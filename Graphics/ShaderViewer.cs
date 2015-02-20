@@ -58,7 +58,7 @@ namespace Moonfish.Graphics
             glControl1.MouseUp += Scene.Camera.OnMouseUp;
             glControl1.MouseCaptureChanged += Scene.Camera.OnMouseCaptureChanged;
 
-            var fileName = @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map";
+            var fileName = @"C:\Users\stem\Documents\modding\headlong.map";
             var directory = Path.GetDirectoryName(fileName);
             var maps = Directory.GetFiles(directory, "*.map", SearchOption.TopDirectoryOnly);
             var resourceMaps = maps.GroupBy(
@@ -72,9 +72,16 @@ namespace Moonfish.Graphics
                 .Select(g => g.First()).ToList();
             resourceMaps.ForEach(x => Halo2.LoadResource(new MapStream(x)));
             Map = new MapStream(fileName);
-            Scene.ObjectManager.Add(Map["hlmt", "ghost"].Meta.Identifier,
-                new ScenarioObject((ModelBlock)(Map["hlmt", "ghost"].Deserialize())));
 
+            var model = (ModelBlock)(Map["hlmt", "masterchief"].Deserialize());
+            int dimension = 10;
+            for (int i = 0; i < dimension * dimension; ++i)
+            {
+                int x = i % dimension;
+                int y = i / dimension;
+                var scenarioObject = new ScenarioObject(model) { WorldMatrix = OpenTK.Matrix4.CreateTranslation(new OpenTK.Vector3(x, y, 0)) };
+                Scene.ObjectManager.Add(Map["hlmt", "masterchief"].Meta.Identifier, scenarioObject);
+            }
 
             var shaderTags = Map.Tags.Where(x => x.Type.ToString() == "shad").ToArray();
             listBox1.Items.AddRange(shaderTags);

@@ -210,11 +210,14 @@ namespace Moonfish.Graphics
                     item.Model.RenderModel.compressionInfo[0].texcoordBoundsY.Min,
                     item.Model.RenderModel.compressionInfo[0].texcoordBoundsY.Max);
 
+                shaderProgram.Use();
                 var worldMatrixAttribute = shaderProgram.GetAttributeLocation("worldMatrix");
                 shaderProgram.SetAttribute(worldMatrixAttribute, item.WorldMatrix);
+                OpenGL.ReportError();
 
                 var texcoordRangeUniform = shaderProgram.GetUniformLocation("texcoordRangeUniform");
                 shaderProgram.SetUniform(texcoordRangeUniform, ref texcoordRange);
+                OpenGL.ReportError();
                 IRenderable @object = item;
                 @object.Render(new[] { shaderProgram });
             }

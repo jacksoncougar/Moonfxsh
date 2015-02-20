@@ -1,0 +1,61 @@
+Halo 2 Header - Vista
+Length: 2048 B
+
+address		value_label					default value 							comments
+							
+0x0000		header_tag					"daeh"					
+0x0004		version						8					
+0x0008		file-size					~					
+0x000C		~							0					
+0x0010		index_address				~						
+0x0014		index_length				~ 										h2v might be wierd
+0x0018		meta_table_length			~					
+0x001C		index_length + ^			~										
+0x0020		~							~										larger than the file itself
+0x0024		~							0xFFFFFF								pointer pointer
+0x0028		~							0										
+0x002C		~							0										byte[256]
+..		
+0x012C		build_string				"11081.07.04.30.0934.main........" 		byte[32]
+0x014C		~							1										
+0x0150		~							~
+0x0154		~							1
+0x0158		~							0
+0x015C		~							0
+0x0160 		~							0	
+0x0164		~							0
+0x0168		~							0
+0x016C		strings_128_table_address											seems to be written over a random stream?
+0x0170		strings_count	
+0x0174		strings_table_length
+0x0178		strings_index_address
+0x017C		strings_table_address		
+0x0180		~							0x01010000								
+0x0184		~
+0x0188		~
+0x018C		~
+0x0190		~
+0x0194		~
+0x0198		~							
+0x019C		~							0
+0x01A0		~							0
+0x01A4		map_name					""										utf8 byte[32]
+..
+0x01C4		~							0
+0x01C8		scenario_path				""										utf8 byte[256]
+..
+0x02C8		~							0
+0x02CC		paths_count															//total? not in map
+0x02D0		paths_table_address														
+0x02D4		paths_table_length	
+0x02D8		paths_index_address
+0x02DC		stringid_index_start												//broken up? only has locale strings
+0x02E0		stringid_index_length
+0x02E4		~
+0x02E8		*																	address to a group of raw blocks
+0x02EC		*																	length of the raw block group
+0x02F0		checksum
+0x02F4		~
+0x02F8																			byte[1284]
+..
+0x07FC		footer_tag					"toof"

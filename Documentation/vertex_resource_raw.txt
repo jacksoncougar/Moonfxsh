@@ -1,0 +1,27 @@
+﻿Example Resource bytes: 
+three blocks with two bytes at the beggining of each.
+ - first byte is an enum?
+ - second byte is the size of the struct being described.
+ 
+0 ->	02 06 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+1 ->	19 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+2 ->	1B 0C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+
+
+flags (enum?)		size		type
+00000001			12			type1_uncompressed
+00000010			04			type1_compressed
+00000100			08			type2_compressed
+00001000			12			type3_compressed
+		
+00011000			08			uncompressed_texcoord
+00011001			04			compressed_texcoord
+		
+00011011			12			compressed_normal
+
+compression_flags
+00000001 -> texcoords
+00000010 -> vertices

@@ -1,0 +1,36 @@
+﻿1:   Vertex positions in Halo 2 seem to have three stored formats: one format is simply a vector3 
+     for position (stored as int16s¹):
+     
+     short x;
+     short y;
+     short z;
+     ...
+
+2:   the second format is the same as before plus a short which is an index into the bone_map table at the 
+     end of the raw data:
+     
+     ...
+     byte bone0;
+     padding_byte;
+
+4:   06-0C 
+	 another multi-node format
+
+	 ...
+	 short padding; //(?)
+	 byte bone0;
+	 byte bone1;
+	 byte weight1;
+	 byte weight2;
+
+3:   08-0C
+	 and finally the third is the same as the frist plus: two bytes followed by two short values which 
+     represent the 'weight' of each bone:
+     
+     ...
+     byte bone0;
+     byte bone1;
+	 byte bone2;
+     short weight1;
+     short weight2;
+	 short weight2;

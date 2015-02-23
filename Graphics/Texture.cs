@@ -42,6 +42,11 @@ namespace Moonfish.Graphics
             var height = workingBitmap.heightPixels;
             var bytesPerPixel = ParseBitapPixelDataSize(workingBitmap.format) / 8.0f;
 
+            if (workingBitmap.flags.HasFlag(BitmapDataBlock.Flags.Palettized))
+            {
+                textureMagFilter = TextureMagFilter.Nearest;
+                textureMinFilter = TextureMinFilter.Nearest;
+            }
             if(workingBitmap.flags.HasFlag(BitmapDataBlock.Flags.Swizzled))
             {
                 buffer = Swizzle(buffer, width, height, 1, (int)bytesPerPixel * 8, true);
@@ -53,6 +58,7 @@ namespace Moonfish.Graphics
             {
                 case BitmapDataBlockBase.TypeDeterminesBitmapGeometry.Texture2D:
                     {
+                        textureTarget = TextureTarget.Texture2D;
                         GL.BindTexture(TextureTarget.Texture2D, this.handle);
                         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)textureMagFilter);
                         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)textureMinFilter);
@@ -61,7 +67,6 @@ namespace Moonfish.Graphics
 
                         byte[] surfaceData = new byte[(int)(bytesPerPixel * width * height)];
                         Array.Copy(buffer, 0, surfaceData, 0, surfaceData.Length);
-
 
                         if (workingBitmap.flags.HasFlag(BitmapDataBlock.Flags.Compressed))
                         {
@@ -77,6 +82,7 @@ namespace Moonfish.Graphics
                     } break;
                 case BitmapDataBlockBase.TypeDeterminesBitmapGeometry.Cubemap:
                     {
+                        textureTarget = TextureTarget.TextureCubeMap;
                         GL.BindTexture(TextureTarget.TextureCubeMap, this.handle);
                         GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (int)textureMagFilter);
                         GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, (int)textureMinFilter);

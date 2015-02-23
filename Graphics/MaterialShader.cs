@@ -14,12 +14,12 @@ namespace Moonfish.Graphics
         public List<Texture> Textures { get; private set; }
 
         int activeShaderPass;
-        public int ActiveShaderPassIndex { get { return activeShaderPass; } set { activeShaderPass = value.Clamp<int>(0, shaderPasses.Length); } }
+        public int ActiveShaderPassIndex { get { return activeShaderPass; } set { activeShaderPass = value.Clamp<int>(0, shaderPasses.Length - 1); } }
 
 
         ShaderBlock shader;
         ShaderTemplateBlock shaderTemplate;
-        ShaderPassBlock[] shaderPasses;
+        public ShaderPassBlock[] shaderPasses;
 
         public MaterialShader(ShaderBlock inShader, MapStream map)
             : this()
@@ -72,10 +72,14 @@ namespace Moonfish.Graphics
 
                     var textureStage = texture.textureStageIndex;
 
-                    GL.ActiveTexture(TextureUnit.Texture0 + textureStage);
+                    OpenGL.ReportError();
+                    GL.ActiveTexture(TextureUnit.Texture1 + textureStage);
 
+                    OpenGL.ReportError();
                     Textures[remappings[implementations[implementationIndex].bitmaps.Index + bitmap].sourceIndex].Bind();
+                    OpenGL.ReportError();
                 }
+                break;
             }
         }
     }

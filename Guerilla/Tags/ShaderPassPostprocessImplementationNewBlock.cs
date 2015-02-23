@@ -14,7 +14,7 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 330)]
+    [LayoutAttribute(Size = 306)]
     public class ShaderPassPostprocessImplementationNewBlockBase
     {
         internal TagBlockIndexStructBlock textures;
@@ -41,9 +41,6 @@ namespace Moonfish.Guerilla.Tags
         internal TagBlockIndexStructBlock vertexConstantInfo;
         internal TagBlockIndexStructBlock renderStateInfo;
         internal TagBlockIndexStructBlock textureStateInfo;
-        internal ShaderPostprocessPixelShader[] pixelShader;
-        internal PixelShaderExternMapBlock[] pixelShaderSwitchExternMap;
-        internal PixelShaderIndexBlock[] pixelShaderIndexBlock;
         internal  ShaderPassPostprocessImplementationNewBlockBase(BinaryReader binaryReader)
         {
             this.textures = new TagBlockIndexStructBlock(binaryReader);
@@ -69,9 +66,6 @@ namespace Moonfish.Guerilla.Tags
             this.vertexConstantInfo = new TagBlockIndexStructBlock(binaryReader);
             this.renderStateInfo = new TagBlockIndexStructBlock(binaryReader);
             this.textureStateInfo = new TagBlockIndexStructBlock(binaryReader);
-            this.pixelShader = ReadShaderPostprocessPixelShaderArray(binaryReader);
-            this.pixelShaderSwitchExternMap = ReadPixelShaderExternMapBlockArray(binaryReader);
-            this.pixelShaderIndexBlock = ReadPixelShaderIndexBlockArray(binaryReader);
         }
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
@@ -86,51 +80,6 @@ namespace Moonfish.Guerilla.Tags
                 }
             }
             return data;
-        }
-        internal  virtual ShaderPostprocessPixelShader[] ReadShaderPostprocessPixelShaderArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderPostprocessPixelShader));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderPostprocessPixelShader[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.Count; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderPostprocessPixelShader(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PixelShaderExternMapBlock[] ReadPixelShaderExternMapBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PixelShaderExternMapBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PixelShaderExternMapBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.Count; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PixelShaderExternMapBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PixelShaderIndexBlock[] ReadPixelShaderIndexBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PixelShaderIndexBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PixelShaderIndexBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.Count; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PixelShaderIndexBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

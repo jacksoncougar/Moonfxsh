@@ -126,16 +126,25 @@ namespace Moonfish.Graphics
             LoadShader(selectedShaderTag);
         }
 
+        MaterialShader material;
+
         private void LoadShader(Moonfish.Tag selectedShaderTag)
         {
             var shader = Map[selectedShaderTag.Identifier].Deserialize() as ShaderBlock;
-            //try
+
+            try
             {
-                MaterialShader material = new MaterialShader(shader, Map);
-                material.UsePass(0);
-                propertyGrid1.SelectedObject = shader;
+                material = new MaterialShader(shader, Map);
+                listBox2.Items.Clear();
+                listBox2.Items.AddRange(material.shaderPasses);
+                listBox2.SelectedIndex = 0;
             }
-            //catch { }
+            catch { }
+        }
+
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            material.UsePass(listBox2.SelectedIndex);
         }
     }
 }

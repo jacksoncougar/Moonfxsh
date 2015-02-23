@@ -170,9 +170,9 @@ namespace Moonfish.Graphics
                     item.itemVehicleCollection.Class.ToString() == "itmc" ?
                     Halo2.GetReferenceObject<ItemCollectionBlock>(item.itemVehicleCollection).itemPermutations.First().item
                     : Halo2.GetReferenceObject<VehicleCollectionBlock>(item.itemVehicleCollection).vehiclePermutations.First().vehicle).model))
-                        {
-                            WorldMatrix = item.WorldMatrix
-                        }
+                    {
+                        WorldMatrix = item.WorldMatrix
+                    }
                         );
                 }
                 catch (NullReferenceException)
@@ -192,9 +192,9 @@ namespace Moonfish.Graphics
             {
                 Add(item.Object.Ident, new ScenarioObject(
                     Halo2.GetReferenceObject<ModelBlock>(Halo2.GetReferenceObject<ObjectBlock>(item.Object).model))
-                    {
-                        WorldMatrix = item.instance.WorldMatrix
-                    }
+                {
+                    WorldMatrix = item.instance.WorldMatrix
+                }
                 );
             }
         }
@@ -210,6 +210,7 @@ namespace Moonfish.Graphics
                     item.Model.RenderModel.compressionInfo[0].texcoordBoundsY.Min,
                     item.Model.RenderModel.compressionInfo[0].texcoordBoundsY.Max);
 
+                OpenGL.ReportError();
                 shaderProgram.Use();
                 var worldMatrixAttribute = shaderProgram.GetAttributeLocation("worldMatrix");
                 shaderProgram.SetAttribute(worldMatrixAttribute, item.WorldMatrix);

@@ -62,11 +62,11 @@ namespace Moonfish.Graphics
             Shaders["default"].Use();
             Shaders["default"].SetUniform(p8NormalColourUniform, 0);
             OpenGL.ReportError();
-            Shaders["default"].SetUniform(p8NormalMapUniform, 1);
+            Shaders["default"].SetUniform(p8NormalMapUniform, 3);
             OpenGL.ReportError();
-            Shaders["default"].SetUniform(diffuseMapUniform, 2);
+            Shaders["default"].SetUniform(diffuseMapUniform, 1);
             OpenGL.ReportError();
-            Shaders["default"].SetUniform(environmentMapUniform, 3);
+            Shaders["default"].SetUniform(environmentMapUniform, 2);
             OpenGL.ReportError();
 
 

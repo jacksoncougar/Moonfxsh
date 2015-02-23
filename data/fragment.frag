@@ -18,9 +18,9 @@ smooth in vec2 VertexTexcoord_texturespace;
 in vec3 LightPosition_worldspace;
 
 uniform sampler1D P8NormalColour;
-uniform sampler2D P8NormalMap;
 uniform sampler2D DiffuseMap;
 uniform samplerCube EnvironmentMap;
+uniform sampler2D P8NormalMap;
 
 out vec4 frag_color; 
 

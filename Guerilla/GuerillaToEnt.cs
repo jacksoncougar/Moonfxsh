@@ -21,7 +21,7 @@ namespace Moonfish.Guerilla
         {
             foreach (var tag in h2Tags)
             {
-                //if (tag.Class.ToString() != "snd!") continue;
+                if (tag.Class.ToString() != "spas") continue;
 
                 Dictionary<string, string> definitionDictitonary = new Dictionary<string, string>();
 
@@ -237,6 +237,16 @@ namespace Moonfish.Guerilla
                         {
                             tag_struct_definition struct_definition = (tag_struct_definition)field.Definition;
                             var fieldType = ToTypeName(struct_definition.name);
+                            var tagBlockDefinition = (TagBlockDefinition)(struct_definition.Definition);
+
+                            // This is an wierd internal block pointer with a length value on it
+                            if (struct_definition.Class == (TagClass)"shtb")
+                            {
+                                foreach (var item in tagBlockDefinition.LatestFieldSet.Fields)
+                                {
+                                    item.Name = string.Format("{0}:{1}", field.Name, item.Name);
+                                }
+                            }
 
                             ProcessTagBlockDefinition(struct_definition.Definition, writer, struct_definition.block_definition_address, ref fieldOffset, "", field.Name, false, true);
 

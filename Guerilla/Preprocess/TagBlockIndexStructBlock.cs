@@ -8,6 +8,7 @@ namespace Moonfish.Guerilla.Preprocess
         [GuerillaPreProcessMethod(BlockName = "tag_block_index_struct_block")]
         protected static void GuerillaPreProcessMethod(BinaryReader binaryReader, IList<tag_field> fields)
         {
+            return;
             fields.Clear();
             fields.Add(new tag_field() { Name = "Index", type = field_type._field_char_integer });
             fields.Add(new tag_field() { Name = "Length", type = field_type._field_char_integer });

@@ -131,6 +131,7 @@
     <Compile Include="Guerilla\Preprocess\ModelVariantRegionBlockBase.cs" />
     <Compile Include="Guerilla\Preprocess\ScenarioBlock.cs" />
     <Compile Include="Guerilla\Preprocess\ScenarioCutsceneTitleBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\ShaderPassPostprocessImplementationNewBlock.cs" />
     <Compile Include="Guerilla\Preprocess\ShaderPostprocessBitmapNewBlockBase.cs" />
     <Compile Include="Guerilla\Preprocess\TagBlockIndexStructBlock.cs" />
     <Compile Include="Guerilla\TagGroups.cs" />

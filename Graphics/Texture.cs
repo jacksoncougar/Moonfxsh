@@ -12,11 +12,18 @@ namespace Moonfish.Graphics
     public class Texture        
     {
         int handle;
+        TextureTarget textureTarget;
 
-        public void Load(BitmapBlock bitmapCollection, MapStream map, TextureUnit textureUnit, 
-            TextureMagFilter textureMagFilter = TextureMagFilter.Linear, TextureMinFilter textureMinFilter = TextureMinFilter.Linear)
+        public Texture()
         {
             handle = GL.GenTexture();
+        }
+
+        public void Load(BitmapBlock bitmapCollection, MapStream map, 
+            TextureUnit textureUnit = TextureUnit.Texture0, 
+            TextureMagFilter textureMagFilter = TextureMagFilter.Linear, 
+            TextureMinFilter textureMinFilter = TextureMinFilter.Linear)
+        {
             GL.ActiveTexture(textureUnit);
 
             var workingBitmap = bitmapCollection.bitmaps[0];
@@ -116,6 +123,10 @@ namespace Moonfish.Graphics
         public void Bind(TextureTarget target)
         {
             GL.BindTexture(target, this.handle);
+        }
+        public void Bind()
+        {
+            GL.BindTexture(this.textureTarget, this.handle);
         }
 
         public static byte[] Swizzle(byte[] raw, int pixOffset, int width, int height, int depth, int bitCount, bool deswizzle)

@@ -44,7 +44,7 @@ namespace Moonfish.Guerilla.Tags
 
     public partial class GlobalGeometryCompressionInfoBlock
     {
-        public Matrix4 ToExtentsMatrix( )
+        public Matrix4 ToObjectMatrix( )
         {
             Matrix4 extents_matrix = new Matrix4(
                 new Vector4( positionBoundsX.Length / 2, 0.0f, 0.0f, 0.0f ),

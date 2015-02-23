@@ -24,10 +24,10 @@ namespace Moonfish
             //ripperEnt.DumpTagLayout(@"C:\Users\seed\Documents\plugins");
             //return;
 
-            //GuerillaCs ripper = new GuerillaCs(@"C:\Users\seed\Documents\Halo 2 Modding\H2Guerilla.exe");
+            GuerillaCs ripper = new GuerillaCs(@"C:\Users\seed\Documents\Halo 2 Modding\H2Guerilla.exe");
 
-            //ripper.DumpTagLayout(@"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfish2015\Moonfish2015\Guerilla\Tags", "bitm", "");
-            //return;
+            ripper.DumpTagLayout(@"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags", "spas", "");
+            return;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new ShaderViewer());

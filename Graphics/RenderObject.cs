@@ -30,6 +30,17 @@ namespace Moonfish.Graphics
             sectionBuffers = new List<Mesh>( new[] { new Mesh( item.renderInfo.renderData[0].section ) } );
         }
 
+        public IEnumerable<Mesh> Batches
+        {
+            get
+            {
+                foreach (var batch in sectionBuffers)
+                {
+                    yield return batch;
+                }
+            }
+        }
+
         public virtual void Render( Program program )
         {
             if( sectionBuffers.Count == 0 ) return;

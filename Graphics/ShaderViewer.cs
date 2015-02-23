@@ -58,7 +58,7 @@ namespace Moonfish.Graphics
             glControl1.MouseUp += Scene.Camera.OnMouseUp;
             glControl1.MouseCaptureChanged += Scene.Camera.OnMouseCaptureChanged;
 
-            var fileName = @"C:\Users\stem\Documents\modding\headlong.map";
+            var fileName = @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map";
             var directory = Path.GetDirectoryName(fileName);
             var maps = Directory.GetFiles(directory, "*.map", SearchOption.TopDirectoryOnly);
             var resourceMaps = maps.GroupBy(
@@ -74,11 +74,11 @@ namespace Moonfish.Graphics
             Map = new MapStream(fileName);
 
             var model = (ModelBlock)(Map["hlmt", "masterchief"].Deserialize());
-            int dimension = 10;
-            for (int i = 0; i < dimension * dimension; ++i)
+            int width = 1, height = 1;
+            for (int i = 0; i < width * height; ++i)
             {
-                int x = i % dimension;
-                int y = i / dimension;
+                float x = 0.4f * (i % width);
+                float y = 0.4f * (i / width);
                 var scenarioObject = new ScenarioObject(model) { WorldMatrix = OpenTK.Matrix4.CreateTranslation(new OpenTK.Vector3(x, y, 0)) };
                 Scene.ObjectManager.Add(Map["hlmt", "masterchief"].Meta.Identifier, scenarioObject);
             }
@@ -129,12 +129,13 @@ namespace Moonfish.Graphics
         private void LoadShader(Moonfish.Tag selectedShaderTag)
         {
             var shader = Map[selectedShaderTag.Identifier].Deserialize() as ShaderBlock;
-            try
+            //try
             {
-                shader.LoadShader(Map);
+                MaterialShader material = new MaterialShader(shader, Map);
+                material.UsePass(0);
                 propertyGrid1.SelectedObject = shader;
             }
-            catch { }
+            //catch { }
         }
     }
 }

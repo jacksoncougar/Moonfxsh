@@ -93,6 +93,7 @@
     <Compile Include="Graphics\Input\MousePole.cs" />
     <Compile Include="Graphics\Manager.cs" />
     <Compile Include="Graphics\MarkerWrapper.cs" />
+    <Compile Include="Graphics\MaterialShader.cs" />
     <Compile Include="Graphics\Maths.cs" />
     <Compile Include="Graphics\mesh.cs" />
     <Compile Include="Graphics\MoonfishColours.cs" />
@@ -628,6 +629,7 @@
     <Compile Include="Tags\BinaryReaderExtensions.cs" />
     <Compile Include="Tags\Bitmap.Code.cs" />
     <Compile Include="Tags\Deserializer.cs" />
+    <Compile Include="Tags\GlobalGeometryPartBlockNew.Code.cs" />
     <Compile Include="Tags\HierarchyModel.Code.cs" />
     <Compile Include="Tags\IWriteable.cs" />
     <Compile Include="Tags\RenderModel.Code.cs" />

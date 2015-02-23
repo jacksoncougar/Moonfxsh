@@ -288,6 +288,15 @@ namespace Moonfish
 
 
         Tag current_tag = new Tag();
+
+        public IMap this[TagReference tagReference]
+        {
+            get
+            {
+                return this[tagReference.Ident];
+            }
+        }
+        
         public IMap this[string tag_class, string tag_name]
         {
             get

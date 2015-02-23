@@ -92,7 +92,7 @@ namespace Moonfish.Graphics
                 CollisionShape = new BoxShape(this.Model.RenderModel.compressionInfo[0].ToHalfExtents())
             };
 
-            collisionSpaceMatrix = Matrix4.CreateTranslation(this.Model.RenderModel.compressionInfo[0].ToExtentsMatrix().ExtractTranslation());
+            collisionSpaceMatrix = Matrix4.CreateTranslation(this.Model.RenderModel.compressionInfo[0].ToObjectMatrix().ExtractTranslation());
             worldMatrix = Matrix4.Identity;
 
             foreach (var section in model.RenderModel.sections)
@@ -112,6 +112,7 @@ namespace Moonfish.Graphics
 
         }
 
+        
         private void RenderPass(Program program)
         {
             if (Model.RenderModel == null) return;
@@ -119,7 +120,7 @@ namespace Moonfish.Graphics
             {
                 using (program.Use())
                 {
-                    var extents = Model.RenderModel.compressionInfo[0].ToExtentsMatrix();
+                    var extents = Model.RenderModel.compressionInfo[0].ToObjectMatrix();
 
                     var objectMatrixAttribute = program.GetAttributeLocation("objectExtents");
                     var colourAttribute = program.GetAttributeLocation("colour");
@@ -135,8 +136,7 @@ namespace Moonfish.Graphics
                             GL.UseProgram(program.Ident);
                             foreach (var part in mesh.Parts)
                             {
-                                GL.DrawElements(PrimitiveType.TriangleStrip, part.stripLength, DrawElementsType.UnsignedShort,
-                                    (IntPtr)(part.stripStartIndex * 2)); OpenGL.ReportError();
+                                part.Draw();
                             }
                         }
                     }
@@ -301,7 +301,7 @@ namespace Moonfish.Graphics
                 {
                     if (!this.Selected) return;
                     var matrix = this.WorldMatrix.ClearTranslation();
-                    var collMtrix = this.Model.RenderModel.compressionInfo[0].ToExtentsMatrix();
+                    var collMtrix = this.Model.RenderModel.compressionInfo[0].ToObjectMatrix();
 
                     Vector3 linVel, angVel;
                     TransformUtil.CalculateVelocity(from, to, 1.0f, out linVel, out angVel);

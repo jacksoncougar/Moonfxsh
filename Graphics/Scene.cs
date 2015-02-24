@@ -16,7 +16,7 @@ namespace Moonfish.Graphics
         Stopwatch Timer { get; set; }
         public Camera Camera { get; set; }
 
-        OpenTK.Vector3 lightPosition = new OpenTK.Vector3(1, 1, 1);
+        OpenTK.Vector3 lightPosition = new OpenTK.Vector3(1f, 2f, 0.5f);
         float rotation = 0;
 
         public event EventHandler OnFrameReady;
@@ -142,7 +142,7 @@ namespace Moonfish.Graphics
                 214, 215, 164, 255, 214, 39, 160, 255, 214, 172, 44, 255, 255, 128, 128, 0, }; 
             #endregion
 
-            GL.TexImage1D(TextureTarget.Texture1D, 0, PixelInternalFormat.Rgba8, 256, 0, PixelFormat.Rgba, PixelType.UnsignedInt8888Ext, H2PaletteBuffer);
+            GL.TexImage1D(TextureTarget.Texture1D, 0, PixelInternalFormat.Rgba8, 256, 0, PixelFormat.Bgra, PixelType.UnsignedByte, H2PaletteBuffer);
         }
 
         public void BindNormalMapPaletteTexture(TextureUnit target = TextureUnit.Texture0)

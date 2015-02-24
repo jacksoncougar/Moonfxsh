@@ -31,7 +31,7 @@ void main()
 	float specularPower = 16.0;
 	
 	float index = texture(P8NormalMap, VertexTexcoord_texturespace.st);
-	vec3 textureNormal_tangentspace = texture( P8NormalColour, index ).bgr * 2.0 - 1.0;
+	vec3 textureNormal_tangentspace = normalize(texture( P8NormalColour, index ).rgb * 2.0 - 1.0);
 	
 	vec4 diffuseColour = texture(DiffuseMap, VertexTexcoord_texturespace.st);
 	vec4 environmentColour = texture(EnvironmentMap, VertexReflection_worldspace);
@@ -50,12 +50,12 @@ void main()
 	
 	vec4 color = 
 		// Ambient : simulates indirect lighting
-		environmentColour * 0.5 * diffuseColour * 0.5 + DiffuseColour * 0.1 +
+		environmentColour * 0.5 * diffuseColour * 0.8 + DiffuseColour * 0.1 +
 		// Diffuse : "color" of the object
 		environmentColour * diffuseColour.a * lightColor * lightPower * cosTheta / distance_squared +
 		// Specular : reflective highlight, like a mirror
 		environmentColour * diffuseColour.a * lightColor * lightPower * pow(cosAlpha, specularPower) / distance_squared;
 
 	
-	frag_color =  color;
+	frag_color =  clamp(color, 0.0, 1.0);
 }

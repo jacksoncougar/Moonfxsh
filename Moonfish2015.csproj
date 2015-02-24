@@ -117,6 +117,7 @@
     <Compile Include="Graphics\ShaderViewer.Designer.cs">
       <DependentUpon>ShaderViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Graphics\Swizzler.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\Track.cs" />
     <Compile Include="Guerilla\Class1.cs" />

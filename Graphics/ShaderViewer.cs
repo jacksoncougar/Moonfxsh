@@ -132,14 +132,14 @@ namespace Moonfish.Graphics
         {
             var shader = Map[selectedShaderTag.Identifier].Deserialize() as ShaderBlock;
 
-            try
+           // try
             {
                 material = new MaterialShader(shader, Map);
                 listBox2.Items.Clear();
                 listBox2.Items.AddRange(material.shaderPasses);
                 listBox2.SelectedIndex = 0;
             }
-            catch { }
+            //catch { }
         }
 
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)

@@ -14,7 +14,7 @@ namespace Moonfish.Graphics
         public List<Texture> Textures { get; private set; }
 
         int activeShaderPass;
-        public int ActiveShaderPassIndex { get { return activeShaderPass; } set { activeShaderPass = value.Clamp<int>(0, shaderPasses.Length - 1); } }
+        public int ActiveShaderPassIndex { get { return activeShaderPass; } set { activeShaderPass = value.Clamp<int>(-1, shaderPasses.Length - 1); } }
 
 
         ShaderBlock shader;
@@ -56,6 +56,8 @@ namespace Moonfish.Graphics
         public void UsePass(int index)
         {
             ActiveShaderPassIndex = index;
+            if (ActiveShaderPassIndex < 0) return;
+
             var template = shaderTemplate.postprocessDefinition[0];
             var activePass = shaderTemplate.postprocessDefinition[0].passes[ActiveShaderPassIndex];
             var implementations = template.implementations.ToList().GetRange(activePass.implementations.Index, activePass.implementations.Length);
@@ -74,8 +76,8 @@ namespace Moonfish.Graphics
 
                     OpenGL.ReportError();
                     GL.ActiveTexture(TextureUnit.Texture1 + textureStage);
-
                     OpenGL.ReportError();
+
                     Textures[remappings[implementations[implementationIndex].bitmaps.Index + bitmap].sourceIndex].Bind();
                     OpenGL.ReportError();
                 }

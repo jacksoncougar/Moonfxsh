@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Moonfish.Graphics
 {
-    public class Texture        
+    public class Texture
     {
         int handle;
         TextureTarget textureTarget;
@@ -19,9 +19,9 @@ namespace Moonfish.Graphics
             handle = GL.GenTexture();
         }
 
-        public void Load(BitmapBlock bitmapCollection, MapStream map, 
-            TextureUnit textureUnit = TextureUnit.Texture0, 
-            TextureMagFilter textureMagFilter = TextureMagFilter.Linear, 
+        public void Load(BitmapBlock bitmapCollection, MapStream map,
+            TextureUnit textureUnit = TextureUnit.Texture0,
+            TextureMagFilter textureMagFilter = TextureMagFilter.Linear,
             TextureMinFilter textureMinFilter = TextureMinFilter.Linear)
         {
             GL.ActiveTexture(textureUnit);
@@ -30,7 +30,10 @@ namespace Moonfish.Graphics
             byte[] buffer = new byte[workingBitmap.lOD1TextureDataLength];
 
             Stream resourceStream;
-            Halo2.TryGettingResourceStream(workingBitmap.lOD1TextureDataOffset, out resourceStream);
+            if (!Halo2.TryGettingResourceStream(workingBitmap.lOD1TextureDataOffset, out resourceStream))
+            {
+                return;
+            }
 
             using (resourceStream.Pin())
             {
@@ -47,9 +50,9 @@ namespace Moonfish.Graphics
                 textureMagFilter = TextureMagFilter.Nearest;
                 textureMinFilter = TextureMinFilter.Nearest;
             }
-            if(workingBitmap.flags.HasFlag(BitmapDataBlock.Flags.Swizzled))
+            if (workingBitmap.flags.HasFlag(BitmapDataBlock.Flags.Swizzled))
             {
-                buffer = Swizzle(buffer, width, height, 1, (int)bytesPerPixel * 8, true);
+                buffer = Swizzler.Swizzle(buffer, (int)bytesPerPixel, width, height, 1);
             }
             PixelInternalFormat pixelInternalFormat = ParseBitmapPixelInternalFormat(workingBitmap.format);
 
@@ -125,116 +128,9 @@ namespace Moonfish.Graphics
 
             OpenGL.ReportError();
         }
-
-        public void Bind(TextureTarget target)
-        {
-            GL.BindTexture(target, this.handle);
-        }
         public void Bind()
         {
             GL.BindTexture(this.textureTarget, this.handle);
-        }
-
-        public static byte[] Swizzle(byte[] raw, int pixOffset, int width, int height, int depth, int bitCount, bool deswizzle)
-        {
-            bitCount /= 8;
-            int a = 0;
-            int b = 0;
-            byte[] dataArray = new byte[raw.Length]; //width * height * bitCount;
-
-            MaskSet masks = new MaskSet(width, height, depth);
-            pixOffset = 0;
-            for (int y = 0; y < height * depth; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    if (deswizzle)
-                    {
-                        a = ((y * width) + x) * bitCount;
-                        b = (Swizzle(x, y, depth, masks)) * bitCount;
-                    }
-                    else
-                    {
-                        b = ((y * width) + x) * bitCount;
-                        a = (Swizzle(x, y, depth, masks)) * bitCount;
-                    }
-
-                    if (a < dataArray.Length && b < raw.Length)
-                    {
-                        for (int i = pixOffset; i < bitCount + pixOffset; i++)
-                            dataArray[a + i] = raw[b + i];
-                    }
-                    else return null;
-                }
-            }
-
-            //for(int u = 0; u < offset; u++)
-            //data[u] = raw[u];
-            //for(int v = offset + (height * width * depth * bitCount); v < data.Length; v++)
-            //	data[v] = raw[v];
-
-            return dataArray;
-        }
-
-        public static byte[] Swizzle(byte[] raw, int width, int height, int depth, int bitCount, bool deswizzle)
-        {
-            return Swizzle(raw, 0, width, height, depth, bitCount, deswizzle);
-        }
-
-        private static int Swizzle(int x, int y, int z, MaskSet masks)
-        {
-            return SwizzleAxis(x, masks.x) | SwizzleAxis(y, masks.y) | (z == -1 ? 0 : SwizzleAxis(z, masks.z));
-        }
-
-        private static int SwizzleAxis(int val, int mask)
-        {
-            int bit = 1;
-            int result = 0;
-
-            while (bit <= mask)
-            {
-                int tmp = mask & bit;
-
-                if (tmp != 0) result |= (val & bit);
-                else val <<= 1;
-
-                bit <<= 1;
-            }
-
-            return result;
-        }
-
-        private class MaskSet
-        {
-            public int x = 0;
-            public int y = 0;
-            public int z = 0;
-
-            public MaskSet(int w, int h, int d)
-            {
-                int bit = 1;
-                int index = 1;
-
-                while (bit < w || bit < h || bit < d)
-                {
-                    if (bit < w)
-                    {
-                        x |= index;
-                        index <<= 1;
-                    }
-                    if (bit < h)
-                    {
-                        y |= index;
-                        index <<= 1;
-                    }
-                    if (bit < d)
-                    {
-                        z |= index;
-                        index <<= 1;
-                    }
-                    bit <<= 1;
-                }
-            }
         }
 
         private PixelType ParseBitapPixelType(BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally format)
@@ -260,7 +156,7 @@ namespace Moonfish.Graphics
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Y8:
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.P8Bump:
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Ay8:
-                    return PixelType.Byte;
+                    return PixelType.UnsignedByte;
 
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8r8g8b8:
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.X8r8g8b8:

@@ -76,14 +76,14 @@ void main()
 	LightDirection_cameraspace = lightPosition_cameraspace + EyeDirection_cameraspace;
 	
 	vec3 vertexNormal_cameraspace =  normalMatrix * unpack(iNormal);
-	vec3 vertexTangent_cameraspace = normalMatrix * (unpack(iTangent));
-	vec3 vertexBitangent_cameraspace = normalMatrix *  (unpack(iBitangent));
+	vec3 vertexTangent_cameraspace = normalMatrix * unpack(iTangent);
+	vec3 vertexBitangent_cameraspace = normalMatrix *  unpack(iBitangent);
 
 	VertexReflection_worldspace = reflect(vertexPosition_cameraspace, vertexNormal_cameraspace);
 	
 	mat3 TBN =  transpose(mat3(
-		vertexTangent_cameraspace,
 		vertexBitangent_cameraspace,
+		vertexTangent_cameraspace,
 		vertexNormal_cameraspace
 	));
 	

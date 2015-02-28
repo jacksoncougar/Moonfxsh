@@ -86,7 +86,7 @@
     <Compile Include="Globals.cs" />
     <Compile Include="GlobalStrings.cs" />
     <Compile Include="Graphics\BulletDebugDrawer.cs" />
-    <Compile Include="Graphics\camera.cs" />
+    <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\GraphicsEvents.cs" />
     <Compile Include="Graphics\GraphicsExtensions.cs" />
     <Compile Include="Graphics\Grid.cs" />
@@ -95,23 +95,22 @@
     <Compile Include="Graphics\MarkerWrapper.cs" />
     <Compile Include="Graphics\MaterialShader.cs" />
     <Compile Include="Graphics\Maths.cs" />
-    <Compile Include="Graphics\mesh.cs" />
+    <Compile Include="Graphics\Mesh.cs" />
     <Compile Include="Graphics\MoonfishColours.cs" />
     <Compile Include="Graphics\MouseEventManager.cs" />
     <Compile Include="Graphics\MousePole.cs" />
-    <Compile Include="Graphics\node.cs" />
+    <Compile Include="Graphics\Node.cs" />
     <Compile Include="Graphics\NodeCollection.cs" />
     <Compile Include="Graphics\OpenGL.cs" />
     <Compile Include="Graphics\Performance.cs" />
     <Compile Include="Graphics\Primitives.cs" />
     <Compile Include="Graphics\Program.cs" />
     <Compile Include="Graphics\RenderObject.cs" />
-    <Compile Include="Graphics\resource.cs" />
     <Compile Include="Graphics\ScenarioObject.cs" />
     <Compile Include="Graphics\ScenarioObjectList.cs" />
     <Compile Include="Graphics\Scene.cs" />
     <Compile Include="Graphics\Section.cs" />
-    <Compile Include="Graphics\shader.cs" />
+    <Compile Include="Graphics\Shader.cs" />
     <Compile Include="Graphics\ShaderViewer.cs">
       <SubType>Form</SubType>
     </Compile>

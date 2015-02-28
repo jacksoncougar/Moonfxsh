@@ -620,6 +620,7 @@
     <Compile Include="Guerilla\Validator.cs" />
     <Compile Include="Guerilla\VirtualMemoryStream.cs" />
     <Compile Include="IResource.cs" />
+    <Compile Include="Local.cs" />
     <Compile Include="main.cs" />
     <Compile Include="MapStream.cs" />
     <Compile Include="Padding.cs" />

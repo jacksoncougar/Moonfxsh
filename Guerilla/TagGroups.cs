@@ -369,6 +369,10 @@ namespace Moonfish.Guerilla
                 {
                     LatestFieldSet = FieldSets[0];
                 }
+                else if (this.name == "animation_pool_block")
+                {
+                    LatestFieldSet = FieldSets[4];
+                }
                 else
                 {
                     reader.BaseStream.Seek(this.field_set_latest_address, SeekOrigin.Begin);
@@ -522,7 +526,7 @@ namespace Moonfish.Guerilla
 
             DefaultPath = Guerilla.ReadString(reader, this.default_tag_path_address);
             stream.Seek(this.definition_address, SeekOrigin.Begin);
-            if (Class.ToString() == "snd!")
+            if (Class.ToString() == "jmad")
             {
 
                 Definition = reader.ReadFieldDefinition<TagBlockDefinition>();

@@ -20,9 +20,12 @@ namespace Moonfish
         [STAThread]
         static void Main()
         {
-            //GuerillaToEnt ripperEnt = new GuerillaToEnt(@"C:\Users\seed\Documents\Halo 2 Modding\H2Guerilla.exe");
-            //ripperEnt.DumpTagLayout(@"C:\Users\seed\Documents\plugins");
-            //return;
+            GuerillaToEnt ripperEnt = new GuerillaToEnt(Local.GuerillaPath);
+            var jmadTag = Guerilla.Guerilla.h2Tags.First(x => x.Class.ToString() == "jmad");
+            ripperEnt.DumpTagLayout(jmadTag, Local.PluginsFolder);
+            Validator v = new Validator();
+            v.Validate(jmadTag, Guerilla.Guerilla.h2Tags);
+            return;
 
             //GuerillaCs ripper = new GuerillaCs(@"C:\Users\seed\Documents\Halo 2 Modding\H2Guerilla.exe");
 

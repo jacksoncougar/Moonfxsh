@@ -14,7 +14,7 @@ namespace Moonfish.Guerilla
         public string Validate(tag_group validateTag, IEnumerable<tag_group> tagPool)
         {
             PointersList = new List<Tuple<BlamPointer, ElementArray>>();
-            StreamWriter stringWriter = File.CreateText(string.Format(@"C:\Users\stem\Documents\h2pc to h2xbox\analysis\{0}.txt", validateTag.Class.ToSafeString()));
+            StreamWriter stringWriter = File.CreateText(string.Format(@"C:\Users\stem\Documents\Plugins\analysis\{0}.txt", validateTag.Class.ToSafeString()));
             WriteMessage = new Log(stringWriter.WriteLine);
 
             int offset = 0; 

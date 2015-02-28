@@ -21,7 +21,7 @@ namespace Moonfish.Guerilla
         {
             foreach (var tag in h2Tags)
             {
-                if (tag.Class.ToString() != "spas") continue;
+                if (tag.Class.ToString() != "jmad") continue;
 
                 Dictionary<string, string> definitionDictitonary = new Dictionary<string, string>();
 
@@ -38,6 +38,22 @@ namespace Moonfish.Guerilla
 
                 //yield return tag;
             }
+        }
+
+        public void DumpTagLayout(tag_group tag, string folder)
+        {
+            Dictionary<string, string> definitionDictitonary = new Dictionary<string, string>();
+
+            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
+            xmlWriterSettings.Indent = true;
+            var outputName = GetEntityCompatibleName(tag);
+            XmlWriter writer = XmlWriter.Create(new FileStream(string.Format("{0}\\{1}.ent", folder, outputName), FileMode.Create, FileAccess.Write, FileShare.Read), xmlWriterSettings);
+
+            root = true;
+            ProcessTag(h2Tags, folder, null, writer, tag);
+
+            // Close the tag layout writer.
+            writer.Close();
         }
 
         bool root;
@@ -71,7 +87,7 @@ namespace Moonfish.Guerilla
 
         private static IList<tag_field> ExtractFields(IEnumerable<tag_group> h2Tags, BinaryReader reader, tag_group tag)
         {
-            var definition = ( TagBlockDefinition)tag.Definition;
+            var definition = (TagBlockDefinition)tag.Definition;
             return definition.LatestFieldSet.Fields;
         }
 
@@ -164,6 +180,7 @@ namespace Moonfish.Guerilla
         private void ProcessTagBlockDefinition(TagBlockDefinition tagBlock, XmlWriter writer, int address, ref int fieldOffset, string group_tag = "", string className = "", bool root = false, bool inline = false, IList<tag_field> fieldOverride = null)
         {
             IList<tag_field> fields = tagBlock.LatestFieldSet.Fields;
+
             if (fieldOverride != null)
             {
                 fields = fieldOverride;
@@ -185,8 +202,9 @@ namespace Moonfish.Guerilla
                 writer.WriteStartDocument();
                 writer.WriteStartElement("plugin");
                 writer.WriteAttributeString("class", group_tag);
-                writer.WriteAttributeString("author", "Moonfish");
+                writer.WriteAttributeString("author", "Moonfxsh");
                 writer.WriteAttributeString("headersize", size.ToString());
+                writer.WriteAttributeString("date", DateTime.Now.ToShortDateString());
             }
             else if (!inline)
             {

@@ -16,7 +16,7 @@ namespace Moonfish.Graphics
         Stopwatch Timer { get; set; }
         public Camera Camera { get; set; }
 
-        OpenTK.Vector3 lightPosition = new OpenTK.Vector3(1f, 2f, 0.5f);
+        OpenTK.Vector3 lightPosition = new OpenTK.Vector3(1f, 1f, 0.5f);
         float rotation = 0;
 
         public event EventHandler OnFrameReady;
@@ -62,11 +62,11 @@ namespace Moonfish.Graphics
             Shaders["default"].Use();
             Shaders["default"].SetUniform(p8NormalColourUniform, 0);
             OpenGL.ReportError();
-            Shaders["default"].SetUniform(p8NormalMapUniform, 3);
+            Shaders["default"].SetUniform(p8NormalMapUniform, 2);
             OpenGL.ReportError();
             Shaders["default"].SetUniform(diffuseMapUniform, 1);
             OpenGL.ReportError();
-            Shaders["default"].SetUniform(environmentMapUniform, 2);
+            Shaders["default"].SetUniform(environmentMapUniform, 3);
             OpenGL.ReportError();
 
 

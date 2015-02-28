@@ -10,5 +10,6 @@ namespace Moonfish
     {
         public const string GuerillaPath = @"C:\Program Files (x86)\Microsoft Games\Halo 2 Map Editor\H2Guerilla.exe";
         public const string PluginsFolder = @"C:\Users\stem\Documents\Plugins";
+        public const string MapsDirectory = @"C:\Users\stem\Documents\modding";
     }
 }

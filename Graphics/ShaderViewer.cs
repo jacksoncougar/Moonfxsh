@@ -58,7 +58,7 @@ namespace Moonfish.Graphics
             glControl1.MouseUp += Scene.Camera.OnMouseUp;
             glControl1.MouseCaptureChanged += Scene.Camera.OnMouseCaptureChanged;
 
-            var fileName = @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map";
+            var fileName = Path.Combine(Local.MapsDirectory, "headlong.map");
             var directory = Path.GetDirectoryName(fileName);
             var maps = Directory.GetFiles(directory, "*.map", SearchOption.TopDirectoryOnly);
             var resourceMaps = maps.GroupBy(

@@ -100,6 +100,7 @@
     <Compile Include="Graphics\MouseEventManager.cs" />
     <Compile Include="Graphics\MousePole.cs" />
     <Compile Include="Graphics\node.cs" />
+    <Compile Include="Graphics\NodeCollection.cs" />
     <Compile Include="Graphics\OpenGL.cs" />
     <Compile Include="Graphics\Performance.cs" />
     <Compile Include="Graphics\Primitives.cs" />

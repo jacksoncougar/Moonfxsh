@@ -50,7 +50,7 @@ void main()
 	
 	vec4 color = 
 		// Ambient : simulates indirect lighting
-		environmentColour * 0.5 * diffuseColour * 0.8 + DiffuseColour * 0.1 +
+		diffuseColour * 0.8 + DiffuseColour * 0.1 +
 		// Diffuse : "color" of the object
 		environmentColour * diffuseColour.a * lightColor * lightPower * cosTheta / distance_squared +
 		// Specular : reflective highlight, like a mirror

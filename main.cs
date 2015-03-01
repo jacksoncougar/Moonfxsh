@@ -33,7 +33,7 @@ namespace Moonfish
             //return;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ShaderViewer());
+            Application.Run(new MarkerViewer());
         }
     }
 }

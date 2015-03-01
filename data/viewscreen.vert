@@ -10,6 +10,5 @@ smooth in out vec4 diffuseColour;
 void main()
 {
     vec4 viewPosition = viewProjectionMatrix  * objectWorldMatrix * position;
-	
 	gl_Position = viewPosition;
 }

@@ -297,26 +297,26 @@ namespace Moonfish
             }
         }
         
-        public IMap this[string tag_class, string tag_name]
+        public IMap this[string @class, string path]
         {
             get
             {
-                if (current_tag.Type == (TagClass)tag_class && current_tag.Path.Contains(tag_name))
+                if (current_tag.Type == (TagClass)@class && current_tag.Path.Contains(path))
                     return this;
                 else current_tag = (from tag in Tags
-                                    where tag.Type == (TagClass)tag_class
-                                    where tag.Path.Contains(tag_name)
+                                    where tag.Type == (TagClass)@class
+                                    where tag.Path.Contains(path)
                                     select tag).First();
                 return this;
             }
         }
 
-        public IMap this[TagIdent tag_id]
+        public IMap this[TagIdent ident]
         {
             get
             {
-                if (current_tag.Identifier == tag_id) return this;
-                else current_tag = Tags[tag_id.Index];
+                if (current_tag.Identifier == ident) return this;
+                else current_tag =  TagIdent.IsNull(ident) ? null : Tags[ident.Index];
                 return this;
             }
 

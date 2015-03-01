@@ -1,13 +1,15 @@
 ﻿#version 130
 
-in vec4 position;
-smooth in out vec4 diffuseColour;
+in vec4 Position;
+out vec4 DiffuseColour;
 
-	uniform mat4 objectExtents;
-	uniform mat4 objectWorldMatrix;
-	uniform mat4 viewProjectionMatrix;
+uniform vec4 Colour;
+uniform mat4 WorldMatrixUniform;
+uniform mat4 ViewProjectionMatrixUniform;
 
 void main()
 {
-    gl_Position = viewProjectionMatrix  * objectWorldMatrix * position;
+	DiffuseColour = Colour;
+    gl_Position = ViewProjectionMatrixUniform  * WorldMatrixUniform * Position;
+	gl_PointSize = 5;
 }

@@ -87,6 +87,12 @@
     <Compile Include="GlobalStrings.cs" />
     <Compile Include="Graphics\BulletDebugDrawer.cs" />
     <Compile Include="Graphics\Camera.cs" />
+    <Compile Include="Graphics\MarkerViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Graphics\MarkerViewer.Designer.cs">
+      <DependentUpon>MarkerViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Graphics\GraphicsEvents.cs" />
     <Compile Include="Graphics\GraphicsExtensions.cs" />
     <Compile Include="Graphics\Grid.cs" />
@@ -678,6 +684,9 @@
     <Content Include="Documentation\vertex_resource_raw.txt" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Graphics\MarkerViewer.resx">
+      <DependentUpon>MarkerViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Graphics\ShaderViewer.resx">
       <DependentUpon>ShaderViewer.cs</DependentUpon>
     </EmbeddedResource>

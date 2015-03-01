@@ -3,7 +3,7 @@ using Moonfish.Collision;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using OpenTK;
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -24,6 +24,66 @@ namespace Moonfish.Graphics
     }
 
 
+    public class ShaderReference
+    {
+        public ReferenceType Type { get; set; }
+        public int Ident;
+        public enum ReferenceType
+        {
+            Halo2,
+            System,
+        }
+
+        public ShaderReference(ReferenceType type, int ident)
+        {
+            this.Type = type;
+            this.Ident = ident;
+        }
+    }
+
+    public class RenderBatch
+    {
+        public ShaderReference Shader { get; set; }
+        public int VertexArrayObject { get; set; }
+        public PrimitiveType PrimitiveType { get; set; }
+        public DrawElementsType DrawElementsType { get; set; }
+        public int ElementStartIndex { get; set; }
+        public int ElementLength { get; set; }
+        public Dictionary<string, dynamic> Attributes { get; private set; }
+        public Dictionary<string, dynamic> Uniforms { get; private set; }
+        public Dictionary<EnableCap, bool> RenderStates { get; private set; }
+
+        public RenderBatch()
+            : this(0, 0, 0)
+        {
+        }
+
+        public RenderBatch(int attributeCount, int uniformCount, int stateCount)
+        {
+            this.Shader = new ShaderReference(ShaderReference.ReferenceType.System, 0);
+            this.Attributes = new Dictionary<string, object>(attributeCount);
+            this.Uniforms = new Dictionary<string, object>(uniformCount);
+            this.RenderStates = new Dictionary<EnableCap, bool>(stateCount);
+            this.PrimitiveType = PrimitiveType.TriangleStrip;
+            this.DrawElementsType = DrawElementsType.UnsignedShort;
+        }
+
+        public void AssignAttribute(string attributeName, dynamic value)
+        {
+            this.Attributes[attributeName] = value;
+        }
+
+        public void AssignUniform(string uniformName, dynamic value)
+        {
+            this.Uniforms[uniformName] = value;
+        }
+
+        public void AssignRenderState(EnableCap state, bool value)
+        {
+            this.RenderStates[state] = value;
+        }
+    }
+
 
     public class ScenarioObject : RenderObject, IClickable, IRenderable, IEnumerable<BulletSharp.CollisionObject>
     {
@@ -37,6 +97,16 @@ namespace Moonfish.Graphics
         public NodeCollection Nodes { get; private set; }
         public Dictionary<RenderModelMarkerBlock, MarkerWrapper> Markers;
         public StringID activePermuation;
+
+        [Flags]
+        public enum RenderFlags
+        {
+            RenderMesh = 1,
+            RenderMarkers = 1 << 1,
+            RenderNodes = 1 << 2,
+        }
+
+        public RenderFlags Flags { get; set; }
 
         public bool Selected { get; set; }
 
@@ -52,6 +122,97 @@ namespace Moonfish.Graphics
             selectedObjects = new List<object>();
             Nodes = new NodeCollection();
             Selected = false;
+            Flags = RenderFlags.RenderMesh | RenderFlags.RenderMarkers;
+        }
+
+        public IEnumerable<RenderBatch> Batches
+        {
+            get
+            {
+                if (this.Flags.HasFlag(RenderFlags.RenderMesh))
+                    foreach (var region in Model.RenderModel.regions)
+                    {
+                        var section_index = region.permutations[0].l6SectionIndexHollywood;
+                        var mesh = sectionBuffers[section_index];
+                        using (mesh.Bind())
+                        {
+                            foreach (var part in mesh.Parts)
+                            {
+                                var extents = Model.RenderModel.compressionInfo[0].ToObjectMatrix();
+                                var colour = Selected ? new ColorF(Color.Yellow).ToArray() : new ColorF(Color.LightCoral).ToArray();
+
+                                var texcoordRange = new Vector4(
+                                        Model.RenderModel.compressionInfo[0].texcoordBoundsX.Min,
+                                       Model.RenderModel.compressionInfo[0].texcoordBoundsX.Max,
+                                       Model.RenderModel.compressionInfo[0].texcoordBoundsY.Min,
+                                       Model.RenderModel.compressionInfo[0].texcoordBoundsY.Max);
+
+                                RenderBatch batch = new RenderBatch()
+                                {
+                                    ElementStartIndex = part.stripStartIndex * sizeof(ushort),
+                                    ElementLength = part.stripLength
+                                };
+                                batch.AssignAttribute("colour", colour);
+
+                                batch.AssignUniform("TexcoordRangeUniform", texcoordRange);
+                                batch.AssignUniform("WorldMatrixUniform", this.WorldMatrix);
+                                batch.AssignUniform("ObjectSpaceMatrixUniform", extents);
+
+                                batch.Shader = new ShaderReference(
+                                    ShaderReference.ReferenceType.Halo2,
+                                    Model.RenderModel.materials[(short)part.material].shader.Ident);
+
+                                batch.VertexArrayObject = mesh.VertexArrayIdent;
+
+                                yield return batch;
+                            }
+                        }
+                    }
+                if (this.Flags.HasFlag(RenderFlags.RenderMarkers))
+                {
+                    List<Vector3> positionData = new List<Vector3>();
+                    List<ColorF> colourData = new List<ColorF>();
+
+                    var markersEnumerator = Model.RenderModel.markerGroups.SelectMany(x => x.markers);
+                    ushort[] elementIndices = Enumerable.Range(0, markersEnumerator.Count()).Select(x => Convert.ToUInt16(x)).ToArray();
+
+                    foreach (var marker in markersEnumerator)
+                    {
+                        var nodeIndex = marker.nodeIndex;
+                        var translation = marker.translation;
+                        var rotation = marker.rotation;
+                        var scale = marker.scale;
+
+                        var transformedPosition = Vector3.Transform(translation, this.Nodes[nodeIndex].WorldMatrix);
+
+                        var colour = selectedObjects.Contains(marker) ? new ColorF(Color.Yellow) : new ColorF(Color.White);
+
+                        positionData.Add(transformedPosition);
+                        colourData.Add(colour);
+                    }
+
+                    Batch batchData = new Batch();
+                    batchData.VertexAttribArray(0, 3, VertexAttribPointerType.Float);
+                    batchData.BufferVertexAttributeData<Vector3>(positionData.ToArray());
+                    batchData.BufferElementArrayData(elementIndices);
+
+                    RenderBatch batch = new RenderBatch()
+                    {
+                        ElementStartIndex = 0,
+                        ElementLength = elementIndices.Length,
+                        PrimitiveType = PrimitiveType.Points,
+                    };
+
+                    batch.Shader = new ShaderReference(ShaderReference.ReferenceType.System, 0);
+                    batch.AssignUniform("WorldMatrixUniform", Matrix4.Identity);
+                    batch.AssignUniform("Colour", new ColorF(Color.Red).RGBA);
+                    batch.AssignRenderState(EnableCap.DepthTest, false);
+                    batch.AssignRenderState(EnableCap.VertexProgramPointSize, true);
+                    batch.VertexArrayObject = batchData.VertexArrayObjectIdent;
+                    yield return batch;
+                }
+
+            }
         }
 
         public ScenarioObject(ModelBlock model)
@@ -88,36 +249,84 @@ namespace Moonfish.Graphics
 
         }
 
-        
+
+
         private void RenderPass(Program program)
         {
             if (Model.RenderModel == null) return;
-            if (program.Name != "system")
-            {
-                using (program.Use())
-                {
-                    var extents = Model.RenderModel.compressionInfo[0].ToObjectMatrix();
+            var extents = Model.RenderModel.compressionInfo[0].ToObjectMatrix();
 
-                    var objectMatrixAttribute = program.GetAttributeLocation("objectExtents");
-                    var colourAttribute = program.GetAttributeLocation("colour");
-                                        
-                    program.SetAttribute(objectMatrixAttribute, extents);
-                    program.SetAttribute(colourAttribute, Selected ? Color.Yellow.ToFloatRgba() : Color.LightCoral.ToFloatRgba());
-                    foreach (var region in Model.RenderModel.regions)
+            Vector4 texcoordRange = new Vector4(
+                    Model.RenderModel.compressionInfo[0].texcoordBoundsX.Min,
+                   Model.RenderModel.compressionInfo[0].texcoordBoundsX.Max,
+                   Model.RenderModel.compressionInfo[0].texcoordBoundsY.Min,
+                   Model.RenderModel.compressionInfo[0].texcoordBoundsY.Max);
+
+
+            var texcoordRangeUniform = program.GetUniformLocation("texcoordRangeUniform");
+            program.SetUniform(texcoordRangeUniform, ref texcoordRange);
+
+            var worldMatrixAttribute = program.GetAttributeLocation("worldMatrix");
+            var objectMatrixAttribute = program.GetAttributeLocation("objectExtents");
+            var colourAttribute = program.GetAttributeLocation("colour");
+
+            program.SetAttribute(worldMatrixAttribute, this.WorldMatrix);
+            program.SetAttribute(objectMatrixAttribute, extents);
+            program.SetAttribute(colourAttribute, Selected ? Color.Yellow.ToFloatRgba() : Color.LightCoral.ToFloatRgba());
+
+            if (this.Flags.HasFlag(RenderFlags.RenderMesh))
+            {
+                foreach (var region in Model.RenderModel.regions)
+                {
+                    var section_index = region.permutations[0].l6SectionIndexHollywood;
+                    var mesh = sectionBuffers[section_index];
+                    using (mesh.Bind())
                     {
-                        var section_index = region.permutations[0].l6SectionIndexHollywood;
-                        var mesh = sectionBuffers[section_index];
-                        using (mesh.Bind())
+                        foreach (var part in mesh.Parts)
                         {
-                            GL.UseProgram(program.Ident);
-                            foreach (var part in mesh.Parts)
-                            {
-                                part.Draw();
-                            }
+                            part.Draw();
                         }
                     }
                 }
             }
+
+            if (this.Flags.HasFlag(RenderFlags.RenderMarkers))
+            {
+                using (OpenGL.Disable(EnableCap.DepthTest))
+                {
+                    foreach (var marker in Model.RenderModel.markerGroups.SelectMany(x => x.markers))
+                    {
+                        var nodeIndex = marker.nodeIndex;
+                        var translation = marker.translation;
+                        var rotation = marker.rotation;
+                        var scale = marker.scale;
+
+                        var worldMatrix = this.Nodes.GetWorldMatrix(nodeIndex);
+
+                        var worldMatrixUniform = program.GetUniformLocation("worldMatrix");
+                        program.SetUniform(worldMatrixUniform, OpenTK.Matrix4.Identity);
+
+                        if (selectedObjects.Contains(marker))
+                        {
+                            GL.VertexAttrib3(1, Color.Black.ToFloatRgba());
+                            DebugDrawer.DrawPoint(translation, 7);
+                            GL.VertexAttrib3(1, Color.Tomato.ToFloatRgba());
+                            DebugDrawer.DrawPoint(translation, 4);
+                        }
+                        else
+                        {
+                            GL.VertexAttrib3(1, Color.White.ToFloatRgba());
+                            DebugDrawer.DrawPoint(translation, 7);
+                            GL.VertexAttrib3(1, Color.SkyBlue.ToFloatRgba());
+                            DebugDrawer.DrawPoint(translation, 3);
+                        }
+
+                        DebugDrawer.DrawPoint(translation, 5);
+                    }
+                }
+            }
+
+
             if (program.Name == "system")
             {
                 using (program.Use())
@@ -269,7 +478,7 @@ namespace Moonfish.Graphics
                 callback.CollisionFilterMask = CollisionFilterGroups.StaticFilter;
 
                 CollisionManager.World.ConvexSweepTest((ConvexShape)CollisionObject.CollisionShape, from, to, callback);
-                
+
                 var lookingNormal = (callback.ConvexToWorld - callback.ConvexFromWorld).Normalized();
                 var dot = Vector3.Dot(callback.HitNormalWorld, lookingNormal);
                 Console.WriteLine(callback.HitNormalWorld);
@@ -344,32 +553,6 @@ namespace Moonfish.Graphics
         internal void UpdateWorldMatrix(object sender, MatrixChangedEventArgs e)
         {
             this.WorldMatrix = e.Matrix;
-        }
-    }
-
-    class ScenarioObjectd
-    {
-        ModelBlock model;
-
-        public ScenarioObjectd(ModelBlock test)
-        {
-            this.model = test;
-            ActivePermutation = StringID.Zero;
-        }
-
-        public StringID ActivePermutation { get; set; }
-
-        public IEnumerable<StringID> Permutations
-        {
-            get
-            {
-                var query = model.RenderModel.regions.SelectMany(x => x.permutations).Select(x => x.name).Distinct();
-                return query;
-            }
-        }
-
-        public void Draw()
-        {
         }
     }
 }

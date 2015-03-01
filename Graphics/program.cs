@@ -66,6 +66,9 @@ namespace Moonfish.Graphics
             if (!attributes.TryGetValue(name, out location))
             {
                 attributes[name] = location = GL.GetAttribLocation(this.Ident, name);
+#if DEBUG
+                OpenGL.ReportError();
+#endif
             }
             return location;
         }
@@ -73,10 +76,16 @@ namespace Moonfish.Graphics
         public void SetAttribute(int location, Vector4 value)
         {
             GL.VertexAttrib4(location + 0, value);
+#if DEBUG
+            OpenGL.ReportError();
+#endif
         }
         public void SetAttribute(int location, float[] values)
         {
             GL.VertexAttrib4(location + 0, values);
+#if DEBUG
+            OpenGL.ReportError();
+#endif
         }
         public void SetAttribute(int location, Matrix4 value)
         {
@@ -84,6 +93,9 @@ namespace Moonfish.Graphics
             GL.VertexAttrib4(location + 1, value.Row1);
             GL.VertexAttrib4(location + 2, value.Row2);
             GL.VertexAttrib4(location + 3, value.Row3);
+#if DEBUG
+            OpenGL.ReportError();
+#endif
         }
 
         public int GetUniformLocation(string name)
@@ -92,6 +104,9 @@ namespace Moonfish.Graphics
             if (!uniforms.TryGetValue(name, out location))
             {
                 location = uniforms[name] = GL.GetUniformLocation(this.Ident, name);
+#if DEBUG
+                OpenGL.ReportError();
+#endif
             }
             return location;
         }
@@ -99,30 +114,76 @@ namespace Moonfish.Graphics
         public void SetUniform(int location, Matrix4 value)
         {
             GL.UniformMatrix4(location, false, ref value);
+#if DEBUG
+            OpenGL.ReportError();
+#endif
         }
         public void SetUniform(int location, ref Matrix4 value)
         {
             GL.UniformMatrix4(location, false, ref value);
+#if DEBUG
+            OpenGL.ReportError();
+#endif
+        }
+
+        public void SetUniform(int location, Matrix3 value)
+        {
+            GL.UniformMatrix3(location, false, ref value);
+#if DEBUG
+            OpenGL.ReportError();
+#endif
         }
         public void SetUniform(int location, ref Matrix3 value)
         {
             GL.UniformMatrix3(location, false, ref value);
+#if DEBUG
+            OpenGL.ReportError();
+#endif
+        }
+
+        public void SetUniform(int location, Vector3 value)
+        {
+            GL.Uniform3(location, ref value);
+#if DEBUG
+            OpenGL.ReportError();
+#endif
         }
         public void SetUniform(int location, ref Vector3 value)
         {
             GL.Uniform3(location, ref value);
+#if DEBUG
+            OpenGL.ReportError();
+#endif
+        }
+
+        public void SetUniform(int location, Vector4 value)
+        {
+            GL.Uniform4(location, ref value);
+#if DEBUG
+            OpenGL.ReportError();
+#endif
         }
         public void SetUniform(int location, ref Vector4 value)
         {
             GL.Uniform4(location, ref value);
+#if DEBUG
+            OpenGL.ReportError();
+#endif
         }
+
         public void SetUniform(int location, float value)
         {
             GL.Uniform1(location, value);
+#if DEBUG
+            OpenGL.ReportError();
+#endif
         }
         public void SetUniform(int location, int value)
         {
             GL.Uniform1(location, value);
+#if DEBUG
+            OpenGL.ReportError();
+#endif
         }
 
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -22,6 +23,9 @@ namespace Moonfish.Graphics
             this.A = normalise ? color.A / (float)byte.MaxValue : color.A;
         }
 
+        public Vector4 RGBA { get { return new OpenTK.Vector4(R, G, B, A); } }
+        public Vector4 ARGB { get { return new OpenTK.Vector4(A, R, G, B); } }
+        
         public float[] ToArray()
         {
             return new[] { R, G, B, A };

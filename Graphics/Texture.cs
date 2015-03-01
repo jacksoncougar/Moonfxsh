@@ -130,7 +130,8 @@ namespace Moonfish.Graphics
         }
         public void Bind()
         {
-            GL.BindTexture(this.textureTarget, this.handle);
+            if (textureTarget == TextureTarget.Texture2D || textureTarget == TextureTarget.TextureCubeMap)
+                GL.BindTexture(this.textureTarget, this.handle);
         }
 
         private PixelType ParseBitapPixelType(BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally format)

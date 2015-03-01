@@ -1,10 +1,9 @@
 ﻿#version 130
 
-smooth in out vec4 diffuseColour;
-
-in float pointSize;
-in vec4 pointCoordinate;
+in vec4 DiffuseColour;
+out vec4 FragmentColour;
 
 void main()
 {
+	FragmentColour = DiffuseColour;
 }

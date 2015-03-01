@@ -1,7 +1,7 @@
 ﻿using Moonfish.Graphics;
 using Moonfish.Guerilla.Tags;
 using OpenTK;
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -22,8 +22,8 @@ namespace Moonfish.Collision
 
             GL.BindVertexArray(vao);
             GL.BindBuffer(BufferTarget.ArrayBuffer, arrayBuffer);
-            var data = new []{ start, end };
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(Vector3.SizeInBytes * 2), data , BufferUsageHint.StaticDraw);
+            var data = new[] { start, end };
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(Vector3.SizeInBytes * 2), data, BufferUsageHint.StaticDraw);
 
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, IntPtr.Zero);
             GL.EnableVertexAttribArray(0);
@@ -44,6 +44,61 @@ namespace Moonfish.Collision
         {
             GL.DeleteVertexArray(vao);
             GL.DeleteBuffer(arrayBuffer);
+        }
+    }
+
+    public class Batch : IDisposable
+    {
+        public int VertexArrayObjectIdent { get { return vao; } }
+
+        int vao;
+        List<int> buffers;
+
+        public Batch()
+        {
+            buffers = new List<int>();
+            vao = GL.GenVertexArray();
+        }
+
+        public void VertexAttribArray(int index, int count, VertexAttribPointerType type, bool normalised = false, int stride = 0, int offset = 0)
+        {
+            GL.BindVertexArray(vao);
+            GL.VertexAttribPointer(index, count, type, normalised, stride, offset);
+            GL.EnableVertexAttribArray(index);
+            GL.BindVertexArray(0);
+        }
+
+        public void BufferVertexAttributeData<T>(T[] data) where T : struct
+        {
+            var buffer = GL.GenBuffer();
+
+            GL.BindVertexArray(vao);
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, buffer);
+            var dataSize = (IntPtr)(System.Runtime.InteropServices.Marshal.SizeOf(typeof(T)) * data.Length);
+            GL.BufferData<T>(BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.StaticDraw);
+
+            GL.BindVertexArray(0);
+            buffers.Add(buffer);
+        }
+
+        public void BufferElementArrayData(ushort[] indices)
+        {
+            var buffer = GL.GenBuffer();
+
+            GL.BindVertexArray(vao);
+
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, buffer);
+            GL.BufferData<ushort>(BufferTarget.ElementArrayBuffer, (IntPtr)(indices.Length * sizeof(ushort)), indices, BufferUsageHint.StaticDraw);
+
+            GL.BindVertexArray(0);
+            buffers.Add(buffer);
+        }
+
+        public void Dispose()
+        {
+            GL.DeleteVertexArray(vao);
+            GL.DeleteBuffers(buffers.Count, buffers.ToArray());
         }
     }
 
@@ -98,7 +153,6 @@ namespace Moonfish.Collision
 
         public static void DrawPoint(Vector3 coordinate)
         {
-            using(debugProgram.Use())
             using (Point point = new Point(coordinate))
             {
                 point.Render(new[] { debugProgram });

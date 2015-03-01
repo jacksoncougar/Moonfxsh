@@ -7,17 +7,18 @@ in int iTangent;
 in int iBitangent;
 
 in vec4 colour; 
-in mat4 worldMatrix;
-in mat4 objectExtents;
-in vec3 LightPositionUniform;
 
-out vec3 LightPosition_worldspace;
+uniform mat4 WorldMatrixUniform;
+uniform mat4 ObjectSpaceMatrixUniform;
+uniform vec4 LightPositionUniform;
 
-uniform mat4 viewProjectionMatrix;
-uniform mat4 viewMatrix; 
-uniform vec4 texcoordRangeUniform;
+
+uniform mat4 ViewProjectionMatrixUniform;
+uniform mat4 ViewMatrixUniform; 
+uniform vec4 TexcoordRangeUniform;
 
 flat out vec4 DiffuseColour;
+out vec3 LightPosition_worldspace;
 
 smooth out vec3 VertexPosition_worldspace;
 smooth out vec3 VertexReflection_worldspace;
@@ -65,14 +66,14 @@ vec3 unpack(in int packedVector)
 
 void main()
 {
-	mat3 normalMatrix = mat3(viewMatrix);	
+	mat3 normalMatrix = mat3(ViewMatrixUniform);	
 
-	LightPosition_worldspace = LightPositionUniform;
-	vec3 vertexPosition_cameraspace = (viewMatrix * worldMatrix * position).xyz;
+	LightPosition_worldspace = LightPositionUniform.xyz;
+	vec3 vertexPosition_cameraspace = (ViewMatrixUniform * WorldMatrixUniform * position).xyz;
 
 	EyeDirection_cameraspace = -vertexPosition_cameraspace;
 
-	vec3 lightPosition_cameraspace = (viewMatrix * vec4(LightPositionUniform, 1.0)).xyz;
+	vec3 lightPosition_cameraspace = (ViewMatrixUniform * LightPositionUniform).xyz;
 	LightDirection_cameraspace = lightPosition_cameraspace + EyeDirection_cameraspace;
 	
 	vec3 vertexNormal_cameraspace =  normalMatrix * unpack(iNormal);
@@ -87,12 +88,12 @@ void main()
 		vertexNormal_cameraspace
 	));
 	
-	VertexPosition_worldspace = vec3(worldMatrix * objectExtents * position);
+	VertexPosition_worldspace = vec3(WorldMatrixUniform * ObjectSpaceMatrixUniform * position);
 	LightDirection_tangentspace = TBN * LightDirection_cameraspace;
 	EyeDirection_tangentspace = TBN * EyeDirection_cameraspace;
 
-	VertexTexcoord_texturespace = vec2(unpack(texcoord.s, texcoordRangeUniform.xy), unpack(texcoord.t, texcoordRangeUniform.zw));
+	VertexTexcoord_texturespace = vec2(unpack(texcoord.s, TexcoordRangeUniform.xy), unpack(texcoord.t, TexcoordRangeUniform.zw));
 	
 	DiffuseColour  = colour;
-    gl_Position = viewProjectionMatrix  * worldMatrix * objectExtents * position;
+    gl_Position = ViewProjectionMatrixUniform  * WorldMatrixUniform * ObjectSpaceMatrixUniform * position;
 }

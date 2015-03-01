@@ -20,6 +20,7 @@ namespace Moonfish.Graphics
         ShaderBlock shader;
         ShaderTemplateBlock shaderTemplate;
         public ShaderPassBlock[] shaderPasses;
+        public string[] shaderPassPaths;
 
         public MaterialShader(ShaderBlock inShader, MapStream map)
             : this()
@@ -29,9 +30,12 @@ namespace Moonfish.Graphics
             Textures = new List<Texture>(shader.postprocessDefinition[0].bitmaps.Length);
             foreach (var item in shader.postprocessDefinition[0].bitmaps)
             {
-                var bitmapBlock = map[item.bitmapGroup].Deserialize() as BitmapBlock;
                 var texture = new Texture();
-                texture.Load(bitmapBlock, map);
+                if (!TagIdent.IsNull(item.bitmapGroup))
+                {
+                    var bitmapBlock = map[item.bitmapGroup].Deserialize() as BitmapBlock;
+                    texture.Load(bitmapBlock, map);
+                }
                 Textures.Add(texture);
             }
 
@@ -41,10 +45,12 @@ namespace Moonfish.Graphics
             this.shaderTemplate = map[shaderTemplateIdent].Deserialize() as ShaderTemplateBlock;
 
             this.shaderPasses = new ShaderPassBlock[shaderTemplate.postprocessDefinition[0].passes.Length];
+            this.shaderPassPaths = new string[shaderTemplate.postprocessDefinition[0].passes.Length];
             for (int i = 0; i < shaderPasses.Length; ++i)
             {
                 var item = shaderTemplate.postprocessDefinition[0].passes[i];
                 shaderPasses[i] = map[item.pass].Deserialize() as ShaderPassBlock;
+                shaderPassPaths[i] = item.pass.ToString();
             }
         }
 
@@ -77,7 +83,7 @@ namespace Moonfish.Graphics
                     OpenGL.ReportError();
                     GL.ActiveTexture(TextureUnit.Texture1 + textureStage);
                     OpenGL.ReportError();
-
+                    var bitmapString = shader.postprocessDefinition[0].bitmaps[remappings[implementations[implementationIndex].bitmaps.Index + bitmap].sourceIndex].bitmapGroup.ToString();
                     Textures[remappings[implementations[implementationIndex].bitmaps.Index + bitmap].sourceIndex].Bind();
                     OpenGL.ReportError();
                 }

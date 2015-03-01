@@ -19,6 +19,8 @@ namespace Moonfish.Graphics
     /// </summary>
     public class Mesh : IDisposable
     {
+        public int VertexArrayIdent { get { return mVAO_id; } }
+
         public RenderModelSectionBlock sectionBlock;
 
         int mVAO_id;

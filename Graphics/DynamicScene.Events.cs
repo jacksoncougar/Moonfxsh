@@ -14,6 +14,8 @@ namespace Moonfish.Graphics
 
         public event EventHandler MouseCaptureChanged;
 
+        public event SelectedObjectChangedEventHandler SelectedObjectChanged;
+
         public void OnMouseDown( object sender, System.Windows.Forms.MouseEventArgs e )
         {
             MousePole.OnMouseDown( this, new MouseEventArgs( Camera, new Vector2( e.X, e.Y ), default( Vector3 ), e.Button ) );
@@ -30,10 +32,11 @@ namespace Moonfish.Graphics
 
             if ( callback.HasHit )
             {
-                var clickableInterface = callback.CollisionObject.UserObject as IClickable;
-                if ( clickableInterface != null )
+                var iSelectable = callback.CollisionObject.UserObject as ISelectable;
+                if ( iSelectable != null && 
+                    SelectedObjectChanged != null)
                 {
-                    clickableInterface.OnMouseClick( this, new MouseEventArgs( Camera, new Vector2( e.X, e.Y ), callback.CollisionObject.WorldTransform.ExtractTranslation(), e.Button ) );
+                    SelectedObjectChanged( this, new SelectEventArgs( callback.CollisionObject.UserObject ) );
                 }
             }
             else
@@ -41,17 +44,17 @@ namespace Moonfish.Graphics
                 if ( e.Button == System.Windows.Forms.MouseButtons.Left )
                 {
                     MousePole.DropHandlers();
-                    MousePole.Hide();
+                   // MousePole.Hide();
                 }
             }
         }
         public void OnMouseUp( object sender, System.Windows.Forms.MouseEventArgs e )
         {
-            //if( this.MouseUp != null ) MouseUp( this, e );
+            MousePole.OnMouseUp( this, new MouseEventArgs( Camera, new Vector2( e.X, e.Y ), default( Vector3 ), e.Button ) );
         }
-        public void OnMouseMove( object sender, System.Windows.Forms.MouseEventArgs e )
+        public void OnMouseMove( object sender, System.Windows.Forms.MouseEventArgs e ) 
         {
-            //if (this.MouseMove != null) this.MouseMove(this, e);
+            MousePole.OnMouseMove( this, new MouseEventArgs( Camera, new Vector2( e.X, e.Y ), default( Vector3 ), e.Button ) );
         }
         public void OnMouseCaptureChanged( object sender, EventArgs e )
         {

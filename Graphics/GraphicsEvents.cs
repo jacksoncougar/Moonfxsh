@@ -19,6 +19,16 @@ namespace Moonfish.Graphics
         void OnMouseCaptureChanged( Object sender, EventArgs e );
     }
 
+    public class SelectEventArgs : EventArgs
+    {
+        public object SelectedObject { get; private set; }
+
+        public SelectEventArgs( object selectedObject )
+        {
+            this.SelectedObject = selectedObject;
+        }
+    }
+
     public class MouseEventArgs : EventArgs
     {
         public Ray MouseRay { get; private set; }
@@ -47,6 +57,8 @@ namespace Moonfish.Graphics
             this.WorldCoordinates = mouseWorldCoordinates;
         }
     }
+
+    public delegate void SelectedObjectChangedEventHandler( object seneder, SelectEventArgs e);
 
     public delegate void MouseMoveEventHandler( object sender, MouseEventArgs e );
 

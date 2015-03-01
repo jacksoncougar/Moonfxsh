@@ -54,7 +54,9 @@ namespace Moonfish.Graphics
             glControl1.MouseUp += Scene.Camera.OnMouseUp;
             glControl1.MouseCaptureChanged += Scene.Camera.OnMouseCaptureChanged;
 
-            glControl1.MouseClick += Scene.OnMouseDown;
+            glControl1.MouseDown += Scene.OnMouseDown;
+            glControl1.MouseMove += Scene.OnMouseMove;
+            glControl1.MouseUp += Scene.OnMouseUp;
 
             var fileName = Path.Combine( Local.MapsDirectory, "headlong.map" );
             var directory = Path.GetDirectoryName( fileName );

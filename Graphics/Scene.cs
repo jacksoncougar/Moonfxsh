@@ -1,6 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace Moonfish.Graphics
 {
@@ -39,7 +40,7 @@ namespace Moonfish.Graphics
             Camera.Viewport.ViewportChanged += Viewport_ViewportChanged;
 
             OpenGL.ReportError();
-            GL.ClearColor( Colours.Green );
+            GL.ClearColor( Color.FromArgb(~Colours.Green.ToArgb()) );
             OpenGL.ReportError();
             GL.FrontFace( FrontFaceDirection.Ccw );
             OpenGL.ReportError();

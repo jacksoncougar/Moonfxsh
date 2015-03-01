@@ -56,7 +56,8 @@
     <Reference Include="BulletSharp">
       <HintPath>Collision\Release OpenTK\BulletSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Fasterflect">
+    <Reference Include="Fasterflect, Version=2.1.3.0, Culture=neutral, PublicKeyToken=38d18473284c1ca7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\fasterflect.2.1.3\lib\net40\Fasterflect.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
@@ -87,6 +88,7 @@
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\DynamicScene.cs" />
     <Compile Include="Graphics\DynamicScene.Events.cs" />
+    <Compile Include="Graphics\Interfaces.cs" />
     <Compile Include="Graphics\MarkerViewer.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -49,8 +49,7 @@ namespace Moonfish.Graphics.Input
             var translationMatrix = Matrix4.CreateTranslation( this.position );
             var rotationMatrix = Matrix4.CreateFromQuaternion( this.rotation );
             var scaleMatrix = Matrix4.CreateScale( this.scale );
-            var worldMatrix = rotationMatrix * translationMatrix;
-            return worldMatrix;
+            return translationMatrix * rotationMatrix.Inverted();
         }
 
         public event MatrixChangedEventHandler WorldMatrixChanged;
@@ -66,7 +65,19 @@ namespace Moonfish.Graphics.Input
 
         public bool Hidden { get; private set; }
 
+
+        public IEnumerable<BulletSharp.CollisionObject> ContactObjects
+        {
+            get
+            {
+                yield return rightContact;
+                yield return forwardContact;
+                yield return upContact;
+            }
+        }
+
         BulletSharp.CollisionObject rightContact, forwardContact, upContact;
+
         SelectedAxis selectedAxis;
 
         Vector3 worldRegistrationPosition, lineRegistration;
@@ -74,6 +85,39 @@ namespace Moonfish.Graphics.Input
         Rectangle viewport;
 
         float scale;
+
+        public MousePole2D( Camera camera )
+            : this( camera, new Vector3( 0, 1, 0 ), new Vector3( 1, 0, 0 ), new Vector3( 0, 0, 1 ) )
+        {
+        }
+
+        public MousePole2D( Camera camera, Vector3 forwardAxis, Vector3 rightAxis, Vector3 upAxis )
+        {
+            this.scale = camera.CreateScale( origin, 0.5f, pixelSize: 85 );
+            var scaleMatrix = Matrix4.CreateScale( scale, scale, scale );
+
+            var rotationX = Matrix3.CreateRotationX( ( float )Math.Acos( Vector3.Dot( Vector3.UnitX, rightAxis ) ) );
+            var rotationY = Matrix3.CreateRotationY( ( float )Math.Acos( Vector3.Dot( Vector3.UnitY, forwardAxis ) ) );
+            var rotationZ = Matrix3.CreateRotationZ( ( float )Math.Acos( Vector3.Dot( Vector3.UnitZ, upAxis ) ) );
+            this.rotation = Quaternion.FromMatrix( rotationX * rotationY * rotationZ );
+            var rotationMatrix = Matrix4.CreateFromQuaternion( this.rotation );
+
+            this.origin = Vector3.Transform( new Vector3( 0, 0, 0 ), scaleMatrix * rotationMatrix );
+            this.right = Vector3.Transform( new Vector3( 1, 0, 0 ), scaleMatrix * rotationMatrix );
+            this.forward = Vector3.Transform( new Vector3( 0, 1, 0 ), scaleMatrix * rotationMatrix );
+            this.up = Vector3.Transform( new Vector3( 0, 0, 1 ), scaleMatrix * rotationMatrix );
+
+            rightContact = new BulletSharp.CollisionObject() { UserObject = this };
+            forwardContact = new BulletSharp.CollisionObject() { UserObject = this };
+            upContact = new BulletSharp.CollisionObject() { UserObject = this };
+
+            BufferData( camera );
+            camera.ViewMatrixChanged += camera_ViewMatrixChanged;
+            camera.Viewport.ProjectionChanged += Viewport_ProjectionChanged;
+            camera.Viewport.ViewportChanged += Viewport_ViewportChanged;
+            camera.CameraUpdated += OnCameraUpdate;
+            OnCameraUpdate( this, new CameraEventArgs( camera ) );
+        }
 
         [Flags]
         public enum SelectedAxis
@@ -86,27 +130,26 @@ namespace Moonfish.Graphics.Input
 
         public void OnMouseDown( object sender, MouseEventArgs e )
         {
-            throw new NotImplementedException();
-            //if( Hidden ) return;
-            //var scene = sender;
-            //if( scene != null && e.Button == MouseButtons.Left )
-            //{
-            //    var callback = new BulletSharp.CollisionWorld.ClosestRayResultCallback( e.MouseRay.Origin, e.MouseRay.Origin + e.MouseRay.Direction * e.MouseRayFarPoint );
-            //    var collisionWorld = //scene.CollisionManager.World;
-            //    collisionWorld.RayTest( e.MouseRay.Origin, e.MouseRay.Origin + e.MouseRay.Direction * e.MouseRayFarPoint, callback );
+            if ( Hidden ) return;
+            var scene = sender as DynamicScene;
+            if ( scene != null && e.Button == MouseButtons.Left )
+            {
+                var callback = new BulletSharp.CollisionWorld.ClosestRayResultCallback( e.MouseRay.Origin, e.MouseRay.Origin + e.MouseRay.Direction * e.MouseRayFarPoint );
+                var collisionWorld = scene.CollisionManager.World;
+                collisionWorld.RayTest( e.MouseRay.Origin, e.MouseRay.Origin + e.MouseRay.Direction * e.MouseRayFarPoint, callback );
 
-            //    if( callback.HasHit )
-            //    {
-            //        if( callback.CollisionObject == rightContact )
-            //            this.selectedAxis = SelectedAxis.U;
-            //        else if( callback.CollisionObject == forwardContact )
-            //            this.selectedAxis = SelectedAxis.V;
-            //        else if( callback.CollisionObject == upContact )
-            //            this.selectedAxis = SelectedAxis.W;
-            //        else return;
-            //        worldRegistrationPosition = callback.HitPointWorld - this.position;
-            //    }
-            //}
+                if ( callback.HasHit )
+                {
+                    if ( callback.CollisionObject == rightContact )
+                        this.selectedAxis = SelectedAxis.U;
+                    else if ( callback.CollisionObject == forwardContact )
+                        this.selectedAxis = SelectedAxis.V;
+                    else if ( callback.CollisionObject == upContact )
+                        this.selectedAxis = SelectedAxis.W;
+                    else return;
+                    worldRegistrationPosition = callback.HitPointWorld - this.position;
+                }
+            }
         }
 
         public void OnMouseUp( object sender, MouseEventArgs e )
@@ -228,9 +271,9 @@ namespace Moonfish.Graphics.Input
 
             var contactSize = 0.2f * scale;
 
-            rightContact.CollisionShape = new BulletSharp.SphereShape( contactSize );
-            forwardContact.CollisionShape = new BulletSharp.SphereShape( contactSize );
-            upContact.CollisionShape = new BulletSharp.SphereShape( contactSize );
+            rightContact.CollisionShape = new BulletSharp.BoxShape( contactSize );
+            forwardContact.CollisionShape = new BulletSharp.BoxShape( contactSize );
+            upContact.CollisionShape = new BulletSharp.BoxShape( contactSize );
 
             rightContact.WorldTransform = Matrix4.CreateTranslation( this.origin + right );
             forwardContact.WorldTransform = Matrix4.CreateTranslation( this.origin + forward );
@@ -295,38 +338,6 @@ namespace Moonfish.Graphics.Input
             return intersection;
         }
 
-        public MousePole2D( Camera camera )
-            : this( camera, new Vector3( 0, 1, 0 ), new Vector3( 1, 0, 0 ), new Vector3( 0, 0, 1 ) )
-        {
-        }
-
-        public MousePole2D( Camera camera, Vector3 forwardAxis, Vector3 rightAxis, Vector3 upAxis )
-        {
-            this.scale = camera.CreateScale( origin, 0.5f, pixelSize: 85 );
-            var scaleMatrix = Matrix4.CreateScale( scale, scale, scale );
-
-            var rotationX = Matrix3.CreateRotationX( ( float )Math.Acos( Vector3.Dot( Vector3.UnitX, rightAxis ) ) );
-            var rotationY = Matrix3.CreateRotationY( ( float )Math.Acos( Vector3.Dot( Vector3.UnitY, forwardAxis ) ) );
-            var rotationZ = Matrix3.CreateRotationZ( ( float )Math.Acos( Vector3.Dot( Vector3.UnitZ, upAxis ) ) );
-            this.rotation = Quaternion.FromMatrix( rotationX * rotationY * rotationZ );
-            var rotationMatrix = Matrix4.CreateFromQuaternion( this.rotation );
-
-            this.origin = Vector3.Transform( new Vector3( 0, 0, 0 ), scaleMatrix * rotationMatrix );
-            this.right = Vector3.Transform( new Vector3( 1, 0, 0 ), scaleMatrix * rotationMatrix );
-            this.forward = Vector3.Transform( new Vector3( 0, 1, 0 ), scaleMatrix * rotationMatrix );
-            this.up = Vector3.Transform( new Vector3( 0, 0, 1 ), scaleMatrix * rotationMatrix );
-
-            rightContact = new BulletSharp.CollisionObject() { UserObject = this };
-            forwardContact = new BulletSharp.CollisionObject() { UserObject = this };
-            upContact = new BulletSharp.CollisionObject() { UserObject = this };
-
-            BufferData( camera );
-            camera.ViewMatrixChanged += camera_ViewMatrixChanged;
-            camera.Viewport.ProjectionChanged += Viewport_ProjectionChanged;
-            camera.Viewport.ViewportChanged += Viewport_ViewportChanged;
-            OnCameraUpdate( this, new CameraEventArgs( camera ) );
-        }
-
         void Viewport_ViewportChanged( object sender, Viewport.ViewportEventArgs e )
         {
             this.viewport = e.Viewport;
@@ -348,7 +359,7 @@ namespace Moonfish.Graphics.Input
             using ( shaderProgram.Use() )
             using ( OpenGL.Enable( EnableCap.PrimitiveRestartFixedIndex ) )
             {
-                var worldMatrixUniform = shaderProgram.GetUniformLocation( "worldMatrix" );
+                var worldMatrixUniform = shaderProgram.GetUniformLocation( "WorldMatrixUniform" );
                 shaderProgram.SetUniform( worldMatrixUniform, Matrix4.Identity );
                 GL.BindVertexArray( glBuffers[ 0 ] );
                 GL.DrawElements( PrimitiveType.Lines, 6, DrawElementsType.UnsignedShort, IntPtr.Zero );
@@ -505,16 +516,6 @@ namespace Moonfish.Graphics.Input
                 rightContact.Dispose();
                 forwardContact.Dispose();
                 upContact.Dispose();
-            }
-        }
-
-        public IEnumerable<BulletSharp.CollisionObject> ContactObjects
-        {
-            get
-            {
-                yield return rightContact;
-                yield return forwardContact;
-                yield return upContact;
             }
         }
 

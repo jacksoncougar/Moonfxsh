@@ -30,10 +30,15 @@ namespace Moonfish.Graphics
             {
                 var collisionObject = new BulletSharp.CollisionObject();
                 collisionObject.CollisionShape = new BulletSharp.BoxShape( 0.015f );
-                collisionObject.WorldTransform = Matrix4.CreateTranslation( marker.translation ) * scenarioObject.Nodes.GetWorldMatrix( marker.nodeIndex );
+                collisionObject.WorldTransform = Matrix4.CreateFromQuaternion( marker.rotation ) * Matrix4.CreateTranslation( marker.translation ) * scenarioObject.Nodes.GetWorldMatrix( marker.nodeIndex );
                 collisionObject.UserObject = scenarioObject.Markers[ marker ];
 
                 World.AddCollisionObject( collisionObject );
+
+                var setPropertyMethodInfo = typeof( BulletSharp.CollisionObject ).GetProperty( "WorldTransform" ).GetSetMethod();
+                var setProperty = Delegate.CreateDelegate( typeof( Action<Matrix4> ), collisionObject, setPropertyMethodInfo );
+
+                scenarioObject.Markers[ marker ].MarkerUpdatedCallback += ( Action<Matrix4> )setProperty;
             }
         }
 
@@ -415,40 +420,39 @@ namespace Moonfish.Graphics
             }
         }
 
+        IEnumerable<RenderBatch> batchbuffer;
         public void Draw( ProgramManager programManager )
         {
-            foreach ( var item in objectInstances.SelectMany( x => x.Value ) )
+            foreach ( var batch in objectInstances.SelectMany( x => x.Value ).SelectMany( x => x.Batches ) )
             {
-                foreach ( var batch in item.Batches )
+                var program = programManager.GetProgram( batch.Shader );
+                if ( program == null ) continue;
+
+                var usingProgram = program.Use();
+
+                GL.BindVertexArray( batch.BatchObject.VertexArrayObjectIdent );
+                foreach ( var attribute in batch.Attributes.Select( x => new { Name = x.Key, Value = x.Value } ) )
                 {
-                    var program = programManager.GetProgram( batch.Shader );
-                    if ( program == null ) continue;
-
-                    var usingProgram = program.Use();
-
-                    GL.BindVertexArray( batch.BatchObject.VertexArrayObjectIdent );
-                    foreach ( var attribute in batch.Attributes.Select( x => new { Name = x.Key, Value = x.Value } ) )
-                    {
-                        var attributeLocation = program.GetAttributeLocation( attribute.Name );
-                        program.SetAttribute( attributeLocation, attribute.Value );
-                    }
-                    foreach ( var uniform in batch.Uniforms.Select( x => new { Name = x.Key, Value = x.Value } ) )
-                    {
-                        var uniformLocation = program.GetUniformLocation( uniform.Name );
-                        program.SetUniform( uniformLocation, uniform.Value );
-                    }
-                    List<System.IDisposable> openGLStates = new List<System.IDisposable>();
-                    foreach ( var state in batch.RenderStates.Select( x => new { Capability = x.Key, Enabled = x.Value } ) )
-                    {
-                        openGLStates.Add( state.Enabled ? OpenGL.Enable( state.Capability ) : OpenGL.Disable( state.Capability ) );
-                    }
-
-                    GL.DrawElements( batch.PrimitiveType, batch.ElementLength, batch.DrawElementsType, batch.ElementStartIndex );
-
-                    // Cleanup states
-                    foreach ( var state in openGLStates ) state.Dispose();
-                    usingProgram.Dispose();
+                    var attributeLocation = program.GetAttributeLocation( attribute.Name );
+                    program.SetAttribute( attributeLocation, attribute.Value );
                 }
+                foreach ( var uniform in batch.Uniforms.Select( x => new { Name = x.Key, Value = x.Value } ) )
+                {
+                    var uniformLocation = program.GetUniformLocation( uniform.Name );
+                    program.SetUniform( uniformLocation, uniform.Value );
+                }
+                List<System.IDisposable> openGLStates = new List<System.IDisposable>();
+                foreach ( var state in batch.RenderStates.Select( x => new { Capability = x.Key, Enabled = x.Value } ) )
+                {
+                    openGLStates.Add( state.Enabled ? OpenGL.Enable( state.Capability ) : OpenGL.Disable( state.Capability ) );
+                }
+
+                GL.DrawElements( batch.PrimitiveType, batch.ElementLength, batch.DrawElementsType, batch.ElementStartIndex );
+
+                // Cleanup states
+                foreach ( var state in openGLStates ) state.Dispose();
+                usingProgram.Dispose();
+
             }
         }
 

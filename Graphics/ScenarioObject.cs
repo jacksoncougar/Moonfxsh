@@ -10,10 +10,6 @@ using System.Linq;
 
 namespace Moonfish.Graphics
 {
-    public interface ISelectable
-    {
-        void Select( );
-    }
 
     public interface IRenderable
     {
@@ -110,6 +106,9 @@ namespace Moonfish.Graphics
         private Matrix4 worldMatrix;
         private Matrix4 collisionSpaceMatrix;
 
+        private Batch NodesBatch;
+        private Batch MarkersBatch;
+
         IList<object> selectedObjects;
 
         public ScenarioObject( )
@@ -119,7 +118,27 @@ namespace Moonfish.Graphics
             selectedObjects = new List<object>();
             Nodes = new NodeCollection();
             Selected = false;
-            Flags = RenderFlags.RenderMesh | RenderFlags.RenderMarkers | RenderFlags.RenderNodes;
+            Flags = RenderFlags.RenderMarkers;
+
+            NodesBatch = new Batch();
+            using ( NodesBatch.Begin() )
+            {
+                NodesBatch.GenerateBuffer();
+                NodesBatch.BindBuffer( BufferTarget.ArrayBuffer, NodesBatch.BufferIdents.Last() );
+                NodesBatch.VertexAttribArray( 0, 3, VertexAttribPointerType.Float );
+                NodesBatch.GenerateBuffer();
+                NodesBatch.BindBuffer( BufferTarget.ElementArrayBuffer, NodesBatch.BufferIdents.Last() );
+            }
+            MarkersBatch = new Batch();
+            using ( MarkersBatch.Begin() )
+            {
+                MarkersBatch.GenerateBuffer();
+                MarkersBatch.BindBuffer( BufferTarget.ArrayBuffer, MarkersBatch.BufferIdents.Last() );
+                MarkersBatch.VertexAttribArray( 0, 3, VertexAttribPointerType.Float );
+                MarkersBatch.GenerateBuffer();
+                MarkersBatch.BindBuffer( BufferTarget.ElementArrayBuffer, MarkersBatch.BufferIdents.Last() );
+            }
+
         }
 
         public IEnumerable<RenderBatch> Batches
@@ -165,7 +184,7 @@ namespace Moonfish.Graphics
                             }
                         }
                     }
-                if ( this.Flags.HasFlag( RenderFlags.RenderMarkers ) && false )
+                if ( this.Flags.HasFlag( RenderFlags.RenderMarkers ) )
                 {
                     List<Vector3> positionData = new List<Vector3>();
                     List<ColorF> colourData = new List<ColorF>();
@@ -188,17 +207,10 @@ namespace Moonfish.Graphics
                         colourData.Add( colour );
                     }
 
-                    Batch batchData = new Batch();
-                    using ( batchData.Begin() )
-                    {
-                        batchData.VertexAttribArray( 0, 3, VertexAttribPointerType.Float );
-                        batchData.GenerateBuffer();
-                        batchData.BindBuffer( BufferTarget.ArrayBuffer, batchData.BufferIdents.Last() );
-                        batchData.BufferVertexAttributeData<Vector3>( positionData.ToArray() );
-                        batchData.GenerateBuffer();
-                        batchData.BindBuffer( BufferTarget.ElementArrayBuffer, batchData.BufferIdents.Last() );
-                        batchData.BufferElementArrayData( elementIndices );
-                    }
+                    MarkersBatch.BindBuffer( BufferTarget.ArrayBuffer, MarkersBatch.BufferIdents.First() );
+                    MarkersBatch.BufferVertexAttributeData<Vector3>( positionData.ToArray() );
+                    MarkersBatch.BindBuffer( BufferTarget.ElementArrayBuffer, MarkersBatch.BufferIdents.Last() );
+                    MarkersBatch.BufferElementArrayData( elementIndices );
 
                     RenderBatch batch = new RenderBatch()
                     {
@@ -212,7 +224,7 @@ namespace Moonfish.Graphics
                     batch.AssignUniform( "Colour", new ColorF( Color.Red ).RGBA );
                     batch.AssignRenderState( EnableCap.DepthTest, false );
                     batch.AssignRenderState( EnableCap.VertexProgramPointSize, true );
-                    batch.BatchObject = batchData;
+                    batch.BatchObject = MarkersBatch;
                     yield return batch;
                 }
                 if ( this.Flags.HasFlag( RenderFlags.RenderNodes ) && false )
@@ -229,17 +241,11 @@ namespace Moonfish.Graphics
                         positionData.Add( transformedPosition );
                     }
 
-                    Batch batchData = new Batch();
-                    using ( batchData.Begin() )
-                    {
-                        batchData.VertexAttribArray( 0, 3, VertexAttribPointerType.Float );
-                        batchData.GenerateBuffer();
-                        batchData.BindBuffer( BufferTarget.ArrayBuffer, batchData.BufferIdents.Last() );
-                        batchData.BufferVertexAttributeData<Vector3>( positionData.ToArray() );
-                        batchData.GenerateBuffer();
-                        batchData.BindBuffer( BufferTarget.ElementArrayBuffer, batchData.BufferIdents.Last() );
-                        batchData.BufferElementArrayData( elementIndices );
-                    }
+                    NodesBatch.BindBuffer( BufferTarget.ArrayBuffer, NodesBatch.BufferIdents.First() );
+                    NodesBatch.BufferVertexAttributeData<Vector3>( positionData.ToArray() );
+                    NodesBatch.BindBuffer( BufferTarget.ElementArrayBuffer, NodesBatch.BufferIdents.Last() );
+                    NodesBatch.BufferElementArrayData( elementIndices );
+
 
 
                     RenderBatch batch = new RenderBatch()
@@ -254,7 +260,7 @@ namespace Moonfish.Graphics
                     batch.AssignUniform( "Colour", new ColorF( Color.White ).RGBA );
                     batch.AssignRenderState( EnableCap.DepthTest, false );
                     batch.AssignRenderState( EnableCap.VertexProgramPointSize, true );
-                    batch.BatchObject = batchData;
+                    batch.BatchObject = NodesBatch;
                     yield return batch;
                 }
             }

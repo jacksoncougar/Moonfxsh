@@ -45,6 +45,9 @@ namespace Moonfish.Graphics
         {
             GL.VertexAttribPointer( index, count, type, normalised, stride, offset );
             GL.EnableVertexAttribArray( index );
+#if DEBUG
+            OpenGL.ReportError();
+#endif
         }
 
         public void GenerateBuffer( )
@@ -67,7 +70,7 @@ namespace Moonfish.Graphics
         public void BufferVertexAttributeData<T>( T[] data ) where T : struct
         {
             var dataSize = ( IntPtr )( System.Runtime.InteropServices.Marshal.SizeOf( typeof( T ) ) * data.Length );
-            GL.BufferData<T>( BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.StaticDraw );
+            GL.BufferData<T>( BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.DynamicDraw );
 
 #if DEBUG
             OpenGL.ReportError();
@@ -76,7 +79,7 @@ namespace Moonfish.Graphics
 
         public void BufferElementArrayData( ushort[] indices )
         {
-            GL.BufferData( BufferTarget.ElementArrayBuffer, ( IntPtr )( indices.Length * sizeof( ushort ) ), indices, BufferUsageHint.StaticDraw );
+            GL.BufferData( BufferTarget.ElementArrayBuffer, ( IntPtr )( indices.Length * sizeof( ushort ) ), indices, BufferUsageHint.DynamicDraw );
 
 #if DEBUG
             OpenGL.ReportError();
@@ -87,6 +90,9 @@ namespace Moonfish.Graphics
         {
             GL.DeleteVertexArray( vao );
             GL.DeleteBuffers( buffers.Count, buffers.ToArray() );
+#if DEBUG
+            OpenGL.ReportError();
+#endif
         }
     }
 }

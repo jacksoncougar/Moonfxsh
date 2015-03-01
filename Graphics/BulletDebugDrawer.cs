@@ -59,11 +59,11 @@ namespace Moonfish.Graphics
 
         public override void DrawSphere( float radius, ref OpenTK.Matrix4 transform, OpenTK.Graphics.Color4 color )
         {
-            //var position = transform.ExtractTranslation();
-            //var min = position - new OpenTK.Vector3(-radius, -radius, -radius);
-            //var max = position - new OpenTK.Vector3(radius, radius, radius);
-            //DrawBox(ref min, ref max, color);
-            //base.DrawSphere(radius, ref transform, color);
+            var min = -radius;
+            var max = radius / 2;
+            var minVector = new Vector3( min, min, min );
+            var maxVector = new Vector3( max, max, max );
+            DrawBox( ref minVector, ref maxVector, ref transform, color );
         }
 
         public override void Draw3dText( ref OpenTK.Vector3 location, string textString )

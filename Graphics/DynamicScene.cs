@@ -13,15 +13,38 @@ namespace Moonfish.Graphics
         {
             CollisionManager = new CollisionManager( base.ProgramManager.SystemProgram );
             MousePole = new MousePole2D( this.Camera );
+            this.SelectedObjectChanged += OnSelectedObjectChanged;
+            foreach ( var item in MousePole.ContactObjects )
+                CollisionManager.World.AddCollisionObject( item );
+        }
+
+        void OnSelectedObjectChanged( object seneder, SelectEventArgs e )
+        {
+            var marker = e.SelectedObject as MarkerWrapper;
+            if ( marker != null )
+            {
+                MousePole.DropHandlers();
+                MousePole.Mode = TransformMode.Local;
+                MousePole.Show();
+                MousePole.Position = marker.WorldMatrix.ExtractTranslation();
+                MousePole.Rotation = marker.ParentWorldMatrix.ExtractRotation();
+                MousePole.WorldMatrixChanged += marker.mousePole_WorldMatrixChanged;
+            }
         }
 
         public override void Draw( float delta )
         {
             base.Draw( delta );
-            MousePole.Render(null);
+            var program = ProgramManager.GetProgram( new ShaderReference( ShaderReference.ReferenceType.System, 0 ) );
+            MousePole.Render( program );
             CollisionManager.World.DebugDrawWorld();
         }
 
+        public override void Update( )
+        {
+            CollisionManager.World.PerformDiscreteCollisionDetection();
+            base.Update();
+        }
 
     }
 }

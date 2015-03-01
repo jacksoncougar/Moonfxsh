@@ -76,7 +76,7 @@ namespace Moonfish.Collision
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, buffer);
             var dataSize = (IntPtr)(System.Runtime.InteropServices.Marshal.SizeOf(typeof(T)) * data.Length);
-            GL.BufferData<T>(BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.StaticDraw);
+            GL.BufferData<T>(BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.StreamDraw);
 
             GL.BindVertexArray(0);
             buffers.Add(buffer);
@@ -89,7 +89,7 @@ namespace Moonfish.Collision
             GL.BindVertexArray(vao);
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, buffer);
-            GL.BufferData<ushort>(BufferTarget.ElementArrayBuffer, (IntPtr)(indices.Length * sizeof(ushort)), indices, BufferUsageHint.StaticDraw);
+            GL.BufferData<ushort>(BufferTarget.ElementArrayBuffer, (IntPtr)(indices.Length * sizeof(ushort)), indices, BufferUsageHint.StreamDraw);
 
             GL.BindVertexArray(0);
             buffers.Add(buffer);
@@ -113,7 +113,7 @@ namespace Moonfish.Collision
 
             GL.BindVertexArray(vao);
             GL.BindBuffer(BufferTarget.ArrayBuffer, arrayBuffer);
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)Vector3.SizeInBytes, ref position, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)Vector3.SizeInBytes, ref position, BufferUsageHint.StreamDraw);
 
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, IntPtr.Zero);
             GL.EnableVertexAttribArray(0);

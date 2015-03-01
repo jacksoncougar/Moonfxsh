@@ -1,9 +1,9 @@
 ﻿#version 130
 
 in vec4 Position;
+in vec4 Colour;
 out vec4 DiffuseColour;
 
-uniform vec4 Colour;
 uniform mat4 WorldMatrixUniform;
 uniform mat4 ViewProjectionMatrixUniform;
 

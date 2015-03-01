@@ -144,8 +144,8 @@ namespace Moonfish.Graphics
         Vector3[] DiffuseColours;
 
 
-        public CoordinateGrid()
-            : base(new Vector3(-4, -4, 0), new Vector2(8, 8), 16, 16)
+        public CoordinateGrid(int width, int height)
+            : base(new Vector3(-width / 2, -height / 2, 0), new Vector2(width, height), 16, 16)
         {
             // generate diffuse colours
             int count = 2 * (17 + 17);
@@ -160,6 +160,9 @@ namespace Moonfish.Graphics
             DiffuseColours[17] = new Vector3(22f / 255f, 132f / 255f, 22f / 255f);
 
             GenerateOpenGLBuffers();
+        }
+        public CoordinateGrid() : this(8,8)
+        {
         }
 
         private void GenerateOpenGLBuffers()

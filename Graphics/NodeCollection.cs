@@ -27,7 +27,8 @@ namespace Moonfish.Graphics
 
         public Matrix4 GetWorldMatrix(int index)
         {
-            return GetWorldMatrix(this[index]);
+            if (index < 0) return Matrix4.Identity;
+            else return GetWorldMatrix(this[index]);
         }
 
         public Matrix4 GetWorldMatrix(RenderModelNodeBlock node)

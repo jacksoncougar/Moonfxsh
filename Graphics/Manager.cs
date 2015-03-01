@@ -25,6 +25,24 @@ namespace Moonfish.Graphics
                 this.World.DebugDrawer = new BulletDebugDrawer(debug);
         }
 
+        public void LoadScenarioObjectCollection(ScenarioObject scenarioObject)
+        {
+            foreach (var marker in scenarioObject.Model.RenderModel.markerGroups.SelectMany(x => x.markers))
+            {
+                var collisionObject = new BulletSharp.CollisionObject();
+                collisionObject.CollisionShape = new BulletSharp.BoxShape(0.045f);
+                collisionObject.WorldTransform = Matrix4.CreateTranslation(marker.translation) * scenarioObject.Nodes.GetWorldMatrix(marker.nodeIndex);
+                collisionObject.UserObject = scenarioObject.Markers[marker];
+
+                World.AddCollisionObject(collisionObject);
+
+                var setPropertyMethodInfo = typeof(BulletSharp.CollisionObject).GetProperty("WorldTransform").GetSetMethod();
+                var setProperty = Delegate.CreateDelegate(typeof(Action<Matrix4>), collisionObject, setPropertyMethodInfo);
+
+                scenarioObject.Markers[marker].MarkerUpdatedCallback += (Action<Matrix4>)setProperty;
+            }
+        }
+
         internal void LoadScenarioCollision(ScenarioStructureBspBlock structureBSP)
         {
 
@@ -106,13 +124,12 @@ namespace Moonfish.Graphics
 
     public class ProgramManager : IEnumerable<Program>
     {
+        public Program SystemProgram { get { return this.Shaders["system"]; } }
         Dictionary<string, Program> Shaders { get; set; }
 
-        OpenTK.Vector3 lightPosition = new OpenTK.Vector3(1f, 1f, 0.5f);        
+        OpenTK.Vector3 lightPosition = new OpenTK.Vector3(1f, 1f, 0.5f);
         int NormalMapPaletteTexture;
 
-        Program Halo2;
-        Program System;
 
         public ProgramManager()
         {
@@ -132,7 +149,7 @@ namespace Moonfish.Graphics
 
             defaultProgram.Link(new List<Shader>(2) { vertex_shader, fragment_shader }); OpenGL.ReportError();
             Shaders["system"] = defaultProgram;
-            
+
         }
 
         private void LoadDefaultShader()
@@ -275,15 +292,21 @@ namespace Moonfish.Graphics
         ScenarioBlock scenario;
         Program old_program;
         Program systemProgram;
-        MultiValueDictionary<TagIdent, ScenarioObject> objectInstances;
+        Dictionary<TagIdent, List<ScenarioObject>> objectInstances;
 
 
         internal void Add(TagIdent ident, ScenarioObject @object)
         {
-            objectInstances.Add(ident, @object);
+            List<ScenarioObject> instanceList ;
+            if (!objectInstances.TryGetValue(ident, out instanceList))
+            {
+                instanceList = objectInstances[ident] = new List<ScenarioObject>();
+            }
+            instanceList.Add(@object);
         }
 
-        public MeshManager(Program program, Program systemProgram) : this()
+        public MeshManager(Program program, Program systemProgram)
+            : this()
         {
             this.old_program = program;
             this.systemProgram = systemProgram;
@@ -291,7 +314,7 @@ namespace Moonfish.Graphics
 
         public MeshManager()
         {
-            objectInstances = new MultiValueDictionary<TagIdent, ScenarioObject>();
+            objectInstances = new Dictionary<TagIdent, List<ScenarioObject>>();
         }
 
         public void LoadCollision(CollisionManager collision)

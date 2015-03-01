@@ -73,21 +73,21 @@ namespace Moonfish.Graphics
             resourceMaps.ForEach(x => Halo2.LoadResource(new MapStream(x)));
             Map = new MapStream(fileName);
 
-            var model = (ModelBlock)(Map["hlmt", "warthog"].Deserialize());
+            var model = (ModelBlock)(Map["hlmt", "masterchief"].Deserialize());
             int width = 1, height = 1;
             for (int i = 0; i < width * height; ++i)
             {
                 float x = 0.4f * (i % width);
                 float y = 0.4f * (i / width);
                 var scenarioObject = new ScenarioObject(model) { WorldMatrix = OpenTK.Matrix4.CreateTranslation(new OpenTK.Vector3(x, y, 0)) };
-                Scene.ObjectManager.Add(Map["hlmt", "warthog"].Meta.Identifier, scenarioObject);
+                Scene.ObjectManager.Add(Map["hlmt", "masterchief"].Meta.Identifier, scenarioObject);
             }
 
             var shaderTags = Map.Tags.Where(x => x.Type.ToString() == "shad").ToArray();
             listBox1.Items.AddRange(shaderTags);
             listBox1.DisplayMember = "Path";
 
-            listBox1.SelectedIndex = listBox1.FindString(@"warthog_metal");
+            listBox1.SelectedIndex = listBox1.FindString(@"objects\characters\masterchief\shaders\masterchief");
 
             //  firing this method is meant to load the view-projection matrix values into 
             //  the shader uniforms, and initalizes the camera

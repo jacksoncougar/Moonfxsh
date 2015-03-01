@@ -12,7 +12,7 @@ namespace Moonfish.Graphics
     {
         public Performance Performance { get; private set; }
         public MeshManager ObjectManager { get; set; }
-        ProgramManager ProgramManager { get; set; }
+        protected ProgramManager ProgramManager { get; set; }
         Stopwatch Timer { get; set; }
         public Camera Camera { get; set; }
 
@@ -21,7 +21,6 @@ namespace Moonfish.Graphics
 
         public event EventHandler OnFrameReady;
 
-        int NormalMapPaletteTexture;
         CoordinateGrid Grid;
 
         public Scene()
@@ -37,7 +36,7 @@ namespace Moonfish.Graphics
             ObjectManager = new MeshManager();
             ProgramManager = new ProgramManager();
             Performance = new Performance();
-            Grid = new CoordinateGrid();
+            Grid = new CoordinateGrid(2,2);
 
             Camera.ViewProjectionMatrixChanged += Camera_ViewProjectionMatrixChanged;
             Camera.ViewMatrixChanged += Camera_ViewMatrixChanged;
@@ -107,9 +106,15 @@ namespace Moonfish.Graphics
             //Console.WriteLine("Draw()");
 
             ObjectManager.Draw(ProgramManager);
+            var program = ProgramManager.GetProgram(new ShaderReference(ShaderReference.ReferenceType.System, 0));
+            using(program.Use())
+            {
+                var colourUniform = program.GetUniformLocation("Colour");
+                program.SetUniform(colourUniform, new ColorF(System.Drawing.Color.Black).RGBA);
+                Grid.Draw();
+
+            }
         }
-
-
 
         public virtual void Update()
         {

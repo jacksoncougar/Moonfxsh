@@ -1,12 +1,4 @@
-﻿using Moonfish.Graphics;
-using Moonfish.Guerilla;
-using Moonfish.Guerilla.Tags;
-using Moonfish.Tags;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {

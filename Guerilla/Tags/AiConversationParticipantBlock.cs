@@ -1,20 +1,18 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class AiConversationParticipantBlock : AiConversationParticipantBlockBase
+    public partial class AiConversationParticipantBlock : AiConversationParticipantBlockBase
     {
-        public  AiConversationParticipantBlock(BinaryReader binaryReader): base(binaryReader)
+        public AiConversationParticipantBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 84)]
+    [LayoutAttribute( Size = 84 )]
     public class AiConversationParticipantBlockBase
     {
         internal byte[] invalidName_;
@@ -31,27 +29,27 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.String32 encounterName;
         internal byte[] invalidName_2;
         internal byte[] invalidName_3;
-        internal  AiConversationParticipantBlockBase(BinaryReader binaryReader)
+        internal AiConversationParticipantBlockBase( BinaryReader binaryReader )
         {
-            this.invalidName_ = binaryReader.ReadBytes(8);
+            this.invalidName_ = binaryReader.ReadBytes( 8 );
             this.useThisObject = binaryReader.ReadShortBlockIndex1();
             this.setNewName = binaryReader.ReadShortBlockIndex1();
-            this.invalidName_0 = binaryReader.ReadBytes(12);
-            this.invalidName_1 = binaryReader.ReadBytes(12);
+            this.invalidName_0 = binaryReader.ReadBytes( 12 );
+            this.invalidName_1 = binaryReader.ReadBytes( 12 );
             this.encounterName = binaryReader.ReadString32();
-            this.invalidName_2 = binaryReader.ReadBytes(4);
-            this.invalidName_3 = binaryReader.ReadBytes(12);
+            this.invalidName_2 = binaryReader.ReadBytes( 4 );
+            this.invalidName_3 = binaryReader.ReadBytes( 12 );
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;

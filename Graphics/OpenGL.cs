@@ -1,8 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Moonfish.Graphics
 {
@@ -15,9 +12,9 @@ namespace Moonfish.Graphics
         /// </summary>
         /// <param name="state">Specifies a symbolic constant indicating a GL capability.</param>
         /// <returns>Resource Handle for this capability</returns>
-        public static IDisposable Enable(EnableCap state)
+        public static IDisposable Enable( EnableCap state )
         {
-            return new Handle(state);
+            return new Handle( state );
         }
 
         /// <summary>
@@ -25,9 +22,9 @@ namespace Moonfish.Graphics
         /// </summary>
         /// <param name="state">Specifies a symbolic constant indicating a GL capability.</param>
         /// <returns>Resource Handle for this capability</returns>
-        public static IDisposable Disable(EnableCap state)
+        public static IDisposable Disable( EnableCap state )
         {
-            return new Handle(state, false);
+            return new Handle( state, false );
         }
 
         public class Handle : IDisposable
@@ -35,31 +32,31 @@ namespace Moonfish.Graphics
             EnableCap state;
             bool stateWasEnabled;
 
-            public Handle(EnableCap state, bool enable = true)
+            public Handle( EnableCap state, bool enable = true )
             {
-                var stateIsEnabled = GL.IsEnabled(state);
+                var stateIsEnabled = GL.IsEnabled( state );
                 //  is not enabled and we want to enable it
-                if (!stateIsEnabled && enable) GL.Enable(state);
+                if ( !stateIsEnabled && enable ) GL.Enable( state );
                 // is enabled and we want to disable it
-                else if (stateIsEnabled && !enable) GL.Disable(state);
+                else if ( stateIsEnabled && !enable ) GL.Disable( state );
 
                 // store previous state
                 this.state = state;
                 this.stateWasEnabled = stateIsEnabled;
             }
-            void IDisposable.Dispose()
+            void IDisposable.Dispose( )
             {
                 // return state to previous setting
-                if (stateWasEnabled) GL.Enable(state);
-                else GL.Disable(state);
+                if ( stateWasEnabled ) GL.Enable( state );
+                else GL.Disable( state );
             }
         }
 
-        internal static void ReportError()
+        internal static void ReportError( )
         {
             var error = GL.GetError();
-            if (error != ErrorCode.NoError) 
-                throw new OpenTK.GraphicsException(error.ToString());
+            if ( error != ErrorCode.NoError )
+                throw new OpenTK.GraphicsException( error.ToString() );
         }
     }
 }

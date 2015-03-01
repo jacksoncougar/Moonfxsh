@@ -1,20 +1,18 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class VehiclePhantomShapeBlock : VehiclePhantomShapeBlockBase
+    public partial class VehiclePhantomShapeBlock : VehiclePhantomShapeBlockBase
     {
-        public  VehiclePhantomShapeBlock(BinaryReader binaryReader): base(binaryReader)
+        public VehiclePhantomShapeBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 224)]
+    [LayoutAttribute( Size = 224 )]
     public class VehiclePhantomShapeBlockBase
     {
         internal byte[] invalidName_;
@@ -35,37 +33,37 @@ namespace Moonfish.Guerilla.Tags
         internal float z0;
         internal float z1;
         internal Multispheres[] multispheres;
-        internal  VehiclePhantomShapeBlockBase(BinaryReader binaryReader)
+        internal VehiclePhantomShapeBlockBase( BinaryReader binaryReader )
         {
-            this.invalidName_ = binaryReader.ReadBytes(4);
+            this.invalidName_ = binaryReader.ReadBytes( 4 );
             this.size = binaryReader.ReadInt16();
             this.count = binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.invalidName_1 = binaryReader.ReadBytes(4);
+            this.invalidName_0 = binaryReader.ReadBytes( 4 );
+            this.invalidName_1 = binaryReader.ReadBytes( 4 );
             this.childShapesSize = binaryReader.ReadInt32();
             this.childShapesCapacity = binaryReader.ReadInt32();
-            this.childShapesStorage = new []{ new ChildShapesStorage(binaryReader), new ChildShapesStorage(binaryReader), new ChildShapesStorage(binaryReader), new ChildShapesStorage(binaryReader),  };
+            this.childShapesStorage = new[] { new ChildShapesStorage( binaryReader ), new ChildShapesStorage( binaryReader ), new ChildShapesStorage( binaryReader ), new ChildShapesStorage( binaryReader ), };
             this.multisphereCount = binaryReader.ReadInt32();
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.invalidName_2 = binaryReader.ReadBytes(8);
+            this.flags = ( Flags )binaryReader.ReadInt32();
+            this.invalidName_2 = binaryReader.ReadBytes( 8 );
             this.x0 = binaryReader.ReadSingle();
             this.x1 = binaryReader.ReadSingle();
             this.y0 = binaryReader.ReadSingle();
             this.y1 = binaryReader.ReadSingle();
             this.z0 = binaryReader.ReadSingle();
             this.z1 = binaryReader.ReadSingle();
-            this.multispheres = new []{ new Multispheres(binaryReader), new Multispheres(binaryReader), new Multispheres(binaryReader), new Multispheres(binaryReader),  };
+            this.multispheres = new[] { new Multispheres( binaryReader ), new Multispheres( binaryReader ), new Multispheres( binaryReader ), new Multispheres( binaryReader ), };
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
@@ -80,22 +78,22 @@ namespace Moonfish.Guerilla.Tags
             internal ShapeType shapeType;
             internal Moonfish.Tags.ShortBlockIndex2 shape;
             internal int collisionFilter;
-            internal  ChildShapesStorage(BinaryReader binaryReader)
+            internal ChildShapesStorage( BinaryReader binaryReader )
             {
-                this.shapeType = (ShapeType)binaryReader.ReadInt16();
+                this.shapeType = ( ShapeType )binaryReader.ReadInt16();
                 this.shape = binaryReader.ReadShortBlockIndex2();
                 this.collisionFilter = binaryReader.ReadInt32();
             }
-            internal  virtual byte[] ReadData(BinaryReader binaryReader)
+            internal virtual byte[] ReadData( BinaryReader binaryReader )
             {
-                var blamPointer = binaryReader.ReadBlamPointer(1);
-                var data = new byte[blamPointer.Count];
-                if(blamPointer.Count > 0)
+                var blamPointer = binaryReader.ReadBlamPointer( 1 );
+                var data = new byte[ blamPointer.Count ];
+                if ( blamPointer.Count > 0 )
                 {
-                    using (binaryReader.BaseStream.Pin())
+                    using ( binaryReader.BaseStream.Pin() )
                     {
-                        binaryReader.BaseStream.Position = blamPointer[0];
-                        data = binaryReader.ReadBytes(blamPointer.Count);
+                        binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                        data = binaryReader.ReadBytes( blamPointer.Count );
                     }
                 }
                 return data;
@@ -128,25 +126,25 @@ namespace Moonfish.Guerilla.Tags
             internal byte[] invalidName_0;
             internal int numSpheres;
             internal FourVectorsStorage[] fourVectorsStorage;
-            internal  Multispheres(BinaryReader binaryReader)
+            internal Multispheres( BinaryReader binaryReader )
             {
-                this.invalidName_ = binaryReader.ReadBytes(4);
+                this.invalidName_ = binaryReader.ReadBytes( 4 );
                 this.size = binaryReader.ReadInt16();
                 this.count = binaryReader.ReadInt16();
-                this.invalidName_0 = binaryReader.ReadBytes(4);
+                this.invalidName_0 = binaryReader.ReadBytes( 4 );
                 this.numSpheres = binaryReader.ReadInt32();
-                this.fourVectorsStorage = new []{ new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader),  };
+                this.fourVectorsStorage = new[] { new FourVectorsStorage( binaryReader ), new FourVectorsStorage( binaryReader ), new FourVectorsStorage( binaryReader ), new FourVectorsStorage( binaryReader ), new FourVectorsStorage( binaryReader ), new FourVectorsStorage( binaryReader ), new FourVectorsStorage( binaryReader ), new FourVectorsStorage( binaryReader ), };
             }
-            internal  virtual byte[] ReadData(BinaryReader binaryReader)
+            internal virtual byte[] ReadData( BinaryReader binaryReader )
             {
-                var blamPointer = binaryReader.ReadBlamPointer(1);
-                var data = new byte[blamPointer.Count];
-                if(blamPointer.Count > 0)
+                var blamPointer = binaryReader.ReadBlamPointer( 1 );
+                var data = new byte[ blamPointer.Count ];
+                if ( blamPointer.Count > 0 )
                 {
-                    using (binaryReader.BaseStream.Pin())
+                    using ( binaryReader.BaseStream.Pin() )
                     {
-                        binaryReader.BaseStream.Position = blamPointer[0];
-                        data = binaryReader.ReadBytes(blamPointer.Count);
+                        binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                        data = binaryReader.ReadBytes( blamPointer.Count );
                     }
                 }
                 return data;
@@ -155,21 +153,21 @@ namespace Moonfish.Guerilla.Tags
             {
                 internal OpenTK.Vector3 sphere;
                 internal byte[] invalidName_;
-                internal  FourVectorsStorage(BinaryReader binaryReader)
+                internal FourVectorsStorage( BinaryReader binaryReader )
                 {
                     this.sphere = binaryReader.ReadVector3();
-                    this.invalidName_ = binaryReader.ReadBytes(4);
+                    this.invalidName_ = binaryReader.ReadBytes( 4 );
                 }
-                internal  virtual byte[] ReadData(BinaryReader binaryReader)
+                internal virtual byte[] ReadData( BinaryReader binaryReader )
                 {
-                    var blamPointer = binaryReader.ReadBlamPointer(1);
-                    var data = new byte[blamPointer.Count];
-                    if(blamPointer.Count > 0)
+                    var blamPointer = binaryReader.ReadBlamPointer( 1 );
+                    var data = new byte[ blamPointer.Count ];
+                    if ( blamPointer.Count > 0 )
                     {
-                        using (binaryReader.BaseStream.Pin())
+                        using ( binaryReader.BaseStream.Pin() )
                         {
-                            binaryReader.BaseStream.Position = blamPointer[0];
-                            data = binaryReader.ReadBytes(blamPointer.Count);
+                            binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                            data = binaryReader.ReadBytes( blamPointer.Count );
                         }
                     }
                     return data;

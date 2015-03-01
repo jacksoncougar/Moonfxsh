@@ -1,21 +1,19 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [LayoutAttribute(Size = 248)]
-    public  partial class GlobalDamageInfoBlock : GlobalDamageInfoBlockBase
+    [LayoutAttribute( Size = 248 )]
+    public partial class GlobalDamageInfoBlock : GlobalDamageInfoBlockBase
     {
-        public  GlobalDamageInfoBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalDamageInfoBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 248)]
+    [LayoutAttribute( Size = 248 )]
     public class GlobalDamageInfoBlockBase
     {
         internal Flags flags;
@@ -51,9 +49,9 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float rechargeFraction;
         internal byte[] invalidName_3;
-        [TagReference("shad")]
+        [TagReference( "shad" )]
         internal Moonfish.Tags.TagReference shieldDamagedFirstPersonShader;
-        [TagReference("shad")]
+        [TagReference( "shad" )]
         internal Moonfish.Tags.TagReference shieldDamagedShader;
         /// <summary>
         /// the default initial and maximumShieldVitality of this object
@@ -73,11 +71,11 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float rechargeTimeSeconds0;
         internal float shieldDamagedThreshold;
-        [TagReference("effe")]
+        [TagReference( "effe" )]
         internal Moonfish.Tags.TagReference shieldDamagedEffect;
-        [TagReference("effe")]
+        [TagReference( "effe" )]
         internal Moonfish.Tags.TagReference shieldDepletedEffect;
-        [TagReference("effe")]
+        [TagReference( "effe" )]
         internal Moonfish.Tags.TagReference shieldRechargingEffect;
         internal GlobalDamageSectionBlock[] damageSections;
         internal GlobalDamageNodesBlock[] nodes;
@@ -87,27 +85,27 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_7;
         internal DamageSeatInfoBlock[] damageSeats;
         internal DamageConstraintInfoBlock[] damageConstraints;
-        [TagReference("shad")]
+        [TagReference( "shad" )]
         internal Moonfish.Tags.TagReference overshieldFirstPersonShader;
-        [TagReference("shad")]
+        [TagReference( "shad" )]
         internal Moonfish.Tags.TagReference overshieldShader;
-        internal  GlobalDamageInfoBlockBase(BinaryReader binaryReader)
+        internal GlobalDamageInfoBlockBase( BinaryReader binaryReader )
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
+            this.flags = ( Flags )binaryReader.ReadInt32();
             this.globalIndirectMaterialName = binaryReader.ReadStringID();
             this.indirectDamageSection = binaryReader.ReadShortBlockIndex2();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.collisionDamageReportingType = (CollisionDamageReportingType)binaryReader.ReadByte();
-            this.responseDamageReportingType = (ResponseDamageReportingType)binaryReader.ReadByte();
-            this.invalidName_1 = binaryReader.ReadBytes(2);
-            this.invalidName_2 = binaryReader.ReadBytes(20);
+            this.invalidName_ = binaryReader.ReadBytes( 2 );
+            this.invalidName_0 = binaryReader.ReadBytes( 4 );
+            this.collisionDamageReportingType = ( CollisionDamageReportingType )binaryReader.ReadByte();
+            this.responseDamageReportingType = ( ResponseDamageReportingType )binaryReader.ReadByte();
+            this.invalidName_1 = binaryReader.ReadBytes( 2 );
+            this.invalidName_2 = binaryReader.ReadBytes( 20 );
             this.maximumVitality = binaryReader.ReadSingle();
             this.minimumStunDamage = binaryReader.ReadSingle();
             this.stunTimeSeconds = binaryReader.ReadSingle();
             this.rechargeTimeSeconds = binaryReader.ReadSingle();
             this.rechargeFraction = binaryReader.ReadSingle();
-            this.invalidName_3 = binaryReader.ReadBytes(64);
+            this.invalidName_3 = binaryReader.ReadBytes( 64 );
             this.shieldDamagedFirstPersonShader = binaryReader.ReadTagReference();
             this.shieldDamagedShader = binaryReader.ReadTagReference();
             this.maximumShieldVitality = binaryReader.ReadSingle();
@@ -119,87 +117,87 @@ namespace Moonfish.Guerilla.Tags
             this.shieldDamagedEffect = binaryReader.ReadTagReference();
             this.shieldDepletedEffect = binaryReader.ReadTagReference();
             this.shieldRechargingEffect = binaryReader.ReadTagReference();
-            this.damageSections = ReadGlobalDamageSectionBlockArray(binaryReader);
-            this.nodes = ReadGlobalDamageNodesBlockArray(binaryReader);
-            this.invalidName_4 = binaryReader.ReadBytes(2);
-            this.invalidName_5 = binaryReader.ReadBytes(2);
-            this.invalidName_6 = binaryReader.ReadBytes(4);
-            this.invalidName_7 = binaryReader.ReadBytes(4);
-            this.damageSeats = ReadDamageSeatInfoBlockArray(binaryReader);
-            this.damageConstraints = ReadDamageConstraintInfoBlockArray(binaryReader);
+            this.damageSections = ReadGlobalDamageSectionBlockArray( binaryReader );
+            this.nodes = ReadGlobalDamageNodesBlockArray( binaryReader );
+            this.invalidName_4 = binaryReader.ReadBytes( 2 );
+            this.invalidName_5 = binaryReader.ReadBytes( 2 );
+            this.invalidName_6 = binaryReader.ReadBytes( 4 );
+            this.invalidName_7 = binaryReader.ReadBytes( 4 );
+            this.damageSeats = ReadDamageSeatInfoBlockArray( binaryReader );
+            this.damageConstraints = ReadDamageConstraintInfoBlockArray( binaryReader );
             this.overshieldFirstPersonShader = binaryReader.ReadTagReference();
             this.overshieldShader = binaryReader.ReadTagReference();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
-        internal  virtual GlobalDamageSectionBlock[] ReadGlobalDamageSectionBlockArray(BinaryReader binaryReader)
+        internal virtual GlobalDamageSectionBlock[] ReadGlobalDamageSectionBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalDamageSectionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalDamageSectionBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( GlobalDamageSectionBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new GlobalDamageSectionBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalDamageSectionBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new GlobalDamageSectionBlock( binaryReader );
                 }
             }
             return array;
         }
-        internal  virtual GlobalDamageNodesBlock[] ReadGlobalDamageNodesBlockArray(BinaryReader binaryReader)
+        internal virtual GlobalDamageNodesBlock[] ReadGlobalDamageNodesBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalDamageNodesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalDamageNodesBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( GlobalDamageNodesBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new GlobalDamageNodesBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalDamageNodesBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new GlobalDamageNodesBlock( binaryReader );
                 }
             }
             return array;
         }
-        internal  virtual DamageSeatInfoBlock[] ReadDamageSeatInfoBlockArray(BinaryReader binaryReader)
+        internal virtual DamageSeatInfoBlock[] ReadDamageSeatInfoBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(DamageSeatInfoBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new DamageSeatInfoBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( DamageSeatInfoBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new DamageSeatInfoBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new DamageSeatInfoBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new DamageSeatInfoBlock( binaryReader );
                 }
             }
             return array;
         }
-        internal  virtual DamageConstraintInfoBlock[] ReadDamageConstraintInfoBlockArray(BinaryReader binaryReader)
+        internal virtual DamageConstraintInfoBlock[] ReadDamageConstraintInfoBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(DamageConstraintInfoBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new DamageConstraintInfoBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( DamageConstraintInfoBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new DamageConstraintInfoBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new DamageConstraintInfoBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new DamageConstraintInfoBlock( binaryReader );
                 }
             }
             return array;

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Moonfish.Guerilla.Remapping
 {
@@ -11,7 +8,7 @@ namespace Moonfish.Guerilla.Remapping
         [GuerillaPreProcessMethod( BlockName = "model_variant_region_block" )]
         protected static void GuerillaPreProcessMethod( BinaryReader binaryReader, IList<tag_field> fields )
         {
-            ( (enum_definition)fields[5].Definition ).Options = new List<string>( new[]{ 
+            ( ( enum_definition )fields[ 5 ].Definition ).Options = new List<string>( new[]{ 
             "no sorting",
             "minus5#Closest",
             "minus4",

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Moonfish.Guerilla
 {
     public static class GuerillaExtensions
     {
-        public delegate void PreProcessFieldSet(BinaryReader reader, List<tag_field> fieldSet);
+        public delegate void PreProcessFieldSet( BinaryReader reader, List<tag_field> fieldSet );
 
-        public static List<tag_field> ReadFields(this BinaryReader reader)
+        public static List<tag_field> ReadFields( this BinaryReader reader )
         {
             var fields = new List<tag_field>();
             var field = new tag_field();
@@ -19,18 +17,18 @@ namespace Moonfish.Guerilla
             {
                 long currentAddress = reader.BaseStream.Position;
                 field = reader.ReadFieldDefinition<tag_field>();
-                fields.Add(field);
+                fields.Add( field );
                 // Seek to the next tag_field.
                 reader.BaseStream.Position = currentAddress + 16;
             }
-            while (field.type != field_type._field_terminator);
+            while ( field.type != field_type._field_terminator );
             return fields;
         }
 
-        public static List<tag_field> ReadFieldSet(this BinaryReader reader, ref TagBlockDefinition definition, out tag_field_set field_set)
+        public static List<tag_field> ReadFieldSet( this BinaryReader reader, ref TagBlockDefinition definition, out tag_field_set field_set )
         {
             field_set = new tag_field_set();
-            if (definition.Name == "sound_block")
+            if ( definition.Name == "sound_block" )
             {
                 definition.field_sets_address = 0x957870;
                 //definition.field_set_latest_address = 0x906178;
@@ -48,13 +46,13 @@ namespace Moonfish.Guerilla
             else
             {
                 // We are going to use the latest tag_field_set for right now.
-                if (definition.Name == "animation_pool_block")
+                if ( definition.Name == "animation_pool_block" )
                 {
-                    reader.BaseStream.Position = definition.field_sets_address + ((definition.field_set_count - 2) * 76) - Guerilla.BaseAddress;
+                    reader.BaseStream.Position = definition.field_sets_address + ( ( definition.field_set_count - 2 ) * 76 ) - Guerilla.BaseAddress;
                 }
-                else if (definition.Name == "decorator_cache_block_data_block")
+                else if ( definition.Name == "decorator_cache_block_data_block" )
                 {
-                    reader.BaseStream.Position = definition.field_sets_address + ((definition.field_set_count - 1) * 76) - Guerilla.BaseAddress;
+                    reader.BaseStream.Position = definition.field_sets_address + ( ( definition.field_set_count - 1 ) * 76 ) - Guerilla.BaseAddress;
                 }
                 else
                 {
@@ -71,40 +69,40 @@ namespace Moonfish.Guerilla
             {
                 long currentAddress = reader.BaseStream.Position;
                 field = reader.ReadFieldDefinition<tag_field>();
-                fields.Add(field);
+                fields.Add( field );
                 // Seek to the next tag_field.
                 reader.BaseStream.Position = currentAddress + 16;// sizeof(tag_field);
             }
-            while (field.type != field_type._field_terminator);
+            while ( field.type != field_type._field_terminator );
             var blockName = definition.Name;
-            var methods = (from method in Assembly.GetExecutingAssembly().GetTypes().SelectMany(x => x.GetMethods(BindingFlags.NonPublic | BindingFlags.Static))
-                           where method.IsDefined(typeof(GuerillaPreProcessMethodAttribute), false)
-                           from attribute in method.GetCustomAttributes(typeof(GuerillaPreProcessMethodAttribute), false)
-                           where (attribute as GuerillaPreProcessMethodAttribute).BlockName == blockName
-                           select method).ToArray();
+            var methods = ( from method in Assembly.GetExecutingAssembly().GetTypes().SelectMany( x => x.GetMethods( BindingFlags.NonPublic | BindingFlags.Static ) )
+                            where method.IsDefined( typeof( GuerillaPreProcessMethodAttribute ), false )
+                            from attribute in method.GetCustomAttributes( typeof( GuerillaPreProcessMethodAttribute ), false )
+                            where ( attribute as GuerillaPreProcessMethodAttribute ).BlockName == blockName
+                            select method ).ToArray();
 
-            if (methods.Count() > 0)
+            if ( methods.Count() > 0 )
             {
-                methods[0].Invoke(null, new object[] { reader, fields });
+                methods[ 0 ].Invoke( null, new object[] { reader, fields } );
             }
             return fields;
         }
 
-        public static T ReadFieldDefinition<T>(this BinaryReader reader) where T : IReadDefinition, new()
+        public static T ReadFieldDefinition<T>( this BinaryReader reader ) where T : IReadDefinition, new()
         {
             // Read the tag_block_definition struct from the stream.
             T definition = new T();
 
-            definition.Read(Guerilla.h2LangLib, reader);
+            definition.Read( Guerilla.h2LangLib, reader );
             return definition;
         }
 
-        public static T ReadFieldDefinition<T>(this BinaryReader reader, tag_field field) where T : IReadDefinition, new()
+        public static T ReadFieldDefinition<T>( this BinaryReader reader, tag_field field ) where T : IReadDefinition, new()
         {
             // Seek to the tag_block_definition address.
             reader.BaseStream.Position = field.definition - Guerilla.BaseAddress;
 
-            return ReadFieldDefinition<T>(reader);
+            return ReadFieldDefinition<T>( reader );
         }
     };
 }

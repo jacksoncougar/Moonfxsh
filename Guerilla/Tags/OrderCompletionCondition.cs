@@ -1,20 +1,19 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
+using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class OrderCompletionCondition : OrderCompletionConditionBase
+    public partial class OrderCompletionCondition : OrderCompletionConditionBase
     {
-        public  OrderCompletionCondition(BinaryReader binaryReader): base(binaryReader)
+        public OrderCompletionCondition( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 56)]
+    [LayoutAttribute( Size = 56 )]
     public class OrderCompletionConditionBase
     {
         internal RuleType ruleType;
@@ -28,36 +27,35 @@ namespace Moonfish.Guerilla.Tags
         internal short invalidName_0;
         internal byte[] invalidName_1;
         internal Flags flags;
-        internal  OrderCompletionConditionBase(BinaryReader binaryReader)
+        internal OrderCompletionConditionBase( BinaryReader binaryReader )
         {
-            this.ruleType = (RuleType)binaryReader.ReadInt16();
+            this.ruleType = ( RuleType )binaryReader.ReadInt16();
             this.squad = binaryReader.ReadShortBlockIndex1();
             this.squadGroup = binaryReader.ReadShortBlockIndex1();
             this.a = binaryReader.ReadInt16();
             this.x = binaryReader.ReadSingle();
             this.triggerVolume = binaryReader.ReadShortBlockIndex1();
-            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.invalidName_ = binaryReader.ReadBytes( 2 );
             this.exitConditionScript = binaryReader.ReadString32();
             this.invalidName_0 = binaryReader.ReadInt16();
-            this.invalidName_1 = binaryReader.ReadBytes(2);
-            this.flags = (Flags)binaryReader.ReadInt32();
+            this.invalidName_1 = binaryReader.ReadBytes( 2 );
+            this.flags = ( Flags )binaryReader.ReadInt32();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
         internal enum RuleType : short
-        
         {
             AOrGreaterAlive = 0,
             AOrFewerAlive = 1,
@@ -83,7 +81,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             NOT = 1,
         };

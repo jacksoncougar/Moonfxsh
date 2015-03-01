@@ -1,21 +1,19 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [LayoutAttribute(Size = 20)]
-    public  partial class ModelMaterialBlock : ModelMaterialBlockBase
+    [LayoutAttribute( Size = 20 )]
+    public partial class ModelMaterialBlock : ModelMaterialBlockBase
     {
-        public  ModelMaterialBlock(BinaryReader binaryReader): base(binaryReader)
+        public ModelMaterialBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 20)]
+    [LayoutAttribute( Size = 20 )]
     public class ModelMaterialBlockBase
     {
         internal Moonfish.Tags.StringID materialName;
@@ -25,26 +23,26 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal Moonfish.Tags.StringID globalMaterialName;
         internal byte[] invalidName_1;
-        internal  ModelMaterialBlockBase(BinaryReader binaryReader)
+        internal ModelMaterialBlockBase( BinaryReader binaryReader )
         {
             this.materialName = binaryReader.ReadStringID();
-            this.materialType = (MaterialType)binaryReader.ReadInt16();
+            this.materialType = ( MaterialType )binaryReader.ReadInt16();
             this.damageSection = binaryReader.ReadShortBlockIndex2();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.invalidName_0 = binaryReader.ReadBytes(2);
+            this.invalidName_ = binaryReader.ReadBytes( 2 );
+            this.invalidName_0 = binaryReader.ReadBytes( 2 );
             this.globalMaterialName = binaryReader.ReadStringID();
-            this.invalidName_1 = binaryReader.ReadBytes(4);
+            this.invalidName_1 = binaryReader.ReadBytes( 4 );
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;

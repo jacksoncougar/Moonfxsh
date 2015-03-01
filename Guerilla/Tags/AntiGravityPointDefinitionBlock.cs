@@ -1,20 +1,18 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class AntiGravityPointDefinitionBlock : AntiGravityPointDefinitionBlockBase
+    public partial class AntiGravityPointDefinitionBlock : AntiGravityPointDefinitionBlockBase
     {
-        public  AntiGravityPointDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
+        public AntiGravityPointDefinitionBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 76)]
+    [LayoutAttribute( Size = 76 )]
     public class AntiGravityPointDefinitionBlockBase
     {
         internal Moonfish.Tags.StringID markerName;
@@ -35,10 +33,10 @@ namespace Moonfish.Guerilla.Tags
         internal float mediumDamageError;
         internal float majorDamageError;
         internal float destroyedStateError;
-        internal  AntiGravityPointDefinitionBlockBase(BinaryReader binaryReader)
+        internal AntiGravityPointDefinitionBlockBase( BinaryReader binaryReader )
         {
             this.markerName = binaryReader.ReadStringID();
-            this.flags = (Flags)binaryReader.ReadInt32();
+            this.flags = ( Flags )binaryReader.ReadInt32();
             this.antigravStrength = binaryReader.ReadSingle();
             this.antigravOffset = binaryReader.ReadSingle();
             this.antigravHeight = binaryReader.ReadSingle();
@@ -46,9 +44,9 @@ namespace Moonfish.Guerilla.Tags
             this.antigravNormalK1 = binaryReader.ReadSingle();
             this.antigravNormalK0 = binaryReader.ReadSingle();
             this.radius = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes(12);
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.invalidName_1 = binaryReader.ReadBytes(2);
+            this.invalidName_ = binaryReader.ReadBytes( 12 );
+            this.invalidName_0 = binaryReader.ReadBytes( 2 );
+            this.invalidName_1 = binaryReader.ReadBytes( 2 );
             this.damageSourceRegionName = binaryReader.ReadStringID();
             this.defaultStateError = binaryReader.ReadSingle();
             this.minorDamageError = binaryReader.ReadSingle();
@@ -56,16 +54,16 @@ namespace Moonfish.Guerilla.Tags
             this.majorDamageError = binaryReader.ReadSingle();
             this.destroyedStateError = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;

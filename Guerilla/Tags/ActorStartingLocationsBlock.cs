@@ -1,20 +1,19 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
+using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ActorStartingLocationsBlock : ActorStartingLocationsBlockBase
+    public partial class ActorStartingLocationsBlock : ActorStartingLocationsBlockBase
     {
-        public  ActorStartingLocationsBlock(BinaryReader binaryReader): base(binaryReader)
+        public ActorStartingLocationsBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 100)]
+    [LayoutAttribute( Size = 100 )]
     public class ActorStartingLocationsBlockBase
     {
         internal Moonfish.Tags.StringID name;
@@ -45,48 +44,47 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.String32 placementScript;
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
-        internal  ActorStartingLocationsBlockBase(BinaryReader binaryReader)
+        internal ActorStartingLocationsBlockBase( BinaryReader binaryReader )
         {
             this.name = binaryReader.ReadStringID();
             this.position = binaryReader.ReadVector3();
             this.referenceFrame = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.invalidName_ = binaryReader.ReadBytes( 2 );
             this.facingYawPitchDegrees = binaryReader.ReadVector2();
-            this.flags = (Flags)binaryReader.ReadInt32();
+            this.flags = ( Flags )binaryReader.ReadInt32();
             this.characterType = binaryReader.ReadShortBlockIndex1();
             this.initialWeapon = binaryReader.ReadShortBlockIndex1();
             this.initialSecondaryWeapon = binaryReader.ReadShortBlockIndex1();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
+            this.invalidName_0 = binaryReader.ReadBytes( 2 );
             this.vehicleType = binaryReader.ReadShortBlockIndex1();
-            this.seatType = (SeatType)binaryReader.ReadInt16();
-            this.grenadeType = (GrenadeType)binaryReader.ReadInt16();
+            this.seatType = ( SeatType )binaryReader.ReadInt16();
+            this.grenadeType = ( GrenadeType )binaryReader.ReadInt16();
             this.swarmCount = binaryReader.ReadInt16();
             this.actorVariantName = binaryReader.ReadStringID();
             this.vehicleVariantName = binaryReader.ReadStringID();
             this.initialMovementDistance = binaryReader.ReadSingle();
             this.emitterVehicle = binaryReader.ReadShortBlockIndex1();
-            this.initialMovementMode = (InitialMovementMode)binaryReader.ReadInt16();
+            this.initialMovementMode = ( InitialMovementMode )binaryReader.ReadInt16();
             this.placementScript = binaryReader.ReadString32();
-            this.invalidName_1 = binaryReader.ReadBytes(2);
-            this.invalidName_2 = binaryReader.ReadBytes(2);
+            this.invalidName_1 = binaryReader.ReadBytes( 2 );
+            this.invalidName_2 = binaryReader.ReadBytes( 2 );
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             InitiallyAsleep = 1,
             InfectionFormExplode = 2,
@@ -95,7 +93,6 @@ namespace Moonfish.Guerilla.Tags
             InitiallyHidden = 16,
         };
         internal enum SeatType : short
-        
         {
             DEFAULT = 0,
             Passenger = 1,
@@ -107,14 +104,12 @@ namespace Moonfish.Guerilla.Tags
             NOVehicle = 7,
         };
         internal enum GrenadeType : short
-        
         {
             NONE = 0,
             HumanGrenade = 1,
             CovenantPlasma = 2,
         };
         internal enum InitialMovementMode : short
-        
         {
             Default = 0,
             Climbing = 1,

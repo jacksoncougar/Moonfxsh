@@ -1,60 +1,58 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
+using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ShaderPassParameterBlock : ShaderPassParameterBlockBase
+    public partial class ShaderPassParameterBlock : ShaderPassParameterBlockBase
     {
-        public  ShaderPassParameterBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderPassParameterBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 44)]
+    [LayoutAttribute( Size = 44 )]
     public class ShaderPassParameterBlockBase
     {
         internal Moonfish.Tags.StringID name;
         internal byte[] explanation;
         internal Type type;
         internal Flags flags;
-        [TagReference("bitm")]
+        [TagReference( "bitm" )]
         internal Moonfish.Tags.TagReference defaultBitmap;
         internal float defaultConstValue;
         internal Moonfish.Tags.ColorR8G8B8 defaultConstColor;
         internal SourceExtern sourceExtern;
         internal byte[] invalidName_;
-        internal  ShaderPassParameterBlockBase(BinaryReader binaryReader)
+        internal ShaderPassParameterBlockBase( BinaryReader binaryReader )
         {
             this.name = binaryReader.ReadStringID();
-            this.explanation = ReadData(binaryReader);
-            this.type = (Type)binaryReader.ReadInt16();
-            this.flags = (Flags)binaryReader.ReadInt16();
+            this.explanation = ReadData( binaryReader );
+            this.type = ( Type )binaryReader.ReadInt16();
+            this.flags = ( Flags )binaryReader.ReadInt16();
             this.defaultBitmap = binaryReader.ReadTagReference();
             this.defaultConstValue = binaryReader.ReadSingle();
             this.defaultConstColor = binaryReader.ReadColorR8G8B8();
-            this.sourceExtern = (SourceExtern)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.sourceExtern = ( SourceExtern )binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes( 2 );
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
         internal enum Type : short
-        
         {
             Bitmap = 0,
             Value = 1,
@@ -63,13 +61,11 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             NoBitmapLOD = 1,
             RequiredParameter = 2,
         };
         internal enum SourceExtern : short
-        
         {
             None = 0,
             GLOBALEyeForwardVectorZ = 1,

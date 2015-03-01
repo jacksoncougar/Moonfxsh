@@ -10,7 +10,7 @@ namespace Moonfish.Guerilla
     {
         public ClassInfo( )
         {
-            Usings = new List<string>( )
+            Usings = new List<string>()
             {
                 "using Moonfish.Model;",
                 "using Moonfish.Tags.BlamExtension;",
@@ -19,13 +19,13 @@ namespace Moonfish.Guerilla
                 "using System;",
                 "using System.IO;",
             };
-            Attributes = new List<AttributeInfo>( );
-            Fields = new List<FieldInfo>( );
-            Constructors = new List<MethodInfo>( );
-            EnumDefinitions = new List<EnumInfo>( );
-            ClassDefinitions = new List<ClassInfo>( );
-            Methods = new List<MethodInfo>( );
-            MethodsTemplates = new List<MethodInfo>( );
+            Attributes = new List<AttributeInfo>();
+            Fields = new List<FieldInfo>();
+            Constructors = new List<MethodInfo>();
+            EnumDefinitions = new List<EnumInfo>();
+            ClassDefinitions = new List<ClassInfo>();
+            Methods = new List<MethodInfo>();
+            MethodsTemplates = new List<MethodInfo>();
         }
 
         public List<string> Usings { get; set; }
@@ -48,11 +48,11 @@ namespace Moonfish.Guerilla
         }
         public string ClassDeclaration
         {
-            get { return string.Format( "{0} class {1} {2}", AccessModifiersExtensions.ToString( AccessModifiers ), Value.Name, BaseClassDeclaration ).Trim( ); }
+            get { return string.Format( "{0} class {1} {2}", AccessModifiersExtensions.ToString( AccessModifiers ), Value.Name, BaseClassDeclaration ).Trim(); }
         }
         public string BaseClassDeclaration
         {
-            get { return ( String.IsNullOrWhiteSpace( BaseClass ) ? "" : string.Format( ": {0}", BaseClass ) ).Trim( ); }
+            get { return ( String.IsNullOrWhiteSpace( BaseClass ) ? "" : string.Format( ": {0}", BaseClass ) ).Trim(); }
         }
 
         internal class TokenDictionary
@@ -61,24 +61,24 @@ namespace Moonfish.Guerilla
 
             public TokenDictionary( )
             {
-                Tokens = new HashSet<string>( );
+                Tokens = new HashSet<string>();
             }
 
             public string GenerateValidToken( string token )
             {
-                using( var code = new Microsoft.CSharp.CSharpCodeProvider( ) )
+                using ( var code = new Microsoft.CSharp.CSharpCodeProvider() )
                 {
                     var validToken = "";
                     var salt = 0;
                     do
                     {
-                        if( Tokens.Contains( token ) )
+                        if ( Tokens.Contains( token ) )
                         {
                             validToken = string.Format( "{0}{1}", token, salt );
                         }
                         else validToken = code.CreateValidIdentifier( token );
                         salt++;
-                    } while( Tokens.Contains( validToken ) );
+                    } while ( Tokens.Contains( validToken ) );
                     Tokens.Add( validToken );
                     return validToken;
                 }
@@ -87,9 +87,9 @@ namespace Moonfish.Guerilla
 
         public void Format( )
         {
-            TokenDictionary tokenDictionary = new TokenDictionary( );
+            TokenDictionary tokenDictionary = new TokenDictionary();
             string name, @namespace;
-            if( GuerillaCs.SplitNamespaceFromFieldName( Value.Name, out name, out @namespace ) )
+            if ( GuerillaCs.SplitNamespaceFromFieldName( Value.Name, out name, out @namespace ) )
             {
                 this.Value.Name = tokenDictionary.GenerateValidToken( GuerillaCs.ToTypeName( name ) );
                 this.Namespace = GuerillaCs.ToTypeName( @namespace );
@@ -100,33 +100,33 @@ namespace Moonfish.Guerilla
             }
 
             FormatFieldNames( tokenDictionary );
-            foreach( var item in EnumDefinitions )
+            foreach ( var item in EnumDefinitions )
             {
-                item.Format( );
+                item.Format();
             }
-            foreach( var item in ClassDefinitions )
+            foreach ( var item in ClassDefinitions )
             {
-                item.Format( );
+                item.Format();
             }
         }
 
         void FormatFieldNames( TokenDictionary tokenDictionary )
         {
-            using( var code = new Microsoft.CSharp.CSharpCodeProvider( ) )
+            using ( var code = new Microsoft.CSharp.CSharpCodeProvider() )
             {
-                foreach( var item in Fields )
+                foreach ( var item in Fields )
                 {
                     var token = tokenDictionary.GenerateValidToken( GuerillaCs.ToMemberName( item.Value.Name ) );
                     item.Value.Name = token;
                 }
 
-                foreach( var item in Methods )
+                foreach ( var item in Methods )
                 {
                     var token = tokenDictionary.GenerateValidToken( GuerillaCs.ToMemberName( item.ClassName ) );
                     item.ClassName = token;
                 }
 
-                foreach( var item in EnumDefinitions )
+                foreach ( var item in EnumDefinitions )
                 {
                     var token = tokenDictionary.GenerateValidToken( GuerillaCs.ToTypeName( item.Value.Name ) );
                     item.Value.Name = token;
@@ -136,39 +136,39 @@ namespace Moonfish.Guerilla
 
         public void Generate( )
         {
-            MethodsTemplates.Clear( );
-            Methods.Clear( );
-            Constructors.Clear( );
+            MethodsTemplates.Clear();
+            Methods.Clear();
+            Constructors.Clear();
 
-            GenerateReadBlockTemplateMethod( );
-            GenerateReadDataMethod( );
-            GenerateBinaryReaderConstructor( );
+            GenerateReadBlockTemplateMethod();
+            GenerateReadDataMethod();
+            GenerateBinaryReaderConstructor();
         }
 
         public ClassInfo GenerateWrapper( string wrapperName, string baseName )
         {
-            var tagClassAttribute = this.Attributes.Where( x => x.AttributeType == typeof( Moonfish.Tags.TagClassAttribute ) ).SingleOrDefault( );
+            var tagClassAttribute = this.Attributes.Where( x => x.AttributeType == typeof( Moonfish.Tags.TagClassAttribute ) ).SingleOrDefault();
             var hasTagClassAttribute = tagClassAttribute == null ? false : true;
-            if( hasTagClassAttribute )
+            if ( hasTagClassAttribute )
                 this.Attributes.Remove( tagClassAttribute );
-            ClassInfo wrapperClassInfo = new ClassInfo( )
+            ClassInfo wrapperClassInfo = new ClassInfo()
             {
                 AccessModifiers = AccessModifiers.Public | AccessModifiers.Partial,
-                Constructors = this.Constructors.Select( x => x.MakeWrapper( wrapperName ) ).ToList( ),
+                Constructors = this.Constructors.Select( x => x.MakeWrapper( wrapperName ) ).ToList(),
                 Namespace = this.Namespace,
                 Usings = this.Usings,
                 Value = new GuerillaName( this.Value ),
                 BaseClass = baseName,
             };
-            if(hasTagClassAttribute)
-                wrapperClassInfo.Attributes.Add(tagClassAttribute);
+            if ( hasTagClassAttribute )
+                wrapperClassInfo.Attributes.Add( tagClassAttribute );
             wrapperClassInfo.Value.Name = wrapperName;
             return wrapperClassInfo;
         }
 
         public void GenerateReadBlockTemplateMethod( )
         {
-            MethodsTemplates.Add( new MethodInfo( )
+            MethodsTemplates.Add( new MethodInfo()
             {
                 Arguments = { "BinaryReader binaryReader" },
                 AccessModifiers = AccessModifiers.Internal | AccessModifiers.Virtual,
@@ -192,7 +192,7 @@ return array;",
 
         public void GenerateReadDataMethod( )
         {
-            Methods.Add( new MethodInfo( )
+            Methods.Add( new MethodInfo()
             {
                 Arguments = { "BinaryReader binaryReader" },
                 AccessModifiers = AccessModifiers.Internal | AccessModifiers.Virtual,
@@ -215,7 +215,7 @@ return data;",
 
         public void GenerateBinaryReaderConstructor( )
         {
-            Constructors.Add( new MethodInfo( )
+            Constructors.Add( new MethodInfo()
             {
                 ClassName = this.Value.Name,
                 Returns = "",
@@ -223,26 +223,26 @@ return data;",
                 Arguments = { "BinaryReader binaryReader" },
                 Wrapper = string.IsNullOrWhiteSpace( BaseClass ) ? false : true
             } );
-            StringBuilder stringBuilder = new StringBuilder( );
-            foreach( var item in this.Fields )
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach ( var item in this.Fields )
             {
-                if( item.IsArray )
+                if ( item.IsArray )
                 {
                     // fixed byte array like padding or skip arrays
-                    if( item.ArraySize > 0 && Type.GetType( item.FieldTypeName ) == typeof( byte ) )
+                    if ( item.ArraySize > 0 && Type.GetType( item.FieldTypeName ) == typeof( byte ) )
                     {
                         stringBuilder.AppendLine( string.Format( "this.{0} = binaryReader.ReadBytes({1});", item.Value.Name, item.ArraySize ) );
                     }
                     // variable byte array (data)
-                    else if( Type.GetType( item.FieldTypeName ) == typeof( byte ) )
+                    else if ( Type.GetType( item.FieldTypeName ) == typeof( byte ) )
                     {
                         stringBuilder.AppendLine( string.Format( "this.{0} = ReadData(binaryReader);", item.Value.Name, item.ArraySize ) );
                     }
                     // inline array
-                    else if( item.ArraySize > 0 )
+                    else if ( item.ArraySize > 0 )
                     {
                         string initializer = "";
-                        for( int i = 0; i <= item.ArraySize - 1; i++ )
+                        for ( int i = 0; i <= item.ArraySize - 1; i++ )
                         {
                             initializer += string.Format( "new {0}(binaryReader){1}", item.FieldTypeName, i == item.ArraySize ? "" : ", " );
                         }
@@ -251,26 +251,26 @@ return data;",
                     // assume an TagBlock
                     else
                     {
-                        var methodInfo = this.MethodsTemplates.Where( x => x.ClassName == "Read{0}Array" ).First( );
+                        var methodInfo = this.MethodsTemplates.Where( x => x.ClassName == "Read{0}Array" ).First();
                         stringBuilder.AppendLine( string.Format( "this.{0} = {1};",
                             item.Value.Name, methodInfo.GetMethodCallSignatureFormat( item.FieldTypeName, "binaryReader" ) ) );
                         var method = methodInfo.MakeFromTemplate( item.FieldTypeName );
-                        if( !this.Methods.Where( x => x.ClassName == method.ClassName
+                        if ( !this.Methods.Where( x => x.ClassName == method.ClassName
                             && x.Arguments == method.Arguments
-                            && x.Returns == method.Returns ).Any( ) )
+                            && x.Returns == method.Returns ).Any() )
                             this.Methods.Add( method );
                     }
                 }
                 else
                 {
-                    if( EnumDefinitions.Where( x => x.Value.Name == item.FieldTypeName ).Any( ) )
+                    if ( EnumDefinitions.Where( x => x.Value.Name == item.FieldTypeName ).Any() )
                     {
-                        var enumDefinition = EnumDefinitions.Where( x => x.Value.Name == item.FieldTypeName ).First( );
+                        var enumDefinition = EnumDefinitions.Where( x => x.Value.Name == item.FieldTypeName ).First();
                         string type = enumDefinition.BaseType == EnumInfo.Type.Byte ? "Byte"
                             : enumDefinition.BaseType == EnumInfo.Type.Short ? "Int16" : "Int32";
                         stringBuilder.AppendLine( string.Format( "this.{0} = ({1})binaryReader.Read{2}();", item.Value.Name, item.FieldTypeName, type ) );
                     }
-                    else if( Type.GetType( item.FieldTypeName ) == null )
+                    else if ( Type.GetType( item.FieldTypeName ) == null )
                     {
                         stringBuilder.AppendLine( string.Format( "this.{0} = new {1}(binaryReader);", item.Value.Name, item.FieldTypeName ) );
                     }
@@ -282,7 +282,7 @@ return data;",
                     }
                 }
             }
-            Constructors.Last( ).Body = stringBuilder.ToString( ).TrimEnd( );
+            Constructors.Last().Body = stringBuilder.ToString().TrimEnd();
         }
 
         public override string ToString( )

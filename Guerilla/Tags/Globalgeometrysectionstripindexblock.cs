@@ -1,37 +1,35 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class GlobalGeometrySectionStripIndexBlock : GlobalGeometrySectionStripIndexBlockBase
+    public partial class GlobalGeometrySectionStripIndexBlock : GlobalGeometrySectionStripIndexBlockBase
     {
-        public  GlobalGeometrySectionStripIndexBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalGeometrySectionStripIndexBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 2)]
+    [LayoutAttribute( Size = 2 )]
     public class GlobalGeometrySectionStripIndexBlockBase
     {
         internal short index;
-        internal  GlobalGeometrySectionStripIndexBlockBase(BinaryReader binaryReader)
+        internal GlobalGeometrySectionStripIndexBlockBase( BinaryReader binaryReader )
         {
             this.index = binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;

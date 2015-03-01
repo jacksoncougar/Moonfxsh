@@ -1,11 +1,7 @@
 ﻿using Moonfish.Collision;
 using OpenTK;
-using OpenTK.Input;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace Moonfish.Graphics
 {
@@ -16,9 +12,9 @@ namespace Moonfish.Graphics
         event EventHandler<MouseEventArgs> MouseUp;
         event EventHandler<MouseEventArgs> MouseClick;
         event EventHandler<MouseEventArgs> MouseCaptureChanged;
-        void OnMouseDown(Object sender, MouseEventArgs e);
-        void OnMouseMove(Object sender, MouseEventArgs e);
-        void OnMouseUp(Object sender, MouseEventArgs e);
+        void OnMouseDown( Object sender, MouseEventArgs e );
+        void OnMouseMove( Object sender, MouseEventArgs e );
+        void OnMouseUp( Object sender, MouseEventArgs e );
         void OnMouseClick( Object sender, MouseEventArgs e );
         void OnMouseCaptureChanged( Object sender, EventArgs e );
     }
@@ -35,24 +31,24 @@ namespace Moonfish.Graphics
         public Vector3 HitPointWorld { get; set; }
         public Vector3 HitNormalWorld { get; set; }
 
-        public MouseEventArgs(Camera camera, Vector2 mouseViewportCoordinates, Vector3 mouseWorldCoordinates, 
-            System.Windows.Forms.MouseButtons button)
+        public MouseEventArgs( Camera camera, Vector2 mouseViewportCoordinates, Vector3 mouseWorldCoordinates,
+            System.Windows.Forms.MouseButtons button )
         {
             // Project the mouse coordinates into world-space at the far z-plane
-            var distantWorldPoint = Maths.Project(camera.ViewMatrix, camera.ProjectionMatrix,
-                new Vector3(mouseViewportCoordinates.X, mouseViewportCoordinates.Y, 1f),
-                (Rectangle)camera.Viewport).Xyz;
+            var distantWorldPoint = Maths.Project( camera.ViewMatrix, camera.ProjectionMatrix,
+                new Vector3( mouseViewportCoordinates.X, mouseViewportCoordinates.Y, 1f ),
+                ( Rectangle )camera.Viewport ).Xyz;
 
             // Produce a ray originating at the camera and pointing towards the distant world point^
             this.ScreenCoordinates = mouseViewportCoordinates;
-            this.MouseRay = new Ray(camera.Position, distantWorldPoint);
-            this.MouseRayFarPoint = (distantWorldPoint - camera.Position).Length;
+            this.MouseRay = new Ray( camera.Position, distantWorldPoint );
+            this.MouseRayFarPoint = ( distantWorldPoint - camera.Position ).Length;
             this.Button = button;
             this.WorldCoordinates = mouseWorldCoordinates;
         }
     }
 
-    public delegate void MouseMoveEventHandler(object sender, MouseEventArgs e);
+    public delegate void MouseMoveEventHandler( object sender, MouseEventArgs e );
 
-    public delegate void MatrixChangedEventHandler(object sender, MatrixChangedEventArgs e);
+    public delegate void MatrixChangedEventHandler( object sender, MatrixChangedEventArgs e );
 }

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moonfish.Graphics
 {
@@ -15,7 +11,7 @@ namespace Moonfish.Graphics
         public static Color Selection = Color.FromArgb( 222, 204, 2 );
         public static Color ClearColour = Color.FromArgb( 33, 33, 33 );
 
-        static float seed = new Random( ).Next( 0, 255 ) / 255;
+        static float seed = new Random().Next( 0, 255 ) / 255;
         const float GoldenAngleConjugate = 0.618033988749895f;
         public static Color LinearRandomDiffuseColor
         {
@@ -37,15 +33,15 @@ namespace Moonfish.Graphics
             int q = Convert.ToInt32( value * ( 1 - f * saturation ) );
             int t = Convert.ToInt32( value * ( 1 - ( 1 - f ) * saturation ) );
 
-            if( hi == 0 )
+            if ( hi == 0 )
                 return Color.FromArgb( 255, v, t, p );
-            else if( hi == 1 )
+            else if ( hi == 1 )
                 return Color.FromArgb( 255, q, v, p );
-            else if( hi == 2 )
+            else if ( hi == 2 )
                 return Color.FromArgb( 255, p, v, t );
-            else if( hi == 3 )
+            else if ( hi == 3 )
                 return Color.FromArgb( 255, p, q, v );
-            else if( hi == 4 )
+            else if ( hi == 4 )
                 return Color.FromArgb( 255, t, p, v );
             else
                 return Color.FromArgb( 255, v, p, q );

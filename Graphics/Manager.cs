@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 
 namespace Moonfish.Graphics
 {
@@ -15,60 +14,60 @@ namespace Moonfish.Graphics
     {
         public CollisionWorld World { get; private set; }
 
-        public CollisionManager(Program debug)
+        public CollisionManager( Program debug )
         {
             var defaultCollisionConfiguration = new DefaultCollisionConfiguration();
-            var collisionDispatcher = new CollisionDispatcher(defaultCollisionConfiguration);
+            var collisionDispatcher = new CollisionDispatcher( defaultCollisionConfiguration );
             var broadphase = new DbvtBroadphase();
-            this.World = new CollisionWorld(collisionDispatcher, broadphase, defaultCollisionConfiguration);
-            if (debug != null)
-                this.World.DebugDrawer = new BulletDebugDrawer(debug);
+            this.World = new CollisionWorld( collisionDispatcher, broadphase, defaultCollisionConfiguration );
+            if ( debug != null )
+                this.World.DebugDrawer = new BulletDebugDrawer( debug );
         }
 
-        public void LoadScenarioObjectCollection(ScenarioObject scenarioObject)
+        public void LoadScenarioObjectCollection( ScenarioObject scenarioObject )
         {
-            foreach (var marker in scenarioObject.Model.RenderModel.markerGroups.SelectMany(x => x.markers))
+            foreach ( var marker in scenarioObject.Model.RenderModel.markerGroups.SelectMany( x => x.markers ) )
             {
                 var collisionObject = new BulletSharp.CollisionObject();
-                collisionObject.CollisionShape = new BulletSharp.BoxShape(0.045f);
-                collisionObject.WorldTransform = Matrix4.CreateTranslation(marker.translation) * scenarioObject.Nodes.GetWorldMatrix(marker.nodeIndex);
-                collisionObject.UserObject = scenarioObject.Markers[marker];
+                collisionObject.CollisionShape = new BulletSharp.BoxShape( 0.015f );
+                collisionObject.WorldTransform = Matrix4.CreateTranslation( marker.translation ) * scenarioObject.Nodes.GetWorldMatrix( marker.nodeIndex );
+                collisionObject.UserObject = scenarioObject.Markers[ marker ];
 
-                World.AddCollisionObject(collisionObject);
-
-                var setPropertyMethodInfo = typeof(BulletSharp.CollisionObject).GetProperty("WorldTransform").GetSetMethod();
-                var setProperty = Delegate.CreateDelegate(typeof(Action<Matrix4>), collisionObject, setPropertyMethodInfo);
-
-                scenarioObject.Markers[marker].MarkerUpdatedCallback += (Action<Matrix4>)setProperty;
+                World.AddCollisionObject( collisionObject );
             }
         }
 
-        internal void LoadScenarioCollision(ScenarioStructureBspBlock structureBSP)
+        internal void LoadScenarioCollision( ScenarioStructureBspBlock structureBSP )
         {
 
-            foreach (var cluster in structureBSP.clusters)
+            foreach ( var cluster in structureBSP.clusters )
             {
                 var triangleMesh = new TriangleMesh();
 
-                var vertices = new Vector3[cluster.clusterData[0].section.vertexBuffers[0].vertexBuffer.Data.Length / 12];
-                for (int i = 0; i < vertices.Length; ++i)
+                var vertices = new Vector3[ cluster.clusterData[ 0 ].section.vertexBuffers[ 0 ].vertexBuffer.Data.Length / 12 ];
+                for ( int i = 0; i < vertices.Length; ++i )
                 {
-                    var data = cluster.clusterData[0].section.vertexBuffers[0].vertexBuffer.Data;
-                    vertices[i] = new Vector3(
-                        BitConverter.ToSingle(data, i * 12 + 0),
-                        BitConverter.ToSingle(data, i * 12 + 4),
-                        BitConverter.ToSingle(data, i * 12 + 8));
+                    var data = cluster.clusterData[ 0 ].section.vertexBuffers[ 0 ].vertexBuffer.Data;
+                    vertices[ i ] = new Vector3(
+                        BitConverter.ToSingle( data, i * 12 + 0 ),
+                        BitConverter.ToSingle( data, i * 12 + 4 ),
+                        BitConverter.ToSingle( data, i * 12 + 8 ) );
                 }
                 TriangleIndexVertexArray inte = new TriangleIndexVertexArray(
-                    cluster.clusterData[0].section.stripIndices.Select(x => (int)x.index).ToArray(), vertices);
+                    cluster.clusterData[ 0 ].section.stripIndices.Select( x => ( int )x.index ).ToArray(), vertices );
 
                 CollisionObject o = new CollisionObject();
-                o.CollisionShape = new BvhTriangleMeshShape(inte, true);
+                o.CollisionShape = new BvhTriangleMeshShape( inte, true );
                 o.CollisionFlags = CollisionFlags.StaticObject;
 
 
-                World.AddCollisionObject(o, CollisionFilterGroups.StaticFilter, CollisionFilterGroups.AllFilter);
+                World.AddCollisionObject( o, CollisionFilterGroups.StaticFilter, CollisionFilterGroups.AllFilter );
             }
+        }
+
+        public void OnMouseClick( object sender, System.Windows.Forms.MouseEventArgs e )
+        {
+
         }
     }
 
@@ -80,58 +79,58 @@ namespace Moonfish.Graphics
         public List<RenderObject> ClusterObjects { get; private set; }
         public List<RenderObject> InstancedGeometryObjects { get; private set; }
 
-        public LevelManager(params Program[] programs)
+        public LevelManager( params Program[] programs )
         {
-            shaded = programs.Length > 0 ? programs[0] : null;
-            system = programs.Length > 1 ? programs[1] : null;
+            shaded = programs.Length > 0 ? programs[ 0 ] : null;
+            system = programs.Length > 1 ? programs[ 1 ] : null;
         }
 
-        public void LoadScenarioStructure(ScenarioStructureBspBlock levelBlock)
+        public void LoadScenarioStructure( ScenarioStructureBspBlock levelBlock )
         {
             this.Level = levelBlock;
             ClusterObjects = new List<RenderObject>();
             InstancedGeometryObjects = new List<RenderObject>();
-            foreach (var cluster in this.Level.clusters)
+            foreach ( var cluster in this.Level.clusters )
             {
-                ClusterObjects.Add(new RenderObject(cluster) { DiffuseColour = Colours.LinearRandomDiffuseColor });
+                ClusterObjects.Add( new RenderObject( cluster ) { DiffuseColour = Colours.LinearRandomDiffuseColor } );
 
             }
-            foreach (var item in this.Level.instancedGeometriesDefinitions)
+            foreach ( var item in this.Level.instancedGeometriesDefinitions )
             {
-                InstancedGeometryObjects.Add(new RenderObject(item) { DiffuseColour = Color.DarkRed });
+                InstancedGeometryObjects.Add( new RenderObject( item ) { DiffuseColour = Color.DarkRed } );
             }
         }
 
-        public void RenderLevel()
+        public void RenderLevel( )
         {
-            if (Level == null) return;
+            if ( Level == null ) return;
 
-            var worldMatrixAttribute = shaded.GetAttributeLocation("worldMatrix");
-            var objectMatrixAttribute = shaded.GetAttributeLocation("objectExtents");
+            var worldMatrixAttribute = shaded.GetAttributeLocation( "worldMatrix" );
+            var objectMatrixAttribute = shaded.GetAttributeLocation( "objectExtents" );
 
-            shaded.SetAttribute(worldMatrixAttribute, Matrix4.Identity);
-            shaded.SetAttribute(objectMatrixAttribute, Matrix4.Identity);
+            shaded.SetAttribute( worldMatrixAttribute, Matrix4.Identity );
+            shaded.SetAttribute( objectMatrixAttribute, Matrix4.Identity );
 
-            foreach (var item in ClusterObjects)
-                item.Render(shaded);
-            foreach (var instance in this.Level.instancedGeometryInstances)
+            foreach ( var item in ClusterObjects )
+                item.Render( shaded );
+            foreach ( var instance in this.Level.instancedGeometryInstances )
             {
-                shaded.SetAttribute(worldMatrixAttribute, instance.WorldMatrix);
-                InstancedGeometryObjects[(int)instance.instanceDefinition].Render(shaded);
+                shaded.SetAttribute( worldMatrixAttribute, instance.WorldMatrix );
+                InstancedGeometryObjects[ ( int )instance.instanceDefinition ].Render( shaded );
             }
         }
     }
 
     public class ProgramManager : IEnumerable<Program>
     {
-        public Program SystemProgram { get { return this.Shaders["system"]; } }
+        public Program SystemProgram { get { return this.Shaders[ "system" ]; } }
         Dictionary<string, Program> Shaders { get; set; }
 
-        OpenTK.Vector3 lightPosition = new OpenTK.Vector3(1f, 1f, 0.5f);
+        OpenTK.Vector3 lightPosition = new OpenTK.Vector3( 1f, 1f, 0.5f );
         int NormalMapPaletteTexture;
 
 
-        public ProgramManager()
+        public ProgramManager( )
         {
             Shaders = new Dictionary<string, Program>();
             LoadDefaultShader();
@@ -139,61 +138,61 @@ namespace Moonfish.Graphics
 
         }
 
-        private void LoadSystemShader()
+        private void LoadSystemShader( )
         {
             Program defaultProgram;
-            var vertex_shader = new Shader("data/sys_vertex.vert", ShaderType.VertexShader);
-            var fragment_shader = new Shader("data/sys_fragment.frag", ShaderType.FragmentShader);
-            defaultProgram = new Program("system"); OpenGL.ReportError();
-            GL.BindAttribLocation(defaultProgram.Ident, 0, "Position"); OpenGL.ReportError();
+            var vertex_shader = new Shader( "data/sys_vertex.vert", ShaderType.VertexShader );
+            var fragment_shader = new Shader( "data/sys_fragment.frag", ShaderType.FragmentShader );
+            defaultProgram = new Program( "system" ); OpenGL.ReportError();
+            GL.BindAttribLocation( defaultProgram.Ident, 0, "Position" ); OpenGL.ReportError();
 
-            defaultProgram.Link(new List<Shader>(2) { vertex_shader, fragment_shader }); OpenGL.ReportError();
-            Shaders["system"] = defaultProgram;
+            defaultProgram.Link( new List<Shader>( 2 ) { vertex_shader, fragment_shader } ); OpenGL.ReportError();
+            Shaders[ "system" ] = defaultProgram;
 
         }
 
-        private void LoadDefaultShader()
+        private void LoadDefaultShader( )
         {
             Program defaultProgram;
-            var vertex_shader = new Shader("data/vertex.vert", ShaderType.VertexShader);
-            var fragment_shader = new Shader("data/fragment.frag", ShaderType.FragmentShader);
-            defaultProgram = new Program("shaded"); OpenGL.ReportError();
-            GL.BindAttribLocation(defaultProgram.Ident, 0, "position"); OpenGL.ReportError();
-            GL.BindAttribLocation(defaultProgram.Ident, 1, "texcoord"); OpenGL.ReportError();
-            GL.BindAttribLocation(defaultProgram.Ident, 2, "iNormal"); OpenGL.ReportError();
-            GL.BindAttribLocation(defaultProgram.Ident, 3, "iTangent"); OpenGL.ReportError();
-            GL.BindAttribLocation(defaultProgram.Ident, 4, "iBitangent"); OpenGL.ReportError();
+            var vertex_shader = new Shader( "data/vertex.vert", ShaderType.VertexShader );
+            var fragment_shader = new Shader( "data/fragment.frag", ShaderType.FragmentShader );
+            defaultProgram = new Program( "shaded" ); OpenGL.ReportError();
+            GL.BindAttribLocation( defaultProgram.Ident, 0, "position" ); OpenGL.ReportError();
+            GL.BindAttribLocation( defaultProgram.Ident, 1, "texcoord" ); OpenGL.ReportError();
+            GL.BindAttribLocation( defaultProgram.Ident, 2, "iNormal" ); OpenGL.ReportError();
+            GL.BindAttribLocation( defaultProgram.Ident, 3, "iTangent" ); OpenGL.ReportError();
+            GL.BindAttribLocation( defaultProgram.Ident, 4, "iBitangent" ); OpenGL.ReportError();
 
             //GL.BindAttribLocation(defaultProgram.ID, 3, "colour"); OpenGL.ReportError();
-            defaultProgram.Link(new List<Shader>(2) { vertex_shader, fragment_shader }); OpenGL.ReportError();
-            var loc = GL.GetAttribLocation(defaultProgram.Ident, "worldMatrix");
-            Shaders["default"] = defaultProgram;
+            defaultProgram.Link( new List<Shader>( 2 ) { vertex_shader, fragment_shader } ); OpenGL.ReportError();
+            var loc = GL.GetAttribLocation( defaultProgram.Ident, "worldMatrix" );
+            Shaders[ "default" ] = defaultProgram;
 
 
             LoadNormalMapPalette();
 
-            var p8NormalColourUniform = Shaders["default"].GetUniformLocation("P8NormalColour");
-            var p8NormalMapUniform = Shaders["default"].GetUniformLocation("P8NormalMap");
-            var diffuseMapUniform = Shaders["default"].GetUniformLocation("DiffuseMap");
-            var environmentMapUniform = Shaders["default"].GetUniformLocation("EnvironmentMap");
+            var p8NormalColourUniform = Shaders[ "default" ].GetUniformLocation( "P8NormalColour" );
+            var p8NormalMapUniform = Shaders[ "default" ].GetUniformLocation( "P8NormalMap" );
+            var diffuseMapUniform = Shaders[ "default" ].GetUniformLocation( "DiffuseMap" );
+            var environmentMapUniform = Shaders[ "default" ].GetUniformLocation( "EnvironmentMap" );
 
-            Shaders["default"].Use();
-            Shaders["default"].SetUniform(p8NormalColourUniform, 0);
-            Shaders["default"].SetUniform(p8NormalMapUniform, 3);
-            Shaders["default"].SetUniform(diffuseMapUniform, 1);
-            Shaders["default"].SetUniform(environmentMapUniform, 2);
+            Shaders[ "default" ].Use();
+            Shaders[ "default" ].SetUniform( p8NormalColourUniform, 0 );
+            Shaders[ "default" ].SetUniform( p8NormalMapUniform, 3 );
+            Shaders[ "default" ].SetUniform( diffuseMapUniform, 1 );
+            Shaders[ "default" ].SetUniform( environmentMapUniform, 2 );
 
 
         }
 
-        private void LoadNormalMapPalette()
+        private void LoadNormalMapPalette( )
         {
             NormalMapPaletteTexture = GL.GenTexture();
-            GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture1D, NormalMapPaletteTexture);
-            GL.TexParameter(TextureTarget.Texture1D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Clamp);
-            GL.TexParameter(TextureTarget.Texture1D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture1D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.ActiveTexture( TextureUnit.Texture0 );
+            GL.BindTexture( TextureTarget.Texture1D, NormalMapPaletteTexture );
+            GL.TexParameter( TextureTarget.Texture1D, TextureParameterName.TextureWrapS, ( int )TextureWrapMode.Clamp );
+            GL.TexParameter( TextureTarget.Texture1D, TextureParameterName.TextureMagFilter, ( int )TextureMagFilter.Nearest );
+            GL.TexParameter( TextureTarget.Texture1D, TextureParameterName.TextureMinFilter, ( int )TextureMinFilter.Nearest );
 
             #region Palette Data
             byte[] H2PaletteBuffer = new byte[] {
@@ -256,31 +255,31 @@ namespace Moonfish.Graphics
                 214, 215, 164, 255, 214, 39, 160, 255, 214, 172, 44, 255, 255, 128, 128, 0, };
             #endregion
 
-            GL.TexImage1D(TextureTarget.Texture1D, 0, PixelInternalFormat.Rgba8, 256, 0, PixelFormat.Bgra, PixelType.UnsignedByte, H2PaletteBuffer);
+            GL.TexImage1D( TextureTarget.Texture1D, 0, PixelInternalFormat.Rgba8, 256, 0, PixelFormat.Bgra, PixelType.UnsignedByte, H2PaletteBuffer );
         }
 
-        public void BindNormalMapPaletteTexture(TextureUnit target = TextureUnit.Texture0)
+        public void BindNormalMapPaletteTexture( TextureUnit target = TextureUnit.Texture0 )
         {
-            GL.ActiveTexture(target);
-            GL.BindTexture(TextureTarget.Texture1D, NormalMapPaletteTexture);
+            GL.ActiveTexture( target );
+            GL.BindTexture( TextureTarget.Texture1D, NormalMapPaletteTexture );
         }
 
-        public Program GetProgram(ShaderReference reference)
+        public Program GetProgram( ShaderReference reference )
         {
-            switch (reference.Type)
+            switch ( reference.Type )
             {
-                case ShaderReference.ReferenceType.Halo2: return this.Shaders["default"];
-                case ShaderReference.ReferenceType.System: return this.Shaders["system"];
+                case ShaderReference.ReferenceType.Halo2: return this.Shaders[ "default" ];
+                case ShaderReference.ReferenceType.System: return this.Shaders[ "system" ];
             }
             return null;
         }
 
-        public IEnumerator<Program> GetEnumerator()
+        public IEnumerator<Program> GetEnumerator( )
         {
-            return this.Shaders.Select(x => x.Value).GetEnumerator();
+            return this.Shaders.Select( x => x.Value ).GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator( )
         {
             return this.GetEnumerator();
         }
@@ -294,91 +293,96 @@ namespace Moonfish.Graphics
         Program systemProgram;
         Dictionary<TagIdent, List<ScenarioObject>> objectInstances;
 
-
-        internal void Add(TagIdent ident, ScenarioObject @object)
+        public IEnumerable<ScenarioObject> this[ TagIdent ident ]
         {
-            List<ScenarioObject> instanceList ;
-            if (!objectInstances.TryGetValue(ident, out instanceList))
-            {
-                instanceList = objectInstances[ident] = new List<ScenarioObject>();
-            }
-            instanceList.Add(@object);
+            get { return objectInstances[ ident ]; }
         }
 
-        public MeshManager(Program program, Program systemProgram)
+
+        internal void Add( TagIdent ident, ScenarioObject @object )
+        {
+            List<ScenarioObject> instanceList;
+            if ( !objectInstances.TryGetValue( ident, out instanceList ) )
+            {
+                instanceList = objectInstances[ ident ] = new List<ScenarioObject>();
+            }
+            instanceList.Add( @object );
+        }
+
+        public MeshManager( Program program, Program systemProgram )
             : this()
         {
             this.old_program = program;
             this.systemProgram = systemProgram;
         }
 
-        public MeshManager()
+        public MeshManager( )
         {
             objectInstances = new Dictionary<TagIdent, List<ScenarioObject>>();
         }
 
-        public void LoadCollision(CollisionManager collision)
+        public void LoadCollision( CollisionManager collision )
         {
             this.Collision = collision;
-            foreach (var item in objectInstances.SelectMany(x => x.Value))
+            foreach ( var item in objectInstances.SelectMany( x => x.Value ) )
             {
-                Collision.World.AddCollisionObject(item.CollisionObject);
+                Collision.World.AddCollisionObject( item.CollisionObject );
             }
         }
 
-        public void LoadScenario(MapStream map)
+        public void LoadScenario( MapStream map )
         {
-            this.scenario = map["scnr", ""].Deserialize();
+            this.scenario = map[ "scnr", "" ].Deserialize();
 
             LoadInstances(
-                scenario.scenery.Select(x => (IH2ObjectInstance)x).ToList(),
-                scenario.sceneryPalette.Select(x => (IH2ObjectPalette)x).ToList());
+                scenario.scenery.Select( x => ( IH2ObjectInstance )x ).ToList(),
+                scenario.sceneryPalette.Select( x => ( IH2ObjectPalette )x ).ToList() );
             LoadInstances(
-                scenario.crates.Select(x => (IH2ObjectInstance)x).ToList(),
-                scenario.cratesPalette.Select(x => (IH2ObjectPalette)x).ToList());
+                scenario.crates.Select( x => ( IH2ObjectInstance )x ).ToList(),
+                scenario.cratesPalette.Select( x => ( IH2ObjectPalette )x ).ToList() );
             LoadInstances(
-                scenario.weapons.Select(x => (IH2ObjectInstance)x).ToList(),
-                scenario.weaponPalette.Select(x => (IH2ObjectPalette)x).ToList());
+                scenario.weapons.Select( x => ( IH2ObjectInstance )x ).ToList(),
+                scenario.weaponPalette.Select( x => ( IH2ObjectPalette )x ).ToList() );
             LoadNetgameEquipment(
-                scenario.netgameEquipment.Select(x => x).ToList());
+                scenario.netgameEquipment.Select( x => x ).ToList() );
 
-            Log.Info(GL.GetError().ToString());
+            Log.Info( GL.GetError().ToString() );
         }
 
-        private void LoadNetgameEquipment(List<ScenarioNetgameEquipmentBlock> list)
+        private void LoadNetgameEquipment( List<ScenarioNetgameEquipmentBlock> list )
         {
-            foreach (var item in list.Where(x => !TagIdent.IsNull(x.itemVehicleCollection.Ident)
-                && (x.itemVehicleCollection.Class.ToString() == "vehc" || x.itemVehicleCollection.Class.ToString() == "itmc")))
+            foreach ( var item in list.Where( x => !TagIdent.IsNull( x.itemVehicleCollection.Ident )
+                && ( x.itemVehicleCollection.Class.ToString() == "vehc" || x.itemVehicleCollection.Class.ToString() == "itmc" ) ) )
             {
                 try
                 {
-                    Add(item.itemVehicleCollection.Ident, new ScenarioObject(Halo2.GetReferenceObject<ModelBlock>(
+                    Add( item.itemVehicleCollection.Ident, new ScenarioObject( Halo2.GetReferenceObject<ModelBlock>(
                     Halo2.GetReferenceObject<ObjectBlock>(
                     item.itemVehicleCollection.Class.ToString() == "itmc" ?
-                    Halo2.GetReferenceObject<ItemCollectionBlock>(item.itemVehicleCollection).itemPermutations.First().item
-                    : Halo2.GetReferenceObject<VehicleCollectionBlock>(item.itemVehicleCollection).vehiclePermutations.First().vehicle).model))
+                    Halo2.GetReferenceObject<ItemCollectionBlock>( item.itemVehicleCollection ).itemPermutations.First().item
+                    : Halo2.GetReferenceObject<VehicleCollectionBlock>( item.itemVehicleCollection ).vehiclePermutations.First().vehicle ).model ) )
                     {
                         WorldMatrix = item.WorldMatrix
                     }
                         );
                 }
-                catch (NullReferenceException)
+                catch ( NullReferenceException )
                 {
                 }
             }
         }
 
-        private void LoadInstances(List<IH2ObjectInstance> instances, List<IH2ObjectPalette> objectPalette)
+        private void LoadInstances( List<IH2ObjectInstance> instances, List<IH2ObjectPalette> objectPalette )
         {
-            var join = (from instance in instances
-                        join palette in objectPalette on (int)instance.PaletteIndex equals objectPalette.IndexOf(palette) into gj
-                        from items in gj.DefaultIfEmpty()
-                        select new { instance, Object = items.ObjectReference }).ToArray();
+            var join = ( from instance in instances
+                         join palette in objectPalette on ( int )instance.PaletteIndex equals objectPalette.IndexOf( palette ) into gj
+                         from items in gj.DefaultIfEmpty()
+                         select new { instance, Object = items.ObjectReference } ).ToArray();
 
-            foreach (var item in join)
+            foreach ( var item in join )
             {
-                Add(item.Object.Ident, new ScenarioObject(
-                    Halo2.GetReferenceObject<ModelBlock>(Halo2.GetReferenceObject<ObjectBlock>(item.Object).model))
+                Add( item.Object.Ident, new ScenarioObject(
+                    Halo2.GetReferenceObject<ModelBlock>( Halo2.GetReferenceObject<ObjectBlock>( item.Object ).model ) )
                 {
                     WorldMatrix = item.instance.WorldMatrix
                 }
@@ -386,95 +390,95 @@ namespace Moonfish.Graphics
             }
         }
 
-        public void Draw(Program shaderProgram)
+        public void Draw( Program shaderProgram )
         {
-            if (shaderProgram == null) return;
-            foreach (var item in objectInstances.SelectMany(x => x.Value))
+            if ( shaderProgram == null ) return;
+            foreach ( var item in objectInstances.SelectMany( x => x.Value ) )
             {
                 Vector4 texcoordRange = new Vector4(
-                    item.Model.RenderModel.compressionInfo[0].texcoordBoundsX.Min,
-                    item.Model.RenderModel.compressionInfo[0].texcoordBoundsX.Max,
-                    item.Model.RenderModel.compressionInfo[0].texcoordBoundsY.Min,
-                    item.Model.RenderModel.compressionInfo[0].texcoordBoundsY.Max);
+                    item.Model.RenderModel.compressionInfo[ 0 ].texcoordBoundsX.Min,
+                    item.Model.RenderModel.compressionInfo[ 0 ].texcoordBoundsX.Max,
+                    item.Model.RenderModel.compressionInfo[ 0 ].texcoordBoundsY.Min,
+                    item.Model.RenderModel.compressionInfo[ 0 ].texcoordBoundsY.Max );
 
                 shaderProgram.Use();
 
-                var worldMatrixAttribute = shaderProgram.GetAttributeLocation("worldMatrix");
-                shaderProgram.SetAttribute(worldMatrixAttribute, item.WorldMatrix);
+                var worldMatrixAttribute = shaderProgram.GetAttributeLocation( "worldMatrix" );
+                shaderProgram.SetAttribute( worldMatrixAttribute, item.WorldMatrix );
 
-                var texcoordRangeUniform = shaderProgram.GetUniformLocation("texcoordRangeUniform");
-                shaderProgram.SetUniform(texcoordRangeUniform, ref texcoordRange);
+                var texcoordRangeUniform = shaderProgram.GetUniformLocation( "texcoordRangeUniform" );
+                shaderProgram.SetUniform( texcoordRangeUniform, ref texcoordRange );
 
                 item.Flags = ScenarioObject.RenderFlags.RenderMarkers;
                 IRenderable @object = item;
-                @object.Render(new[] { shaderProgram });
+                @object.Render( new[] { shaderProgram } );
             }
         }
 
-        public void Draw(ProgramManager programManager)
+        public void Draw( ProgramManager programManager )
         {
-            foreach (var item in objectInstances.SelectMany(x => x.Value))
+            foreach ( var item in objectInstances.SelectMany( x => x.Value ) )
             {
-                foreach (var batch in item.Batches)
+                foreach ( var batch in item.Batches )
                 {
-                    var program = programManager.GetProgram(batch.Shader);
-                    if (program == null) continue;
+                    var program = programManager.GetProgram( batch.Shader );
+                    if ( program == null ) continue;
 
                     var usingProgram = program.Use();
 
-                    GL.BindVertexArray(batch.VertexArrayObject);
-                    foreach (var attribute in batch.Attributes.Select(x => new { Name = x.Key, Value = x.Value }))
+                    GL.BindVertexArray( batch.BatchObject.VertexArrayObjectIdent );
+                    foreach ( var attribute in batch.Attributes.Select( x => new { Name = x.Key, Value = x.Value } ) )
                     {
-                        var attributeLocation = program.GetAttributeLocation(attribute.Name);
-                        program.SetAttribute(attributeLocation, attribute.Value);
+                        var attributeLocation = program.GetAttributeLocation( attribute.Name );
+                        program.SetAttribute( attributeLocation, attribute.Value );
                     }
-                    foreach (var uniform in batch.Uniforms.Select(x => new { Name = x.Key, Value = x.Value }))
+                    foreach ( var uniform in batch.Uniforms.Select( x => new { Name = x.Key, Value = x.Value } ) )
                     {
-                        var uniformLocation = program.GetUniformLocation(uniform.Name);
-                        program.SetUniform(uniformLocation, uniform.Value);
+                        var uniformLocation = program.GetUniformLocation( uniform.Name );
+                        program.SetUniform( uniformLocation, uniform.Value );
                     }
                     List<System.IDisposable> openGLStates = new List<System.IDisposable>();
-                    foreach (var state in batch.RenderStates.Select(x => new { Capability = x.Key, Enabled = x.Value }))
+                    foreach ( var state in batch.RenderStates.Select( x => new { Capability = x.Key, Enabled = x.Value } ) )
                     {
-                        openGLStates.Add(state.Enabled ? OpenGL.Enable(state.Capability) : OpenGL.Disable(state.Capability));
+                        openGLStates.Add( state.Enabled ? OpenGL.Enable( state.Capability ) : OpenGL.Disable( state.Capability ) );
                     }
 
-                    GL.DrawElements(batch.PrimitiveType, batch.ElementLength, batch.DrawElementsType, batch.ElementStartIndex);
+                    GL.DrawElements( batch.PrimitiveType, batch.ElementLength, batch.DrawElementsType, batch.ElementStartIndex );
 
                     // Cleanup states
-                    foreach (var state in openGLStates) state.Dispose();
+                    foreach ( var state in openGLStates ) state.Dispose();
                     usingProgram.Dispose();
                 }
             }
         }
 
 
-        public void Add(TagIdent item)
+        public void Add( TagIdent item )
         {
-            var data = Halo2.GetReferenceObject(item);
+            var data = Halo2.GetReferenceObject( item );
             //objects[item] = new ScenarioObject( (ModelBlock)data );
         }
 
-        public void Draw(TagIdent item)
+        public void Draw( TagIdent item )
         {
-            if (objectInstances.ContainsKey(item))
+            if ( objectInstances.ContainsKey( item ) )
             {
                 //IRenderable @object = objects[item] as IRenderable;
                 //@object.Render( new[] { program, systemProgram } );
             }
             else
             {
-                var data = Halo2.GetReferenceObject(item);
+                var data = Halo2.GetReferenceObject( item );
                 //objects[item] = new ScenarioObject( (ModelBlock)data );
             }
         }
 
-        internal void Remove(TagIdent item)
+        internal void Remove( TagIdent item )
         {
-            this.objectInstances.Remove(item);
+            this.objectInstances.Remove( item );
         }
 
-        internal void Clear()
+        internal void Clear( )
         {
             this.objectInstances.Clear();
         }

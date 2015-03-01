@@ -1,20 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Moonfish.Graphics.Input;
 
 namespace Moonfish.Graphics
 {
-    public class DynamicScene : Scene
+    public partial class DynamicScene : Scene
     {
-        CollisionManager CollisionManager;
+        public CollisionManager CollisionManager { get; set; }
 
-        DynamicScene()
+        public MousePole2D MousePole { get; set; }
+
+        public DynamicScene( )
             : base()
         {
-            CollisionManager = new CollisionManager(base.ProgramManager.SystemProgram);
-         
+            CollisionManager = new CollisionManager( base.ProgramManager.SystemProgram );
+            MousePole = new MousePole2D( this.Camera );
+        }
+
+        public override void Draw( float delta )
+        {
+            base.Draw( delta );
+            MousePole.Render(null);
+            CollisionManager.World.DebugDrawWorld();
         }
 
 

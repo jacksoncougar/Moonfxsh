@@ -1,20 +1,19 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
+using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class FlockDefinitionBlock : FlockDefinitionBlockBase
+    public partial class FlockDefinitionBlock : FlockDefinitionBlockBase
     {
-        public  FlockDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
+        public FlockDefinitionBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 132)]
+    [LayoutAttribute( Size = 132 )]
     public class FlockDefinitionBlockBase
     {
         internal Moonfish.Tags.ShortBlockIndex1 bsp;
@@ -32,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float productionFrequencyBoidsSec;
         internal Moonfish.Model.Range scale;
-        [TagReference("crea")]
+        [TagReference( "crea" )]
         internal Moonfish.Tags.TagReference creature;
         internal int boidCount;
         /// <summary>
@@ -105,15 +104,15 @@ namespace Moonfish.Guerilla.Tags
         internal float randomOffsetScale01;
         internal Moonfish.Model.Range randomOffsetPeriodSeconds;
         internal Moonfish.Tags.StringID flockName;
-        internal  FlockDefinitionBlockBase(BinaryReader binaryReader)
+        internal FlockDefinitionBlockBase( BinaryReader binaryReader )
         {
             this.bsp = binaryReader.ReadShortBlockIndex1();
-            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.invalidName_ = binaryReader.ReadBytes( 2 );
             this.boundingVolume = binaryReader.ReadShortBlockIndex1();
-            this.flags = (Flags)binaryReader.ReadInt16();
+            this.flags = ( Flags )binaryReader.ReadInt16();
             this.ecologyMarginWus = binaryReader.ReadSingle();
-            this.sources = ReadFlockSourceBlockArray(binaryReader);
-            this.sinks = ReadFlockSinkBlockArray(binaryReader);
+            this.sources = ReadFlockSourceBlockArray( binaryReader );
+            this.sinks = ReadFlockSinkBlockArray( binaryReader );
             this.productionFrequencyBoidsSec = binaryReader.ReadSingle();
             this.scale = binaryReader.ReadRange();
             this.creature = binaryReader.ReadTagReference();
@@ -138,53 +137,52 @@ namespace Moonfish.Guerilla.Tags
             this.randomOffsetPeriodSeconds = binaryReader.ReadRange();
             this.flockName = binaryReader.ReadStringID();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
-        internal  virtual FlockSourceBlock[] ReadFlockSourceBlockArray(BinaryReader binaryReader)
+        internal virtual FlockSourceBlock[] ReadFlockSourceBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(FlockSourceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new FlockSourceBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( FlockSourceBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new FlockSourceBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new FlockSourceBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new FlockSourceBlock( binaryReader );
                 }
             }
             return array;
         }
-        internal  virtual FlockSinkBlock[] ReadFlockSinkBlockArray(BinaryReader binaryReader)
+        internal virtual FlockSinkBlock[] ReadFlockSinkBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(FlockSinkBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new FlockSinkBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( FlockSinkBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new FlockSinkBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new FlockSinkBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new FlockSinkBlock( binaryReader );
                 }
             }
             return array;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             HardBoundariesOnVolume = 1,
             FlockInitiallyStopped = 2,

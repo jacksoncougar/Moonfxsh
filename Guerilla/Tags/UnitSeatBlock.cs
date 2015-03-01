@@ -1,20 +1,18 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class UnitSeatBlock : UnitSeatBlockBase
+    public partial class UnitSeatBlock : UnitSeatBlockBase
     {
-        public  UnitSeatBlock(BinaryReader binaryReader): base(binaryReader)
+        public UnitSeatBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 176)]
+    [LayoutAttribute( Size = 176 )]
     public class UnitSeatBlockBase
     {
         internal Flags flags;
@@ -50,7 +48,7 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID enterSeatString;
         internal float yawMinimum;
         internal float yawMaximum;
-        [TagReference("char")]
+        [TagReference( "char" )]
         internal Moonfish.Tags.TagReference builtInGunner;
         /// <summary>
         /// how close to the entry marker a unit must be
@@ -67,9 +65,9 @@ namespace Moonfish.Guerilla.Tags
         internal float maximumRelativeVelocity;
         internal Moonfish.Tags.StringID invisibleSeatRegion;
         internal int runtimeInvisibleSeatRegionIndex;
-        internal  UnitSeatBlockBase(BinaryReader binaryReader)
+        internal UnitSeatBlockBase( BinaryReader binaryReader )
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
+            this.flags = ( Flags )binaryReader.ReadInt32();
             this.label = binaryReader.ReadStringID();
             this.markerName = binaryReader.ReadStringID();
             this.entryMarkerSName = binaryReader.ReadStringID();
@@ -78,9 +76,9 @@ namespace Moonfish.Guerilla.Tags
             this.boardingMeleeString = binaryReader.ReadStringID();
             this.pingScale = binaryReader.ReadSingle();
             this.turnoverTimeSeconds = binaryReader.ReadSingle();
-            this.acceleration = new UnitSeatAccelerationStructBlock(binaryReader);
+            this.acceleration = new UnitSeatAccelerationStructBlock( binaryReader );
             this.aIScariness = binaryReader.ReadSingle();
-            this.aiSeatType = (AiSeatType)binaryReader.ReadInt16();
+            this.aiSeatType = ( AiSeatType )binaryReader.ReadInt16();
             this.boardingSeat = binaryReader.ReadShortBlockIndex1();
             this.listenerInterpolationFactor = binaryReader.ReadSingle();
             this.yawRateBoundsDegreesPerSecond = binaryReader.ReadRange();
@@ -88,8 +86,8 @@ namespace Moonfish.Guerilla.Tags
             this.minSpeedReference = binaryReader.ReadSingle();
             this.maxSpeedReference = binaryReader.ReadSingle();
             this.speedExponent = binaryReader.ReadSingle();
-            this.unitCamera = new UnitCameraStructBlock(binaryReader);
-            this.unitHudInterface = ReadUnitHudReferenceBlockArray(binaryReader);
+            this.unitCamera = new UnitCameraStructBlock( binaryReader );
+            this.unitHudInterface = ReadUnitHudReferenceBlockArray( binaryReader );
             this.enterSeatString = binaryReader.ReadStringID();
             this.yawMinimum = binaryReader.ReadSingle();
             this.yawMaximum = binaryReader.ReadSingle();
@@ -101,31 +99,31 @@ namespace Moonfish.Guerilla.Tags
             this.invisibleSeatRegion = binaryReader.ReadStringID();
             this.runtimeInvisibleSeatRegionIndex = binaryReader.ReadInt32();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
-        internal  virtual UnitHudReferenceBlock[] ReadUnitHudReferenceBlockArray(BinaryReader binaryReader)
+        internal virtual UnitHudReferenceBlock[] ReadUnitHudReferenceBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(UnitHudReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UnitHudReferenceBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( UnitHudReferenceBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new UnitHudReferenceBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UnitHudReferenceBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new UnitHudReferenceBlock( binaryReader );
                 }
             }
             return array;

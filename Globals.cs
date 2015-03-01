@@ -7,8 +7,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moonfish
 {
@@ -19,10 +17,10 @@ namespace Moonfish
     {
         public static MapType CheckMapType( string filename )
         {
-            using( BinaryReader reader = new BinaryReader( new FileStream( filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 2048, FileOptions.SequentialScan | FileOptions.Asynchronous ) ) )
+            using ( BinaryReader reader = new BinaryReader( new FileStream( filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 2048, FileOptions.SequentialScan | FileOptions.Asynchronous ) ) )
             {
                 reader.BaseStream.Seek( 320, SeekOrigin.Begin );
-                return (MapType)reader.ReadInt32( );
+                return ( MapType )reader.ReadInt32();
             }
         }
 
@@ -48,36 +46,36 @@ namespace Moonfish
 
         public static dynamic GetReferenceObject( TagIdent identifier, bool reload = false )
         {
-            if( mapStream == null ) return null;
-            if( reload )
+            if ( mapStream == null ) return null;
+            if ( reload )
                 mapStream.Remove( identifier );
-            return mapStream[identifier].Deserialize( );
+            return mapStream[ identifier ].Deserialize();
         }
         public static dynamic GetReferenceObject( TagReference reference )
         {
-            if( mapStream == null ) return null;
-            if( reference.Ident == TagIdent.NullIdentifier ) return null;
+            if ( mapStream == null ) return null;
+            if ( reference.Ident == TagIdent.NullIdentifier ) return null;
 
-            return mapStream[reference.Ident].Deserialize( );
+            return mapStream[ reference.Ident ].Deserialize();
         }
 
         public static T GetReferenceObject<T>( TagReference reference ) where T : class
         {
-            if( mapStream == null ) return null;
-            if( reference.Ident == TagIdent.NullIdentifier ) return null;
+            if ( mapStream == null ) return null;
+            if ( reference.Ident == TagIdent.NullIdentifier ) return null;
 
-            return mapStream[reference.Ident].Deserialize( );
+            return mapStream[ reference.Ident ].Deserialize();
         }
 
 
         public static ResourceStream GetResourceBlock( Guerilla.Tags.GlobalGeometryBlockInfoStructBlock blockInfo )
         {
             Stream resourceStream = mapStream;
-            if( blockInfo.ResourceLocation != Halo2.ResourceSource.Local
+            if ( blockInfo.ResourceLocation != Halo2.ResourceSource.Local
                 && !TryGettingResourceStream( blockInfo.blockOffset, out resourceStream ) )
                 return null;
             resourceStream.Position = blockInfo.ResourceOffset + 8;
-            var buffer = new byte[blockInfo.blockSize - 8];
+            var buffer = new byte[ blockInfo.blockSize - 8 ];
             resourceStream.Read( buffer, 0, blockInfo.blockSize - 8 );
             return new ResourceStream( buffer, blockInfo ) { };
         }
@@ -86,33 +84,32 @@ namespace Moonfish
         static MapStream resourceShared;
         static MapStream resourceSinglePlayer;
         static MapStream resourceMainMenu;
-        static TagGroupLookup tagGroups = new TagGroupLookup( );
-        static GlobalStrings strings = new GlobalStrings( );
+        static TagGroupLookup tagGroups = new TagGroupLookup();
+        static GlobalStrings strings = new GlobalStrings();
         static Dictionary<TagClass, Type> definedTagGroupsDictionary;
 
         static Halo2( )
         {
-            Paths = new GlobalPaths( );
+            Paths = new GlobalPaths();
             definedTagGroupsDictionary = new Dictionary<TagClass, Type>( 3 );
             var assembly = typeof( Moonfish.Tag ).Assembly;
-            if( assembly == null ) throw new ArgumentNullException( "assembly" );
+            if ( assembly == null ) throw new ArgumentNullException( "assembly" );
             Type[] types;
             try
             {
-                types = assembly.GetTypes( );
+                types = assembly.GetTypes();
             }
-            catch( ReflectionTypeLoadException e )
-
+            catch ( ReflectionTypeLoadException e )
             {
-                types = e.Types.Where( t => t != null ).ToArray( );
+                types = e.Types.Where( t => t != null ).ToArray();
             }
-            foreach( var type in types )
+            foreach ( var type in types )
             {
                 //if (!type.IsNested)
                 {
-                    if( type.IsDefined( typeof( Tags.TagClassAttribute ), false ) )
+                    if ( type.IsDefined( typeof( Tags.TagClassAttribute ), false ) )
                     {
-                        TagClass class_of_tag = ( type.GetCustomAttributes( typeof( Tags.TagClassAttribute ), false )[0] as Tags.TagClassAttribute ).TagClass;
+                        TagClass class_of_tag = ( type.GetCustomAttributes( typeof( Tags.TagClassAttribute ), false )[ 0 ] as Tags.TagClassAttribute ).TagClass;
                         definedTagGroupsDictionary.Add( class_of_tag, type );
                     }
                 }
@@ -121,7 +118,7 @@ namespace Moonfish
 
         public static bool LoadResource( MapStream map )
         {
-            switch( map.Type )
+            switch ( map.Type )
             {
                 case MapType.Shared:
                     resourceShared = map;
@@ -139,7 +136,7 @@ namespace Moonfish
 
         public static Type GetTypeOf( TagClass className )
         {
-            return definedTagGroupsDictionary[className];
+            return definedTagGroupsDictionary[ className ];
         }
 
         internal static void ActiveMap( MapStream mapstream )
@@ -151,7 +148,7 @@ namespace Moonfish
         {
             var newHash = mapStream.CalculateTaghash( ident );
             var currentHash = mapStream.GetTagHash( ident );
-            if( currentHash == null ) return false;
+            if ( currentHash == null ) return false;
             else
             {
                 var equals = currentHash == newHash;
@@ -161,8 +158,8 @@ namespace Moonfish
 
         internal static bool TryGettingResourceStream( int resourceAddress, out System.IO.Stream resourceStream )
         {
-            var resourceSource = (ResourceSource)( ( resourceAddress & 0xC0000000 ) >> 30 );
-            switch( resourceSource )
+            var resourceSource = ( ResourceSource )( ( resourceAddress & 0xC0000000 ) >> 30 );
+            switch ( resourceSource )
             {
                 case ResourceSource.Shared:
                     resourceStream = Halo2.resourceShared;
@@ -206,7 +203,7 @@ namespace Moonfish
 
         static void LogMessage( string token, string message )
         {
-            if( OnLog != null )
+            if ( OnLog != null )
                 OnLog( string.Format( "{0}: {1}", token, message ) );
         }
 
@@ -218,18 +215,18 @@ namespace Moonfish
 
     public static class StaticBenchmark
     {
-        static Stopwatch Timer = new Stopwatch( );
+        static Stopwatch Timer = new Stopwatch();
         static string result;
 
         public static void Begin( )
         {
-            Timer.Start( );
+            Timer.Start();
         }
         public static void End( )
         {
-            Timer.Stop( );
-            result = Timer.ElapsedMilliseconds.ToString( ) + " Milliseconds";
-            Timer.Reset( );
+            Timer.Stop();
+            result = Timer.ElapsedMilliseconds.ToString() + " Milliseconds";
+            Timer.Reset();
         }
         public static string Result { get { return result; } }
 
@@ -241,12 +238,12 @@ namespace Moonfish
 
     public class TagGroupLookup : IEnumerable, IEnumerable<string>
     {
-        public string this[int index]
+        public string this[ int index ]
         {
-            get { return classes[index]; }
+            get { return classes[ index ]; }
         }
 
-        static readonly List<string> classes = new List<string>( ) {
+        static readonly List<string> classes = new List<string>() {
                                     #region Class Strings
 "$#!+",
 "*cen","*eap","*ehi","*igh","*ipd","*qip","*rea","*sce",
@@ -284,7 +281,7 @@ namespace Moonfish
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator( )
         {
-            return classes.GetEnumerator( );
+            return classes.GetEnumerator();
         }
 
         #endregion
@@ -293,7 +290,7 @@ namespace Moonfish
 
         IEnumerator<string> IEnumerable<string>.GetEnumerator( )
         {
-            return classes.GetEnumerator( );
+            return classes.GetEnumerator();
         }
 
         #endregion

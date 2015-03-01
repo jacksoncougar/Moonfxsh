@@ -82,9 +82,11 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="GlobalStrings.cs" />
+    <Compile Include="Graphics\Batch.cs" />
     <Compile Include="Graphics\BulletDebugDrawer.cs" />
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\DynamicScene.cs" />
+    <Compile Include="Graphics\DynamicScene.Events.cs" />
     <Compile Include="Graphics\MarkerViewer.cs">
       <SubType>Form</SubType>
     </Compile>

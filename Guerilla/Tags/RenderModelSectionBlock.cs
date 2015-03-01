@@ -1,20 +1,18 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class RenderModelSectionBlock : RenderModelSectionBlockBase
+    public partial class RenderModelSectionBlock : RenderModelSectionBlockBase
     {
-        public  RenderModelSectionBlock(BinaryReader binaryReader): base(binaryReader)
+        public RenderModelSectionBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 92)]
+    [LayoutAttribute( Size = 92 )]
     public class RenderModelSectionBlockBase
     {
         internal GlobalGeometryClassificationEnumDefinition globalGeometryClassificationEnumDefinition;
@@ -24,41 +22,41 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal RenderModelSectionDataBlock[] sectionData;
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
-        internal  RenderModelSectionBlockBase(BinaryReader binaryReader)
+        internal RenderModelSectionBlockBase( BinaryReader binaryReader )
         {
-            this.globalGeometryClassificationEnumDefinition = (GlobalGeometryClassificationEnumDefinition)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
+            this.globalGeometryClassificationEnumDefinition = ( GlobalGeometryClassificationEnumDefinition )binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes( 2 );
+            this.sectionInfo = new GlobalGeometrySectionInfoStructBlock( binaryReader );
             this.rigidNode = binaryReader.ReadShortBlockIndex1();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.sectionData = ReadRenderModelSectionDataBlockArray(binaryReader);
-            this.geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            this.flags = ( Flags )binaryReader.ReadInt16();
+            this.sectionData = ReadRenderModelSectionDataBlockArray( binaryReader );
+            this.geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock( binaryReader );
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
-        internal  virtual RenderModelSectionDataBlock[] ReadRenderModelSectionDataBlockArray(BinaryReader binaryReader)
+        internal virtual RenderModelSectionDataBlock[] ReadRenderModelSectionDataBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(RenderModelSectionDataBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderModelSectionDataBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( RenderModelSectionDataBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new RenderModelSectionDataBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RenderModelSectionDataBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new RenderModelSectionDataBlock( binaryReader );
                 }
             }
             return array;

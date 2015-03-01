@@ -1,12 +1,8 @@
 ﻿using Moonfish.Guerilla;
-using System;
+using Moonfish.ResourceManagement;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Runtime.InteropServices;
-using Moonfish.ResourceManagement;
 
 namespace Moonfish.Tags
 {
@@ -29,7 +25,7 @@ namespace Moonfish.Tags
         {
             var field = fields.Last( x => x.type != field_type._field_terminator );
             fields.Remove( field );
-            fields.Insert( fields.IndexOf( fields.Last( ) ), new tag_field( ) { type = field_type._field_pad, Name = "padding", definition = 4 } );
+            fields.Insert( fields.IndexOf( fields.Last() ), new tag_field() { type = field_type._field_pad, Name = "padding", definition = 4 } );
         }
     }
     public partial class DecoratorCacheBlockBlock
@@ -60,7 +56,7 @@ namespace Moonfish.Guerilla.Tags
         internal override StructureBspClusterDataBlockNew[] ReadStructureBspClusterDataBlockNewArray( BinaryReader binaryReader )
         {
             binaryReader.ReadBytes( 8 );
-            using( binaryReader.BaseStream.Pin( ) )
+            using ( binaryReader.BaseStream.Pin() )
             {
                 ResourceStream source = Halo2.GetResourceBlock( this.geometryBlockInfo );
                 BinaryReader reader = new BinaryReader( source );
@@ -71,8 +67,8 @@ namespace Moonfish.Guerilla.Tags
 
     public partial class GlobalGeometryBlockInfoStructBlock
     {
-        public int ResourceOffset { get { return (int)(base.blockOffset & ~0xC0000000); } }
+        public int ResourceOffset { get { return ( int )( base.blockOffset & ~0xC0000000 ); } }
 
-        public Halo2.ResourceSource ResourceLocation { get { return (Halo2.ResourceSource)( ( base.blockOffset & 0xC0000000 ) >> 30 ); } }
+        public Halo2.ResourceSource ResourceLocation { get { return ( Halo2.ResourceSource )( ( base.blockOffset & 0xC0000000 ) >> 30 ); } }
     };
 }

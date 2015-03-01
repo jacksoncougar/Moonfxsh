@@ -35,11 +35,11 @@ namespace Moonfish.Guerilla
 
         #region Imports
 
-        [DllImport("kernel32")]
-        public extern static IntPtr LoadLibrary(string librayName);
+        [DllImport( "kernel32" )]
+        public extern static IntPtr LoadLibrary( string librayName );
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern int LoadString(IntPtr hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax);
+        [DllImport( "user32.dll", CharSet = CharSet.Auto )]
+        public static extern int LoadString( IntPtr hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax );
 
         #endregion
 
@@ -47,71 +47,71 @@ namespace Moonfish.Guerilla
         public static List<tag_group> h2Tags;
         public readonly static Dictionary<string, Action<BinaryReader, IList<tag_field>>> PostprocessFunctions;
 
-        static Guerilla()
+        static Guerilla( )
         {
             h2Tags = new List<tag_group>();
-            Guerilla.h2LangLib = LoadLibrary(H2LanguageLibrary);
+            Guerilla.h2LangLib = LoadLibrary( H2LanguageLibrary );
             PostprocessFunctions = new Dictionary<string, Action<BinaryReader, IList<tag_field>>>();
-            var methods = (from method in Assembly.GetExecutingAssembly().GetTypes().SelectMany(
-                               x => x.GetMethods(BindingFlags.NonPublic | BindingFlags.Static))
-                           where method.IsDefined(typeof(GuerillaPreProcessMethodAttribute), false)
-                           select method).ToArray();
-            foreach (var method in methods)
+            var methods = ( from method in Assembly.GetExecutingAssembly().GetTypes().SelectMany(
+                                x => x.GetMethods( BindingFlags.NonPublic | BindingFlags.Static ) )
+                            where method.IsDefined( typeof( GuerillaPreProcessMethodAttribute ), false )
+                            select method ).ToArray();
+            foreach ( var method in methods )
             {
-                var attributes = method.GetCustomAttributes(typeof(GuerillaPreProcessMethodAttribute), false);
+                var attributes = method.GetCustomAttributes( typeof( GuerillaPreProcessMethodAttribute ), false );
 
-                foreach (GuerillaPreProcessMethodAttribute attribute in attributes)
+                foreach ( GuerillaPreProcessMethodAttribute attribute in attributes )
                 {
-                    PostprocessFunctions[attribute.BlockName] = (Action<BinaryReader, IList<tag_field>>)Delegate.CreateDelegate(typeof(Action<BinaryReader, IList<tag_field>>), (method));
+                    PostprocessFunctions[ attribute.BlockName ] = ( Action<BinaryReader, IList<tag_field>> )Delegate.CreateDelegate( typeof( Action<BinaryReader, IList<tag_field>> ), ( method ) );
                 }
             }
         }
 
-        protected Guerilla(string guerillaExecutablePath)
+        protected Guerilla( string guerillaExecutablePath )
         {
             // Open the guerilla executable.
-            using (BinaryReader reader = new BinaryReader(new VirtualMemoryStream(guerillaExecutablePath, Guerilla.BaseAddress)))
+            using ( BinaryReader reader = new BinaryReader( new VirtualMemoryStream( guerillaExecutablePath, Guerilla.BaseAddress ) ) )
             {
-                Guerilla.h2Tags = new List<tag_group>(Guerilla.NumberOfTagLayouts);
+                Guerilla.h2Tags = new List<tag_group>( Guerilla.NumberOfTagLayouts );
 
                 // Loop through all the tag layouts and extract each one.
-                for (int i = 0; i < Guerilla.NumberOfTagLayouts; i++)
+                for ( int i = 0; i < Guerilla.NumberOfTagLayouts; i++ )
                 {
                     // Go to the tag layout table.
-                    reader.BaseStream.Position = Guerilla.TagLayoutTableAddress + (i * 4);
+                    reader.BaseStream.Position = Guerilla.TagLayoutTableAddress + ( i * 4 );
 
                     // Read the tag layout pointer.
                     int layoutAddress = reader.ReadInt32();
 
                     // Go to the tag layout and read it.
                     reader.BaseStream.Position = layoutAddress;
-                    tag_group tag = new tag_group(reader);
-                    h2Tags.Add(tag);
+                    tag_group tag = new tag_group( reader );
+                    h2Tags.Add( tag );
                 }
             }
         }
 
-        protected virtual string FormatAttributeString(string attributeString)
+        protected virtual string FormatAttributeString( string attributeString )
         {
             return attributeString;
         }
 
-        public static int CalculateSizeOfFieldSet(IList<tag_field> fields)
+        public static int CalculateSizeOfFieldSet( IList<tag_field> fields )
         {
             var totalFieldSetSize = 0;
-            for (int i = 0; i < fields.Count; ++i)
+            for ( int i = 0; i < fields.Count; ++i )
             {
-                var field = fields[i];
-                var fieldSize = CalculateSizeOfField(field);
-                if (field.type == field_type._field_array_start)
+                var field = fields[ i ];
+                var fieldSize = CalculateSizeOfField( field );
+                if ( field.type == field_type._field_array_start )
                 {
                     var arrayCount = field.definition;
                     var elementSize = 0;
                     do
                     {
-                        field = fields[++i];
-                        elementSize += CalculateSizeOfField(field);
-                    } while (field.type != field_type._field_array_end);
+                        field = fields[ ++i ];
+                        elementSize += CalculateSizeOfField( field );
+                    } while ( field.type != field_type._field_array_end );
                     fieldSize += elementSize * arrayCount;
                 }
                 totalFieldSetSize += fieldSize;
@@ -119,28 +119,28 @@ namespace Moonfish.Guerilla
             return totalFieldSetSize;
         }
 
-        public static int CalculateSizeOfField(tag_field field)
+        public static int CalculateSizeOfField( tag_field field )
         {
-            switch (field.type)
+            switch ( field.type )
             {
                 case field_type._field_struct:
                     {
-                        tag_struct_definition struct_definition = (tag_struct_definition)field.Definition;
+                        tag_struct_definition struct_definition = ( tag_struct_definition )field.Definition;
                         TagBlockDefinition blockDefinition = struct_definition.Definition;
 
-                        return CalculateSizeOfFieldSet(blockDefinition.LatestFieldSet.Fields);
+                        return CalculateSizeOfFieldSet( blockDefinition.LatestFieldSet.Fields );
                     }
                 case field_type._field_skip:
                 case field_type._field_pad:
                     return field.definition;
                 default:
-                    return GetFieldSize(field.type);
+                    return GetFieldSize( field.type );
             }
         }
 
-        public static int GetFieldSize(field_type type)
+        public static int GetFieldSize( field_type type )
         {
-            switch (type)
+            switch ( type )
             {
                 #region Standard Types
                 case field_type._field_char_integer:
@@ -234,7 +234,7 @@ namespace Moonfish.Guerilla
                     return 32;
 
                 case field_type._field_moonfish_ident:
-                    return Marshal.SizeOf(typeof(Moonfish.Tags.TagIdent));
+                    return Marshal.SizeOf( typeof( Moonfish.Tags.TagIdent ) );
 
                 //case field_type._field_pad:
                 //case field_type._field_skip:
@@ -251,92 +251,92 @@ namespace Moonfish.Guerilla
             throw new Exception();
         }
 
-        protected static string ValidateFieldName(string fieldName)
+        protected static string ValidateFieldName( string fieldName )
         {
-            using (var provider = new CSharpCodeProvider())
+            using ( var provider = new CSharpCodeProvider() )
             {
-                if (!provider.IsValidIdentifier(fieldName))
+                if ( !provider.IsValidIdentifier( fieldName ) )
                 {
-                    var huh = provider.CreateValidIdentifier(fieldName);
-                    fieldName = string.Format("invalidName_{0}", fieldName);
+                    var huh = provider.CreateValidIdentifier( fieldName );
+                    fieldName = string.Format( "invalidName_{0}", fieldName );
                 }
             }
             return fieldName;
         }
 
-        protected virtual string PostProcessFieldName(string fieldName, Dictionary<string, int> fieldNames)
+        protected virtual string PostProcessFieldName( string fieldName, Dictionary<string, int> fieldNames )
         {
-            if (fieldNames.ContainsKey(fieldName))
+            if ( fieldNames.ContainsKey( fieldName ) )
             {
-                fieldName = fieldName + fieldNames[fieldName]++;
+                fieldName = fieldName + fieldNames[ fieldName ]++;
             }
             else
             {
-                fieldNames[fieldName] = 0;
+                fieldNames[ fieldName ] = 0;
             }
-            return ValidateFieldName(fieldName);
+            return ValidateFieldName( fieldName );
         }
 
-        protected virtual string ResolveFieldName(ref tag_field field, string fallbackFieldName)
+        protected virtual string ResolveFieldName( ref tag_field field, string fallbackFieldName )
         {
-            var fieldName = ToMemberName(field.Name);
+            var fieldName = ToMemberName( field.Name );
             return fieldName == "invalidName_" ? fallbackFieldName : fieldName;
         }
 
-        protected virtual string FormatTypeString(ref tag_field field)
+        protected virtual string FormatTypeString( ref tag_field field )
         {
             return field.type.ToString();
         }
 
-        protected static string ToTypeName(string value)
+        protected static string ToTypeName( string value )
         {
-            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+            TextInfo textInfo = new CultureInfo( "en-US", false ).TextInfo;
             var indices = new List<int>();
-            for(int i = 0; i < value.Length; ++i)
+            for ( int i = 0; i < value.Length; ++i )
             {
-                if( Char.IsUpper( value[i] ) ) indices.Add( i );
+                if ( Char.IsUpper( value[ i ] ) ) indices.Add( i );
             }
-            value.Where(x => Char.IsUpper(x)).Select(x=>value.IndexOf(x)).ToList();
-            var typeName = new StringBuilder(value.Replace('_', ' '));
-            typeName = typeName.Replace('-', ' ');
-            typeName = new StringBuilder(textInfo.ToTitleCase(typeName.ToString()));
-            Regex r = new Regex("[^a-zA-Z0-9 -]");
-            typeName = new StringBuilder(r.Replace(typeName.ToString(), " "));
-            indices.ForEach(x => typeName[x] = Char.ToUpperInvariant(typeName[x]));
-            typeName = typeName.Replace(" ", "");
-            typeName = new StringBuilder(ValidateFieldName(typeName.ToString()));
+            value.Where( x => Char.IsUpper( x ) ).Select( x => value.IndexOf( x ) ).ToList();
+            var typeName = new StringBuilder( value.Replace( '_', ' ' ) );
+            typeName = typeName.Replace( '-', ' ' );
+            typeName = new StringBuilder( textInfo.ToTitleCase( typeName.ToString() ) );
+            Regex r = new Regex( "[^a-zA-Z0-9 -]" );
+            typeName = new StringBuilder( r.Replace( typeName.ToString(), " " ) );
+            indices.ForEach( x => typeName[ x ] = Char.ToUpperInvariant( typeName[ x ] ) );
+            typeName = typeName.Replace( " ", "" );
+            typeName = new StringBuilder( ValidateFieldName( typeName.ToString() ) );
             return typeName.ToString();
         }
 
-        protected static string ToMemberName(string value)
+        protected static string ToMemberName( string value )
         {
-            if (string.Empty == ToTypeName(value)) return string.Empty;
-            StringBuilder memberName = new StringBuilder(ToTypeName(value));
-            var firstChar = char.ToLower(memberName[0]);
-            memberName[0] = firstChar;
+            if ( string.Empty == ToTypeName( value ) ) return string.Empty;
+            StringBuilder memberName = new StringBuilder( ToTypeName( value ) );
+            var firstChar = char.ToLower( memberName[ 0 ] );
+            memberName[ 0 ] = firstChar;
             return memberName.ToString();
         }
 
-        public static string ReadString(BinaryReader reader, int address)
+        public static string ReadString( BinaryReader reader, int address )
         {
             string str = "";
 
             // Check if address is smaller than the base address of the executable.
-            if (address < BaseAddress)
+            if ( address < BaseAddress )
             {
                 // The string is stored in the h2 language library.
-                StringBuilder sb = new StringBuilder(0x1000);
-                LoadString(h2LangLib, (uint)address, sb, sb.Capacity);
+                StringBuilder sb = new StringBuilder( 0x1000 );
+                LoadString( h2LangLib, ( uint )address, sb, sb.Capacity );
                 str = sb.ToString();
             }
-            else if (address > BaseAddress && (address - BaseAddress) < (int)reader.BaseStream.Length)
+            else if ( address > BaseAddress && ( address - BaseAddress ) < ( int )reader.BaseStream.Length )
             {
                 // Seek to the string address.
                 reader.BaseStream.Position = address - BaseAddress;
 
                 // Read the string from the executable.
                 char b;
-                while ((b = reader.ReadChar()) != '\0')
+                while ( ( b = reader.ReadChar() ) != '\0' )
                     str += b;
             }
 

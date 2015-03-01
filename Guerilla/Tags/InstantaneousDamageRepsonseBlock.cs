@@ -1,21 +1,19 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [LayoutAttribute(Size = 80)]
-    public  partial class InstantaneousDamageRepsonseBlock : InstantaneousDamageRepsonseBlockBase
+    [LayoutAttribute( Size = 80 )]
+    public partial class InstantaneousDamageRepsonseBlock : InstantaneousDamageRepsonseBlockBase
     {
-        public  InstantaneousDamageRepsonseBlock(BinaryReader binaryReader): base(binaryReader)
+        public InstantaneousDamageRepsonseBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 80)]
+    [LayoutAttribute( Size = 80 )]
     public class InstantaneousDamageRepsonseBlockBase
     {
         internal ResponseType responseType;
@@ -25,7 +23,7 @@ namespace Moonfish.Guerilla.Tags
         /// repsonse fires after crossing this threshold.  1=full health
         /// </summary>
         internal float damageThreshold;
-        [TagReference("effe")]
+        [TagReference( "effe" )]
         internal Moonfish.Tags.TagReference transitionEffect;
         internal InstantaneousResponseDamageEffectStructBlock damageEffect;
         internal Moonfish.Tags.StringID region;
@@ -37,7 +35,7 @@ namespace Moonfish.Guerilla.Tags
         /// in seconds
         /// </summary>
         internal float responseDelay;
-        [TagReference("effe")]
+        [TagReference( "effe" )]
         internal Moonfish.Tags.TagReference delayEffect;
         internal Moonfish.Tags.StringID delayEffectMarkerName;
         internal Moonfish.Tags.StringID constraintGroupName;
@@ -45,19 +43,19 @@ namespace Moonfish.Guerilla.Tags
         internal float skipFraction;
         internal Moonfish.Tags.StringID destroyedChildObjectMarkerName;
         internal float totalDamageThreshold;
-        internal  InstantaneousDamageRepsonseBlockBase(BinaryReader binaryReader)
+        internal InstantaneousDamageRepsonseBlockBase( BinaryReader binaryReader )
         {
-            this.responseType = (ResponseType)binaryReader.ReadInt16();
-            this.constraintDamageType = (ConstraintDamageType)binaryReader.ReadInt16();
-            this.flags = (Flags)binaryReader.ReadInt32();
+            this.responseType = ( ResponseType )binaryReader.ReadInt16();
+            this.constraintDamageType = ( ConstraintDamageType )binaryReader.ReadInt16();
+            this.flags = ( Flags )binaryReader.ReadInt32();
             this.damageThreshold = binaryReader.ReadSingle();
             this.transitionEffect = binaryReader.ReadTagReference();
-            this.damageEffect = new InstantaneousResponseDamageEffectStructBlock(binaryReader);
+            this.damageEffect = new InstantaneousResponseDamageEffectStructBlock( binaryReader );
             this.region = binaryReader.ReadStringID();
-            this.newState = (NewState)binaryReader.ReadInt16();
+            this.newState = ( NewState )binaryReader.ReadInt16();
             this.runtimeRegionIndex = binaryReader.ReadInt16();
             this.effectMarkerName = binaryReader.ReadStringID();
-            this.damageEffectMarker = new InstantaneousResponseDamageEffectMarkerStructBlock(binaryReader);
+            this.damageEffectMarker = new InstantaneousResponseDamageEffectMarkerStructBlock( binaryReader );
             this.responseDelay = binaryReader.ReadSingle();
             this.delayEffect = binaryReader.ReadTagReference();
             this.delayEffectMarkerName = binaryReader.ReadStringID();
@@ -67,16 +65,16 @@ namespace Moonfish.Guerilla.Tags
             this.destroyedChildObjectMarkerName = binaryReader.ReadStringID();
             this.totalDamageThreshold = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;

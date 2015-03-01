@@ -1,10 +1,5 @@
 ﻿using Moonfish.Model;
 using OpenTK;
-using OpenTK.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Moonfish.Graphics
 {
@@ -26,7 +21,7 @@ namespace Moonfish.Graphics
 
         public override void Update( params float[] input )
         {
-            if( input.Length >= 2 ) Pan( input[0], input[1] );
+            if ( input.Length >= 2 ) Pan( input[ 0 ], input[ 1 ] );
         }
     }
 
@@ -49,9 +44,9 @@ namespace Moonfish.Graphics
 
         public override void Update( params float[] input )
         {
-            if( input.Length == 2 ) Zoom( input[0] * input[1] );
-            if( input.Length == 1 ) Zoom( input[0] );
-            else if( input.Length > 0 ) Zoom( input[0] );
+            if ( input.Length == 2 ) Zoom( input[ 0 ] * input[ 1 ] );
+            if ( input.Length == 1 ) Zoom( input[ 0 ] );
+            else if ( input.Length > 0 ) Zoom( input[ 0 ] );
         }
     }
 
@@ -66,7 +61,7 @@ namespace Moonfish.Graphics
         }
         public override void Update( params float[] input )
         {
-            if( input.Length >= 2 ) ArcRotate( input[0], input[1] );
+            if ( input.Length >= 2 ) ArcRotate( input[ 0 ], input[ 1 ] );
         }
         public void ArcRotate( float polarIncrement, float azimuthIncrement )
         {

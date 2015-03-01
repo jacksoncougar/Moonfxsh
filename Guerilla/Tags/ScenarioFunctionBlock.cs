@@ -1,20 +1,19 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
+using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ScenarioFunctionBlock : ScenarioFunctionBlockBase
+    public partial class ScenarioFunctionBlock : ScenarioFunctionBlockBase
     {
-        public  ScenarioFunctionBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioFunctionBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 120)]
+    [LayoutAttribute( Size = 120 )]
     public class ScenarioFunctionBlockBase
     {
         internal Flags flags;
@@ -75,48 +74,47 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 turnOffWith;
         internal byte[] invalidName_2;
         internal byte[] invalidName_3;
-        internal  ScenarioFunctionBlockBase(BinaryReader binaryReader)
+        internal ScenarioFunctionBlockBase( BinaryReader binaryReader )
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
+            this.flags = ( Flags )binaryReader.ReadInt32();
             this.name = binaryReader.ReadString32();
             this.periodSeconds = binaryReader.ReadSingle();
             this.scalePeriodBy = binaryReader.ReadShortBlockIndex1();
-            this.function = (Function)binaryReader.ReadInt16();
+            this.function = ( Function )binaryReader.ReadInt16();
             this.scaleFunctionBy = binaryReader.ReadShortBlockIndex1();
-            this.wobbleFunction = (WobbleFunctionCurveUsedForWobble)binaryReader.ReadInt16();
+            this.wobbleFunction = ( WobbleFunctionCurveUsedForWobble )binaryReader.ReadInt16();
             this.wobblePeriodSeconds = binaryReader.ReadSingle();
             this.wobbleMagnitudePercent = binaryReader.ReadSingle();
             this.squareWaveThreshold = binaryReader.ReadSingle();
             this.stepCount = binaryReader.ReadInt16();
-            this.mapTo = (MapTo)binaryReader.ReadInt16();
+            this.mapTo = ( MapTo )binaryReader.ReadInt16();
             this.sawtoothCount = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.invalidName_ = binaryReader.ReadBytes( 2 );
             this.scaleResultBy = binaryReader.ReadShortBlockIndex1();
-            this.boundsMode = (BoundsModeControlsHowBoundsBelowAreUsed)binaryReader.ReadInt16();
+            this.boundsMode = ( BoundsModeControlsHowBoundsBelowAreUsed )binaryReader.ReadInt16();
             this.bounds = binaryReader.ReadVector2();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.invalidName_1 = binaryReader.ReadBytes(2);
+            this.invalidName_0 = binaryReader.ReadBytes( 4 );
+            this.invalidName_1 = binaryReader.ReadBytes( 2 );
             this.turnOffWith = binaryReader.ReadShortBlockIndex1();
-            this.invalidName_2 = binaryReader.ReadBytes(16);
-            this.invalidName_3 = binaryReader.ReadBytes(16);
+            this.invalidName_2 = binaryReader.ReadBytes( 16 );
+            this.invalidName_3 = binaryReader.ReadBytes( 16 );
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             ScriptedLevelScriptWillSetThisValueOtherSettingsHereWillBeIgnored = 1,
             InvertResultOfFunctionIs1MinusActualResult = 2,
@@ -124,7 +122,6 @@ namespace Moonfish.Guerilla.Tags
             AlwaysActiveFunctionDoesNotDeactivateWhenAtOrBelowLowerBound = 8,
         };
         internal enum Function : short
-        
         {
             One = 0,
             Zero = 1,
@@ -140,7 +137,6 @@ namespace Moonfish.Guerilla.Tags
             Spark = 11,
         };
         internal enum WobbleFunctionCurveUsedForWobble : short
-        
         {
             One = 0,
             Zero = 1,
@@ -156,7 +152,6 @@ namespace Moonfish.Guerilla.Tags
             Spark = 11,
         };
         internal enum MapTo : short
-        
         {
             Linear = 0,
             Early = 1,
@@ -168,7 +163,6 @@ namespace Moonfish.Guerilla.Tags
             Zero = 7,
         };
         internal enum BoundsModeControlsHowBoundsBelowAreUsed : short
-        
         {
             Clip = 0,
             ClipAndNormalize = 1,

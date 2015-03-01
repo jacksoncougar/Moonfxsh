@@ -1,20 +1,19 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
+using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SquadsBlock : SquadsBlockBase
+    public partial class SquadsBlock : SquadsBlockBase
     {
-        public  SquadsBlock(BinaryReader binaryReader): base(binaryReader)
+        public SquadsBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 116)]
+    [LayoutAttribute( Size = 116 )]
     public class SquadsBlockBase
     {
         internal Moonfish.Tags.String32 name;
@@ -45,63 +44,62 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.String32 placementScript;
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
-        internal  SquadsBlockBase(BinaryReader binaryReader)
+        internal SquadsBlockBase( BinaryReader binaryReader )
         {
             this.name = binaryReader.ReadString32();
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.team = (Team)binaryReader.ReadInt16();
+            this.flags = ( Flags )binaryReader.ReadInt32();
+            this.team = ( Team )binaryReader.ReadInt16();
             this.parent = binaryReader.ReadShortBlockIndex1();
             this.squadDelayTimeSeconds = binaryReader.ReadSingle();
             this.normalDiffCount = binaryReader.ReadInt16();
             this.insaneDiffCount = binaryReader.ReadInt16();
-            this.majorUpgrade = (MajorUpgrade)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.majorUpgrade = ( MajorUpgrade )binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes( 2 );
             this.vehicleType = binaryReader.ReadShortBlockIndex1();
             this.characterType = binaryReader.ReadShortBlockIndex1();
             this.initialZone = binaryReader.ReadShortBlockIndex1();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
+            this.invalidName_0 = binaryReader.ReadBytes( 2 );
             this.initialWeapon = binaryReader.ReadShortBlockIndex1();
             this.initialSecondaryWeapon = binaryReader.ReadShortBlockIndex1();
-            this.grenadeType = (GrenadeType)binaryReader.ReadInt16();
+            this.grenadeType = ( GrenadeType )binaryReader.ReadInt16();
             this.initialOrder = binaryReader.ReadShortBlockIndex1();
             this.vehicleVariant = binaryReader.ReadStringID();
-            this.startingLocations = ReadActorStartingLocationsBlockArray(binaryReader);
+            this.startingLocations = ReadActorStartingLocationsBlockArray( binaryReader );
             this.placementScript = binaryReader.ReadString32();
-            this.invalidName_1 = binaryReader.ReadBytes(2);
-            this.invalidName_2 = binaryReader.ReadBytes(2);
+            this.invalidName_1 = binaryReader.ReadBytes( 2 );
+            this.invalidName_2 = binaryReader.ReadBytes( 2 );
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
-        internal  virtual ActorStartingLocationsBlock[] ReadActorStartingLocationsBlockArray(BinaryReader binaryReader)
+        internal virtual ActorStartingLocationsBlock[] ReadActorStartingLocationsBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(ActorStartingLocationsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ActorStartingLocationsBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( ActorStartingLocationsBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new ActorStartingLocationsBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ActorStartingLocationsBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new ActorStartingLocationsBlock( binaryReader );
                 }
             }
             return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             Unused = 1,
             NeverSearch = 2,
@@ -119,7 +117,6 @@ namespace Moonfish.Guerilla.Tags
             UnitsNotEnterableByPlayer = 8192,
         };
         internal enum Team : short
-        
         {
             Default = 0,
             Player = 1,
@@ -139,7 +136,6 @@ namespace Moonfish.Guerilla.Tags
             Unused15 = 15,
         };
         internal enum MajorUpgrade : short
-        
         {
             Normal = 0,
             Few = 1,
@@ -148,7 +144,6 @@ namespace Moonfish.Guerilla.Tags
             All = 4,
         };
         internal enum GrenadeType : short
-        
         {
             NONE = 0,
             HumanGrenade = 1,

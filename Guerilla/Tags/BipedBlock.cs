@@ -1,21 +1,19 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("bipd")]
-    public  partial class BipedBlock : BipedBlockBase
+    [TagClassAttribute( "bipd" )]
+    public partial class BipedBlock : BipedBlockBase
     {
-        public  BipedBlock(BinaryReader binaryReader): base(binaryReader)
+        public BipedBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 296)]
+    [LayoutAttribute( Size = 296 )]
     public class BipedBlockBase : UnitBlock
     {
         internal float movingTurningSpeedDegreesPerSecond;
@@ -84,7 +82,7 @@ namespace Moonfish.Guerilla.Tags
         /// when the biped ragdolls from a head shot it acceleartes based on this value.  0 defaults to the standard acceleration scale
         /// </summary>
         internal float headShotAccScale;
-        [TagReference("effe")]
+        [TagReference( "effe" )]
         internal Moonfish.Tags.TagReference areaDamageEffect;
         internal CharacterPhysicsStructBlock physics;
         /// <summary>
@@ -94,19 +92,20 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// when the flood reanimate this guy, he turns into a ...
         /// </summary>
-        [TagReference("char")]
+        [TagReference( "char" )]
         internal Moonfish.Tags.TagReference reanimationCharacter;
         /// <summary>
         /// when I die, out of the ashes of my death crawls a ...
         /// </summary>
-        [TagReference("char")]
+        [TagReference( "char" )]
         internal Moonfish.Tags.TagReference deathSpawnCharacter;
         internal short deathSpawnCount;
         internal byte[] invalidName_0;
-        internal  BipedBlockBase(BinaryReader binaryReader): base(binaryReader)
+        internal BipedBlockBase( BinaryReader binaryReader )
+            : base( binaryReader )
         {
             this.movingTurningSpeedDegreesPerSecond = binaryReader.ReadSingle();
-            this.flags = (Flags)binaryReader.ReadInt32();
+            this.flags = ( Flags )binaryReader.ReadInt32();
             this.stationaryTurningThreshold = binaryReader.ReadSingle();
             this.jumpVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
             this.maximumSoftLandingTimeSeconds = binaryReader.ReadSingle();
@@ -126,42 +125,42 @@ namespace Moonfish.Guerilla.Tags
             this.cameraVerticalMovementScale = binaryReader.ReadSingle();
             this.cameraExclusionDistanceWorldUnits = binaryReader.ReadSingle();
             this.autoaimWidthWorldUnits = binaryReader.ReadSingle();
-            this.lockOnData = new BipedLockOnDataStructBlock(binaryReader);
-            this.invalidName_ = binaryReader.ReadBytes(16);
+            this.lockOnData = new BipedLockOnDataStructBlock( binaryReader );
+            this.invalidName_ = binaryReader.ReadBytes( 16 );
             this.headShotAccScale = binaryReader.ReadSingle();
             this.areaDamageEffect = binaryReader.ReadTagReference();
-            this.physics = new CharacterPhysicsStructBlock(binaryReader);
-            this.contactPoints = ReadContactPointBlockArray(binaryReader);
+            this.physics = new CharacterPhysicsStructBlock( binaryReader );
+            this.contactPoints = ReadContactPointBlockArray( binaryReader );
             this.reanimationCharacter = binaryReader.ReadTagReference();
             this.deathSpawnCharacter = binaryReader.ReadTagReference();
             this.deathSpawnCount = binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
+            this.invalidName_0 = binaryReader.ReadBytes( 2 );
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
-        internal  virtual ContactPointBlock[] ReadContactPointBlockArray(BinaryReader binaryReader)
+        internal virtual ContactPointBlock[] ReadContactPointBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(ContactPointBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ContactPointBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( ContactPointBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new ContactPointBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ContactPointBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new ContactPointBlock( binaryReader );
                 }
             }
             return array;

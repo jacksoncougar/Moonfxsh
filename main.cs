@@ -1,13 +1,5 @@
-﻿using Moonfish.Debug;
-using Moonfish.Graphics;
-using Moonfish.Guerilla;
-using Moonfish.Tags;
+﻿using Moonfish.Graphics;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Moonfish
@@ -18,7 +10,7 @@ namespace Moonfish
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main( )
         {
             //GuerillaToEnt ripperEnt = new GuerillaToEnt(Local.GuerillaPath);
             //var jmadTag = Guerilla.Guerilla.h2Tags.First(x => x.Class.ToString() == "jmad");
@@ -32,8 +24,8 @@ namespace Moonfish
             //ripper.DumpTagLayout(@"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags", "spas", "");
             //return;
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MarkerViewer());
+            Application.SetCompatibleTextRenderingDefault( false );
+            Application.Run( new MarkerViewer() );
         }
     }
 }

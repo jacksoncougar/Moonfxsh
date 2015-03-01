@@ -1,20 +1,18 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ShaderPassVertexShaderConstantBlock : ShaderPassVertexShaderConstantBlockBase
+    public partial class ShaderPassVertexShaderConstantBlock : ShaderPassVertexShaderConstantBlockBase
     {
-        public  ShaderPassVertexShaderConstantBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderPassVertexShaderConstantBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 12)]
+    [LayoutAttribute( Size = 12 )]
     public class ShaderPassVertexShaderConstantBlockBase
     {
         internal Moonfish.Tags.StringID sourceParameter;
@@ -22,30 +20,29 @@ namespace Moonfish.Guerilla.Tags
         internal RegisterBank registerBank;
         internal short registerIndex;
         internal ComponentMask componentMask;
-        internal  ShaderPassVertexShaderConstantBlockBase(BinaryReader binaryReader)
+        internal ShaderPassVertexShaderConstantBlockBase( BinaryReader binaryReader )
         {
             this.sourceParameter = binaryReader.ReadStringID();
-            this.scaleByTextureStage = (ScaleByTextureStage)binaryReader.ReadInt16();
-            this.registerBank = (RegisterBank)binaryReader.ReadInt16();
+            this.scaleByTextureStage = ( ScaleByTextureStage )binaryReader.ReadInt16();
+            this.registerBank = ( RegisterBank )binaryReader.ReadInt16();
             this.registerIndex = binaryReader.ReadInt16();
-            this.componentMask = (ComponentMask)binaryReader.ReadInt16();
+            this.componentMask = ( ComponentMask )binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
         internal enum ScaleByTextureStage : short
-        
         {
             None = 0,
             Stage0 = 1,
@@ -54,13 +51,11 @@ namespace Moonfish.Guerilla.Tags
             Stage3 = 4,
         };
         internal enum RegisterBank : short
-        
         {
             Vn015 = 0,
             Cn012 = 1,
         };
         internal enum ComponentMask : short
-        
         {
             XValue = 0,
             YValue = 1,

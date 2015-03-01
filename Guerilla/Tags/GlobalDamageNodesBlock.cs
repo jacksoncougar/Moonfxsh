@@ -1,42 +1,40 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [LayoutAttribute(Size = 16)]
-    public  partial class GlobalDamageNodesBlock : GlobalDamageNodesBlockBase
+    [LayoutAttribute( Size = 16 )]
+    public partial class GlobalDamageNodesBlock : GlobalDamageNodesBlockBase
     {
-        public  GlobalDamageNodesBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalDamageNodesBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 16)]
+    [LayoutAttribute( Size = 16 )]
     public class GlobalDamageNodesBlockBase
     {
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
-        internal  GlobalDamageNodesBlockBase(BinaryReader binaryReader)
+        internal GlobalDamageNodesBlockBase( BinaryReader binaryReader )
         {
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.invalidName_1 = binaryReader.ReadBytes(12);
+            this.invalidName_ = binaryReader.ReadBytes( 2 );
+            this.invalidName_0 = binaryReader.ReadBytes( 2 );
+            this.invalidName_1 = binaryReader.ReadBytes( 12 );
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;

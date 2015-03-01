@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Moonfish.Graphics.Input
@@ -16,6 +14,7 @@ namespace Moonfish.Graphics.Input
         World,
         Local,
     }
+
     public class MousePole2D : IDisposable
     {
         public TransformMode Mode { get; set; }
@@ -24,10 +23,10 @@ namespace Moonfish.Graphics.Input
             get { return this.Position; }
             set
             {
-                var previousWorldMatrix = CalculateWorldMatrix( );
+                var previousWorldMatrix = CalculateWorldMatrix();
                 this.position = value;
-                var worldMatrix = CalculateWorldMatrix( );
-                if( WorldMatrixChanged != null )
+                var worldMatrix = CalculateWorldMatrix();
+                if ( WorldMatrixChanged != null )
                     WorldMatrixChanged( this, new MatrixChangedEventArgs( previousWorldMatrix, worldMatrix ) );
             }
         }
@@ -37,10 +36,10 @@ namespace Moonfish.Graphics.Input
             get { return this.rotation; }
             set
             {
-                var previousWorldMatrix = CalculateWorldMatrix( );
+                var previousWorldMatrix = CalculateWorldMatrix();
                 this.rotation = value;
-                var worldMatrix = CalculateWorldMatrix( );
-                if( WorldMatrixChanged != null )
+                var worldMatrix = CalculateWorldMatrix();
+                if ( WorldMatrixChanged != null )
                     WorldMatrixChanged( this, new MatrixChangedEventArgs( previousWorldMatrix, worldMatrix ) );
             }
         }
@@ -50,11 +49,12 @@ namespace Moonfish.Graphics.Input
             var translationMatrix = Matrix4.CreateTranslation( this.position );
             var rotationMatrix = Matrix4.CreateFromQuaternion( this.rotation );
             var scaleMatrix = Matrix4.CreateScale( this.scale );
-            var worldMatrix = rotationMatrix *  translationMatrix ;
+            var worldMatrix = rotationMatrix * translationMatrix;
             return worldMatrix;
         }
 
         public event MatrixChangedEventHandler WorldMatrixChanged;
+
         public Action<Matrix4> SetWorldMatrix;
 
         Vector3 position;
@@ -111,8 +111,8 @@ namespace Moonfish.Graphics.Input
 
         public void OnMouseUp( object sender, MouseEventArgs e )
         {
-            if( Hidden ) return;
-            if( e.Button == MouseButtons.Left )
+            if ( Hidden ) return;
+            if ( e.Button == MouseButtons.Left )
             {
                 selectedAxis = SelectedAxis.None;
             }
@@ -120,8 +120,8 @@ namespace Moonfish.Graphics.Input
 
         public void OnMouseMove( object sender, MouseEventArgs e )
         {
-            if( Hidden ) return;
-            if( selectedAxis != SelectedAxis.None )
+            if ( Hidden ) return;
+            if ( selectedAxis != SelectedAxis.None )
             {
                 Vector3 intersection;
 
@@ -139,26 +139,26 @@ namespace Moonfish.Graphics.Input
                     );
 
 
-                var viewerAxis = ( mouseRay.Origin - origin ).Normalized( );
-                viewerAxis.Normalize( );
+                var viewerAxis = ( mouseRay.Origin - origin ).Normalized();
+                viewerAxis.Normalize();
 
                 // Setup and select the collision plane
                 var planeUNormal = new Vector3( 0, 0, 0 );
                 var planeVNormal = new Vector3( 0, 0, 0 );
                 var translationNormal = new Vector3( 0, 0, 0 );
-                if( selectedAxis.HasFlag( SelectedAxis.U ) )
+                if ( selectedAxis.HasFlag( SelectedAxis.U ) )
                 {
                     planeUNormal = up;
                     planeVNormal = forward;
                     translationNormal = right;
                 }
-                else if( selectedAxis.HasFlag( SelectedAxis.V ) )
+                else if ( selectedAxis.HasFlag( SelectedAxis.V ) )
                 {
                     planeUNormal = right;
                     planeVNormal = up;
                     translationNormal = forward;
                 }
-                else if( selectedAxis.HasFlag( SelectedAxis.W ) )
+                else if ( selectedAxis.HasFlag( SelectedAxis.W ) )
                 {
                     planeUNormal = right;
                     planeVNormal = forward;
@@ -176,7 +176,7 @@ namespace Moonfish.Graphics.Input
 
                 // Select the most perpendicular plane
                 var translationPlaneNormal = planeUNormal;
-                if( cosineToPlaneU > cosineToPlaneV )
+                if ( cosineToPlaneU > cosineToPlaneV )
                 {
                     translationPlaneNormal = planeVNormal;
                 }
@@ -187,7 +187,7 @@ namespace Moonfish.Graphics.Input
                 var translationPlane = new Plane( translationPlaneNormal, -planeOffset );
 
                 float? hit, registrationHit;
-                if( translationPlane.Intersects( mouseRay, out hit )
+                if ( translationPlane.Intersects( mouseRay, out hit )
                     && translationPlane.Intersects( registrationRay, out registrationHit ) )
                 {
                     //// Debug drawing code
@@ -215,7 +215,7 @@ namespace Moonfish.Graphics.Input
 
         public void OnCameraUpdate( object sender, CameraEventArgs e )
         {
-            if( Hidden ) return;
+            if ( Hidden ) return;
             this.scale = e.Camera.CreateScale( origin, 0.5f, pixelSize: 30 );
             var scaleMatrix = Matrix4.CreateScale( scale, scale, scale );
 
@@ -243,7 +243,7 @@ namespace Moonfish.Graphics.Input
         private Vector3 ProjectScreenPoint( Vector3 screenCoordinate )
         {
             var axisDirection = origin;
-            switch( selectedAxis )
+            switch ( selectedAxis )
             {
                 case SelectedAxis.U:
                     axisDirection = origin + right;
@@ -258,7 +258,7 @@ namespace Moonfish.Graphics.Input
             var pointA = Maths.UnProject( viewMatrix * projectionMatrix, origin, viewport, Maths.ProjectionTarget.View );
             var pointB = Maths.UnProject( viewMatrix * projectionMatrix, axisDirection, viewport, Maths.ProjectionTarget.View );
 
-            var lineNormal = ( pointB - pointA ).Normalized( );
+            var lineNormal = ( pointB - pointA ).Normalized();
             var dotProduct = Vector3.Dot( screenCoordinate - pointA, lineNormal );
             var intersection = pointA + lineNormal * dotProduct;
             return intersection;
@@ -272,7 +272,7 @@ namespace Moonfish.Graphics.Input
         private Vector3 ProjectPoint( Vector3 worldCoordinate )
         {
             var axisDirection = origin;
-            switch( selectedAxis )
+            switch ( selectedAxis )
             {
                 case SelectedAxis.U:
                     axisDirection = origin + right;
@@ -289,7 +289,7 @@ namespace Moonfish.Graphics.Input
             var pointC = Maths.UnProject( viewMatrix * projectionMatrix, worldCoordinate, viewport, Maths.ProjectionTarget.View );
 
 
-            var lineNormal = ( pointB - pointA ).Normalized( );
+            var lineNormal = ( pointB - pointA ).Normalized();
             var dotProduct = Vector3.Dot( pointC - pointA, lineNormal );
             var intersection = pointA + lineNormal * dotProduct;
             return intersection;
@@ -305,9 +305,9 @@ namespace Moonfish.Graphics.Input
             this.scale = camera.CreateScale( origin, 0.5f, pixelSize: 85 );
             var scaleMatrix = Matrix4.CreateScale( scale, scale, scale );
 
-            var rotationX = Matrix3.CreateRotationX( (float)Math.Acos( Vector3.Dot( Vector3.UnitX, rightAxis ) ) );
-            var rotationY = Matrix3.CreateRotationY( (float)Math.Acos( Vector3.Dot( Vector3.UnitY, forwardAxis ) ) );
-            var rotationZ = Matrix3.CreateRotationZ( (float)Math.Acos( Vector3.Dot( Vector3.UnitZ, upAxis ) ) );
+            var rotationX = Matrix3.CreateRotationX( ( float )Math.Acos( Vector3.Dot( Vector3.UnitX, rightAxis ) ) );
+            var rotationY = Matrix3.CreateRotationY( ( float )Math.Acos( Vector3.Dot( Vector3.UnitY, forwardAxis ) ) );
+            var rotationZ = Matrix3.CreateRotationZ( ( float )Math.Acos( Vector3.Dot( Vector3.UnitZ, upAxis ) ) );
             this.rotation = Quaternion.FromMatrix( rotationX * rotationY * rotationZ );
             var rotationMatrix = Matrix4.CreateFromQuaternion( this.rotation );
 
@@ -316,9 +316,9 @@ namespace Moonfish.Graphics.Input
             this.forward = Vector3.Transform( new Vector3( 0, 1, 0 ), scaleMatrix * rotationMatrix );
             this.up = Vector3.Transform( new Vector3( 0, 0, 1 ), scaleMatrix * rotationMatrix );
 
-            rightContact = new BulletSharp.CollisionObject( ) { UserObject = this };
-            forwardContact = new BulletSharp.CollisionObject( ) { UserObject = this };
-            upContact = new BulletSharp.CollisionObject( ) { UserObject = this };
+            rightContact = new BulletSharp.CollisionObject() { UserObject = this };
+            forwardContact = new BulletSharp.CollisionObject() { UserObject = this };
+            upContact = new BulletSharp.CollisionObject() { UserObject = this };
 
             BufferData( camera );
             camera.ViewMatrixChanged += camera_ViewMatrixChanged;
@@ -344,15 +344,15 @@ namespace Moonfish.Graphics.Input
 
         public void Render( Program shaderProgram )
         {
-            if( Hidden ) return;
-            using( shaderProgram.Use( ) )
-            using( OpenGL.Enable( EnableCap.PrimitiveRestartFixedIndex ) )
+            if ( Hidden ) return;
+            using ( shaderProgram.Use() )
+            using ( OpenGL.Enable( EnableCap.PrimitiveRestartFixedIndex ) )
             {
-                var worldMatrixUniform = shaderProgram.GetUniformLocation("worldMatrix");
-                shaderProgram.SetUniform(worldMatrixUniform, Matrix4.Identity);
-                GL.BindVertexArray( glBuffers[0] );
+                var worldMatrixUniform = shaderProgram.GetUniformLocation( "worldMatrix" );
+                shaderProgram.SetUniform( worldMatrixUniform, Matrix4.Identity );
+                GL.BindVertexArray( glBuffers[ 0 ] );
                 GL.DrawElements( PrimitiveType.Lines, 6, DrawElementsType.UnsignedShort, IntPtr.Zero );
-                GL.DrawElements( PrimitiveType.TriangleFan, elementCount - 6, DrawElementsType.UnsignedShort, (IntPtr)12 );
+                GL.DrawElements( PrimitiveType.TriangleFan, elementCount - 6, DrawElementsType.UnsignedShort, ( IntPtr )12 );
                 GL.BindVertexArray( 0 );
             }
         }
@@ -378,18 +378,18 @@ namespace Moonfish.Graphics.Input
                 origin + up }
                 .Concat( rightArrowCoordinates )
             .Concat( forwardArrowCoordinates )
-            .Concat( upArrowCoordinates ).ToArray( );
+            .Concat( upArrowCoordinates ).ToArray();
 
             var indices = new ushort[] { 0, 3, 1, 4, 2, 5 };
             var offset = indices.Length;
-            var rightArrowIndices = arrow.Indices.Select( x => x == ushort.MaxValue ? x : (ushort)( x + offset ) ).ToArray( );
+            var rightArrowIndices = arrow.Indices.Select( x => x == ushort.MaxValue ? x : ( ushort )( x + offset ) ).ToArray();
             offset += vertexCount;
-            var forwardArrowIndices = arrow.Indices.Select( x => x == ushort.MaxValue ? x : (ushort)( x + offset ) ).ToArray( );
+            var forwardArrowIndices = arrow.Indices.Select( x => x == ushort.MaxValue ? x : ( ushort )( x + offset ) ).ToArray();
             offset += vertexCount;
-            var upArrowIndices = arrow.Indices.Select( x => x == ushort.MaxValue ? x : (ushort)( x + offset ) ).ToArray( );
+            var upArrowIndices = arrow.Indices.Select( x => x == ushort.MaxValue ? x : ( ushort )( x + offset ) ).ToArray();
             indices = indices.Concat( rightArrowIndices ).Concat( new[] { ushort.MaxValue } )
                 .Concat( forwardArrowIndices ).Concat( new[] { ushort.MaxValue } )
-                .Concat( upArrowIndices ).ToArray( );
+                .Concat( upArrowIndices ).ToArray();
 
             this.elementCount = indices.Length;
 
@@ -399,13 +399,13 @@ namespace Moonfish.Graphics.Input
         private IEnumerable<Vector3> TransformCoordinates( ref Conic_ arrow, Vector3 targetAxis )
         {
             var normal = targetAxis;
-            normal.Normalize( );
-            normal.Normalize( );// idk.
+            normal.Normalize();
+            normal.Normalize();// idk.
             var dot = Vector3.Dot( Vector3.UnitZ, normal );
 
             var axis = Vector3.Cross( Vector3.UnitZ, normal );
             var projection = axis.Length;
-            var angle = (float)Math.Acos( dot );
+            var angle = ( float )Math.Acos( dot );
 
 
             var translationMatrix = Matrix4.CreateTranslation( origin + targetAxis );
@@ -414,19 +414,19 @@ namespace Moonfish.Graphics.Input
 
             var matrix = scaleMatrix * rotationMatrix * translationMatrix;
 
-            var rightArrowCoordinates = arrow.VertexCoordinates.Select( x => Vector3.Transform( x, matrix ) ).ToArray( );
+            var rightArrowCoordinates = arrow.VertexCoordinates.Select( x => Vector3.Transform( x, matrix ) ).ToArray();
 
             return rightArrowCoordinates;
         }
 
         private void BufferData( Vector3[] coordinates, ushort[] indices )
         {
-            this.glBuffers = new[] { GL.GenVertexArray( ), GL.GenBuffer( ), GL.GenBuffer( ) };
+            this.glBuffers = new[] { GL.GenVertexArray(), GL.GenBuffer(), GL.GenBuffer() };
 
-            GL.BindVertexArray( glBuffers[0] );
+            GL.BindVertexArray( glBuffers[ 0 ] );
 
-            GL.BindBuffer( BufferTarget.ArrayBuffer, glBuffers[1] );
-            GL.BindBuffer( BufferTarget.ElementArrayBuffer, glBuffers[2] );
+            GL.BindBuffer( BufferTarget.ArrayBuffer, glBuffers[ 1 ] );
+            GL.BindBuffer( BufferTarget.ElementArrayBuffer, glBuffers[ 2 ] );
 
             // assign colours
             var colourPallet = new[] 
@@ -435,26 +435,26 @@ namespace Moonfish.Graphics.Input
                 selectedAxis.HasFlag(SelectedAxis.V) ? Colours.Selection : Colours.Green,
                 selectedAxis.HasFlag(SelectedAxis.W) ? Colours.Selection : Colours.Blue
             };
-            var colours = colourPallet.SelectMany( x => x.ToFloatRgb( ) ).Concat( colourPallet.SelectMany( x => x.ToFloatRgb( ) ) );
+            var colours = colourPallet.SelectMany( x => x.ToFloatRgb() ).Concat( colourPallet.SelectMany( x => x.ToFloatRgb() ) );
 
             var colourCount = coordinates.Length - 6;
             var palletDivisor = colourCount / 3;
-            for( int i = 0; i < colourCount; ++i )
+            for ( int i = 0; i < colourCount; ++i )
             {
                 var index = ( i / palletDivisor ) % palletDivisor;
-                colours = colours.Concat( colourPallet[index].ToFloatRgb( ) );
+                colours = colours.Concat( colourPallet[ index ].ToFloatRgb() );
             }
 
-            var colourArray = colours.ToArray( );
+            var colourArray = colours.ToArray();
 
             GL.BufferData<ushort>(
                 BufferTarget.ElementArrayBuffer,
-                (IntPtr)( sizeof( ushort ) * indices.Length ),
+                ( IntPtr )( sizeof( ushort ) * indices.Length ),
                 indices,
                 BufferUsageHint.StreamDraw );
             GL.BufferData(
                 BufferTarget.ArrayBuffer,
-                (IntPtr)( Vector3.SizeInBytes * coordinates.Length + sizeof( float ) * colourArray.Length ),
+                ( IntPtr )( Vector3.SizeInBytes * coordinates.Length + sizeof( float ) * colourArray.Length ),
                 IntPtr.Zero,
                 BufferUsageHint.StreamDraw );
 
@@ -463,7 +463,7 @@ namespace Moonfish.Graphics.Input
             BufferColourData( Vector3.SizeInBytes * coordinates.Length, colourArray );
 
             GL.VertexAttribPointer( 0, 3, VertexAttribPointerType.Float, false, 0, 0 );
-            GL.VertexAttribPointer( 1, 3, VertexAttribPointerType.Float, false, 0, (IntPtr)( Vector3.SizeInBytes * coordinates.Length ) );
+            GL.VertexAttribPointer( 1, 3, VertexAttribPointerType.Float, false, 0, ( IntPtr )( Vector3.SizeInBytes * coordinates.Length ) );
 
             GL.EnableVertexAttribArray( 0 );
             GL.EnableVertexAttribArray( 1 );
@@ -475,8 +475,8 @@ namespace Moonfish.Graphics.Input
         {
             GL.BufferSubData<float>(
                 BufferTarget.ArrayBuffer,
-                (IntPtr)( offset ),
-                (IntPtr)( sizeof( float ) * colours.Length ),
+                ( IntPtr )( offset ),
+                ( IntPtr )( sizeof( float ) * colours.Length ),
                 colours );
         }
 
@@ -484,8 +484,8 @@ namespace Moonfish.Graphics.Input
         {
             GL.BufferSubData<Vector3>(
                 BufferTarget.ArrayBuffer,
-                (IntPtr)0,
-                (IntPtr)( Vector3.SizeInBytes * coordinates.Length ),
+                ( IntPtr )0,
+                ( IntPtr )( Vector3.SizeInBytes * coordinates.Length ),
                 coordinates );
         }
 
@@ -496,15 +496,15 @@ namespace Moonfish.Graphics.Input
 
         private void Dispose( bool disposing )
         {
-            GL.DeleteVertexArray( glBuffers[0] );
-            GL.DeleteBuffer( glBuffers[1] );
-            GL.DeleteBuffer( glBuffers[2] );
-            if( disposing )
+            GL.DeleteVertexArray( glBuffers[ 0 ] );
+            GL.DeleteBuffer( glBuffers[ 1 ] );
+            GL.DeleteBuffer( glBuffers[ 2 ] );
+            if ( disposing )
             {
                 // call IDisposable on members
-                rightContact.Dispose( );
-                forwardContact.Dispose( );
-                upContact.Dispose( );
+                rightContact.Dispose();
+                forwardContact.Dispose();
+                upContact.Dispose();
             }
         }
 

@@ -1,33 +1,31 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class UnitBoardingMeleeStructBlock : UnitBoardingMeleeStructBlockBase
+    public partial class UnitBoardingMeleeStructBlock : UnitBoardingMeleeStructBlockBase
     {
-        public  UnitBoardingMeleeStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public UnitBoardingMeleeStructBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 40)]
+    [LayoutAttribute( Size = 40 )]
     public class UnitBoardingMeleeStructBlockBase
     {
-        [TagReference("jpt!")]
+        [TagReference( "jpt!" )]
         internal Moonfish.Tags.TagReference boardingMeleeDamage;
-        [TagReference("jpt!")]
+        [TagReference( "jpt!" )]
         internal Moonfish.Tags.TagReference boardingMeleeResponse;
-        [TagReference("jpt!")]
+        [TagReference( "jpt!" )]
         internal Moonfish.Tags.TagReference landingMeleeDamage;
-        [TagReference("jpt!")]
+        [TagReference( "jpt!" )]
         internal Moonfish.Tags.TagReference flurryMeleeDamage;
-        [TagReference("jpt!")]
+        [TagReference( "jpt!" )]
         internal Moonfish.Tags.TagReference obstacleSmashDamage;
-        internal  UnitBoardingMeleeStructBlockBase(BinaryReader binaryReader)
+        internal UnitBoardingMeleeStructBlockBase( BinaryReader binaryReader )
         {
             this.boardingMeleeDamage = binaryReader.ReadTagReference();
             this.boardingMeleeResponse = binaryReader.ReadTagReference();
@@ -35,16 +33,16 @@ namespace Moonfish.Guerilla.Tags
             this.flurryMeleeDamage = binaryReader.ReadTagReference();
             this.obstacleSmashDamage = binaryReader.ReadTagReference();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;

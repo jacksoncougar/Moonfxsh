@@ -1,11 +1,8 @@
-﻿using Moonfish.Guerilla;
-using Moonfish.Tags;
+﻿using Moonfish.Tags;
 using OpenTK;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -79,8 +76,8 @@ namespace Moonfish.Guerilla.Tags
         {
             var index = ( from field in fields
                           where field.Name == "Object Data"
-                          select fields.IndexOf( field ) ).Single( );
-            fields.Insert( ++index, new tag_field( ) { type = field_type._field_pad, Name = "indexer", definition = 4 } );
+                          select fields.IndexOf( field ) ).Single();
+            fields.Insert( ++index, new tag_field() { type = field_type._field_pad, Name = "indexer", definition = 4 } );
         }
         #endregion
 

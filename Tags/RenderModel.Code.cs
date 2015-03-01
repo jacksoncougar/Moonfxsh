@@ -1,20 +1,9 @@
-﻿using OpenTK;
+﻿using Moonfish.ResourceManagement;
+using OpenTK;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security.Permissions;
-using System.Text;
-using Fasterflect;
-using Moonfish.Graphics;
-using Moonfish.ResourceManagement;
-using Moonfish.Tags;
-using OpenTK.Graphics.ES30;
-using Moonfish.Collision;
-using System.Drawing;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -32,7 +21,7 @@ namespace Moonfish.Guerilla.Tags
         internal override RenderModelSectionDataBlock[] ReadRenderModelSectionDataBlockArray( BinaryReader binaryReader )
         {
             binaryReader.ReadBytes( 8 );
-            using( binaryReader.BaseStream.Pin( ) )
+            using ( binaryReader.BaseStream.Pin() )
             {
                 var geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock( binaryReader );
                 ResourceStream source = Halo2.GetResourceBlock( geometryBlockInfo );
@@ -86,7 +75,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 var worldMatrix = Matrix4.Identity;
                 var translation = Matrix4.CreateTranslation( this.defaultTranslation );
-                var rotation = Matrix4.CreateFromQuaternion( this.defaultRotation.Normalized( ) );
+                var rotation = Matrix4.CreateFromQuaternion( this.defaultRotation.Normalized() );
                 return worldMatrix = rotation * translation * Matrix4.Identity;
             }
         }
@@ -96,10 +85,10 @@ namespace Moonfish.Guerilla.Tags
     {
         public override object ConvertTo( ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType )
         {
-            if( destinationType == typeof( string ) && value is RenderModelMarkerGroupBlock )
+            if ( destinationType == typeof( string ) && value is RenderModelMarkerGroupBlock )
             {
                 var markerGroup = ( value as RenderModelMarkerGroupBlock );
-                return markerGroup.name.ToString( );
+                return markerGroup.name.ToString();
             }
             return base.ConvertTo( context, culture, value, destinationType );
         }
@@ -110,18 +99,18 @@ namespace Moonfish.Guerilla.Tags
         internal override GlobalGeometrySectionVertexBufferBlock[] ReadGlobalGeometrySectionVertexBufferBlockArray( BinaryReader binaryReader )
         {
             var vertexBuffers = base.ReadGlobalGeometrySectionVertexBufferBlockArray( binaryReader );
-            using( binaryReader.BaseStream.Pin( ) )
+            using ( binaryReader.BaseStream.Pin() )
             {
-                if( binaryReader.BaseStream is ResourceStream )
+                if ( binaryReader.BaseStream is ResourceStream )
                 {
                     var stream = binaryReader.BaseStream as ResourceStream;
 
                     var vertexBufferResources = stream.Resources.Where(
-                        x => x.type == GlobalGeometryBlockResourceBlockBase.Type.VertexBuffer ).ToArray( );
+                        x => x.type == GlobalGeometryBlockResourceBlockBase.Type.VertexBuffer ).ToArray();
 
-                    for( int i = 0; i < vertexBuffers.Length; i++ )
+                    for ( int i = 0; i < vertexBuffers.Length; i++ )
                     {
-                        vertexBuffers[i].vertexBuffer.Data = stream.GetResourceData( vertexBufferResources[i] );
+                        vertexBuffers[ i ].vertexBuffer.Data = stream.GetResourceData( vertexBufferResources[ i ] );
                     }
                 }
                 return vertexBuffers;

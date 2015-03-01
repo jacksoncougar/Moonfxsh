@@ -1,39 +1,37 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ShaderPropertiesBlock : ShaderPropertiesBlockBase
+    public partial class ShaderPropertiesBlock : ShaderPropertiesBlockBase
     {
-        public  ShaderPropertiesBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderPropertiesBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 80)]
+    [LayoutAttribute( Size = 80 )]
     public class ShaderPropertiesBlockBase
     {
-        [TagReference("bitm")]
+        [TagReference( "bitm" )]
         internal Moonfish.Tags.TagReference diffuseMap;
-        [TagReference("bitm")]
+        [TagReference( "bitm" )]
         internal Moonfish.Tags.TagReference lightmapEmissiveMap;
         internal Moonfish.Tags.ColorR8G8B8 lightmapEmissiveColor;
         internal float lightmapEmissivePower;
         internal float lightmapResolutionScale;
         internal float lightmapHalfLife;
         internal float lightmapDiffuseScale;
-        [TagReference("bitm")]
+        [TagReference( "bitm" )]
         internal Moonfish.Tags.TagReference alphaTestMap;
-        [TagReference("bitm")]
+        [TagReference( "bitm" )]
         internal Moonfish.Tags.TagReference translucentMap;
         internal Moonfish.Tags.ColorR8G8B8 lightmapTransparentColor;
         internal float lightmapTransparentAlpha;
         internal float lightmapFoliageScale;
-        internal  ShaderPropertiesBlockBase(BinaryReader binaryReader)
+        internal ShaderPropertiesBlockBase( BinaryReader binaryReader )
         {
             this.diffuseMap = binaryReader.ReadTagReference();
             this.lightmapEmissiveMap = binaryReader.ReadTagReference();
@@ -48,16 +46,16 @@ namespace Moonfish.Guerilla.Tags
             this.lightmapTransparentAlpha = binaryReader.ReadSingle();
             this.lightmapFoliageScale = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;

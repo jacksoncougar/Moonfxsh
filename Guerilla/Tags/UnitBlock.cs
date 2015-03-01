@@ -1,27 +1,25 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("unit")]
-    public  partial class UnitBlock : UnitBlockBase
+    [TagClassAttribute( "unit" )]
+    public partial class UnitBlock : UnitBlockBase
     {
-        public  UnitBlock(BinaryReader binaryReader): base(binaryReader)
+        public UnitBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 304)]
+    [LayoutAttribute( Size = 304 )]
     public class UnitBlockBase : ObjectBlock
     {
         internal Flags flags;
         internal DefaultTeam defaultTeam;
         internal ConstantSoundVolume constantSoundVolume;
-        [TagReference("effe")]
+        [TagReference( "effe" )]
         internal Moonfish.Tags.TagReference integratedLightToggle;
         internal float cameraFieldOfViewDegrees;
         internal float cameraStiffness;
@@ -51,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// automatically created character when this unit is driven
         /// </summary>
-        [TagReference("char")]
+        [TagReference( "char" )]
         internal Moonfish.Tags.TagReference spawnedTurretCharacter;
         /// <summary>
         /// number of actors which we spawn
@@ -75,7 +73,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal Moonfish.Tags.StringID leftHandNode;
         internal UnitAdditionalNodeNamesStructBlock moreDamnNodes;
-        [TagReference("jpt!")]
+        [TagReference( "jpt!" )]
         internal Moonfish.Tags.TagReference meleeDamage;
         internal UnitBoardingMeleeStructBlock yourMomma;
         internal MotionSensorBlipSize motionSensorBlipSize;
@@ -91,16 +89,17 @@ namespace Moonfish.Guerilla.Tags
         internal UnitSeatBlock[] seats;
         internal UnitBoostStructBlock boost;
         internal UnitLipsyncScalesStructBlock lipsync;
-        internal  UnitBlockBase(BinaryReader binaryReader): base(binaryReader)
+        internal UnitBlockBase( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.defaultTeam = (DefaultTeam)binaryReader.ReadInt16();
-            this.constantSoundVolume = (ConstantSoundVolume)binaryReader.ReadInt16();
+            this.flags = ( Flags )binaryReader.ReadInt32();
+            this.defaultTeam = ( DefaultTeam )binaryReader.ReadInt16();
+            this.constantSoundVolume = ( ConstantSoundVolume )binaryReader.ReadInt16();
             this.integratedLightToggle = binaryReader.ReadTagReference();
             this.cameraFieldOfViewDegrees = binaryReader.ReadSingle();
             this.cameraStiffness = binaryReader.ReadSingle();
-            this.unitCamera = new UnitCameraStructBlock(binaryReader);
-            this.acceleration = new UnitSeatAccelerationStructBlock(binaryReader);
+            this.unitCamera = new UnitCameraStructBlock( binaryReader );
+            this.acceleration = new UnitSeatAccelerationStructBlock( binaryReader );
             this.softPingThreshold01 = binaryReader.ReadSingle();
             this.softPingInterruptTimeSeconds = binaryReader.ReadSingle();
             this.hardPingThreshold01 = binaryReader.ReadSingle();
@@ -123,123 +122,123 @@ namespace Moonfish.Guerilla.Tags
             this.lookingAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
             this.rightHandNode = binaryReader.ReadStringID();
             this.leftHandNode = binaryReader.ReadStringID();
-            this.moreDamnNodes = new UnitAdditionalNodeNamesStructBlock(binaryReader);
+            this.moreDamnNodes = new UnitAdditionalNodeNamesStructBlock( binaryReader );
             this.meleeDamage = binaryReader.ReadTagReference();
-            this.yourMomma = new UnitBoardingMeleeStructBlock(binaryReader);
-            this.motionSensorBlipSize = (MotionSensorBlipSize)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.postures = ReadUnitPosturesBlockArray(binaryReader);
-            this.nEWHUDINTERFACES = ReadUnitHudReferenceBlockArray(binaryReader);
-            this.dialogueVariants = ReadDialogueVariantBlockArray(binaryReader);
+            this.yourMomma = new UnitBoardingMeleeStructBlock( binaryReader );
+            this.motionSensorBlipSize = ( MotionSensorBlipSize )binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes( 2 );
+            this.postures = ReadUnitPosturesBlockArray( binaryReader );
+            this.nEWHUDINTERFACES = ReadUnitHudReferenceBlockArray( binaryReader );
+            this.dialogueVariants = ReadDialogueVariantBlockArray( binaryReader );
             this.grenadeVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            this.grenadeType = (GrenadeType)binaryReader.ReadInt16();
+            this.grenadeType = ( GrenadeType )binaryReader.ReadInt16();
             this.grenadeCount = binaryReader.ReadInt16();
-            this.poweredSeats = ReadPoweredSeatBlockArray(binaryReader);
-            this.weapons = ReadUnitWeaponBlockArray(binaryReader);
-            this.seats = ReadUnitSeatBlockArray(binaryReader);
-            this.boost = new UnitBoostStructBlock(binaryReader);
-            this.lipsync = new UnitLipsyncScalesStructBlock(binaryReader);
+            this.poweredSeats = ReadPoweredSeatBlockArray( binaryReader );
+            this.weapons = ReadUnitWeaponBlockArray( binaryReader );
+            this.seats = ReadUnitSeatBlockArray( binaryReader );
+            this.boost = new UnitBoostStructBlock( binaryReader );
+            this.lipsync = new UnitLipsyncScalesStructBlock( binaryReader );
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
-        internal  virtual UnitPosturesBlock[] ReadUnitPosturesBlockArray(BinaryReader binaryReader)
+        internal virtual UnitPosturesBlock[] ReadUnitPosturesBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(UnitPosturesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UnitPosturesBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( UnitPosturesBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new UnitPosturesBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UnitPosturesBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new UnitPosturesBlock( binaryReader );
                 }
             }
             return array;
         }
-        internal  virtual UnitHudReferenceBlock[] ReadUnitHudReferenceBlockArray(BinaryReader binaryReader)
+        internal virtual UnitHudReferenceBlock[] ReadUnitHudReferenceBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(UnitHudReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UnitHudReferenceBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( UnitHudReferenceBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new UnitHudReferenceBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UnitHudReferenceBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new UnitHudReferenceBlock( binaryReader );
                 }
             }
             return array;
         }
-        internal  virtual DialogueVariantBlock[] ReadDialogueVariantBlockArray(BinaryReader binaryReader)
+        internal virtual DialogueVariantBlock[] ReadDialogueVariantBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(DialogueVariantBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new DialogueVariantBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( DialogueVariantBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new DialogueVariantBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new DialogueVariantBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new DialogueVariantBlock( binaryReader );
                 }
             }
             return array;
         }
-        internal  virtual PoweredSeatBlock[] ReadPoweredSeatBlockArray(BinaryReader binaryReader)
+        internal virtual PoweredSeatBlock[] ReadPoweredSeatBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(PoweredSeatBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PoweredSeatBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( PoweredSeatBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new PoweredSeatBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PoweredSeatBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new PoweredSeatBlock( binaryReader );
                 }
             }
             return array;
         }
-        internal  virtual UnitWeaponBlock[] ReadUnitWeaponBlockArray(BinaryReader binaryReader)
+        internal virtual UnitWeaponBlock[] ReadUnitWeaponBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(UnitWeaponBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UnitWeaponBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( UnitWeaponBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new UnitWeaponBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UnitWeaponBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new UnitWeaponBlock( binaryReader );
                 }
             }
             return array;
         }
-        internal  virtual UnitSeatBlock[] ReadUnitSeatBlockArray(BinaryReader binaryReader)
+        internal virtual UnitSeatBlock[] ReadUnitSeatBlockArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf(typeof(UnitSeatBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UnitSeatBlock[blamPointer.Count];
-            using (binaryReader.BaseStream.Pin())
+            var elementSize = Deserializer.SizeOf( typeof( UnitSeatBlock ) );
+            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
+            var array = new UnitSeatBlock[ blamPointer.Count ];
+            using ( binaryReader.BaseStream.Pin() )
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for ( int i = 0; i < blamPointer.Count; ++i )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UnitSeatBlock(binaryReader);
+                    binaryReader.BaseStream.Position = blamPointer[ i ];
+                    array[ i ] = new UnitSeatBlock( binaryReader );
                 }
             }
             return array;

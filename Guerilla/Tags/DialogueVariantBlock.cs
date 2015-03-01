@@ -1,20 +1,18 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class DialogueVariantBlock : DialogueVariantBlockBase
+    public partial class DialogueVariantBlock : DialogueVariantBlockBase
     {
-        public  DialogueVariantBlock(BinaryReader binaryReader): base(binaryReader)
+        public DialogueVariantBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 12)]
+    [LayoutAttribute( Size = 12 )]
     public class DialogueVariantBlockBase
     {
         /// <summary>
@@ -22,24 +20,24 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal short variantNumber;
         internal byte[] invalidName_;
-        [TagReference("udlg")]
+        [TagReference( "udlg" )]
         internal Moonfish.Tags.TagReference dialogue;
-        internal  DialogueVariantBlockBase(BinaryReader binaryReader)
+        internal DialogueVariantBlockBase( BinaryReader binaryReader )
         {
             this.variantNumber = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.invalidName_ = binaryReader.ReadBytes( 2 );
             this.dialogue = binaryReader.ReadTagReference();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;

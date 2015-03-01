@@ -1,20 +1,19 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
+using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ObjectAiPropertiesBlock : ObjectAiPropertiesBlockBase
+    public partial class ObjectAiPropertiesBlock : ObjectAiPropertiesBlockBase
     {
-        public  ObjectAiPropertiesBlock(BinaryReader binaryReader): base(binaryReader)
+        public ObjectAiPropertiesBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 16)]
+    [LayoutAttribute( Size = 16 )]
     public class ObjectAiPropertiesBlockBase
     {
         internal AiFlags aiFlags;
@@ -25,38 +24,36 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal AiSize aiSize;
         internal LeapJumpSpeed leapJumpSpeed;
-        internal  ObjectAiPropertiesBlockBase(BinaryReader binaryReader)
+        internal ObjectAiPropertiesBlockBase( BinaryReader binaryReader )
         {
-            this.aiFlags = (AiFlags)binaryReader.ReadInt32();
+            this.aiFlags = ( AiFlags )binaryReader.ReadInt32();
             this.aiTypeName = binaryReader.ReadStringID();
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.aiSize = (AiSize)binaryReader.ReadInt16();
-            this.leapJumpSpeed = (LeapJumpSpeed)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes( 4 );
+            this.aiSize = ( AiSize )binaryReader.ReadInt16();
+            this.leapJumpSpeed = ( LeapJumpSpeed )binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
         [FlagsAttribute]
         internal enum AiFlags : int
-        
         {
             DetroyableCover = 1,
             PathfindingIgnoreWhenDead = 2,
             DynamicCover = 4,
         };
         internal enum AiSize : short
-        
         {
             Default = 0,
             Tiny = 1,
@@ -67,7 +64,6 @@ namespace Moonfish.Guerilla.Tags
             Immobile = 6,
         };
         internal enum LeapJumpSpeed : short
-        
         {
             NONE = 0,
             Down = 1,

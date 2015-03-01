@@ -1,20 +1,19 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
+using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ScenarioNetpointsBlock : ScenarioNetpointsBlockBase
+    public partial class ScenarioNetpointsBlock : ScenarioNetpointsBlockBase
     {
-        public  ScenarioNetpointsBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioNetpointsBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 32)]
+    [LayoutAttribute( Size = 32 )]
     public class ScenarioNetpointsBlockBase
     {
         internal OpenTK.Vector3 position;
@@ -25,33 +24,32 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal Moonfish.Tags.StringID eMPTYSTRING;
         internal Moonfish.Tags.StringID eMPTYSTRING0;
-        internal  ScenarioNetpointsBlockBase(BinaryReader binaryReader)
+        internal ScenarioNetpointsBlockBase( BinaryReader binaryReader )
         {
             this.position = binaryReader.ReadVector3();
             this.facingDegrees = binaryReader.ReadSingle();
-            this.type = (Type)binaryReader.ReadInt16();
-            this.teamDesignator = (TeamDesignator)binaryReader.ReadInt16();
+            this.type = ( Type )binaryReader.ReadInt16();
+            this.teamDesignator = ( TeamDesignator )binaryReader.ReadInt16();
             this.identifier = binaryReader.ReadInt16();
-            this.flags = (Flags)binaryReader.ReadInt16();
+            this.flags = ( Flags )binaryReader.ReadInt16();
             this.eMPTYSTRING = binaryReader.ReadStringID();
             this.eMPTYSTRING0 = binaryReader.ReadStringID();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
         internal enum Type : short
-        
         {
             CTFFlagSpawn = 0,
             CTFFlagReturn = 1,
@@ -74,7 +72,6 @@ namespace Moonfish.Guerilla.Tags
             KingHill7 = 18,
         };
         internal enum TeamDesignator : short
-        
         {
             RedAlpha = 0,
             BlueBravo = 1,
@@ -88,7 +85,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             MultipleFlagBomb = 1,
             SingleFlagBomb = 2,

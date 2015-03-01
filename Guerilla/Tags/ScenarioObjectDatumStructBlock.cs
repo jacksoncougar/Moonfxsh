@@ -1,20 +1,19 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
+using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ScenarioObjectDatumStructBlock : ScenarioObjectDatumStructBlockBase
+    public partial class ScenarioObjectDatumStructBlock : ScenarioObjectDatumStructBlockBase
     {
-        public  ScenarioObjectDatumStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioObjectDatumStructBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 48)]
+    [LayoutAttribute( Size = 48 )]
     public class ScenarioObjectDatumStructBlockBase
     {
         internal PlacementFlags placementFlags;
@@ -27,36 +26,35 @@ namespace Moonfish.Guerilla.Tags
         internal BSPPolicy bSPPolicy;
         internal byte[] invalidName_;
         internal Moonfish.Tags.ShortBlockIndex1 editorFolder;
-        internal  ScenarioObjectDatumStructBlockBase(BinaryReader binaryReader)
+        internal ScenarioObjectDatumStructBlockBase( BinaryReader binaryReader )
         {
-            this.placementFlags = (PlacementFlags)binaryReader.ReadInt32();
+            this.placementFlags = ( PlacementFlags )binaryReader.ReadInt32();
             this.position = binaryReader.ReadVector3();
             this.rotation = binaryReader.ReadVector3();
             this.scale = binaryReader.ReadSingle();
-            this.transformFlags = (TransformFlags)binaryReader.ReadInt16();
+            this.transformFlags = ( TransformFlags )binaryReader.ReadInt16();
             this.manualBSPFlags = binaryReader.ReadBlockFlags16();
-            this.objectID = new ScenarioObjectIdStructBlock(binaryReader);
-            this.bSPPolicy = (BSPPolicy)binaryReader.ReadByte();
-            this.invalidName_ = binaryReader.ReadBytes(1);
+            this.objectID = new ScenarioObjectIdStructBlock( binaryReader );
+            this.bSPPolicy = ( BSPPolicy )binaryReader.ReadByte();
+            this.invalidName_ = binaryReader.ReadBytes( 1 );
             this.editorFolder = binaryReader.ReadShortBlockIndex1();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
         [FlagsAttribute]
         internal enum PlacementFlags : int
-        
         {
             NotAutomatically = 1,
             Unused = 2,
@@ -70,12 +68,10 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum TransformFlags : short
-        
         {
             Mirrored = 1,
         };
         internal enum BSPPolicy : byte
-        
         {
             Default = 0,
             AlwaysPlaced = 1,

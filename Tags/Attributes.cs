@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Moonfish.Tags
 {
@@ -12,40 +9,40 @@ namespace Moonfish.Tags
         public int MaxElements;
     }
 
-    [AttributeUsage(AttributeTargets.Class,
-        AllowMultiple = false, Inherited = false)]
+    [AttributeUsage( AttributeTargets.Class,
+        AllowMultiple = false, Inherited = false )]
     public class TagClassAttribute : System.Attribute
     {
         public TagClass TagClass { get; set; }
-        public TagClassAttribute(string tagClass)
+        public TagClassAttribute( string tagClass )
         {
-            TagClass = (TagClass)tagClass;
+            TagClass = ( TagClass )tagClass;
         }
     }
 
-    [AttributeUsage(AttributeTargets.Field)]
+    [AttributeUsage( AttributeTargets.Field )]
     public class TagBlockFieldAttribute : TagFieldAttribute
     {
-        public TagBlockFieldAttribute(int fieldOffset) : base(fieldOffset) { }
-   
-        public TagBlockFieldAttribute() { }
-    }
-    
-    [AttributeUsage(AttributeTargets.Field)]
-    public class TagStructFieldAttribute : TagFieldAttribute
-    {
-        public TagStructFieldAttribute() { }
+        public TagBlockFieldAttribute( int fieldOffset ) : base( fieldOffset ) { }
+
+        public TagBlockFieldAttribute( ) { }
     }
 
-    [AttributeUsage(AttributeTargets.All)]
+    [AttributeUsage( AttributeTargets.Field )]
+    public class TagStructFieldAttribute : TagFieldAttribute
+    {
+        public TagStructFieldAttribute( ) { }
+    }
+
+    [AttributeUsage( AttributeTargets.All )]
     public class TagFieldAttribute : Attribute
     {
         public bool UsesCustomFunction = false;
         public int Offset;
         public bool UsesFieldOffset { get { return Offset != -1; } }
 
-        public TagFieldAttribute() : this(-1) { }
-        public TagFieldAttribute(int fieldOffset) 
+        public TagFieldAttribute( ) : this( -1 ) { }
+        public TagFieldAttribute( int fieldOffset )
         {
             this.Offset = fieldOffset;
         }

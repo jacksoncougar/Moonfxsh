@@ -1,20 +1,18 @@
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
-using OpenTK;
-using System;
+using Moonfish.Tags.BlamExtension;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ShaderAnimationPropertyBlock : ShaderAnimationPropertyBlockBase
+    public partial class ShaderAnimationPropertyBlock : ShaderAnimationPropertyBlockBase
     {
-        public  ShaderAnimationPropertyBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderAnimationPropertyBlock( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            
+
         }
     };
-    [LayoutAttribute(Size = 24)]
+    [LayoutAttribute( Size = 24 )]
     public class ShaderAnimationPropertyBlockBase
     {
         internal Type type;
@@ -23,31 +21,30 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID rangeName;
         internal float timePeriodSec;
         internal MappingFunctionBlock function;
-        internal  ShaderAnimationPropertyBlockBase(BinaryReader binaryReader)
+        internal ShaderAnimationPropertyBlockBase( BinaryReader binaryReader )
         {
-            this.type = (Type)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.type = ( Type )binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes( 2 );
             this.inputName = binaryReader.ReadStringID();
             this.rangeName = binaryReader.ReadStringID();
             this.timePeriodSec = binaryReader.ReadSingle();
-            this.function = new MappingFunctionBlock(binaryReader);
+            this.function = new MappingFunctionBlock( binaryReader );
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var data = new byte[ blamPointer.Count ];
+            if ( blamPointer.Count > 0 )
             {
-                using (binaryReader.BaseStream.Pin())
+                using ( binaryReader.BaseStream.Pin() )
                 {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
+                    data = binaryReader.ReadBytes( blamPointer.Count );
                 }
             }
             return data;
         }
         internal enum Type : short
-        
         {
             BitmapScaleUniform = 0,
             BitmapScaleX = 1,

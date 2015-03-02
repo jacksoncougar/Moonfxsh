@@ -6,16 +6,20 @@ namespace Moonfish.Graphics
     {
         public CollisionManager CollisionManager { get; set; }
 
+        public bool DrawDebugCollision { get; set; }
+
         public MousePole2D MousePole { get; set; }
 
         public DynamicScene( )
             : base()
         {
+            DrawDebugCollision = false;
             CollisionManager = new CollisionManager( base.ProgramManager.SystemProgram );
             MousePole = new MousePole2D( this.Camera );
             this.SelectedObjectChanged += OnSelectedObjectChanged;
             foreach ( var item in MousePole.ContactObjects )
                 CollisionManager.World.AddCollisionObject( item );
+            MousePole.Hide();
         }
 
         void OnSelectedObjectChanged( object seneder, SelectEventArgs e )
@@ -37,7 +41,8 @@ namespace Moonfish.Graphics
             base.Draw( delta );
             var program = ProgramManager.GetProgram( new ShaderReference( ShaderReference.ReferenceType.System, 0 ) );
             MousePole.Render( program );
-            CollisionManager.World.DebugDrawWorld();
+            if ( DrawDebugCollision )
+                CollisionManager.World.DebugDrawWorld();
         }
 
         public override void Update( )

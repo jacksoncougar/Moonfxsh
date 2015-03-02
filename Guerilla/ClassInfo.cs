@@ -248,7 +248,7 @@ return data;",
                         }
                         stringBuilder.AppendLine( string.Format( "this.{0} = new []{{ {1} }};", item.Value.Name, initializer ) );
                     }
-                    // assume an TagBlock
+                    // assume a TagBlock
                     else
                     {
                         var methodInfo = this.MethodsTemplates.Where( x => x.ClassName == "Read{0}Array" ).First();

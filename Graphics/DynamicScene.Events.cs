@@ -44,7 +44,7 @@ namespace Moonfish.Graphics
                 if ( e.Button == System.Windows.Forms.MouseButtons.Left )
                 {
                     MousePole.DropHandlers();
-                   // MousePole.Hide();
+                    MousePole.Hide();
                 }
             }
         }

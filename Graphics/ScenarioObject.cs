@@ -155,10 +155,10 @@ namespace Moonfish.Graphics
                             foreach ( var part in mesh.Parts )
                             {
                                 var extents = Model.RenderModel.compressionInfo[ 0 ].ToObjectMatrix();
-                                var colour = Selected ? new ColorF( Color.Yellow ).ToArray() : new ColorF( Color.LightCoral ).ToArray();
+                                var colour = Selected ? new ColorF( Color.Yellow ).RGBA : new ColorF( Color.LightCoral ).RGBA;
 
                                 var texcoordRange = new Vector4(
-                                        Model.RenderModel.compressionInfo[ 0 ].texcoordBoundsX.Min,
+                                       Model.RenderModel.compressionInfo[ 0 ].texcoordBoundsX.Min,
                                        Model.RenderModel.compressionInfo[ 0 ].texcoordBoundsX.Max,
                                        Model.RenderModel.compressionInfo[ 0 ].texcoordBoundsY.Min,
                                        Model.RenderModel.compressionInfo[ 0 ].texcoordBoundsY.Max );
@@ -221,13 +221,13 @@ namespace Moonfish.Graphics
 
                     batch.Shader = new ShaderReference( ShaderReference.ReferenceType.System, 0 );
                     batch.AssignUniform( "WorldMatrixUniform", Matrix4.Identity );
-                    batch.AssignUniform( "Colour", new ColorF( Color.Red ).RGBA );
+                    batch.AssignAttribute( "Colour", new ColorF( Color.Red ).RGBA );
                     batch.AssignRenderState( EnableCap.DepthTest, false );
                     batch.AssignRenderState( EnableCap.VertexProgramPointSize, true );
                     batch.BatchObject = MarkersBatch;
                     yield return batch;
                 }
-                if ( this.Flags.HasFlag( RenderFlags.RenderNodes ) && false )
+                if ( this.Flags.HasFlag( RenderFlags.RenderNodes ) )
                 {
                     List<Vector3> positionData = new List<Vector3>();
 
@@ -257,7 +257,7 @@ namespace Moonfish.Graphics
 
                     batch.Shader = new ShaderReference( ShaderReference.ReferenceType.System, 0 );
                     batch.AssignUniform( "WorldMatrixUniform", Matrix4.Identity );
-                    batch.AssignUniform( "Colour", new ColorF( Color.White ).RGBA );
+                    batch.AssignAttribute( "Colour", new ColorF( Color.White ).RGBA );
                     batch.AssignRenderState( EnableCap.DepthTest, false );
                     batch.AssignRenderState( EnableCap.VertexProgramPointSize, true );
                     batch.BatchObject = NodesBatch;

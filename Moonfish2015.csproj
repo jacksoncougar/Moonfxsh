@@ -52,6 +52,9 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BulletSharp">
       <HintPath>Collision\Release OpenTK\BulletSharp.dll</HintPath>
@@ -128,7 +131,6 @@
     <Compile Include="Graphics\Swizzler.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\Track.cs" />
-    <Compile Include="Guerilla\Class1.cs" />
     <Compile Include="Guerilla\ClassInfo.cs" />
     <Compile Include="Guerilla\GuerillaAttributes.cs" />
     <Compile Include="Guerilla\GuerillaBase.cs" />
@@ -633,6 +635,11 @@
     <Compile Include="MapStream.cs" />
     <Compile Include="Padding.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="PropertyGridExtensions.cs" />
     <Compile Include="ResourceStream.cs" />
     <Compile Include="Tags\Attributes.cs" />
@@ -684,6 +691,7 @@
     <Content Include="Documentation\tangent_space_calculations_cpp.txt" />
     <Content Include="Documentation\vertex_formats.txt" />
     <Content Include="Documentation\vertex_resource_raw.txt" />
+    <Content Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Graphics\MarkerViewer.resx">
@@ -691,6 +699,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Graphics\ShaderViewer.resx">
       <DependentUpon>ShaderViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

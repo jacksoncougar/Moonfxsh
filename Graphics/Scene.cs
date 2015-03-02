@@ -9,7 +9,7 @@ namespace Moonfish.Graphics
     {
         public Performance Performance { get; private set; }
         public MeshManager ObjectManager { get; set; }
-        protected ProgramManager ProgramManager { get; set; }
+        public ProgramManager ProgramManager { get; set; }
         Stopwatch Timer { get; set; }
         public Camera Camera { get; set; }
 

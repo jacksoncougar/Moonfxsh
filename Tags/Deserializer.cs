@@ -13,10 +13,15 @@ namespace Moonfish.Tags
 
     static class Deserializer
     {
+        static List<Tuple<FieldInfo, object, MethodInvoker>> PostProcessQueue;
         static Dictionary<Type, Tuple<MethodInfo, bool>> ExtensionMethodDictionary;
         static Dictionary<Type, Fasterflect.MethodInvoker> ReadTypeMethods;
         static Assembly ExecutingAssembly;
         static MapStream Source;
+
+        public delegate void PreprocessFieldDelegate( BinaryReader sourceReader, FieldInfo field );
+        private delegate void ProcessFieldInfo( BinaryReader binaryReader, Object item, FieldInfo field );
+        public delegate void ProcessTagBlockArrayDelegate( BinaryReader sourceReader, object item, FieldInfo field );
 
         static Deserializer( )
         {
@@ -51,6 +56,24 @@ namespace Moonfish.Tags
             return returnValue;
         }
 
+        public static dynamic Deserialize( this BinaryReader binaryReader, Type type )
+        {
+            var @object = type.CreateInstance();
+
+            var fields = type.Fields(
+                 Flags.Public |
+                 Flags.NonPublic |
+                 Flags.Instance );
+
+            List<FieldDelegateInformation> fieldMethods;
+
+            ProcessFieldTypes( fields, out fieldMethods );
+
+            InvokeFields( binaryReader, @object, fields, fieldMethods );
+
+            return @object;
+        }
+
         private static object DeserializeArray( BinaryReader sourceReader, Type elementType, int elementSize, int elementCount )
         {
             var arrayDataAddress = sourceReader.BaseStream.Position;
@@ -79,7 +102,8 @@ namespace Moonfish.Tags
             }
             return array;
         }
-        static void DeserializeTag( this BinaryReader sourceReader, object item, FieldInfo field )
+
+        private static void DeserializeTag( this BinaryReader sourceReader, object item, FieldInfo field )
         {
             var reference = sourceReader.ReadTagReference();
             Source.Position = Source[ reference.Ident ].Meta.VirtualAddress;
@@ -87,32 +111,12 @@ namespace Moonfish.Tags
             field.SetValue( item, Deserialize( sourceReader, Halo2.GetTypeOf( reference.Class ) ) );
         }
 
-        static void Deserialize( this BinaryReader sourceReader, object item, FieldInfo field )
+        private static void Deserialize( this BinaryReader sourceReader, object item, FieldInfo field )
         {
             field.SetValue( item, Deserialize( sourceReader, field.FieldType ) );
         }
 
-        public static dynamic Deserialize( this BinaryReader sourceReader, Type type )
-        {
-            var streamPosition = sourceReader.BaseStream.Position;
-
-            var item = type.CreateInstance();
-
-            var fields = type.Fields(
-                 Flags.Public |
-                 Flags.NonPublic |
-                 Flags.Instance );
-
-            List<FieldDelegateInformation> fieldMethods;
-
-            ProcessFieldTypes( fields, out fieldMethods );
-
-            InvokeFields( sourceReader, item, fields, fieldMethods );
-
-            return item;
-        }
-
-        struct FieldDelegateInformation
+        private struct FieldDelegateInformation
         {
             public readonly FieldInfo Callee;
             public readonly Delegate MethodDelegate;
@@ -243,11 +247,7 @@ namespace Moonfish.Tags
                 fieldDeletegate( binaryReader, item, field );
             }
         }
-
-        public delegate void PreprocessFieldDelegate( BinaryReader sourceReader, FieldInfo field );
-        public static PreprocessFieldDelegate PreprocessField;
-
-        public delegate void ProcessTagBlockArrayDelegate( BinaryReader sourceReader, object item, FieldInfo field );
+        
         public static ProcessTagBlockArrayDelegate ProcessTagBlockArray = new ProcessTagBlockArrayDelegate( DefaultProcessTagBlockArray );
 
         private static void DefaultProcessTagBlockArray( BinaryReader sourceReader, object item, FieldInfo field )
@@ -273,6 +273,7 @@ namespace Moonfish.Tags
             else elementSize = Marshal.SizeOf( elementType );
             return elementSize;
         }
+
         private static void ProcessFixedStructArray( BinaryReader sourceReader, object item, FieldInfo field )
         {
             Type elementType = field.FieldType.GetElementType();
@@ -285,7 +286,7 @@ namespace Moonfish.Tags
             field.Set( item, array );
         }
 
-        static void ReadFixedArrayField( BinaryReader binaryReader, object item, FieldInfo field )
+        private static void ReadFixedArrayField( BinaryReader binaryReader, object item, FieldInfo field )
         {
             var marhsalAsAttribute = field.Attribute<MarshalAsAttribute>();
             var elementType = field.FieldType.GetElementType();
@@ -308,7 +309,7 @@ namespace Moonfish.Tags
                 field.Set( item, array );
             }
         }
-        static void PostProcessField( BinaryReader binaryReader, object item, FieldInfo field )
+        private static void PostProcessField( BinaryReader binaryReader, object item, FieldInfo field )
         {
             var customReadFieldMethod = ( from method in item.GetType().GetMethods( BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public )
                                           where method.HasParameterSignature( new Type[] { typeof( BinaryReader ), typeof( Object ), typeof( FieldInfo ) } )
@@ -323,7 +324,7 @@ namespace Moonfish.Tags
             var methodInfo = ReadTypeMethods[ type ];
             return methodInfo( binaryReader, new[] { binaryReader } );
         }
-        static void CacheBinaryReaderMethods( )
+        private static void CacheBinaryReaderMethods( )
         {
             var types = ExecutingAssembly.GetTypes();
             // get BinaryReader extension methods from the executing assembly 
@@ -387,9 +388,6 @@ namespace Moonfish.Tags
             else throw new InvalidDataException();
         }
 
-        delegate void ProcessFieldInfo( BinaryReader binaryReader, Object item, FieldInfo field );
-
-        static List<Tuple<FieldInfo, object, MethodInvoker>> PostProcessQueue;
 
         private static int SizeOf( FieldInfo field )
         {

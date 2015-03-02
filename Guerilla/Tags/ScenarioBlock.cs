@@ -2,6 +2,9 @@ using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
+using System.Reflection;
+using System.Linq;
+using Fasterflect;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -295,6 +298,7 @@ namespace Moonfish.Guerilla.Tags
             }
             return array;
         }
+
         internal virtual PredictedResourceBlock[] ReadPredictedResourceBlockArray( BinaryReader binaryReader )
         {
             var elementSize = Deserializer.SizeOf( typeof( PredictedResourceBlock ) );

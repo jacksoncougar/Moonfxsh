@@ -283,8 +283,6 @@ namespace Moonfish
             Halo2.ActiveMap( this );
         }
 
-
-
         Tag current_tag = new Tag();
 
         public IMap this[ TagReference tagReference ]
@@ -337,7 +335,7 @@ namespace Moonfish
                              select tag ).FirstOrDefault();
             if ( tagQuery.Value != null ) return tagQuery.Value;
 
-            this.Position = ( this as IMap ).Meta.VirtualAddress;
+            ( this as IMap ).Seek();
 
             var typeQuery = ( from types in Assembly.GetExecutingAssembly().GetTypes()
                               where types.HasAttribute( typeof( TagClassAttribute ) )
@@ -527,7 +525,7 @@ namespace Moonfish
     /* * *
      * Unicode Handling
      * ----------------
-     * Store and index pointing to a table which maps to a UTF8 string for each language.
+     * Store an index pointing to a table which maps to a UTF8 string for each language.
      * For each Unicode there will be a memory usage of 4 + ( language_count * 4 ) used for indexers
      * 
      * [StringID] -> [index] : 0 -> [Language Switch Mappings] -> [English] -> UTF8 String

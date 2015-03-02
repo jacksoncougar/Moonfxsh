@@ -273,8 +273,6 @@ namespace Moonfish.Tags
         {
             return new RGBColor() { Red = binaryReader.ReadByte(), Green = binaryReader.ReadByte(), Blue = binaryReader.ReadByte() };
         }
-
-
         public static TagReference ReadTagReference( this BinaryReader binaryReader )
         {
             return new TagReference( binaryReader.ReadTagClass(), binaryReader.ReadTagIdent() );

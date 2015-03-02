@@ -300,9 +300,14 @@ namespace Moonfish.Graphics
 
         public IEnumerable<ScenarioObject> this[ TagIdent ident ]
         {
-            get { return objectInstances[ ident ]; }
+            get
+            {
+                List<ScenarioObject> instances;
+                if ( objectInstances.TryGetValue( ident, out instances ) )
+                    return instances;
+                else return Enumerable.Empty<ScenarioObject>();
+            }
         }
-
 
         internal void Add( TagIdent ident, ScenarioObject @object )
         {
@@ -420,7 +425,6 @@ namespace Moonfish.Graphics
             }
         }
 
-        IEnumerable<RenderBatch> batchbuffer;
         public void Draw( ProgramManager programManager )
         {
             foreach ( var batch in objectInstances.SelectMany( x => x.Value ).SelectMany( x => x.Batches ) )

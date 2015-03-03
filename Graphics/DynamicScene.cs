@@ -28,7 +28,6 @@ namespace Moonfish.Graphics
             if ( marker != null )
             {
                 MousePole.DropHandlers();
-                MousePole.Mode = TransformMode.Local;
                 MousePole.Show();
                 MousePole.Position = marker.WorldMatrix.ExtractTranslation();
                 MousePole.Rotation = marker.ParentWorldMatrix.ExtractRotation();
@@ -47,6 +46,16 @@ namespace Moonfish.Graphics
 
         public override void Update( )
         {
+            foreach ( var collisionObject in CollisionManager.World.CollisionObjectArray )
+            {
+                var box = collisionObject as BulletSharp.CollisionObject;
+                if((box) != null && box.UserObject is MarkerWrapper)
+                {
+                    var worldMatrix = box.WorldTransform;
+                    var scale = Camera.CreateScale(worldMatrix.ExtractTranslation(), 0.05f, 10f);
+                    box.CollisionShape.LocalScaling = new OpenTK.Vector3( scale, scale, scale );
+                }
+            }
             CollisionManager.World.PerformDiscreteCollisionDetection();
             base.Update();
         }

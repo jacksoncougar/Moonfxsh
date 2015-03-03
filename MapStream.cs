@@ -79,7 +79,7 @@ namespace Moonfish
         private Dictionary<TagIdent, string> hashTags;
 
         public MapStream( string filename )
-            : base( filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1024 )
+            : base( filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite, 1024 )
         {
             this.MemoryBlocks = new VirtualMappedAddress[ 2 ];
             //HEADER

@@ -21,10 +21,10 @@ namespace Moonfish.Graphics
         public ShaderPassBlock[] shaderPasses;
         public string[] shaderPassPaths;
 
-        public MaterialShader( ShaderBlock inShader, MapStream map )
+        public MaterialShader( ShaderBlock shader, MapStream map )
             : this()
         {
-            this.shader = inShader;
+            this.shader = shader;
             //  Load bitmap classes and transfer data into glTextures
             Textures = new List<Texture>( shader.postprocessDefinition[ 0 ].bitmaps.Length );
             foreach ( var item in shader.postprocessDefinition[ 0 ].bitmaps )

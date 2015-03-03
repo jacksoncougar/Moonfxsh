@@ -62,22 +62,21 @@ namespace Moonfish.Graphics
             BinaryReader binaryReader = new BinaryReader( Map );
             BinaryWriter binaryWriter = new BinaryWriter( Map );
 
-            Map[ SelectedTag ].Seek();
+            Map[ selectedItem.Model.renderModel ].Seek();
             Map.Seek( 88, SeekOrigin.Current );
             var markerGroups = binaryReader.ReadBlamPointer( 12 );
             foreach ( var group in markerGroups )
             {
-                Map.Seek( group, SeekOrigin.Begin );
+                Map.Seek( group + 4, SeekOrigin.Begin );
                 var markers = binaryReader.ReadBlamPointer( 36 );
                 foreach ( var marker in markers )
                 {
+                    if ( !markerEnumerator.MoveNext() ) return;
                     var data = markerEnumerator.Current.Key;
-                    Map.Seek( marker, SeekOrigin.Begin );
-                    Map.Seek( 4, SeekOrigin.Current );
+                    Map.Seek( marker + 4, SeekOrigin.Begin );
                     binaryWriter.Write( data.translation );
                     binaryWriter.Write( data.rotation );
                     binaryWriter.Write( data.scale );
-                    if ( !markerEnumerator.MoveNext() ) return;
                 }
             }
         }
@@ -98,7 +97,14 @@ namespace Moonfish.Graphics
             glControl1.MouseMove += Scene.OnMouseMove;
             glControl1.MouseUp += Scene.OnMouseUp;
 
-            var fileName = Path.Combine( Local.MapsDirectory, "headlong.map" );
+
+            //  firing this method is meant to load the view-projection matrix values into 
+            //  the shader uniforms, and initalizes the camera
+            glControl1_Resize( this, new EventArgs() );
+        }
+
+        private void LoadMap( string fileName )
+        {
             var directory = Path.GetDirectoryName( fileName );
             var maps = Directory.GetFiles( directory, "*.map", SearchOption.TopDirectoryOnly );
             var resourceMaps = maps.GroupBy(
@@ -114,25 +120,16 @@ namespace Moonfish.Graphics
 
             Map = new MapStream( fileName );
 
+            listBox1.Items.Clear();
             listBox1.Items.AddRange( Map.Where( x => x.Type.ToString() == "hlmt" ).Select( x => x ).ToArray() );
             listBox1.DisplayMember = "Path";
-
-            SelectedTag = Map[ "hlmt", "masterchief" ].Meta.Identifier;
-
-            var model = ( ModelBlock )( Map[ SelectedTag ].Deserialize() );
-
-            var scenarioObject = new ScenarioObject( model );
-            Scene.ObjectManager.Add( SelectedTag, scenarioObject );
-            Scene.CollisionManager.LoadScenarioObjectCollection( Scene.ObjectManager[ SelectedTag ].First() );
-
-            //  firing this method is meant to load the view-projection matrix values into 
-            //  the shader uniforms, and initalizes the camera
-            glControl1_Resize( this, new EventArgs() );
+            listBox1.SelectedIndex = listBox1.Items.Count > 0 ? 0 : -1;
         }
 
         void glControl1_Resize( object sender, EventArgs e )
         {
             ChangeViewport( glControl1.Width, glControl1.Height );
+            glControl1.Invalidate();
         }
 
         private void ChangeViewport( int width, int height )
@@ -146,8 +143,33 @@ namespace Moonfish.Graphics
             UpdateState();
         }
 
+        class FloatingLabel : Label
+        {
+            protected override void WndProc( ref Message m )
+            {
+                const int WM_NCHITTEST = 0x0084;
+                const int HTTRANSPARENT = ( -1 );
+
+                if ( m.Msg == WM_NCHITTEST )
+                {
+                    m.Result = ( IntPtr )HTTRANSPARENT;
+                }
+                else
+                {
+                    base.WndProc( ref m );
+                }
+            }
+        }
+
         private void UpdateState( )
         {
+            foreach ( FloatingLabel control in glControl1.Controls )
+            {
+                control.Visible = tsBtnLabels.Checked;
+                var marker = ( MarkerWrapper )control.Tag;
+                var location = Scene.Camera.UnProject( marker.WorldMatrix.ExtractTranslation(), Maths.ProjectionTarget.View );
+                control.Location = new System.Drawing.Point( ( int )location.X, ( int )location.Y );
+            }
             Scene.DrawDebugCollision = debugDrawToolStripMenuItem.Checked;
             Scene.MousePole.Mode = ( TransformMode )Enum.Parse( typeof( TransformMode ), toolStripComboBox1.SelectedItem.ToString() );
             var selectedItem = Scene.ObjectManager[ SelectedTag ].FirstOrDefault();
@@ -181,6 +203,7 @@ namespace Moonfish.Graphics
             {
                 Scene.CollisionManager.World.RemoveCollisionObject( @object.CollisionObject );
             }
+            glControl1.Controls.Clear();
             foreach ( var marker in @object.Markers )
             {
                 var markerCollisionObject = Scene.CollisionManager.World.CollisionObjectArray.Where( x => x.UserObject == marker.Value ).FirstOrDefault();
@@ -191,6 +214,7 @@ namespace Moonfish.Graphics
             }
             Scene.ObjectManager.Remove( ident );
         }
+
         void LoadModel( TagIdent ident )
         {
             var model = ( ModelBlock )( Map[ ident ].Deserialize() );
@@ -200,6 +224,29 @@ namespace Moonfish.Graphics
 
             Scene.ProgramManager.LoadMaterials( model.RenderModel.materials.Select( x => x.shader.Ident ), Map );
             Scene.CollisionManager.LoadScenarioObjectCollection( Scene.ObjectManager[ ident ].First() );
+
+            var @object = Scene.ObjectManager[ ident ].First();
+
+            glControl1.Controls.Clear();
+            foreach ( var markerGroup in @object.Model.RenderModel.markerGroups )
+            {
+                var name = markerGroup.name.ToString();
+                foreach ( var marker in markerGroup.markers )
+                {
+                    glControl1.Controls.Add(
+                        new FloatingLabel()
+                        {
+                            Text = name,
+                            BackColor = Color.Red,
+                            ForeColor = Color.Black,
+                            AutoSize = true,
+                            Tag = @object.Markers[ marker ]
+                        } );
+                }
+            }
+
+
+
         }
 
         private void listBox1_SelectedIndexChanged( object sender, EventArgs e )
@@ -211,6 +258,32 @@ namespace Moonfish.Graphics
             {
                 LoadModel( SelectedTag );
             }
+        }
+
+        private void glControl1_SizeChanged( object sender, EventArgs e )
+        {
+        }
+
+        private void glControl1_Paint( object sender, PaintEventArgs e )
+        {
+            Scene.Update();
+            Scene.RenderFrame();
+        }
+
+        private void saveToolStripMenuItem_Click( object sender, EventArgs e )
+        {
+            SaveMarkerData();
+        }
+
+        private void openToolStripMenuItem_Click( object sender, EventArgs e )
+        {
+            OpenFileDialog dialog = new OpenFileDialog()
+            {
+                DefaultExt = "(*.map)|map file",
+                Multiselect = false
+            };
+            if ( dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK ) return;
+            LoadMap( dialog.FileName );
         }
 
     }

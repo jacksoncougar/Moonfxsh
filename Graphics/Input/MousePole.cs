@@ -358,6 +358,7 @@ namespace Moonfish.Graphics.Input
             if ( Hidden ) return;
             using ( shaderProgram.Use() )
             using ( OpenGL.Enable( EnableCap.PrimitiveRestartFixedIndex ) )
+            using ( OpenGL.Disable( EnableCap.DepthTest ) )
             {
                 var worldMatrixUniform = shaderProgram.GetUniformLocation( "WorldMatrixUniform" );
                 shaderProgram.SetUniform( worldMatrixUniform, Matrix4.Identity );

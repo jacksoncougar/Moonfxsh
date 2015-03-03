@@ -260,19 +260,19 @@ namespace Moonfish.Graphics
             switch ( format )
             {
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A1r5g5b5:
-                    pixelFormat = PixelInternalFormat.Rgb5A1; break;
+                    pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A4r4g4b4:
-                    pixelFormat = PixelInternalFormat.Rgba4; break;
+                    pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8:
-                    pixelFormat = PixelInternalFormat.Alpha8; break;
+                    pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8r8g8b8:
                     pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8y8:
-                    pixelFormat = PixelInternalFormat.Luminance8Alpha8; break;
+                    pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Argbfp32:
-                    pixelFormat = PixelInternalFormat.Rgba32f; break;
+                    pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Ay8:
-                    pixelFormat = PixelInternalFormat.Luminance8; break;
+                    pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Dxt1:
                     pixelFormat = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Dxt3:
@@ -280,19 +280,19 @@ namespace Moonfish.Graphics
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Dxt5:
                     pixelFormat = PixelInternalFormat.CompressedRgbaS3tcDxt5Ext; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.G8b8:
-                    pixelFormat = PixelInternalFormat.Rg8; break;
+                    pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.P8:
-                    pixelFormat = PixelInternalFormat.R8; break;
+                    pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.P8Bump:
-                    pixelFormat = PixelInternalFormat.R8; break;
+                    pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.R5g6b5:
                     pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Rgbfp16:
-                    pixelFormat = PixelInternalFormat.Rgb16f; break;
+                    pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Rgbfp32:
-                    pixelFormat = PixelInternalFormat.Rgb32f; break;
+                    pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.V8u8:
-                    pixelFormat = PixelInternalFormat.Rg8; break;
+                    pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.X8r8g8b8:
                     pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Y8:

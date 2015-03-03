@@ -206,11 +206,13 @@ namespace Moonfish.Graphics
                         positionData.Add( transformedPosition );
                         colourData.Add( colour );
                     }
-
-                    MarkersBatch.BindBuffer( BufferTarget.ArrayBuffer, MarkersBatch.BufferIdents.First() );
-                    MarkersBatch.BufferVertexAttributeData<Vector3>( positionData.ToArray() );
-                    MarkersBatch.BindBuffer( BufferTarget.ElementArrayBuffer, MarkersBatch.BufferIdents.Last() );
-                    MarkersBatch.BufferElementArrayData( elementIndices );
+                    using ( MarkersBatch.Begin() )
+                    {
+                        MarkersBatch.BindBuffer( BufferTarget.ArrayBuffer, MarkersBatch.BufferIdents.First() );
+                        MarkersBatch.BufferVertexAttributeData<Vector3>( positionData.ToArray() );
+                        MarkersBatch.BindBuffer( BufferTarget.ElementArrayBuffer, MarkersBatch.BufferIdents.Last() );
+                        MarkersBatch.BufferElementArrayData( elementIndices );
+                    }
 
                     RenderBatch batch = new RenderBatch()
                     {
@@ -241,12 +243,13 @@ namespace Moonfish.Graphics
                         positionData.Add( transformedPosition );
                     }
 
-                    NodesBatch.BindBuffer( BufferTarget.ArrayBuffer, NodesBatch.BufferIdents.First() );
-                    NodesBatch.BufferVertexAttributeData<Vector3>( positionData.ToArray() );
-                    NodesBatch.BindBuffer( BufferTarget.ElementArrayBuffer, NodesBatch.BufferIdents.Last() );
-                    NodesBatch.BufferElementArrayData( elementIndices );
-
-
+                    using ( NodesBatch.Begin() )
+                    {
+                        NodesBatch.BindBuffer( BufferTarget.ArrayBuffer, NodesBatch.BufferIdents.First() );
+                        NodesBatch.BufferVertexAttributeData<Vector3>( positionData.ToArray() );
+                        NodesBatch.BindBuffer( BufferTarget.ElementArrayBuffer, NodesBatch.BufferIdents.Last() );
+                        NodesBatch.BufferElementArrayData( elementIndices );
+                    }
 
                     RenderBatch batch = new RenderBatch()
                     {

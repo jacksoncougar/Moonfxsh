@@ -52,9 +52,9 @@ void main()
 		// Ambient : simulates indirect lighting
 		(diffuseColour * 0.5 +  diffuseColour.a * DiffuseColour * 0.05) +
 		// Diffuse : "color" of the object
-		(diffuseColour * diffuseColour.a * lightColor * lightPower * cosTheta / distance_squared) +
+		(diffuseColour * diffuseColour.a * lightColor * lightPower * cosTheta) +
 		// Specular : reflective highlight, like a mirror
-		(environmentColour * diffuseColour.a * lightColor * lightPower * pow(cosAlpha, specularPower) / distance_squared);
+		(environmentColour * diffuseColour.a * lightColor * lightPower * pow(cosAlpha, specularPower));
 
 	
 	frag_color =  clamp(color, 0.0, 1.0);

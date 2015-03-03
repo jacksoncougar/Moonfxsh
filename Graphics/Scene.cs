@@ -13,7 +13,7 @@ namespace Moonfish.Graphics
         Stopwatch Timer { get; set; }
         public Camera Camera { get; set; }
 
-        OpenTK.Vector3 lightPosition = new OpenTK.Vector3( 0.8f, 0.0F, 0.5f );
+        OpenTK.Vector3 lightPosition = new OpenTK.Vector3( 3.8f, 3.0F, 3.5f );
         float rotation = 0;
 
         public event EventHandler OnFrameReady;
@@ -117,16 +117,16 @@ namespace Moonfish.Graphics
         {
             //Console.WriteLine("Update()");
 
-            var R = OpenTK.Matrix4.CreateRotationX( rotation );
-            rotation += OpenTK.MathHelper.DegreesToRadians( 0.03f );
-            rotation = rotation > Maths.Pi2 ? 0 : rotation;
-            var l = OpenTK.Vector3.Transform( lightPosition, R ); //Console.WriteLine(rotation);
+            //var R = OpenTK.Matrix4.CreateRotationX( rotation );
+            //rotation += OpenTK.MathHelper.DegreesToRadians( 0.03f );
+            //rotation = rotation > Maths.Pi2 ? 0 : rotation;
+            //var l = OpenTK.Vector3.Transform( lightPosition, R ); //Console.WriteLine(rotation);
             foreach ( var program in ProgramManager )
             {
                 var lightPositionAttribute = program.GetUniformLocation( "LightPositionUniform" );
 
                 using ( program.Use() )
-                    program.SetUniform( lightPositionAttribute, new OpenTK.Vector4( l ) );
+                    program.SetUniform( lightPositionAttribute, new OpenTK.Vector4( lightPosition ) );
 
             }
             Camera.Update();

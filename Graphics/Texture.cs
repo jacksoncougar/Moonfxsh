@@ -5,8 +5,9 @@ using System.IO;
 
 namespace Moonfish.Graphics
 {
-    public class Texture
+    public class Texture : IDisposable
     {
+        bool disposed = false;
         int handle;
         TextureTarget textureTarget;
 
@@ -21,6 +22,7 @@ namespace Moonfish.Graphics
             TextureMinFilter textureMinFilter = TextureMinFilter.Linear )
         {
             GL.ActiveTexture( textureUnit );
+            OpenGL.ReportError();
 
             var workingBitmap = bitmapCollection.bitmaps[ 0 ];
             byte[] buffer = new byte[ workingBitmap.lOD1TextureDataLength ];
@@ -59,10 +61,15 @@ namespace Moonfish.Graphics
                     {
                         textureTarget = TextureTarget.Texture2D;
                         GL.BindTexture( TextureTarget.Texture2D, this.handle );
+                        OpenGL.ReportError();
                         GL.TexParameter( TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, ( int )textureMagFilter );
+                        OpenGL.ReportError();
                         GL.TexParameter( TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, ( int )textureMinFilter );
+                        OpenGL.ReportError();
                         GL.TexParameter( TextureTarget.Texture2D, TextureParameterName.TextureWrapS, ( int )TextureWrapMode.Repeat );
-                        GL.TexParameter( TextureTarget.Texture2D, TextureParameterName.TextureWrapT, ( int )TextureWrapMode.Repeat ); OpenGL.ReportError();
+                        OpenGL.ReportError();
+                        GL.TexParameter( TextureTarget.Texture2D, TextureParameterName.TextureWrapT, ( int )TextureWrapMode.Repeat ); 
+                        OpenGL.ReportError();
 
                         byte[] surfaceData = new byte[ ( int )( bytesPerPixel * width * height ) ];
                         Array.Copy( buffer, 0, surfaceData, 0, surfaceData.Length );
@@ -71,12 +78,16 @@ namespace Moonfish.Graphics
                         {
                             GL.CompressedTexImage2D(
                                 TextureTarget.Texture2D, 0, pixelInternalFormat, width, height, 0, ( int )( bytesPerPixel * width * height ), surfaceData );
+
+                            OpenGL.ReportError();
                         }
                         else
                         {
                             var pixelFormat = ParseBitapPixelFormat( workingBitmap.format );
                             var pixelType = ParseBitapPixelType( workingBitmap.format );
                             GL.TexImage2D( TextureTarget.Texture2D, 0, pixelInternalFormat, width, height, 0, pixelFormat, pixelType, surfaceData );
+
+                            OpenGL.ReportError();
                         }
                     } break;
                 case BitmapDataBlockBase.TypeDeterminesBitmapGeometry.Cubemap:
@@ -97,6 +108,7 @@ namespace Moonfish.Graphics
                                                    TextureTarget.TextureCubeMapPositiveZ,
                                                    TextureTarget.TextureCubeMapNegativeZ,
                                                };
+                        OpenGL.ReportError();
 
                         for ( int i = 0; i < 6; ++i )
                         {
@@ -110,12 +122,16 @@ namespace Moonfish.Graphics
                             {
                                 GL.CompressedTexImage2D(
                                     cube[ i ], 0, pixelInternalFormat, width, height, 0, ( int )( bytesPerPixel * width * height ), surfaceData );
+
+                                OpenGL.ReportError();
                             }
                             else
                             {
                                 var pixelFormat = ParseBitapPixelFormat( workingBitmap.format );
                                 var pixelType = ParseBitapPixelType( workingBitmap.format );
                                 GL.TexImage2D( cube[ i ], 0, pixelInternalFormat, width, height, 0, pixelFormat, pixelType, surfaceData );
+
+                                OpenGL.ReportError();
                             }
                         }
                     } break;
@@ -270,7 +286,7 @@ namespace Moonfish.Graphics
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.P8Bump:
                     pixelFormat = PixelInternalFormat.R8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.R5g6b5:
-                    pixelFormat = PixelInternalFormat.R5G6B5IccSgix; break;
+                    pixelFormat = PixelInternalFormat.Rgba8; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Rgbfp16:
                     pixelFormat = PixelInternalFormat.Rgb16f; break;
                 case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Rgbfp32:
@@ -284,6 +300,22 @@ namespace Moonfish.Graphics
                 default: throw new FormatException( "Unsupported Texture Format" );
             }
             return pixelFormat;
+        }
+
+        public void Dispose( )
+        {
+            Dispose( true );
+            GC.SuppressFinalize( this );    
+        }
+
+        protected virtual void Dispose( bool disposing )
+        {
+            if ( disposed ) return;
+            if ( disposing )
+            {
+                GL.DeleteTexture( this.handle );
+            }
+            disposed = true;
         }
     }
 }

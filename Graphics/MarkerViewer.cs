@@ -62,7 +62,7 @@ namespace Moonfish.Graphics
             BinaryReader binaryReader = new BinaryReader( Map );
             BinaryWriter binaryWriter = new BinaryWriter( Map );
 
-            Map[ "mode", "masterchief" ].Seek();
+            Map[ SelectedTag ].Seek();
             Map.Seek( 88, SeekOrigin.Current );
             var markerGroups = binaryReader.ReadBlamPointer( 12 );
             foreach ( var group in markerGroups )
@@ -175,7 +175,7 @@ namespace Moonfish.Graphics
         {
             var @object = Scene.ObjectManager[ ident ].FirstOrDefault();
             if ( @object == null ) return;
-            
+
             var collisionObject = Scene.CollisionManager.World.CollisionObjectArray.Where( x => x == @object.CollisionObject ).FirstOrDefault();
             if ( collisionObject != null )
             {
@@ -197,9 +197,8 @@ namespace Moonfish.Graphics
 
             var scenarioObject = new ScenarioObject( model );
             Scene.ObjectManager.Add( ident, scenarioObject );
-            var material = model.RenderModel.materials.FirstOrDefault();
-            if ( material != null )
-                LoadShader( material.shader.Ident );
+
+            Scene.ProgramManager.LoadMaterials( model.RenderModel.materials.Select( x => x.shader.Ident ), Map );
             Scene.CollisionManager.LoadScenarioObjectCollection( Scene.ObjectManager[ ident ].First() );
         }
 
@@ -214,12 +213,5 @@ namespace Moonfish.Graphics
             }
         }
 
-        MaterialShader material;
-
-        private void LoadShader( TagIdent ident )
-        {
-            var shader = Map[ ident ].Deserialize() as ShaderBlock;
-            material = new MaterialShader( shader, Map );
-        }
     }
 }

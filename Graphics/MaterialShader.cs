@@ -1,13 +1,15 @@
 ﻿using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using OpenTK.Graphics.OpenGL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Moonfish.Graphics
 {
-    public class MaterialShader
+    public class MaterialShader : IDisposable
     {
+        private bool disposed = false;
         public List<Texture> Textures { get; private set; }
 
         int activeShaderPass;
@@ -86,6 +88,26 @@ namespace Moonfish.Graphics
                 }
                 break;
             }
+        }
+
+        public void Dispose( )
+        {
+            Dispose( true );
+            GC.SuppressFinalize( this );
+        }
+
+        protected virtual void Dispose( bool disposing )
+        {
+            if ( disposed ) return;
+
+            if ( disposing )
+            {
+                foreach ( var texture in Textures )
+                {
+                    texture.Dispose();
+                }
+            }
+            disposed = true;
         }
     }
 }

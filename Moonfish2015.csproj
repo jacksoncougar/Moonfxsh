@@ -116,6 +116,7 @@
     <Compile Include="Graphics\Performance.cs" />
     <Compile Include="Graphics\Primitives.cs" />
     <Compile Include="Graphics\Program.cs" />
+    <Compile Include="Graphics\ProgramManager.cs" />
     <Compile Include="Graphics\RenderObject.cs" />
     <Compile Include="Graphics\ScenarioObject.cs" />
     <Compile Include="Graphics\ScenarioObjectList.cs" />

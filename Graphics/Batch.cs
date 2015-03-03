@@ -9,6 +9,8 @@ namespace Moonfish.Graphics
         public int VertexArrayObjectIdent { get { return vao; } }
         public IList<int> BufferIdents { get { return buffers; } }
 
+        bool disposed = false;
+
         int vao;
         List<int> buffers;
 
@@ -88,11 +90,22 @@ namespace Moonfish.Graphics
 
         public void Dispose( )
         {
+            Dispose( true );
+            GC.SuppressFinalize( this );
+        }
+
+        protected virtual void Dispose( bool disposing )
+        {
+            if ( disposed ) return;
+            if ( disposing )
+            {
             GL.DeleteVertexArray( vao );
             GL.DeleteBuffers( buffers.Count, buffers.ToArray() );
 #if DEBUG
             OpenGL.ReportError();
 #endif
+            }
+            disposed = true;
         }
     }
 }

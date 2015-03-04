@@ -227,6 +227,7 @@ namespace Moonfish.Graphics
 
             var @object = Scene.ObjectManager[ ident ].First();
 
+            propertyGrid1.SelectedObject = @object.Model.RenderModel.markerGroups;
             glControl1.Controls.Clear();
             foreach ( var markerGroup in @object.Model.RenderModel.markerGroups )
             {

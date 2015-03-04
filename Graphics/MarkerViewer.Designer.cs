@@ -55,6 +55,7 @@
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.tsBtnLabels = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -247,18 +248,19 @@
             // toolStrip1
             // 
             this.toolStrip1.AllowMerge = false;
-            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
             this.toolStripComboBox1,
+            this.toolStripSeparator3,
             this.toolStripLabel2,
             this.toolStripButton1,
             this.toolStripButton2,
             this.toolStripButton3,
             this.tsBtnLabels});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.toolStrip1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.toolStrip1.Size = new System.Drawing.Size(686, 25);
             this.toolStrip1.TabIndex = 5;
             this.toolStrip1.Text = "toolStrip1";
@@ -330,6 +332,11 @@
             this.tsBtnLabels.Size = new System.Drawing.Size(44, 21);
             this.tsBtnLabels.Text = "Labels";
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
             // MarkerViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -390,6 +397,7 @@
         private System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripButton tsBtnLabels;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 
     }
 }

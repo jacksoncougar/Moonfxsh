@@ -70,7 +70,7 @@ namespace Moonfish.Graphics
             Scene.ProgramManager.LoadMaterials(@object.RenderModel.materials.Select(x => x.shader.Ident), Map);
             Scene.CollisionManager.LoadScenarioObjectCollision(Scene.ObjectManager[Map["hlmt", "masterchief"].Meta.Identifier].First());
 
-            //propertyGrid1.SelectedObject = Scene.MousePole._debugInfo;
+            propertyGrid1.SelectedObject = Scene.MousePole;
 
             //  firing this method is meant to load the view-projection matrix values into 
             //  the shader uniforms, and initalizes the camera

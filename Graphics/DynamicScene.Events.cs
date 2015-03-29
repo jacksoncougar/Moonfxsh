@@ -59,7 +59,6 @@ namespace Moonfish.Graphics
             MouseMove += clickableCollisionObject.MouseMove;
             MouseUp += clickableCollisionObject.MouseUp;
             MouseClick += clickableCollisionObject.MouseClick;
-
         }
 
         public void OnMouseUp(object sender, System.Windows.Forms.MouseEventArgs e)

@@ -15,13 +15,13 @@ namespace Moonfish.Graphics
 
         public bool DrawDebugCollision { get; set; }
 
-        public TranslationGizmo MousePole { get; set; }
+        public RotationGizmo MousePole { get; set; }
 
         public DynamicScene()
         {
             DrawDebugCollision = false;
             CollisionManager = new CollisionManager(ProgramManager.SystemProgram);
-            MousePole = new TranslationGizmo();
+            MousePole = new RotationGizmo();
             Camera.CameraUpdated += MousePole.OnCameraUpdate;
             SelectedObjectChanged += OnSelectedObjectChanged;
             foreach (var item in MousePole.CollisionObjects)
@@ -35,8 +35,8 @@ namespace Moonfish.Graphics
             var marker = e.SelectedObject as MarkerWrapper;
             if (marker != null)
             {
-                MousePole.WorldMatrix = marker.WorldMatrix;
                 MousePole.DropHandlers();
+                MousePole.WorldMatrix = marker.WorldMatrix;
                 MousePole.WorldMatrixChanged += marker.mousePole_WorldMatrixChanged;
             }
         }

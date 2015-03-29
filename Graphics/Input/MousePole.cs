@@ -1,13 +1,14 @@
-﻿using Moonfish.Collision;
-using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
+using BulletSharp;
+using Moonfish.Collision;
 using Moonfish.Graphics.Primitives;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
+using IDisposable = System.IDisposable;
 
 namespace Moonfish.Graphics.Input
 {
@@ -68,7 +69,7 @@ namespace Moonfish.Graphics.Input
         public bool Hidden { get; private set; }
 
 
-        public IEnumerable<BulletSharp.CollisionObject> ContactObjects
+        public IEnumerable<CollisionObject> ContactObjects
         {
             get
             {
@@ -78,9 +79,9 @@ namespace Moonfish.Graphics.Input
             }
         }
 
-        readonly BulletSharp.CollisionObject _rightContact;
-        readonly BulletSharp.CollisionObject _forwardContact;
-        readonly BulletSharp.CollisionObject _upContact;
+        readonly CollisionObject _rightContact;
+        readonly CollisionObject _forwardContact;
+        readonly CollisionObject _upContact;
 
         SelectedAxis _selectedAxis;
 
@@ -113,9 +114,9 @@ namespace Moonfish.Graphics.Input
             _forward = Vector3.Transform(new Vector3(0, 1, 0), scaleMatrix * rotationMatrix);
             _up = Vector3.Transform(new Vector3(0, 0, 1), scaleMatrix * rotationMatrix);
 
-            _rightContact = new BulletSharp.CollisionObject() { UserObject = this };
-            _forwardContact = new BulletSharp.CollisionObject() { UserObject = this };
-            _upContact = new BulletSharp.CollisionObject() { UserObject = this };
+            _rightContact = new CollisionObject() { UserObject = this };
+            _forwardContact = new CollisionObject() { UserObject = this };
+            _upContact = new CollisionObject() { UserObject = this };
 
             BufferData();
             camera.ViewMatrixChanged += camera_ViewMatrixChanged;
@@ -139,7 +140,7 @@ namespace Moonfish.Graphics.Input
             if (Hidden) return;
             var scene = sender as DynamicScene;
             if (scene == null || e.Button != MouseButtons.Left) return;
-            var callback = new BulletSharp.CollisionWorld.ClosestRayResultCallback(e.MouseRay.Origin, e.MouseRay.Origin + e.MouseRay.Direction * e.MouseRayFarPoint);
+            var callback = new CollisionWorld.ClosestRayResultCallback(e.MouseRay.Origin, e.MouseRay.Origin + e.MouseRay.Direction * e.MouseRayFarPoint);
             var collisionWorld = scene.CollisionManager.World;
             collisionWorld.RayTest(e.MouseRay.Origin, e.MouseRay.Origin + e.MouseRay.Direction * e.MouseRayFarPoint, callback);
 
@@ -290,9 +291,9 @@ namespace Moonfish.Graphics.Input
 
             var contactSize = 0.2f * _scale;
 
-            _rightContact.CollisionShape = new BulletSharp.BoxShape(contactSize);
-            _forwardContact.CollisionShape = new BulletSharp.BoxShape(contactSize);
-            _upContact.CollisionShape = new BulletSharp.BoxShape(contactSize);
+            _rightContact.CollisionShape = new BoxShape(contactSize);
+            _forwardContact.CollisionShape = new BoxShape(contactSize);
+            _upContact.CollisionShape = new BoxShape(contactSize);
 
             _rightContact.WorldTransform = Matrix4.CreateTranslation(_origin + _right);
             _forwardContact.WorldTransform = Matrix4.CreateTranslation(_origin + _forward);

@@ -90,6 +90,8 @@
     <Compile Include="Graphics\INode.cs" />
     <Compile Include="Graphics\Input\ClickableCollisionObject.cs" />
     <Compile Include="Graphics\Input\DebugInfo.cs" />
+    <Compile Include="Graphics\Input\GizmoBase.cs" />
+    <Compile Include="Graphics\Input\RotationGizmo.cs" />
     <Compile Include="Graphics\Input\TranslationGizmo.cs" />
     <Compile Include="Graphics\MathHelper.cs" />
     <Compile Include="Graphics\Primitives\Debug.cs" />

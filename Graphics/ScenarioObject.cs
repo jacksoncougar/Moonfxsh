@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 using BulletSharp;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
@@ -50,14 +51,14 @@ namespace Moonfish.Graphics
         private readonly TriangleBatch _markersBatch;
         private readonly TriangleBatch _nodesBatch;
         private Matrix4 _worldMatrix;
-        public StringID ActivePermuation;
+        public StringID ActivePermuation { get; set; }
         public Dictionary<RenderModelMarkerBlock, MarkerWrapper> Markers;
 
-        public ScenarioObject()
+        private ScenarioObject()
         {
             ActivePermuation = StringID.Zero;
             Nodes = new List<RenderModelNodeBlock>();
-            Flags = RenderFlags.RenderMarkers | RenderFlags.RenderMesh;
+            Flags = RenderFlags.RenderMarkers | RenderFlags.RenderMesh | RenderFlags.RenderNodes;
 
             _nodesBatch = new TriangleBatch();
             using (_nodesBatch.Begin())
@@ -128,7 +129,7 @@ namespace Moonfish.Graphics
 
                             var batch = new RenderBatch
                             {
-                                ElementStartIndex = part.stripStartIndex*sizeof (ushort),
+                                ElementStartIndex = part.stripStartIndex * sizeof(ushort),
                                 ElementLength = part.stripLength
                             };
                             batch.AssignUniform("TexcoordRangeUniform", texcoordRange);
@@ -137,7 +138,7 @@ namespace Moonfish.Graphics
 
                             batch.Shader = new ShaderReference(
                                 ShaderReference.ReferenceType.Halo2,
-                                Model.RenderModel.materials[(short) part.material].shader.Ident);
+                                Model.RenderModel.materials[part.material].shader.Ident);
 
                             batch.BatchObject = mesh.TriangleBatch;
 
@@ -190,7 +191,7 @@ namespace Moonfish.Graphics
                     foreach (var node in Nodes)
                     {
                         var transformedPosition = Vector3.Transform(node.defaultTranslation,
-                            Nodes.GetWorldMatrix((short) node.parentNode));
+                            Nodes.GetWorldMatrix(node.parentNode));
 
                         positionData.Add(transformedPosition);
                     }
@@ -207,10 +208,10 @@ namespace Moonfish.Graphics
                     {
                         ElementStartIndex = 0,
                         ElementLength = elementIndices.Length,
-                        PrimitiveType = PrimitiveType.Points
+                        PrimitiveType = PrimitiveType.Points,
+                        Shader = new ShaderReference(ShaderReference.ReferenceType.System, 0)
                     };
 
-                    batch.Shader = new ShaderReference(ShaderReference.ReferenceType.System, 0);
                     batch.AssignUniform("WorldMatrixUniform", Matrix4.Identity);
                     batch.AssignAttribute("Colour", new ColorF(Color.White).RGBA);
                     batch.AssignRenderState(EnableCap.DepthTest, false);
@@ -232,12 +233,49 @@ namespace Moonfish.Graphics
             set
             {
                 _worldMatrix = value;
-                CollisionObject.WorldTransform = _collisionSpaceMatrix*value;
+                CollisionObject.WorldTransform = _collisionSpaceMatrix * value;
             }
         }
 
+        public Matrix4 CalculateChildWorldMatrix(object value)
+        {
+            if (value.GetType() == typeof(RenderModelMarkerBlock))
+                return CalculateWorldMatrix((RenderModelMarkerBlock)value);
+            if (value.GetType() == typeof(RenderModelNodeBlock))
+                return CalculateWorldMatrix((RenderModelNodeBlock)value);
+            throw new InvalidCastException();
+        }
+
+        public void SetChildWorldMatrix(object nodeBlock, Matrix4 value)
+        {
+            if (nodeBlock.GetType() == typeof(RenderModelNodeBlock))
+                SetWorldMatrix((RenderModelNodeBlock)nodeBlock, value);
+            else throw new InvalidCastException();
+        }
+
+        private void SetWorldMatrix(RenderModelNodeBlock nodeBlock, Matrix4 value)
+        {
+            Nodes.SetWorldMatrix(nodeBlock, value);
+        }
+
+        private Matrix4 CalculateWorldMatrix(RenderModelMarkerBlock markerBlock)
+        {
+            if (!Model.RenderModel.markerGroups.SelectMany(x => x.Markers).Contains(markerBlock))
+                throw new ArgumentOutOfRangeException();
+
+            return markerBlock.WorldMatrix * Nodes.GetWorldMatrix(markerBlock.nodeIndex);
+        }
+
+        private Matrix4 CalculateWorldMatrix(RenderModelNodeBlock nodeBlock)
+        {
+            if (!Model.RenderModel.nodes.Contains(nodeBlock))
+                throw new ArgumentOutOfRangeException();
+
+            return Nodes.GetWorldMatrix(nodeBlock);
+        }
+
         public void OnMouseMove(CollisionManager collisionManager, Camera activeCamera,
-            System.Windows.Forms.MouseEventArgs e)
+            MouseEventArgs e)
         {
             var mouse = new
             {
@@ -249,12 +287,12 @@ namespace Moonfish.Graphics
             var to = Matrix4.CreateTranslation(mouse.Far);
 
             var d = (mouse.Far - mouse.Near).Normalized();
-            using (var callback = new CollisionWorld.ClosestConvexResultCallback(mouse.Near, mouse.Far))
+            using (var callback = new ClosestConvexResultCallback(mouse.Near, mouse.Far))
             {
                 callback.CollisionFilterGroup = CollisionFilterGroups.StaticFilter;
                 callback.CollisionFilterMask = CollisionFilterGroups.StaticFilter;
 
-                collisionManager.World.ConvexSweepTest((ConvexShape) CollisionObject.CollisionShape, from, to, callback);
+                collisionManager.World.ConvexSweepTest((ConvexShape)CollisionObject.CollisionShape, from, to, callback);
 
                 Console.WriteLine(callback.HitNormalWorld);
                 if (callback.HasHit)
@@ -267,11 +305,6 @@ namespace Moonfish.Graphics
                     WorldMatrix = T;
                 }
             }
-        }
-
-        internal void UpdateWorldMatrix(object sender, MatrixChangedEventArgs e)
-        {
-            WorldMatrix = e.Matrix;
         }
     }
 }

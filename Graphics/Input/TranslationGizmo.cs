@@ -13,7 +13,7 @@ namespace Moonfish.Graphics.Input
             set { base.WorldMatrix = value; }
         }
 
-        protected Vector3 FindPlaneNormal(Vector3 viewerAxis, Vector3 axisNormal)
+        private Vector3 FindPlaneNormal(Vector3 viewerAxis, Vector3 axisNormal)
         {
             var planeUNormal = UpNormalized;
             var planeVNormal = RightNormalized;
@@ -30,8 +30,15 @@ namespace Moonfish.Graphics.Input
                 : cosineToPlaneV < cosineToPlaneW ? planeVNormal : planeWNormal;
             return normal;
         }
+        
+        protected override void Commit()
+        {
+            position += _translation;
+            _translation = Vector3.Zero;
+            base.Commit();
+        }
 
-        protected void SetTranslation(Vector3 translationVector3)
+        private void SetTranslation(Vector3 translationVector3)
         {
             var beforeMatrix = CalculateWorldMatrix(position, rotation, scale);
             var afterMatrix = CalculateWorldMatrix(position + translationVector3, rotation, scale);

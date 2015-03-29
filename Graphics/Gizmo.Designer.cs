@@ -1,11 +1,15 @@
-﻿namespace Moonfish.Graphics
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using OpenTK;
+
+namespace Moonfish.Graphics
 {
     partial class Gizmo
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -117,11 +121,11 @@
 
         #endregion
 
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel lblRenderTime;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
-        private OpenTK.GLControl glControl1;
+        private StatusStrip statusStrip1;
+        private ToolStripStatusLabel lblRenderTime;
+        private SplitContainer splitContainer1;
+        private PropertyGrid propertyGrid1;
+        private GLControl glControl1;
 
     }
 }

@@ -1,7 +1,7 @@
-﻿using OpenTK.Graphics.OpenGL;
-using System;
+﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {

@@ -1,10 +1,11 @@
-﻿using Moonfish.Guerilla.Tags;
-using System;
+﻿using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Moonfish.Guerilla.Tags;
+using OpenTK;
 
 namespace Moonfish.Graphics
 {
@@ -43,7 +44,7 @@ namespace Moonfish.Graphics
 
         void glControl1_Load( object sender, EventArgs e )
         {
-            Scene = new Graphics.Scene();
+            Scene = new Scene();
             Application.Idle += HandleApplicationIdle;
             Scene.OnFrameReady += Scene_OnFrameReady;
 
@@ -74,7 +75,7 @@ namespace Moonfish.Graphics
             {
                 float x = 0.4f * ( i % width );
                 float y = 0.4f * ( i / width );
-                var scenarioObject = new ScenarioObject( model ) { WorldMatrix = OpenTK.Matrix4.CreateTranslation( new OpenTK.Vector3( x, y, 0 ) ) };
+                var scenarioObject = new ScenarioObject( model ) { WorldMatrix = Matrix4.CreateTranslation( new Vector3( x, y, 0 ) ) };
                 Scene.ObjectManager.Add( Map[ "hlmt", "masterchief" ].Meta.Identifier, scenarioObject );
             }
 
@@ -123,7 +124,7 @@ namespace Moonfish.Graphics
 
         MaterialShader material;
 
-        private void LoadShader( Moonfish.Tag selectedShaderTag )
+        private void LoadShader( Tag selectedShaderTag )
         {
             var shader = Map[ selectedShaderTag.Identifier ].Deserialize() as ShaderBlock;
 

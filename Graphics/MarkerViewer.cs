@@ -1,14 +1,14 @@
-﻿using Moonfish.Guerilla.Tags;
-using Moonfish.Tags.BlamExtension;
-using Moonfish.Tags;
-using System;
+﻿using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Moonfish.Graphics.Input;
-using System.Collections.Generic;
+using Moonfish.Guerilla.Tags;
+using Moonfish.Tags;
+using Moonfish.Tags.BlamExtension;
+using Point = System.Drawing.Point;
 
 namespace Moonfish.Graphics
 {
@@ -27,7 +27,7 @@ namespace Moonfish.Graphics
             public IntPtr WParameter;
             public IntPtr LParameter;
             public uint Time;
-            public System.Drawing.Point Location;
+            public Point Location;
         }
 
         [DllImport( "user32.dll" )]
@@ -45,14 +45,14 @@ namespace Moonfish.Graphics
             InitializeComponent();
             glControl1.Load += glControl1_Load;
 
-            foreach ( var value in Enum.GetValues( typeof( TransformMode ) ) )
-            {
-                toolStripComboBox1.Items.Add( value );
-            }
+            //foreach ( var value in Enum.GetValues( typeof( TransformMode ) ) )
+            //{
+            //    toolStripComboBox1.Items.Add( value );
+            //}
             toolStripComboBox1.SelectedIndex = 0;
         }
 
-        public void SaveMarkerData( )
+        private void SaveMarkerData( )
         {
             var selectedItem = Scene.ObjectManager[ SelectedTag ].FirstOrDefault();
             if ( selectedItem == null ) return;
@@ -83,7 +83,7 @@ namespace Moonfish.Graphics
 
         void glControl1_Load( object sender, EventArgs e )
         {
-            Scene = new Graphics.DynamicScene();
+            Scene = new DynamicScene();
             Application.Idle += HandleApplicationIdle;
             Scene.OnFrameReady += Scene_OnFrameReady;
 
@@ -168,7 +168,7 @@ namespace Moonfish.Graphics
                 control.Visible = tsBtnLabels.Checked;
                 var marker = ( MarkerWrapper )control.Tag;
                 var location = Scene.Camera.UnProject( marker.ParentWorldMatrix.ExtractTranslation(), Maths.ProjectionTarget.View );
-                control.Location = new System.Drawing.Point( ( int )location.X, ( int )location.Y );
+                control.Location = new Point( ( int )location.X, ( int )location.Y );
             }
             Scene.DrawDebugCollision = debugDrawToolStripMenuItem.Checked;
             //Scene.MousePole.Mode = (TransformMode)Enum.Parse(typeof(TransformMode), toolStripComboBox1.SelectedItem.ToString());

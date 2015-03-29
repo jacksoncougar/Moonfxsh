@@ -1,6 +1,7 @@
-﻿using OpenTK.Graphics.OpenGL;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {
@@ -92,7 +93,7 @@ namespace Moonfish.Graphics
 
         public void BufferVertexAttributeData<T>(T[] data) where T : struct
         {
-            var dataSize = (IntPtr)(System.Runtime.InteropServices.Marshal.SizeOf(typeof(T)) * data.Length);
+            var dataSize = (IntPtr)(Marshal.SizeOf(typeof(T)) * data.Length);
             GL.BufferData<T>(BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.DynamicDraw);
 
 #if DEBUG
@@ -102,7 +103,7 @@ namespace Moonfish.Graphics
 
         public void BufferVertexAttributeSubData<T>(T[] data, int offset = 0) where T : struct
         {
-            var dataSize = (IntPtr)(System.Runtime.InteropServices.Marshal.SizeOf(typeof(T)) * data.Length);
+            var dataSize = (IntPtr)(Marshal.SizeOf(typeof(T)) * data.Length);
             GL.BufferSubData<T>(BufferTarget.ArrayBuffer, (IntPtr)offset, dataSize, data);
 
 #if DEBUG

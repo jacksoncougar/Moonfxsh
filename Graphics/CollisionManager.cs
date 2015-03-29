@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using BulletSharp;
+using Moonfish.Graphics.Input;
 using Moonfish.Guerilla.Tags;
 using OpenTK;
 
@@ -20,18 +21,46 @@ namespace Moonfish.Graphics
                 this.World.DebugDrawer = new BulletDebugDrawer(debug);
         }
 
+        public void Update()
+        {
+            foreach (var collisionObject in World.CollisionObjectArray)
+            {
+                var scenarioObject = collisionObject as ScenarioCollisionObject;
+                if (scenarioObject != null)
+                {
+                    var matrix = scenarioObject.ParentObject.CalculateChildWorldMatrix(scenarioObject.UserObject);
+                    scenarioObject.WorldTransform = matrix;
+                }
+            }
+            World.PerformDiscreteCollisionDetection();
+        }
+
         public void LoadScenarioObjectCollision(ScenarioObject scenarioObject)
         {
+            for (var index = 0; index < scenarioObject.Nodes.Count; index++)
+            {
+                var node = scenarioObject.Nodes[index];
+                var collisionObject = new ScenarioCollisionObject
+                {
+                    CollisionShape = new BoxShape(0.015f),
+                    WorldTransform = scenarioObject.Nodes.GetWorldMatrix(node),
+                    UserObject = node,
+                    ParentObject = scenarioObject
+                };
+                node.CollisionObject = collisionObject;
+                World.AddCollisionObject(collisionObject);
+            }
             foreach (var marker in scenarioObject.Model.RenderModel.markerGroups.SelectMany(x => x.markers))
             {
-                var collisionObject = new CollisionObject
+                var collisionObject = new ScenarioCollisionObject
                 {
                     CollisionShape = new BoxShape(0.015f),
 
-                    WorldTransform = Matrix4.CreateFromQuaternion(marker.rotation) * 
+                    WorldTransform = Matrix4.CreateFromQuaternion(marker.rotation) *
                     Matrix4.CreateTranslation(marker.translation) *
                         scenarioObject.Nodes.GetWorldMatrix(marker.nodeIndex),
-                    UserObject = scenarioObject.Markers[marker]
+                    UserObject = scenarioObject.Markers[marker].marker,
+                    ParentObject = scenarioObject
                 };
 
                 World.AddCollisionObject(collisionObject);
@@ -68,11 +97,6 @@ namespace Moonfish.Graphics
 
                 World.AddCollisionObject(collisionObject, CollisionFilterGroups.StaticFilter, CollisionFilterGroups.AllFilter);
             }
-        }
-
-        public void OnMouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-
         }
     }
 }

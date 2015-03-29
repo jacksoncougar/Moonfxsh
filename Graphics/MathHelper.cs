@@ -1,21 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OpenTK;
 
 namespace Moonfish.Graphics
 {
     public static class MathHelper
     {
+        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
+        public static bool NearlyEqual(this float a, double value, float epsilon = 0.00001f)
+        {
+            var absA = Math.Abs(a);
+            var absB = Math.Abs(value);
+            var diff = Math.Abs(a - value);
+
+            if (a == value)
+            { // shortcut, handles infinities
+                return true;
+            }
+            if (a == 0 || value == 0 || diff < epsilon)
+            {
+                // a or b is zero or both are extremely close to it
+                // relative error is less meaningful here
+                return diff < (epsilon * Double.MinValue);
+            }
+            // use relative error
+            return diff / (absA + absB) < epsilon;
+        }
+
         public static Vector3 UnProject(this Camera camera, Vector2 screenCoordinates, float depth = 0.0f)
         {
             return UnProject(camera.ViewProjectionMatrix, screenCoordinates, depth, (Rectangle) camera.Viewport).Xyz;
         }
 
-        public static Vector4 UnProject(Matrix4 viewProjectionMatrix,
+        private static Vector4 UnProject(Matrix4 viewProjectionMatrix,
                Vector2 viewportCoordinates, float depth, Rectangle viewport)
         {
             // Calculate 'Normalised Device Coordinates'
@@ -45,7 +63,7 @@ namespace Moonfish.Graphics
             return Project(camera.ViewProjectionMatrix, worldCoordinates, (Rectangle) camera.Viewport).Xy;
         }
 
-        public static Vector3 Project(Matrix4 viewProjectionMatrix, Vector3 worldCoordinates, Rectangle viewport)
+        private static Vector3 Project(Matrix4 viewProjectionMatrix, Vector3 worldCoordinates, Rectangle viewport)
         {
             var coordinates = new Vector4(worldCoordinates, 1);
             coordinates = Vector4.Transform(coordinates, viewProjectionMatrix);

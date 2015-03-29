@@ -1,8 +1,8 @@
-﻿using OpenTK.Graphics.OpenGL;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {
@@ -14,7 +14,7 @@ namespace Moonfish.Graphics
         Stopwatch Timer { get; set; }
         public Camera Camera { get; set; }
 
-        OpenTK.Vector3 lightPosition = new OpenTK.Vector3(3.8f, 3.0F, 3.5f);
+        Vector3 lightPosition = new Vector3(3.8f, 3.0F, 3.5f);
         float rotation = 0;
 
         public event EventHandler OnFrameReady;
@@ -136,7 +136,7 @@ namespace Moonfish.Graphics
                 var lightPositionAttribute = program.GetUniformLocation("LightPositionUniform");
 
                 using (program.Use())
-                    program.SetUniform(lightPositionAttribute, new OpenTK.Vector4(lightPosition));
+                    program.SetUniform(lightPositionAttribute, new Vector4(lightPosition));
 
             }
             Camera.Update();

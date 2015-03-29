@@ -57,7 +57,8 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BulletSharp">
+    <Reference Include="BulletSharp, Version=2.82.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>Collision\Release OpenTK\BulletSharp.dll</HintPath>
     </Reference>
     <Reference Include="Fasterflect, Version=2.1.3.0, Culture=neutral, PublicKeyToken=38d18473284c1ca7, processorArchitecture=MSIL">
@@ -89,7 +90,6 @@
     <Compile Include="GlobalStrings.cs" />
     <Compile Include="Graphics\INode.cs" />
     <Compile Include="Graphics\Input\ClickableCollisionObject.cs" />
-    <Compile Include="Graphics\Input\DebugInfo.cs" />
     <Compile Include="Graphics\Input\GizmoBase.cs" />
     <Compile Include="Graphics\Input\RotationGizmo.cs" />
     <Compile Include="Graphics\Input\TranslationGizmo.cs" />
@@ -102,7 +102,6 @@
     <Compile Include="Graphics\CollisionManager.cs" />
     <Compile Include="Graphics\DynamicScene.cs" />
     <Compile Include="Graphics\DynamicScene.Events.cs" />
-    <Compile Include="Graphics\Input\MouseInput.cs" />
     <Compile Include="Graphics\Interfaces.cs" />
     <Compile Include="Graphics\Gizmo.cs">
       <SubType>Form</SubType>
@@ -119,17 +118,15 @@
     <Compile Include="Graphics\GraphicsEvents.cs" />
     <Compile Include="Graphics\GraphicsExtensions.cs" />
     <Compile Include="Graphics\Grid.cs" />
-    <Compile Include="Graphics\Input\MousePole.cs" />
     <Compile Include="Graphics\Manager.cs" />
     <Compile Include="Graphics\MarkerWrapper.cs" />
     <Compile Include="Graphics\MaterialShader.cs" />
     <Compile Include="Graphics\Maths.cs" />
     <Compile Include="Graphics\Mesh.cs" />
     <Compile Include="Graphics\MoonfishColours.cs" />
-    <Compile Include="Graphics\MouseEventManager.cs" />
     <Compile Include="Graphics\Conic.cs" />
     <Compile Include="Graphics\Node.cs" />
-    <Compile Include="Graphics\NodeCollection.cs" />
+    <Compile Include="Graphics\NodeCollectionExtensions.cs" />
     <Compile Include="Graphics\OpenGL.cs" />
     <Compile Include="Graphics\Performance.cs" />
     <Compile Include="Graphics\Primitives\Box.cs" />

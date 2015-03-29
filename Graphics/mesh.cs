@@ -1,12 +1,11 @@
-﻿using Moonfish.Guerilla.Tags;
-using Moonfish.Tags;
-using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Moonfish.Guerilla.Tags;
+using Moonfish.Tags;
+using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {

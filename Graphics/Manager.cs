@@ -1,11 +1,9 @@
-﻿using Moonfish.Guerilla.Tags;
-using Moonfish.Tags;
-using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
+using Moonfish.Guerilla.Tags;
+using Moonfish.Tags;
+using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {
@@ -171,6 +169,7 @@ namespace Moonfish.Graphics
 
         public void Draw(ProgramManager programManager, RenderBatch batch)
         {
+            if (batch.BatchObject == null) return;
             var program = programManager.GetProgram(batch.Shader);
             if (program == null) return;
 

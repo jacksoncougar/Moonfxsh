@@ -1,5 +1,6 @@
-﻿using OpenTK.Graphics.OpenGL;
-using System;
+﻿using System;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {
@@ -56,7 +57,7 @@ namespace Moonfish.Graphics
         {
             var error = GL.GetError();
             if ( error != ErrorCode.NoError )
-                throw new OpenTK.GraphicsException( error.ToString() );
+                throw new GraphicsException( error.ToString() );
         }
     }
 }

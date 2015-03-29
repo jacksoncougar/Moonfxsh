@@ -1,12 +1,10 @@
-﻿using Moonfish.Guerilla.Tags;
-using Moonfish.Tags;
-using OpenTK.Graphics.OpenGL;
-using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Moonfish.Guerilla.Tags;
+using Moonfish.Tags;
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {
@@ -17,7 +15,7 @@ namespace Moonfish.Graphics
         public Program ScreenProgram { get { return this.Shaders["screen"]; } }
         Dictionary<string, Program> Shaders { get; set; }
 
-        OpenTK.Vector3 lightPosition = new OpenTK.Vector3( 1f, 1f, 0.5f );
+        Vector3 lightPosition = new Vector3( 1f, 1f, 0.5f );
         int NormalMapPaletteTexture;
 
         Dictionary<TagIdent, MaterialShader> Materials { get; set; }
@@ -203,7 +201,7 @@ namespace Moonfish.Graphics
             return this.Shaders.Select( x => x.Value ).GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator( )
+        IEnumerator IEnumerable.GetEnumerator( )
         {
             return this.GetEnumerator();
         }

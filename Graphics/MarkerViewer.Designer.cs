@@ -1,11 +1,15 @@
-﻿namespace Moonfish.Graphics
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using OpenTK;
+
+namespace Moonfish.Graphics
 {
     partial class MarkerViewer
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -371,33 +375,33 @@
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private OpenTK.GLControl glControl1;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel lblRenderTime;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
-        private System.Windows.Forms.ToolStripButton toolStripButton3;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem debugDrawToolStripMenuItem;
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
-        private System.Windows.Forms.ToolStripButton tsBtnLabels;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private SplitContainer splitContainer1;
+        private GLControl glControl1;
+        private SplitContainer splitContainer2;
+        private ListBox listBox1;
+        private StatusStrip statusStrip1;
+        private ToolStripStatusLabel lblRenderTime;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStripMenuItem openToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem saveToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem closeToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator4;
+        private ToolStripMenuItem exitToolStripMenuItem;
+        private ToolStrip toolStrip1;
+        private ToolStripComboBox toolStripComboBox1;
+        private ToolStripButton toolStripButton1;
+        private ToolStripButton toolStripButton2;
+        private ToolStripButton toolStripButton3;
+        private ToolStripLabel toolStripLabel1;
+        private ToolStripMenuItem toolsToolStripMenuItem;
+        private ToolStripMenuItem debugDrawToolStripMenuItem;
+        private PropertyGrid propertyGrid1;
+        private ToolStripLabel toolStripLabel2;
+        private ToolStripButton tsBtnLabels;
+        private ToolStripSeparator toolStripSeparator3;
 
     }
 }

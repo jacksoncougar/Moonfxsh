@@ -1,6 +1,6 @@
-﻿using OpenTK;
-using System;
+﻿using System;
 using System.Drawing;
+using OpenTK;
 
 namespace Moonfish.Graphics
 {
@@ -20,8 +20,8 @@ namespace Moonfish.Graphics
             this.A = normalise ? color.A / (float)byte.MaxValue : color.A;
         }
 
-        public Vector4 RGBA { get { return new OpenTK.Vector4(R, G, B, A); } }
-        public Vector4 ARGB { get { return new OpenTK.Vector4(A, R, G, B); } }
+        public Vector4 RGBA { get { return new Vector4(R, G, B, A); } }
+        public Vector4 ARGB { get { return new Vector4(A, R, G, B); } }
 
         public float[] ToArray()
         {

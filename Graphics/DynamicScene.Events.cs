@@ -1,9 +1,8 @@
-﻿using OpenTK;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using BulletSharp;
 using Moonfish.Graphics.Input;
-using OpenTK.Input;
-using OpenTK.Platform.Windows;
+using OpenTK;
 
 namespace Moonfish.Graphics
 {
@@ -13,12 +12,11 @@ namespace Moonfish.Graphics
         public event EventHandler<SceneMouseMoveEventArgs> MouseMove;
         public event EventHandler<SceneMouseEventArgs> MouseUp;
         public event EventHandler<SceneMouseEventArgs> MouseClick;
-
         public event EventHandler MouseCaptureChanged;
 
         public event SelectedObjectChangedEventHandler SelectedObjectChanged;
 
-        public void OnMouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        public void OnMouseDown(object sender, MouseEventArgs e)
         {
             var mouse = new
             {
@@ -26,7 +24,7 @@ namespace Moonfish.Graphics
                 Far = Camera.ReProject(new Vector2(e.X, e.Y), depth: 1)
             };
 
-            var callback = new BulletSharp.CollisionWorld.ClosestRayResultCallback(mouse.Close, mouse.Far);
+            var callback = new ClosestRayResultCallback(mouse.Close, mouse.Far) { CollisionFilterGroup = CollisionFilterGroups.AllFilter };
             CollisionManager.World.PerformDiscreteCollisionDetection();
             CollisionManager.World.RayTest(mouse.Close, mouse.Far, callback);
 
@@ -38,18 +36,17 @@ namespace Moonfish.Graphics
                     RegisterEventHandler(clickableCollisionObject);
                     clickableCollisionObject.MouseDown(this, new SceneMouseEventArgs(Camera, new Vector2(e.X, e.Y), default(Vector3), e.Button));
                 }
-                var iSelectable = callback.CollisionObject.UserObject as ISelectable;
-                if (iSelectable != null &&
-                    SelectedObjectChanged != null)
+                if (SelectedObjectChanged != null)
                 {
-                    SelectedObjectChanged(this, new SelectEventArgs(callback.CollisionObject.UserObject));
+                    SelectedObjectChanged(this, new SelectEventArgs(callback.CollisionObject));
                 }
             }
             else
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    MousePole.DropHandlers();
+                    if (SelectedObjectChanged != null)
+                        SelectedObjectChanged(this, new SelectEventArgs(null));
                 }
             }
         }
@@ -61,7 +58,7 @@ namespace Moonfish.Graphics
             MouseClick += clickableCollisionObject.MouseClick;
         }
 
-        public void OnMouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        public void OnMouseUp(object sender, MouseEventArgs e)
         {
             if (MouseUp != null) MouseUp(this, new SceneMouseEventArgs(Camera, new Vector2(e.X, e.Y), default(Vector3), e.Button));
             MouseMove = null;
@@ -69,12 +66,12 @@ namespace Moonfish.Graphics
             MouseClick = null;
         }
 
-        public void OnMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        public void OnMouseMove(object sender, MouseEventArgs e)
         {
             if (MouseMove != null) MouseMove(this, new SceneMouseMoveEventArgs(Camera, e));
         }
 
-        public void OnMouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        public void OnMouseClick(object sender, MouseEventArgs e)
         {
             if (MouseClick != null) MouseClick(this, new SceneMouseEventArgs(Camera, new Vector2(e.X, e.Y), default(Vector3), e.Button));
         }

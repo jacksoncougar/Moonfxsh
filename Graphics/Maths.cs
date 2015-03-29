@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using OpenTK;
 
 namespace Moonfish.Graphics

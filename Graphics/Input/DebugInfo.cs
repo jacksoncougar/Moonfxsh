@@ -1,3 +1,0 @@
-namespace Moonfish.Graphics.Input
-{
-}

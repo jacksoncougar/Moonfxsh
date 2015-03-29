@@ -1,14 +1,12 @@
-﻿using Moonfish.Guerilla.Tags;
-using Moonfish.Tags.BlamExtension;
-using Moonfish.Tags;
-using System;
+﻿using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Moonfish.Graphics.Input;
-using System.Collections.Generic;
+using Moonfish.Guerilla.Tags;
+using Moonfish.Tags;
+using Point = System.Drawing.Point;
 
 namespace Moonfish.Graphics
 {
@@ -27,7 +25,7 @@ namespace Moonfish.Graphics
             public IntPtr WParameter;
             public IntPtr LParameter;
             public uint Time;
-            public System.Drawing.Point Location;
+            public Point Location;
         }
 
         [DllImport("user32.dll")]
@@ -122,7 +120,6 @@ namespace Moonfish.Graphics
                 UpdateState();
                 Scene.Update();
                 Scene.RenderFrame();
-                propertyGrid1.Refresh();
             }
         }
 

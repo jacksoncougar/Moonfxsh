@@ -1,7 +1,7 @@
-﻿using Moonfish.Guerilla.Tags;
-using OpenTK.Graphics.OpenGL;
-using System;
+﻿using System;
 using System.IO;
+using Moonfish.Guerilla.Tags;
+using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {
@@ -43,12 +43,12 @@ namespace Moonfish.Graphics
             var height = workingBitmap.heightPixels;
             var bytesPerPixel = ParseBitapPixelDataSize( workingBitmap.format ) / 8.0f;
 
-            if ( workingBitmap.flags.HasFlag( BitmapDataBlock.Flags.Palettized ) )
+            if ( workingBitmap.flags.HasFlag( BitmapDataBlockBase.Flags.Palettized ) )
             {
                 textureMagFilter = TextureMagFilter.Nearest;
                 textureMinFilter = TextureMinFilter.Nearest;
             }
-            if ( workingBitmap.flags.HasFlag( BitmapDataBlock.Flags.Swizzled ) )
+            if ( workingBitmap.flags.HasFlag( BitmapDataBlockBase.Flags.Swizzled ) )
             {
                 buffer = Swizzler.Swizzle( buffer, ( int )bytesPerPixel, width, height, 1 );
             }
@@ -74,7 +74,7 @@ namespace Moonfish.Graphics
                         byte[] surfaceData = new byte[ ( int )( bytesPerPixel * width * height ) ];
                         Array.Copy( buffer, 0, surfaceData, 0, surfaceData.Length );
 
-                        if ( workingBitmap.flags.HasFlag( BitmapDataBlock.Flags.Compressed ) )
+                        if ( workingBitmap.flags.HasFlag( BitmapDataBlockBase.Flags.Compressed ) )
                         {
                             GL.CompressedTexImage2D(
                                 TextureTarget.Texture2D, 0, pixelInternalFormat, width, height, 0, ( int )( bytesPerPixel * width * height ), surfaceData );
@@ -118,7 +118,7 @@ namespace Moonfish.Graphics
                             Array.Copy( buffer, stride * i, surfaceData, 0, surfaceData.Length );
 
 
-                            if ( workingBitmap.flags.HasFlag( BitmapDataBlock.Flags.Compressed ) )
+                            if ( workingBitmap.flags.HasFlag( BitmapDataBlockBase.Flags.Compressed ) )
                             {
                                 GL.CompressedTexImage2D(
                                     cube[ i ], 0, pixelInternalFormat, width, height, 0, ( int )( bytesPerPixel * width * height ), surfaceData );

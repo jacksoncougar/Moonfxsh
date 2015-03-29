@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Input;
+using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 
 namespace Moonfish.Graphics
 {
@@ -86,12 +87,12 @@ namespace Moonfish.Graphics
             if (MouseCaptureChanged != null) MouseCaptureChanged(this, e);
         }
 
-        public void OnMouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        public void OnMouseDown(object sender, MouseEventArgs e)
         {
             if (MouseDown != null) MouseDown(this, e);
         }
 
-        public void OnMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        public void OnMouseMove(object sender, MouseEventArgs e)
         {
             var mouseState = Mouse.GetState();
             var keyboardState = Keyboard.GetState();
@@ -135,7 +136,7 @@ namespace Moonfish.Graphics
             _previousMouseCoordinate = currentMouseCoordinate;
         }
 
-        public void OnMouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        public void OnMouseUp(object sender, MouseEventArgs e)
         {
             if (MouseUp != null) MouseUp(this, e);
         }

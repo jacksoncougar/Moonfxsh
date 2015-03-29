@@ -1,11 +1,8 @@
-﻿using Moonfish.Collision;
-using OpenTK;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using OpenTK.Input;
-using OpenTK.Platform.Windows;
-using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
+using Moonfish.Collision;
+using OpenTK;
 
 namespace Moonfish.Graphics
 {
@@ -50,7 +47,7 @@ namespace Moonfish.Graphics
         public float MouseRayFarPoint { get; private set; }
         public Vector2 ScreenCoordinates { get; private set; }
         public Vector3 WorldCoordinates { get; private set; }
-        public System.Windows.Forms.MouseButtons Button { get; private set; }
+        public MouseButtons Button { get; private set; }
 
         public bool WasHit { get; set; }
         public Vector3 HitPointWorld { get; set; }

@@ -4,32 +4,36 @@ namespace Moonfish.Graphics.Input
 {
     public class RotationGizmo : GizmoBase
     {
-        private Quaternion _rotationDelta = Quaternion.Identity;
+        private Quaternion _transform;
+
+        public RotationGizmo()
+        {
+            _transform = Quaternion.Identity;
+        }
 
         public override Matrix4 WorldMatrix
         {
-            get { return CalculateWorldMatrix(position, _rotationDelta * rotation, scale); }
+            get { return CalculateWorldMatrix(position, _transform * rotation, scale); }
             set { base.WorldMatrix = value; }
         }
 
         protected override void Commit()
         {
-            selectedAxis = Axis.None;
-            rotation = _rotationDelta * rotation;
+            rotation = _transform * rotation;
             rotation.Normalize();
-            _rotationDelta = Quaternion.Identity;
-            SelectAxis(Axis.None);
+            _transform = Quaternion.Identity;
+            base.Commit();
         }
 
-        protected void SetTransform(float degrees)
+        private void SetTransform(float degrees)
         {
             var axisNormal = GetAxisNormal(selectedAxis);
             var radians = OpenTK.MathHelper.DegreesToRadians(degrees);
 
-            _rotationDelta = Quaternion.FromAxisAngle(axisNormal, radians);
+            _transform = Quaternion.FromAxisAngle(axisNormal, radians);
 
             var beforeMatrix = CalculateWorldMatrix(position, rotation, scale);
-            var afterMatrix = CalculateWorldMatrix(position, _rotationDelta * rotation, scale);
+            var afterMatrix = CalculateWorldMatrix(position, _transform * rotation, scale);
             OnWorldMatrixChanged(ref beforeMatrix, ref afterMatrix);
         }
 

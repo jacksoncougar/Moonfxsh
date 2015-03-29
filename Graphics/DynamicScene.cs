@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Reflection;
 using BulletSharp;
 using Moonfish.Graphics.Input;
 using Moonfish.Graphics.Primitives;
+using Moonfish.Guerilla.Tags;
 using OpenTK;
-using Fasterflect;
-using MousePole = Moonfish.Graphics.Input.MousePole;
 
 namespace Moonfish.Graphics
 {
@@ -15,29 +13,42 @@ namespace Moonfish.Graphics
 
         public bool DrawDebugCollision { get; set; }
 
-        public RotationGizmo MousePole { get; set; }
+        public TranslationGizmo MousePole { get; set; }
 
         public DynamicScene()
         {
-            DrawDebugCollision = false;
+            DrawDebugCollision = true;
             CollisionManager = new CollisionManager(ProgramManager.SystemProgram);
-            MousePole = new RotationGizmo();
+            MousePole = new TranslationGizmo();
             Camera.CameraUpdated += MousePole.OnCameraUpdate;
             SelectedObjectChanged += OnSelectedObjectChanged;
             foreach (var item in MousePole.CollisionObjects)
-                CollisionManager.World.AddCollisionObject(item);
+                CollisionManager.World.AddCollisionObject(item);;
+#if DEBUG
             GLDebug.DebugProgram = ProgramManager.SystemProgram;
             GLDebug.ScreenspaceProgram = ProgramManager.ScreenProgram;
+#endif
         }
 
         void OnSelectedObjectChanged(object seneder, SelectEventArgs e)
         {
-            var marker = e.SelectedObject as MarkerWrapper;
-            if (marker != null)
+            if (e.SelectedObject == null)
             {
                 MousePole.DropHandlers();
-                MousePole.WorldMatrix = marker.WorldMatrix;
-                MousePole.WorldMatrixChanged += marker.mousePole_WorldMatrixChanged;
+                MousePole.Show(false);
+                return;
+            }
+            var item = e.SelectedObject as ScenarioCollisionObject;
+            if (item != null)
+            {
+                MousePole.Show(true);
+                MousePole.DropHandlers();
+                MousePole.WorldMatrix = item.WorldTransform;
+                MousePole.WorldMatrixChanged +=
+                    delegate(object sender, MatrixChangedEventArgs args)
+                    {
+                        item.ParentObject.SetChildWorldMatrix(item.UserObject, args.Matrix);
+                    };
             }
         }
 
@@ -47,7 +58,7 @@ namespace Moonfish.Graphics
 
             ObjectManager.Draw(ProgramManager, MousePole.Model);
 
-            if (DrawDebugCollision || true)
+            if (DrawDebugCollision)
                 CollisionManager.World.DebugDrawWorld();
         }
 
@@ -55,17 +66,15 @@ namespace Moonfish.Graphics
         {
             foreach (CollisionObject collisionObject in CollisionManager.World.CollisionObjectArray)
             {
-                var box = collisionObject;
-                if ((box) != null && box.UserObject is MarkerWrapper)
+                if (collisionObject.UserObject is MarkerWrapper)
                 {
-                    var worldMatrix = box.WorldTransform;
+                    var worldMatrix = collisionObject.WorldTransform;
                     var scale = Camera.CreateScale(worldMatrix.ExtractTranslation(), 0.05f, 15f);
-                    box.CollisionShape.LocalScaling = new Vector3(scale, scale, scale);
+                    collisionObject.CollisionShape.LocalScaling = new Vector3(scale, scale, scale);
                 }
             }
-            CollisionManager.World.PerformDiscreteCollisionDetection();
+            CollisionManager.Update();
             base.Update();
         }
-
     }
 }

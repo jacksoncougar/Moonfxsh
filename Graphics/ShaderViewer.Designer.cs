@@ -1,11 +1,15 @@
-﻿namespace Moonfish.Graphics
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using OpenTK;
+
+namespace Moonfish.Graphics
 {
     partial class ShaderViewer
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -130,11 +134,11 @@
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private OpenTK.GLControl glControl1;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.ListBox listBox2;
+        private SplitContainer splitContainer1;
+        private GLControl glControl1;
+        private SplitContainer splitContainer2;
+        private ListBox listBox1;
+        private ListBox listBox2;
 
     }
 }

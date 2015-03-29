@@ -408,12 +408,12 @@ namespace Moonfish.Tags
     {
         short index;
 
-        public static explicit operator short( ShortBlockIndex1 shortBlockIndex )
+        public static implicit operator short( ShortBlockIndex1 shortBlockIndex )
         {
             return shortBlockIndex.index;
         }
 
-        public static explicit operator ShortBlockIndex1( short value )
+        public static implicit operator ShortBlockIndex1(short value)
         {
             return new ShortBlockIndex1 { index = value };
         }

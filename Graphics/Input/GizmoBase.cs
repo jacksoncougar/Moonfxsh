@@ -9,41 +9,35 @@ namespace Moonfish.Graphics.Input
 {
     public abstract class GizmoBase
     {
-        protected readonly ClickableCollisionObject forwardCollisionObject;
-        protected readonly ClickableCollisionObject rightCollisionObject;
-        protected readonly ClickableCollisionObject upCollisionObject;
-
+        private readonly EventHandler<SceneMouseEventArgs> _mouseDownXDelegate;
+        private readonly EventHandler<SceneMouseEventArgs> _mouseDownYDelegate;
+        private readonly EventHandler<SceneMouseEventArgs> _mouseDownZDelegate;
+        private readonly EventHandler<SceneMouseMoveEventArgs> _mouseMoveDelegate;
+        private readonly EventHandler<SceneMouseEventArgs> _mouseUpDelegate;
+        private readonly ClickableCollisionObject _forwardCollisionObject;
+        private readonly ClickableCollisionObject _rightCollisionObject;
+        private readonly ClickableCollisionObject _upCollisionObject;
         private TriangleBatch _batch;
+        private bool _hidden;
         protected Vector3 position;
+        private Vector2 _registrationScreenspace;
         protected Quaternion rotation;
         protected float scale;
         protected Axis selectedAxis;
-        protected Vector2 registrationScreenspace;
 
         protected GizmoBase()
         {
             PixelSize = 30;
-            upCollisionObject = new ClickableCollisionObject {CollisionShape = new SphereShape(0.25f)};
-            rightCollisionObject = new ClickableCollisionObject {CollisionShape = new SphereShape(0.25f)};
-            forwardCollisionObject = new ClickableCollisionObject { CollisionShape = new SphereShape(0.25f) };
+            _upCollisionObject = new ClickableCollisionObject { CollisionShape = new SphereShape(0.25f), UserObject = this };
+            _rightCollisionObject = new ClickableCollisionObject { CollisionShape = new SphereShape(0.25f), UserObject = this };
+            _forwardCollisionObject = new ClickableCollisionObject { CollisionShape = new SphereShape(0.25f), UserObject = this };
 
-            upCollisionObject.OnMouseMove +=
-                delegate(object sender, SceneMouseMoveEventArgs args) { Transform(args); };
-            rightCollisionObject.OnMouseMove +=
-                delegate(object sender, SceneMouseMoveEventArgs args) { Transform(args); };
-            forwardCollisionObject.OnMouseMove +=
-                delegate(object sender, SceneMouseMoveEventArgs args) { Transform(args); };
-
-            upCollisionObject.OnMouseDown +=
-                delegate(object sender, SceneMouseEventArgs args) { SelectAxis(Axis.Up, args); };
-            rightCollisionObject.OnMouseDown +=
-                delegate(object sender, SceneMouseEventArgs args) { SelectAxis(Axis.Right, args); };
-            forwardCollisionObject.OnMouseDown +=
-                delegate(object sender, SceneMouseEventArgs args) { SelectAxis(Axis.Forward, args); };
-
-            upCollisionObject.OnMouseUp += delegate { Commit(); };
-            rightCollisionObject.OnMouseUp += delegate { Commit(); };
-            forwardCollisionObject.OnMouseUp += delegate { Commit(); };
+            _mouseDownXDelegate = delegate(object sender, SceneMouseEventArgs args) { SelectAxis(Axis.Right, args); };
+            _mouseDownYDelegate = delegate(object sender, SceneMouseEventArgs args) { SelectAxis(Axis.Up, args); };
+            _mouseDownZDelegate = delegate(object sender, SceneMouseEventArgs args) { SelectAxis(Axis.Forward, args); };
+            _mouseMoveDelegate = delegate(object sender, SceneMouseMoveEventArgs args) { Transform(args); };
+            _mouseUpDelegate = delegate { Commit(); };
+            AssignCollisionObjectFunctions();
 
             position = new Vector3(0.1f, 0.1f, 0.0f);
             rotation = Quaternion.Identity;
@@ -56,24 +50,19 @@ namespace Moonfish.Graphics.Input
         {
             get
             {
-                yield return rightCollisionObject;
-                yield return upCollisionObject;
-                yield return forwardCollisionObject;
+                yield return _rightCollisionObject;
+                yield return _upCollisionObject;
+                yield return _forwardCollisionObject;
             }
         }
 
-        public virtual Matrix4 LocalMatrix
+        private Matrix4 LocalMatrix
         {
             get { return CalculateWorldMatrix(position, rotation, scale); }
-            set
-            {
-                position = value.ExtractTranslation();
-                rotation = value.ExtractRotation();
-                scale = value.ExtractScale().X;
-            }
         }
 
         public RenderBatch Model { get; private set; }
+
         public int PixelSize { get; set; }
 
         public virtual Matrix4 WorldMatrix
@@ -109,23 +98,53 @@ namespace Moonfish.Graphics.Input
 
         public void OnCameraUpdate(object sender, CameraEventArgs e)
         {
-            scale = ((Camera) sender).CreateScale(WorldMatrix.ExtractTranslation(), 0.5f, PixelSize);
+            scale = ((Camera)sender).CreateScale(WorldMatrix.ExtractTranslation(), 0.5f, PixelSize);
 
             Model.AssignUniform("WorldMatrixUniform", WorldMatrix);
 
             var shape = new SphereShape(scale * 0.15f);
-            rightCollisionObject.CollisionShape = shape;
-            upCollisionObject.CollisionShape = shape;
-            forwardCollisionObject.CollisionShape = shape;
+            _rightCollisionObject.CollisionShape = shape;
+            _upCollisionObject.CollisionShape = shape;
+            _forwardCollisionObject.CollisionShape = shape;
 
             var collisionMatrix = WorldMatrix.ClearScale();
 
-            rightCollisionObject.WorldTransform = Matrix4.CreateTranslation(Vector3.UnitX * scale) * collisionMatrix;
-            upCollisionObject.WorldTransform = Matrix4.CreateTranslation(Vector3.UnitY * scale) * collisionMatrix;
-            forwardCollisionObject.WorldTransform = Matrix4.CreateTranslation(Vector3.UnitZ * scale) * collisionMatrix;
+            _rightCollisionObject.WorldTransform = Matrix4.CreateTranslation(Vector3.UnitX * scale) * collisionMatrix;
+            _upCollisionObject.WorldTransform = Matrix4.CreateTranslation(Vector3.UnitY * scale) * collisionMatrix;
+            _forwardCollisionObject.WorldTransform = Matrix4.CreateTranslation(Vector3.UnitZ * scale) * collisionMatrix;
+        }
+
+        public void Show(bool show)
+        {
+            if (!_hidden == show) return;
+
+            _hidden = !show;
+            Model.BatchObject = show ? _batch : null;
+
+            if (show) AssignCollisionObjectFunctions();
+            else ClearCollisionObjectFunctions();
         }
 
         public event MatrixChangedEventHandler WorldMatrixChanged;
+
+        protected Vector2 CalculateScreenspaceTranslation(Vector2 originScreenspace, Vector2 axisNormalScreenspace,
+            Vector2 cursorScreenspace)
+        {
+            var cursorVectorScreenspace = cursorScreenspace - originScreenspace;
+            var registrationVectorScreenspace = _registrationScreenspace - originScreenspace;
+
+            var translationNormalScreenspace =
+                (axisNormalScreenspace - originScreenspace).Normalized();
+
+            var cursorInterceptDot = Vector2.Dot(cursorVectorScreenspace,
+                translationNormalScreenspace);
+            var registrationInterceptDot = Vector2.Dot(registrationVectorScreenspace,
+                translationNormalScreenspace);
+
+            var translationDot = cursorInterceptDot - registrationInterceptDot;
+
+            return translationNormalScreenspace * translationDot;
+        }
 
         protected static Matrix4 CalculateWorldMatrix(Vector3 translation, Quaternion rotation, float scale)
         {
@@ -156,7 +175,7 @@ namespace Moonfish.Graphics.Input
             }
         }
 
-        protected virtual void OnWorldMatrixChanged(ref Matrix4 beforeMatrix, ref Matrix4 afterMatrix)
+        protected void OnWorldMatrixChanged(ref Matrix4 beforeMatrix, ref Matrix4 afterMatrix)
         {
             if (WorldMatrixChanged != null)
                 WorldMatrixChanged(this, new MatrixChangedEventArgs(ref beforeMatrix, ref afterMatrix));
@@ -167,7 +186,7 @@ namespace Moonfish.Graphics.Input
             selectedAxis = axis;
             if (args != null)
             {
-                registrationScreenspace = args.ScreenCoordinates;
+                _registrationScreenspace = args.ScreenCoordinates;
             }
 
             var colours = GetColours();
@@ -178,13 +197,44 @@ namespace Moonfish.Graphics.Input
             }
         }
 
+        protected abstract void Transform(SceneMouseMoveEventArgs args);
+
+        private void AssignCollisionObjectFunctions()
+        {
+            _upCollisionObject.OnMouseMove += _mouseMoveDelegate;
+            _rightCollisionObject.OnMouseMove += _mouseMoveDelegate;
+            _forwardCollisionObject.OnMouseMove += _mouseMoveDelegate;
+
+            _upCollisionObject.OnMouseDown += _mouseDownYDelegate;
+            _rightCollisionObject.OnMouseDown += _mouseDownXDelegate;
+            _forwardCollisionObject.OnMouseDown += _mouseDownZDelegate;
+
+            _upCollisionObject.OnMouseUp += _mouseUpDelegate;
+            _rightCollisionObject.OnMouseUp += _mouseUpDelegate;
+            _forwardCollisionObject.OnMouseUp += _mouseUpDelegate;
+        }
+
+        private void ClearCollisionObjectFunctions()
+        {
+            _upCollisionObject.OnMouseMove -= _mouseMoveDelegate;
+            _rightCollisionObject.OnMouseMove -= _mouseMoveDelegate;
+            _forwardCollisionObject.OnMouseMove -= _mouseMoveDelegate;
+
+            _upCollisionObject.OnMouseDown -= _mouseDownYDelegate;
+            _rightCollisionObject.OnMouseDown -= _mouseDownXDelegate;
+            _forwardCollisionObject.OnMouseDown -= _mouseDownZDelegate;
+
+            _upCollisionObject.OnMouseUp -= _mouseUpDelegate;
+            _rightCollisionObject.OnMouseUp -= _mouseUpDelegate;
+            _forwardCollisionObject.OnMouseUp -= _mouseUpDelegate;
+        }
+
         private void GenerateModel()
         {
             _batch = new TriangleBatch();
-            var coordinates = new[]
-            {Vector3.Zero, Vector3.UnitX, Vector3.Zero, Vector3.UnitY, Vector3.Zero, Vector3.UnitZ};
+            var coordinates = new[] { Vector3.Zero, Vector3.UnitX, Vector3.Zero, Vector3.UnitY, Vector3.Zero, Vector3.UnitZ };
             var colours = GetColours();
-            var indices = new short[] {0, 1, 2, 3, 4, 5};
+            var indices = new short[] { 0, 1, 2, 3, 4, 5 };
             using (_batch.Begin())
             {
                 _batch.BindBuffer(BufferTarget.ArrayBuffer, _batch.GenerateBuffer());
@@ -232,26 +282,5 @@ namespace Moonfish.Graphics.Input
             Right = 1 << 2,
             Forward = 1 << 3
         };
-
-        protected Vector2 CalculateScreenspaceTranslation(Vector2 originScreenspace, Vector2 axisNormalScreenspace,
-            Vector2 cursorScreenspace)
-        {
-            var cursorVectorScreenspace = cursorScreenspace - originScreenspace;
-            var registrationVectorScreenspace = registrationScreenspace - originScreenspace;
-
-            var translationNormalScreenspace =
-                (axisNormalScreenspace - originScreenspace).Normalized();
-
-            var cursorInterceptDot = Vector2.Dot(cursorVectorScreenspace,
-                translationNormalScreenspace);
-            var registrationInterceptDot = Vector2.Dot(registrationVectorScreenspace,
-                translationNormalScreenspace);
-
-            var translationDot = cursorInterceptDot - registrationInterceptDot;
-
-            return translationNormalScreenspace * translationDot;
-        }
-
-        protected abstract void Transform(SceneMouseMoveEventArgs args);
     }
 }

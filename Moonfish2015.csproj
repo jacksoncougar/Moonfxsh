@@ -87,12 +87,27 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="GlobalStrings.cs" />
-    <Compile Include="Graphics\Batch.cs" />
+    <Compile Include="Graphics\INode.cs" />
+    <Compile Include="Graphics\Input\ClickableCollisionObject.cs" />
+    <Compile Include="Graphics\Input\DebugInfo.cs" />
+    <Compile Include="Graphics\Input\TranslationGizmo.cs" />
+    <Compile Include="Graphics\MathHelper.cs" />
+    <Compile Include="Graphics\Primitives\Debug.cs" />
+    <Compile Include="Graphics\Primitives\Line.cs" />
+    <Compile Include="Graphics\TriangleBatch.cs" />
     <Compile Include="Graphics\BulletDebugDrawer.cs" />
     <Compile Include="Graphics\Camera.cs" />
+    <Compile Include="Graphics\CollisionManager.cs" />
     <Compile Include="Graphics\DynamicScene.cs" />
     <Compile Include="Graphics\DynamicScene.Events.cs" />
+    <Compile Include="Graphics\Input\MouseInput.cs" />
     <Compile Include="Graphics\Interfaces.cs" />
+    <Compile Include="Graphics\Gizmo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Graphics\Gizmo.Designer.cs">
+      <DependentUpon>Gizmo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Graphics\MarkerViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,17 +125,17 @@
     <Compile Include="Graphics\Mesh.cs" />
     <Compile Include="Graphics\MoonfishColours.cs" />
     <Compile Include="Graphics\MouseEventManager.cs" />
-    <Compile Include="Graphics\MousePole.cs" />
+    <Compile Include="Graphics\Conic.cs" />
     <Compile Include="Graphics\Node.cs" />
     <Compile Include="Graphics\NodeCollection.cs" />
     <Compile Include="Graphics\OpenGL.cs" />
     <Compile Include="Graphics\Performance.cs" />
-    <Compile Include="Graphics\Primitives.cs" />
+    <Compile Include="Graphics\Primitives\Box.cs" />
     <Compile Include="Graphics\Program.cs" />
     <Compile Include="Graphics\ProgramManager.cs" />
+    <Compile Include="Graphics\RenderBatch.cs" />
     <Compile Include="Graphics\RenderObject.cs" />
     <Compile Include="Graphics\ScenarioObject.cs" />
-    <Compile Include="Graphics\ScenarioObjectList.cs" />
     <Compile Include="Graphics\Scene.cs" />
     <Compile Include="Graphics\Section.cs" />
     <Compile Include="Graphics\Shader.cs" />
@@ -133,6 +148,7 @@
     <Compile Include="Graphics\Swizzler.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\Track.cs" />
+    <Compile Include="Graphics\VertexFunctions.cs" />
     <Compile Include="Guerilla\ClassInfo.cs" />
     <Compile Include="Guerilla\GuerillaAttributes.cs" />
     <Compile Include="Guerilla\GuerillaBase.cs" />
@@ -696,6 +712,9 @@
     <Content Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Graphics\Gizmo.resx">
+      <DependentUpon>Gizmo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Graphics\MarkerViewer.resx">
       <DependentUpon>MarkerViewer.cs</DependentUpon>
     </EmbeddedResource>

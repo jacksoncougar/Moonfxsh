@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using Moonfish.Graphics;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -73,10 +74,9 @@ namespace Moonfish.Guerilla.Tags
         {
             get
             {
-                var worldMatrix = Matrix4.Identity;
                 var translation = Matrix4.CreateTranslation( this.defaultTranslation );
                 var rotation = Matrix4.CreateFromQuaternion( this.defaultRotation.Normalized() );
-                return worldMatrix = rotation * translation * Matrix4.Identity;
+                return rotation * translation * Matrix4.Identity;
             }
         }
     };

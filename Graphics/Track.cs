@@ -65,8 +65,8 @@ namespace Moonfish.Graphics
         }
         public void ArcRotate( float polarIncrement, float azimuthIncrement )
         {
-            azimuth += MathHelper.DegreesToRadians( azimuthIncrement );
-            polar += MathHelper.DegreesToRadians( polarIncrement );
+            azimuth += OpenTK.MathHelper.DegreesToRadians( azimuthIncrement );
+            polar += OpenTK.MathHelper.DegreesToRadians(polarIncrement);
 
             var worldMatrix = this.WorldMatrix;
             var upVector = worldMatrix.Row1.Xyz;

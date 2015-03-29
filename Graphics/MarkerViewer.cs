@@ -34,10 +34,10 @@ namespace Moonfish.Graphics
         public static extern int PeekMessage( out NativeMessage message, IntPtr window, uint filterMin, uint filterMax, uint remove );
         #endregion
 
-        bool IsApplicationIdle( )
+        static bool IsApplicationIdle( )
         {
             NativeMessage result;
-            return PeekMessage( out result, IntPtr.Zero, ( uint )0, ( uint )0, ( uint )0 ) == 0;
+            return PeekMessage( out result, IntPtr.Zero, 0, 0, 0 ) == 0;
         }
 
         public MarkerViewer( )
@@ -106,17 +106,17 @@ namespace Moonfish.Graphics
         private void LoadMap( string fileName )
         {
             var directory = Path.GetDirectoryName( fileName );
-            var maps = Directory.GetFiles( directory, "*.map", SearchOption.TopDirectoryOnly );
-            var resourceMaps = maps.GroupBy(
-                x =>
-                {
-                    return Halo2.CheckMapType( x );
-                }
-            ).Where( x => x.Key == MapType.MainMenu
-                || x.Key == MapType.Shared
-                || x.Key == MapType.SinglePlayerShared )
-                .Select( g => g.First() ).ToList();
-            resourceMaps.ForEach( x => Halo2.LoadResource( new MapStream( x ) ) );
+            if (directory != null)
+            {
+                var maps = Directory.GetFiles( directory, "*.map", SearchOption.TopDirectoryOnly );
+                var resourceMaps = maps.GroupBy(
+                    Halo2.CheckMapType
+                    ).Where( x => x.Key == MapType.MainMenu
+                                  || x.Key == MapType.Shared
+                                  || x.Key == MapType.SinglePlayerShared )
+                    .Select( g => g.First() ).ToList();
+                resourceMaps.ForEach( x => Halo2.LoadResource( new MapStream( x ) ) );
+            }
 
             Map = new MapStream( fileName );
 
@@ -167,11 +167,11 @@ namespace Moonfish.Graphics
             {
                 control.Visible = tsBtnLabels.Checked;
                 var marker = ( MarkerWrapper )control.Tag;
-                var location = Scene.Camera.UnProject( marker.WorldMatrix.ExtractTranslation(), Maths.ProjectionTarget.View );
+                var location = Scene.Camera.UnProject( marker.ParentWorldMatrix.ExtractTranslation(), Maths.ProjectionTarget.View );
                 control.Location = new System.Drawing.Point( ( int )location.X, ( int )location.Y );
             }
             Scene.DrawDebugCollision = debugDrawToolStripMenuItem.Checked;
-            Scene.MousePole.Mode = ( TransformMode )Enum.Parse( typeof( TransformMode ), toolStripComboBox1.SelectedItem.ToString() );
+            //Scene.MousePole.Mode = (TransformMode)Enum.Parse(typeof(TransformMode), toolStripComboBox1.SelectedItem.ToString());
             var selectedItem = Scene.ObjectManager[ SelectedTag ].FirstOrDefault();
             if ( selectedItem == null ) return;
             selectedItem.Flags = toolStripButton1.Checked ? selectedItem.Flags |= ScenarioObject.RenderFlags.RenderNodes :
@@ -198,7 +198,7 @@ namespace Moonfish.Graphics
             var @object = Scene.ObjectManager[ ident ].FirstOrDefault();
             if ( @object == null ) return;
 
-            var collisionObject = Scene.CollisionManager.World.CollisionObjectArray.Where( x => x == @object.CollisionObject ).FirstOrDefault();
+            var collisionObject = Scene.CollisionManager.World.CollisionObjectArray.FirstOrDefault(x => x == @object.CollisionObject);
             if ( collisionObject != null )
             {
                 Scene.CollisionManager.World.RemoveCollisionObject( @object.CollisionObject );
@@ -206,7 +206,7 @@ namespace Moonfish.Graphics
             glControl1.Controls.Clear();
             foreach ( var marker in @object.Markers )
             {
-                var markerCollisionObject = Scene.CollisionManager.World.CollisionObjectArray.Where( x => x.UserObject == marker.Value ).FirstOrDefault();
+                var markerCollisionObject = Scene.CollisionManager.World.CollisionObjectArray.FirstOrDefault(x => x.UserObject == marker.Value);
                 if ( markerCollisionObject != null )
                 {
                     Scene.CollisionManager.World.RemoveCollisionObject( markerCollisionObject );
@@ -223,7 +223,7 @@ namespace Moonfish.Graphics
             Scene.ObjectManager.Add( ident, scenarioObject );
 
             Scene.ProgramManager.LoadMaterials( model.RenderModel.materials.Select( x => x.shader.Ident ), Map );
-            Scene.CollisionManager.LoadScenarioObjectCollection( Scene.ObjectManager[ ident ].First() );
+            Scene.CollisionManager.LoadScenarioObjectCollision( Scene.ObjectManager[ ident ].First() );
 
             var @object = Scene.ObjectManager[ ident ].First();
 
@@ -254,7 +254,7 @@ namespace Moonfish.Graphics
         {
             if ( listBox1.SelectedIndex < 0 ) return;
             RemoveModel( SelectedTag );
-            SelectedTag = ( listBox1.SelectedItem as Tag ).Identifier;
+            SelectedTag = ( (Tag) listBox1.SelectedItem ).Identifier;
             if ( Scene.ObjectManager[ SelectedTag ].Any() == false )
             {
                 LoadModel( SelectedTag );
@@ -283,7 +283,7 @@ namespace Moonfish.Graphics
                 DefaultExt = "(*.map)|map file",
                 Multiselect = false
             };
-            if ( dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK ) return;
+            if ( dialog.ShowDialog() != DialogResult.OK ) return;
             LoadMap( dialog.FileName );
         }
 

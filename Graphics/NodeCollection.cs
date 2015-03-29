@@ -5,36 +5,20 @@ using System.Collections.Generic;
 
 namespace Moonfish.Graphics
 {
-    public class NodeCollection : List<RenderModelNodeBlock>
+    public static class NodeCollectionExtensions
     {
-        public NodeCollection( )
-            : base()
+        public static Matrix4 GetWorldMatrix(this IList<RenderModelNodeBlock> list, int index)
         {
+            return index < 0 ? Matrix4.Identity : list.GetWorldMatrix(list[index]);
         }
 
-        public NodeCollection( int capacity )
-            : base( capacity )
+        public static Matrix4 GetWorldMatrix(this IList<RenderModelNodeBlock> list, RenderModelNodeBlock node)
         {
-        }
-
-        public NodeCollection( IEnumerable<RenderModelNodeBlock> collection )
-            : base( collection )
-        {
-        }
-
-        public Matrix4 GetWorldMatrix( int index )
-        {
-            if ( index < 0 ) return Matrix4.Identity;
-            else return GetWorldMatrix( this[ index ] );
-        }
-
-        public Matrix4 GetWorldMatrix( RenderModelNodeBlock node )
-        {
-            if ( !this.Contains( node ) ) throw new ArgumentOutOfRangeException();
+            if (!list.Contains(node)) throw new ArgumentOutOfRangeException();
 
             var worldMatrix = node.WorldMatrix;
-            if ( ( int )node.parentNode < 0 ) return worldMatrix;
-            return worldMatrix * GetWorldMatrix( this[ ( int )node.parentNode ] );
+            if ((int)node.parentNode < 0) return worldMatrix;
+            return worldMatrix * list.GetWorldMatrix(list[(int)node.parentNode]);
         }
     };
 }

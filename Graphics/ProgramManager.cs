@@ -6,13 +6,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenTK;
 
 namespace Moonfish.Graphics
 {
 
     public class ProgramManager : IEnumerable<Program>
     {
-        public Program SystemProgram { get { return this.Shaders[ "system" ]; } }
+        public Program SystemProgram { get { return this.Shaders["system"]; } }
+        public Program ScreenProgram { get { return this.Shaders["screen"]; } }
         Dictionary<string, Program> Shaders { get; set; }
 
         OpenTK.Vector3 lightPosition = new OpenTK.Vector3( 1f, 1f, 0.5f );
@@ -26,7 +28,7 @@ namespace Moonfish.Graphics
             Shaders = new Dictionary<string, Program>();
             LoadDefaultShader();
             LoadSystemShader();
-
+            LoadScreenShader();
         }
 
         public void LoadMaterials( IEnumerable<TagIdent> shaders, MapStream map )
@@ -44,15 +46,26 @@ namespace Moonfish.Graphics
 
         private void LoadSystemShader( )
         {
-            Program defaultProgram;
             var vertex_shader = new Shader( "data/sys_vertex.vert", ShaderType.VertexShader );
             var fragment_shader = new Shader( "data/sys_fragment.frag", ShaderType.FragmentShader );
-            defaultProgram = new Program( "system" ); OpenGL.ReportError();
-            GL.BindAttribLocation( defaultProgram.Ident, 0, "Position" ); OpenGL.ReportError();
+            var defaultProgram = new Program("system"); OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 0, "Position"); OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 1, "Colour"); OpenGL.ReportError();
 
             defaultProgram.Link( new List<Shader>( 2 ) { vertex_shader, fragment_shader } ); OpenGL.ReportError();
             Shaders[ "system" ] = defaultProgram;
+        }
 
+        private void LoadScreenShader()
+        {
+            var vertex_shader = new Shader("data/viewscreen.vert", ShaderType.VertexShader);
+            var fragment_shader = new Shader("data/sys_fragment.frag", ShaderType.FragmentShader);
+            var defaultProgram = new Program("screen"); OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 0, "Position"); OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 1, "Colour"); OpenGL.ReportError();
+
+            defaultProgram.Link(new List<Shader>(2) { vertex_shader, fragment_shader }); OpenGL.ReportError();
+            Shaders["screen"] = defaultProgram;
         }
 
         private void LoadDefaultShader( )

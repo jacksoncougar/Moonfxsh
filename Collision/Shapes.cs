@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using Moonfish.Graphics;
+using OpenTK;
 
 namespace Moonfish.Collision
 {
@@ -8,10 +9,10 @@ namespace Moonfish.Collision
         public Vector3 Origin;
         public Vector3 Direction;
 
-        public Ray( Vector3 origin, Vector3 direction )
+        public Ray(Vector3 origin, Vector3 direction)
         {
             Origin = origin;
-            Direction = ( direction - origin ).Normalized();
+            Direction = (direction - origin).Normalized();
         }
     }
 
@@ -20,7 +21,7 @@ namespace Moonfish.Collision
         public readonly Vector3 Origin;
         public readonly float HalfExtents;
 
-        public BoundingBoxAxisAligned( Vector3 origin, float halfExtents )
+        public BoundingBoxAxisAligned(Vector3 origin, float halfExtents)
         {
             this.Origin = origin;
             this.HalfExtents = halfExtents;
@@ -32,19 +33,19 @@ namespace Moonfish.Collision
         public Vector3 Normal;
         public float Distance;
 
-        public Plane( Vector3 normal, float distance )
+        public Plane(Vector3 normal, float distance)
         {
             this.Normal = normal;
             this.Distance = distance;
         }
 
-        public bool Intersects( Ray ray, out float? closestHitFraction )
+        public bool Intersects(Ray ray, out float? closestHitFraction)
         {
             //t = ( ray.Origin [dot] plane.Normal [plus] plane.Distance ) [divided by] ( ray.Direction [dot] plane.Normal )
             closestHitFraction = null;
-            var numerator = -( Vector3.Dot( ray.Origin, this.Normal ) + this.Distance );
-            var denominator = ( Vector3.Dot( ray.Direction, this.Normal ) );
-            if ( numerator == 0 || denominator == 0 ) return false;
+            var numerator = -(Vector3.Dot(ray.Origin, this.Normal) + this.Distance);
+            var denominator = (Vector3.Dot(ray.Direction, this.Normal));
+            if (Maths.NearlyEqual(numerator, 0) || Maths.NearlyEqual(denominator, 0)) return false;
             closestHitFraction = numerator / denominator;
             return true;
         }

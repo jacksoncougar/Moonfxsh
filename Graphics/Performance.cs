@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Moonfish.Graphics
 {
@@ -13,38 +14,37 @@ namespace Moonfish.Graphics
         public float FramesPerSecond { get; private set; }
         public float FrameTime { get; private set; }
 
-        Stopwatch Timer;
-        FrameInfo[] frameHistory;
-        int index = 0;
+        readonly Stopwatch _timer;
+        readonly FrameInfo[] _frameHistory;
+        private int _index;
 
         const int Size = 25;
 
-        TimeSpan frameStart, frameEnd;
+        TimeSpan _frameStart, _frameEnd;
 
         public Performance( )
         {
-            Timer = new Stopwatch();
-            frameHistory = new FrameInfo[ Size ];
-            Timer.Start();
+            _timer = new Stopwatch();
+            _frameHistory = new FrameInfo[ Size ];
+            _timer.Start();
         }
 
         public void BeginFrame( )
         {
-            frameStart = Timer.Elapsed;
+            _frameStart = _timer.Elapsed;
         }
 
         public void EndFrame( )
         {
-            frameEnd = Timer.Elapsed;
+            _frameEnd = _timer.Elapsed;
 
-            var elapsed = ( frameEnd - frameStart ).Ticks;
-            frameHistory[ ++index >= Size ? index = 0 : index ] = new FrameInfo() { RenderTime = elapsed };
-            var sum = 0.0f;
-            foreach ( var value in frameHistory ) sum += value.RenderTime;
-            FramesPerSecond = ( float )( ( Stopwatch.Frequency / ( sum / frameHistory.Length ) ) );
-            FrameTime = ( float )sum / frameHistory.Length;
+            var elapsed = ( _frameEnd - _frameStart ).Ticks;
+            _frameHistory[ ++_index >= Size ? _index = 0 : _index ] = new FrameInfo() { RenderTime = elapsed };
+            var sum = _frameHistory.Sum(value => value.RenderTime);
+            FramesPerSecond = Stopwatch.Frequency / ( sum / _frameHistory.Length );
+            FrameTime = sum / _frameHistory.Length;
         }
 
-        public float Delta { get { return ( Timer.Elapsed - frameEnd ).Milliseconds; } }
+        public float Delta { get { return ( _timer.Elapsed - _frameEnd ).Milliseconds; } }
     }
 }

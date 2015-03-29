@@ -1,5 +1,5 @@
 ﻿using OpenTK;
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -10,8 +10,8 @@ namespace Moonfish.Graphics
     {
         public readonly string Name;
 
-        Dictionary<string, int> uniforms;
-        Dictionary<string, int> attributes;
+        readonly Dictionary<string, int> _uniforms;
+        readonly Dictionary<string, int> _attributes;
 
         public int Ident { get; private set; }
 
@@ -19,8 +19,8 @@ namespace Moonfish.Graphics
         {
             this.Name = name;
 
-            attributes = new Dictionary<string, int>();
-            uniforms = new Dictionary<string, int>();
+            _attributes = new Dictionary<string, int>();
+            _uniforms = new Dictionary<string, int>();
 
             Ident = GL.CreateProgram();
         }
@@ -59,9 +59,9 @@ namespace Moonfish.Graphics
         public int GetAttributeLocation( string name )
         {
             int location;
-            if ( !attributes.TryGetValue( name, out location ) )
+            if ( !_attributes.TryGetValue( name, out location ) )
             {
-                attributes[ name ] = location = GL.GetAttribLocation( this.Ident, name );
+                _attributes[ name ] = location = GL.GetAttribLocation( this.Ident, name );
 #if DEBUG
                 OpenGL.ReportError();
 #endif
@@ -69,21 +69,21 @@ namespace Moonfish.Graphics
             return location;
         }
 
-        public void SetAttribute( int location, Vector4 value )
+        public static void SetAttribute( int location, Vector4 value )
         {
             GL.VertexAttrib4( location + 0, value );
 #if DEBUG
             OpenGL.ReportError();
 #endif
         }
-        public void SetAttribute( int location, float[] values )
+        public static void SetAttribute( int location, float[] values )
         {
             GL.VertexAttrib4( location + 0, values );
 #if DEBUG
             OpenGL.ReportError();
 #endif
         }
-        public void SetAttribute( int location, Matrix4 value )
+        public static void SetAttribute( int location, Matrix4 value )
         {
             GL.VertexAttrib4( location + 0, value.Row0 );
             GL.VertexAttrib4( location + 1, value.Row1 );
@@ -97,9 +97,9 @@ namespace Moonfish.Graphics
         public int GetUniformLocation( string name )
         {
             int location;
-            if ( !uniforms.TryGetValue( name, out location ) )
+            if ( !_uniforms.TryGetValue( name, out location ) )
             {
-                location = uniforms[ name ] = GL.GetUniformLocation( this.Ident, name );
+                location = _uniforms[ name ] = GL.GetUniformLocation( this.Ident, name );
 #if DEBUG
                 OpenGL.ReportError();
 #endif

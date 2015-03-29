@@ -1,18 +1,19 @@
 ﻿using Moonfish.Guerilla.Tags;
 using OpenTK;
 using System;
+using System.Collections.Generic;
 
 namespace Moonfish.Graphics
 {
     public class MarkerWrapper : ISelectable
     {
-        private NodeCollection nodes;
+        private readonly List<RenderModelNodeBlock> _nodes;
 
         public Matrix4 ParentWorldMatrix
         {
             get
             {
-                return nodes.GetWorldMatrix( this.marker.nodeIndex );
+                return _nodes.GetWorldMatrix(marker.nodeIndex);
             }
         }
 
@@ -20,31 +21,34 @@ namespace Moonfish.Graphics
         {
             get
             {
-                var translationMatrix = Matrix4.CreateTranslation( this.marker.Translation );
-                var rotationMatrix = Matrix4.CreateFromQuaternion( this.marker.Rotation );
-                var scaleMatrix = Matrix4.CreateScale( this.marker.Scale );
-                return scaleMatrix * rotationMatrix * translationMatrix * nodes.GetWorldMatrix( this.marker.nodeIndex );
+                var translationMatrix = Matrix4.CreateTranslation(marker.Translation);
+                var rotationMatrix = Matrix4.CreateFromQuaternion(marker.Rotation);
+                var scaleMatrix = Matrix4.CreateScale(marker.Scale);
+                return scaleMatrix * rotationMatrix * translationMatrix * _nodes.GetWorldMatrix(marker.nodeIndex);
             }
         }
 
         public RenderModelMarkerBlock marker;
 
-        public MarkerWrapper( RenderModelMarkerBlock marker, NodeCollection nodes )
+        public MarkerWrapper(RenderModelMarkerBlock marker, List<RenderModelNodeBlock> nodes)
         {
             this.marker = marker;
-            this.nodes = nodes;
+            _nodes = nodes;
         }
 
         public Action<Matrix4> MarkerUpdatedCallback;
 
         public event EventHandler MarkerUpdated;
 
-        internal void mousePole_WorldMatrixChanged( object sender, MatrixChangedEventArgs e )
+        internal void mousePole_WorldMatrixChanged(object sender, MatrixChangedEventArgs e)
         {
-            var translation = e.Delta.ExtractTranslation();
-            this.marker.Translation += translation;
-            if ( MarkerUpdated != null ) MarkerUpdated( this, null );
-            if ( MarkerUpdatedCallback != null ) MarkerUpdatedCallback( this.WorldMatrix );
+            var matrix = e.Matrix * ParentWorldMatrix.Inverted();
+            var translation = matrix.ExtractTranslation();
+            var rotation = matrix.ExtractRotation();
+            marker.Translation = translation;
+            marker.rotation = rotation;
+            if (MarkerUpdated != null) MarkerUpdated(this, null);
+            if (MarkerUpdatedCallback != null) MarkerUpdatedCallback(WorldMatrix);
         }
     }
 }

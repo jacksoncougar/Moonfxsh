@@ -25,7 +25,7 @@ namespace Moonfish
             //return;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault( false );
-            Application.Run( new MarkerViewer() );
+            Application.Run( new Gizmo() );
         }
     }
 }

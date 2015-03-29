@@ -37,7 +37,7 @@ namespace Moonfish.Graphics
                 var @object = callback.CollisionObject.UserObject as IClickable;
 
                 @object.OnMouseDown( this,
-                    new MouseEventArgs(
+                    new SceneMouseEventArgs(
                         viewportCamera,
                         new Vector2( e.X, e.Y ),
                         callback.CollisionObject.WorldTransform.ExtractTranslation(),
@@ -62,7 +62,7 @@ namespace Moonfish.Graphics
             if ( callback.HasHit && callback.CollisionObject.UserObject is IClickable )
             {
                 @object = callback.CollisionObject.UserObject as IClickable;
-                @object.OnMouseUp( this, new MouseEventArgs(
+                @object.OnMouseUp( this, new SceneMouseEventArgs(
                         viewportCamera,
                         new Vector2( e.X, e.Y ),
                         callback.CollisionObject.WorldTransform.ExtractTranslation(),
@@ -71,7 +71,7 @@ namespace Moonfish.Graphics
             }
             foreach ( var item in Hooks.Where( x => !x.Equals( @object ) ).Select( x => x.Value ) )
             {
-                item.OnMouseUp( this, new MouseEventArgs(
+                item.OnMouseUp( this, new SceneMouseEventArgs(
                         viewportCamera,
                         new Vector2( e.X, e.Y ),
                         callback.RayToWorld,
@@ -85,8 +85,8 @@ namespace Moonfish.Graphics
         {
             var mouse = new
             {
-                Near = viewportCamera.Project( new Vector2( e.X, e.Y ), depth: -1 ),
-                Far = viewportCamera.Project( new Vector2( e.X, e.Y ), depth: 1 )
+                Near = viewportCamera.ReProject( new Vector2( e.X, e.Y ), depth: -1 ),
+                Far = viewportCamera.ReProject( new Vector2( e.X, e.Y ), depth: 1 )
             };
 
             var callback = new CollisionWorld.ClosestRayResultCallback(
@@ -102,8 +102,8 @@ namespace Moonfish.Graphics
         {
             var mouse = new
             {
-                Near = viewportCamera.Project( new Vector2( e.X, e.Y ), depth: -1 ),
-                Far = viewportCamera.Project( new Vector2( e.X, e.Y ), depth: 1 )
+                Near = viewportCamera.ReProject( new Vector2( e.X, e.Y ), depth: -1 ),
+                Far = viewportCamera.ReProject( new Vector2( e.X, e.Y ), depth: 1 )
             };
 
             var callback = new CollisionWorld.ClosestRayResultCallback(

@@ -125,6 +125,7 @@ namespace Moonfish.Graphics
 
         public virtual void Update()
         {
+            GL.PointSize(1.0f);
             //Console.WriteLine("Update()");
 
             //var R = OpenTK.Matrix4.CreateRotationX( rotation );

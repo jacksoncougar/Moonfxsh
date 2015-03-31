@@ -57,7 +57,7 @@ namespace Moonfish.Graphics
             var selectedItem = Scene.ObjectManager[ SelectedTag ].FirstOrDefault();
             if ( selectedItem == null ) return;
 
-            var markerEnumerator = selectedItem.Markers.GetEnumerator();
+            var markerEnumerator = selectedItem.Model.RenderModel.markerGroups.SelectMany(x=>x.Markers).GetEnumerator();
 
             BinaryReader binaryReader = new BinaryReader( Map );
             BinaryWriter binaryWriter = new BinaryWriter( Map );
@@ -72,7 +72,7 @@ namespace Moonfish.Graphics
                 foreach ( var marker in markers )
                 {
                     if ( !markerEnumerator.MoveNext() ) return;
-                    var data = markerEnumerator.Current.Key;
+                    var data = markerEnumerator.Current;
                     Map.Seek( marker + 4, SeekOrigin.Begin );
                     binaryWriter.Write( data.translation );
                     binaryWriter.Write( data.rotation );
@@ -206,7 +206,7 @@ namespace Moonfish.Graphics
             glControl1.Controls.Clear();
             foreach ( var marker in @object.Markers )
             {
-                var markerCollisionObject = Scene.CollisionManager.World.CollisionObjectArray.FirstOrDefault(x => x.UserObject == marker.Value);
+                var markerCollisionObject = Scene.CollisionManager.World.CollisionObjectArray.FirstOrDefault(x => x.UserObject == marker);
                 if ( markerCollisionObject != null )
                 {
                     Scene.CollisionManager.World.RemoveCollisionObject( markerCollisionObject );
@@ -241,7 +241,7 @@ namespace Moonfish.Graphics
                             BackColor = Color.Red,
                             ForeColor = Color.Black,
                             AutoSize = true,
-                            Tag = @object.Markers[ marker ]
+                            Tag = marker
                         } );
                 }
             }

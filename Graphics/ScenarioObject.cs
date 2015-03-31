@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -51,8 +52,6 @@ namespace Moonfish.Graphics
         private readonly TriangleBatch _markersBatch;
         private readonly TriangleBatch _nodesBatch;
         private Matrix4 _worldMatrix;
-        public StringID ActivePermuation { get; set; }
-        public Dictionary<RenderModelMarkerBlock, MarkerWrapper> Markers;
 
         private ScenarioObject()
         {
@@ -100,51 +99,23 @@ namespace Moonfish.Graphics
 
             foreach (var section in model.RenderModel.sections)
             {
-                SectionBuffers.Add(new Mesh(section.sectionData[0].section));
+                var mesh = new Mesh(section.sectionData[0].section, model.RenderModel.compressionInfo[0])
+                {
+                    SectionBlock = section
+                };
+                SectionBuffers.Add(mesh);
             }
             Nodes = new List<RenderModelNodeBlock>(model.RenderModel.nodes);
-            Markers = model.RenderModel.markerGroups.SelectMany(x => x.Markers)
-                .ToDictionary(x => x, x => new MarkerWrapper(x, Nodes));
         }
+
+        public StringID ActivePermuation { get; set; }
 
         public IEnumerable<RenderBatch> Batches
         {
             get
             {
                 if (Flags.HasFlag(RenderFlags.RenderMesh))
-                    foreach (var region in Model.RenderModel.regions)
-                    {
-                        var sectionIndex = region.permutations[0].l6SectionIndexHollywood;
-                        var mesh = SectionBuffers[sectionIndex];
-
-                        foreach (var part in mesh.Parts)
-                        {
-                            var extents = Model.RenderModel.compressionInfo[0].ToObjectMatrix();
-
-                            var texcoordRange = new Vector4(
-                                Model.RenderModel.compressionInfo[0].texcoordBoundsX.Min,
-                                Model.RenderModel.compressionInfo[0].texcoordBoundsX.Max,
-                                Model.RenderModel.compressionInfo[0].texcoordBoundsY.Min,
-                                Model.RenderModel.compressionInfo[0].texcoordBoundsY.Max);
-
-                            var batch = new RenderBatch
-                            {
-                                ElementStartIndex = part.stripStartIndex * sizeof(ushort),
-                                ElementLength = part.stripLength
-                            };
-                            batch.AssignUniform("TexcoordRangeUniform", texcoordRange);
-                            batch.AssignUniform("WorldMatrixUniform", WorldMatrix);
-                            batch.AssignUniform("ObjectSpaceMatrixUniform", extents);
-
-                            batch.Shader = new ShaderReference(
-                                ShaderReference.ReferenceType.Halo2,
-                                Model.RenderModel.materials[part.material].shader.Ident);
-
-                            batch.BatchObject = mesh.TriangleBatch;
-
-                            yield return batch;
-                        }
-                    }
+                    foreach (var renderBatch in RenderBatches()) yield return renderBatch;
                 if (Flags.HasFlag(RenderFlags.RenderMarkers))
                 {
                     var markersEnumerator = Model.RenderModel.markerGroups.SelectMany(x => x.markers).ToList();
@@ -223,8 +194,17 @@ namespace Moonfish.Graphics
         }
 
         public CollisionObject CollisionObject { get; set; }
+
         public RenderFlags Flags { get; set; }
+
+        public IEnumerable<RenderModelMarkerBlock> Markers
+        {
+            get { return Model.RenderModel.markerGroups.SelectMany(x => x.Markers); }
+        }
+
         public ModelBlock Model { get; set; }
+
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public List<RenderModelNodeBlock> Nodes { get; private set; }
 
         public Matrix4 WorldMatrix
@@ -244,34 +224,6 @@ namespace Moonfish.Graphics
             if (value.GetType() == typeof(RenderModelNodeBlock))
                 return CalculateWorldMatrix((RenderModelNodeBlock)value);
             throw new InvalidCastException();
-        }
-
-        public void SetChildWorldMatrix(object nodeBlock, Matrix4 value)
-        {
-            if (nodeBlock.GetType() == typeof(RenderModelNodeBlock))
-                SetWorldMatrix((RenderModelNodeBlock)nodeBlock, value);
-            else throw new InvalidCastException();
-        }
-
-        private void SetWorldMatrix(RenderModelNodeBlock nodeBlock, Matrix4 value)
-        {
-            Nodes.SetWorldMatrix(nodeBlock, value);
-        }
-
-        private Matrix4 CalculateWorldMatrix(RenderModelMarkerBlock markerBlock)
-        {
-            if (!Model.RenderModel.markerGroups.SelectMany(x => x.Markers).Contains(markerBlock))
-                throw new ArgumentOutOfRangeException();
-
-            return markerBlock.WorldMatrix * Nodes.GetWorldMatrix(markerBlock.nodeIndex);
-        }
-
-        private Matrix4 CalculateWorldMatrix(RenderModelNodeBlock nodeBlock)
-        {
-            if (!Model.RenderModel.nodes.Contains(nodeBlock))
-                throw new ArgumentOutOfRangeException();
-
-            return Nodes.GetWorldMatrix(nodeBlock);
         }
 
         public void OnMouseMove(CollisionManager collisionManager, Camera activeCamera,
@@ -305,6 +257,77 @@ namespace Moonfish.Graphics
                     WorldMatrix = T;
                 }
             }
+        }
+
+        public void SetChildWorldMatrix(object nodeBlock, Matrix4 value)
+        {
+            if (nodeBlock.GetType() == typeof(RenderModelNodeBlock))
+                SetWorldMatrix((RenderModelNodeBlock)nodeBlock, value);
+            else throw new InvalidCastException();
+        }
+
+        private Matrix4 CalculateWorldMatrix(RenderModelMarkerBlock markerBlock)
+        {
+            if (!Model.RenderModel.markerGroups.SelectMany(x => x.Markers).Contains(markerBlock))
+                throw new ArgumentOutOfRangeException();
+
+            return markerBlock.WorldMatrix * Nodes.GetWorldMatrix(markerBlock.nodeIndex);
+        }
+
+        private Matrix4 CalculateWorldMatrix(RenderModelNodeBlock nodeBlock)
+        {
+            if (!Model.RenderModel.nodes.Contains(nodeBlock))
+                throw new ArgumentOutOfRangeException();
+
+            return Nodes.GetWorldMatrix(nodeBlock);
+        }
+
+        private IEnumerable<RenderBatch> RenderBatches()
+        {
+            foreach (var region in Model.RenderModel.regions)
+            {
+                var sectionIndex = region.permutations[0].l6SectionIndexHollywood;
+                var mesh = SectionBuffers[sectionIndex];
+
+                foreach (var part in mesh.Parts)
+                {
+                    var extents = Model.RenderModel.compressionInfo[0].ToObjectMatrix();
+                    var texcoordRange = Model.RenderModel.compressionInfo[0].ExtractTexcoordScaling();
+
+                    var batch = new RenderBatch
+                    {
+                        ElementStartIndex = part.stripStartIndex * sizeof(ushort),
+                        ElementLength = part.stripLength
+                    };
+
+                    batch.AssignUniform("TexcoordRangeUniform", texcoordRange);
+                    batch.AssignUniform("WorldMatrixUniform", WorldMatrix);
+                    for (int i = 0; i < mesh.SectionBlock.sectionData[0].nodeMap.Length; ++i)
+                    {
+
+                        var inverseBindPoseMatrix = Nodes.GetInverseBindPoseTransfrom(mesh.SectionBlock.sectionData[0].nodeMap[i].nodeIndex);
+                        var poseMatrix = Nodes.GetPoseTransfrom(mesh.SectionBlock.sectionData[0].nodeMap[i].nodeIndex);
+                        var final = inverseBindPoseMatrix * poseMatrix;
+
+                        batch.AssignUniform(string.Format("BoneMatrices[{0}]", i), final);
+                    }
+
+                    batch.Shader = new ShaderReference(
+                            ShaderReference.ReferenceType.Halo2,
+                            Model.RenderModel.materials[part.material].shader.Ident);
+                    batch.PrimitiveType = PrimitiveType.TriangleStrip;
+                    batch.BatchObject = mesh.TriangleBatch;
+                    batch.ChangeState = delegate() { GL.PointSize(10.0f); };
+                    batch.RevertState = delegate() { GL.PointSize(1.0f); };
+
+                    yield return batch;
+                }
+            }
+        }
+
+        private void SetWorldMatrix(RenderModelNodeBlock nodeBlock, Matrix4 value)
+        {
+            Nodes.SetWorldMatrix(nodeBlock, value);
         }
     }
 }

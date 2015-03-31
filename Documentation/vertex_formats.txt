@@ -31,6 +31,6 @@
      byte bone0;
      byte bone1;
 	 byte bone2;
-     short weight1;
-     short weight2;
-	 short weight2;
+     byte weight1;
+     byte weight2;
+	 byte weight2;

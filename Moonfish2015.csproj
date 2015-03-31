@@ -40,6 +40,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -667,6 +668,7 @@
     <Compile Include="Tags\HierarchyModel.Code.cs" />
     <Compile Include="Tags\IWriteable.cs" />
     <Compile Include="Tags\RenderModel.Code.cs" />
+    <Compile Include="Tags\RenderModelNodeBlock.cs" />
     <Compile Include="Tags\Scenario.Code.cs" />
     <Compile Include="Tags\ScenarioNetgameEquipmentBlock.cs" />
     <Compile Include="Tags\ScenarioStructureBSP.Code.cs" />

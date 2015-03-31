@@ -191,7 +191,9 @@ namespace Moonfish.Graphics
                     ? OpenGL.Enable(state.Capability)
                     : OpenGL.Disable(state.Capability)).ToList();
 
+            batch.SetupGLRenderState();
             GL.DrawElements(batch.PrimitiveType, batch.ElementLength, batch.DrawElementsType, batch.ElementStartIndex);
+            batch.CleanupGLRenderState();
 
             // Cleanup states
             foreach (var state in openGLStates) state.Dispose();

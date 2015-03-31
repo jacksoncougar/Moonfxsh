@@ -5,6 +5,56 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {
+    public class UniformBuffer : IDisposable
+    {
+        private bool _disposed;
+        private int handle;
+
+        public void SetUniforms(Program program, string name, object value)
+        {
+            var location = program.GetUniformLocation(name);
+            var offset = program.GetUniformOffsets(new[] {location});
+        }
+
+        public object GetUniforms(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public UniformBuffer()
+        {
+            handle = GL.GenBuffer();
+        }
+
+        public void BufferData<T>(string value, T[] data) where T : struct
+        {
+            var dataSize = (IntPtr)(Marshal.SizeOf(typeof(T)) * data.Length);
+            GL.BufferData(BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.DynamicDraw);
+
+#if DEBUG
+            OpenGL.ReportError();
+#endif
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            if (disposing)
+            {
+                // dispose of IDisposible objects here   
+            }
+            //dispose of unmanaged objects here
+            GL.DeleteBuffer(handle);
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+    }
+
     public class TriangleBatch : IDisposable
     {
         public int VertexArrayObjectIdent
@@ -94,7 +144,8 @@ namespace Moonfish.Graphics
         public void BufferVertexAttributeData<T>(T[] data) where T : struct
         {
             var dataSize = (IntPtr)(Marshal.SizeOf(typeof(T)) * data.Length);
-            GL.BufferData<T>(BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.DynamicDraw);
+
+            GL.BufferData(BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.DynamicDraw);
 
 #if DEBUG
             OpenGL.ReportError();
@@ -104,7 +155,7 @@ namespace Moonfish.Graphics
         public void BufferVertexAttributeSubData<T>(T[] data, int offset = 0) where T : struct
         {
             var dataSize = (IntPtr)(Marshal.SizeOf(typeof(T)) * data.Length);
-            GL.BufferSubData<T>(BufferTarget.ArrayBuffer, (IntPtr)offset, dataSize, data);
+            GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)offset, dataSize, data);
 
 #if DEBUG
             OpenGL.ReportError();

@@ -56,7 +56,7 @@ namespace Moonfish.Graphics.Input
             }
         }
 
-        private Matrix4 LocalMatrix
+        protected virtual Matrix4 LocalMatrix
         {
             get { return CalculateWorldMatrix(position, rotation, scale); }
         }

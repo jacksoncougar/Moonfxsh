@@ -71,12 +71,15 @@ namespace Moonfish.Graphics
             Program defaultProgram;
             var vertex_shader = new Shader( "data/vertex.vert", ShaderType.VertexShader );
             var fragment_shader = new Shader( "data/fragment.frag", ShaderType.FragmentShader );
-            defaultProgram = new Program( "shaded" ); OpenGL.ReportError();
-            GL.BindAttribLocation( defaultProgram.Ident, 0, "position" ); OpenGL.ReportError();
-            GL.BindAttribLocation( defaultProgram.Ident, 1, "texcoord" ); OpenGL.ReportError();
-            GL.BindAttribLocation( defaultProgram.Ident, 2, "iNormal" ); OpenGL.ReportError();
-            GL.BindAttribLocation( defaultProgram.Ident, 3, "iTangent" ); OpenGL.ReportError();
-            GL.BindAttribLocation( defaultProgram.Ident, 4, "iBitangent" ); OpenGL.ReportError();
+            defaultProgram = new Program("shaded"); OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 0, "position"); OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 1, "boneIndices"); OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 2, "boneWeights"); OpenGL.ReportError();
+            GL.BindAttribLocation( defaultProgram.Ident, 3, "texcoord" ); OpenGL.ReportError();
+            GL.BindAttribLocation( defaultProgram.Ident, 4, "normal" ); OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 5, "tangent"); OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 6, "bitangent"); OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 7, "colour"); OpenGL.ReportError();
 
             //GL.BindAttribLocation(defaultProgram.ID, 3, "colour"); OpenGL.ReportError();
             defaultProgram.Link( new List<Shader>( 2 ) { vertex_shader, fragment_shader } ); OpenGL.ReportError();

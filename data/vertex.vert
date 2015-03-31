@@ -1,21 +1,24 @@
-﻿#version 130
+﻿#version 140
 
 in vec4 position;
+in vec3 boneIndices;
+in vec3 boneWeights;
 in vec2 texcoord;
-in int iNormal;
-in int iTangent;
-in int iBitangent;
-
+in int normal;
+in int tangent;
+in int bitangent;
 in vec4 colour; 
+
 
 uniform mat4 WorldMatrixUniform;
 uniform mat4 ObjectSpaceMatrixUniform;
 uniform vec4 LightPositionUniform;
 
-
 uniform mat4 ViewProjectionMatrixUniform;
 uniform mat4 ViewMatrixUniform; 
 uniform vec4 TexcoordRangeUniform;
+
+uniform mat4 BoneMatrices[64];
 
 flat out vec4 DiffuseColour;
 out vec3 LightPosition_worldspace;
@@ -66,19 +69,24 @@ vec3 unpack(in int packedVector)
 
 void main()
 {
+	vec3 weights = boneWeights;
+	if(length(weights) < 1) weights.x = 1.0;
+	vec4 transformedPosition  = (BoneMatrices[int(boneIndices.x)] * position) * boneWeights.x;
+	transformedPosition  += (BoneMatrices[int(boneIndices.y)] * position) * boneWeights.y;
+	transformedPosition  += (BoneMatrices[int(boneIndices.z)] * position) * boneWeights.z;
 	mat3 normalMatrix = mat3(ViewMatrixUniform);	
 
 	LightPosition_worldspace = LightPositionUniform.xyz;
-	vec3 vertexPosition_cameraspace = (ViewMatrixUniform * WorldMatrixUniform * position).xyz;
+	vec3 vertexPosition_cameraspace = (ViewMatrixUniform * WorldMatrixUniform * transformedPosition).xyz;
 
 	EyeDirection_cameraspace = -vertexPosition_cameraspace;
 
 	vec3 lightPosition_cameraspace = (ViewMatrixUniform * LightPositionUniform).xyz;
 	LightDirection_cameraspace = lightPosition_cameraspace + EyeDirection_cameraspace;
 	
-	vec3 vertexNormal_cameraspace =  normalMatrix * unpack(iNormal);
-	vec3 vertexTangent_cameraspace = normalMatrix * unpack(iTangent);
-	vec3 vertexBitangent_cameraspace = normalMatrix *  unpack(iBitangent);
+	vec3 vertexNormal_cameraspace =  normalMatrix * unpack(normal);
+	vec3 vertexTangent_cameraspace = normalMatrix * unpack(tangent);
+	vec3 vertexBitangent_cameraspace = normalMatrix *  unpack(bitangent);
 
 	VertexReflection_worldspace = reflect(vertexPosition_cameraspace, vertexNormal_cameraspace);
 	
@@ -88,12 +96,12 @@ void main()
 		vertexNormal_cameraspace
 	));
 	
-	VertexPosition_worldspace = vec3(WorldMatrixUniform * ObjectSpaceMatrixUniform * position);
+	VertexPosition_worldspace = vec3(WorldMatrixUniform * transformedPosition);
 	LightDirection_tangentspace = TBN * LightDirection_cameraspace;
 	EyeDirection_tangentspace = TBN * EyeDirection_cameraspace;
 
 	VertexTexcoord_texturespace = vec2(unpack(texcoord.s, TexcoordRangeUniform.xy), unpack(texcoord.t, TexcoordRangeUniform.zw));
 	
 	DiffuseColour  = colour;
-    gl_Position = ViewProjectionMatrixUniform  * WorldMatrixUniform * ObjectSpaceMatrixUniform * position;
+    gl_Position = ViewProjectionMatrixUniform * transformedPosition;
 }

@@ -14,12 +14,12 @@ namespace Moonfish.Graphics
 
         public RenderObject(StructureBspClusterBlockBase item)
         {
-            SectionBuffers = new List<Mesh>(new[] { new Mesh(item.clusterData[0].section) });
+            SectionBuffers = new List<Mesh>(new[] { new Mesh(item.clusterData[0].section, null) });
         }
 
         public RenderObject(StructureBspInstancedGeometryDefinitionBlockBase item)
         {
-            SectionBuffers = new List<Mesh>(new[] { new Mesh(item.renderInfo.renderData[0].section) });
+            SectionBuffers = new List<Mesh>(new[] { new Mesh(item.renderInfo.renderData[0].section, null) });
         }
     }
 }

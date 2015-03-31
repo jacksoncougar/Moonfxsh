@@ -21,6 +21,9 @@ namespace Moonfish.Graphics
                 this.World.DebugDrawer = new BulletDebugDrawer(debug);
         }
 
+        /// <summary>
+        /// Kludge
+        /// </summary>
         public void Update()
         {
             foreach (var collisionObject in World.CollisionObjectArray)
@@ -50,25 +53,18 @@ namespace Moonfish.Graphics
                 node.CollisionObject = collisionObject;
                 World.AddCollisionObject(collisionObject);
             }
-            foreach (var marker in scenarioObject.Model.RenderModel.markerGroups.SelectMany(x => x.markers))
+            foreach (var collisionObject in scenarioObject.Markers.Select(marker => new ScenarioCollisionObject
             {
-                var collisionObject = new ScenarioCollisionObject
-                {
-                    CollisionShape = new BoxShape(0.015f),
+                CollisionShape = new BoxShape(0.015f),
 
-                    WorldTransform = Matrix4.CreateFromQuaternion(marker.rotation) *
-                    Matrix4.CreateTranslation(marker.translation) *
-                        scenarioObject.Nodes.GetWorldMatrix(marker.nodeIndex),
-                    UserObject = scenarioObject.Markers[marker].marker,
-                    ParentObject = scenarioObject
-                };
-
+                WorldTransform = Matrix4.CreateFromQuaternion(marker.rotation) *
+                                 Matrix4.CreateTranslation(marker.translation) *
+                                 scenarioObject.Nodes.GetWorldMatrix(marker.nodeIndex),
+                UserObject = marker,
+                ParentObject = scenarioObject
+            }))
+            {
                 World.AddCollisionObject(collisionObject);
-
-                var setPropertyMethodInfo = typeof(CollisionObject).GetProperty("WorldTransform").GetSetMethod();
-                var setProperty = Delegate.CreateDelegate(typeof(Action<Matrix4>), collisionObject, setPropertyMethodInfo);
-
-                scenarioObject.Markers[marker].MarkerUpdatedCallback += (Action<Matrix4>)setProperty;
             }
         }
 

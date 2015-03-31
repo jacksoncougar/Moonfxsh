@@ -13,17 +13,17 @@ namespace Moonfish.Graphics
 
         public bool DrawDebugCollision { get; set; }
 
-        public TranslationGizmo MousePole { get; set; }
+        public RotationGizmo MousePole { get; set; }
 
         public DynamicScene()
         {
-            DrawDebugCollision = true;
+            DrawDebugCollision = false;
             CollisionManager = new CollisionManager(ProgramManager.SystemProgram);
-            MousePole = new TranslationGizmo();
+            MousePole = new RotationGizmo();
             Camera.CameraUpdated += MousePole.OnCameraUpdate;
             SelectedObjectChanged += OnSelectedObjectChanged;
             foreach (var item in MousePole.CollisionObjects)
-                CollisionManager.World.AddCollisionObject(item);;
+                CollisionManager.World.AddCollisionObject(item); ;
 #if DEBUG
             GLDebug.DebugProgram = ProgramManager.SystemProgram;
             GLDebug.ScreenspaceProgram = ProgramManager.ScreenProgram;
@@ -41,21 +41,21 @@ namespace Moonfish.Graphics
             var item = e.SelectedObject as ScenarioCollisionObject;
             if (item != null)
             {
+                var node = item.UserObject as RenderModelNodeBlock;
                 MousePole.Show(true);
                 MousePole.DropHandlers();
                 MousePole.WorldMatrix = item.WorldTransform;
-                MousePole.WorldMatrixChanged +=
-                    delegate(object sender, MatrixChangedEventArgs args)
-                    {
-                        item.ParentObject.SetChildWorldMatrix(item.UserObject, args.Matrix);
-                    };
+                    MousePole.WorldMatrixChanged += 
+                delegate(object sender, MatrixChangedEventArgs args)
+                {
+                    item.ParentObject.SetChildWorldMatrix(item.UserObject, args.Matrix);
+                };
             }
         }
 
         public override void Draw(float delta)
         {
             base.Draw(delta);
-
             ObjectManager.Draw(ProgramManager, MousePole.Model);
 
             if (DrawDebugCollision)

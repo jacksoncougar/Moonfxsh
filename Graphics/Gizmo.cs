@@ -63,12 +63,13 @@ namespace Moonfish.Graphics
 
             Open(@"C:\Users\seed\Documents\Halo 2 Modding\headlong.map");
 
-            var @object = (ModelBlock)Map["hlmt", "masterchief"].Deserialize();
-            Scene.ObjectManager.Add(Map["hlmt", "masterchief"].Meta.Identifier, new ScenarioObject(@object));
+            var @object = (ModelBlock)Map["hlmt", "banshee"].Deserialize();
+            var scenarioObject = new ScenarioObject(@object);
+            Scene.ObjectManager.Add(Map["hlmt", "warthog"].Meta.Identifier, scenarioObject);
             Scene.ProgramManager.LoadMaterials(@object.RenderModel.materials.Select(x => x.shader.Ident), Map);
-            Scene.CollisionManager.LoadScenarioObjectCollision(Scene.ObjectManager[Map["hlmt", "masterchief"].Meta.Identifier].First());
+            Scene.CollisionManager.LoadScenarioObjectCollision(Scene.ObjectManager[Map["hlmt", "warthog"].Meta.Identifier].First());
 
-            propertyGrid1.SelectedObject = Scene.MousePole;
+            propertyGrid1.SelectedObject = scenarioObject.Nodes[0];
 
             //  firing this method is meant to load the view-projection matrix values into 
             //  the shader uniforms, and initalizes the camera
@@ -120,6 +121,7 @@ namespace Moonfish.Graphics
                 UpdateState();
                 Scene.Update();
                 Scene.RenderFrame();
+                propertyGrid1.Refresh();
             }
         }
 

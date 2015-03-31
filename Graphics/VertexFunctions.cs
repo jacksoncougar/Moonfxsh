@@ -4,6 +4,13 @@ namespace Moonfish.Graphics
 {
     public static class VertexFunctions
     {
+        public static float Unpack(int value, float min, float max)
+        {
+            const float ushortMaxInverse = 1.0f / (float)ushort.MaxValue;
+            const float ushortHalf = (float)ushort.MaxValue / 2;
+            return (((value + ushortHalf) * ushortMaxInverse) * (max - min)) + min;
+        }
+
         private static Vector3 UnpackVectorInt(int packedVector)
         {
             var xComponent = (packedVector & 0x7ff);

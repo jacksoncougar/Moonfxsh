@@ -4,7 +4,6 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using BulletSharp;
 using Moonfish.Graphics;
 
 namespace Moonfish.Guerilla.Tags
@@ -35,13 +34,23 @@ namespace Moonfish.Guerilla.Tags
 
     public partial class GlobalGeometryCompressionInfoBlock
     {
+        public Vector4 ExtractTexcoordScaling()
+        {
+            return new Vector4(
+                texcoordBoundsX.Min,
+                texcoordBoundsX.Max,
+                texcoordBoundsY.Min,
+                texcoordBoundsY.Max
+                );
+        }
+
         public Matrix4 ToObjectMatrix()
         {
             Matrix4 extents_matrix = new Matrix4(
-                new Vector4(positionBoundsX.Length / 2, 0.0f, 0.0f, 0.0f),
-                new Vector4(0.0f, positionBoundsY.Length / 2, 0.0f, 0.0f),
-                new Vector4(0.0f, 0.0f, positionBoundsZ.Length / 2, 0.0f),
-                new Vector4(positionBoundsX.Min + positionBoundsX.Length / 2, positionBoundsY.Min + positionBoundsY.Length / 2, positionBoundsZ.Min + positionBoundsZ.Length / 2, 1.0f)
+                new Vector4(12, 0.0f, 0.0f, 0.0f),
+                new Vector4(0.0f, 1, 0.0f, 0.0f),
+                new Vector4(0.0f, 0.0f, 1, 0.0f),
+                new Vector4(0, 0, 0, 1.0f)
                 );
             return extents_matrix;
         }
@@ -52,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
         }
     };
 
-    [TypeConverter(typeof(ExpandableObjectConverter))]
+    [TypeConverter(typeof(MarkerGroupConverter))]
     partial class RenderModelMarkerBlock
     {
         public byte RegionIndex { get { return regionIndex; } set { regionIndex = value; } }
@@ -79,34 +88,13 @@ namespace Moonfish.Guerilla.Tags
         public RenderModelMarkerBlock[] Markers { get { return markers; } }
     };
 
-    public partial class RenderModelNodeBlock : ISelectable
-    {
-        public CollisionObject CollisionObject { get; set; }
-
-        public Matrix4 WorldMatrix
-        {
-            get
-            {
-                var translation = Matrix4.CreateTranslation(defaultTranslation);
-                var rotation = Matrix4.CreateFromQuaternion(defaultRotation);
-                var scale = Matrix4.CreateScale(1);
-                return rotation * translation * Matrix4.Identity;
-            }
-            set
-            {
-                defaultTranslation = value.ExtractTranslation();
-                defaultRotation = value.ExtractRotation();
-            }
-        }
-    };
-
     class MarkerGroupConverter : ExpandableObjectConverter
     {
         public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
         {
-            if (destinationType == typeof(string) && value is RenderModelMarkerGroupBlock)
+            if (destinationType == typeof(string) && value is RenderModelNodeBlock)
             {
-                var markerGroup = (value as RenderModelMarkerGroupBlock);
+                var markerGroup = ((RenderModelNodeBlock)value);
                 return markerGroup.name.ToString();
             }
             return base.ConvertTo(context, culture, value, destinationType);

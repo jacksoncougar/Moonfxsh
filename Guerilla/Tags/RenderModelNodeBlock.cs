@@ -1,6 +1,7 @@
 using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using OpenTK;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -9,8 +10,10 @@ namespace Moonfish.Guerilla.Tags
         public RenderModelNodeBlock( BinaryReader binaryReader )
             : base( binaryReader )
         {
-
+            Initialize();
         }
+
+        partial void Initialize();
     };
     [LayoutAttribute( Size = 96 )]
     public class RenderModelNodeBlockBase

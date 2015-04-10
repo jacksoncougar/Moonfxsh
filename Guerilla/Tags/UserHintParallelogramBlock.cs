@@ -1,7 +1,8 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
+using Moonfish.Tags;
+using OpenTK;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -13,20 +14,20 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 68 )]
+    [Layout( Size = 68 )]
     public class UserHintParallelogramBlockBase
     {
         internal Flags flags;
-        internal OpenTK.Vector3 point0;
+        internal Vector3 point0;
         internal short referenceFrame;
         internal byte[] invalidName_;
-        internal OpenTK.Vector3 point1;
+        internal Vector3 point1;
         internal short referenceFrame0;
         internal byte[] invalidName_0;
-        internal OpenTK.Vector3 point2;
+        internal Vector3 point2;
         internal short referenceFrame1;
         internal byte[] invalidName_1;
-        internal OpenTK.Vector3 point3;
+        internal Vector3 point3;
         internal short referenceFrame2;
         internal byte[] invalidName_2;
         internal UserHintParallelogramBlockBase( BinaryReader binaryReader )
@@ -59,7 +60,7 @@ namespace Moonfish.Guerilla.Tags
             }
             return data;
         }
-        [FlagsAttribute]
+        [Flags]
         internal enum Flags : int
         {
             Bidirectional = 1,

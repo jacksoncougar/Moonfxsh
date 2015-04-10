@@ -1,10 +1,10 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "vehi" )]
+    [TagClass( "vehi" )]
     public partial class VehicleBlock : VehicleBlockBase
     {
         public VehicleBlock( BinaryReader binaryReader )
@@ -13,7 +13,7 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 276 )]
+    [Layout( Size = 276 )]
     public class VehicleBlockBase : UnitBlock
     {
         internal Flags flags;
@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal SpecificTypeIfYourTypeCorrespondsToSomethingInThisListChooseIt specificType;
         internal PlayerTrainingVehicleType playerTrainingVehicleType;
-        internal Moonfish.Tags.StringID flipMessage;
+        internal StringID flipMessage;
         internal float turnScale;
         internal float speedTurnPenaltyPower052;
         internal float speedTurnPenalty0None1CantTurnAtTopSpeed;
@@ -84,15 +84,15 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float thrustScale;
         [TagReference( "snd!" )]
-        internal Moonfish.Tags.TagReference suspensionSound;
+        internal TagReference suspensionSound;
         [TagReference( "snd!" )]
-        internal Moonfish.Tags.TagReference crashSound;
+        internal TagReference crashSound;
         [TagReference( "foot" )]
-        internal Moonfish.Tags.TagReference uNUSED;
+        internal TagReference uNUSED;
         [TagReference( "effe" )]
-        internal Moonfish.Tags.TagReference specialEffect;
+        internal TagReference specialEffect;
         [TagReference( "effe" )]
-        internal Moonfish.Tags.TagReference unusedEffect;
+        internal TagReference unusedEffect;
         internal HavokVehiclePhysicsStructBlock havokVehiclePhysics;
         internal VehicleBlockBase( BinaryReader binaryReader )
             : base( binaryReader )

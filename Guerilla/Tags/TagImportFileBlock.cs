@@ -1,6 +1,6 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,11 +12,11 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 528 )]
+    [Layout( Size = 528 )]
     public class TagImportFileBlockBase
     {
-        internal Moonfish.Tags.String256 path;
-        internal Moonfish.Tags.String32 modificationDate;
+        internal String256 path;
+        internal String32 modificationDate;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
         internal int checksumCrc32;

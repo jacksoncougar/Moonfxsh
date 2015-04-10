@@ -1,6 +1,6 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,13 +12,13 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 8 )]
+    [Layout( Size = 8 )]
     public class ZoneSetBlockBase
     {
         internal AreaType areaType;
         internal byte[] invalidName_;
-        internal Moonfish.Tags.ShortBlockIndex1 zone;
-        internal Moonfish.Tags.ShortBlockIndex2 area;
+        internal ShortBlockIndex1 zone;
+        internal ShortBlockIndex2 area;
         internal ZoneSetBlockBase( BinaryReader binaryReader )
         {
             this.areaType = ( AreaType )binaryReader.ReadInt16();

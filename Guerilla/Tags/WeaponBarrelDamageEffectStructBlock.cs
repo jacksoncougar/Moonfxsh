@@ -1,6 +1,6 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,11 +12,11 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 8 )]
+    [Layout( Size = 8 )]
     public class WeaponBarrelDamageEffectStructBlockBase
     {
         [TagReference( "jpt!" )]
-        internal Moonfish.Tags.TagReference damageEffect;
+        internal TagReference damageEffect;
         internal WeaponBarrelDamageEffectStructBlockBase( BinaryReader binaryReader )
         {
             this.damageEffect = binaryReader.ReadTagReference();

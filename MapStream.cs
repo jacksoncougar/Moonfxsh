@@ -1,5 +1,4 @@
 ﻿using Fasterflect;
-using Moonfish.Tags;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using Moonfish.Tags;
 
 namespace Moonfish
 {
@@ -344,7 +344,7 @@ namespace Moonfish
 
             var ident = ( this as IMap ).Meta.Identifier;
 
-            deserializedTags[ ident ] = Moonfish.Tags.Deserializer.Deserialize( this, typeQuery );
+            deserializedTags[ ident ] = Deserializer.Deserialize( this, typeQuery );
             this.hashTags[ ident ] = CalculateTaghash( ident );
             return deserializedTags[ ident ];
         }

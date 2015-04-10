@@ -1,6 +1,6 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,19 +12,19 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 40 )]
+    [Layout( Size = 40 )]
     public class UnitBoardingMeleeStructBlockBase
     {
         [TagReference( "jpt!" )]
-        internal Moonfish.Tags.TagReference boardingMeleeDamage;
+        internal TagReference boardingMeleeDamage;
         [TagReference( "jpt!" )]
-        internal Moonfish.Tags.TagReference boardingMeleeResponse;
+        internal TagReference boardingMeleeResponse;
         [TagReference( "jpt!" )]
-        internal Moonfish.Tags.TagReference landingMeleeDamage;
+        internal TagReference landingMeleeDamage;
         [TagReference( "jpt!" )]
-        internal Moonfish.Tags.TagReference flurryMeleeDamage;
+        internal TagReference flurryMeleeDamage;
         [TagReference( "jpt!" )]
-        internal Moonfish.Tags.TagReference obstacleSmashDamage;
+        internal TagReference obstacleSmashDamage;
         internal UnitBoardingMeleeStructBlockBase( BinaryReader binaryReader )
         {
             this.boardingMeleeDamage = binaryReader.ReadTagReference();

@@ -1,7 +1,8 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
+using Moonfish.Tags;
+using OpenTK;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -13,14 +14,14 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 36 )]
+    [Layout( Size = 36 )]
     public class UserHintLineSegmentBlockBase
     {
         internal Flags flags;
-        internal OpenTK.Vector3 point0;
+        internal Vector3 point0;
         internal short referenceFrame;
         internal byte[] invalidName_;
-        internal OpenTK.Vector3 point1;
+        internal Vector3 point1;
         internal short referenceFrame0;
         internal byte[] invalidName_0;
         internal UserHintLineSegmentBlockBase( BinaryReader binaryReader )
@@ -47,7 +48,7 @@ namespace Moonfish.Guerilla.Tags
             }
             return data;
         }
-        [FlagsAttribute]
+        [Flags]
         internal enum Flags : int
         {
             Bidirectional = 1,

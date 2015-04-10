@@ -1,6 +1,6 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,7 +12,7 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 16 )]
+    [Layout( Size = 16 )]
     public class VehiclePermutationBase
     {
         /// <summary>
@@ -23,8 +23,8 @@ namespace Moonfish.Guerilla.Tags
         /// which vehicle to
         /// </summary>
         [TagReference( "vehi" )]
-        internal Moonfish.Tags.TagReference vehicle;
-        internal Moonfish.Tags.StringID variantName;
+        internal TagReference vehicle;
+        internal StringID variantName;
         internal VehiclePermutationBase( BinaryReader binaryReader )
         {
             this.weight = binaryReader.ReadSingle();

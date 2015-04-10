@@ -1,6 +1,7 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
+using OpenTK;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,10 +13,10 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 20 )]
+    [Layout( Size = 20 )]
     public class UnitSeatAccelerationStructBlockBase
     {
-        internal OpenTK.Vector3 accelerationRangeWorldUnitsPerSecondSquared;
+        internal Vector3 accelerationRangeWorldUnitsPerSecondSquared;
         internal float accelActionScaleActionsFail01;
         internal float accelAttachScaleDetachUnit01;
         internal UnitSeatAccelerationStructBlockBase( BinaryReader binaryReader )

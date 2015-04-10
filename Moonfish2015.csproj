@@ -81,12 +81,27 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>packages\DockPanelSuite.2.9.0.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collision\DebugDrawer.cs" />
     <Compile Include="Collision\Shapes.cs" />
     <Compile Include="Debug\Memory.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Forms\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\UserControl1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UserControl1.Designer.cs">
+      <DependentUpon>UserControl1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="GlobalStrings.cs" />
     <Compile Include="Graphics\INode.cs" />
@@ -651,6 +666,7 @@
     <Compile Include="Local.cs" />
     <Compile Include="main.cs" />
     <Compile Include="MapStream.cs" />
+    <Compile Include="OpenTKExtensions.cs" />
     <Compile Include="Padding.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -701,18 +717,29 @@
     <None Include="data\viewscreen.vert">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Documentation\animations.pdf" />
     <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <None Include="packages.config" />
     <Compile Include="Tags\Shader.Code.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\x86\Debug\Moonfish2015.exe" />
+    <Content Include="bin\x86\Debug\Moonfish2015.pdb" />
     <Content Include="Documentation\halo_2_header.txt" />
     <Content Include="Documentation\tangent_space_calculations_cpp.txt" />
+    <Content Include="Documentation\animation_codecs.txt" />
     <Content Include="Documentation\vertex_formats.txt" />
     <Content Include="Documentation\vertex_resource_raw.txt" />
     <Content Include="icon.ico" />
+    <Content Include="license.txt" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UserControl1.resx">
+      <DependentUpon>UserControl1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Graphics\Gizmo.resx">
       <DependentUpon>Gizmo.cs</DependentUpon>
     </EmbeddedResource>
@@ -730,6 +757,7 @@
   <ItemGroup>
     <Folder Include="bin\Debug\" />
     <Folder Include="bin\Release\" />
+    <Folder Include="bin\x86\Release\" />
     <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

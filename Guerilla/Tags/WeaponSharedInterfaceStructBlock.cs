@@ -1,6 +1,6 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,7 +12,7 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 16 )]
+    [Layout( Size = 16 )]
     public class WeaponSharedInterfaceStructBlockBase
     {
         internal byte[] invalidName_;

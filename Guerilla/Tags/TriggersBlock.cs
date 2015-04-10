@@ -1,7 +1,7 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -13,10 +13,10 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 48 )]
+    [Layout( Size = 48 )]
     public class TriggersBlockBase
     {
-        internal Moonfish.Tags.String32 name;
+        internal String32 name;
         internal TriggerFlags triggerFlags;
         internal CombinationRule combinationRule;
         internal byte[] invalidName_;
@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
             }
             return array;
         }
-        [FlagsAttribute]
+        [Flags]
         internal enum TriggerFlags : int
         {
             LatchONWhenTriggered = 1,

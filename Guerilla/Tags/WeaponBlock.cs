@@ -1,11 +1,13 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
+using Moonfish.Model;
+using Moonfish.Tags;
+using OpenTK;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "weap" )]
+    [TagClass( "weap" )]
     public partial class WeaponBlock : WeaponBlockBase
     {
         public WeaponBlock( BinaryReader binaryReader )
@@ -14,11 +16,11 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 496 )]
+    [Layout( Size = 496 )]
     public class WeaponBlockBase : ItemBlock
     {
         internal Flags flags;
-        internal Moonfish.Tags.StringID invalidName_;
+        internal StringID invalidName_;
         internal SecondaryTriggerMode secondaryTriggerMode;
         /// <summary>
         /// if the second trigger loads alternate ammunition, this is the maximum number of shots that can be loaded at a time
@@ -30,9 +32,9 @@ namespace Moonfish.Guerilla.Tags
         internal float turnOnTime;
         internal float readyTimeSeconds;
         [TagReference( "null" )]
-        internal Moonfish.Tags.TagReference readyEffect;
+        internal TagReference readyEffect;
         [TagReference( "jpt!" )]
-        internal Moonfish.Tags.TagReference readyDamageEffect;
+        internal TagReference readyDamageEffect;
         /// <summary>
         /// the heat value a weapon must return to before leaving the overheated state, once it has become overheated in the first place
         /// </summary>
@@ -62,17 +64,17 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float overheatedHeatLossPerSecond01;
         [TagReference( "null" )]
-        internal Moonfish.Tags.TagReference overheated;
+        internal TagReference overheated;
         [TagReference( "jpt!" )]
-        internal Moonfish.Tags.TagReference overheatedDamageEffect;
+        internal TagReference overheatedDamageEffect;
         [TagReference( "null" )]
-        internal Moonfish.Tags.TagReference detonation;
+        internal TagReference detonation;
         [TagReference( "jpt!" )]
-        internal Moonfish.Tags.TagReference detonationDamageEffect;
+        internal TagReference detonationDamageEffect;
         [TagReference( "jpt!" )]
-        internal Moonfish.Tags.TagReference playerMeleeDamage;
+        internal TagReference playerMeleeDamage;
         [TagReference( "jpt!" )]
-        internal Moonfish.Tags.TagReference playerMeleeResponse;
+        internal TagReference playerMeleeResponse;
         internal MeleeAimAssistStructBlock meleeAimAssist;
         internal MeleeDamageParametersStructBlock meleeDamageParameters;
         internal MeleeDamageReportingType meleeDamageReportingType;
@@ -81,7 +83,7 @@ namespace Moonfish.Guerilla.Tags
         /// the number of magnificationLevels this weapon allows
         /// </summary>
         internal short magnificationLevels;
-        internal Moonfish.Model.Range magnificationRange;
+        internal Range magnificationRange;
         internal AimAssistStructBlock weaponAimAssist;
         internal MovementPenalized movementPenalized;
         internal byte[] invalidName_1;
@@ -97,9 +99,9 @@ namespace Moonfish.Guerilla.Tags
         internal float weaponPowerOnTimeSeconds;
         internal float weaponPowerOffTimeSeconds;
         [TagReference( "null" )]
-        internal Moonfish.Tags.TagReference weaponPowerOnEffect;
+        internal TagReference weaponPowerOnEffect;
         [TagReference( "null" )]
-        internal Moonfish.Tags.TagReference weaponPowerOffEffect;
+        internal TagReference weaponPowerOffEffect;
         /// <summary>
         /// how much the weapon's heat recovery is penalized as it ages
         /// </summary>
@@ -117,11 +119,11 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float ageMisfireChance01;
         [TagReference( "snd!" )]
-        internal Moonfish.Tags.TagReference pickupSound;
+        internal TagReference pickupSound;
         [TagReference( "snd!" )]
-        internal Moonfish.Tags.TagReference zoomInSound;
+        internal TagReference zoomInSound;
         [TagReference( "snd!" )]
-        internal Moonfish.Tags.TagReference zoomOutSound;
+        internal TagReference zoomOutSound;
         /// <summary>
         /// how much to decrease active camo when a round is fired
         /// </summary>
@@ -133,9 +135,9 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// the node that get's attached to the unit's hand
         /// </summary>
-        internal Moonfish.Tags.StringID handleNode;
-        internal Moonfish.Tags.StringID weaponClass;
-        internal Moonfish.Tags.StringID weaponName;
+        internal StringID handleNode;
+        internal StringID weaponClass;
+        internal StringID weaponName;
         internal MultiplayerWeaponType multiplayerWeaponType;
         internal WeaponType weaponType;
         internal WeaponTrackingStructBlock tracking;
@@ -150,13 +152,13 @@ namespace Moonfish.Guerilla.Tags
         internal float maxTurningAcceleration;
         internal float maxTurningVelocity;
         [TagReference( "vehi" )]
-        internal Moonfish.Tags.TagReference deployedVehicle;
+        internal TagReference deployedVehicle;
         [TagReference( "effe" )]
-        internal Moonfish.Tags.TagReference ageEffect;
+        internal TagReference ageEffect;
         [TagReference( "weap" )]
-        internal Moonfish.Tags.TagReference agedWeapon;
-        internal OpenTK.Vector3 firstPersonWeaponOffset;
-        internal OpenTK.Vector2 firstPersonScopeSize;
+        internal TagReference agedWeapon;
+        internal Vector3 firstPersonWeaponOffset;
+        internal Vector2 firstPersonScopeSize;
         internal WeaponBlockBase( BinaryReader binaryReader )
             : base( binaryReader )
         {
@@ -302,7 +304,7 @@ namespace Moonfish.Guerilla.Tags
             }
             return array;
         }
-        [FlagsAttribute]
+        [Flags]
         internal enum Flags : int
         {
             VerticalHeatDisplay = 1,

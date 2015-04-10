@@ -1,7 +1,7 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -13,7 +13,7 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 12 )]
+    [Layout( Size = 12 )]
     public class UserHintPolygonBlockBase
     {
         internal Flags flags;
@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
             }
             return array;
         }
-        [FlagsAttribute]
+        [Flags]
         internal enum Flags : int
         {
             Bidirectional = 1,

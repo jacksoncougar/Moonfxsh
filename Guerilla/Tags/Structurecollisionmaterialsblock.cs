@@ -1,6 +1,6 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,15 +12,15 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 20 )]
+    [Layout( Size = 20 )]
     public class StructureCollisionMaterialsBlockBase
     {
         [TagReference( "shad" )]
-        internal Moonfish.Tags.TagReference oldShader;
+        internal TagReference oldShader;
         internal byte[] invalidName_;
-        internal Moonfish.Tags.ShortBlockIndex1 conveyorSurfaceIndex;
+        internal ShortBlockIndex1 conveyorSurfaceIndex;
         [TagReference( "shad" )]
-        internal Moonfish.Tags.TagReference newShader;
+        internal TagReference newShader;
         internal StructureCollisionMaterialsBlockBase( BinaryReader binaryReader )
         {
             this.oldShader = binaryReader.ReadTagReference();

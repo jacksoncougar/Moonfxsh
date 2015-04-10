@@ -1,6 +1,7 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Model;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,16 +13,16 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 176 )]
+    [Layout( Size = 176 )]
     public class UnitSeatBlockBase
     {
         internal Flags flags;
-        internal Moonfish.Tags.StringID label;
-        internal Moonfish.Tags.StringID markerName;
-        internal Moonfish.Tags.StringID entryMarkerSName;
-        internal Moonfish.Tags.StringID boardingGrenadeMarker;
-        internal Moonfish.Tags.StringID boardingGrenadeString;
-        internal Moonfish.Tags.StringID boardingMeleeString;
+        internal StringID label;
+        internal StringID markerName;
+        internal StringID entryMarkerSName;
+        internal StringID boardingGrenadeMarker;
+        internal StringID boardingGrenadeString;
+        internal StringID boardingMeleeString;
         /// <summary>
         /// nathan is too lazy to make pings for each seat.
         /// </summary>
@@ -33,23 +34,23 @@ namespace Moonfish.Guerilla.Tags
         internal UnitSeatAccelerationStructBlock acceleration;
         internal float aIScariness;
         internal AiSeatType aiSeatType;
-        internal Moonfish.Tags.ShortBlockIndex1 boardingSeat;
+        internal ShortBlockIndex1 boardingSeat;
         /// <summary>
         /// how far to interpolate listener position from camera to occupant's head
         /// </summary>
         internal float listenerInterpolationFactor;
-        internal Moonfish.Model.Range yawRateBoundsDegreesPerSecond;
-        internal Moonfish.Model.Range pitchRateBoundsDegreesPerSecond;
+        internal Range yawRateBoundsDegreesPerSecond;
+        internal Range pitchRateBoundsDegreesPerSecond;
         internal float minSpeedReference;
         internal float maxSpeedReference;
         internal float speedExponent;
         internal UnitCameraStructBlock unitCamera;
         internal UnitHudReferenceBlock[] unitHudInterface;
-        internal Moonfish.Tags.StringID enterSeatString;
+        internal StringID enterSeatString;
         internal float yawMinimum;
         internal float yawMaximum;
         [TagReference( "char" )]
-        internal Moonfish.Tags.TagReference builtInGunner;
+        internal TagReference builtInGunner;
         /// <summary>
         /// how close to the entry marker a unit must be
         /// </summary>
@@ -63,7 +64,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float entryMarkerFacingAngle;
         internal float maximumRelativeVelocity;
-        internal Moonfish.Tags.StringID invisibleSeatRegion;
+        internal StringID invisibleSeatRegion;
         internal int runtimeInvisibleSeatRegionIndex;
         internal UnitSeatBlockBase( BinaryReader binaryReader )
         {

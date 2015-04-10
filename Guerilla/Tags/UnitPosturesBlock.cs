@@ -1,6 +1,7 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
+using OpenTK;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,11 +13,11 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 16 )]
+    [Layout( Size = 16 )]
     public class UnitPosturesBlockBase
     {
-        internal Moonfish.Tags.StringID name;
-        internal OpenTK.Vector3 pillOffset;
+        internal StringID name;
+        internal Vector3 pillOffset;
         internal UnitPosturesBlockBase( BinaryReader binaryReader )
         {
             this.name = binaryReader.ReadStringID();

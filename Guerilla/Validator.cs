@@ -1,9 +1,9 @@
-﻿using Moonfish.Tags;
-using Moonfish.Tags.BlamExtension;
+﻿using Moonfish.Tags.BlamExtension;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla
 {

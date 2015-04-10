@@ -1,8 +1,8 @@
-﻿using Moonfish.Tags;
-using OpenTK;
+﻿using OpenTK;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {

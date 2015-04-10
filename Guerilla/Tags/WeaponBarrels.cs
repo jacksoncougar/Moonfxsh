@@ -1,7 +1,9 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
+using Moonfish.Model;
+using Moonfish.Tags;
+using OpenTK;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -13,14 +15,14 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 236 )]
+    [Layout( Size = 236 )]
     public class WeaponBarrelsBase
     {
         internal Flags flags;
         /// <summary>
         /// the number of firing effects created per second
         /// </summary>
-        internal Moonfish.Model.Range roundsPerSecond;
+        internal Range roundsPerSecond;
         /// <summary>
         /// the continuous firing time it takes for the weapon to achieve its final rounds per second
         /// </summary>
@@ -52,7 +54,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// the magazine from which this trigger draws its ammunition
         /// </summary>
-        internal Moonfish.Tags.ShortBlockIndex1 magazine;
+        internal ShortBlockIndex1 magazine;
         /// <summary>
         /// the number of rounds expended to create a single firing effect
         /// </summary>
@@ -65,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
         /// the number of non-tracer rounds fired between tracers
         /// </summary>
         internal short roundsBetweenTracers;
-        internal Moonfish.Tags.StringID optionalBarrelMarkerName;
+        internal StringID optionalBarrelMarkerName;
         internal PredictionType predictionType;
         /// <summary>
         /// how loud this weapon appears to the AI
@@ -82,7 +84,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// the range of angles (in degrees) that a damaged weapon will skew fire
         /// </summary>
-        internal Moonfish.Model.Range damageError;
+        internal Range damageError;
         /// <summary>
         /// the continuous firing time it takes for the weapon to achieve its final error
         /// </summary>
@@ -93,21 +95,21 @@ namespace Moonfish.Guerilla.Tags
         internal float decelerationTimeSeconds1;
         internal byte[] invalidName_;
         internal float minimumErrorDegrees;
-        internal Moonfish.Model.Range errorAngleDegrees;
+        internal Range errorAngleDegrees;
         internal float dualWieldDamageScale;
         internal DistributionFunction distributionFunction;
         internal short projectilesPerShot;
         internal float distributionAngleDegrees;
         internal float minimumErrorDegrees0;
-        internal Moonfish.Model.Range errorAngleDegrees0;
+        internal Range errorAngleDegrees0;
         /// <summary>
         /// +x is forward, +z is up, +y is left
         /// </summary>
-        internal OpenTK.Vector3 firstPersonOffsetWorldUnits;
+        internal Vector3 firstPersonOffsetWorldUnits;
         internal DamageEffectReportingType damageEffectReportingType;
         internal byte[] invalidName_0;
         [TagReference( "proj" )]
-        internal Moonfish.Tags.TagReference projectile;
+        internal TagReference projectile;
         internal WeaponBarrelDamageEffectStructBlock eh;
         /// <summary>
         /// the amount of time (in seconds) it takes for the ejection port to transition from 1.0 (open) to 0.0 (closed) after a shot has been fired
@@ -132,7 +134,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// angleChangePerShot of the weapon during firing
         /// </summary>
-        internal Moonfish.Model.Range angleChangePerShot;
+        internal Range angleChangePerShot;
         /// <summary>
         /// the continuous firing time it takes for the weapon to achieve its final angle change per shot
         /// </summary>
@@ -232,7 +234,7 @@ namespace Moonfish.Guerilla.Tags
             }
             return array;
         }
-        [FlagsAttribute]
+        [Flags]
         internal enum Flags : int
         {
             TracksFiredProjectilePooPooCaCaPeePee = 1,

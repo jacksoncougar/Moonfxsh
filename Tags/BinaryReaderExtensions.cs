@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Moonfish.ResourceManagement;
 
 namespace Moonfish.Tags
 {
@@ -84,7 +85,7 @@ namespace Moonfish.Tags
         {
             public static BlamPointer ReadBlamPointer( this BinaryReader binaryReader, int elementSize )
             {
-                var resourceStream = binaryReader.BaseStream as Moonfish.ResourceManagement.ResourceStream;
+                var resourceStream = binaryReader.BaseStream as ResourceStream;
                 if ( resourceStream == null )
                 {
                     return new BlamPointer( binaryReader.ReadInt32(), binaryReader.ReadInt32(), elementSize );
@@ -308,10 +309,10 @@ namespace Moonfish.Tags
             return ( ShortBlockIndex2 )binaryReader.ReadInt16();
         }
 
-        public static OpenTK.Quaternion ReadQuaternion( this BinaryReader binaryReader )
+        public static Quaternion ReadQuaternion( this BinaryReader binaryReader )
         {
             float i = binaryReader.ReadSingle(), j = binaryReader.ReadSingle(), k = binaryReader.ReadSingle(), l = binaryReader.ReadSingle();
-            return new OpenTK.Quaternion( l, k, j, i );
+            return new Quaternion( l, k, j, i );
         }
 
         public static ColorR8G8B8 ReadColorR8G8B8( this BinaryReader binaryReader )

@@ -1,6 +1,7 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
+using OpenTK;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,12 +13,12 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 20 )]
+    [Layout( Size = 20 )]
     public class TransparentPlanesBlockBase
     {
         internal short sectionIndex;
         internal short partIndex;
-        internal OpenTK.Vector4 plane;
+        internal Vector4 plane;
         internal TransparentPlanesBlockBase( BinaryReader binaryReader )
         {
             this.sectionIndex = binaryReader.ReadInt16();

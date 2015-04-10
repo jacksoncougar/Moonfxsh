@@ -1,7 +1,8 @@
-﻿using Moonfish.Tags;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Moonfish.Guerilla.Tags;
+using Moonfish.Tags;
 
 namespace Moonfish.ResourceManagement
 {

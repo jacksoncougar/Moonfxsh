@@ -1,6 +1,6 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,11 +12,11 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 8 )]
+    [Layout( Size = 8 )]
     public class StylePaletteBlockBase
     {
         [TagReference( "styl" )]
-        internal Moonfish.Tags.TagReference reference;
+        internal TagReference reference;
         internal StylePaletteBlockBase( BinaryReader binaryReader )
         {
             this.reference = binaryReader.ReadTagReference();

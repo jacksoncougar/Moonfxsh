@@ -1,10 +1,10 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "vehc" )]
+    [TagClass( "vehc" )]
     public partial class VehicleCollectionBlock : VehicleCollectionBlockBase
     {
         public VehicleCollectionBlock( BinaryReader binaryReader )
@@ -13,7 +13,7 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 12 )]
+    [Layout( Size = 12 )]
     public class VehicleCollectionBlockBase
     {
         internal VehiclePermutation[] vehiclePermutations;

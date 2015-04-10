@@ -1,7 +1,7 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -13,12 +13,12 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 56 )]
+    [Layout( Size = 56 )]
     public class ZoneBlockBase
     {
-        internal Moonfish.Tags.String32 name;
+        internal String32 name;
         internal Flags flags;
-        internal Moonfish.Tags.ShortBlockIndex1 manualBsp;
+        internal ShortBlockIndex1 manualBsp;
         internal byte[] invalidName_;
         internal FiringPositionsBlock[] firingPositions;
         internal AreasBlock[] areas;
@@ -75,7 +75,7 @@ namespace Moonfish.Guerilla.Tags
             }
             return array;
         }
-        [FlagsAttribute]
+        [Flags]
         internal enum Flags : int
         {
             ManualBspIndex = 1,

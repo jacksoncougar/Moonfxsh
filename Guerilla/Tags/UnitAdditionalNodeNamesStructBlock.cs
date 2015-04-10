@@ -1,6 +1,6 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,13 +12,13 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 4 )]
+    [Layout( Size = 4 )]
     public class UnitAdditionalNodeNamesStructBlockBase
     {
         /// <summary>
         /// if found, use this gun marker
         /// </summary>
-        internal Moonfish.Tags.StringID preferredGunNode;
+        internal StringID preferredGunNode;
         internal UnitAdditionalNodeNamesStructBlockBase( BinaryReader binaryReader )
         {
             this.preferredGunNode = binaryReader.ReadStringID();

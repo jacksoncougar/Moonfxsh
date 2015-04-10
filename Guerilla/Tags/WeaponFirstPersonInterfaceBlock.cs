@@ -1,6 +1,6 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,13 +12,13 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 16 )]
+    [Layout( Size = 16 )]
     public class WeaponFirstPersonInterfaceBlockBase
     {
         [TagReference( "mode" )]
-        internal Moonfish.Tags.TagReference firstPersonModel;
+        internal TagReference firstPersonModel;
         [TagReference( "jmad" )]
-        internal Moonfish.Tags.TagReference firstPersonAnimations;
+        internal TagReference firstPersonAnimations;
         internal WeaponFirstPersonInterfaceBlockBase( BinaryReader binaryReader )
         {
             this.firstPersonModel = binaryReader.ReadTagReference();

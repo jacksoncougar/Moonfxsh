@@ -1,8 +1,9 @@
-﻿using Moonfish.Guerilla;
-using Moonfish.ResourceManagement;
+﻿using Moonfish.ResourceManagement;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Moonfish.Guerilla;
+using Moonfish.Guerilla.Tags;
 
 namespace Moonfish.Tags
 {
@@ -40,7 +41,7 @@ namespace Moonfish.Tags
         }
     }
     #endregion
-    partial class ScenarioStructureBSP : Moonfish.Guerilla.Tags.ScenarioStructureBspBlock
+    partial class ScenarioStructureBSP : ScenarioStructureBspBlock
     {
         public ScenarioStructureBSP( BinaryReader binaryReader )
             : base( binaryReader )

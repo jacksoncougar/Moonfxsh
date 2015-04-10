@@ -1,6 +1,6 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,7 +12,7 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 36 )]
+    [Layout( Size = 36 )]
     public class WeaponTriggerChargingStructBlockBase
     {
         /// <summary>
@@ -37,12 +37,12 @@ namespace Moonfish.Guerilla.Tags
         /// the chargingEffect is created once when the trigger begins to charge
         /// </summary>
         [TagReference( "null" )]
-        internal Moonfish.Tags.TagReference chargingEffect;
+        internal TagReference chargingEffect;
         /// <summary>
         /// the charging effect is created once when the trigger begins to charge
         /// </summary>
         [TagReference( "jpt!" )]
-        internal Moonfish.Tags.TagReference chargingDamageEffect;
+        internal TagReference chargingDamageEffect;
         internal WeaponTriggerChargingStructBlockBase( BinaryReader binaryReader )
         {
             this.chargingTimeSeconds = binaryReader.ReadSingle();

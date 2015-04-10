@@ -1,7 +1,7 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -13,14 +13,14 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 64 )]
+    [Layout( Size = 64 )]
     public class WeaponTriggersBase
     {
         internal Flags flags;
         internal Input input;
         internal Behavior behavior;
-        internal Moonfish.Tags.ShortBlockIndex1 primaryBarrel;
-        internal Moonfish.Tags.ShortBlockIndex1 secondaryBarrel;
+        internal ShortBlockIndex1 primaryBarrel;
+        internal ShortBlockIndex1 secondaryBarrel;
         internal Prediction prediction;
         internal byte[] invalidName_;
         internal WeaponTriggerAutofireStructBlock autofire;
@@ -51,7 +51,7 @@ namespace Moonfish.Guerilla.Tags
             }
             return data;
         }
-        [FlagsAttribute]
+        [Flags]
         internal enum Flags : int
         {
             AutofireSingleActionOnly = 1,

@@ -1,10 +1,10 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "unit" )]
+    [TagClass( "unit" )]
     public partial class UnitBlock : UnitBlockBase
     {
         public UnitBlock( BinaryReader binaryReader )
@@ -13,14 +13,14 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 304 )]
+    [Layout( Size = 304 )]
     public class UnitBlockBase : ObjectBlock
     {
         internal Flags flags;
         internal DefaultTeam defaultTeam;
         internal ConstantSoundVolume constantSoundVolume;
         [TagReference( "effe" )]
-        internal Moonfish.Tags.TagReference integratedLightToggle;
+        internal TagReference integratedLightToggle;
         internal float cameraFieldOfViewDegrees;
         internal float cameraStiffness;
         internal UnitCameraStructBlock unitCamera;
@@ -50,7 +50,7 @@ namespace Moonfish.Guerilla.Tags
         /// automatically created character when this unit is driven
         /// </summary>
         [TagReference( "char" )]
-        internal Moonfish.Tags.TagReference spawnedTurretCharacter;
+        internal TagReference spawnedTurretCharacter;
         /// <summary>
         /// number of actors which we spawn
         /// </summary>
@@ -67,14 +67,14 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// where the primary weapon is attached
         /// </summary>
-        internal Moonfish.Tags.StringID rightHandNode;
+        internal StringID rightHandNode;
         /// <summary>
         /// where the seconday weapon is attached (for dual-pistol modes)
         /// </summary>
-        internal Moonfish.Tags.StringID leftHandNode;
+        internal StringID leftHandNode;
         internal UnitAdditionalNodeNamesStructBlock moreDamnNodes;
         [TagReference( "jpt!" )]
-        internal Moonfish.Tags.TagReference meleeDamage;
+        internal TagReference meleeDamage;
         internal UnitBoardingMeleeStructBlock yourMomma;
         internal MotionSensorBlipSize motionSensorBlipSize;
         internal byte[] invalidName_;

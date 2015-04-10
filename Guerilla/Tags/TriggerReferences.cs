@@ -1,7 +1,7 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -13,11 +13,11 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 8 )]
+    [Layout( Size = 8 )]
     public class TriggerReferencesBase
     {
         internal TriggerFlags triggerFlags;
-        internal Moonfish.Tags.ShortBlockIndex1 trigger;
+        internal ShortBlockIndex1 trigger;
         internal byte[] invalidName_;
         internal TriggerReferencesBase( BinaryReader binaryReader )
         {
@@ -39,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             }
             return data;
         }
-        [FlagsAttribute]
+        [Flags]
         internal enum TriggerFlags : int
         {
             Not = 1,

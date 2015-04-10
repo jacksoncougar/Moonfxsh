@@ -1,6 +1,7 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
+using OpenTK;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,7 +13,7 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 224 )]
+    [Layout( Size = 224 )]
     public class VehiclePhantomShapeBlockBase
     {
         internal byte[] invalidName_;
@@ -76,7 +77,7 @@ namespace Moonfish.Guerilla.Tags
         public class ChildShapesStorage
         {
             internal ShapeType shapeType;
-            internal Moonfish.Tags.ShortBlockIndex2 shape;
+            internal ShortBlockIndex2 shape;
             internal int collisionFilter;
             internal ChildShapesStorage( BinaryReader binaryReader )
             {
@@ -151,7 +152,7 @@ namespace Moonfish.Guerilla.Tags
             }
             public class FourVectorsStorage
             {
-                internal OpenTK.Vector3 sphere;
+                internal Vector3 sphere;
                 internal byte[] invalidName_;
                 internal FourVectorsStorage( BinaryReader binaryReader )
                 {

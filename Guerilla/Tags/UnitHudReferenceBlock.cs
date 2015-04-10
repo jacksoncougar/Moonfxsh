@@ -1,6 +1,6 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,11 +12,11 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 8 )]
+    [Layout( Size = 8 )]
     public class UnitHudReferenceBlockBase
     {
         [TagReference( "nhdt" )]
-        internal Moonfish.Tags.TagReference newUnitHudInterface;
+        internal TagReference newUnitHudInterface;
         internal UnitHudReferenceBlockBase( BinaryReader binaryReader )
         {
             this.newUnitHudInterface = binaryReader.ReadTagReference();

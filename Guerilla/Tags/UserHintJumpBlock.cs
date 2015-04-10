@@ -1,7 +1,7 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -13,11 +13,11 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 8 )]
+    [Layout( Size = 8 )]
     public class UserHintJumpBlockBase
     {
         internal Flags flags;
-        internal Moonfish.Tags.ShortBlockIndex1 geometryIndex;
+        internal ShortBlockIndex1 geometryIndex;
         internal ForceJumpHeight forceJumpHeight;
         internal ControlFlags controlFlags;
         internal UserHintJumpBlockBase( BinaryReader binaryReader )
@@ -41,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             }
             return data;
         }
-        [FlagsAttribute]
+        [Flags]
         internal enum Flags : short
         {
             Bidirectional = 1,
@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
             Tower = 6,
             Infinite = 7,
         };
-        [FlagsAttribute]
+        [Flags]
         internal enum ControlFlags : short
         {
             MagicLift = 1,

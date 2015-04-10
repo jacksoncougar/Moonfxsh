@@ -1,7 +1,7 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -13,11 +13,11 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 4 )]
+    [Layout( Size = 4 )]
     public class UserHintClimbBlockBase
     {
         internal Flags flags;
-        internal Moonfish.Tags.ShortBlockIndex1 geometryIndex;
+        internal ShortBlockIndex1 geometryIndex;
         internal UserHintClimbBlockBase( BinaryReader binaryReader )
         {
             this.flags = ( Flags )binaryReader.ReadInt16();
@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             }
             return data;
         }
-        [FlagsAttribute]
+        [Flags]
         internal enum Flags : short
         {
             Bidirectional = 1,

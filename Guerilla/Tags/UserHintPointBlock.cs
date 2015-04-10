@@ -1,6 +1,7 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
+using OpenTK;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,10 +13,10 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 16 )]
+    [Layout( Size = 16 )]
     public class UserHintPointBlockBase
     {
-        internal OpenTK.Vector3 point;
+        internal Vector3 point;
         internal short referenceFrame;
         internal byte[] invalidName_;
         internal UserHintPointBlockBase( BinaryReader binaryReader )

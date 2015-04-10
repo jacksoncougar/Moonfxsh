@@ -1,6 +1,9 @@
 ﻿using Moonfish.Graphics;
 using System;
+using System.Linq;
 using System.Windows.Forms;
+using Moonfish.Guerilla;
+using Moonfish.Forms;
 
 namespace Moonfish
 {
@@ -10,22 +13,19 @@ namespace Moonfish
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main( )
+        static void Main()
         {
             //GuerillaToEnt ripperEnt = new GuerillaToEnt(Local.GuerillaPath);
-            //var jmadTag = Guerilla.Guerilla.h2Tags.First(x => x.Class.ToString() == "jmad");
-            //ripperEnt.DumpTagLayout(jmadTag, Local.PluginsFolder);
-            //Validator v = new Validator();
-            //v.Validate(jmadTag, Guerilla.Guerilla.h2Tags);
+            //foreach (var tag in Guerilla.Guerilla.h2Tags)
+            //{
+            //    ripperEnt.DumpTagLayout(tag, Local.PluginsFolder);
+            //}
+            ////Validator v = new Validator();
             //return;
 
-            //GuerillaCs ripper = new GuerillaCs(@"C:\Users\seed\Documents\Halo 2 Modding\H2Guerilla.exe");
-
-            //ripper.DumpTagLayout(@"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags", "spas", "");
-            //return;
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault( false );
-            Application.Run( new Gizmo() );
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
         }
     }
 }

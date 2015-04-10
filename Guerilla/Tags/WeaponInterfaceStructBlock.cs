@@ -1,6 +1,6 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,13 +12,13 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 32 )]
+    [Layout( Size = 32 )]
     public class WeaponInterfaceStructBlockBase
     {
         internal WeaponSharedInterfaceStructBlock sharedInterface;
         internal WeaponFirstPersonInterfaceBlock[] firstPerson;
         [TagReference( "nhdt" )]
-        internal Moonfish.Tags.TagReference newHudInterface;
+        internal TagReference newHudInterface;
         internal WeaponInterfaceStructBlockBase( BinaryReader binaryReader )
         {
             this.sharedInterface = new WeaponSharedInterfaceStructBlock( binaryReader );

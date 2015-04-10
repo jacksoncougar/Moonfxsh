@@ -1,6 +1,7 @@
-using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using Moonfish.Model;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -12,13 +13,13 @@ namespace Moonfish.Guerilla.Tags
 
         }
     };
-    [LayoutAttribute( Size = 28 )]
+    [Layout( Size = 28 )]
     public class UnitCameraStructBlockBase
     {
-        internal Moonfish.Tags.StringID cameraMarkerName;
-        internal Moonfish.Tags.StringID cameraSubmergedMarkerName;
+        internal StringID cameraMarkerName;
+        internal StringID cameraSubmergedMarkerName;
         internal float pitchAutoLevel;
-        internal Moonfish.Model.Range pitchRange;
+        internal Range pitchRange;
         internal UnitCameraTrackBlock[] cameraTracks;
         internal UnitCameraStructBlockBase( BinaryReader binaryReader )
         {

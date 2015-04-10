@@ -1,28 +1,27 @@
-using Moonfish.Tags.BlamExtension;
-using System;
-using System.IO;
 using Moonfish.Model;
+using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
+using System;
+using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class WeaponBarrels : WeaponBarrelsBase
+    public  partial class WeaponBarrels : WeaponBarrelsBase
     {
-        public WeaponBarrels( BinaryReader binaryReader )
-            : base( binaryReader )
+        public  WeaponBarrels(BinaryReader binaryReader): base(binaryReader)
         {
-
+            
         }
     };
-    [Layout( Size = 236 )]
+    [LayoutAttribute(Size = 236)]
     public class WeaponBarrelsBase
     {
         internal Flags flags;
         /// <summary>
         /// the number of firing effects created per second
         /// </summary>
-        internal Range roundsPerSecond;
+        internal Moonfish.Model.Range roundsPerSecond;
         /// <summary>
         /// the continuous firing time it takes for the weapon to achieve its final rounds per second
         /// </summary>
@@ -54,7 +53,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// the magazine from which this trigger draws its ammunition
         /// </summary>
-        internal ShortBlockIndex1 magazine;
+        internal Moonfish.Tags.ShortBlockIndex1 magazine;
         /// <summary>
         /// the number of rounds expended to create a single firing effect
         /// </summary>
@@ -67,7 +66,7 @@ namespace Moonfish.Guerilla.Tags
         /// the number of non-tracer rounds fired between tracers
         /// </summary>
         internal short roundsBetweenTracers;
-        internal StringID optionalBarrelMarkerName;
+        internal Moonfish.Tags.StringID optionalBarrelMarkerName;
         internal PredictionType predictionType;
         /// <summary>
         /// how loud this weapon appears to the AI
@@ -84,7 +83,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// the range of angles (in degrees) that a damaged weapon will skew fire
         /// </summary>
-        internal Range damageError;
+        internal Moonfish.Model.Range damageError;
         /// <summary>
         /// the continuous firing time it takes for the weapon to achieve its final error
         /// </summary>
@@ -95,21 +94,21 @@ namespace Moonfish.Guerilla.Tags
         internal float decelerationTimeSeconds1;
         internal byte[] invalidName_;
         internal float minimumErrorDegrees;
-        internal Range errorAngleDegrees;
+        internal Moonfish.Model.Range errorAngleDegrees;
         internal float dualWieldDamageScale;
         internal DistributionFunction distributionFunction;
         internal short projectilesPerShot;
         internal float distributionAngleDegrees;
         internal float minimumErrorDegrees0;
-        internal Range errorAngleDegrees0;
+        internal Moonfish.Model.Range errorAngleDegrees0;
         /// <summary>
         /// +x is forward, +z is up, +y is left
         /// </summary>
-        internal Vector3 firstPersonOffsetWorldUnits;
+        internal OpenTK.Vector3 firstPersonOffsetWorldUnits;
         internal DamageEffectReportingType damageEffectReportingType;
         internal byte[] invalidName_0;
-        [TagReference( "proj" )]
-        internal TagReference projectile;
+        [TagReference("proj")]
+        internal Moonfish.Tags.TagReference projectile;
         internal WeaponBarrelDamageEffectStructBlock eh;
         /// <summary>
         /// the amount of time (in seconds) it takes for the ejection port to transition from 1.0 (open) to 0.0 (closed) after a shot has been fired
@@ -134,7 +133,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// angleChangePerShot of the weapon during firing
         /// </summary>
-        internal Range angleChangePerShot;
+        internal Moonfish.Model.Range angleChangePerShot;
         /// <summary>
         /// the continuous firing time it takes for the weapon to achieve its final angle change per shot
         /// </summary>
@@ -154,9 +153,9 @@ namespace Moonfish.Guerilla.Tags
         /// firingEffects determine what happens when this trigger is fired
         /// </summary>
         internal BarrelFiringEffectBlock[] firingEffects;
-        internal WeaponBarrelsBase( BinaryReader binaryReader )
+        internal  WeaponBarrelsBase(BinaryReader binaryReader)
         {
-            this.flags = ( Flags )binaryReader.ReadInt32();
+            this.flags = (Flags)binaryReader.ReadInt32();
             this.roundsPerSecond = binaryReader.ReadRange();
             this.accelerationTimeSeconds = binaryReader.ReadSingle();
             this.decelerationTimeSeconds = binaryReader.ReadSingle();
@@ -170,27 +169,27 @@ namespace Moonfish.Guerilla.Tags
             this.minimumRoundsLoaded = binaryReader.ReadInt16();
             this.roundsBetweenTracers = binaryReader.ReadInt16();
             this.optionalBarrelMarkerName = binaryReader.ReadStringID();
-            this.predictionType = ( PredictionType )binaryReader.ReadInt16();
-            this.firingNoise = ( FiringNoiseHowLoudThisWeaponAppearsToTheAI )binaryReader.ReadInt16();
+            this.predictionType = (PredictionType)binaryReader.ReadInt16();
+            this.firingNoise = (FiringNoiseHowLoudThisWeaponAppearsToTheAI)binaryReader.ReadInt16();
             this.accelerationTimeSeconds0 = binaryReader.ReadSingle();
             this.decelerationTimeSeconds0 = binaryReader.ReadSingle();
             this.damageError = binaryReader.ReadRange();
             this.accelerationTimeSeconds1 = binaryReader.ReadSingle();
             this.decelerationTimeSeconds1 = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes( 8 );
+            this.invalidName_ = binaryReader.ReadBytes(8);
             this.minimumErrorDegrees = binaryReader.ReadSingle();
             this.errorAngleDegrees = binaryReader.ReadRange();
             this.dualWieldDamageScale = binaryReader.ReadSingle();
-            this.distributionFunction = ( DistributionFunction )binaryReader.ReadInt16();
+            this.distributionFunction = (DistributionFunction)binaryReader.ReadInt16();
             this.projectilesPerShot = binaryReader.ReadInt16();
             this.distributionAngleDegrees = binaryReader.ReadSingle();
             this.minimumErrorDegrees0 = binaryReader.ReadSingle();
             this.errorAngleDegrees0 = binaryReader.ReadRange();
             this.firstPersonOffsetWorldUnits = binaryReader.ReadVector3();
-            this.damageEffectReportingType = ( DamageEffectReportingType )binaryReader.ReadByte();
-            this.invalidName_0 = binaryReader.ReadBytes( 3 );
+            this.damageEffectReportingType = (DamageEffectReportingType)binaryReader.ReadByte();
+            this.invalidName_0 = binaryReader.ReadBytes(3);
             this.projectile = binaryReader.ReadTagReference();
-            this.eh = new WeaponBarrelDamageEffectStructBlock( binaryReader );
+            this.eh = new WeaponBarrelDamageEffectStructBlock(binaryReader);
             this.ejectionPortRecoveryTime = binaryReader.ReadSingle();
             this.illuminationRecoveryTime = binaryReader.ReadSingle();
             this.heatGeneratedPerRound01 = binaryReader.ReadSingle();
@@ -199,43 +198,44 @@ namespace Moonfish.Guerilla.Tags
             this.angleChangePerShot = binaryReader.ReadRange();
             this.accelerationTimeSeconds2 = binaryReader.ReadSingle();
             this.decelerationTimeSeconds2 = binaryReader.ReadSingle();
-            this.angleChangeFunction = ( AngleChangeFunctionFunctionUsedToScaleBetweenInitialAndFinalAngleChangePerShot )binaryReader.ReadInt16();
-            this.invalidName_1 = binaryReader.ReadBytes( 2 );
-            this.invalidName_2 = binaryReader.ReadBytes( 8 );
-            this.invalidName_3 = binaryReader.ReadBytes( 24 );
-            this.firingEffects = ReadBarrelFiringEffectBlockArray( binaryReader );
+            this.angleChangeFunction = (AngleChangeFunctionFunctionUsedToScaleBetweenInitialAndFinalAngleChangePerShot)binaryReader.ReadInt16();
+            this.invalidName_1 = binaryReader.ReadBytes(2);
+            this.invalidName_2 = binaryReader.ReadBytes(8);
+            this.invalidName_3 = binaryReader.ReadBytes(24);
+            this.firingEffects = ReadBarrelFiringEffectBlockArray(binaryReader);
         }
-        internal virtual byte[] ReadData( BinaryReader binaryReader )
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            var blamPointer = binaryReader.ReadBlamPointer( 1 );
-            var data = new byte[ blamPointer.Count ];
-            if ( blamPointer.Count > 0 )
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.Count];
+            if(blamPointer.Count > 0)
             {
-                using ( binaryReader.BaseStream.Pin() )
+                using (binaryReader.BaseStream.Pin())
                 {
-                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
-                    data = binaryReader.ReadBytes( blamPointer.Count );
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.Count);
                 }
             }
             return data;
         }
-        internal virtual BarrelFiringEffectBlock[] ReadBarrelFiringEffectBlockArray( BinaryReader binaryReader )
+        internal  virtual BarrelFiringEffectBlock[] ReadBarrelFiringEffectBlockArray(BinaryReader binaryReader)
         {
-            var elementSize = Deserializer.SizeOf( typeof( BarrelFiringEffectBlock ) );
-            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
-            var array = new BarrelFiringEffectBlock[ blamPointer.Count ];
-            using ( binaryReader.BaseStream.Pin() )
+            var elementSize = Deserializer.SizeOf(typeof(BarrelFiringEffectBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new BarrelFiringEffectBlock[blamPointer.Count];
+            using (binaryReader.BaseStream.Pin())
             {
-                for ( int i = 0; i < blamPointer.Count; ++i )
+                for (int i = 0; i < blamPointer.Count; ++i)
                 {
-                    binaryReader.BaseStream.Position = blamPointer[ i ];
-                    array[ i ] = new BarrelFiringEffectBlock( binaryReader );
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new BarrelFiringEffectBlock(binaryReader);
                 }
             }
             return array;
         }
-        [Flags]
+        [FlagsAttribute]
         internal enum Flags : int
+        
         {
             TracksFiredProjectilePooPooCaCaPeePee = 1,
             RandomFiringEffectsRatherThanBeingChosenSequentiallyFiringEffectsArePickedRandomly = 2,
@@ -253,12 +253,14 @@ namespace Moonfish.Guerilla.Tags
             FiresLockedProjectiles = 8192,
         };
         internal enum PredictionType : short
+        
         {
             None = 0,
             Continuous = 1,
             Instant = 2,
         };
         internal enum FiringNoiseHowLoudThisWeaponAppearsToTheAI : short
+        
         {
             Silent = 0,
             Medium = 1,
@@ -267,11 +269,13 @@ namespace Moonfish.Guerilla.Tags
             Quiet = 4,
         };
         internal enum DistributionFunction : short
+        
         {
             Point = 0,
             HorizontalFan = 1,
         };
         internal enum DamageEffectReportingType : byte
+        
         {
             TehGuardians11 = 0,
             FallingDamage = 1,
@@ -317,6 +321,7 @@ namespace Moonfish.Guerilla.Tags
             Teleporter = 41,
         };
         internal enum AngleChangeFunctionFunctionUsedToScaleBetweenInitialAndFinalAngleChangePerShot : short
+        
         {
             Linear = 0,
             Early = 1,

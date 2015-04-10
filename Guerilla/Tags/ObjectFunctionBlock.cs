@@ -1,19 +1,20 @@
-using Moonfish.Tags;
+using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
+using Moonfish.Tags;
+using OpenTK;
 using System;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class ObjectFunctionBlock : ObjectFunctionBlockBase
+    public  partial class ObjectFunctionBlock : ObjectFunctionBlockBase
     {
-        public ObjectFunctionBlock( BinaryReader binaryReader )
-            : base( binaryReader )
+        public  ObjectFunctionBlock(BinaryReader binaryReader): base(binaryReader)
         {
-
+            
         }
     };
-    [LayoutAttribute( Size = 32 )]
+    [LayoutAttribute(Size = 32)]
     public class ObjectFunctionBlockBase
     {
         internal Flags flags;
@@ -29,32 +30,33 @@ namespace Moonfish.Guerilla.Tags
         internal float minValue;
         internal MappingFunctionBlock defaultFunction;
         internal Moonfish.Tags.StringID scaleBy;
-        internal ObjectFunctionBlockBase( BinaryReader binaryReader )
+        internal  ObjectFunctionBlockBase(BinaryReader binaryReader)
         {
-            this.flags = ( Flags )binaryReader.ReadInt32();
+            this.flags = (Flags)binaryReader.ReadInt32();
             this.importName = binaryReader.ReadStringID();
             this.exportName = binaryReader.ReadStringID();
             this.turnOffWith = binaryReader.ReadStringID();
             this.minValue = binaryReader.ReadSingle();
-            this.defaultFunction = new MappingFunctionBlock( binaryReader );
+            this.defaultFunction = new MappingFunctionBlock(binaryReader);
             this.scaleBy = binaryReader.ReadStringID();
         }
-        internal virtual byte[] ReadData( BinaryReader binaryReader )
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            var blamPointer = binaryReader.ReadBlamPointer( 1 );
-            var data = new byte[ blamPointer.Count ];
-            if ( blamPointer.Count > 0 )
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.Count];
+            if(blamPointer.Count > 0)
             {
-                using ( binaryReader.BaseStream.Pin() )
+                using (binaryReader.BaseStream.Pin())
                 {
-                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
-                    data = binaryReader.ReadBytes( blamPointer.Count );
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.Count);
                 }
             }
             return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             InvertResultOfFunctionIsOneMinusActualResult = 1,
             MappingDoesNotControlsActiveTheCurveMappingCanMakeTheFunctionActiveInactive = 2,

@@ -1,18 +1,20 @@
-using Moonfish.Tags;
+using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
+using Moonfish.Tags;
+using OpenTK;
+using System;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class OrderEndingBlock : OrderEndingBlockBase
+    public  partial class OrderEndingBlock : OrderEndingBlockBase
     {
-        public OrderEndingBlock( BinaryReader binaryReader )
-            : base( binaryReader )
+        public  OrderEndingBlock(BinaryReader binaryReader): base(binaryReader)
         {
-
+            
         }
     };
-    [LayoutAttribute( Size = 20 )]
+    [LayoutAttribute(Size = 20)]
     public class OrderEndingBlockBase
     {
         internal Moonfish.Tags.ShortBlockIndex1 nextOrder;
@@ -24,50 +26,52 @@ namespace Moonfish.Guerilla.Tags
         internal DialogueTypeWhenThisEndingIsTriggeredLaunchADialogueEventOfTheGivenType dialogueType;
         internal byte[] invalidName_;
         internal TriggerReferences[] triggers;
-        internal OrderEndingBlockBase( BinaryReader binaryReader )
+        internal  OrderEndingBlockBase(BinaryReader binaryReader)
         {
             this.nextOrder = binaryReader.ReadShortBlockIndex1();
-            this.combinationRule = ( CombinationRule )binaryReader.ReadInt16();
+            this.combinationRule = (CombinationRule)binaryReader.ReadInt16();
             this.delayTime = binaryReader.ReadSingle();
-            this.dialogueType = ( DialogueTypeWhenThisEndingIsTriggeredLaunchADialogueEventOfTheGivenType )binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes( 2 );
-            this.triggers = ReadTriggerReferencesArray( binaryReader );
+            this.dialogueType = (DialogueTypeWhenThisEndingIsTriggeredLaunchADialogueEventOfTheGivenType)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.triggers = ReadTriggerReferencesArray(binaryReader);
         }
-        internal virtual byte[] ReadData( BinaryReader binaryReader )
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            var blamPointer = binaryReader.ReadBlamPointer( 1 );
-            var data = new byte[ blamPointer.Count ];
-            if ( blamPointer.Count > 0 )
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.Count];
+            if(blamPointer.Count > 0)
             {
-                using ( binaryReader.BaseStream.Pin() )
+                using (binaryReader.BaseStream.Pin())
                 {
-                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
-                    data = binaryReader.ReadBytes( blamPointer.Count );
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.Count);
                 }
             }
             return data;
         }
-        internal virtual TriggerReferences[] ReadTriggerReferencesArray( BinaryReader binaryReader )
+        internal  virtual TriggerReferences[] ReadTriggerReferencesArray(BinaryReader binaryReader)
         {
-            var elementSize = Deserializer.SizeOf( typeof( TriggerReferences ) );
-            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
-            var array = new TriggerReferences[ blamPointer.Count ];
-            using ( binaryReader.BaseStream.Pin() )
+            var elementSize = Deserializer.SizeOf(typeof(TriggerReferences));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new TriggerReferences[blamPointer.Count];
+            using (binaryReader.BaseStream.Pin())
             {
-                for ( int i = 0; i < blamPointer.Count; ++i )
+                for (int i = 0; i < blamPointer.Count; ++i)
                 {
-                    binaryReader.BaseStream.Position = blamPointer[ i ];
-                    array[ i ] = new TriggerReferences( binaryReader );
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new TriggerReferences(binaryReader);
                 }
             }
             return array;
         }
         internal enum CombinationRule : short
+        
         {
             OR = 0,
             AND = 1,
         };
         internal enum DialogueTypeWhenThisEndingIsTriggeredLaunchADialogueEventOfTheGivenType : short
+        
         {
             None = 0,
             Advance = 1,

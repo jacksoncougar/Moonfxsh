@@ -1,28 +1,29 @@
-using Moonfish.Tags.BlamExtension;
-using System.IO;
 using Moonfish.Model;
+using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
+using OpenTK;
+using System;
+using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class UnitSeatBlock : UnitSeatBlockBase
+    public  partial class UnitSeatBlock : UnitSeatBlockBase
     {
-        public UnitSeatBlock( BinaryReader binaryReader )
-            : base( binaryReader )
+        public  UnitSeatBlock(BinaryReader binaryReader): base(binaryReader)
         {
-
+            
         }
     };
-    [Layout( Size = 176 )]
+    [LayoutAttribute(Size = 176)]
     public class UnitSeatBlockBase
     {
         internal Flags flags;
-        internal StringID label;
-        internal StringID markerName;
-        internal StringID entryMarkerSName;
-        internal StringID boardingGrenadeMarker;
-        internal StringID boardingGrenadeString;
-        internal StringID boardingMeleeString;
+        internal Moonfish.Tags.StringID label;
+        internal Moonfish.Tags.StringID markerName;
+        internal Moonfish.Tags.StringID entryMarkerSName;
+        internal Moonfish.Tags.StringID boardingGrenadeMarker;
+        internal Moonfish.Tags.StringID boardingGrenadeString;
+        internal Moonfish.Tags.StringID boardingMeleeString;
         /// <summary>
         /// nathan is too lazy to make pings for each seat.
         /// </summary>
@@ -34,23 +35,23 @@ namespace Moonfish.Guerilla.Tags
         internal UnitSeatAccelerationStructBlock acceleration;
         internal float aIScariness;
         internal AiSeatType aiSeatType;
-        internal ShortBlockIndex1 boardingSeat;
+        internal Moonfish.Tags.ShortBlockIndex1 boardingSeat;
         /// <summary>
         /// how far to interpolate listener position from camera to occupant's head
         /// </summary>
         internal float listenerInterpolationFactor;
-        internal Range yawRateBoundsDegreesPerSecond;
-        internal Range pitchRateBoundsDegreesPerSecond;
+        internal Moonfish.Model.Range yawRateBoundsDegreesPerSecond;
+        internal Moonfish.Model.Range pitchRateBoundsDegreesPerSecond;
         internal float minSpeedReference;
         internal float maxSpeedReference;
         internal float speedExponent;
         internal UnitCameraStructBlock unitCamera;
         internal UnitHudReferenceBlock[] unitHudInterface;
-        internal StringID enterSeatString;
+        internal Moonfish.Tags.StringID enterSeatString;
         internal float yawMinimum;
         internal float yawMaximum;
-        [TagReference( "char" )]
-        internal TagReference builtInGunner;
+        [TagReference("char")]
+        internal Moonfish.Tags.TagReference builtInGunner;
         /// <summary>
         /// how close to the entry marker a unit must be
         /// </summary>
@@ -64,11 +65,11 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float entryMarkerFacingAngle;
         internal float maximumRelativeVelocity;
-        internal StringID invisibleSeatRegion;
+        internal Moonfish.Tags.StringID invisibleSeatRegion;
         internal int runtimeInvisibleSeatRegionIndex;
-        internal UnitSeatBlockBase( BinaryReader binaryReader )
+        internal  UnitSeatBlockBase(BinaryReader binaryReader)
         {
-            this.flags = ( Flags )binaryReader.ReadInt32();
+            this.flags = (Flags)binaryReader.ReadInt32();
             this.label = binaryReader.ReadStringID();
             this.markerName = binaryReader.ReadStringID();
             this.entryMarkerSName = binaryReader.ReadStringID();
@@ -77,9 +78,9 @@ namespace Moonfish.Guerilla.Tags
             this.boardingMeleeString = binaryReader.ReadStringID();
             this.pingScale = binaryReader.ReadSingle();
             this.turnoverTimeSeconds = binaryReader.ReadSingle();
-            this.acceleration = new UnitSeatAccelerationStructBlock( binaryReader );
+            this.acceleration = new UnitSeatAccelerationStructBlock(binaryReader);
             this.aIScariness = binaryReader.ReadSingle();
-            this.aiSeatType = ( AiSeatType )binaryReader.ReadInt16();
+            this.aiSeatType = (AiSeatType)binaryReader.ReadInt16();
             this.boardingSeat = binaryReader.ReadShortBlockIndex1();
             this.listenerInterpolationFactor = binaryReader.ReadSingle();
             this.yawRateBoundsDegreesPerSecond = binaryReader.ReadRange();
@@ -87,8 +88,8 @@ namespace Moonfish.Guerilla.Tags
             this.minSpeedReference = binaryReader.ReadSingle();
             this.maxSpeedReference = binaryReader.ReadSingle();
             this.speedExponent = binaryReader.ReadSingle();
-            this.unitCamera = new UnitCameraStructBlock( binaryReader );
-            this.unitHudInterface = ReadUnitHudReferenceBlockArray( binaryReader );
+            this.unitCamera = new UnitCameraStructBlock(binaryReader);
+            this.unitHudInterface = ReadUnitHudReferenceBlockArray(binaryReader);
             this.enterSeatString = binaryReader.ReadStringID();
             this.yawMinimum = binaryReader.ReadSingle();
             this.yawMaximum = binaryReader.ReadSingle();
@@ -100,36 +101,38 @@ namespace Moonfish.Guerilla.Tags
             this.invisibleSeatRegion = binaryReader.ReadStringID();
             this.runtimeInvisibleSeatRegionIndex = binaryReader.ReadInt32();
         }
-        internal virtual byte[] ReadData( BinaryReader binaryReader )
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            var blamPointer = binaryReader.ReadBlamPointer( 1 );
-            var data = new byte[ blamPointer.Count ];
-            if ( blamPointer.Count > 0 )
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.Count];
+            if(blamPointer.Count > 0)
             {
-                using ( binaryReader.BaseStream.Pin() )
+                using (binaryReader.BaseStream.Pin())
                 {
-                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
-                    data = binaryReader.ReadBytes( blamPointer.Count );
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.Count);
                 }
             }
             return data;
         }
-        internal virtual UnitHudReferenceBlock[] ReadUnitHudReferenceBlockArray( BinaryReader binaryReader )
+        internal  virtual UnitHudReferenceBlock[] ReadUnitHudReferenceBlockArray(BinaryReader binaryReader)
         {
-            var elementSize = Deserializer.SizeOf( typeof( UnitHudReferenceBlock ) );
-            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
-            var array = new UnitHudReferenceBlock[ blamPointer.Count ];
-            using ( binaryReader.BaseStream.Pin() )
+            var elementSize = Deserializer.SizeOf(typeof(UnitHudReferenceBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new UnitHudReferenceBlock[blamPointer.Count];
+            using (binaryReader.BaseStream.Pin())
             {
-                for ( int i = 0; i < blamPointer.Count; ++i )
+                for (int i = 0; i < blamPointer.Count; ++i)
                 {
-                    binaryReader.BaseStream.Position = blamPointer[ i ];
-                    array[ i ] = new UnitHudReferenceBlock( binaryReader );
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new UnitHudReferenceBlock(binaryReader);
                 }
             }
             return array;
         }
+        [FlagsAttribute]
         internal enum Flags : int
+        
         {
             Invisible = 1,
             Locked = 2,
@@ -153,6 +156,7 @@ namespace Moonfish.Guerilla.Tags
             InvisibleUnderMajorDamage = 524288,
         };
         internal enum AiSeatType : short
+        
         {
             NONE = 0,
             Passenger = 1,

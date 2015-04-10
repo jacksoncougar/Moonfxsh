@@ -1,19 +1,20 @@
-using Moonfish.Tags;
+using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
+using Moonfish.Tags;
+using OpenTK;
 using System;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class BitmapDataBlock : BitmapDataBlockBase
+    public  partial class BitmapDataBlock : BitmapDataBlockBase
     {
-        public BitmapDataBlock( BinaryReader binaryReader )
-            : base( binaryReader )
+        public  BitmapDataBlock(BinaryReader binaryReader): base(binaryReader)
         {
-
+            
         }
     };
-    [LayoutAttribute( Size = 116 )]
+    [LayoutAttribute(Size = 116)]
     public class BitmapDataBlockBase
     {
         internal Moonfish.Tags.TagClass signature;
@@ -45,16 +46,16 @@ namespace Moonfish.Guerilla.Tags
         internal int lOD2TextureDataLength;
         internal int lOD3TextureDataLength;
         internal byte[] invalidName_0;
-        internal BitmapDataBlockBase( BinaryReader binaryReader )
+        internal  BitmapDataBlockBase(BinaryReader binaryReader)
         {
             this.signature = binaryReader.ReadTagClass();
             this.widthPixels = binaryReader.ReadInt16();
             this.heightPixels = binaryReader.ReadInt16();
             this.depthPixels = binaryReader.ReadByte();
-            this.moreFlags = ( MoreFlags )binaryReader.ReadByte();
-            this.type = ( TypeDeterminesBitmapGeometry )binaryReader.ReadInt16();
-            this.format = ( FormatDeterminesHowPixelsAreRepresentedInternally )binaryReader.ReadInt16();
-            this.flags = ( Flags )binaryReader.ReadInt16();
+            this.moreFlags = (MoreFlags)binaryReader.ReadByte();
+            this.type = (TypeDeterminesBitmapGeometry)binaryReader.ReadInt16();
+            this.format = (FormatDeterminesHowPixelsAreRepresentedInternally)binaryReader.ReadInt16();
+            this.flags = (Flags)binaryReader.ReadInt16();
             this.registrationPoint = binaryReader.ReadPoint();
             this.mipmapCount = binaryReader.ReadInt16();
             this.lowDetailMipmapCount = binaryReader.ReadInt16();
@@ -62,40 +63,43 @@ namespace Moonfish.Guerilla.Tags
             this.lOD1TextureDataOffset = binaryReader.ReadInt32();
             this.lOD2TextureDataOffset = binaryReader.ReadInt32();
             this.lOD3TextureDataOffset = binaryReader.ReadInt32();
-            this.invalidName_ = binaryReader.ReadBytes( 12 );
+            this.invalidName_ = binaryReader.ReadBytes(12);
             this.lOD1TextureDataLength = binaryReader.ReadInt32();
             this.lOD2TextureDataLength = binaryReader.ReadInt32();
             this.lOD3TextureDataLength = binaryReader.ReadInt32();
-            this.invalidName_0 = binaryReader.ReadBytes( 52 );
+            this.invalidName_0 = binaryReader.ReadBytes(52);
         }
-        internal virtual byte[] ReadData( BinaryReader binaryReader )
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            var blamPointer = binaryReader.ReadBlamPointer( 1 );
-            var data = new byte[ blamPointer.Count ];
-            if ( blamPointer.Count > 0 )
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.Count];
+            if(blamPointer.Count > 0)
             {
-                using ( binaryReader.BaseStream.Pin() )
+                using (binaryReader.BaseStream.Pin())
                 {
-                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
-                    data = binaryReader.ReadBytes( blamPointer.Count );
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.Count);
                 }
             }
             return data;
         }
         [FlagsAttribute]
         internal enum MoreFlags : byte
+        
         {
             DeleteFromCacheFile = 1,
             BitmapCreateAttempted = 2,
             InvalidName = 4,
         };
         internal enum TypeDeterminesBitmapGeometry : short
+        
         {
             Texture2D = 0,
             Texture3D = 1,
             Cubemap = 2,
         };
         internal enum FormatDeterminesHowPixelsAreRepresentedInternally : short
+        
         {
             A8 = 0,
             Y8 = 1,
@@ -124,6 +128,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             PowerOfTwoDimensions = 1,
             Compressed = 2,

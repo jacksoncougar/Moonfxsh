@@ -1,46 +1,49 @@
+using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
-using System.IO;
 using Moonfish.Tags;
+using OpenTK;
+using System;
+using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class ZoneSetBlock : ZoneSetBlockBase
+    public  partial class ZoneSetBlock : ZoneSetBlockBase
     {
-        public ZoneSetBlock( BinaryReader binaryReader )
-            : base( binaryReader )
+        public  ZoneSetBlock(BinaryReader binaryReader): base(binaryReader)
         {
-
+            
         }
     };
-    [Layout( Size = 8 )]
+    [LayoutAttribute(Size = 8)]
     public class ZoneSetBlockBase
     {
         internal AreaType areaType;
         internal byte[] invalidName_;
-        internal ShortBlockIndex1 zone;
-        internal ShortBlockIndex2 area;
-        internal ZoneSetBlockBase( BinaryReader binaryReader )
+        internal Moonfish.Tags.ShortBlockIndex1 zone;
+        internal Moonfish.Tags.ShortBlockIndex2 area;
+        internal  ZoneSetBlockBase(BinaryReader binaryReader)
         {
-            this.areaType = ( AreaType )binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes( 2 );
+            this.areaType = (AreaType)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
             this.zone = binaryReader.ReadShortBlockIndex1();
             this.area = binaryReader.ReadShortBlockIndex2();
         }
-        internal virtual byte[] ReadData( BinaryReader binaryReader )
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            var blamPointer = binaryReader.ReadBlamPointer( 1 );
-            var data = new byte[ blamPointer.Count ];
-            if ( blamPointer.Count > 0 )
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.Count];
+            if(blamPointer.Count > 0)
             {
-                using ( binaryReader.BaseStream.Pin() )
+                using (binaryReader.BaseStream.Pin())
                 {
-                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
-                    data = binaryReader.ReadBytes( blamPointer.Count );
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.Count);
                 }
             }
             return data;
         }
         internal enum AreaType : short
+        
         {
             Deault = 0,
             Search = 1,

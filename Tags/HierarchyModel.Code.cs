@@ -2,7 +2,6 @@
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClass( "hlmt" )]
     public partial class ModelBlock
     {
         public RenderModelBlock RenderModel

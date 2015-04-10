@@ -1,20 +1,21 @@
-using Moonfish.Tags;
+using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
+using Moonfish.Tags;
+using OpenTK;
 using System;
 using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "bitm" )]
-    public partial class BitmapBlock : BitmapBlockBase
+    [TagClassAttribute("bitm")]
+    public  partial class BitmapBlock : BitmapBlockBase
     {
-        public BitmapBlock( BinaryReader binaryReader )
-            : base( binaryReader )
+        public  BitmapBlock(BinaryReader binaryReader): base(binaryReader)
         {
-
+            
         }
     };
-    [LayoutAttribute( Size = 76 )]
+    [LayoutAttribute(Size = 76)]
     public class BitmapBlockBase
     {
         internal Type type;
@@ -56,75 +57,76 @@ namespace Moonfish.Guerilla.Tags
         internal ForceFormat forceFormat;
         internal BitmapGroupSequenceBlock[] sequences;
         internal BitmapDataBlock[] bitmaps;
-        internal BitmapBlockBase( BinaryReader binaryReader )
+        internal  BitmapBlockBase(BinaryReader binaryReader)
         {
-            this.type = ( Type )binaryReader.ReadInt16();
-            this.format = ( Format )binaryReader.ReadInt16();
-            this.usage = ( Usage )binaryReader.ReadInt16();
-            this.flags = ( Flags )binaryReader.ReadInt16();
+            this.type = (Type)binaryReader.ReadInt16();
+            this.format = (Format)binaryReader.ReadInt16();
+            this.usage = (Usage)binaryReader.ReadInt16();
+            this.flags = (Flags)binaryReader.ReadInt16();
             this.detailFadeFactor01 = binaryReader.ReadSingle();
             this.sharpenAmount01 = binaryReader.ReadSingle();
             this.bumpHeightRepeats = binaryReader.ReadSingle();
-            this.spriteSize = ( SpriteSize )binaryReader.ReadInt16();
+            this.spriteSize = (SpriteSize)binaryReader.ReadInt16();
             this.eMPTYSTRING = binaryReader.ReadInt16();
             this.colorPlateWidthPixels = binaryReader.ReadInt16();
             this.colorPlateHeightPixels = binaryReader.ReadInt16();
-            this.data = binaryReader.ReadBytes( 8 );
-            this.data0 = binaryReader.ReadBytes( 8 );
+            this.data = binaryReader.ReadBytes(8);
+            this.data0 = binaryReader.ReadBytes(8);
             this.blurFilterSize010Pixels = binaryReader.ReadSingle();
             this.alphaBias11 = binaryReader.ReadSingle();
             this.mipmapCountLevels = binaryReader.ReadInt16();
-            this.spriteUsage = ( SpriteUsage )binaryReader.ReadInt16();
+            this.spriteUsage = (SpriteUsage)binaryReader.ReadInt16();
             this.spriteSpacing = binaryReader.ReadInt16();
-            this.forceFormat = ( ForceFormat )binaryReader.ReadInt16();
-            this.sequences = ReadBitmapGroupSequenceBlockArray( binaryReader );
-            this.bitmaps = ReadBitmapDataBlockArray( binaryReader );
+            this.forceFormat = (ForceFormat)binaryReader.ReadInt16();
+            this.sequences = ReadBitmapGroupSequenceBlockArray(binaryReader);
+            this.bitmaps = ReadBitmapDataBlockArray(binaryReader);
         }
-        internal virtual byte[] ReadData( BinaryReader binaryReader )
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            var blamPointer = binaryReader.ReadBlamPointer( 1 );
-            var data = new byte[ blamPointer.Count ];
-            if ( blamPointer.Count > 0 )
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.Count];
+            if(blamPointer.Count > 0)
             {
-                using ( binaryReader.BaseStream.Pin() )
+                using (binaryReader.BaseStream.Pin())
                 {
-                    binaryReader.BaseStream.Position = blamPointer[ 0 ];
-                    data = binaryReader.ReadBytes( blamPointer.Count );
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.Count);
                 }
             }
             return data;
         }
-        internal virtual BitmapGroupSequenceBlock[] ReadBitmapGroupSequenceBlockArray( BinaryReader binaryReader )
+        internal  virtual BitmapGroupSequenceBlock[] ReadBitmapGroupSequenceBlockArray(BinaryReader binaryReader)
         {
-            var elementSize = Deserializer.SizeOf( typeof( BitmapGroupSequenceBlock ) );
-            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
-            var array = new BitmapGroupSequenceBlock[ blamPointer.Count ];
-            using ( binaryReader.BaseStream.Pin() )
+            var elementSize = Deserializer.SizeOf(typeof(BitmapGroupSequenceBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new BitmapGroupSequenceBlock[blamPointer.Count];
+            using (binaryReader.BaseStream.Pin())
             {
-                for ( int i = 0; i < blamPointer.Count; ++i )
+                for (int i = 0; i < blamPointer.Count; ++i)
                 {
-                    binaryReader.BaseStream.Position = blamPointer[ i ];
-                    array[ i ] = new BitmapGroupSequenceBlock( binaryReader );
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new BitmapGroupSequenceBlock(binaryReader);
                 }
             }
             return array;
         }
-        internal virtual BitmapDataBlock[] ReadBitmapDataBlockArray( BinaryReader binaryReader )
+        internal  virtual BitmapDataBlock[] ReadBitmapDataBlockArray(BinaryReader binaryReader)
         {
-            var elementSize = Deserializer.SizeOf( typeof( BitmapDataBlock ) );
-            var blamPointer = binaryReader.ReadBlamPointer( elementSize );
-            var array = new BitmapDataBlock[ blamPointer.Count ];
-            using ( binaryReader.BaseStream.Pin() )
+            var elementSize = Deserializer.SizeOf(typeof(BitmapDataBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new BitmapDataBlock[blamPointer.Count];
+            using (binaryReader.BaseStream.Pin())
             {
-                for ( int i = 0; i < blamPointer.Count; ++i )
+                for (int i = 0; i < blamPointer.Count; ++i)
                 {
-                    binaryReader.BaseStream.Position = blamPointer[ i ];
-                    array[ i ] = new BitmapDataBlock( binaryReader );
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new BitmapDataBlock(binaryReader);
                 }
             }
             return array;
         }
         internal enum Type : short
+        
         {
             TextureArray2D = 0,
             TextureArray3D = 1,
@@ -133,6 +135,7 @@ namespace Moonfish.Guerilla.Tags
             InterfaceBitmaps = 4,
         };
         internal enum Format : short
+        
         {
             CompressedWithColorKeyTransparency = 0,
             CompressedWithExplicitAlpha = 1,
@@ -142,6 +145,7 @@ namespace Moonfish.Guerilla.Tags
             Monochrome = 5,
         };
         internal enum Usage : short
+        
         {
             AlphaBlend = 0,
             Default = 1,
@@ -157,6 +161,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             EnableDiffusionDithering = 1,
             DisableHeightMapCompression = 2,
@@ -173,6 +178,7 @@ namespace Moonfish.Guerilla.Tags
             IntentionallyTrueColor = 4096,
         };
         internal enum SpriteSize : short
+        
         {
             Size32X32 = 0,
             Size64X64 = 1,
@@ -182,12 +188,14 @@ namespace Moonfish.Guerilla.Tags
             Size1024X1024 = 5,
         };
         internal enum SpriteUsage : short
+        
         {
             BlendAddSubtractMax = 0,
             MultiplyMin = 1,
             DoubleMultiply = 2,
         };
         internal enum ForceFormat : short
+        
         {
             Default = 0,
             ForceG8B8 = 1,

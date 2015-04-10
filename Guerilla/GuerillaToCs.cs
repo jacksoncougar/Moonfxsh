@@ -332,7 +332,7 @@ namespace Moonfish.Guerilla
                         {
                             fieldInfo = new FieldInfo()
                             {
-                                Value = IsValidFieldName( field.Name.ToUpper() ) ? field.Name : field.Definition.DisplayName,
+                                Value = IsValidFieldName( field.Name.ToUpper() ) ? field.Name : field.Definition.Definition.DisplayName,
                                 AccessModifiers = Moonfish.Guerilla.AccessModifiers.Internal,
                             };
 

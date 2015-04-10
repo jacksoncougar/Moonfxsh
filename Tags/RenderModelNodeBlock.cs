@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
             Pose
         }
 
-        partial void Initialize()
+        void Initialize()
         {
             Mode = DisplayMode.Pose;
             _pose = new Pose { rotation = defaultRotation, translation = defaultTranslation };

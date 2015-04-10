@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using Moonfish.Compiler;
 using Moonfish.Guerilla;
 
 namespace Moonfish
@@ -14,13 +15,25 @@ namespace Moonfish
         [STAThread]
         static void Main()
         {
-            GuerillaToEnt ripperEnt = new GuerillaToEnt(Local.GuerillaPath);
-            foreach (var tag in Guerilla.Guerilla.h2Tags)
-            {
-                ripperEnt.DumpTagLayout(tag, Local.PluginsFolder);
-            }
+            //GuerillaToEnt ripperEnt = new GuerillaToEnt(Local.GuerillaPath);
+            //foreach (var tag in Guerilla.Guerilla.h2Tags)
+            //{
+            //    ripperEnt.DumpTagLayout(tag, Local.PluginsFolder);
+            //}
             ////Validator v = new Validator();
             //return;
+
+            GuerillaCs guerilla = new GuerillaCs(Local.GuerillaPath);
+            foreach (var tag in Guerilla.Guerilla.h2Tags)
+            {
+                guerilla.DumpTagLayout(@"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags",
+                    (string)tag.Class, tag.Name);
+                Application.DoEvents();
+            }
+
+            Decompiler d = new Decompiler();
+            //d.Decompile(new MapStream(@"C:\Users\seed\Documents\Halo 2 Modding\headlong.map"));
+            return;
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

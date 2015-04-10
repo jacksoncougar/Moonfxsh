@@ -38,7 +38,7 @@ namespace Moonfish.Guerilla
             }
         }
 
-        public void DumpTagLayout( tag_group tag, string folder )
+        public void DumpTagLayout( GuerillaTagGroup tag, string folder )
         {
             Dictionary<string, string> definitionDictitonary = new Dictionary<string, string>();
 
@@ -55,17 +55,17 @@ namespace Moonfish.Guerilla
         }
 
         bool root;
-        private void ProcessTag( IEnumerable<tag_group> h2Tags, string folder, BinaryReader reader, XmlWriter writer, tag_group tag )
+        private void ProcessTag( IEnumerable<GuerillaTagGroup> h2Tags, string folder, BinaryReader reader, XmlWriter writer, GuerillaTagGroup tag )
         {
             const int @null = -1;
             List<tag_field> fields = null;
-            if ( tag.parent_group_tag != @null )
+            if ( tag.parentGroupTag != @null )
             {
                 fields = new List<tag_field>();
-                var parent = h2Tags.Where( x => x.group_tag == tag.parent_group_tag ).Single();
-                if ( parent.parent_group_tag != @null )
+                var parent = h2Tags.Where( x => x.groupTag == tag.parentGroupTag ).Single();
+                if ( parent.parentGroupTag != @null )
                 {
-                    var @base = h2Tags.Where( x => x.group_tag == parent.parent_group_tag ).Single();
+                    var @base = h2Tags.Where( x => x.groupTag == parent.parentGroupTag ).Single();
                     fields.AddRange( ExtractFields( h2Tags, reader, @base ) );
                 }
                 fields.AddRange( ExtractFields( h2Tags, reader, parent ) );
@@ -74,7 +74,7 @@ namespace Moonfish.Guerilla
 
             // Process the tag_group definition.
             var fieldOffset = 0;
-            ProcessTagBlockDefinition( tag.Definition, writer, tag.definition_address, ref fieldOffset, tag.Class.ToString(), "", root, false, fields );
+            ProcessTagBlockDefinition( tag.Definition, writer, tag.definitionAddress, ref fieldOffset, tag.Class.ToString(), "", root, false, fields );
             root = root ? false : false;
 
             writer.Flush();
@@ -83,13 +83,13 @@ namespace Moonfish.Guerilla
             return;
         }
 
-        private static IList<tag_field> ExtractFields( IEnumerable<tag_group> h2Tags, BinaryReader reader, tag_group tag )
+        private static IList<tag_field> ExtractFields( IEnumerable<GuerillaTagGroup> h2Tags, BinaryReader reader, GuerillaTagGroup tag )
         {
             var definition = ( TagBlockDefinition )tag.Definition;
             return definition.LatestFieldSet.Fields;
         }
 
-        private static string GetEntityCompatibleName( tag_group tag )
+        private static string GetEntityCompatibleName( GuerillaTagGroup tag )
         {
             var outputName = tag.Class.ToString().Trim();
 

@@ -34,13 +34,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var data = new byte[blamPointer.count];
+            if(blamPointer.count > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    data = binaryReader.ReadBytes(blamPointer.count);
                 }
             }
             return data;
@@ -49,10 +49,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(ScenarioClusterDataBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioClusterDataBlock[blamPointer.Count];
+            var array = new ScenarioClusterDataBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new ScenarioClusterDataBlock(binaryReader);
@@ -64,10 +64,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(StructureBspBackgroundSoundPaletteBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspBackgroundSoundPaletteBlock[blamPointer.Count];
+            var array = new StructureBspBackgroundSoundPaletteBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new StructureBspBackgroundSoundPaletteBlock(binaryReader);
@@ -79,10 +79,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(StructureBspSoundEnvironmentPaletteBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspSoundEnvironmentPaletteBlock[blamPointer.Count];
+            var array = new StructureBspSoundEnvironmentPaletteBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new StructureBspSoundEnvironmentPaletteBlock(binaryReader);
@@ -94,10 +94,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(StructureBspWeatherPaletteBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspWeatherPaletteBlock[blamPointer.Count];
+            var array = new StructureBspWeatherPaletteBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new StructureBspWeatherPaletteBlock(binaryReader);
@@ -109,10 +109,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(ScenarioAtmosphericFogPalette));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioAtmosphericFogPalette[blamPointer.Count];
+            var array = new ScenarioAtmosphericFogPalette[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new ScenarioAtmosphericFogPalette(binaryReader);

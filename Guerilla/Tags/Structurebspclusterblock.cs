@@ -75,13 +75,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var data = new byte[blamPointer.count];
+            if(blamPointer.count > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    data = binaryReader.ReadBytes(blamPointer.count);
                 }
             }
             return data;
@@ -90,10 +90,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(StructureBspClusterDataBlockNew));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspClusterDataBlockNew[blamPointer.Count];
+            var array = new StructureBspClusterDataBlockNew[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new StructureBspClusterDataBlockNew(binaryReader);
@@ -105,10 +105,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(PredictedResourceBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PredictedResourceBlock[blamPointer.Count];
+            var array = new PredictedResourceBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new PredictedResourceBlock(binaryReader);
@@ -120,10 +120,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(StructureBspClusterPortalIndexBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspClusterPortalIndexBlock[blamPointer.Count];
+            var array = new StructureBspClusterPortalIndexBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new StructureBspClusterPortalIndexBlock(binaryReader);
@@ -135,10 +135,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(StructureBspClusterInstancedGeometryIndexBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspClusterInstancedGeometryIndexBlock[blamPointer.Count];
+            var array = new StructureBspClusterInstancedGeometryIndexBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new StructureBspClusterInstancedGeometryIndexBlock(binaryReader);
@@ -150,10 +150,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(GlobalGeometrySectionStripIndexBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalGeometrySectionStripIndexBlock[blamPointer.Count];
+            var array = new GlobalGeometrySectionStripIndexBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new GlobalGeometrySectionStripIndexBlock(binaryReader);

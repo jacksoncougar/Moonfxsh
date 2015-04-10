@@ -64,13 +64,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var data = new byte[blamPointer.count];
+            if(blamPointer.count > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    data = binaryReader.ReadBytes(blamPointer.count);
                 }
             }
             return data;
@@ -79,10 +79,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(HudWidgetEffectBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new HudWidgetEffectBlock[blamPointer.Count];
+            var array = new HudWidgetEffectBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new HudWidgetEffectBlock(binaryReader);

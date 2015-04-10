@@ -1,0 +1,344 @@
+// ReSharper disable All
+using Moonfish.Model;
+using Moonfish.Tags.BlamExtension;
+using Moonfish.Tags;
+using OpenTK;
+using System;
+using System.IO;
+
+namespace Moonfish.Guerilla.Tags
+{
+    public  partial class VocalizationDefinitionsBlock0 : VocalizationDefinitionsBlock0Base
+    {
+        public  VocalizationDefinitionsBlock0(System.IO.BinaryReader binaryReader): base(binaryReader)
+        {
+            
+        }
+    };
+    [LayoutAttribute(Size = 96)]
+    public class VocalizationDefinitionsBlock0Base
+    {
+        internal Moonfish.Tags.StringID vocalization;
+        internal Moonfish.Tags.StringID parentVocalization;
+        internal short parentIndex;
+        internal Priority priority;
+        internal Flags flags;
+        /// <summary>
+        /// how does the speaker of this vocalization direct his gaze?
+        /// </summary>
+        internal GlanceBehaviorHowDoesTheSpeakerOfThisVocalizationDirectHisGaze glanceBehavior;
+        /// <summary>
+        /// how does someone who hears me behave?
+        /// </summary>
+        internal GlanceRecipientBehaviorHowDoesSomeoneWhoHearsMeBehave glanceRecipientBehavior;
+        internal PerceptionType perceptionType;
+        internal MaxCombatStatus maxCombatStatus;
+        internal AnimationImpulse animationImpulse;
+        internal OverlapPriority overlapPriority;
+        /// <summary>
+        /// Minimum delay time between playing the same permutation
+        /// </summary>
+        internal float soundRepetitionDelayMinutes;
+        /// <summary>
+        /// How long to wait to actually start the vocalization
+        /// </summary>
+        internal float allowableQueueDelaySeconds;
+        /// <summary>
+        /// How long to wait to actually start the vocalization
+        /// </summary>
+        internal float preVocDelaySeconds;
+        /// <summary>
+        /// How long into the vocalization the AI should be notified
+        /// </summary>
+        internal float notificationDelaySeconds;
+        /// <summary>
+        /// How long speech is suppressed in the speaking unit after vocalizing
+        /// </summary>
+        internal float postVocDelaySeconds;
+        /// <summary>
+        /// How long before the same vocalization can be repeated
+        /// </summary>
+        internal float repeatDelaySeconds;
+        /// <summary>
+        /// Inherent weight of this vocalization
+        /// </summary>
+        internal float weight01;
+        /// <summary>
+        /// speaker won't move for the given amount of time
+        /// </summary>
+        internal float speakerFreezeTime;
+        /// <summary>
+        /// listener won't move for the given amount of time (from start of vocalization)
+        /// </summary>
+        internal float listenerFreezeTime;
+        internal SpeakerEmotion speakerEmotion;
+        internal ListenerEmotion listenerEmotion;
+        internal float playerSkipFraction;
+        internal float skipFraction;
+        internal Moonfish.Tags.StringID sampleLine;
+        internal ResponseBlock[] reponses;
+        internal VocalizationDefinitionsBlock1[] children;
+        internal  VocalizationDefinitionsBlock0Base(System.IO.BinaryReader binaryReader)
+        {
+            vocalization = binaryReader.ReadStringID();
+            parentVocalization = binaryReader.ReadStringID();
+            parentIndex = binaryReader.ReadInt16();
+            priority = (Priority)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt32();
+            glanceBehavior = (GlanceBehaviorHowDoesTheSpeakerOfThisVocalizationDirectHisGaze)binaryReader.ReadInt16();
+            glanceRecipientBehavior = (GlanceRecipientBehaviorHowDoesSomeoneWhoHearsMeBehave)binaryReader.ReadInt16();
+            perceptionType = (PerceptionType)binaryReader.ReadInt16();
+            maxCombatStatus = (MaxCombatStatus)binaryReader.ReadInt16();
+            animationImpulse = (AnimationImpulse)binaryReader.ReadInt16();
+            overlapPriority = (OverlapPriority)binaryReader.ReadInt16();
+            soundRepetitionDelayMinutes = binaryReader.ReadSingle();
+            allowableQueueDelaySeconds = binaryReader.ReadSingle();
+            preVocDelaySeconds = binaryReader.ReadSingle();
+            notificationDelaySeconds = binaryReader.ReadSingle();
+            postVocDelaySeconds = binaryReader.ReadSingle();
+            repeatDelaySeconds = binaryReader.ReadSingle();
+            weight01 = binaryReader.ReadSingle();
+            speakerFreezeTime = binaryReader.ReadSingle();
+            listenerFreezeTime = binaryReader.ReadSingle();
+            speakerEmotion = (SpeakerEmotion)binaryReader.ReadInt16();
+            listenerEmotion = (ListenerEmotion)binaryReader.ReadInt16();
+            playerSkipFraction = binaryReader.ReadSingle();
+            skipFraction = binaryReader.ReadSingle();
+            sampleLine = binaryReader.ReadStringID();
+            ReadResponseBlockArray(binaryReader);
+            ReadVocalizationDefinitionsBlock1Array(binaryReader);
+        }
+        internal  virtual byte[] ReadData(System.IO.BinaryReader binaryReader)
+        {
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.Count];
+            if(blamPointer.Count > 0)
+            {
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.Count);
+                }
+            }
+            return data;
+        }
+        internal  virtual ResponseBlock[] ReadResponseBlockArray(System.IO.BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ResponseBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ResponseBlock[blamPointer.Count];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.Count; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ResponseBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual VocalizationDefinitionsBlock1[] ReadVocalizationDefinitionsBlock1Array(System.IO.BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(VocalizationDefinitionsBlock1));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new VocalizationDefinitionsBlock1[blamPointer.Count];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.Count; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new VocalizationDefinitionsBlock1(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual void WriteData(System.IO.BinaryWriter binaryWriter)
+        {
+            
+        }
+        internal  virtual void WriteResponseBlockArray(System.IO.BinaryWriter binaryWriter)
+        {
+            
+        }
+        internal  virtual void WriteVocalizationDefinitionsBlock1Array(System.IO.BinaryWriter binaryWriter)
+        {
+            
+        }
+        public void Write(System.IO.BinaryWriter binaryWriter)
+        {
+            using(binaryWriter.BaseStream.Pin())
+            {
+                binaryWriter.Write(vocalization);
+                binaryWriter.Write(parentVocalization);
+                binaryWriter.Write(parentIndex);
+                binaryWriter.Write((Int16)priority);
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int16)glanceBehavior);
+                binaryWriter.Write((Int16)glanceRecipientBehavior);
+                binaryWriter.Write((Int16)perceptionType);
+                binaryWriter.Write((Int16)maxCombatStatus);
+                binaryWriter.Write((Int16)animationImpulse);
+                binaryWriter.Write((Int16)overlapPriority);
+                binaryWriter.Write(soundRepetitionDelayMinutes);
+                binaryWriter.Write(allowableQueueDelaySeconds);
+                binaryWriter.Write(preVocDelaySeconds);
+                binaryWriter.Write(notificationDelaySeconds);
+                binaryWriter.Write(postVocDelaySeconds);
+                binaryWriter.Write(repeatDelaySeconds);
+                binaryWriter.Write(weight01);
+                binaryWriter.Write(speakerFreezeTime);
+                binaryWriter.Write(listenerFreezeTime);
+                binaryWriter.Write((Int16)speakerEmotion);
+                binaryWriter.Write((Int16)listenerEmotion);
+                binaryWriter.Write(playerSkipFraction);
+                binaryWriter.Write(skipFraction);
+                binaryWriter.Write(sampleLine);
+                WriteResponseBlockArray(binaryWriter);
+                WriteVocalizationDefinitionsBlock1Array(binaryWriter);
+            }
+        }
+        internal enum Priority : short
+        
+        {
+            None = 0,
+            Recall = 1,
+            Idle = 2,
+            Comment = 3,
+            IdleResponse = 4,
+            Postcombat = 5,
+            Combat = 6,
+            Status = 7,
+            Respond = 8,
+            Warn = 9,
+            Act = 10,
+            React = 11,
+            Involuntary = 12,
+            Scream = 13,
+            Scripted = 14,
+            Death = 15,
+        };
+        [FlagsAttribute]
+        internal enum Flags : int
+        
+        {
+            Immediate = 1,
+            Interrupt = 2,
+            CancelLowPriority = 4,
+        };
+        internal enum GlanceBehaviorHowDoesTheSpeakerOfThisVocalizationDirectHisGaze : short
+        
+        {
+            NONE = 0,
+            GlanceSubjectShort = 1,
+            GlanceSubjectLong = 2,
+            GlanceCauseShort = 3,
+            GlanceCauseLong = 4,
+            GlanceFriendShort = 5,
+            GlanceFriendLong = 6,
+        };
+        internal enum GlanceRecipientBehaviorHowDoesSomeoneWhoHearsMeBehave : short
+        
+        {
+            NONE = 0,
+            GlanceSubjectShort = 1,
+            GlanceSubjectLong = 2,
+            GlanceCauseShort = 3,
+            GlanceCauseLong = 4,
+            GlanceFriendShort = 5,
+            GlanceFriendLong = 6,
+        };
+        internal enum PerceptionType : short
+        
+        {
+            None = 0,
+            Speaker = 1,
+            Listener = 2,
+        };
+        internal enum MaxCombatStatus : short
+        
+        {
+            Asleep = 0,
+            Idle = 1,
+            Alert = 2,
+            Active = 3,
+            Uninspected = 4,
+            Definite = 5,
+            Certain = 6,
+            Visible = 7,
+            ClearLos = 8,
+            Dangerous = 9,
+        };
+        internal enum AnimationImpulse : short
+        
+        {
+            None = 0,
+            Shakefist = 1,
+            Cheer = 2,
+            SurpriseFront = 3,
+            SurpriseBack = 4,
+            Taunt = 5,
+            Brace = 6,
+            Point = 7,
+            Hold = 8,
+            Wave = 9,
+            Advance = 10,
+            Fallback = 11,
+        };
+        internal enum OverlapPriority : short
+        
+        {
+            None = 0,
+            Recall = 1,
+            Idle = 2,
+            Comment = 3,
+            IdleResponse = 4,
+            Postcombat = 5,
+            Combat = 6,
+            Status = 7,
+            Respond = 8,
+            Warn = 9,
+            Act = 10,
+            React = 11,
+            Involuntary = 12,
+            Scream = 13,
+            Scripted = 14,
+            Death = 15,
+        };
+        internal enum SpeakerEmotion : short
+        
+        {
+            None = 0,
+            Asleep = 1,
+            Amorous = 2,
+            Happy = 3,
+            Inquisitive = 4,
+            Repulsed = 5,
+            Disappointed = 6,
+            Shocked = 7,
+            Scared = 8,
+            Arrogant = 9,
+            Annoyed = 10,
+            Angry = 11,
+            Pensive = 12,
+            Pain = 13,
+        };
+        internal enum ListenerEmotion : short
+        
+        {
+            None = 0,
+            Asleep = 1,
+            Amorous = 2,
+            Happy = 3,
+            Inquisitive = 4,
+            Repulsed = 5,
+            Disappointed = 6,
+            Shocked = 7,
+            Scared = 8,
+            Arrogant = 9,
+            Annoyed = 10,
+            Angry = 11,
+            Pensive = 12,
+            Pain = 13,
+        };
+    };
+}

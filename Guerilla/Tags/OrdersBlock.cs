@@ -53,13 +53,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var data = new byte[blamPointer.count];
+            if(blamPointer.count > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    data = binaryReader.ReadBytes(blamPointer.count);
                 }
             }
             return data;
@@ -68,10 +68,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(ZoneSetBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ZoneSetBlock[blamPointer.Count];
+            var array = new ZoneSetBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new ZoneSetBlock(binaryReader);
@@ -83,10 +83,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(SecondaryZoneSetBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SecondaryZoneSetBlock[blamPointer.Count];
+            var array = new SecondaryZoneSetBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new SecondaryZoneSetBlock(binaryReader);
@@ -98,10 +98,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(SecondarySetTriggerBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SecondarySetTriggerBlock[blamPointer.Count];
+            var array = new SecondarySetTriggerBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new SecondarySetTriggerBlock(binaryReader);
@@ -113,10 +113,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(SpecialMovementBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SpecialMovementBlock[blamPointer.Count];
+            var array = new SpecialMovementBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new SpecialMovementBlock(binaryReader);
@@ -128,10 +128,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(OrderEndingBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new OrderEndingBlock[blamPointer.Count];
+            var array = new OrderEndingBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new OrderEndingBlock(binaryReader);

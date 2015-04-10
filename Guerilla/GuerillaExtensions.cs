@@ -95,7 +95,7 @@ namespace Moonfish.Guerilla
             // Read the tag_block_definition struct from the stream.
             T definition = new T();
 
-            definition.Read( Guerilla.h2LangLib, reader );
+            definition.Read(reader );
             return definition;
         }
 

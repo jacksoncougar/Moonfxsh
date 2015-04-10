@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -27,28 +28,53 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector2 registrationPoint;
         internal  BitmapGroupSpriteBlockBase(BinaryReader binaryReader)
         {
-            this.bitmapIndex = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.left = binaryReader.ReadSingle();
-            this.right = binaryReader.ReadSingle();
-            this.top = binaryReader.ReadSingle();
-            this.bottom = binaryReader.ReadSingle();
-            this.registrationPoint = binaryReader.ReadVector2();
+            bitmapIndex = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(4);
+            left = binaryReader.ReadSingle();
+            right = binaryReader.ReadSingle();
+            top = binaryReader.ReadSingle();
+            bottom = binaryReader.ReadSingle();
+            registrationPoint = binaryReader.ReadVector2();
         }
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var data = new byte[blamPointer.count];
+            if(blamPointer.count > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    data = binaryReader.ReadBytes(blamPointer.count);
                 }
             }
             return data;
+        }
+        internal  virtual void WriteData(System.IO.BinaryWriter binaryWriter, System.Byte[] data, ref Int64 nextAddress)
+        {
+            using (binaryWriter.BaseStream.Pin())
+            {
+                binaryWriter.BaseStream.Position = nextAddress;
+                binaryWriter.BaseStream.Pad(8);
+                binaryWriter.Write(data);
+                binaryWriter.BaseStream.Pad(4);
+                nextAddress = binaryWriter.BaseStream.Position;
+            }
+        }
+        public void Write(BinaryWriter binaryWriter)
+        {
+            using(binaryWriter.BaseStream.Pin())
+            {
+                binaryWriter.Write(bitmapIndex);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write(left);
+                binaryWriter.Write(right);
+                binaryWriter.Write(top);
+                binaryWriter.Write(bottom);
+                binaryWriter.Write(registrationPoint);
+            }
         }
     };
 }

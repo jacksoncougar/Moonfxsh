@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -24,22 +25,22 @@ namespace Moonfish.Guerilla.Tags
         internal BitmapGroupSpriteBlock[] sprites;
         internal  BitmapGroupSequenceBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadString32();
-            this.firstBitmapIndex = binaryReader.ReadInt16();
-            this.bitmapCount = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(16);
-            this.sprites = ReadBitmapGroupSpriteBlockArray(binaryReader);
+            name = binaryReader.ReadString32();
+            firstBitmapIndex = binaryReader.ReadInt16();
+            bitmapCount = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(16);
+            ReadBitmapGroupSpriteBlockArray(binaryReader);
         }
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var data = new byte[blamPointer.count];
+            if(blamPointer.count > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    data = binaryReader.ReadBytes(blamPointer.count);
                 }
             }
             return data;
@@ -48,16 +49,42 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(BitmapGroupSpriteBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new BitmapGroupSpriteBlock[blamPointer.Count];
+            var array = new BitmapGroupSpriteBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new BitmapGroupSpriteBlock(binaryReader);
                 }
             }
             return array;
+        }
+        internal  virtual void WriteData(System.IO.BinaryWriter binaryWriter, System.Byte[] data, ref Int64 nextAddress)
+        {
+            using (binaryWriter.BaseStream.Pin())
+            {
+                binaryWriter.BaseStream.Position = nextAddress;
+                binaryWriter.BaseStream.Pad(8);
+                binaryWriter.Write(data);
+                binaryWriter.BaseStream.Pad(4);
+                nextAddress = binaryWriter.BaseStream.Position;
+            }
+        }
+        internal  virtual void WriteBitmapGroupSpriteBlockArray(BinaryWriter binaryWriter)
+        {
+            
+        }
+        public void Write(BinaryWriter binaryWriter)
+        {
+            using(binaryWriter.BaseStream.Pin())
+            {
+                binaryWriter.Write(name);
+                binaryWriter.Write(firstBitmapIndex);
+                binaryWriter.Write(bitmapCount);
+                binaryWriter.Write(invalidName_, 0, 16);
+                WriteBitmapGroupSpriteBlockArray(binaryWriter);
+            }
         }
     };
 }

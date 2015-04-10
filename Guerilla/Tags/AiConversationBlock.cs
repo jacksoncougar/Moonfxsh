@@ -4,14 +4,16 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class AiConversationBlock : AiConversationBlockBase
+    public partial class AiConversationBlock : AiConversationBlockBase
     {
-        public  AiConversationBlock(BinaryReader binaryReader): base(binaryReader)
+        public AiConversationBlock(BinaryReader binaryReader)
+            : base(binaryReader)
         {
-            
+
         }
     };
     [LayoutAttribute(Size = 104)]
@@ -32,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
         internal AiConversationParticipantBlock[] participants;
         internal AiConversationLineBlock[] lines;
         internal GNullBlock[] gNullBlock;
-        internal  AiConversationBlockBase(BinaryReader binaryReader)
+        internal AiConversationBlockBase(BinaryReader binaryReader)
         {
             this.name = binaryReader.ReadString32();
             this.flags = (Flags)binaryReader.ReadInt16();
@@ -44,28 +46,29 @@ namespace Moonfish.Guerilla.Tags
             this.lines = ReadAiConversationLineBlockArray(binaryReader);
             this.gNullBlock = ReadGNullBlockArray(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+
+        internal virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var data = new byte[blamPointer.count];
+            if (blamPointer.count > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    data = binaryReader.ReadBytes(blamPointer.count);
                 }
             }
             return data;
         }
-        internal  virtual AiConversationParticipantBlock[] ReadAiConversationParticipantBlockArray(BinaryReader binaryReader)
+        internal virtual AiConversationParticipantBlock[] ReadAiConversationParticipantBlockArray(BinaryReader binaryReader)
         {
             var elementSize = Deserializer.SizeOf(typeof(AiConversationParticipantBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AiConversationParticipantBlock[blamPointer.Count];
+            var array = new AiConversationParticipantBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new AiConversationParticipantBlock(binaryReader);
@@ -73,14 +76,49 @@ namespace Moonfish.Guerilla.Tags
             }
             return array;
         }
-        internal  virtual AiConversationLineBlock[] ReadAiConversationLineBlockArray(BinaryReader binaryReader)
+
+        public void Write(BinaryWriter binaryWriter, int nextAddress)
+        {
+            using (binaryWriter.BaseStream.Pin()) { 
+                binaryWriter.Write(name);
+                binaryWriter.Write((short)flags);
+                binaryWriter.Write(invalidName_);
+                binaryWriter.Write(triggerDistanceWorldUnits);
+                binaryWriter.Write(runToPlayerDistWorldUnits);
+                binaryWriter.Write(invalidName_0);
+            }
+
+        }
+
+        internal virtual AiConversationParticipantBlock[] WriteAiConversationParticipantBlockArray(BinaryWriter binaryWriter, int nextAddress)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(AiConversationParticipantBlock));
+            var count = participants.Length;
+            var blamPointer = new BlamPointer(count, nextAddress, elementSize);
+
+            binaryWriter.Write(count);
+            binaryWriter.Write(nextAddress);
+
+            var array = new AiConversationParticipantBlock[blamPointer.count];
+            using (binaryWriter.BaseStream.Pin())
+            {
+                for (var i = 0; i < blamPointer.count; ++i)
+                {
+                    binaryWriter.BaseStream.Position = blamPointer[i];
+                    //participants[i].Write(binaryWriter);
+                }
+            }
+            return array;
+        }
+
+        internal virtual AiConversationLineBlock[] ReadAiConversationLineBlockArray(BinaryReader binaryReader)
         {
             var elementSize = Deserializer.SizeOf(typeof(AiConversationLineBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AiConversationLineBlock[blamPointer.Count];
+            var array = new AiConversationLineBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new AiConversationLineBlock(binaryReader);
@@ -88,14 +126,14 @@ namespace Moonfish.Guerilla.Tags
             }
             return array;
         }
-        internal  virtual GNullBlock[] ReadGNullBlockArray(BinaryReader binaryReader)
+        internal virtual GNullBlock[] ReadGNullBlockArray(BinaryReader binaryReader)
         {
             var elementSize = Deserializer.SizeOf(typeof(GNullBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GNullBlock[blamPointer.Count];
+            var array = new GNullBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new GNullBlock(binaryReader);
@@ -105,7 +143,6 @@ namespace Moonfish.Guerilla.Tags
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             StopIfDeathThisConversationWillBeAbortedIfAnyParticipantDies = 1,
             StopIfDamagedAnActorWillAbortThisConversationIfTheyAreDamaged = 2,

@@ -40,7 +40,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -160,6 +160,7 @@
     <Compile Include="Guerilla\GuerillaToCs.cs" />
     <Compile Include="Guerilla\GuerillaToEnt.cs" />
     <Compile Include="Guerilla\MethodInfo.cs" />
+    <Compile Include="Guerilla\ParameterInfo.cs" />
     <Compile Include="Guerilla\Preprocess\Bitmap.cs" />
     <Compile Include="Guerilla\Preprocess\ModelVariantRegionBlockBase.cs" />
     <Compile Include="Guerilla\Preprocess\ScenarioBlock.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="Guerilla\Preprocess\ShaderPassPostprocessImplementationNewBlock.cs" />
     <Compile Include="Guerilla\Preprocess\ShaderPostprocessBitmapNewBlockBase.cs" />
     <Compile Include="Guerilla\Preprocess\TagBlockIndexStructBlock.cs" />
+    <Compile Include="Guerilla\StaticReflection.cs" />
     <Compile Include="Guerilla\TagGroups.cs" />
     <Compile Include="Guerilla\Tags\ActorStartingLocationsBlock.cs">
       <SubType>Code</SubType>
@@ -2093,6 +2095,7 @@
     <Compile Include="Guerilla\Tags\ZoneSetBlock.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Guerilla\GuerillaTagGroup.cs" />
     <Compile Include="Guerilla\Validator.cs" />
     <Compile Include="Guerilla\VirtualMemoryStream.cs" />
     <Compile Include="IResource.cs" />
@@ -2112,6 +2115,7 @@
     <Compile Include="Tags\Attributes.cs" />
     <Compile Include="Tags\BinaryReaderExtensions.cs" />
     <Compile Include="Tags\Bitmap.Code.cs" />
+    <Compile Include="Tags\BlamPointer.cs" />
     <Compile Include="Tags\Deserializer.cs" />
     <Compile Include="Tags\GlobalGeometryPartBlockNew.Code.cs" />
     <Compile Include="Tags\HierarchyModel.Code.cs" />
@@ -2186,6 +2190,7 @@
     <Folder Include="bin\Release\" />
     <Folder Include="bin\x86\Release\" />
     <Folder Include="Forms\" />
+    <Folder Include="Guerilla\Debug\" />
     <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

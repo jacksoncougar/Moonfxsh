@@ -42,13 +42,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var data = new byte[blamPointer.count];
+            if(blamPointer.count > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    data = binaryReader.ReadBytes(blamPointer.count);
                 }
             }
             return data;
@@ -57,10 +57,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(AnimationGraphNodeBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationGraphNodeBlock[blamPointer.Count];
+            var array = new AnimationGraphNodeBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new AnimationGraphNodeBlock(binaryReader);
@@ -72,10 +72,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(AnimationGraphSoundReferenceBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationGraphSoundReferenceBlock[blamPointer.Count];
+            var array = new AnimationGraphSoundReferenceBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new AnimationGraphSoundReferenceBlock(binaryReader);
@@ -87,10 +87,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(AnimationGraphEffectReferenceBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationGraphEffectReferenceBlock[blamPointer.Count];
+            var array = new AnimationGraphEffectReferenceBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new AnimationGraphEffectReferenceBlock(binaryReader);
@@ -102,10 +102,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(AnimationBlendScreenBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationBlendScreenBlock[blamPointer.Count];
+            var array = new AnimationBlendScreenBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new AnimationBlendScreenBlock(binaryReader);
@@ -117,10 +117,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(AnimationPoolBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationPoolBlock[blamPointer.Count];
+            var array = new AnimationPoolBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new AnimationPoolBlock(binaryReader);

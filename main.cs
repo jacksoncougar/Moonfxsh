@@ -3,7 +3,9 @@ using System;
 using System.Linq;
 using System.Windows.Forms;
 using Moonfish.Compiler;
+using System.ComponentModel;
 using Moonfish.Guerilla;
+using Moonfish.Tags;
 
 namespace Moonfish
 {
@@ -22,12 +24,11 @@ namespace Moonfish
             //}
             ////Validator v = new Validator();
             //return;
-
+            
             GuerillaCs guerilla = new GuerillaCs(Local.GuerillaPath);
-            foreach (var tag in Guerilla.Guerilla.h2Tags)
+            foreach (var tag in Guerilla.Guerilla.h2Tags.Where(x=>x.Class == (TagClass)"bitm"))
             {
-                guerilla.DumpTagLayout(@"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags",
-                    (string)tag.Class, tag.Name);
+                guerilla.DumpTagLayout(tag, @"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags");
                 Application.DoEvents();
             }
 

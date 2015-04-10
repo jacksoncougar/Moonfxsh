@@ -38,13 +38,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var data = new byte[blamPointer.count];
+            if(blamPointer.count > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    data = binaryReader.ReadBytes(blamPointer.count);
                 }
             }
             return data;
@@ -53,10 +53,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(HudDashlightsBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new HudDashlightsBlock[blamPointer.Count];
+            var array = new HudDashlightsBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new HudDashlightsBlock(binaryReader);
@@ -68,10 +68,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(HudWaypointArrowBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new HudWaypointArrowBlock[blamPointer.Count];
+            var array = new HudWaypointArrowBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new HudWaypointArrowBlock(binaryReader);
@@ -83,10 +83,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(HudWaypointBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new HudWaypointBlock[blamPointer.Count];
+            var array = new HudWaypointBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new HudWaypointBlock(binaryReader);
@@ -98,10 +98,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(NewHudSoundBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new NewHudSoundBlock[blamPointer.Count];
+            var array = new NewHudSoundBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new NewHudSoundBlock(binaryReader);
@@ -113,10 +113,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(PlayerTrainingEntryDataBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlayerTrainingEntryDataBlock[blamPointer.Count];
+            var array = new PlayerTrainingEntryDataBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new PlayerTrainingEntryDataBlock(binaryReader);

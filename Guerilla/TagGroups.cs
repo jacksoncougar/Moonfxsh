@@ -83,7 +83,7 @@ namespace Moonfish.Guerilla
 
     public interface IReadDefinition
     {
-        void Read( IntPtr h2LangLib, BinaryReader reader );
+        void Read(BinaryReader reader);
     }
 
     public class tag_field : IReadDefinition
@@ -98,18 +98,18 @@ namespace Moonfish.Guerilla
         public string Name { get; set; }
         public dynamic Definition { get; private set; }
 
-        public void Read( IntPtr h2LangLib, BinaryReader reader )
+        public void Read(BinaryReader reader)
         {
             // Read all the fields from the stream.
-            this.type = ( field_type )reader.ReadInt16();
-            this.padding = reader.ReadInt16();
-            this.name_address = reader.ReadInt32();
-            this.definition = reader.ReadInt32();
-            this.group_tag = reader.ReadInt32();
+            type = ( field_type )reader.ReadInt16();
+            padding = reader.ReadInt16();
+            name_address = reader.ReadInt32();
+            definition = reader.ReadInt32();
+            group_tag = reader.ReadInt32();
 
             // Read Properties
-            this.Name = Guerilla.ReadString( reader, this.name_address );
-            this.Definition = ReadDefinition( reader );
+            Name = Guerilla.ReadString( reader, name_address );
+            Definition = ReadDefinition( reader );
         }
 
         private dynamic ReadDefinition( BinaryReader reader )
@@ -150,12 +150,12 @@ namespace Moonfish.Guerilla
 
         public TagClass Class { get { return new TagClass( group_tag ); } }
 
-        public void Read( IntPtr h2LangLib, BinaryReader reader )
+        public void Read(BinaryReader reader)
         {
             // Read all the fields from the stream.
-            this.flags = reader.ReadInt32();
-            this.group_tag = reader.ReadInt32();
-            this.group_tags_address = reader.ReadInt32();
+            flags = reader.ReadInt32();
+            group_tag = reader.ReadInt32();
+            group_tags_address = reader.ReadInt32();
         }
     }
 
@@ -173,28 +173,28 @@ namespace Moonfish.Guerilla
         /// <summary>
         /// Gets the name of the data definition.
         /// </summary>
-        public string Name { get { return this.name; } }
+        public string Name { get { return name; } }
 
         private string maximum_size_string;
         /// <summary>
         /// Gets the string representation of the maximum size of the tag data definition.
         /// </summary>
-        public string MaximumSize { get { return this.maximum_size_string; } }
+        public string MaximumSize { get { return maximum_size_string; } }
 
-        public void Read( IntPtr h2LangLib, BinaryReader reader )
+        public void Read(BinaryReader reader)
         {
             // Read all the fields from the stream.
-            this.nameAddress = reader.ReadInt32();
-            this.flags = reader.ReadInt32();
-            this.alignmentBit = reader.ReadInt32();
-            this.maximumSize = reader.ReadInt32();
-            this.maximumSizeStringAddress = reader.ReadInt32();
-            this.byteswapFunction = reader.ReadInt32();
-            this.copyFunction = reader.ReadInt32();
+            nameAddress = reader.ReadInt32();
+            flags = reader.ReadInt32();
+            alignmentBit = reader.ReadInt32();
+            maximumSize = reader.ReadInt32();
+            maximumSizeStringAddress = reader.ReadInt32();
+            byteswapFunction = reader.ReadInt32();
+            copyFunction = reader.ReadInt32();
 
             // Read the strings.
-            this.name = Guerilla.ReadString( reader, this.nameAddress );
-            this.maximum_size_string = Guerilla.ReadString( reader, this.maximumSizeStringAddress );
+            name = Guerilla.ReadString( reader, nameAddress );
+            maximum_size_string = Guerilla.ReadString( reader, maximumSizeStringAddress );
         }
 
         public int Alignment { get { return Guerilla.GetAlignmentValue( alignmentBit ); } }
@@ -205,11 +205,11 @@ namespace Moonfish.Guerilla
         public int get_block_proc;
         public int is_valid_source_block_proc;
 
-        public void Read( IntPtr h2LangLib, BinaryReader reader )
+        public void Read(BinaryReader reader)
         {
             // Read the fields from the stream.
-            this.get_block_proc = reader.ReadInt32();
-            this.is_valid_source_block_proc = reader.ReadInt32();
+            get_block_proc = reader.ReadInt32();
+            is_valid_source_block_proc = reader.ReadInt32();
         }
     }
 
@@ -221,12 +221,12 @@ namespace Moonfish.Guerilla
 
         public List<string> Options { get; set; }
 
-        public void Read( IntPtr h2LangLib, BinaryReader reader )
+        public void Read(BinaryReader reader)
         {
             // Read all the fields from the stream.
-            this.option_count = reader.ReadInt32();
-            this.options_address = reader.ReadInt32();
-            this.flags = reader.ReadInt32();
+            option_count = reader.ReadInt32();
+            options_address = reader.ReadInt32();
+            flags = reader.ReadInt32();
 
             Options = new List<string>( option_count );
             for ( var i = 0; i < option_count; ++i )
@@ -252,7 +252,7 @@ namespace Moonfish.Guerilla
         public string displayName;
         public string name;
 
-        public string Name { get { return this.name; } }
+        public string Name { get { return name; } }
         public TagClass Class { get { return new TagClass( group_tag ); } }
         public dynamic Definition { get; set; }
 
@@ -260,19 +260,19 @@ namespace Moonfish.Guerilla
             : this()
         {
             // Read all the fields from the stream.
-            this.name_address = reader.ReadInt32();
-            this.group_tag = reader.ReadInt32();
-            this.display_name_address = reader.ReadInt32();
-            this.block_definition_address = reader.ReadInt32();
+            name_address = reader.ReadInt32();
+            group_tag = reader.ReadInt32();
+            display_name_address = reader.ReadInt32();
+            block_definition_address = reader.ReadInt32();
 
-            this.displayName = Guerilla.ReadString( reader, this.display_name_address );
-            this.name = Guerilla.ReadString( reader, this.name_address );
+            displayName = Guerilla.ReadString( reader, display_name_address );
+            name = Guerilla.ReadString( reader, name_address );
 
             reader.BaseStream.Seek( block_definition_address, SeekOrigin.Begin );
             Definition = reader.ReadFieldDefinition<TagBlockDefinition>();
         }
 
-        public void Read( IntPtr h2LangLib, BinaryReader reader )
+        public void Read(BinaryReader reader)
         {
             this = new tag_struct_definition( reader );
         }
@@ -295,13 +295,13 @@ namespace Moonfish.Guerilla
         public int dispose_element_proc;
 
         private string display_name;
-        public string DisplayName { get { return this.display_name; } }
+        public string DisplayName { get { return display_name; } }
 
         private string name;
-        public string Name { get { return this.name; } }
+        public string Name { get { return name; } }
 
         private string maximum_element_count_str;
-        public string MaximumElementCount { get { return this.maximum_element_count_str; } }
+        public string MaximumElementCount { get { return maximum_element_count_str; } }
 
         public List<tag_field_set> FieldSets { get; set; }
         public tag_field_set LatestFieldSet { get; set; }
@@ -310,24 +310,24 @@ namespace Moonfish.Guerilla
             : this()
         {
             // Read all the fields from the stream.
-            this.display_name_address = reader.ReadInt32();
-            this.name_address = reader.ReadInt32();
-            this.flags = reader.ReadInt32();
-            this.maximum_element_count = reader.ReadInt32();
-            this.maximum_element_count_string_address = reader.ReadInt32();
-            this.field_sets_address = reader.ReadInt32();
-            this.field_set_count = reader.ReadInt32();
-            this.field_set_latest_address = reader.ReadInt32();
+            display_name_address = reader.ReadInt32();
+            name_address = reader.ReadInt32();
+            flags = reader.ReadInt32();
+            maximum_element_count = reader.ReadInt32();
+            maximum_element_count_string_address = reader.ReadInt32();
+            field_sets_address = reader.ReadInt32();
+            field_set_count = reader.ReadInt32();
+            field_set_latest_address = reader.ReadInt32();
             reader.BaseStream.Position += 4;
-            this.postprocess_proc = reader.ReadInt32();
-            this.format_proc = reader.ReadInt32();
-            this.generate_default_proc = reader.ReadInt32();
-            this.dispose_element_proc = reader.ReadInt32();
+            postprocess_proc = reader.ReadInt32();
+            format_proc = reader.ReadInt32();
+            generate_default_proc = reader.ReadInt32();
+            dispose_element_proc = reader.ReadInt32();
 
             // Read the display name and name strings.
-            this.display_name = Guerilla.ReadString( reader, this.display_name_address );
-            this.name = Guerilla.ReadString( reader, this.name_address );
-            this.maximum_element_count_str = Guerilla.ReadString( reader, this.maximum_element_count_string_address );
+            display_name = Guerilla.ReadString( reader, display_name_address );
+            name = Guerilla.ReadString( reader, name_address );
+            maximum_element_count_str = Guerilla.ReadString( reader, maximum_element_count_string_address );
             if ( name == "sound_block" )
             {
                 field_sets_address = 0x957870;
@@ -347,7 +347,7 @@ namespace Moonfish.Guerilla
                 fieldSet.size_string_address = 0x00795330;
                 fieldSet.size_string = "sizeof(sound_definition)";
 
-                var definitionName = this.name;
+                var definitionName = name;
                 fieldSet.ReadFields( reader, Guerilla.PostprocessFunctions.Where( x => x.Key == definitionName ).Select( x => x.Value ).FirstOrDefault() );
                 LatestFieldSet = fieldSet;
                 FieldSets.Add( fieldSet );
@@ -355,7 +355,7 @@ namespace Moonfish.Guerilla
             else
             {
                 FieldSets = new List<tag_field_set>( field_set_count );
-                var definitionName = this.name;
+                var definitionName = name;
                 var address = field_sets_address;
                 for ( var i = 0; i < field_set_count; ++i )
                 {
@@ -364,24 +364,24 @@ namespace Moonfish.Guerilla
                     FieldSets.Add( fieldSet );
                     address += tag_field_set.Size;
                 }
-                if ( this.name == "sound_promotion_parameters_struct_block" )
+                if ( name == "sound_promotion_parameters_struct_block" )
                 {
                     LatestFieldSet = FieldSets[ 0 ];
                 }
-                else if ( this.name == "animation_pool_block" )
+                else if ( name == "animation_pool_block" )
                 {
                     LatestFieldSet = FieldSets[ 4 ];
                 }
                 else
                 {
-                    reader.BaseStream.Seek( this.field_set_latest_address, SeekOrigin.Begin );
+                    reader.BaseStream.Seek( field_set_latest_address, SeekOrigin.Begin );
                     var latestFieldSet = new tag_field_set( reader, Guerilla.PostprocessFunctions.Where( x => x.Key == definitionName ).Select( x => x.Value ).FirstOrDefault() );
                     LatestFieldSet = latestFieldSet;
                 }
             }
         }
 
-        public void Read( IntPtr h2LangLib, BinaryReader reader )
+        public void Read(BinaryReader reader)
         {
             this = new TagBlockDefinition( reader );
         }
@@ -398,13 +398,13 @@ namespace Moonfish.Guerilla
         public s_tag_field_set_version( BinaryReader reader )
         {
             // Read all the fields from the stream.
-            this.fields_address = reader.ReadInt32();
-            this.index = reader.ReadInt32();
-            this.upgrade_proc = reader.ReadInt32();
+            fields_address = reader.ReadInt32();
+            index = reader.ReadInt32();
+            upgrade_proc = reader.ReadInt32();
             reader.BaseStream.Position += 4;
-            this.size_of = reader.ReadInt32();
+            size_of = reader.ReadInt32();
         }
-        public void Read( IntPtr h2LangLib, BinaryReader reader )
+        public void Read(BinaryReader reader)
         {
             this = new s_tag_field_set_version( reader );
         }
@@ -427,22 +427,22 @@ namespace Moonfish.Guerilla
         /// <summary>
         /// Gets the sizeof string for this tag_field_set.
         /// </summary>
-        public string SizeString { get { return this.size_string; } }
+        public string SizeString { get { return size_string; } }
         public int Alignment { get { return Guerilla.GetAlignmentValue( alignment_bit ); } }
         public List<tag_field> Fields;
 
         public tag_field_set( BinaryReader reader, Action<BinaryReader, IList<tag_field>> postprocessFunction = null )
             : this()
         {
-            this.version = reader.ReadFieldDefinition<s_tag_field_set_version>();
-            this.size = reader.ReadInt32();
-            this.alignment_bit = reader.ReadInt32();
-            this.parent_version_index = reader.ReadInt32();
-            this.fields_address = reader.ReadInt32();
-            this.size_string_address = reader.ReadInt32();
+            version = reader.ReadFieldDefinition<s_tag_field_set_version>();
+            size = reader.ReadInt32();
+            alignment_bit = reader.ReadInt32();
+            parent_version_index = reader.ReadInt32();
+            fields_address = reader.ReadInt32();
+            size_string_address = reader.ReadInt32();
 
             // Read the size_of string.
-            this.size_string = Guerilla.ReadString( reader, this.size_string_address );
+            size_string = Guerilla.ReadString( reader, size_string_address );
 
             ReadFields( reader, postprocessFunction );
         }
@@ -456,89 +456,9 @@ namespace Moonfish.Guerilla
             if ( postprocessFunction != null ) postprocessFunction( reader, Fields );
         }
 
-        public void Read( IntPtr h2LangLib, BinaryReader reader )
+        public void Read(BinaryReader reader)
         {
             this = new tag_field_set( reader );
-        }
-    }
-
-
-    public struct tag_group : IReadDefinition
-    {
-        public int name_address;
-        public int flags;
-        public int group_tag;
-        public int parent_group_tag;
-        public short version;
-        public byte initialized;
-        //public byte b1;
-        public int postprocess_proc;
-        public int save_postprocess_proc;
-        public int postprocess_for_sync_proc;
-        //public int i1;
-        public int definition_address;
-        public int[] child_group_tags;
-        public short childs_count;
-        //public short s1;
-        public int default_tag_path_address;
-
-        private string text;
-        public string Name { get { return this.text; } }
-        public string DefaultPath { get; set; }
-        public TagClass Class { get { return new TagClass( this.group_tag ); } }
-        public TagClass ParentClass { get { return new TagClass( this.parent_group_tag ); } }
-
-        public dynamic Definition { get; set; }
-
-        public tag_group( BinaryReader reader )
-            : this()
-        {
-            var stream = reader.BaseStream;
-
-            this.name_address = reader.ReadInt32();
-            this.flags = reader.ReadInt32();
-            this.group_tag = reader.ReadInt32();
-            this.parent_group_tag = reader.ReadInt32();
-            this.version = reader.ReadInt16();
-            this.initialized = reader.ReadByte();
-
-            stream.Seek( 1, SeekOrigin.Current );
-
-            this.postprocess_proc = reader.ReadInt32();
-            this.save_postprocess_proc = reader.ReadInt32();
-            this.postprocess_for_sync_proc = reader.ReadInt32();
-
-            stream.Seek( 4, SeekOrigin.Current );
-
-            this.definition_address = reader.ReadInt32();
-            this.child_group_tags = new int[ 16 ];
-            for ( int i = 0; i < 16; i++ )
-                this.child_group_tags[ i ] = reader.ReadInt32();
-            this.childs_count = reader.ReadInt16();
-
-            stream.Seek( 2, SeekOrigin.Current );
-
-            this.default_tag_path_address = reader.ReadInt32();
-
-
-            this.text = Guerilla.ReadString( reader, this.name_address );
-
-            DefaultPath = Guerilla.ReadString( reader, this.default_tag_path_address );
-            stream.Seek( this.definition_address, SeekOrigin.Begin );
-            if ( Class.ToString() == "jmad" )
-            {
-
-                Definition = reader.ReadFieldDefinition<TagBlockDefinition>();
-            }
-            else
-            {
-                Definition = reader.ReadFieldDefinition<TagBlockDefinition>();
-            }
-        }
-
-        public void Read( IntPtr h2LangLib, BinaryReader reader )
-        {
-            this = new tag_group( reader );
         }
     }
 }

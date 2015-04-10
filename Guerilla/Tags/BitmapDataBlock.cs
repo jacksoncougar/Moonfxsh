@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -48,40 +49,77 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  BitmapDataBlockBase(BinaryReader binaryReader)
         {
-            this.signature = binaryReader.ReadTagClass();
-            this.widthPixels = binaryReader.ReadInt16();
-            this.heightPixels = binaryReader.ReadInt16();
-            this.depthPixels = binaryReader.ReadByte();
-            this.moreFlags = (MoreFlags)binaryReader.ReadByte();
-            this.type = (TypeDeterminesBitmapGeometry)binaryReader.ReadInt16();
-            this.format = (FormatDeterminesHowPixelsAreRepresentedInternally)binaryReader.ReadInt16();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.registrationPoint = binaryReader.ReadPoint();
-            this.mipmapCount = binaryReader.ReadInt16();
-            this.lowDetailMipmapCount = binaryReader.ReadInt16();
-            this.pixelsOffset = binaryReader.ReadInt32();
-            this.lOD1TextureDataOffset = binaryReader.ReadInt32();
-            this.lOD2TextureDataOffset = binaryReader.ReadInt32();
-            this.lOD3TextureDataOffset = binaryReader.ReadInt32();
-            this.invalidName_ = binaryReader.ReadBytes(12);
-            this.lOD1TextureDataLength = binaryReader.ReadInt32();
-            this.lOD2TextureDataLength = binaryReader.ReadInt32();
-            this.lOD3TextureDataLength = binaryReader.ReadInt32();
-            this.invalidName_0 = binaryReader.ReadBytes(52);
+            signature = binaryReader.ReadTagClass();
+            widthPixels = binaryReader.ReadInt16();
+            heightPixels = binaryReader.ReadInt16();
+            depthPixels = binaryReader.ReadByte();
+            moreFlags = (MoreFlags)binaryReader.ReadByte();
+            type = (TypeDeterminesBitmapGeometry)binaryReader.ReadInt16();
+            format = (FormatDeterminesHowPixelsAreRepresentedInternally)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            registrationPoint = binaryReader.ReadPoint();
+            mipmapCount = binaryReader.ReadInt16();
+            lowDetailMipmapCount = binaryReader.ReadInt16();
+            pixelsOffset = binaryReader.ReadInt32();
+            lOD1TextureDataOffset = binaryReader.ReadInt32();
+            lOD2TextureDataOffset = binaryReader.ReadInt32();
+            lOD3TextureDataOffset = binaryReader.ReadInt32();
+            invalidName_ = binaryReader.ReadBytes(12);
+            lOD1TextureDataLength = binaryReader.ReadInt32();
+            lOD2TextureDataLength = binaryReader.ReadInt32();
+            lOD3TextureDataLength = binaryReader.ReadInt32();
+            invalidName_0 = binaryReader.ReadBytes(52);
         }
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var data = new byte[blamPointer.count];
+            if(blamPointer.count > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    data = binaryReader.ReadBytes(blamPointer.count);
                 }
             }
             return data;
+        }
+        internal  virtual void WriteData(System.IO.BinaryWriter binaryWriter, System.Byte[] data, ref Int64 nextAddress)
+        {
+            using (binaryWriter.BaseStream.Pin())
+            {
+                binaryWriter.BaseStream.Position = nextAddress;
+                binaryWriter.BaseStream.Pad(8);
+                binaryWriter.Write(data);
+                binaryWriter.BaseStream.Pad(4);
+                nextAddress = binaryWriter.BaseStream.Position;
+            }
+        }
+        public void Write(BinaryWriter binaryWriter)
+        {
+            using(binaryWriter.BaseStream.Pin())
+            {
+                binaryWriter.Write(signature);
+                binaryWriter.Write(widthPixels);
+                binaryWriter.Write(heightPixels);
+                binaryWriter.Write(depthPixels);
+                binaryWriter.Write((Byte)moreFlags);
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write((Int16)format);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(registrationPoint);
+                binaryWriter.Write(mipmapCount);
+                binaryWriter.Write(lowDetailMipmapCount);
+                binaryWriter.Write(pixelsOffset);
+                binaryWriter.Write(lOD1TextureDataOffset);
+                binaryWriter.Write(lOD2TextureDataOffset);
+                binaryWriter.Write(lOD3TextureDataOffset);
+                binaryWriter.Write(invalidName_, 0, 12);
+                binaryWriter.Write(lOD1TextureDataLength);
+                binaryWriter.Write(lOD2TextureDataLength);
+                binaryWriter.Write(lOD3TextureDataLength);
+                binaryWriter.Write(invalidName_0, 0, 52);
+            }
         }
         [FlagsAttribute]
         internal enum MoreFlags : byte

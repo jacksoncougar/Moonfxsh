@@ -43,14 +43,14 @@ namespace Moonfish.Guerilla
 
         #endregion
 
-        public readonly static IntPtr h2LangLib;
-        public static List<tag_group> h2Tags;
+        public readonly static IntPtr H2LangLib;
+        public static List<GuerillaTagGroup> h2Tags;
         public readonly static Dictionary<string, Action<BinaryReader, IList<tag_field>>> PostprocessFunctions;
 
         static Guerilla( )
         {
-            h2Tags = new List<tag_group>();
-            Guerilla.h2LangLib = LoadLibrary( H2LanguageLibrary );
+            h2Tags = new List<GuerillaTagGroup>();
+            H2LangLib = LoadLibrary( H2LanguageLibrary );
             PostprocessFunctions = new Dictionary<string, Action<BinaryReader, IList<tag_field>>>();
             var methods = ( from method in Assembly.GetExecutingAssembly().GetTypes().SelectMany(
                                 x => x.GetMethods( BindingFlags.NonPublic | BindingFlags.Static ) )
@@ -70,22 +70,22 @@ namespace Moonfish.Guerilla
         protected Guerilla( string guerillaExecutablePath )
         {
             // Open the guerilla executable.
-            using ( BinaryReader reader = new BinaryReader( new VirtualMemoryStream( guerillaExecutablePath, Guerilla.BaseAddress ) ) )
+            using ( var reader = new BinaryReader( new VirtualMemoryStream( guerillaExecutablePath, BaseAddress ) ) )
             {
-                Guerilla.h2Tags = new List<tag_group>( Guerilla.NumberOfTagLayouts );
+                h2Tags = new List<GuerillaTagGroup>( NumberOfTagLayouts );
 
                 // Loop through all the tag layouts and extract each one.
-                for ( int i = 0; i < Guerilla.NumberOfTagLayouts; i++ )
+                for ( var i = 0; i < NumberOfTagLayouts; i++ )
                 {
                     // Go to the tag layout table.
-                    reader.BaseStream.Position = Guerilla.TagLayoutTableAddress + ( i * 4 );
+                    reader.BaseStream.Position = TagLayoutTableAddress + ( i * 4 );
 
                     // Read the tag layout pointer.
-                    int layoutAddress = reader.ReadInt32();
+                    var layoutAddress = reader.ReadInt32();
 
                     // Go to the tag layout and read it.
                     reader.BaseStream.Position = layoutAddress;
-                    tag_group tag = new tag_group( reader );
+                    var tag = new GuerillaTagGroup( reader );
                     h2Tags.Add( tag );
                 }
             }
@@ -99,7 +99,7 @@ namespace Moonfish.Guerilla
         public static int CalculateSizeOfFieldSet( IList<tag_field> fields )
         {
             var totalFieldSetSize = 0;
-            for ( int i = 0; i < fields.Count; ++i )
+            for ( var i = 0; i < fields.Count; ++i )
             {
                 var field = fields[ i ];
                 var fieldSize = CalculateSizeOfField( field );
@@ -125,7 +125,7 @@ namespace Moonfish.Guerilla
             {
                 case field_type._field_struct:
                     {
-                        tag_struct_definition struct_definition = ( tag_struct_definition )field.Definition;
+                        var struct_definition = ( tag_struct_definition )field.Definition;
                         TagBlockDefinition blockDefinition = struct_definition.Definition;
 
                         return CalculateSizeOfFieldSet( blockDefinition.LatestFieldSet.Fields );
@@ -257,7 +257,6 @@ namespace Moonfish.Guerilla
             {
                 if ( !provider.IsValidIdentifier( fieldName ) )
                 {
-                    var huh = provider.CreateValidIdentifier( fieldName );
                     fieldName = string.Format( "invalidName_{0}", fieldName );
                 }
             }
@@ -290,9 +289,9 @@ namespace Moonfish.Guerilla
 
         protected static string ToTypeName( string value )
         {
-            TextInfo textInfo = new CultureInfo( "en-US", false ).TextInfo;
+            var textInfo = new CultureInfo( "en-US", false ).TextInfo;
             var indices = new List<int>();
-            for ( int i = 0; i < value.Length; ++i )
+            for ( var i = 0; i < value.Length; ++i )
             {
                 if ( Char.IsUpper( value[ i ] ) ) indices.Add( i );
             }
@@ -300,7 +299,7 @@ namespace Moonfish.Guerilla
             var typeName = new StringBuilder( value.Replace( '_', ' ' ) );
             typeName = typeName.Replace( '-', ' ' );
             typeName = new StringBuilder( textInfo.ToTitleCase( typeName.ToString() ) );
-            Regex r = new Regex( "[^a-zA-Z0-9 -]" );
+            var r = new Regex( "[^a-zA-Z0-9 -]" );
             typeName = new StringBuilder( r.Replace( typeName.ToString(), " " ) );
             indices.ForEach( x => typeName[ x ] = Char.ToUpperInvariant( typeName[ x ] ) );
             typeName = typeName.Replace( " ", "" );
@@ -308,10 +307,10 @@ namespace Moonfish.Guerilla
             return typeName.ToString();
         }
 
-        protected static string ToMemberName( string value )
+        public static string ToMemberName( string value )
         {
             if ( string.Empty == ToTypeName( value ) ) return string.Empty;
-            StringBuilder memberName = new StringBuilder( ToTypeName( value ) );
+            var memberName = new StringBuilder( ToTypeName( value ) );
             var firstChar = char.ToLower( memberName[ 0 ] );
             memberName[ 0 ] = firstChar;
             return memberName.ToString();
@@ -319,14 +318,14 @@ namespace Moonfish.Guerilla
 
         public static string ReadString( BinaryReader reader, int address )
         {
-            string str = "";
+            var str = "";
 
             // Check if address is smaller than the base address of the executable.
             if ( address < BaseAddress )
             {
                 // The string is stored in the h2 language library.
-                StringBuilder sb = new StringBuilder( 0x1000 );
-                LoadString( h2LangLib, ( uint )address, sb, sb.Capacity );
+                var sb = new StringBuilder( 0x1000 );
+                LoadString( H2LangLib, ( uint )address, sb, sb.Capacity );
                 str = sb.ToString();
             }
             else if ( address > BaseAddress && ( address - BaseAddress ) < ( int )reader.BaseStream.Length )

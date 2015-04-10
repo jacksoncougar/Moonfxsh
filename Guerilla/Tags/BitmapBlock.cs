@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -59,38 +60,38 @@ namespace Moonfish.Guerilla.Tags
         internal BitmapDataBlock[] bitmaps;
         internal  BitmapBlockBase(BinaryReader binaryReader)
         {
-            this.type = (Type)binaryReader.ReadInt16();
-            this.format = (Format)binaryReader.ReadInt16();
-            this.usage = (Usage)binaryReader.ReadInt16();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.detailFadeFactor01 = binaryReader.ReadSingle();
-            this.sharpenAmount01 = binaryReader.ReadSingle();
-            this.bumpHeightRepeats = binaryReader.ReadSingle();
-            this.spriteSize = (SpriteSize)binaryReader.ReadInt16();
-            this.eMPTYSTRING = binaryReader.ReadInt16();
-            this.colorPlateWidthPixels = binaryReader.ReadInt16();
-            this.colorPlateHeightPixels = binaryReader.ReadInt16();
-            this.data = binaryReader.ReadBytes(8);
-            this.data0 = binaryReader.ReadBytes(8);
-            this.blurFilterSize010Pixels = binaryReader.ReadSingle();
-            this.alphaBias11 = binaryReader.ReadSingle();
-            this.mipmapCountLevels = binaryReader.ReadInt16();
-            this.spriteUsage = (SpriteUsage)binaryReader.ReadInt16();
-            this.spriteSpacing = binaryReader.ReadInt16();
-            this.forceFormat = (ForceFormat)binaryReader.ReadInt16();
-            this.sequences = ReadBitmapGroupSequenceBlockArray(binaryReader);
-            this.bitmaps = ReadBitmapDataBlockArray(binaryReader);
+            type = (Type)binaryReader.ReadInt16();
+            format = (Format)binaryReader.ReadInt16();
+            usage = (Usage)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            detailFadeFactor01 = binaryReader.ReadSingle();
+            sharpenAmount01 = binaryReader.ReadSingle();
+            bumpHeightRepeats = binaryReader.ReadSingle();
+            spriteSize = (SpriteSize)binaryReader.ReadInt16();
+            eMPTYSTRING = binaryReader.ReadInt16();
+            colorPlateWidthPixels = binaryReader.ReadInt16();
+            colorPlateHeightPixels = binaryReader.ReadInt16();
+            data = binaryReader.ReadBytes(8);
+            data0 = binaryReader.ReadBytes(8);
+            blurFilterSize010Pixels = binaryReader.ReadSingle();
+            alphaBias11 = binaryReader.ReadSingle();
+            mipmapCountLevels = binaryReader.ReadInt16();
+            spriteUsage = (SpriteUsage)binaryReader.ReadInt16();
+            spriteSpacing = binaryReader.ReadInt16();
+            forceFormat = (ForceFormat)binaryReader.ReadInt16();
+            ReadBitmapGroupSequenceBlockArray(binaryReader);
+            ReadBitmapDataBlockArray(binaryReader);
         }
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var data = new byte[blamPointer.count];
+            if(blamPointer.count > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    data = binaryReader.ReadBytes(blamPointer.count);
                 }
             }
             return data;
@@ -99,10 +100,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(BitmapGroupSequenceBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new BitmapGroupSequenceBlock[blamPointer.Count];
+            var array = new BitmapGroupSequenceBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new BitmapGroupSequenceBlock(binaryReader);
@@ -114,16 +115,62 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(BitmapDataBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new BitmapDataBlock[blamPointer.Count];
+            var array = new BitmapDataBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new BitmapDataBlock(binaryReader);
                 }
             }
             return array;
+        }
+        internal  virtual void WriteData(System.IO.BinaryWriter binaryWriter, System.Byte[] data, ref Int64 nextAddress)
+        {
+            using (binaryWriter.BaseStream.Pin())
+            {
+                binaryWriter.BaseStream.Position = nextAddress;
+                binaryWriter.BaseStream.Pad(8);
+                binaryWriter.Write(data);
+                binaryWriter.BaseStream.Pad(4);
+                nextAddress = binaryWriter.BaseStream.Position;
+            }
+        }
+        internal  virtual void WriteBitmapGroupSequenceBlockArray(BinaryWriter binaryWriter)
+        {
+            
+        }
+        internal  virtual void WriteBitmapDataBlockArray(BinaryWriter binaryWriter)
+        {
+            
+        }
+        public void Write(BinaryWriter binaryWriter)
+        {
+            using(binaryWriter.BaseStream.Pin())
+            {
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write((Int16)format);
+                binaryWriter.Write((Int16)usage);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(detailFadeFactor01);
+                binaryWriter.Write(sharpenAmount01);
+                binaryWriter.Write(bumpHeightRepeats);
+                binaryWriter.Write((Int16)spriteSize);
+                binaryWriter.Write(eMPTYSTRING);
+                binaryWriter.Write(colorPlateWidthPixels);
+                binaryWriter.Write(colorPlateHeightPixels);
+                binaryWriter.Write(data, 0, 8);
+                binaryWriter.Write(data0, 0, 8);
+                binaryWriter.Write(blurFilterSize010Pixels);
+                binaryWriter.Write(alphaBias11);
+                binaryWriter.Write(mipmapCountLevels);
+                binaryWriter.Write((Int16)spriteUsage);
+                binaryWriter.Write(spriteSpacing);
+                binaryWriter.Write((Int16)forceFormat);
+                WriteBitmapGroupSequenceBlockArray(binaryWriter);
+                WriteBitmapDataBlockArray(binaryWriter);
+            }
         }
         internal enum Type : short
         

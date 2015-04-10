@@ -1,7 +1,5 @@
 ﻿using Moonfish.Graphics;
 using OpenTK;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,76 +8,6 @@ using Moonfish.ResourceManagement;
 
 namespace Moonfish.Tags
 {
-    public struct BlamPointer : IEnumerable<int>, IEquatable<BlamPointer>
-    {
-        public readonly int Count;
-        public readonly int Address;
-        public readonly int ElementSize;
-
-        public int this[ int index ]
-        {
-            get { return Address + ElementSize * index; }
-        }
-
-        public BlamPointer( int count, int address, int elementSize )
-        {
-            this.Count = count;
-            this.Address = address;
-            this.ElementSize = elementSize;
-        }
-
-        public int PointedSize
-        {
-            get { return Count * ElementSize; }
-        }
-
-        public IEnumerator<int> GetEnumerator( )
-        {
-            for ( int i = 0; i < Count; ++i )
-            {
-                yield return Address + ElementSize * i;
-            }
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator( )
-        {
-            return this.GetEnumerator();
-        }
-
-        public bool Intersects( BlamPointer other )
-        {
-            return !( this.Address + this.PointedSize <= other.Address
-                || other.Address + other.PointedSize <= this.Address );
-        }
-
-        public override bool Equals( object obj )
-        {
-            if ( obj is BlamPointer )
-            {
-                return ( this as IEquatable<BlamPointer> ).Equals( ( BlamPointer )obj );
-            }
-            return base.Equals( obj );
-        }
-
-        public override int GetHashCode( )
-        {
-            return Address.GetHashCode();
-        }
-
-        bool IEquatable<BlamPointer>.Equals( BlamPointer other )
-        {
-            var val = this.Address == other.Address && this.Count == other.Count && this.ElementSize == other.ElementSize;
-            if ( val )
-            {
-            }
-            return val;
-        }
-        public override string ToString( )
-        {
-            return string.Format( "{0}:{1}", Address, Count );
-        }
-    }
-
     namespace BlamExtension
     {
         static class BinaryReaderExtensions
@@ -102,7 +30,7 @@ namespace Moonfish.Tags
                     }
                     else
                     {
-                        if ( resource.type == Guerilla.Tags.GlobalGeometryBlockResourceBlockBase.Type.TagData )
+                        if ( resource.type == GlobalGeometryBlockResourceBlockBase.Type.TagData )
                         {
                             var count = resource.resourceDataSize;
                             var address = resource.resourceDataOffset + resourceStream.HeaderSize;

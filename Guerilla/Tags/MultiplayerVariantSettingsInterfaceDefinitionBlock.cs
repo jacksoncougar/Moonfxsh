@@ -60,13 +60,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var data = new byte[blamPointer.count];
+            if(blamPointer.count > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    data = binaryReader.ReadBytes(blamPointer.count);
                 }
             }
             return data;
@@ -75,10 +75,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(VariantSettingEditReferenceBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new VariantSettingEditReferenceBlock[blamPointer.Count];
+            var array = new VariantSettingEditReferenceBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new VariantSettingEditReferenceBlock(binaryReader);
@@ -90,10 +90,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(GDefaultVariantsBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GDefaultVariantsBlock[blamPointer.Count];
+            var array = new GDefaultVariantsBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new GDefaultVariantsBlock(binaryReader);
@@ -111,13 +111,13 @@ namespace Moonfish.Guerilla.Tags
             internal  virtual byte[] ReadData(BinaryReader binaryReader)
             {
                 var blamPointer = binaryReader.ReadBlamPointer(1);
-                var data = new byte[blamPointer.Count];
-                if(blamPointer.Count > 0)
+                var data = new byte[blamPointer.count];
+                if(blamPointer.count > 0)
                 {
                     using (binaryReader.BaseStream.Pin())
                     {
                         binaryReader.BaseStream.Position = blamPointer[0];
-                        data = binaryReader.ReadBytes(blamPointer.Count);
+                        data = binaryReader.ReadBytes(blamPointer.count);
                     }
                 }
                 return data;

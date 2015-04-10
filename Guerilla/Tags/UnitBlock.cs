@@ -143,13 +143,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
+            var data = new byte[blamPointer.count];
+            if(blamPointer.count > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
+                    data = binaryReader.ReadBytes(blamPointer.count);
                 }
             }
             return data;
@@ -158,10 +158,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(UnitPosturesBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UnitPosturesBlock[blamPointer.Count];
+            var array = new UnitPosturesBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new UnitPosturesBlock(binaryReader);
@@ -173,10 +173,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(UnitHudReferenceBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UnitHudReferenceBlock[blamPointer.Count];
+            var array = new UnitHudReferenceBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new UnitHudReferenceBlock(binaryReader);
@@ -188,10 +188,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(DialogueVariantBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new DialogueVariantBlock[blamPointer.Count];
+            var array = new DialogueVariantBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new DialogueVariantBlock(binaryReader);
@@ -203,10 +203,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(PoweredSeatBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PoweredSeatBlock[blamPointer.Count];
+            var array = new PoweredSeatBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new PoweredSeatBlock(binaryReader);
@@ -218,10 +218,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(UnitWeaponBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UnitWeaponBlock[blamPointer.Count];
+            var array = new UnitWeaponBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new UnitWeaponBlock(binaryReader);
@@ -233,10 +233,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(UnitSeatBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UnitSeatBlock[blamPointer.Count];
+            var array = new UnitSeatBlock[blamPointer.count];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.Count; ++i)
+                for (int i = 0; i < blamPointer.count; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new UnitSeatBlock(binaryReader);

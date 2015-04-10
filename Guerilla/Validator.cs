@@ -9,7 +9,7 @@ namespace Moonfish.Guerilla
 {
     public class Validator
     {
-        public string Validate( tag_group validateTag, IEnumerable<tag_group> tagPool )
+        public string Validate( GuerillaTagGroup validateTag, IEnumerable<GuerillaTagGroup> tagPool )
         {
             PointersList = new List<Tuple<BlamPointer, ElementArray>>();
             StreamWriter stringWriter = File.CreateText( string.Format( @"C:\Users\stem\Documents\Plugins\analysis\{0}.txt", validateTag.Class.ToSafeString() ) );
@@ -81,7 +81,7 @@ namespace Moonfish.Guerilla
         private void AnalyzePointers( List<Tuple<BlamPointer, ElementArray>> arrayPointerList )
         {
             var size = arrayPointerList.First().Item1.PointedSize;
-            int nextAddress = arrayPointerList.First().Item1.Address;
+            int nextAddress = arrayPointerList.First().Item1.address;
 
             var arraySize = default( int );
             var arrayStartAddress = default( int );
@@ -92,10 +92,10 @@ namespace Moonfish.Guerilla
                 //if (arrayPointer.Item1.Address != arrayEndAddress)
                 //OnWriteMessage(string.Format("{1} Hole {0}", arrayPointer.Item1.Address - arrayEndAddress, arrayPointer.Item2.ToHierarchyString()));
                 arraySize = 0;
-                arrayStartAddress = arrayPointer.Item1.Address;
+                arrayStartAddress = arrayPointer.Item1.address;
                 foreach ( var pointer in arrayPointer.Item1 )
                 {
-                    arraySize += arrayPointer.Item1.ElementSize;
+                    arraySize += arrayPointer.Item1.elementSize;
                 }
                 arrayEndAddress = arrayStartAddress + arraySize;
             }
@@ -137,23 +137,23 @@ namespace Moonfish.Guerilla
                     if ( !allocated.Any() )
                     {
                         var alignedAddress = ( address - startOffset ) + Padding.GetCount( address - startOffset, info.Alignment );
-                        if ( pointer.Address - startOffset != alignedAddress )
+                        if ( pointer.address - startOffset != alignedAddress )
                         {
                             MapStream mapStream = reader.BaseStream as MapStream;
                             if ( mapStream != null )
                             {
-                                OnWriteMessage( string.Format( "{2}: Expected address \"{0}\"  - actually was \"{1}\"", address - startOffset, pointer.Address - startOffset, info.Name ) );
+                                OnWriteMessage( string.Format( "{2}: Expected address \"{0}\"  - actually was \"{1}\"", address - startOffset, pointer.address - startOffset, info.Name ) );
                             }
                         }
-                        address = pointer.Address + pointer.PointedSize;
+                        address = pointer.address + pointer.PointedSize;
                     }
                     if ( allocated.Any() ) { }
                     else if ( partiallyAllocated.Any() )
                     {
                         foreach ( var overlappingItem in partiallyAllocated )
                         {
-                            var overlap = pointer.Address - overlappingItem.Item1.Address - overlappingItem.Item1.PointedSize;
-                            OnWriteMessage( string.Format( "Overlap of ({0})[{3}] with ({1}) by ({2}) bytes", overlappingItem.Item2.ToHierarchyString(), info.ToHierarchyString(), overlap, overlappingItem.Item1.Count ) );
+                            var overlap = pointer.address - overlappingItem.Item1.address - overlappingItem.Item1.PointedSize;
+                            OnWriteMessage( string.Format( "Overlap of ({0})[{3}] with ({1}) by ({2}) bytes", overlappingItem.Item2.ToHierarchyString(), info.ToHierarchyString(), overlap, overlappingItem.Item1.count ) );
                         }
                     }
                 }
@@ -195,8 +195,8 @@ namespace Moonfish.Guerilla
                                                   {
                                                       binaryReader.BaseStream.Seek( child.Address, SeekOrigin.Current );
                                                       var arrayPointer = binaryReader.ReadBlamPointer( child.ElementSize );
-                                                      child.VirtualAddress = arrayPointer.Address;
-                                                      child.Count = arrayPointer.Count;
+                                                      child.VirtualAddress = arrayPointer.address;
+                                                      child.Count = arrayPointer.count;
                                                       return arrayPointer;
                                                   }
                                               } )()
@@ -205,7 +205,7 @@ namespace Moonfish.Guerilla
             {
                 if ( !ValidateBlamPointer( child.ArrayPointer, child.ElementArray, binaryReader.BaseStream as MapStream ) )
                     continue;
-                if ( !( child.ArrayPointer.Count == 0 && child.ArrayPointer.Address == 0 ) )
+                if ( !( child.ArrayPointer.count == 0 && child.ArrayPointer.address == 0 ) )
                 {
                     ValidateTagBlock( child.ElementArray, child.ArrayPointer, binaryReader, ref nextAddress );
                 }
@@ -215,15 +215,15 @@ namespace Moonfish.Guerilla
         private bool ValidateBlamPointer( BlamPointer blamPointer, ElementArray info, MapStream stream )
         {
             var stringWriter = new StringWriter();
-            if ( blamPointer.Count == 0 && blamPointer.Address == 0 ) return true;
-            if ( blamPointer.Count == 0 ^ blamPointer.Address == 0 )
-                stringWriter.WriteLine( string.Format( "-> null-value count({0}) address({1}) is invalid", blamPointer.Count, blamPointer.Address ) );
-            if ( blamPointer.Count < 0 )
-                stringWriter.WriteLine( string.Format( "-> count({0}) is invalid", blamPointer.Count ) );
-            if ( blamPointer.Count > info.MaxElementCount && info.MaxElementCount > 0 )
-                stringWriter.WriteLine( string.Format( "-> count({0}) > max-count({1})", blamPointer.Count, info.MaxElementCount ) );
+            if ( blamPointer.count == 0 && blamPointer.address == 0 ) return true;
+            if ( blamPointer.count == 0 ^ blamPointer.address == 0 )
+                stringWriter.WriteLine( string.Format( "-> null-value count({0}) address({1}) is invalid", blamPointer.count, blamPointer.address ) );
+            if ( blamPointer.count < 0 )
+                stringWriter.WriteLine( string.Format( "-> count({0}) is invalid", blamPointer.count ) );
+            if ( blamPointer.count > info.MaxElementCount && info.MaxElementCount > 0 )
+                stringWriter.WriteLine( string.Format( "-> count({0}) > max-count({1})", blamPointer.count, info.MaxElementCount ) );
             if ( !stream.ContainsPointer( blamPointer ) )
-                stringWriter.WriteLine( string.Format( "-> address({0}) not contained in stream({1})", blamPointer.Address, stream.Name ) );
+                stringWriter.WriteLine( string.Format( "-> address({0}) not contained in stream({1})", blamPointer.address, stream.Name ) );
 
             var errors = stringWriter.ToString();
             if ( !string.IsNullOrWhiteSpace( errors ) )

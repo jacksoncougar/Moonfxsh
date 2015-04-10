@@ -90,18 +90,6 @@
     <Compile Include="Collision\Shapes.cs" />
     <Compile Include="Debug\Memory.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Forms\Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\UserControl1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\UserControl1.Designer.cs">
-      <DependentUpon>UserControl1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="GlobalStrings.cs" />
     <Compile Include="Graphics\INode.cs" />
@@ -168,7 +156,6 @@
     <Compile Include="Guerilla\GuerillaAttributes.cs" />
     <Compile Include="Guerilla\GuerillaBase.cs" />
     <Compile Include="Guerilla\GuerillaExtensions.cs" />
-    <Compile Include="Guerilla\GuerillaFields.cs" />
     <Compile Include="Guerilla\GuerillaToCs.cs" />
     <Compile Include="Guerilla\GuerillaToEnt.cs" />
     <Compile Include="Guerilla\MethodInfo.cs" />
@@ -734,12 +721,6 @@
     <Content Include="license.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UserControl1.resx">
-      <DependentUpon>UserControl1.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Graphics\Gizmo.resx">
       <DependentUpon>Gizmo.cs</DependentUpon>
     </EmbeddedResource>
@@ -758,6 +739,7 @@
     <Folder Include="bin\Debug\" />
     <Folder Include="bin\Release\" />
     <Folder Include="bin\x86\Release\" />
+    <Folder Include="Forms\" />
     <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,6 +1,7 @@
 using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 using System.IO;
+using OpenTK;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,7 +16,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute( Size = 16 )]
     public class StructureBspWeatherPolyhedronPlaneBlockBase
     {
-        internal OpenTK.Vector4 plane;
+        internal Vector4 plane;
         internal StructureBspWeatherPolyhedronPlaneBlockBase( BinaryReader binaryReader )
         {
             this.plane = binaryReader.ReadVector4();

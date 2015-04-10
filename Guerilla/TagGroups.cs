@@ -330,12 +330,12 @@ namespace Moonfish.Guerilla
             this.maximum_element_count_str = Guerilla.ReadString( reader, this.maximum_element_count_string_address );
             if ( name == "sound_block" )
             {
-                this.field_sets_address = 0x957870;
+                field_sets_address = 0x957870;
+                field_set_latest_address = 0x906178;
 
                 FieldSets = new List<tag_field_set>( 1 );
                 var fieldSet = new tag_field_set();
 
-                //definition.field_set_latest_address = 0x906178;
                 fieldSet.version.fields_address = 0x906178;
                 fieldSet.version.index = 0;
                 fieldSet.version.upgrade_proc = 0;

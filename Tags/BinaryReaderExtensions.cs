@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Moonfish.Guerilla.Tags;
 using Moonfish.ResourceManagement;
 
 namespace Moonfish.Tags
@@ -94,7 +95,7 @@ namespace Moonfish.Tags
                 {
                     var offset = resourceStream.Position;
                     binaryReader.BaseStream.Seek( 8, SeekOrigin.Current );
-                    var resource = resourceStream.Resources.Where( x => x.primaryLocator == offset && x.type != Guerilla.Tags.GlobalGeometryBlockResourceBlockBase.Type.VertexBuffer ).SingleOrDefault();
+                    var resource = resourceStream.Resources.SingleOrDefault(x => x.primaryLocator == offset && x.type != GlobalGeometryBlockResourceBlockBase.Type.VertexBuffer);
                     if ( resource == null )
                     {
                         return new BlamPointer( 0, 0, elementSize );

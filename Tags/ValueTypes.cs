@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 
 namespace Moonfish.Tags
@@ -224,6 +225,18 @@ namespace Moonfish.Tags
         public static bool operator ==( TagIdent object1, TagIdent object2 )
         {
             return object1.Equals( object2 );
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as TagIdent?;
+            if (other == null) return false;
+            return Equals(other.Value);
+        }
+
+        public override int GetHashCode()
+        {
+            return SaltedIndex;
         }
 
         public static bool operator !=( TagIdent object1, TagIdent object2 )

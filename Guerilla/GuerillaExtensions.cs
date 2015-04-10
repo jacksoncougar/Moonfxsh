@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -25,13 +26,14 @@ namespace Moonfish.Guerilla
             return fields;
         }
 
+        [Obsolete]
         public static List<tag_field> ReadFieldSet( this BinaryReader reader, ref TagBlockDefinition definition, out tag_field_set field_set )
         {
             field_set = new tag_field_set();
             if ( definition.Name == "sound_block" )
             {
                 definition.field_sets_address = 0x957870;
-                //definition.field_set_latest_address = 0x906178;
+                definition.field_set_latest_address = 0x906178;
                 field_set.version.fields_address = 0x906178;
                 field_set.version.index = 0;
                 field_set.version.upgrade_proc = 0;
@@ -81,7 +83,7 @@ namespace Moonfish.Guerilla
                             where ( attribute as GuerillaPreProcessMethodAttribute ).BlockName == blockName
                             select method ).ToArray();
 
-            if ( methods.Count() > 0 )
+            if ( methods.Any() )
             {
                 methods[ 0 ].Invoke( null, new object[] { reader, fields } );
             }

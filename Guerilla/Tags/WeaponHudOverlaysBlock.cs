@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 92)]
-    public class WeaponHudOverlaysBlockBase
+    [LayoutAttribute(Size = 92, Alignment = 4)]
+    public class WeaponHudOverlaysBlockBase  : IGuerilla
     {
         internal StateAttachedTo stateAttachedTo;
         internal byte[] invalidName_;
@@ -28,46 +29,31 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal  WeaponHudOverlaysBlockBase(BinaryReader binaryReader)
         {
-            this.stateAttachedTo = (StateAttachedTo)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.canUseOnMapType = (CanUseOnMapType)binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.invalidName_1 = binaryReader.ReadBytes(28);
-            this.overlayBitmap = binaryReader.ReadTagReference();
-            this.overlays = ReadWeaponHudOverlayBlockArray(binaryReader);
-            this.invalidName_2 = binaryReader.ReadBytes(40);
+            stateAttachedTo = (StateAttachedTo)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            canUseOnMapType = (CanUseOnMapType)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(28);
+            overlayBitmap = binaryReader.ReadTagReference();
+            overlays = Guerilla.ReadBlockArray<WeaponHudOverlayBlock>(binaryReader);
+            invalidName_2 = binaryReader.ReadBytes(40);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)stateAttachedTo);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Int16)canUseOnMapType);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(invalidName_1, 0, 28);
+                binaryWriter.Write(overlayBitmap);
+                Guerilla.WriteBlockArray<WeaponHudOverlayBlock>(binaryWriter, overlays, nextAddress);
+                binaryWriter.Write(invalidName_2, 0, 40);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual WeaponHudOverlayBlock[] ReadWeaponHudOverlayBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(WeaponHudOverlayBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new WeaponHudOverlayBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new WeaponHudOverlayBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum StateAttachedTo : short
-        
         {
             InventoryAmmo = 0,
             LoadedAmmo = 1,
@@ -79,7 +65,6 @@ namespace Moonfish.Guerilla.Tags
             ElevationToTarget = 7,
         };
         internal enum CanUseOnMapType : short
-        
         {
             Any = 0,
             Solo = 1,

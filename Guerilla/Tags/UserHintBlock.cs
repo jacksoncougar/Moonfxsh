@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 72)]
-    public class UserHintBlockBase
+    [LayoutAttribute(Size = 72, Alignment = 4)]
+    public class UserHintBlockBase  : IGuerilla
     {
         internal UserHintPointBlock[] pointGeometry;
         internal UserHintRayBlock[] rayGeometry;
@@ -28,164 +29,31 @@ namespace Moonfish.Guerilla.Tags
         internal UserHintFlightBlock[] flightHints;
         internal  UserHintBlockBase(BinaryReader binaryReader)
         {
-            this.pointGeometry = ReadUserHintPointBlockArray(binaryReader);
-            this.rayGeometry = ReadUserHintRayBlockArray(binaryReader);
-            this.lineSegmentGeometry = ReadUserHintLineSegmentBlockArray(binaryReader);
-            this.parallelogramGeometry = ReadUserHintParallelogramBlockArray(binaryReader);
-            this.polygonGeometry = ReadUserHintPolygonBlockArray(binaryReader);
-            this.jumpHints = ReadUserHintJumpBlockArray(binaryReader);
-            this.climbHints = ReadUserHintClimbBlockArray(binaryReader);
-            this.wellHints = ReadUserHintWellBlockArray(binaryReader);
-            this.flightHints = ReadUserHintFlightBlockArray(binaryReader);
+            pointGeometry = Guerilla.ReadBlockArray<UserHintPointBlock>(binaryReader);
+            rayGeometry = Guerilla.ReadBlockArray<UserHintRayBlock>(binaryReader);
+            lineSegmentGeometry = Guerilla.ReadBlockArray<UserHintLineSegmentBlock>(binaryReader);
+            parallelogramGeometry = Guerilla.ReadBlockArray<UserHintParallelogramBlock>(binaryReader);
+            polygonGeometry = Guerilla.ReadBlockArray<UserHintPolygonBlock>(binaryReader);
+            jumpHints = Guerilla.ReadBlockArray<UserHintJumpBlock>(binaryReader);
+            climbHints = Guerilla.ReadBlockArray<UserHintClimbBlock>(binaryReader);
+            wellHints = Guerilla.ReadBlockArray<UserHintWellBlock>(binaryReader);
+            flightHints = Guerilla.ReadBlockArray<UserHintFlightBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteBlockArray<UserHintPointBlock>(binaryWriter, pointGeometry, nextAddress);
+                Guerilla.WriteBlockArray<UserHintRayBlock>(binaryWriter, rayGeometry, nextAddress);
+                Guerilla.WriteBlockArray<UserHintLineSegmentBlock>(binaryWriter, lineSegmentGeometry, nextAddress);
+                Guerilla.WriteBlockArray<UserHintParallelogramBlock>(binaryWriter, parallelogramGeometry, nextAddress);
+                Guerilla.WriteBlockArray<UserHintPolygonBlock>(binaryWriter, polygonGeometry, nextAddress);
+                Guerilla.WriteBlockArray<UserHintJumpBlock>(binaryWriter, jumpHints, nextAddress);
+                Guerilla.WriteBlockArray<UserHintClimbBlock>(binaryWriter, climbHints, nextAddress);
+                Guerilla.WriteBlockArray<UserHintWellBlock>(binaryWriter, wellHints, nextAddress);
+                Guerilla.WriteBlockArray<UserHintFlightBlock>(binaryWriter, flightHints, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual UserHintPointBlock[] ReadUserHintPointBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UserHintPointBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UserHintPointBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UserHintPointBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UserHintRayBlock[] ReadUserHintRayBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UserHintRayBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UserHintRayBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UserHintRayBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UserHintLineSegmentBlock[] ReadUserHintLineSegmentBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UserHintLineSegmentBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UserHintLineSegmentBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UserHintLineSegmentBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UserHintParallelogramBlock[] ReadUserHintParallelogramBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UserHintParallelogramBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UserHintParallelogramBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UserHintParallelogramBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UserHintPolygonBlock[] ReadUserHintPolygonBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UserHintPolygonBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UserHintPolygonBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UserHintPolygonBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UserHintJumpBlock[] ReadUserHintJumpBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UserHintJumpBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UserHintJumpBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UserHintJumpBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UserHintClimbBlock[] ReadUserHintClimbBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UserHintClimbBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UserHintClimbBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UserHintClimbBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UserHintWellBlock[] ReadUserHintWellBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UserHintWellBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UserHintWellBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UserHintWellBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UserHintFlightBlock[] ReadUserHintFlightBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UserHintFlightBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UserHintFlightBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UserHintFlightBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

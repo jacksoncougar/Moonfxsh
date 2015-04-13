@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 528)]
-    public class TagImportFileBlockBase
+    [LayoutAttribute(Size = 528, Alignment = 4)]
+    public class TagImportFileBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.String256 path;
         internal Moonfish.Tags.String32 modificationDate;
@@ -27,28 +28,29 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal  TagImportFileBlockBase(BinaryReader binaryReader)
         {
-            this.path = binaryReader.ReadString256();
-            this.modificationDate = binaryReader.ReadString32();
-            this.invalidName_ = binaryReader.ReadBytes(8);
-            this.invalidName_0 = binaryReader.ReadBytes(88);
-            this.checksumCrc32 = binaryReader.ReadInt32();
-            this.sizeBytes = binaryReader.ReadInt32();
-            this.zippedData = ReadData(binaryReader);
-            this.invalidName_1 = binaryReader.ReadBytes(128);
+            path = binaryReader.ReadString256();
+            modificationDate = binaryReader.ReadString32();
+            invalidName_ = binaryReader.ReadBytes(8);
+            invalidName_0 = binaryReader.ReadBytes(88);
+            checksumCrc32 = binaryReader.ReadInt32();
+            sizeBytes = binaryReader.ReadInt32();
+            zippedData = Guerilla.ReadData(binaryReader);
+            invalidName_1 = binaryReader.ReadBytes(128);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(path);
+                binaryWriter.Write(modificationDate);
+                binaryWriter.Write(invalidName_, 0, 8);
+                binaryWriter.Write(invalidName_0, 0, 88);
+                binaryWriter.Write(checksumCrc32);
+                binaryWriter.Write(sizeBytes);
+                Guerilla.WriteData(binaryWriter);
+                binaryWriter.Write(invalidName_1, 0, 128);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

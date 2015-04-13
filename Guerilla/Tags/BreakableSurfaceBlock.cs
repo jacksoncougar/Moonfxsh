@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass BsdtClass = (TagClass)"bsdt";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32)]
-    public class BreakableSurfaceBlockBase
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class BreakableSurfaceBlockBase  : IGuerilla
     {
         internal float maximumVitality;
         [TagReference("effe")]
@@ -27,40 +36,23 @@ namespace Moonfish.Guerilla.Tags
         internal float particleDensity;
         internal  BreakableSurfaceBlockBase(BinaryReader binaryReader)
         {
-            this.maximumVitality = binaryReader.ReadSingle();
-            this.effect = binaryReader.ReadTagReference();
-            this.sound = binaryReader.ReadTagReference();
-            this.particleEffects = ReadParticleSystemDefinitionBlockNewArray(binaryReader);
-            this.particleDensity = binaryReader.ReadSingle();
+            maximumVitality = binaryReader.ReadSingle();
+            effect = binaryReader.ReadTagReference();
+            sound = binaryReader.ReadTagReference();
+            particleEffects = Guerilla.ReadBlockArray<ParticleSystemDefinitionBlockNew>(binaryReader);
+            particleDensity = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(maximumVitality);
+                binaryWriter.Write(effect);
+                binaryWriter.Write(sound);
+                Guerilla.WriteBlockArray<ParticleSystemDefinitionBlockNew>(binaryWriter, particleEffects, nextAddress);
+                binaryWriter.Write(particleDensity);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ParticleSystemDefinitionBlockNew[] ReadParticleSystemDefinitionBlockNewArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ParticleSystemDefinitionBlockNew));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ParticleSystemDefinitionBlockNew[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ParticleSystemDefinitionBlockNew(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24)]
-    public class MaterialEffectMaterialBlockBase
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class MaterialEffectMaterialBlockBase  : IGuerilla
     {
         [TagReference("null")]
         internal Moonfish.Tags.TagReference tagEffectOrSound;
@@ -27,29 +28,27 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  MaterialEffectMaterialBlockBase(BinaryReader binaryReader)
         {
-            this.tagEffectOrSound = binaryReader.ReadTagReference();
-            this.secondaryTagEffectOrSound = binaryReader.ReadTagReference();
-            this.materialName = binaryReader.ReadStringID();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.sweetenerMode = (SweetenerMode)binaryReader.ReadByte();
-            this.invalidName_0 = binaryReader.ReadBytes(1);
+            tagEffectOrSound = binaryReader.ReadTagReference();
+            secondaryTagEffectOrSound = binaryReader.ReadTagReference();
+            materialName = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(2);
+            sweetenerMode = (SweetenerMode)binaryReader.ReadByte();
+            invalidName_0 = binaryReader.ReadBytes(1);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(tagEffectOrSound);
+                binaryWriter.Write(secondaryTagEffectOrSound);
+                binaryWriter.Write(materialName);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Byte)sweetenerMode);
+                binaryWriter.Write(invalidName_0, 0, 1);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum SweetenerMode : byte
-        
         {
             SweetenerDefault = 0,
             SweetenerEnabled = 1,

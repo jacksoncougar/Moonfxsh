@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass CenClass = (TagClass)"*cen";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 72)]
-    public class ScenarioSceneryResourceBlockBase
+    [LayoutAttribute(Size = 72, Alignment = 4)]
+    public class ScenarioSceneryResourceBlockBase  : IGuerilla
     {
         internal ScenarioObjectNamesBlock[] names;
         internal DontUseMeScenarioEnvironmentObjectBlock[] invalidName_;
@@ -30,150 +39,33 @@ namespace Moonfish.Guerilla.Tags
         internal GScenarioEditorFolderBlock[] editorFolders;
         internal  ScenarioSceneryResourceBlockBase(BinaryReader binaryReader)
         {
-            this.names = ReadScenarioObjectNamesBlockArray(binaryReader);
-            this.invalidName_ = ReadDontUseMeScenarioEnvironmentObjectBlockArray(binaryReader);
-            this.structureReferences = ReadScenarioStructureBspReferenceBlockArray(binaryReader);
-            this.palette = ReadScenarioSceneryPaletteBlockArray(binaryReader);
-            this.objects = ReadScenarioSceneryBlockArray(binaryReader);
-            this.nextSceneryObjectIDSalt = binaryReader.ReadInt32();
-            this.palette0 = ReadScenarioCratePaletteBlockArray(binaryReader);
-            this.objects0 = ReadScenarioCrateBlockArray(binaryReader);
-            this.nextBlockObjectIDSalt = binaryReader.ReadInt32();
-            this.editorFolders = ReadGScenarioEditorFolderBlockArray(binaryReader);
+            names = Guerilla.ReadBlockArray<ScenarioObjectNamesBlock>(binaryReader);
+            invalidName_ = Guerilla.ReadBlockArray<DontUseMeScenarioEnvironmentObjectBlock>(binaryReader);
+            structureReferences = Guerilla.ReadBlockArray<ScenarioStructureBspReferenceBlock>(binaryReader);
+            palette = Guerilla.ReadBlockArray<ScenarioSceneryPaletteBlock>(binaryReader);
+            objects = Guerilla.ReadBlockArray<ScenarioSceneryBlock>(binaryReader);
+            nextSceneryObjectIDSalt = binaryReader.ReadInt32();
+            palette0 = Guerilla.ReadBlockArray<ScenarioCratePaletteBlock>(binaryReader);
+            objects0 = Guerilla.ReadBlockArray<ScenarioCrateBlock>(binaryReader);
+            nextBlockObjectIDSalt = binaryReader.ReadInt32();
+            editorFolders = Guerilla.ReadBlockArray<GScenarioEditorFolderBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteBlockArray<ScenarioObjectNamesBlock>(binaryWriter, names, nextAddress);
+                Guerilla.WriteBlockArray<DontUseMeScenarioEnvironmentObjectBlock>(binaryWriter, invalidName_, nextAddress);
+                Guerilla.WriteBlockArray<ScenarioStructureBspReferenceBlock>(binaryWriter, structureReferences, nextAddress);
+                Guerilla.WriteBlockArray<ScenarioSceneryPaletteBlock>(binaryWriter, palette, nextAddress);
+                Guerilla.WriteBlockArray<ScenarioSceneryBlock>(binaryWriter, objects, nextAddress);
+                binaryWriter.Write(nextSceneryObjectIDSalt);
+                Guerilla.WriteBlockArray<ScenarioCratePaletteBlock>(binaryWriter, palette0, nextAddress);
+                Guerilla.WriteBlockArray<ScenarioCrateBlock>(binaryWriter, objects0, nextAddress);
+                binaryWriter.Write(nextBlockObjectIDSalt);
+                Guerilla.WriteBlockArray<GScenarioEditorFolderBlock>(binaryWriter, editorFolders, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ScenarioObjectNamesBlock[] ReadScenarioObjectNamesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioObjectNamesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioObjectNamesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioObjectNamesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual DontUseMeScenarioEnvironmentObjectBlock[] ReadDontUseMeScenarioEnvironmentObjectBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(DontUseMeScenarioEnvironmentObjectBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new DontUseMeScenarioEnvironmentObjectBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new DontUseMeScenarioEnvironmentObjectBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ScenarioStructureBspReferenceBlock[] ReadScenarioStructureBspReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioStructureBspReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioStructureBspReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioStructureBspReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ScenarioSceneryPaletteBlock[] ReadScenarioSceneryPaletteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioSceneryPaletteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioSceneryPaletteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioSceneryPaletteBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ScenarioSceneryBlock[] ReadScenarioSceneryBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioSceneryBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioSceneryBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioSceneryBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ScenarioCratePaletteBlock[] ReadScenarioCratePaletteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioCratePaletteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioCratePaletteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioCratePaletteBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ScenarioCrateBlock[] ReadScenarioCrateBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioCrateBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioCrateBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioCrateBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GScenarioEditorFolderBlock[] ReadGScenarioEditorFolderBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GScenarioEditorFolderBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GScenarioEditorFolderBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GScenarioEditorFolderBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 76)]
-    public class WindowPaneReferenceBlockBase
+    [LayoutAttribute(Size = 76, Alignment = 4)]
+    public class WindowPaneReferenceBlockBase  : IGuerilla
     {
         internal byte[] invalidName_;
         internal AnimationIndex animationIndex;
@@ -30,169 +31,37 @@ namespace Moonfish.Guerilla.Tags
         internal PlayerBlockReferenceBlock[] playerBlocks;
         internal  WindowPaneReferenceBlockBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            this.buttons = ReadButtonWidgetReferenceBlockArray(binaryReader);
-            this.listBlock = ReadListReferenceBlockArray(binaryReader);
-            this.tableView = ReadTableViewListReferenceBlockArray(binaryReader);
-            this.textBlocks = ReadTextBlockReferenceBlockArray(binaryReader);
-            this.bitmapBlocks = ReadBitmapBlockReferenceBlockArray(binaryReader);
-            this.modelSceneBlocks = ReadUiModelSceneReferenceBlockArray(binaryReader);
-            this.textValueBlocks = ReadSTextValuePairBlocksBlockUNUSEDArray(binaryReader);
-            this.hudBlocks = ReadHudBlockReferenceBlockArray(binaryReader);
-            this.playerBlocks = ReadPlayerBlockReferenceBlockArray(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(2);
+            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            buttons = Guerilla.ReadBlockArray<ButtonWidgetReferenceBlock>(binaryReader);
+            listBlock = Guerilla.ReadBlockArray<ListReferenceBlock>(binaryReader);
+            tableView = Guerilla.ReadBlockArray<TableViewListReferenceBlock>(binaryReader);
+            textBlocks = Guerilla.ReadBlockArray<TextBlockReferenceBlock>(binaryReader);
+            bitmapBlocks = Guerilla.ReadBlockArray<BitmapBlockReferenceBlock>(binaryReader);
+            modelSceneBlocks = Guerilla.ReadBlockArray<UiModelSceneReferenceBlock>(binaryReader);
+            textValueBlocks = Guerilla.ReadBlockArray<STextValuePairBlocksBlockUNUSED>(binaryReader);
+            hudBlocks = Guerilla.ReadBlockArray<HudBlockReferenceBlock>(binaryReader);
+            playerBlocks = Guerilla.ReadBlockArray<PlayerBlockReferenceBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Int16)animationIndex);
+                Guerilla.WriteBlockArray<ButtonWidgetReferenceBlock>(binaryWriter, buttons, nextAddress);
+                Guerilla.WriteBlockArray<ListReferenceBlock>(binaryWriter, listBlock, nextAddress);
+                Guerilla.WriteBlockArray<TableViewListReferenceBlock>(binaryWriter, tableView, nextAddress);
+                Guerilla.WriteBlockArray<TextBlockReferenceBlock>(binaryWriter, textBlocks, nextAddress);
+                Guerilla.WriteBlockArray<BitmapBlockReferenceBlock>(binaryWriter, bitmapBlocks, nextAddress);
+                Guerilla.WriteBlockArray<UiModelSceneReferenceBlock>(binaryWriter, modelSceneBlocks, nextAddress);
+                Guerilla.WriteBlockArray<STextValuePairBlocksBlockUNUSED>(binaryWriter, textValueBlocks, nextAddress);
+                Guerilla.WriteBlockArray<HudBlockReferenceBlock>(binaryWriter, hudBlocks, nextAddress);
+                Guerilla.WriteBlockArray<PlayerBlockReferenceBlock>(binaryWriter, playerBlocks, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ButtonWidgetReferenceBlock[] ReadButtonWidgetReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ButtonWidgetReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ButtonWidgetReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ButtonWidgetReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ListReferenceBlock[] ReadListReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ListReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ListReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ListReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual TableViewListReferenceBlock[] ReadTableViewListReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(TableViewListReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TableViewListReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new TableViewListReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual TextBlockReferenceBlock[] ReadTextBlockReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(TextBlockReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TextBlockReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new TextBlockReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual BitmapBlockReferenceBlock[] ReadBitmapBlockReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(BitmapBlockReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new BitmapBlockReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new BitmapBlockReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UiModelSceneReferenceBlock[] ReadUiModelSceneReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UiModelSceneReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UiModelSceneReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UiModelSceneReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual STextValuePairBlocksBlockUNUSED[] ReadSTextValuePairBlocksBlockUNUSEDArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(STextValuePairBlocksBlockUNUSED));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new STextValuePairBlocksBlockUNUSED[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new STextValuePairBlocksBlockUNUSED(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual HudBlockReferenceBlock[] ReadHudBlockReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(HudBlockReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new HudBlockReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new HudBlockReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PlayerBlockReferenceBlock[] ReadPlayerBlockReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PlayerBlockReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlayerBlockReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PlayerBlockReferenceBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum AnimationIndex : short
-        
         {
             NONE = 0,
             InvalidName00 = 1,

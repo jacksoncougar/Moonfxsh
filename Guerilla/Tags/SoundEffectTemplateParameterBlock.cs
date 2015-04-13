@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36)]
-    public class SoundEffectTemplateParameterBlockBase
+    [LayoutAttribute(Size = 36, Alignment = 4)]
+    public class SoundEffectTemplateParameterBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Type type;
@@ -28,32 +29,33 @@ namespace Moonfish.Guerilla.Tags
         internal float maximumScalarValue;
         internal  SoundEffectTemplateParameterBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.type = (Type)binaryReader.ReadInt16();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.hardwareOffset = binaryReader.ReadInt32();
-            this.defaultEnumIntegerValue = binaryReader.ReadInt32();
-            this.defaultScalarValue = binaryReader.ReadSingle();
-            this.defaultFunction = new MappingFunctionBlock(binaryReader);
-            this.minimumScalarValue = binaryReader.ReadSingle();
-            this.maximumScalarValue = binaryReader.ReadSingle();
+            name = binaryReader.ReadStringID();
+            type = (Type)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            hardwareOffset = binaryReader.ReadInt32();
+            defaultEnumIntegerValue = binaryReader.ReadInt32();
+            defaultScalarValue = binaryReader.ReadSingle();
+            defaultFunction = new MappingFunctionBlock(binaryReader);
+            minimumScalarValue = binaryReader.ReadSingle();
+            maximumScalarValue = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(hardwareOffset);
+                binaryWriter.Write(defaultEnumIntegerValue);
+                binaryWriter.Write(defaultScalarValue);
+                defaultFunction.Write(binaryWriter);
+                binaryWriter.Write(minimumScalarValue);
+                binaryWriter.Write(maximumScalarValue);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum Type : short
-        
         {
             Integer = 0,
             Real = 1,
@@ -61,7 +63,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             ExposeAsFunction = 1,
         };

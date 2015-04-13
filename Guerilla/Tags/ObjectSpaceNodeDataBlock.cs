@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,35 +15,30 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 28)]
-    public class ObjectSpaceNodeDataBlockBase
+    [LayoutAttribute(Size = 28, Alignment = 4)]
+    public class ObjectSpaceNodeDataBlockBase  : IGuerilla
     {
         internal short nodeIndex;
         internal ComponentFlags componentFlags;
         internal QuantizedOrientationStructBlock orientation;
         internal  ObjectSpaceNodeDataBlockBase(BinaryReader binaryReader)
         {
-            this.nodeIndex = binaryReader.ReadInt16();
-            this.componentFlags = (ComponentFlags)binaryReader.ReadInt16();
-            this.orientation = new QuantizedOrientationStructBlock(binaryReader);
+            nodeIndex = binaryReader.ReadInt16();
+            componentFlags = (ComponentFlags)binaryReader.ReadInt16();
+            orientation = new QuantizedOrientationStructBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(nodeIndex);
+                binaryWriter.Write((Int16)componentFlags);
+                orientation.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum ComponentFlags : short
-        
         {
             Rotation = 1,
             Translation = 2,

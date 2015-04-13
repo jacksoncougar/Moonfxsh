@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class GDefaultVariantsBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class GDefaultVariantsBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID variantName;
         internal VariantType variantType;
@@ -24,43 +25,25 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  GDefaultVariantsBlockBase(BinaryReader binaryReader)
         {
-            this.variantName = binaryReader.ReadStringID();
-            this.variantType = (VariantType)binaryReader.ReadInt32();
-            this.settings = ReadGDefaultVariantSettingsBlockArray(binaryReader);
-            this.descriptionIndex = binaryReader.ReadByte();
-            this.invalidName_ = binaryReader.ReadBytes(3);
+            variantName = binaryReader.ReadStringID();
+            variantType = (VariantType)binaryReader.ReadInt32();
+            settings = Guerilla.ReadBlockArray<GDefaultVariantSettingsBlock>(binaryReader);
+            descriptionIndex = binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes(3);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(variantName);
+                binaryWriter.Write((Int32)variantType);
+                Guerilla.WriteBlockArray<GDefaultVariantSettingsBlock>(binaryWriter, settings, nextAddress);
+                binaryWriter.Write(descriptionIndex);
+                binaryWriter.Write(invalidName_, 0, 3);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual GDefaultVariantSettingsBlock[] ReadGDefaultVariantSettingsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GDefaultVariantSettingsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GDefaultVariantSettingsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GDefaultVariantSettingsBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum VariantType : int
-        
         {
             Slayer = 0,
             Oddball = 1,

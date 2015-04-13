@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 4)]
-    public class TextureBlockBase
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class TextureBlockBase  : IGuerilla
     {
         internal byte stageIndex;
         internal byte parameterIndex;
@@ -23,24 +24,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte flags;
         internal  TextureBlockBase(BinaryReader binaryReader)
         {
-            this.stageIndex = binaryReader.ReadByte();
-            this.parameterIndex = binaryReader.ReadByte();
-            this.globalTextureIndex = binaryReader.ReadByte();
-            this.flags = binaryReader.ReadByte();
+            stageIndex = binaryReader.ReadByte();
+            parameterIndex = binaryReader.ReadByte();
+            globalTextureIndex = binaryReader.ReadByte();
+            flags = binaryReader.ReadByte();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(stageIndex);
+                binaryWriter.Write(parameterIndex);
+                binaryWriter.Write(globalTextureIndex);
+                binaryWriter.Write(flags);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class CharacterGeneralBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class CharacterGeneralBlockBase  : IGuerilla
     {
         internal GeneralFlags generalFlags;
         internal Type type;
@@ -26,28 +27,24 @@ namespace Moonfish.Guerilla.Tags
         internal float scariness;
         internal  CharacterGeneralBlockBase(BinaryReader binaryReader)
         {
-            this.generalFlags = (GeneralFlags)binaryReader.ReadInt32();
-            this.type = (Type)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.scariness = binaryReader.ReadSingle();
+            generalFlags = (GeneralFlags)binaryReader.ReadInt32();
+            type = (Type)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            scariness = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)generalFlags);
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(scariness);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum GeneralFlags : int
-        
         {
             Swarm = 1,
             Flying = 2,
@@ -55,7 +52,6 @@ namespace Moonfish.Guerilla.Tags
             UsesGravemind = 8,
         };
         internal enum Type : short
-        
         {
             Elite = 0,
             Jackal = 1,

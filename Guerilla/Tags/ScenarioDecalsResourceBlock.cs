@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass DecClass = (TagClass)"dec*";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,59 +24,24 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class ScenarioDecalsResourceBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class ScenarioDecalsResourceBlockBase  : IGuerilla
     {
         internal ScenarioDecalPaletteBlock[] palette;
         internal ScenarioDecalsBlock[] decals;
         internal  ScenarioDecalsResourceBlockBase(BinaryReader binaryReader)
         {
-            this.palette = ReadScenarioDecalPaletteBlockArray(binaryReader);
-            this.decals = ReadScenarioDecalsBlockArray(binaryReader);
+            palette = Guerilla.ReadBlockArray<ScenarioDecalPaletteBlock>(binaryReader);
+            decals = Guerilla.ReadBlockArray<ScenarioDecalsBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteBlockArray<ScenarioDecalPaletteBlock>(binaryWriter, palette, nextAddress);
+                Guerilla.WriteBlockArray<ScenarioDecalsBlock>(binaryWriter, decals, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ScenarioDecalPaletteBlock[] ReadScenarioDecalPaletteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioDecalPaletteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioDecalPaletteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioDecalPaletteBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ScenarioDecalsBlock[] ReadScenarioDecalsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioDecalsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioDecalsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioDecalsBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

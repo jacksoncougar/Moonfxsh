@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36)]
-    public class PrimaryLightStructBlockBase
+    [LayoutAttribute(Size = 36, Alignment = 4)]
+    public class PrimaryLightStructBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.ColorR8G8B8 minLightmapColor;
         internal Moonfish.Tags.ColorR8G8B8 maxLightmapColor;
@@ -26,24 +27,21 @@ namespace Moonfish.Guerilla.Tags
         internal MappingFunctionBlock function;
         internal  PrimaryLightStructBlockBase(BinaryReader binaryReader)
         {
-            this.minLightmapColor = binaryReader.ReadColorR8G8B8();
-            this.maxLightmapColor = binaryReader.ReadColorR8G8B8();
-            this.exclusionAngleFromUp = binaryReader.ReadSingle();
-            this.function = new MappingFunctionBlock(binaryReader);
+            minLightmapColor = binaryReader.ReadColorR8G8B8();
+            maxLightmapColor = binaryReader.ReadColorR8G8B8();
+            exclusionAngleFromUp = binaryReader.ReadSingle();
+            function = new MappingFunctionBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(minLightmapColor);
+                binaryWriter.Write(maxLightmapColor);
+                binaryWriter.Write(exclusionAngleFromUp);
+                function.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

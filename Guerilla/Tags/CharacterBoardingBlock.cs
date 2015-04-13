@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class CharacterBoardingBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class CharacterBoardingBlockBase  : IGuerilla
     {
         internal Flags flags;
         /// <summary>
@@ -32,28 +33,24 @@ namespace Moonfish.Guerilla.Tags
         internal float maxSpeedWuS;
         internal  CharacterBoardingBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.maxDistanceWus = binaryReader.ReadSingle();
-            this.abortDistanceWus = binaryReader.ReadSingle();
-            this.maxSpeedWuS = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt32();
+            maxDistanceWus = binaryReader.ReadSingle();
+            abortDistanceWus = binaryReader.ReadSingle();
+            maxSpeedWuS = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(maxDistanceWus);
+                binaryWriter.Write(abortDistanceWus);
+                binaryWriter.Write(maxSpeedWuS);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             AirborneBoarding = 1,
         };

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 108)]
-    public class AnimationPoolBlockBase
+    [LayoutAttribute(Size = 108, Alignment = 4)]
+    public class AnimationPoolBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal int nodeListChecksum;
@@ -47,118 +48,77 @@ namespace Moonfish.Guerilla.Tags
         internal ObjectSpaceNodeDataBlock[] objectSpaceParentNodesABCDCC;
         internal  AnimationPoolBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.nodeListChecksum = binaryReader.ReadInt32();
-            this.productionChecksum = binaryReader.ReadInt32();
-            this.importChecksum = binaryReader.ReadInt32();
-            this.type = (Type)binaryReader.ReadByte();
-            this.frameInfoType = (FrameInfoType)binaryReader.ReadByte();
-            this.blendScreen = binaryReader.ReadByteBlockIndex1();
-            this.nodeCount = binaryReader.ReadByte();
-            this.frameCount = binaryReader.ReadInt16();
-            this.internalFlags = (InternalFlags)binaryReader.ReadByte();
-            this.productionFlags = (ProductionFlags)binaryReader.ReadByte();
-            this.playbackFlags = (PlaybackFlags)binaryReader.ReadInt16();
-            this.desiredCompression = (DesiredCompression)binaryReader.ReadByte();
-            this.currentCompression = (CurrentCompression)binaryReader.ReadByte();
-            this.weight = binaryReader.ReadSingle();
-            this.parentGraphIndex = binaryReader.ReadInt32();
-            this.parentGraphBlockIndex = binaryReader.ReadInt32();
-            this.parentGraphBlockOffset = binaryReader.ReadInt32();
-            this.parentGraphStartingPointIndex = binaryReader.ReadInt16();
-            this.loopFrameIndex = binaryReader.ReadInt16();
-            this.parentAnimation = binaryReader.ReadShortBlockIndex1();
-            this.nextAnimation = binaryReader.ReadShortBlockIndex1();
-            this.animationData = ReadData(binaryReader);
-            this.dataSizes = new PackedDataSizesStructBlock(binaryReader);
-            this.frameEventsABCDCC = ReadAnimationFrameEventBlockArray(binaryReader);
-            this.soundEventsABCDCC = ReadAnimationSoundEventBlockArray(binaryReader);
-            this.effectEventsABCDCC = ReadAnimationEffectEventBlockArray(binaryReader);
-            this.objectSpaceParentNodesABCDCC = ReadObjectSpaceNodeDataBlockArray(binaryReader);
+            name = binaryReader.ReadStringID();
+            nodeListChecksum = binaryReader.ReadInt32();
+            productionChecksum = binaryReader.ReadInt32();
+            importChecksum = binaryReader.ReadInt32();
+            type = (Type)binaryReader.ReadByte();
+            frameInfoType = (FrameInfoType)binaryReader.ReadByte();
+            blendScreen = binaryReader.ReadByteBlockIndex1();
+            nodeCount = binaryReader.ReadByte();
+            frameCount = binaryReader.ReadInt16();
+            internalFlags = (InternalFlags)binaryReader.ReadByte();
+            productionFlags = (ProductionFlags)binaryReader.ReadByte();
+            playbackFlags = (PlaybackFlags)binaryReader.ReadInt16();
+            desiredCompression = (DesiredCompression)binaryReader.ReadByte();
+            currentCompression = (CurrentCompression)binaryReader.ReadByte();
+            weight = binaryReader.ReadSingle();
+            parentGraphIndex = binaryReader.ReadInt32();
+            parentGraphBlockIndex = binaryReader.ReadInt32();
+            parentGraphBlockOffset = binaryReader.ReadInt32();
+            parentGraphStartingPointIndex = binaryReader.ReadInt16();
+            loopFrameIndex = binaryReader.ReadInt16();
+            parentAnimation = binaryReader.ReadShortBlockIndex1();
+            nextAnimation = binaryReader.ReadShortBlockIndex1();
+            animationData = Guerilla.ReadData(binaryReader);
+            dataSizes = new PackedDataSizesStructBlock(binaryReader);
+            frameEventsABCDCC = Guerilla.ReadBlockArray<AnimationFrameEventBlock>(binaryReader);
+            soundEventsABCDCC = Guerilla.ReadBlockArray<AnimationSoundEventBlock>(binaryReader);
+            effectEventsABCDCC = Guerilla.ReadBlockArray<AnimationEffectEventBlock>(binaryReader);
+            objectSpaceParentNodesABCDCC = Guerilla.ReadBlockArray<ObjectSpaceNodeDataBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write(nodeListChecksum);
+                binaryWriter.Write(productionChecksum);
+                binaryWriter.Write(importChecksum);
+                binaryWriter.Write((Byte)type);
+                binaryWriter.Write((Byte)frameInfoType);
+                binaryWriter.Write(blendScreen);
+                binaryWriter.Write(nodeCount);
+                binaryWriter.Write(frameCount);
+                binaryWriter.Write((Byte)internalFlags);
+                binaryWriter.Write((Byte)productionFlags);
+                binaryWriter.Write((Int16)playbackFlags);
+                binaryWriter.Write((Byte)desiredCompression);
+                binaryWriter.Write((Byte)currentCompression);
+                binaryWriter.Write(weight);
+                binaryWriter.Write(parentGraphIndex);
+                binaryWriter.Write(parentGraphBlockIndex);
+                binaryWriter.Write(parentGraphBlockOffset);
+                binaryWriter.Write(parentGraphStartingPointIndex);
+                binaryWriter.Write(loopFrameIndex);
+                binaryWriter.Write(parentAnimation);
+                binaryWriter.Write(nextAnimation);
+                Guerilla.WriteData(binaryWriter);
+                dataSizes.Write(binaryWriter);
+                Guerilla.WriteBlockArray<AnimationFrameEventBlock>(binaryWriter, frameEventsABCDCC, nextAddress);
+                Guerilla.WriteBlockArray<AnimationSoundEventBlock>(binaryWriter, soundEventsABCDCC, nextAddress);
+                Guerilla.WriteBlockArray<AnimationEffectEventBlock>(binaryWriter, effectEventsABCDCC, nextAddress);
+                Guerilla.WriteBlockArray<ObjectSpaceNodeDataBlock>(binaryWriter, objectSpaceParentNodesABCDCC, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual AnimationFrameEventBlock[] ReadAnimationFrameEventBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AnimationFrameEventBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationFrameEventBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AnimationFrameEventBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual AnimationSoundEventBlock[] ReadAnimationSoundEventBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AnimationSoundEventBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationSoundEventBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AnimationSoundEventBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual AnimationEffectEventBlock[] ReadAnimationEffectEventBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AnimationEffectEventBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationEffectEventBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AnimationEffectEventBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ObjectSpaceNodeDataBlock[] ReadObjectSpaceNodeDataBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ObjectSpaceNodeDataBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ObjectSpaceNodeDataBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ObjectSpaceNodeDataBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum Type : byte
-        
         {
             Base = 0,
             Overlay = 1,
             Replacement = 2,
         };
         internal enum FrameInfoType : byte
-        
         {
             None = 0,
             DxDy = 1,
@@ -167,7 +127,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum InternalFlags : byte
-        
         {
             Unused0 = 1,
             WorldRelative = 2,
@@ -180,7 +139,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum ProductionFlags : byte
-        
         {
             DoNotMonitorChanges = 1,
             VerifySoundEvents = 2,
@@ -188,7 +146,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum PlaybackFlags : short
-        
         {
             DisableInterpolationIn = 1,
             DisableInterpolationOut = 2,
@@ -199,7 +156,6 @@ namespace Moonfish.Guerilla.Tags
             DisableTransitionAdjustment = 64,
         };
         internal enum DesiredCompression : byte
-        
         {
             BestScore = 0,
             BestCompression = 1,
@@ -209,7 +165,6 @@ namespace Moonfish.Guerilla.Tags
             BestLargeKeyframe = 5,
         };
         internal enum CurrentCompression : byte
-        
         {
             BestScore = 0,
             BestCompression = 1,

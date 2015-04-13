@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24)]
-    public class AnimationAimingScreenStructBlockBase
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class AnimationAimingScreenStructBlockBase  : IGuerilla
     {
         internal float rightYawPerFrame;
         internal float leftYawPerFrame;
@@ -27,28 +28,29 @@ namespace Moonfish.Guerilla.Tags
         internal short upPitchFrameCount;
         internal  AnimationAimingScreenStructBlockBase(BinaryReader binaryReader)
         {
-            this.rightYawPerFrame = binaryReader.ReadSingle();
-            this.leftYawPerFrame = binaryReader.ReadSingle();
-            this.rightFrameCount = binaryReader.ReadInt16();
-            this.leftFrameCount = binaryReader.ReadInt16();
-            this.downPitchPerFrame = binaryReader.ReadSingle();
-            this.upPitchPerFrame = binaryReader.ReadSingle();
-            this.downPitchFrameCount = binaryReader.ReadInt16();
-            this.upPitchFrameCount = binaryReader.ReadInt16();
+            rightYawPerFrame = binaryReader.ReadSingle();
+            leftYawPerFrame = binaryReader.ReadSingle();
+            rightFrameCount = binaryReader.ReadInt16();
+            leftFrameCount = binaryReader.ReadInt16();
+            downPitchPerFrame = binaryReader.ReadSingle();
+            upPitchPerFrame = binaryReader.ReadSingle();
+            downPitchFrameCount = binaryReader.ReadInt16();
+            upPitchFrameCount = binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(rightYawPerFrame);
+                binaryWriter.Write(leftYawPerFrame);
+                binaryWriter.Write(rightFrameCount);
+                binaryWriter.Write(leftFrameCount);
+                binaryWriter.Write(downPitchPerFrame);
+                binaryWriter.Write(upPitchPerFrame);
+                binaryWriter.Write(downPitchFrameCount);
+                binaryWriter.Write(upPitchFrameCount);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

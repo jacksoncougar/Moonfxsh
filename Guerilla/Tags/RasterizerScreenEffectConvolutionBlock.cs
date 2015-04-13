@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 92)]
-    public class RasterizerScreenEffectConvolutionBlockBase
+    [LayoutAttribute(Size = 92, Alignment = 4)]
+    public class RasterizerScreenEffectConvolutionBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal byte[] invalidName_;
@@ -28,33 +29,34 @@ namespace Moonfish.Guerilla.Tags
         internal float resolutionScale01;
         internal  RasterizerScreenEffectConvolutionBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.invalidName_0 = binaryReader.ReadBytes(64);
-            this.convolutionAmount0Inf = binaryReader.ReadSingle();
-            this.filterScale = binaryReader.ReadSingle();
-            this.filterBoxFactor01NotUsedForZoom = binaryReader.ReadSingle();
-            this.zoomFalloffRadius = binaryReader.ReadSingle();
-            this.zoomCutoffRadius = binaryReader.ReadSingle();
-            this.resolutionScale01 = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(64);
+            convolutionAmount0Inf = binaryReader.ReadSingle();
+            filterScale = binaryReader.ReadSingle();
+            filterBoxFactor01NotUsedForZoom = binaryReader.ReadSingle();
+            zoomFalloffRadius = binaryReader.ReadSingle();
+            zoomCutoffRadius = binaryReader.ReadSingle();
+            resolutionScale01 = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(invalidName_0, 0, 64);
+                binaryWriter.Write(convolutionAmount0Inf);
+                binaryWriter.Write(filterScale);
+                binaryWriter.Write(filterBoxFactor01NotUsedForZoom);
+                binaryWriter.Write(zoomFalloffRadius);
+                binaryWriter.Write(zoomCutoffRadius);
+                binaryWriter.Write(resolutionScale01);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             OnlyWhenPrimaryIsActive = 1,
             OnlyWhenSecondaryIsActive = 2,

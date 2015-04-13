@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 52)]
-    public class CharacterPerceptionBlockBase
+    [LayoutAttribute(Size = 52, Alignment = 4)]
+    public class CharacterPerceptionBlockBase  : IGuerilla
     {
         internal PerceptionFlags perceptionFlags;
         /// <summary>
@@ -68,37 +69,42 @@ namespace Moonfish.Guerilla.Tags
         internal float firstAckSurpriseDistanceWorldUnits;
         internal  CharacterPerceptionBlockBase(BinaryReader binaryReader)
         {
-            this.perceptionFlags = (PerceptionFlags)binaryReader.ReadInt32();
-            this.maxVisionDistanceWorldUnits = binaryReader.ReadSingle();
-            this.centralVisionAngleDegrees = binaryReader.ReadSingle();
-            this.maxVisionAngleDegrees = binaryReader.ReadSingle();
-            this.peripheralVisionAngleDegrees = binaryReader.ReadSingle();
-            this.peripheralDistanceWorldUnits = binaryReader.ReadSingle();
-            this.hearingDistanceWorldUnits = binaryReader.ReadSingle();
-            this.noticeProjectileChance01 = binaryReader.ReadSingle();
-            this.noticeVehicleChance01 = binaryReader.ReadSingle();
-            this.combatPerceptionTimeSeconds = binaryReader.ReadSingle();
-            this.guardPerceptionTimeSeconds = binaryReader.ReadSingle();
-            this.nonCombatPerceptionTimeSeconds = binaryReader.ReadSingle();
-            this.firstAckSurpriseDistanceWorldUnits = binaryReader.ReadSingle();
+            perceptionFlags = (PerceptionFlags)binaryReader.ReadInt32();
+            maxVisionDistanceWorldUnits = binaryReader.ReadSingle();
+            centralVisionAngleDegrees = binaryReader.ReadSingle();
+            maxVisionAngleDegrees = binaryReader.ReadSingle();
+            peripheralVisionAngleDegrees = binaryReader.ReadSingle();
+            peripheralDistanceWorldUnits = binaryReader.ReadSingle();
+            hearingDistanceWorldUnits = binaryReader.ReadSingle();
+            noticeProjectileChance01 = binaryReader.ReadSingle();
+            noticeVehicleChance01 = binaryReader.ReadSingle();
+            combatPerceptionTimeSeconds = binaryReader.ReadSingle();
+            guardPerceptionTimeSeconds = binaryReader.ReadSingle();
+            nonCombatPerceptionTimeSeconds = binaryReader.ReadSingle();
+            firstAckSurpriseDistanceWorldUnits = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)perceptionFlags);
+                binaryWriter.Write(maxVisionDistanceWorldUnits);
+                binaryWriter.Write(centralVisionAngleDegrees);
+                binaryWriter.Write(maxVisionAngleDegrees);
+                binaryWriter.Write(peripheralVisionAngleDegrees);
+                binaryWriter.Write(peripheralDistanceWorldUnits);
+                binaryWriter.Write(hearingDistanceWorldUnits);
+                binaryWriter.Write(noticeProjectileChance01);
+                binaryWriter.Write(noticeVehicleChance01);
+                binaryWriter.Write(combatPerceptionTimeSeconds);
+                binaryWriter.Write(guardPerceptionTimeSeconds);
+                binaryWriter.Write(nonCombatPerceptionTimeSeconds);
+                binaryWriter.Write(firstAckSurpriseDistanceWorldUnits);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum PerceptionFlags : int
-        
         {
             Flag1 = 1,
         };

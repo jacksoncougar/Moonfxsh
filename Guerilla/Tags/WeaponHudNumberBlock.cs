@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 160)]
-    public class WeaponHudNumberBlockBase
+    [LayoutAttribute(Size = 160, Alignment = 4)]
+    public class WeaponHudNumberBlockBase  : IGuerilla
     {
         internal StateAttachedTo stateAttachedTo;
         internal byte[] invalidName_;
@@ -53,51 +54,71 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_8;
         internal  WeaponHudNumberBlockBase(BinaryReader binaryReader)
         {
-            this.stateAttachedTo = (StateAttachedTo)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.canUseOnMapType = (CanUseOnMapType)binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.invalidName_1 = binaryReader.ReadBytes(28);
-            this.anchorOffset = binaryReader.ReadPoint();
-            this.widthScale = binaryReader.ReadSingle();
-            this.heightScale = binaryReader.ReadSingle();
-            this.scalingFlags = (ScalingFlags)binaryReader.ReadInt16();
-            this.invalidName_2 = binaryReader.ReadBytes(2);
-            this.invalidName_3 = binaryReader.ReadBytes(20);
-            this.defaultColor = binaryReader.ReadColourA1R1G1B1();
-            this.flashingColor = binaryReader.ReadColourA1R1G1B1();
-            this.flashPeriod = binaryReader.ReadSingle();
-            this.flashDelay = binaryReader.ReadSingle();
-            this.numberOfFlashes = binaryReader.ReadInt16();
-            this.flashFlags = (FlashFlags)binaryReader.ReadInt16();
-            this.flashLength = binaryReader.ReadSingle();
-            this.disabledColor = binaryReader.ReadColourA1R1G1B1();
-            this.invalidName_4 = binaryReader.ReadBytes(4);
-            this.maximumNumberOfDigits = binaryReader.ReadByte();
-            this.flags = (Flags)binaryReader.ReadByte();
-            this.numberOfFractionalDigits = binaryReader.ReadByte();
-            this.invalidName_5 = binaryReader.ReadBytes(1);
-            this.invalidName_6 = binaryReader.ReadBytes(12);
-            this.weaponSpecificFlags = (WeaponSpecificFlags)binaryReader.ReadInt16();
-            this.invalidName_7 = binaryReader.ReadBytes(2);
-            this.invalidName_8 = binaryReader.ReadBytes(36);
+            stateAttachedTo = (StateAttachedTo)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            canUseOnMapType = (CanUseOnMapType)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(28);
+            anchorOffset = binaryReader.ReadPoint();
+            widthScale = binaryReader.ReadSingle();
+            heightScale = binaryReader.ReadSingle();
+            scalingFlags = (ScalingFlags)binaryReader.ReadInt16();
+            invalidName_2 = binaryReader.ReadBytes(2);
+            invalidName_3 = binaryReader.ReadBytes(20);
+            defaultColor = binaryReader.ReadColourA1R1G1B1();
+            flashingColor = binaryReader.ReadColourA1R1G1B1();
+            flashPeriod = binaryReader.ReadSingle();
+            flashDelay = binaryReader.ReadSingle();
+            numberOfFlashes = binaryReader.ReadInt16();
+            flashFlags = (FlashFlags)binaryReader.ReadInt16();
+            flashLength = binaryReader.ReadSingle();
+            disabledColor = binaryReader.ReadColourA1R1G1B1();
+            invalidName_4 = binaryReader.ReadBytes(4);
+            maximumNumberOfDigits = binaryReader.ReadByte();
+            flags = (Flags)binaryReader.ReadByte();
+            numberOfFractionalDigits = binaryReader.ReadByte();
+            invalidName_5 = binaryReader.ReadBytes(1);
+            invalidName_6 = binaryReader.ReadBytes(12);
+            weaponSpecificFlags = (WeaponSpecificFlags)binaryReader.ReadInt16();
+            invalidName_7 = binaryReader.ReadBytes(2);
+            invalidName_8 = binaryReader.ReadBytes(36);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)stateAttachedTo);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Int16)canUseOnMapType);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(invalidName_1, 0, 28);
+                binaryWriter.Write(anchorOffset);
+                binaryWriter.Write(widthScale);
+                binaryWriter.Write(heightScale);
+                binaryWriter.Write((Int16)scalingFlags);
+                binaryWriter.Write(invalidName_2, 0, 2);
+                binaryWriter.Write(invalidName_3, 0, 20);
+                binaryWriter.Write(defaultColor);
+                binaryWriter.Write(flashingColor);
+                binaryWriter.Write(flashPeriod);
+                binaryWriter.Write(flashDelay);
+                binaryWriter.Write(numberOfFlashes);
+                binaryWriter.Write((Int16)flashFlags);
+                binaryWriter.Write(flashLength);
+                binaryWriter.Write(disabledColor);
+                binaryWriter.Write(invalidName_4, 0, 4);
+                binaryWriter.Write(maximumNumberOfDigits);
+                binaryWriter.Write((Byte)flags);
+                binaryWriter.Write(numberOfFractionalDigits);
+                binaryWriter.Write(invalidName_5, 0, 1);
+                binaryWriter.Write(invalidName_6, 0, 12);
+                binaryWriter.Write((Int16)weaponSpecificFlags);
+                binaryWriter.Write(invalidName_7, 0, 2);
+                binaryWriter.Write(invalidName_8, 0, 36);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum StateAttachedTo : short
-        
         {
             InventoryAmmo = 0,
             LoadedAmmo = 1,
@@ -109,7 +130,6 @@ namespace Moonfish.Guerilla.Tags
             ElevationToTarget = 7,
         };
         internal enum CanUseOnMapType : short
-        
         {
             Any = 0,
             Solo = 1,
@@ -117,20 +137,17 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum ScalingFlags : short
-        
         {
             DontScaleOffset = 1,
             DontScaleSize = 2,
         };
         [FlagsAttribute]
         internal enum FlashFlags : short
-        
         {
             ReverseDefaultFlashingColors = 1,
         };
         [FlagsAttribute]
         internal enum Flags : byte
-        
         {
             ShowLeadingZeros = 1,
             OnlyShowWhenZoomed = 2,
@@ -138,7 +155,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum WeaponSpecificFlags : short
-        
         {
             DivideNumberByClipSize = 1,
         };

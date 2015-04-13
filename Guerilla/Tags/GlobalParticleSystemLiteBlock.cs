@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 140)]
-    public class GlobalParticleSystemLiteBlockBase
+    [LayoutAttribute(Size = 140, Alignment = 4)]
+    public class GlobalParticleSystemLiteBlockBase  : IGuerilla
     {
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference sprites;
@@ -44,62 +45,63 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal  GlobalParticleSystemLiteBlockBase(BinaryReader binaryReader)
         {
-            this.sprites = binaryReader.ReadTagReference();
-            this.viewBoxWidth = binaryReader.ReadSingle();
-            this.viewBoxHeight = binaryReader.ReadSingle();
-            this.viewBoxDepth = binaryReader.ReadSingle();
-            this.exclusionRadius = binaryReader.ReadSingle();
-            this.maxVelocity = binaryReader.ReadSingle();
-            this.minMass = binaryReader.ReadSingle();
-            this.maxMass = binaryReader.ReadSingle();
-            this.minSize = binaryReader.ReadSingle();
-            this.maxSize = binaryReader.ReadSingle();
-            this.maximumNumberOfParticles = binaryReader.ReadInt32();
-            this.initialVelocity = binaryReader.ReadVector3();
-            this.bitmapAnimationSpeed = binaryReader.ReadSingle();
-            this.geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            this.particleSystemData = ReadParticleSystemLiteDataBlockArray(binaryReader);
-            this.type = (Type)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.mininumOpacity = binaryReader.ReadSingle();
-            this.maxinumOpacity = binaryReader.ReadSingle();
-            this.rainStreakScale = binaryReader.ReadSingle();
-            this.rainLineWidth = binaryReader.ReadSingle();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.invalidName_1 = binaryReader.ReadBytes(4);
-            this.invalidName_2 = binaryReader.ReadBytes(4);
+            sprites = binaryReader.ReadTagReference();
+            viewBoxWidth = binaryReader.ReadSingle();
+            viewBoxHeight = binaryReader.ReadSingle();
+            viewBoxDepth = binaryReader.ReadSingle();
+            exclusionRadius = binaryReader.ReadSingle();
+            maxVelocity = binaryReader.ReadSingle();
+            minMass = binaryReader.ReadSingle();
+            maxMass = binaryReader.ReadSingle();
+            minSize = binaryReader.ReadSingle();
+            maxSize = binaryReader.ReadSingle();
+            maximumNumberOfParticles = binaryReader.ReadInt32();
+            initialVelocity = binaryReader.ReadVector3();
+            bitmapAnimationSpeed = binaryReader.ReadSingle();
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            particleSystemData = Guerilla.ReadBlockArray<ParticleSystemLiteDataBlock>(binaryReader);
+            type = (Type)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            mininumOpacity = binaryReader.ReadSingle();
+            maxinumOpacity = binaryReader.ReadSingle();
+            rainStreakScale = binaryReader.ReadSingle();
+            rainLineWidth = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            invalidName_1 = binaryReader.ReadBytes(4);
+            invalidName_2 = binaryReader.ReadBytes(4);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(sprites);
+                binaryWriter.Write(viewBoxWidth);
+                binaryWriter.Write(viewBoxHeight);
+                binaryWriter.Write(viewBoxDepth);
+                binaryWriter.Write(exclusionRadius);
+                binaryWriter.Write(maxVelocity);
+                binaryWriter.Write(minMass);
+                binaryWriter.Write(maxMass);
+                binaryWriter.Write(minSize);
+                binaryWriter.Write(maxSize);
+                binaryWriter.Write(maximumNumberOfParticles);
+                binaryWriter.Write(initialVelocity);
+                binaryWriter.Write(bitmapAnimationSpeed);
+                geometryBlockInfo.Write(binaryWriter);
+                Guerilla.WriteBlockArray<ParticleSystemLiteDataBlock>(binaryWriter, particleSystemData, nextAddress);
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(mininumOpacity);
+                binaryWriter.Write(maxinumOpacity);
+                binaryWriter.Write(rainStreakScale);
+                binaryWriter.Write(rainLineWidth);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write(invalidName_1, 0, 4);
+                binaryWriter.Write(invalidName_2, 0, 4);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ParticleSystemLiteDataBlock[] ReadParticleSystemLiteDataBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ParticleSystemLiteDataBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ParticleSystemLiteDataBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ParticleSystemLiteDataBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum Type : short
-        
         {
             Generic = 0,
             Snow = 1,

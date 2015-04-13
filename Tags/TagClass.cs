@@ -110,7 +110,7 @@ namespace Moonfish.Tags
         public string ToSafeString( )
         {
             var value = ToString( );
-            var illegalChars = new List<char>( new[] {'<', '>'} );
+            var illegalChars = new List<char>( new[] {'<', '>', '!', '*', '#', '+', ' '} );
             illegalChars.ForEach( x => { value = value.Replace( x, '_' ); } );
             illegalChars = Path.GetInvalidFileNameChars( ).ToList( );
             illegalChars.ForEach( x => { value = value.Replace( x.ToString( ), string.Empty ); } );

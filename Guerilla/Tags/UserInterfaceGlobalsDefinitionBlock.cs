@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass WgtzClass = (TagClass)"wgtz";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32)]
-    public class UserInterfaceGlobalsDefinitionBlockBase
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class UserInterfaceGlobalsDefinitionBlockBase  : IGuerilla
     {
         [TagReference("wigl")]
         internal Moonfish.Tags.TagReference sharedGlobals;
@@ -27,39 +36,21 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference gameHopperDescriptions;
         internal  UserInterfaceGlobalsDefinitionBlockBase(BinaryReader binaryReader)
         {
-            this.sharedGlobals = binaryReader.ReadTagReference();
-            this.screenWidgets = ReadUserInterfaceWidgetReferenceBlockArray(binaryReader);
-            this.mpVariantSettingsUi = binaryReader.ReadTagReference();
-            this.gameHopperDescriptions = binaryReader.ReadTagReference();
+            sharedGlobals = binaryReader.ReadTagReference();
+            screenWidgets = Guerilla.ReadBlockArray<UserInterfaceWidgetReferenceBlock>(binaryReader);
+            mpVariantSettingsUi = binaryReader.ReadTagReference();
+            gameHopperDescriptions = binaryReader.ReadTagReference();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(sharedGlobals);
+                Guerilla.WriteBlockArray<UserInterfaceWidgetReferenceBlock>(binaryWriter, screenWidgets, nextAddress);
+                binaryWriter.Write(mpVariantSettingsUi);
+                binaryWriter.Write(gameHopperDescriptions);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual UserInterfaceWidgetReferenceBlock[] ReadUserInterfaceWidgetReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UserInterfaceWidgetReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UserInterfaceWidgetReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UserInterfaceWidgetReferenceBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

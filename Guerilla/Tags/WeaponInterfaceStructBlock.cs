@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32)]
-    public class WeaponInterfaceStructBlockBase
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class WeaponInterfaceStructBlockBase  : IGuerilla
     {
         internal WeaponSharedInterfaceStructBlock sharedInterface;
         internal WeaponFirstPersonInterfaceBlock[] firstPerson;
@@ -23,38 +24,19 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference newHudInterface;
         internal  WeaponInterfaceStructBlockBase(BinaryReader binaryReader)
         {
-            this.sharedInterface = new WeaponSharedInterfaceStructBlock(binaryReader);
-            this.firstPerson = ReadWeaponFirstPersonInterfaceBlockArray(binaryReader);
-            this.newHudInterface = binaryReader.ReadTagReference();
+            sharedInterface = new WeaponSharedInterfaceStructBlock(binaryReader);
+            firstPerson = Guerilla.ReadBlockArray<WeaponFirstPersonInterfaceBlock>(binaryReader);
+            newHudInterface = binaryReader.ReadTagReference();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                sharedInterface.Write(binaryWriter);
+                Guerilla.WriteBlockArray<WeaponFirstPersonInterfaceBlock>(binaryWriter, firstPerson, nextAddress);
+                binaryWriter.Write(newHudInterface);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual WeaponFirstPersonInterfaceBlock[] ReadWeaponFirstPersonInterfaceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(WeaponFirstPersonInterfaceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new WeaponFirstPersonInterfaceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new WeaponFirstPersonInterfaceBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

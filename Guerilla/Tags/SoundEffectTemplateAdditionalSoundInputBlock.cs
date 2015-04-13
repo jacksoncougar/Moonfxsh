@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,31 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class SoundEffectTemplateAdditionalSoundInputBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class SoundEffectTemplateAdditionalSoundInputBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID dspEffect;
         internal MappingFunctionBlock lowFrequencySound;
         internal float timePeriodSeconds;
         internal  SoundEffectTemplateAdditionalSoundInputBlockBase(BinaryReader binaryReader)
         {
-            this.dspEffect = binaryReader.ReadStringID();
-            this.lowFrequencySound = new MappingFunctionBlock(binaryReader);
-            this.timePeriodSeconds = binaryReader.ReadSingle();
+            dspEffect = binaryReader.ReadStringID();
+            lowFrequencySound = new MappingFunctionBlock(binaryReader);
+            timePeriodSeconds = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(dspEffect);
+                lowFrequencySound.Write(binaryWriter);
+                binaryWriter.Write(timePeriodSeconds);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

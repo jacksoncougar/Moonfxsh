@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32)]
-    public class ScenarioNetpointsBlockBase
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class ScenarioNetpointsBlockBase  : IGuerilla
     {
         internal OpenTK.Vector3 position;
         internal float facingDegrees;
@@ -27,31 +28,31 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID eMPTYSTRING0;
         internal  ScenarioNetpointsBlockBase(BinaryReader binaryReader)
         {
-            this.position = binaryReader.ReadVector3();
-            this.facingDegrees = binaryReader.ReadSingle();
-            this.type = (Type)binaryReader.ReadInt16();
-            this.teamDesignator = (TeamDesignator)binaryReader.ReadInt16();
-            this.identifier = binaryReader.ReadInt16();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.eMPTYSTRING = binaryReader.ReadStringID();
-            this.eMPTYSTRING0 = binaryReader.ReadStringID();
+            position = binaryReader.ReadVector3();
+            facingDegrees = binaryReader.ReadSingle();
+            type = (Type)binaryReader.ReadInt16();
+            teamDesignator = (TeamDesignator)binaryReader.ReadInt16();
+            identifier = binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            eMPTYSTRING = binaryReader.ReadStringID();
+            eMPTYSTRING0 = binaryReader.ReadStringID();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(position);
+                binaryWriter.Write(facingDegrees);
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write((Int16)teamDesignator);
+                binaryWriter.Write(identifier);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(eMPTYSTRING);
+                binaryWriter.Write(eMPTYSTRING0);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum Type : short
-        
         {
             CTFFlagSpawn = 0,
             CTFFlagReturn = 1,
@@ -74,7 +75,6 @@ namespace Moonfish.Guerilla.Tags
             KingHill7 = 18,
         };
         internal enum TeamDesignator : short
-        
         {
             RedAlpha = 0,
             BlueBravo = 1,
@@ -88,7 +88,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             MultipleFlagBomb = 1,
             SingleFlagBomb = 2,

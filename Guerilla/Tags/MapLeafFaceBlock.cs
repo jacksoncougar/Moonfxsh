@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,44 +15,24 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class MapLeafFaceBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class MapLeafFaceBlockBase  : IGuerilla
     {
         internal int nodeIndex;
         internal MapLeafFaceVertexBlock[] vertices;
         internal  MapLeafFaceBlockBase(BinaryReader binaryReader)
         {
-            this.nodeIndex = binaryReader.ReadInt32();
-            this.vertices = ReadMapLeafFaceVertexBlockArray(binaryReader);
+            nodeIndex = binaryReader.ReadInt32();
+            vertices = Guerilla.ReadBlockArray<MapLeafFaceVertexBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(nodeIndex);
+                Guerilla.WriteBlockArray<MapLeafFaceVertexBlock>(binaryWriter, vertices, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual MapLeafFaceVertexBlock[] ReadMapLeafFaceVertexBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(MapLeafFaceVertexBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new MapLeafFaceVertexBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new MapLeafFaceVertexBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36)]
-    public class SkyAnimationBlockBase
+    [LayoutAttribute(Size = 36, Alignment = 4)]
+    public class SkyAnimationBlockBase  : IGuerilla
     {
         /// <summary>
         /// Index of the animation in the animation graph.
@@ -26,24 +27,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  SkyAnimationBlockBase(BinaryReader binaryReader)
         {
-            this.animationIndex = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.periodSec = binaryReader.ReadSingle();
-            this.invalidName_0 = binaryReader.ReadBytes(28);
+            animationIndex = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            periodSec = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(28);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(animationIndex);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(periodSec);
+                binaryWriter.Write(invalidName_0, 0, 28);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

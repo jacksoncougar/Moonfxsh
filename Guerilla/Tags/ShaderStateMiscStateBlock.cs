@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,35 +15,30 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 7)]
-    public class ShaderStateMiscStateBlockBase
+    [LayoutAttribute(Size = 7, Alignment = 4)]
+    public class ShaderStateMiscStateBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal byte[] invalidName_;
         internal Moonfish.Tags.RGBColor fogColor;
         internal  ShaderStateMiscStateBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.fogColor = binaryReader.ReadRGBColor();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            fogColor = binaryReader.ReadRGBColor();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(fogColor);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             YUVToRGB = 1,
             InvalidName16BitDither = 2,

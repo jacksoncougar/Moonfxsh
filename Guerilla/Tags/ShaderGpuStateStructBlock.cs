@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 56)]
-    public class ShaderGpuStateStructBlockBase
+    [LayoutAttribute(Size = 56, Alignment = 4)]
+    public class ShaderGpuStateStructBlockBase  : IGuerilla
     {
         internal RenderStateBlock[] renderStates;
         internal TextureStageStateBlock[] textureStageStates;
@@ -26,117 +27,27 @@ namespace Moonfish.Guerilla.Tags
         internal VertexShaderConstantBlock[] cnConstants;
         internal  ShaderGpuStateStructBlockBase(BinaryReader binaryReader)
         {
-            this.renderStates = ReadRenderStateBlockArray(binaryReader);
-            this.textureStageStates = ReadTextureStageStateBlockArray(binaryReader);
-            this.renderStateParameters = ReadRenderStateParameterBlockArray(binaryReader);
-            this.textureStageParameters = ReadTextureStageStateParameterBlockArray(binaryReader);
-            this.textures = ReadTextureBlockArray(binaryReader);
-            this.vnConstants = ReadVertexShaderConstantBlockArray(binaryReader);
-            this.cnConstants = ReadVertexShaderConstantBlockArray(binaryReader);
+            renderStates = Guerilla.ReadBlockArray<RenderStateBlock>(binaryReader);
+            textureStageStates = Guerilla.ReadBlockArray<TextureStageStateBlock>(binaryReader);
+            renderStateParameters = Guerilla.ReadBlockArray<RenderStateParameterBlock>(binaryReader);
+            textureStageParameters = Guerilla.ReadBlockArray<TextureStageStateParameterBlock>(binaryReader);
+            textures = Guerilla.ReadBlockArray<TextureBlock>(binaryReader);
+            vnConstants = Guerilla.ReadBlockArray<VertexShaderConstantBlock>(binaryReader);
+            cnConstants = Guerilla.ReadBlockArray<VertexShaderConstantBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteBlockArray<RenderStateBlock>(binaryWriter, renderStates, nextAddress);
+                Guerilla.WriteBlockArray<TextureStageStateBlock>(binaryWriter, textureStageStates, nextAddress);
+                Guerilla.WriteBlockArray<RenderStateParameterBlock>(binaryWriter, renderStateParameters, nextAddress);
+                Guerilla.WriteBlockArray<TextureStageStateParameterBlock>(binaryWriter, textureStageParameters, nextAddress);
+                Guerilla.WriteBlockArray<TextureBlock>(binaryWriter, textures, nextAddress);
+                Guerilla.WriteBlockArray<VertexShaderConstantBlock>(binaryWriter, vnConstants, nextAddress);
+                Guerilla.WriteBlockArray<VertexShaderConstantBlock>(binaryWriter, cnConstants, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual RenderStateBlock[] ReadRenderStateBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RenderStateBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderStateBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RenderStateBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual TextureStageStateBlock[] ReadTextureStageStateBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(TextureStageStateBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TextureStageStateBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new TextureStageStateBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RenderStateParameterBlock[] ReadRenderStateParameterBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RenderStateParameterBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderStateParameterBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RenderStateParameterBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual TextureStageStateParameterBlock[] ReadTextureStageStateParameterBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(TextureStageStateParameterBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TextureStageStateParameterBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new TextureStageStateParameterBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual TextureBlock[] ReadTextureBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(TextureBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TextureBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new TextureBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual VertexShaderConstantBlock[] ReadVertexShaderConstantBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(VertexShaderConstantBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new VertexShaderConstantBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new VertexShaderConstantBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

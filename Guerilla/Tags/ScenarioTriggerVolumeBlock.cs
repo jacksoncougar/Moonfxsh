@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 68)]
-    public class ScenarioTriggerVolumeBlockBase
+    [LayoutAttribute(Size = 68, Alignment = 4)]
+    public class ScenarioTriggerVolumeBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 objectName;
@@ -29,51 +30,53 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal  ScenarioTriggerVolumeBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.objectName = binaryReader.ReadShortBlockIndex1();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.nodeName = binaryReader.ReadStringID();
-            this.eMPTYSTRING = new []{ new EMPTYSTRING(binaryReader), new EMPTYSTRING(binaryReader), new EMPTYSTRING(binaryReader), new EMPTYSTRING(binaryReader), new EMPTYSTRING(binaryReader), new EMPTYSTRING(binaryReader),  };
-            this.position = binaryReader.ReadVector3();
-            this.extents = binaryReader.ReadVector3();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.killTriggerVolume = binaryReader.ReadShortBlockIndex1();
-            this.invalidName_1 = binaryReader.ReadBytes(2);
+            name = binaryReader.ReadStringID();
+            objectName = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
+            nodeName = binaryReader.ReadStringID();
+            eMPTYSTRING = new []{ new EMPTYSTRING(binaryReader), new EMPTYSTRING(binaryReader), new EMPTYSTRING(binaryReader), new EMPTYSTRING(binaryReader), new EMPTYSTRING(binaryReader), new EMPTYSTRING(binaryReader),  };
+            position = binaryReader.ReadVector3();
+            extents = binaryReader.ReadVector3();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            killTriggerVolume = binaryReader.ReadShortBlockIndex1();
+            invalidName_1 = binaryReader.ReadBytes(2);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write(objectName);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(nodeName);
+                eMPTYSTRING[0].Write(binaryWriter);
+                eMPTYSTRING[1].Write(binaryWriter);
+                eMPTYSTRING[2].Write(binaryWriter);
+                eMPTYSTRING[3].Write(binaryWriter);
+                eMPTYSTRING[4].Write(binaryWriter);
+                eMPTYSTRING[5].Write(binaryWriter);
+                binaryWriter.Write(position);
+                binaryWriter.Write(extents);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write(killTriggerVolume);
+                binaryWriter.Write(invalidName_1, 0, 2);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
-        public class EMPTYSTRING
+        public class EMPTYSTRING  : IGuerilla
         {
             internal float eMPTYSTRING;
             internal  EMPTYSTRING(BinaryReader binaryReader)
             {
-                this.eMPTYSTRING = binaryReader.ReadSingle();
+                eMPTYSTRING = binaryReader.ReadSingle();
             }
-            internal  virtual byte[] ReadData(BinaryReader binaryReader)
+            public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
-                var blamPointer = binaryReader.ReadBlamPointer(1);
-                var data = new byte[blamPointer.elementCount];
-                if(blamPointer.elementCount > 0)
+                using(binaryWriter.BaseStream.Pin())
                 {
-                    using (binaryReader.BaseStream.Pin())
-                    {
-                        binaryReader.BaseStream.Position = blamPointer[0];
-                        data = binaryReader.ReadBytes(blamPointer.elementCount);
-                    }
+                    binaryWriter.Write(eMPTYSTRING);
+                    return nextAddress = (int)binaryWriter.BaseStream.Position;
                 }
-                return data;
             }
         };
     };

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 68)]
-    public class ScenarioStructureBspReferenceBlockBase
+    [LayoutAttribute(Size = 68, Alignment = 4)]
+    public class ScenarioStructureBspReferenceBlockBase  : IGuerilla
     {
         internal byte[] invalidName_;
         [TagReference("sbsp")]
@@ -34,37 +35,42 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_4;
         internal  ScenarioStructureBspReferenceBlockBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(16);
-            this.structureBSP = binaryReader.ReadTagReference();
-            this.structureLightmap = binaryReader.ReadTagReference();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.uNUSEDRadianceEstSearchDistance = binaryReader.ReadSingle();
-            this.invalidName_1 = binaryReader.ReadBytes(4);
-            this.uNUSEDLuminelsPerWorldUnit = binaryReader.ReadSingle();
-            this.uNUSEDOutputWhiteReference = binaryReader.ReadSingle();
-            this.invalidName_2 = binaryReader.ReadBytes(8);
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.invalidName_3 = binaryReader.ReadBytes(2);
-            this.defaultSky = binaryReader.ReadShortBlockIndex1();
-            this.invalidName_4 = binaryReader.ReadBytes(2);
+            invalidName_ = binaryReader.ReadBytes(16);
+            structureBSP = binaryReader.ReadTagReference();
+            structureLightmap = binaryReader.ReadTagReference();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            uNUSEDRadianceEstSearchDistance = binaryReader.ReadSingle();
+            invalidName_1 = binaryReader.ReadBytes(4);
+            uNUSEDLuminelsPerWorldUnit = binaryReader.ReadSingle();
+            uNUSEDOutputWhiteReference = binaryReader.ReadSingle();
+            invalidName_2 = binaryReader.ReadBytes(8);
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_3 = binaryReader.ReadBytes(2);
+            defaultSky = binaryReader.ReadShortBlockIndex1();
+            invalidName_4 = binaryReader.ReadBytes(2);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 16);
+                binaryWriter.Write(structureBSP);
+                binaryWriter.Write(structureLightmap);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write(uNUSEDRadianceEstSearchDistance);
+                binaryWriter.Write(invalidName_1, 0, 4);
+                binaryWriter.Write(uNUSEDLuminelsPerWorldUnit);
+                binaryWriter.Write(uNUSEDOutputWhiteReference);
+                binaryWriter.Write(invalidName_2, 0, 8);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(invalidName_3, 0, 2);
+                binaryWriter.Write(defaultSky);
+                binaryWriter.Write(invalidName_4, 0, 2);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             DefaultSkyEnabled = 1,
         };

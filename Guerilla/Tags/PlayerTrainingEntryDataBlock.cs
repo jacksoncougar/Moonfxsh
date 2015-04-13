@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 28)]
-    public class PlayerTrainingEntryDataBlockBase
+    [LayoutAttribute(Size = 28, Alignment = 4)]
+    public class PlayerTrainingEntryDataBlockBase  : IGuerilla
     {
         /// <summary>
         /// comes out of the HUD text globals
@@ -53,34 +54,36 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  PlayerTrainingEntryDataBlockBase(BinaryReader binaryReader)
         {
-            this.displayString = binaryReader.ReadStringID();
-            this.displayString2 = binaryReader.ReadStringID();
-            this.displayString3 = binaryReader.ReadStringID();
-            this.maxDisplayTime = binaryReader.ReadInt16();
-            this.displayCount = binaryReader.ReadInt16();
-            this.dissapearDelay = binaryReader.ReadInt16();
-            this.redisplayDelay = binaryReader.ReadInt16();
-            this.displayDelayS = binaryReader.ReadSingle();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
+            displayString = binaryReader.ReadStringID();
+            displayString2 = binaryReader.ReadStringID();
+            displayString3 = binaryReader.ReadStringID();
+            maxDisplayTime = binaryReader.ReadInt16();
+            displayCount = binaryReader.ReadInt16();
+            dissapearDelay = binaryReader.ReadInt16();
+            redisplayDelay = binaryReader.ReadInt16();
+            displayDelayS = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(displayString);
+                binaryWriter.Write(displayString2);
+                binaryWriter.Write(displayString3);
+                binaryWriter.Write(maxDisplayTime);
+                binaryWriter.Write(displayCount);
+                binaryWriter.Write(dissapearDelay);
+                binaryWriter.Write(redisplayDelay);
+                binaryWriter.Write(displayDelayS);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(invalidName_, 0, 2);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             NotInMultiplayer = 1,
         };

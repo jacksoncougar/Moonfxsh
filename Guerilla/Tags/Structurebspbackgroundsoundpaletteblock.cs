@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 100)]
-    public class StructureBspBackgroundSoundPaletteBlockBase
+    [LayoutAttribute(Size = 100, Alignment = 4)]
+    public class StructureBspBackgroundSoundPaletteBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         [TagReference("lsnd")]
@@ -35,35 +36,38 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  StructureBspBackgroundSoundPaletteBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadString32();
-            this.backgroundSound = binaryReader.ReadTagReference();
-            this.insideClusterSound = binaryReader.ReadTagReference();
-            this.invalidName_ = binaryReader.ReadBytes(20);
-            this.cutoffDistance = binaryReader.ReadSingle();
-            this.scaleFlags = (ScaleFlags)binaryReader.ReadInt32();
-            this.interiorScale = binaryReader.ReadSingle();
-            this.portalScale = binaryReader.ReadSingle();
-            this.exteriorScale = binaryReader.ReadSingle();
-            this.interpolationSpeed1Sec = binaryReader.ReadSingle();
-            this.invalidName_0 = binaryReader.ReadBytes(8);
+            name = binaryReader.ReadString32();
+            backgroundSound = binaryReader.ReadTagReference();
+            insideClusterSound = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(20);
+            cutoffDistance = binaryReader.ReadSingle();
+            scaleFlags = (ScaleFlags)binaryReader.ReadInt32();
+            interiorScale = binaryReader.ReadSingle();
+            portalScale = binaryReader.ReadSingle();
+            exteriorScale = binaryReader.ReadSingle();
+            interpolationSpeed1Sec = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(8);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write(backgroundSound);
+                binaryWriter.Write(insideClusterSound);
+                binaryWriter.Write(invalidName_, 0, 20);
+                binaryWriter.Write(cutoffDistance);
+                binaryWriter.Write((Int32)scaleFlags);
+                binaryWriter.Write(interiorScale);
+                binaryWriter.Write(portalScale);
+                binaryWriter.Write(exteriorScale);
+                binaryWriter.Write(interpolationSpeed1Sec);
+                binaryWriter.Write(invalidName_0, 0, 8);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum ScaleFlags : int
-        
         {
             OverrideDefaultScale = 1,
             UseAdjacentClusterAsPortalScale = 2,

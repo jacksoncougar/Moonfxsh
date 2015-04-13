@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 64)]
-    public class HudMessagesBlockBase
+    [LayoutAttribute(Size = 64, Alignment = 4)]
+    public class HudMessagesBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal short startIndexIntoTextBlob;
@@ -25,26 +26,25 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  HudMessagesBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadString32();
-            this.startIndexIntoTextBlob = binaryReader.ReadInt16();
-            this.startIndexOfMessageBlock = binaryReader.ReadInt16();
-            this.panelCount = binaryReader.ReadByte();
-            this.invalidName_ = binaryReader.ReadBytes(3);
-            this.invalidName_0 = binaryReader.ReadBytes(24);
+            name = binaryReader.ReadString32();
+            startIndexIntoTextBlob = binaryReader.ReadInt16();
+            startIndexOfMessageBlock = binaryReader.ReadInt16();
+            panelCount = binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes(3);
+            invalidName_0 = binaryReader.ReadBytes(24);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write(startIndexIntoTextBlob);
+                binaryWriter.Write(startIndexOfMessageBlock);
+                binaryWriter.Write(panelCount);
+                binaryWriter.Write(invalidName_, 0, 3);
+                binaryWriter.Write(invalidName_0, 0, 24);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

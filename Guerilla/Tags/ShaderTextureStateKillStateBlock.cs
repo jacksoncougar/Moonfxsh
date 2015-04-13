@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 11)]
-    public class ShaderTextureStateKillStateBlockBase
+    [LayoutAttribute(Size = 11, Alignment = 4)]
+    public class ShaderTextureStateKillStateBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal byte[] invalidName_;
@@ -24,34 +25,30 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.RGBColor colorkeyColor;
         internal  ShaderTextureStateKillStateBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.colorkeyMode = (ColorkeyMode)binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.colorkeyColor = binaryReader.ReadRGBColor();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            colorkeyMode = (ColorkeyMode)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            colorkeyColor = binaryReader.ReadRGBColor();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Int16)colorkeyMode);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(colorkeyColor);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             AlphaKill = 1,
         };
         internal enum ColorkeyMode : short
-        
         {
             Disabled = 0,
             ZeroAlpha = 1,

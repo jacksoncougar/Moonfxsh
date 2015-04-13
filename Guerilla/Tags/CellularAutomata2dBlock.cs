@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass WhipClass = (TagClass)"whip";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 544)]
-    public class CellularAutomata2dBlockBase
+    [LayoutAttribute(Size = 544, Alignment = 4)]
+    public class CellularAutomata2dBlockBase  : IGuerilla
     {
         internal short updatesPerSecondHz;
         internal byte[] invalidName_;
@@ -49,67 +58,72 @@ namespace Moonfish.Guerilla.Tags
         internal RulesBlock[] rules;
         internal  CellularAutomata2dBlockBase(BinaryReader binaryReader)
         {
-            this.updatesPerSecondHz = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.deadCellPenalty = binaryReader.ReadSingle();
-            this.liveCellBonus = binaryReader.ReadSingle();
-            this.invalidName_0 = binaryReader.ReadBytes(80);
-            this.widthCells = binaryReader.ReadInt16();
-            this.heightCells = binaryReader.ReadInt16();
-            this.cellWidthWorldUnits = binaryReader.ReadSingle();
-            this.heightWorldUnits = binaryReader.ReadSingle();
-            this.velocityCellsUpdate = binaryReader.ReadVector2();
-            this.invalidName_1 = binaryReader.ReadBytes(28);
-            this.marker = binaryReader.ReadStringID();
-            this.interpolationFlags = (InterpolationFlags)binaryReader.ReadInt32();
-            this.baseColor = binaryReader.ReadColorR8G8B8();
-            this.peakColor = binaryReader.ReadColorR8G8B8();
-            this.invalidName_2 = binaryReader.ReadBytes(76);
-            this.widthCells0 = binaryReader.ReadInt16();
-            this.heightCells0 = binaryReader.ReadInt16();
-            this.cellWidthWorldUnits0 = binaryReader.ReadSingle();
-            this.velocityCellsUpdate0 = binaryReader.ReadVector2();
-            this.invalidName_3 = binaryReader.ReadBytes(48);
-            this.marker0 = binaryReader.ReadStringID();
-            this.textureWidthCells = binaryReader.ReadInt16();
-            this.invalidName_4 = binaryReader.ReadBytes(2);
-            this.invalidName_5 = binaryReader.ReadBytes(48);
-            this.texture = binaryReader.ReadTagReference();
-            this.invalidName_6 = binaryReader.ReadBytes(160);
-            this.rules = ReadRulesBlockArray(binaryReader);
+            updatesPerSecondHz = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            deadCellPenalty = binaryReader.ReadSingle();
+            liveCellBonus = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(80);
+            widthCells = binaryReader.ReadInt16();
+            heightCells = binaryReader.ReadInt16();
+            cellWidthWorldUnits = binaryReader.ReadSingle();
+            heightWorldUnits = binaryReader.ReadSingle();
+            velocityCellsUpdate = binaryReader.ReadVector2();
+            invalidName_1 = binaryReader.ReadBytes(28);
+            marker = binaryReader.ReadStringID();
+            interpolationFlags = (InterpolationFlags)binaryReader.ReadInt32();
+            baseColor = binaryReader.ReadColorR8G8B8();
+            peakColor = binaryReader.ReadColorR8G8B8();
+            invalidName_2 = binaryReader.ReadBytes(76);
+            widthCells0 = binaryReader.ReadInt16();
+            heightCells0 = binaryReader.ReadInt16();
+            cellWidthWorldUnits0 = binaryReader.ReadSingle();
+            velocityCellsUpdate0 = binaryReader.ReadVector2();
+            invalidName_3 = binaryReader.ReadBytes(48);
+            marker0 = binaryReader.ReadStringID();
+            textureWidthCells = binaryReader.ReadInt16();
+            invalidName_4 = binaryReader.ReadBytes(2);
+            invalidName_5 = binaryReader.ReadBytes(48);
+            texture = binaryReader.ReadTagReference();
+            invalidName_6 = binaryReader.ReadBytes(160);
+            rules = Guerilla.ReadBlockArray<RulesBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(updatesPerSecondHz);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(deadCellPenalty);
+                binaryWriter.Write(liveCellBonus);
+                binaryWriter.Write(invalidName_0, 0, 80);
+                binaryWriter.Write(widthCells);
+                binaryWriter.Write(heightCells);
+                binaryWriter.Write(cellWidthWorldUnits);
+                binaryWriter.Write(heightWorldUnits);
+                binaryWriter.Write(velocityCellsUpdate);
+                binaryWriter.Write(invalidName_1, 0, 28);
+                binaryWriter.Write(marker);
+                binaryWriter.Write((Int32)interpolationFlags);
+                binaryWriter.Write(baseColor);
+                binaryWriter.Write(peakColor);
+                binaryWriter.Write(invalidName_2, 0, 76);
+                binaryWriter.Write(widthCells0);
+                binaryWriter.Write(heightCells0);
+                binaryWriter.Write(cellWidthWorldUnits0);
+                binaryWriter.Write(velocityCellsUpdate0);
+                binaryWriter.Write(invalidName_3, 0, 48);
+                binaryWriter.Write(marker0);
+                binaryWriter.Write(textureWidthCells);
+                binaryWriter.Write(invalidName_4, 0, 2);
+                binaryWriter.Write(invalidName_5, 0, 48);
+                binaryWriter.Write(texture);
+                binaryWriter.Write(invalidName_6, 0, 160);
+                Guerilla.WriteBlockArray<RulesBlock>(binaryWriter, rules, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual RulesBlock[] ReadRulesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RulesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RulesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RulesBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum InterpolationFlags : int
-        
         {
             BlendInHsvBlendsColorsInHsvRatherThanRgbSpace = 1,
             MoreColorsBlendsColorsThroughMoreHuesGoesTheLongWayAroundTheColorWheel = 2,

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24)]
-    public class DecoratorCellCollectionBlockBase
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class DecoratorCellCollectionBlockBase  : IGuerilla
     {
         internal ChildIndices[] childIndices;
         internal Moonfish.Tags.ShortBlockIndex1 cacheBlockIndex;
@@ -23,45 +24,43 @@ namespace Moonfish.Guerilla.Tags
         internal int groupStartIndex;
         internal  DecoratorCellCollectionBlockBase(BinaryReader binaryReader)
         {
-            this.childIndices = new []{ new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader),  };
-            this.cacheBlockIndex = binaryReader.ReadShortBlockIndex1();
-            this.groupCount = binaryReader.ReadInt16();
-            this.groupStartIndex = binaryReader.ReadInt32();
+            childIndices = new []{ new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader),  };
+            cacheBlockIndex = binaryReader.ReadShortBlockIndex1();
+            groupCount = binaryReader.ReadInt16();
+            groupStartIndex = binaryReader.ReadInt32();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                childIndices[0].Write(binaryWriter);
+                childIndices[1].Write(binaryWriter);
+                childIndices[2].Write(binaryWriter);
+                childIndices[3].Write(binaryWriter);
+                childIndices[4].Write(binaryWriter);
+                childIndices[5].Write(binaryWriter);
+                childIndices[6].Write(binaryWriter);
+                childIndices[7].Write(binaryWriter);
+                binaryWriter.Write(cacheBlockIndex);
+                binaryWriter.Write(groupCount);
+                binaryWriter.Write(groupStartIndex);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
-        public class ChildIndices
+        public class ChildIndices  : IGuerilla
         {
             internal short childIndex;
             internal  ChildIndices(BinaryReader binaryReader)
             {
-                this.childIndex = binaryReader.ReadInt16();
+                childIndex = binaryReader.ReadInt16();
             }
-            internal  virtual byte[] ReadData(BinaryReader binaryReader)
+            public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
-                var blamPointer = binaryReader.ReadBlamPointer(1);
-                var data = new byte[blamPointer.elementCount];
-                if(blamPointer.elementCount > 0)
+                using(binaryWriter.BaseStream.Pin())
                 {
-                    using (binaryReader.BaseStream.Pin())
-                    {
-                        binaryReader.BaseStream.Position = blamPointer[0];
-                        data = binaryReader.ReadBytes(blamPointer.elementCount);
-                    }
+                    binaryWriter.Write(childIndex);
+                    return nextAddress = (int)binaryWriter.BaseStream.Position;
                 }
-                return data;
             }
         };
     };

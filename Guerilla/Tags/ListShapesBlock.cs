@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,34 +15,29 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8)]
-    public class ListShapesBlockBase
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class ListShapesBlockBase  : IGuerilla
     {
         internal ShapeType shapeType;
         internal Moonfish.Tags.ShortBlockIndex2 shape;
         internal int collisionFilter;
         internal  ListShapesBlockBase(BinaryReader binaryReader)
         {
-            this.shapeType = (ShapeType)binaryReader.ReadInt16();
-            this.shape = binaryReader.ReadShortBlockIndex2();
-            this.collisionFilter = binaryReader.ReadInt32();
+            shapeType = (ShapeType)binaryReader.ReadInt16();
+            shape = binaryReader.ReadShortBlockIndex2();
+            collisionFilter = binaryReader.ReadInt32();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)shapeType);
+                binaryWriter.Write(shape);
+                binaryWriter.Write(collisionFilter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum ShapeType : short
-        
         {
             Sphere = 0,
             Pill = 1,

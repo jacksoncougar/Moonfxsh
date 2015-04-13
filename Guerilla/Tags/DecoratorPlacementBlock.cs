@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 22)]
-    public class DecoratorPlacementBlockBase
+    [LayoutAttribute(Size = 22, Alignment = 4)]
+    public class DecoratorPlacementBlockBase  : IGuerilla
     {
         internal int internalData1;
         internal int compressedPosition;
@@ -25,26 +26,25 @@ namespace Moonfish.Guerilla.Tags
         internal int compressedLight2Direction;
         internal  DecoratorPlacementBlockBase(BinaryReader binaryReader)
         {
-            this.internalData1 = binaryReader.ReadInt32();
-            this.compressedPosition = binaryReader.ReadInt32();
-            this.tintColor = binaryReader.ReadRGBColor();
-            this.lightmapColor = binaryReader.ReadRGBColor();
-            this.compressedLightDirection = binaryReader.ReadInt32();
-            this.compressedLight2Direction = binaryReader.ReadInt32();
+            internalData1 = binaryReader.ReadInt32();
+            compressedPosition = binaryReader.ReadInt32();
+            tintColor = binaryReader.ReadRGBColor();
+            lightmapColor = binaryReader.ReadRGBColor();
+            compressedLightDirection = binaryReader.ReadInt32();
+            compressedLight2Direction = binaryReader.ReadInt32();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(internalData1);
+                binaryWriter.Write(compressedPosition);
+                binaryWriter.Write(tintColor);
+                binaryWriter.Write(lightmapColor);
+                binaryWriter.Write(compressedLightDirection);
+                binaryWriter.Write(compressedLight2Direction);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

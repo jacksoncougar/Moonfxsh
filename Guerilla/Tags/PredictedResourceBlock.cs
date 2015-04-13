@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,34 +15,29 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8)]
-    public class PredictedResourceBlockBase
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class PredictedResourceBlockBase  : IGuerilla
     {
         internal Type type;
         internal short resourceIndex;
         internal int tagIndex;
         internal  PredictedResourceBlockBase(BinaryReader binaryReader)
         {
-            this.type = (Type)binaryReader.ReadInt16();
-            this.resourceIndex = binaryReader.ReadInt16();
-            this.tagIndex = binaryReader.ReadInt32();
+            type = (Type)binaryReader.ReadInt16();
+            resourceIndex = binaryReader.ReadInt16();
+            tagIndex = binaryReader.ReadInt32();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write(resourceIndex);
+                binaryWriter.Write(tagIndex);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum Type : short
-        
         {
             Bitmap = 0,
             Sound = 1,

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,46 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 84)]
-    public class LightmapGeometrySectionBlockBase
+    [LayoutAttribute(Size = 84, Alignment = 4)]
+    public class LightmapGeometrySectionBlockBase  : IGuerilla
     {
         internal GlobalGeometrySectionInfoStructBlock geometryInfo;
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
         internal LightmapGeometrySectionCacheDataBlock[] cacheData;
         internal  LightmapGeometrySectionBlockBase(BinaryReader binaryReader)
         {
-            this.geometryInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
-            this.geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            this.cacheData = ReadLightmapGeometrySectionCacheDataBlockArray(binaryReader);
+            geometryInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            cacheData = Guerilla.ReadBlockArray<LightmapGeometrySectionCacheDataBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                geometryInfo.Write(binaryWriter);
+                geometryBlockInfo.Write(binaryWriter);
+                Guerilla.WriteBlockArray<LightmapGeometrySectionCacheDataBlock>(binaryWriter, cacheData, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual LightmapGeometrySectionCacheDataBlock[] ReadLightmapGeometrySectionCacheDataBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LightmapGeometrySectionCacheDataBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightmapGeometrySectionCacheDataBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LightmapGeometrySectionCacheDataBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

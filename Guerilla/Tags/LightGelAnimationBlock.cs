@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,29 +15,24 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class LightGelAnimationBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class LightGelAnimationBlockBase  : IGuerilla
     {
         internal MappingFunctionBlock dx;
         internal MappingFunctionBlock dy;
         internal  LightGelAnimationBlockBase(BinaryReader binaryReader)
         {
-            this.dx = new MappingFunctionBlock(binaryReader);
-            this.dy = new MappingFunctionBlock(binaryReader);
+            dx = new MappingFunctionBlock(binaryReader);
+            dy = new MappingFunctionBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                dx.Write(binaryWriter);
+                dy.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,31 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 48)]
-    public class PlatformSoundPitchLfoBlockBase
+    [LayoutAttribute(Size = 48, Alignment = 4)]
+    public class PlatformSoundPitchLfoBlockBase  : IGuerilla
     {
         internal SoundPlaybackParameterDefinitionBlock delay;
         internal SoundPlaybackParameterDefinitionBlock frequency;
         internal SoundPlaybackParameterDefinitionBlock pitchModulation;
         internal  PlatformSoundPitchLfoBlockBase(BinaryReader binaryReader)
         {
-            this.delay = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            this.frequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            this.pitchModulation = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            delay = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            frequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            pitchModulation = new SoundPlaybackParameterDefinitionBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                delay.Write(binaryWriter);
+                frequency.Write(binaryWriter);
+                pitchModulation.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

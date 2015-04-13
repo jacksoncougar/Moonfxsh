@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,29 +15,24 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24)]
-    public class LightmapBucketRawVertexBlockBase
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class LightmapBucketRawVertexBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.ColorR8G8B8 primaryLightmapColor;
         internal OpenTK.Vector3 primaryLightmapIncidentDirection;
         internal  LightmapBucketRawVertexBlockBase(BinaryReader binaryReader)
         {
-            this.primaryLightmapColor = binaryReader.ReadColorR8G8B8();
-            this.primaryLightmapIncidentDirection = binaryReader.ReadVector3();
+            primaryLightmapColor = binaryReader.ReadColorR8G8B8();
+            primaryLightmapIncidentDirection = binaryReader.ReadVector3();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(primaryLightmapColor);
+                binaryWriter.Write(primaryLightmapIncidentDirection);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

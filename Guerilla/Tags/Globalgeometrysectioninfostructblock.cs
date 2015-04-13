@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 40)]
-    public class GlobalGeometrySectionInfoStructBlockBase
+    [LayoutAttribute(Size = 40, Alignment = 4)]
+    public class GlobalGeometrySectionInfoStructBlockBase  : IGuerilla
     {
         internal short totalVertexCount;
         internal short totalTriangleCount;
@@ -38,57 +39,53 @@ namespace Moonfish.Guerilla.Tags
         internal SectionLightingFlags sectionLightingFlags;
         internal  GlobalGeometrySectionInfoStructBlockBase(BinaryReader binaryReader)
         {
-            this.totalVertexCount = binaryReader.ReadInt16();
-            this.totalTriangleCount = binaryReader.ReadInt16();
-            this.totalPartCount = binaryReader.ReadInt16();
-            this.shadowCastingTriangleCount = binaryReader.ReadInt16();
-            this.shadowCastingPartCount = binaryReader.ReadInt16();
-            this.opaquePointCount = binaryReader.ReadInt16();
-            this.opaqueVertexCount = binaryReader.ReadInt16();
-            this.opaquePartCount = binaryReader.ReadInt16();
-            this.opaqueMaxNodesVertex = binaryReader.ReadByte();
-            this.transparentMaxNodesVertex = binaryReader.ReadByte();
-            this.shadowCastingRigidTriangleCount = binaryReader.ReadInt16();
-            this.geometryClassification = (GeometryClassification)binaryReader.ReadInt16();
-            this.geometryCompressionFlags = (GeometryCompressionFlags)binaryReader.ReadInt16();
-            this.eMPTYSTRING = ReadGlobalGeometryCompressionInfoBlockArray(binaryReader);
-            this.hardwareNodeCount = binaryReader.ReadByte();
-            this.nodeMapSize = binaryReader.ReadByte();
-            this.softwarePlaneCount = binaryReader.ReadInt16();
-            this.totalSubpartCont = binaryReader.ReadInt16();
-            this.sectionLightingFlags = (SectionLightingFlags)binaryReader.ReadInt16();
+            totalVertexCount = binaryReader.ReadInt16();
+            totalTriangleCount = binaryReader.ReadInt16();
+            totalPartCount = binaryReader.ReadInt16();
+            shadowCastingTriangleCount = binaryReader.ReadInt16();
+            shadowCastingPartCount = binaryReader.ReadInt16();
+            opaquePointCount = binaryReader.ReadInt16();
+            opaqueVertexCount = binaryReader.ReadInt16();
+            opaquePartCount = binaryReader.ReadInt16();
+            opaqueMaxNodesVertex = binaryReader.ReadByte();
+            transparentMaxNodesVertex = binaryReader.ReadByte();
+            shadowCastingRigidTriangleCount = binaryReader.ReadInt16();
+            geometryClassification = (GeometryClassification)binaryReader.ReadInt16();
+            geometryCompressionFlags = (GeometryCompressionFlags)binaryReader.ReadInt16();
+            eMPTYSTRING = Guerilla.ReadBlockArray<GlobalGeometryCompressionInfoBlock>(binaryReader);
+            hardwareNodeCount = binaryReader.ReadByte();
+            nodeMapSize = binaryReader.ReadByte();
+            softwarePlaneCount = binaryReader.ReadInt16();
+            totalSubpartCont = binaryReader.ReadInt16();
+            sectionLightingFlags = (SectionLightingFlags)binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(totalVertexCount);
+                binaryWriter.Write(totalTriangleCount);
+                binaryWriter.Write(totalPartCount);
+                binaryWriter.Write(shadowCastingTriangleCount);
+                binaryWriter.Write(shadowCastingPartCount);
+                binaryWriter.Write(opaquePointCount);
+                binaryWriter.Write(opaqueVertexCount);
+                binaryWriter.Write(opaquePartCount);
+                binaryWriter.Write(opaqueMaxNodesVertex);
+                binaryWriter.Write(transparentMaxNodesVertex);
+                binaryWriter.Write(shadowCastingRigidTriangleCount);
+                binaryWriter.Write((Int16)geometryClassification);
+                binaryWriter.Write((Int16)geometryCompressionFlags);
+                Guerilla.WriteBlockArray<GlobalGeometryCompressionInfoBlock>(binaryWriter, eMPTYSTRING, nextAddress);
+                binaryWriter.Write(hardwareNodeCount);
+                binaryWriter.Write(nodeMapSize);
+                binaryWriter.Write(softwarePlaneCount);
+                binaryWriter.Write(totalSubpartCont);
+                binaryWriter.Write((Int16)sectionLightingFlags);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual GlobalGeometryCompressionInfoBlock[] ReadGlobalGeometryCompressionInfoBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalGeometryCompressionInfoBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalGeometryCompressionInfoBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalGeometryCompressionInfoBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum GeometryClassification : short
-        
         {
             Worldspace = 0,
             Rigid = 1,
@@ -98,7 +95,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum GeometryCompressionFlags : short
-        
         {
             CompressedPosition = 1,
             CompressedTexcoord = 2,
@@ -106,7 +102,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum SectionLightingFlags : short
-        
         {
             HasLmTexcoords = 1,
             HasLmIncRad = 2,

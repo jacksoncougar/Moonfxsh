@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,29 +15,24 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 13)]
-    public class ShaderPostprocessColorBlockBase
+    [LayoutAttribute(Size = 13, Alignment = 4)]
+    public class ShaderPostprocessColorBlockBase  : IGuerilla
     {
         internal byte parameterIndex;
         internal Moonfish.Tags.ColorR8G8B8 color;
         internal  ShaderPostprocessColorBlockBase(BinaryReader binaryReader)
         {
-            this.parameterIndex = binaryReader.ReadByte();
-            this.color = binaryReader.ReadColorR8G8B8();
+            parameterIndex = binaryReader.ReadByte();
+            color = binaryReader.ReadColorR8G8B8();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(parameterIndex);
+                binaryWriter.Write(color);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

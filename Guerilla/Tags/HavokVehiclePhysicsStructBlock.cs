@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 84)]
-    public class HavokVehiclePhysicsStructBlockBase
+    [LayoutAttribute(Size = 84, Alignment = 4)]
+    public class HavokVehiclePhysicsStructBlockBase  : IGuerilla
     {
         internal Flags flags;
         /// <summary>
@@ -64,84 +65,46 @@ namespace Moonfish.Guerilla.Tags
         internal VehiclePhantomShapeBlock[] shapePhantomShape;
         internal  HavokVehiclePhysicsStructBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.groundFriction = binaryReader.ReadSingle();
-            this.groundDepth = binaryReader.ReadSingle();
-            this.groundDampFactor = binaryReader.ReadSingle();
-            this.groundMovingFriction = binaryReader.ReadSingle();
-            this.groundMaximumSlope0 = binaryReader.ReadSingle();
-            this.groundMaximumSlope1 = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes(16);
-            this.antiGravityBankLift = binaryReader.ReadSingle();
-            this.steeringBankReactionScale = binaryReader.ReadSingle();
-            this.gravityScale = binaryReader.ReadSingle();
-            this.radius = binaryReader.ReadSingle();
-            this.antiGravityPoints = ReadAntiGravityPointDefinitionBlockArray(binaryReader);
-            this.frictionPoints = ReadFrictionPointDefinitionBlockArray(binaryReader);
-            this.shapePhantomShape = ReadVehiclePhantomShapeBlockArray(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            groundFriction = binaryReader.ReadSingle();
+            groundDepth = binaryReader.ReadSingle();
+            groundDampFactor = binaryReader.ReadSingle();
+            groundMovingFriction = binaryReader.ReadSingle();
+            groundMaximumSlope0 = binaryReader.ReadSingle();
+            groundMaximumSlope1 = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(16);
+            antiGravityBankLift = binaryReader.ReadSingle();
+            steeringBankReactionScale = binaryReader.ReadSingle();
+            gravityScale = binaryReader.ReadSingle();
+            radius = binaryReader.ReadSingle();
+            antiGravityPoints = Guerilla.ReadBlockArray<AntiGravityPointDefinitionBlock>(binaryReader);
+            frictionPoints = Guerilla.ReadBlockArray<FrictionPointDefinitionBlock>(binaryReader);
+            shapePhantomShape = Guerilla.ReadBlockArray<VehiclePhantomShapeBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(groundFriction);
+                binaryWriter.Write(groundDepth);
+                binaryWriter.Write(groundDampFactor);
+                binaryWriter.Write(groundMovingFriction);
+                binaryWriter.Write(groundMaximumSlope0);
+                binaryWriter.Write(groundMaximumSlope1);
+                binaryWriter.Write(invalidName_, 0, 16);
+                binaryWriter.Write(antiGravityBankLift);
+                binaryWriter.Write(steeringBankReactionScale);
+                binaryWriter.Write(gravityScale);
+                binaryWriter.Write(radius);
+                Guerilla.WriteBlockArray<AntiGravityPointDefinitionBlock>(binaryWriter, antiGravityPoints, nextAddress);
+                Guerilla.WriteBlockArray<FrictionPointDefinitionBlock>(binaryWriter, frictionPoints, nextAddress);
+                Guerilla.WriteBlockArray<VehiclePhantomShapeBlock>(binaryWriter, shapePhantomShape, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual AntiGravityPointDefinitionBlock[] ReadAntiGravityPointDefinitionBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AntiGravityPointDefinitionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AntiGravityPointDefinitionBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AntiGravityPointDefinitionBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual FrictionPointDefinitionBlock[] ReadFrictionPointDefinitionBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(FrictionPointDefinitionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new FrictionPointDefinitionBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new FrictionPointDefinitionBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual VehiclePhantomShapeBlock[] ReadVehiclePhantomShapeBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(VehiclePhantomShapeBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new VehiclePhantomShapeBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new VehiclePhantomShapeBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             Invalid = 1,
         };

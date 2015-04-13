@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass SlitClass = (TagClass)"slit";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class ShaderLightResponseBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class ShaderLightResponseBlockBase  : IGuerilla
     {
         internal ShaderTemplateCategoryBlock[] categories;
         internal ShaderTemplateLevelOfDetailBlock[] shaderLODs;
@@ -24,54 +33,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  ShaderLightResponseBlockBase(BinaryReader binaryReader)
         {
-            this.categories = ReadShaderTemplateCategoryBlockArray(binaryReader);
-            this.shaderLODs = ReadShaderTemplateLevelOfDetailBlockArray(binaryReader);
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.invalidName_0 = binaryReader.ReadBytes(2);
+            categories = Guerilla.ReadBlockArray<ShaderTemplateCategoryBlock>(binaryReader);
+            shaderLODs = Guerilla.ReadBlockArray<ShaderTemplateLevelOfDetailBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(2);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteBlockArray<ShaderTemplateCategoryBlock>(binaryWriter, categories, nextAddress);
+                Guerilla.WriteBlockArray<ShaderTemplateLevelOfDetailBlock>(binaryWriter, shaderLODs, nextAddress);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ShaderTemplateCategoryBlock[] ReadShaderTemplateCategoryBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderTemplateCategoryBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderTemplateCategoryBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderTemplateCategoryBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ShaderTemplateLevelOfDetailBlock[] ReadShaderTemplateLevelOfDetailBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderTemplateLevelOfDetailBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderTemplateLevelOfDetailBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderTemplateLevelOfDetailBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,49 +15,29 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class AiSceneTriggerBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class AiSceneTriggerBlockBase  : IGuerilla
     {
         internal CombinationRule combinationRule;
         internal byte[] invalidName_;
         internal TriggerReferences[] triggers;
         internal  AiSceneTriggerBlockBase(BinaryReader binaryReader)
         {
-            this.combinationRule = (CombinationRule)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.triggers = ReadTriggerReferencesArray(binaryReader);
+            combinationRule = (CombinationRule)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            triggers = Guerilla.ReadBlockArray<TriggerReferences>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)combinationRule);
+                binaryWriter.Write(invalidName_, 0, 2);
+                Guerilla.WriteBlockArray<TriggerReferences>(binaryWriter, triggers, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual TriggerReferences[] ReadTriggerReferencesArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(TriggerReferences));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TriggerReferences[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new TriggerReferences(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum CombinationRule : short
-        
         {
             OR = 0,
             AND = 1,

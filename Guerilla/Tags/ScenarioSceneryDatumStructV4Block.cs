@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class ScenarioSceneryDatumStructV4BlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class ScenarioSceneryDatumStructV4BlockBase  : IGuerilla
     {
         internal PathfindingPolicy pathfindingPolicy;
         internal LightmappingPolicy lightmappingPolicy;
@@ -24,43 +25,25 @@ namespace Moonfish.Guerilla.Tags
         internal ValidMultiplayerGames validMultiplayerGames;
         internal  ScenarioSceneryDatumStructV4BlockBase(BinaryReader binaryReader)
         {
-            this.pathfindingPolicy = (PathfindingPolicy)binaryReader.ReadInt16();
-            this.lightmappingPolicy = (LightmappingPolicy)binaryReader.ReadInt16();
-            this.pathfindingReferences = ReadPathfindingObjectIndexListBlockArray(binaryReader);
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.validMultiplayerGames = (ValidMultiplayerGames)binaryReader.ReadInt16();
+            pathfindingPolicy = (PathfindingPolicy)binaryReader.ReadInt16();
+            lightmappingPolicy = (LightmappingPolicy)binaryReader.ReadInt16();
+            pathfindingReferences = Guerilla.ReadBlockArray<PathfindingObjectIndexListBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(2);
+            validMultiplayerGames = (ValidMultiplayerGames)binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)pathfindingPolicy);
+                binaryWriter.Write((Int16)lightmappingPolicy);
+                Guerilla.WriteBlockArray<PathfindingObjectIndexListBlock>(binaryWriter, pathfindingReferences, nextAddress);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Int16)validMultiplayerGames);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual PathfindingObjectIndexListBlock[] ReadPathfindingObjectIndexListBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PathfindingObjectIndexListBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PathfindingObjectIndexListBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PathfindingObjectIndexListBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum PathfindingPolicy : short
-        
         {
             TagDefault = 0,
             PathfindingDYNAMIC = 1,
@@ -69,7 +52,6 @@ namespace Moonfish.Guerilla.Tags
             PathfindingNONE = 4,
         };
         internal enum LightmappingPolicy : short
-        
         {
             TagDefault = 0,
             Dynamic = 1,
@@ -77,7 +59,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum ValidMultiplayerGames : short
-        
         {
             CaptureTheFlag = 1,
             Slayer = 2,

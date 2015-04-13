@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 80)]
-    public class ShaderPropertiesBlockBase
+    [LayoutAttribute(Size = 80, Alignment = 4)]
+    public class ShaderPropertiesBlockBase  : IGuerilla
     {
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference diffuseMap;
@@ -35,32 +36,37 @@ namespace Moonfish.Guerilla.Tags
         internal float lightmapFoliageScale;
         internal  ShaderPropertiesBlockBase(BinaryReader binaryReader)
         {
-            this.diffuseMap = binaryReader.ReadTagReference();
-            this.lightmapEmissiveMap = binaryReader.ReadTagReference();
-            this.lightmapEmissiveColor = binaryReader.ReadColorR8G8B8();
-            this.lightmapEmissivePower = binaryReader.ReadSingle();
-            this.lightmapResolutionScale = binaryReader.ReadSingle();
-            this.lightmapHalfLife = binaryReader.ReadSingle();
-            this.lightmapDiffuseScale = binaryReader.ReadSingle();
-            this.alphaTestMap = binaryReader.ReadTagReference();
-            this.translucentMap = binaryReader.ReadTagReference();
-            this.lightmapTransparentColor = binaryReader.ReadColorR8G8B8();
-            this.lightmapTransparentAlpha = binaryReader.ReadSingle();
-            this.lightmapFoliageScale = binaryReader.ReadSingle();
+            diffuseMap = binaryReader.ReadTagReference();
+            lightmapEmissiveMap = binaryReader.ReadTagReference();
+            lightmapEmissiveColor = binaryReader.ReadColorR8G8B8();
+            lightmapEmissivePower = binaryReader.ReadSingle();
+            lightmapResolutionScale = binaryReader.ReadSingle();
+            lightmapHalfLife = binaryReader.ReadSingle();
+            lightmapDiffuseScale = binaryReader.ReadSingle();
+            alphaTestMap = binaryReader.ReadTagReference();
+            translucentMap = binaryReader.ReadTagReference();
+            lightmapTransparentColor = binaryReader.ReadColorR8G8B8();
+            lightmapTransparentAlpha = binaryReader.ReadSingle();
+            lightmapFoliageScale = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(diffuseMap);
+                binaryWriter.Write(lightmapEmissiveMap);
+                binaryWriter.Write(lightmapEmissiveColor);
+                binaryWriter.Write(lightmapEmissivePower);
+                binaryWriter.Write(lightmapResolutionScale);
+                binaryWriter.Write(lightmapHalfLife);
+                binaryWriter.Write(lightmapDiffuseScale);
+                binaryWriter.Write(alphaTestMap);
+                binaryWriter.Write(translucentMap);
+                binaryWriter.Write(lightmapTransparentColor);
+                binaryWriter.Write(lightmapTransparentAlpha);
+                binaryWriter.Write(lightmapFoliageScale);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

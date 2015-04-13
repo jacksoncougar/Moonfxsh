@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24)]
-    public class GlobalLeafConnectionBlockBase
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class GlobalLeafConnectionBlockBase  : IGuerilla
     {
         internal int planeIndex;
         internal int backLeafIndex;
@@ -24,40 +25,23 @@ namespace Moonfish.Guerilla.Tags
         internal float area;
         internal  GlobalLeafConnectionBlockBase(BinaryReader binaryReader)
         {
-            this.planeIndex = binaryReader.ReadInt32();
-            this.backLeafIndex = binaryReader.ReadInt32();
-            this.frontLeafIndex = binaryReader.ReadInt32();
-            this.vertices = ReadLeafConnectionVertexBlockArray(binaryReader);
-            this.area = binaryReader.ReadSingle();
+            planeIndex = binaryReader.ReadInt32();
+            backLeafIndex = binaryReader.ReadInt32();
+            frontLeafIndex = binaryReader.ReadInt32();
+            vertices = Guerilla.ReadBlockArray<LeafConnectionVertexBlock>(binaryReader);
+            area = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(planeIndex);
+                binaryWriter.Write(backLeafIndex);
+                binaryWriter.Write(frontLeafIndex);
+                Guerilla.WriteBlockArray<LeafConnectionVertexBlock>(binaryWriter, vertices, nextAddress);
+                binaryWriter.Write(area);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual LeafConnectionVertexBlock[] ReadLeafConnectionVertexBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LeafConnectionVertexBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LeafConnectionVertexBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LeafConnectionVertexBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass SndeClass = (TagClass)"snde";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 72)]
-    public class SoundEnvironmentBlockBase
+    [LayoutAttribute(Size = 72, Alignment = 4)]
+    public class SoundEnvironmentBlockBase  : IGuerilla
     {
         internal byte[] invalidName_;
         /// <summary>
@@ -51,36 +60,45 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal  SoundEnvironmentBlockBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.priority = binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.roomIntensityDB = binaryReader.ReadSingle();
-            this.roomIntensityHfDB = binaryReader.ReadSingle();
-            this.roomRolloff0To10 = binaryReader.ReadSingle();
-            this.decayTime1To20Seconds = binaryReader.ReadSingle();
-            this.decayHfRatio1To2 = binaryReader.ReadSingle();
-            this.reflectionsIntensityDB10010 = binaryReader.ReadSingle();
-            this.reflectionsDelay0To3Seconds = binaryReader.ReadSingle();
-            this.reverbIntensityDB10020 = binaryReader.ReadSingle();
-            this.reverbDelay0To1Seconds = binaryReader.ReadSingle();
-            this.diffusion = binaryReader.ReadSingle();
-            this.density = binaryReader.ReadSingle();
-            this.hfReference20To20000Hz = binaryReader.ReadSingle();
-            this.invalidName_1 = binaryReader.ReadBytes(16);
+            invalidName_ = binaryReader.ReadBytes(4);
+            priority = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            roomIntensityDB = binaryReader.ReadSingle();
+            roomIntensityHfDB = binaryReader.ReadSingle();
+            roomRolloff0To10 = binaryReader.ReadSingle();
+            decayTime1To20Seconds = binaryReader.ReadSingle();
+            decayHfRatio1To2 = binaryReader.ReadSingle();
+            reflectionsIntensityDB10010 = binaryReader.ReadSingle();
+            reflectionsDelay0To3Seconds = binaryReader.ReadSingle();
+            reverbIntensityDB10020 = binaryReader.ReadSingle();
+            reverbDelay0To1Seconds = binaryReader.ReadSingle();
+            diffusion = binaryReader.ReadSingle();
+            density = binaryReader.ReadSingle();
+            hfReference20To20000Hz = binaryReader.ReadSingle();
+            invalidName_1 = binaryReader.ReadBytes(16);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(priority);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(roomIntensityDB);
+                binaryWriter.Write(roomIntensityHfDB);
+                binaryWriter.Write(roomRolloff0To10);
+                binaryWriter.Write(decayTime1To20Seconds);
+                binaryWriter.Write(decayHfRatio1To2);
+                binaryWriter.Write(reflectionsIntensityDB10010);
+                binaryWriter.Write(reflectionsDelay0To3Seconds);
+                binaryWriter.Write(reverbIntensityDB10020);
+                binaryWriter.Write(reverbDelay0To1Seconds);
+                binaryWriter.Write(diffusion);
+                binaryWriter.Write(density);
+                binaryWriter.Write(hfReference20To20000Hz);
+                binaryWriter.Write(invalidName_1, 0, 16);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

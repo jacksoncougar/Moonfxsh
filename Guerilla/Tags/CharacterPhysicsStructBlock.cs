@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 148)]
-    public class CharacterPhysicsStructBlockBase
+    [LayoutAttribute(Size = 148, Alignment = 4)]
+    public class CharacterPhysicsStructBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal float heightStanding;
@@ -40,69 +41,46 @@ namespace Moonfish.Guerilla.Tags
         internal CharacterPhysicsSentinelStructBlock sentinelPhysics;
         internal  CharacterPhysicsStructBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.heightStanding = binaryReader.ReadSingle();
-            this.heightCrouching = binaryReader.ReadSingle();
-            this.radius = binaryReader.ReadSingle();
-            this.mass = binaryReader.ReadSingle();
-            this.livingMaterialName = binaryReader.ReadStringID();
-            this.deadMaterialName = binaryReader.ReadStringID();
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.deadSphereShapes = ReadSpheresBlockArray(binaryReader);
-            this.pillShapes = ReadPillsBlockArray(binaryReader);
-            this.sphereShapes = ReadSpheresBlockArray(binaryReader);
-            this.groundPhysics = new CharacterPhysicsGroundStructBlock(binaryReader);
-            this.flyingPhysics = new CharacterPhysicsFlyingStructBlock(binaryReader);
-            this.deadPhysics = new CharacterPhysicsDeadStructBlock(binaryReader);
-            this.sentinelPhysics = new CharacterPhysicsSentinelStructBlock(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            heightStanding = binaryReader.ReadSingle();
+            heightCrouching = binaryReader.ReadSingle();
+            radius = binaryReader.ReadSingle();
+            mass = binaryReader.ReadSingle();
+            livingMaterialName = binaryReader.ReadStringID();
+            deadMaterialName = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(4);
+            deadSphereShapes = Guerilla.ReadBlockArray<SpheresBlock>(binaryReader);
+            pillShapes = Guerilla.ReadBlockArray<PillsBlock>(binaryReader);
+            sphereShapes = Guerilla.ReadBlockArray<SpheresBlock>(binaryReader);
+            groundPhysics = new CharacterPhysicsGroundStructBlock(binaryReader);
+            flyingPhysics = new CharacterPhysicsFlyingStructBlock(binaryReader);
+            deadPhysics = new CharacterPhysicsDeadStructBlock(binaryReader);
+            sentinelPhysics = new CharacterPhysicsSentinelStructBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(heightStanding);
+                binaryWriter.Write(heightCrouching);
+                binaryWriter.Write(radius);
+                binaryWriter.Write(mass);
+                binaryWriter.Write(livingMaterialName);
+                binaryWriter.Write(deadMaterialName);
+                binaryWriter.Write(invalidName_, 0, 4);
+                Guerilla.WriteBlockArray<SpheresBlock>(binaryWriter, deadSphereShapes, nextAddress);
+                Guerilla.WriteBlockArray<PillsBlock>(binaryWriter, pillShapes, nextAddress);
+                Guerilla.WriteBlockArray<SpheresBlock>(binaryWriter, sphereShapes, nextAddress);
+                groundPhysics.Write(binaryWriter);
+                flyingPhysics.Write(binaryWriter);
+                deadPhysics.Write(binaryWriter);
+                sentinelPhysics.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual SpheresBlock[] ReadSpheresBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SpheresBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SpheresBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SpheresBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PillsBlock[] ReadPillsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PillsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PillsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PillsBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             CenteredAtOrigin = 1,
             ShapeSpherical = 2,

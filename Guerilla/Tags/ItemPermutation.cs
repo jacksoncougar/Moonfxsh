@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class ItemPermutationBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class ItemPermutationBase  : IGuerilla
     {
         /// <summary>
         /// relatively how likely this item will be chosen
@@ -29,23 +30,19 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID variantName;
         internal  ItemPermutationBase(BinaryReader binaryReader)
         {
-            this.weight = binaryReader.ReadSingle();
-            this.item = binaryReader.ReadTagReference();
-            this.variantName = binaryReader.ReadStringID();
+            weight = binaryReader.ReadSingle();
+            item = binaryReader.ReadTagReference();
+            variantName = binaryReader.ReadStringID();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(weight);
+                binaryWriter.Write(item);
+                binaryWriter.Write(variantName);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

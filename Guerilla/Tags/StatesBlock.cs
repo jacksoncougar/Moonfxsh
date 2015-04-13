@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 96)]
-    public class StatesBlockBase
+    [LayoutAttribute(Size = 96, Alignment = 4)]
+    public class StatesBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal Moonfish.Tags.ColorR8G8B8 color;
@@ -35,36 +36,45 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal  StatesBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadString32();
-            this.color = binaryReader.ReadColorR8G8B8();
-            this.countsAsNeighbors = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.initialPlacementWeight = binaryReader.ReadSingle();
-            this.invalidName_0 = binaryReader.ReadBytes(24);
-            this.zero = binaryReader.ReadShortBlockIndex1();
-            this.one = binaryReader.ReadShortBlockIndex1();
-            this.two = binaryReader.ReadShortBlockIndex1();
-            this.three = binaryReader.ReadShortBlockIndex1();
-            this.four = binaryReader.ReadShortBlockIndex1();
-            this.five = binaryReader.ReadShortBlockIndex1();
-            this.six = binaryReader.ReadShortBlockIndex1();
-            this.seven = binaryReader.ReadShortBlockIndex1();
-            this.eight = binaryReader.ReadShortBlockIndex1();
-            this.invalidName_1 = binaryReader.ReadBytes(2);
+            name = binaryReader.ReadString32();
+            color = binaryReader.ReadColorR8G8B8();
+            countsAsNeighbors = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            initialPlacementWeight = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(24);
+            zero = binaryReader.ReadShortBlockIndex1();
+            one = binaryReader.ReadShortBlockIndex1();
+            two = binaryReader.ReadShortBlockIndex1();
+            three = binaryReader.ReadShortBlockIndex1();
+            four = binaryReader.ReadShortBlockIndex1();
+            five = binaryReader.ReadShortBlockIndex1();
+            six = binaryReader.ReadShortBlockIndex1();
+            seven = binaryReader.ReadShortBlockIndex1();
+            eight = binaryReader.ReadShortBlockIndex1();
+            invalidName_1 = binaryReader.ReadBytes(2);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write(color);
+                binaryWriter.Write(countsAsNeighbors);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(initialPlacementWeight);
+                binaryWriter.Write(invalidName_0, 0, 24);
+                binaryWriter.Write(zero);
+                binaryWriter.Write(one);
+                binaryWriter.Write(two);
+                binaryWriter.Write(three);
+                binaryWriter.Write(four);
+                binaryWriter.Write(five);
+                binaryWriter.Write(six);
+                binaryWriter.Write(seven);
+                binaryWriter.Write(eight);
+                binaryWriter.Write(invalidName_1, 0, 2);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 28)]
-    public class EnvironmentObjectRefsBase
+    [LayoutAttribute(Size = 28, Alignment = 4)]
+    public class EnvironmentObjectRefsBase  : IGuerilla
     {
         internal Flags flags;
         internal byte[] invalidName_;
@@ -25,60 +26,28 @@ namespace Moonfish.Guerilla.Tags
         internal EnvironmentObjectNodes[] nodes;
         internal  EnvironmentObjectRefsBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.firstSector = binaryReader.ReadInt32();
-            this.lastSector = binaryReader.ReadInt32();
-            this.bsps = ReadEnvironmentObjectBspRefsArray(binaryReader);
-            this.nodes = ReadEnvironmentObjectNodesArray(binaryReader);
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            firstSector = binaryReader.ReadInt32();
+            lastSector = binaryReader.ReadInt32();
+            bsps = Guerilla.ReadBlockArray<EnvironmentObjectBspRefs>(binaryReader);
+            nodes = Guerilla.ReadBlockArray<EnvironmentObjectNodes>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(firstSector);
+                binaryWriter.Write(lastSector);
+                Guerilla.WriteBlockArray<EnvironmentObjectBspRefs>(binaryWriter, bsps, nextAddress);
+                Guerilla.WriteBlockArray<EnvironmentObjectNodes>(binaryWriter, nodes, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual EnvironmentObjectBspRefs[] ReadEnvironmentObjectBspRefsArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(EnvironmentObjectBspRefs));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new EnvironmentObjectBspRefs[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new EnvironmentObjectBspRefs(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual EnvironmentObjectNodes[] ReadEnvironmentObjectNodesArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(EnvironmentObjectNodes));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new EnvironmentObjectNodes[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new EnvironmentObjectNodes(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             Mobile = 1,
         };

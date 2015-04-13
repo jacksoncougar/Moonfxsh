@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass DevoClass = (TagClass)"devo";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 548)]
-    public class CellularAutomataBlockBase
+    [LayoutAttribute(Size = 548, Alignment = 4)]
+    public class CellularAutomataBlockBase  : IGuerilla
     {
         internal short updatesPerSecondHz;
         internal short xWidthCells;
@@ -65,51 +74,75 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_8;
         internal  CellularAutomataBlockBase(BinaryReader binaryReader)
         {
-            this.updatesPerSecondHz = binaryReader.ReadInt16();
-            this.xWidthCells = binaryReader.ReadInt16();
-            this.yDepthCells = binaryReader.ReadInt16();
-            this.zHeightCells = binaryReader.ReadInt16();
-            this.xWidthWorldUnits = binaryReader.ReadSingle();
-            this.yDepthWorldUnits = binaryReader.ReadSingle();
-            this.zHeightWorldUnits = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes(32);
-            this.marker = binaryReader.ReadStringID();
-            this.cellBirthChance01 = binaryReader.ReadSingle();
-            this.invalidName_0 = binaryReader.ReadBytes(32);
-            this.cellGeneMutates1InTimes = binaryReader.ReadInt32();
-            this.virusGeneMutations1InTimes = binaryReader.ReadInt32();
-            this.invalidName_1 = binaryReader.ReadBytes(32);
-            this.infectedCellLifespanUpdates = binaryReader.ReadInt32();
-            this.minimumInfectionAgeUpdates = binaryReader.ReadInt16();
-            this.invalidName_2 = binaryReader.ReadBytes(2);
-            this.cellInfectionChance01 = binaryReader.ReadSingle();
-            this.infectionThreshold01 = binaryReader.ReadSingle();
-            this.invalidName_3 = binaryReader.ReadBytes(32);
-            this.newCellFilledChance01 = binaryReader.ReadSingle();
-            this.newCellInfectedChance01 = binaryReader.ReadSingle();
-            this.invalidName_4 = binaryReader.ReadBytes(32);
-            this.detailTextureChangeChance01 = binaryReader.ReadSingle();
-            this.invalidName_5 = binaryReader.ReadBytes(32);
-            this.detailTextureWidthCells = binaryReader.ReadInt16();
-            this.invalidName_6 = binaryReader.ReadBytes(2);
-            this.detailTexture = binaryReader.ReadTagReference();
-            this.invalidName_7 = binaryReader.ReadBytes(32);
-            this.maskBitmap = binaryReader.ReadTagReference();
-            this.invalidName_8 = binaryReader.ReadBytes(240);
+            updatesPerSecondHz = binaryReader.ReadInt16();
+            xWidthCells = binaryReader.ReadInt16();
+            yDepthCells = binaryReader.ReadInt16();
+            zHeightCells = binaryReader.ReadInt16();
+            xWidthWorldUnits = binaryReader.ReadSingle();
+            yDepthWorldUnits = binaryReader.ReadSingle();
+            zHeightWorldUnits = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(32);
+            marker = binaryReader.ReadStringID();
+            cellBirthChance01 = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(32);
+            cellGeneMutates1InTimes = binaryReader.ReadInt32();
+            virusGeneMutations1InTimes = binaryReader.ReadInt32();
+            invalidName_1 = binaryReader.ReadBytes(32);
+            infectedCellLifespanUpdates = binaryReader.ReadInt32();
+            minimumInfectionAgeUpdates = binaryReader.ReadInt16();
+            invalidName_2 = binaryReader.ReadBytes(2);
+            cellInfectionChance01 = binaryReader.ReadSingle();
+            infectionThreshold01 = binaryReader.ReadSingle();
+            invalidName_3 = binaryReader.ReadBytes(32);
+            newCellFilledChance01 = binaryReader.ReadSingle();
+            newCellInfectedChance01 = binaryReader.ReadSingle();
+            invalidName_4 = binaryReader.ReadBytes(32);
+            detailTextureChangeChance01 = binaryReader.ReadSingle();
+            invalidName_5 = binaryReader.ReadBytes(32);
+            detailTextureWidthCells = binaryReader.ReadInt16();
+            invalidName_6 = binaryReader.ReadBytes(2);
+            detailTexture = binaryReader.ReadTagReference();
+            invalidName_7 = binaryReader.ReadBytes(32);
+            maskBitmap = binaryReader.ReadTagReference();
+            invalidName_8 = binaryReader.ReadBytes(240);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(updatesPerSecondHz);
+                binaryWriter.Write(xWidthCells);
+                binaryWriter.Write(yDepthCells);
+                binaryWriter.Write(zHeightCells);
+                binaryWriter.Write(xWidthWorldUnits);
+                binaryWriter.Write(yDepthWorldUnits);
+                binaryWriter.Write(zHeightWorldUnits);
+                binaryWriter.Write(invalidName_, 0, 32);
+                binaryWriter.Write(marker);
+                binaryWriter.Write(cellBirthChance01);
+                binaryWriter.Write(invalidName_0, 0, 32);
+                binaryWriter.Write(cellGeneMutates1InTimes);
+                binaryWriter.Write(virusGeneMutations1InTimes);
+                binaryWriter.Write(invalidName_1, 0, 32);
+                binaryWriter.Write(infectedCellLifespanUpdates);
+                binaryWriter.Write(minimumInfectionAgeUpdates);
+                binaryWriter.Write(invalidName_2, 0, 2);
+                binaryWriter.Write(cellInfectionChance01);
+                binaryWriter.Write(infectionThreshold01);
+                binaryWriter.Write(invalidName_3, 0, 32);
+                binaryWriter.Write(newCellFilledChance01);
+                binaryWriter.Write(newCellInfectedChance01);
+                binaryWriter.Write(invalidName_4, 0, 32);
+                binaryWriter.Write(detailTextureChangeChance01);
+                binaryWriter.Write(invalidName_5, 0, 32);
+                binaryWriter.Write(detailTextureWidthCells);
+                binaryWriter.Write(invalidName_6, 0, 2);
+                binaryWriter.Write(detailTexture);
+                binaryWriter.Write(invalidName_7, 0, 32);
+                binaryWriter.Write(maskBitmap);
+                binaryWriter.Write(invalidName_8, 0, 240);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

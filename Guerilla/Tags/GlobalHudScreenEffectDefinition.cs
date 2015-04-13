@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 320)]
-    public class GlobalHudScreenEffectDefinitionBase
+    [LayoutAttribute(Size = 320, Alignment = 4)]
+    public class GlobalHudScreenEffectDefinitionBase  : IGuerilla
     {
         internal byte[] invalidName_;
         internal Flags flags;
@@ -44,45 +45,58 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_12;
         internal  GlobalHudScreenEffectDefinitionBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.invalidName_1 = binaryReader.ReadBytes(16);
-            this.maskFullscreen = binaryReader.ReadTagReference();
-            this.maskSplitscreen = binaryReader.ReadTagReference();
-            this.invalidName_2 = binaryReader.ReadBytes(8);
-            this.invalidName_3 = binaryReader.ReadBytes(20);
-            this.invalidName_4 = binaryReader.ReadBytes(24);
-            this.invalidName_5 = binaryReader.ReadBytes(8);
-            this.invalidName_6 = binaryReader.ReadBytes(24);
-            this.invalidName_7 = binaryReader.ReadBytes(20);
-            this.invalidName_8 = binaryReader.ReadBytes(24);
-            this.screenEffectFlags = (ScreenEffectFlags)binaryReader.ReadInt32();
-            this.invalidName_9 = binaryReader.ReadBytes(32);
-            this.screenEffect = binaryReader.ReadTagReference();
-            this.invalidName_10 = binaryReader.ReadBytes(32);
-            this.screenEffectFlags0 = (ScreenEffectFlags)binaryReader.ReadInt32();
-            this.invalidName_11 = binaryReader.ReadBytes(32);
-            this.screenEffect0 = binaryReader.ReadTagReference();
-            this.invalidName_12 = binaryReader.ReadBytes(32);
+            invalidName_ = binaryReader.ReadBytes(4);
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(16);
+            maskFullscreen = binaryReader.ReadTagReference();
+            maskSplitscreen = binaryReader.ReadTagReference();
+            invalidName_2 = binaryReader.ReadBytes(8);
+            invalidName_3 = binaryReader.ReadBytes(20);
+            invalidName_4 = binaryReader.ReadBytes(24);
+            invalidName_5 = binaryReader.ReadBytes(8);
+            invalidName_6 = binaryReader.ReadBytes(24);
+            invalidName_7 = binaryReader.ReadBytes(20);
+            invalidName_8 = binaryReader.ReadBytes(24);
+            screenEffectFlags = (ScreenEffectFlags)binaryReader.ReadInt32();
+            invalidName_9 = binaryReader.ReadBytes(32);
+            screenEffect = binaryReader.ReadTagReference();
+            invalidName_10 = binaryReader.ReadBytes(32);
+            screenEffectFlags0 = (ScreenEffectFlags)binaryReader.ReadInt32();
+            invalidName_11 = binaryReader.ReadBytes(32);
+            screenEffect0 = binaryReader.ReadTagReference();
+            invalidName_12 = binaryReader.ReadBytes(32);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(invalidName_1, 0, 16);
+                binaryWriter.Write(maskFullscreen);
+                binaryWriter.Write(maskSplitscreen);
+                binaryWriter.Write(invalidName_2, 0, 8);
+                binaryWriter.Write(invalidName_3, 0, 20);
+                binaryWriter.Write(invalidName_4, 0, 24);
+                binaryWriter.Write(invalidName_5, 0, 8);
+                binaryWriter.Write(invalidName_6, 0, 24);
+                binaryWriter.Write(invalidName_7, 0, 20);
+                binaryWriter.Write(invalidName_8, 0, 24);
+                binaryWriter.Write((Int32)screenEffectFlags);
+                binaryWriter.Write(invalidName_9, 0, 32);
+                binaryWriter.Write(screenEffect);
+                binaryWriter.Write(invalidName_10, 0, 32);
+                binaryWriter.Write((Int32)screenEffectFlags0);
+                binaryWriter.Write(invalidName_11, 0, 32);
+                binaryWriter.Write(screenEffect0);
+                binaryWriter.Write(invalidName_12, 0, 32);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             OnlyWhenZoomed = 1,
             MirrorHorizontally = 2,
@@ -91,13 +105,11 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum ScreenEffectFlags : int
-        
         {
             OnlyWhenZoomed = 1,
         };
         [FlagsAttribute]
         internal enum ScreenEffectFlags0 : int
-        
         {
             OnlyWhenZoomed = 1,
         };

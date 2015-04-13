@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36)]
-    public class StructureBspClusterPortalBlockBase
+    [LayoutAttribute(Size = 36, Alignment = 4)]
+    public class StructureBspClusterPortalBlockBase  : IGuerilla
     {
         internal short backCluster;
         internal short frontCluster;
@@ -26,46 +27,30 @@ namespace Moonfish.Guerilla.Tags
         internal StructureBspClusterPortalVertexBlock[] vertices;
         internal  StructureBspClusterPortalBlockBase(BinaryReader binaryReader)
         {
-            this.backCluster = binaryReader.ReadInt16();
-            this.frontCluster = binaryReader.ReadInt16();
-            this.planeIndex = binaryReader.ReadInt32();
-            this.centroid = binaryReader.ReadVector3();
-            this.boundingRadius = binaryReader.ReadSingle();
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.vertices = ReadStructureBspClusterPortalVertexBlockArray(binaryReader);
+            backCluster = binaryReader.ReadInt16();
+            frontCluster = binaryReader.ReadInt16();
+            planeIndex = binaryReader.ReadInt32();
+            centroid = binaryReader.ReadVector3();
+            boundingRadius = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt32();
+            vertices = Guerilla.ReadBlockArray<StructureBspClusterPortalVertexBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(backCluster);
+                binaryWriter.Write(frontCluster);
+                binaryWriter.Write(planeIndex);
+                binaryWriter.Write(centroid);
+                binaryWriter.Write(boundingRadius);
+                binaryWriter.Write((Int32)flags);
+                Guerilla.WriteBlockArray<StructureBspClusterPortalVertexBlock>(binaryWriter, vertices, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual StructureBspClusterPortalVertexBlock[] ReadStructureBspClusterPortalVertexBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspClusterPortalVertexBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspClusterPortalVertexBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspClusterPortalVertexBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             AICannotHearThroughThis = 1,
             OneWay = 2,

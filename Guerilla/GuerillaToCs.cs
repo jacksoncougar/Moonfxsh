@@ -215,7 +215,8 @@ namespace Moonfish.Guerilla
                         string.Format("public partial struct {0}", typeof(TagClass).Name).Tab(ref tabCount));
                     streamWriter.WriteLine( "{".Tab( ref tabCount ) );
 
-                    var titleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase( @class );
+                    var tagClass = ( TagClass ) @class ;
+                    var titleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase( tagClass.ToSafeString(  ) );
                     streamWriter.WriteLine(
                         string.Format( @"public static readonly {0} {1}Class = ({0})""{2}"";", typeof ( TagClass ).Name,
                             titleCase, @class ).Tab( ref tabCount ) );

@@ -19,28 +19,6 @@ namespace Moonfish
         SinglePlayerShared = 4,
     }
 
-    public static class StreamExtensions
-    {
-        public static IDisposable Pin( this Stream stream )
-        {
-            return new StreamPositionHandle( stream );
-        }
-
-        public class StreamPositionHandle : IDisposable
-        {
-            long streamPosition;
-            Stream stream;
-            public StreamPositionHandle( Stream stream )
-            {
-                this.stream = stream;
-                this.streamPosition = stream.Position;
-            }
-            void IDisposable.Dispose( )
-            {
-                stream.Position = streamPosition;
-            }
-        }
-    }
     /// <summary>
     /// A minimalist class to load essential data which can be used to parse a retail cache map.
     /// </summary>
@@ -78,68 +56,67 @@ namespace Moonfish
         private Dictionary<TagIdent, dynamic> deserializedTags;
         private Dictionary<TagIdent, string> hashTags;
 
-        public MapStream( string filename )
-            : base( filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite, 1024 )
+        public MapStream(string filename)
+            : base(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite, 1024)
         {
-            this.MemoryBlocks = new VirtualMappedAddress[ 2 ];
+            MemoryBlocks = new VirtualMappedAddress[2];
             //HEADER
-            BinaryReader bin = new BinaryReader( this, Encoding.UTF8 );
+            var binaryReader = new BinaryReader(this, Encoding.UTF8);
 
-            this.Position = 0;
-            if ( bin.ReadTagClass() != ( TagClass )"head" )
-                throw new InvalidDataException( "Not a halo-map file" );
+            base.Seek(0, SeekOrigin.Begin);
+            if (binaryReader.ReadTagClass() != (TagClass)"head")
+                throw new InvalidDataException("Not a halo-map file");
 
-            this.Position = 42;
-            BuildVersion = ( Version )bin.ReadInt32();
+            base.Seek(42, SeekOrigin.Begin);
+            BuildVersion = (Version)binaryReader.ReadInt32();
 
-            this.Position = 16;
-            int indexAddress = bin.ReadInt32();
-            int indexLength = bin.ReadInt32();
-            this.TagCacheLength = bin.ReadInt32();
+            base.Seek(16, SeekOrigin.Begin);
+            var indexAddress = binaryReader.ReadInt32();
+            var indexLength = binaryReader.ReadInt32();
+            TagCacheLength = binaryReader.ReadInt32();
 
 
-            if ( BuildVersion == Version.PC_RETAIL )
-                this.Position += 12;
+            if (BuildVersion == Version.PC_RETAIL)
+                base.Seek(12, SeekOrigin.Current);
 
             // Read maptype
-            using ( this.Pin() )
+            using (this.Pin())
             {
-                this.Position = 2048;
-                this.Seek( 320, SeekOrigin.Begin );
-                this.Type = ( MapType )bin.ReadInt32();
+                base.Seek(320, SeekOrigin.Begin);
+                Type = (MapType)binaryReader.ReadInt32();
             }
 
-            this.Seek( 332, SeekOrigin.Current );
+            base.Seek(332, SeekOrigin.Current);
 
-            int stringTableLength = bin.ReadInt32();
-            this.Seek( 4, SeekOrigin.Current );
-            int stringTableAddress = bin.ReadInt32();
+            var stringTableLength = binaryReader.ReadInt32();
+            base.Seek(4, SeekOrigin.Current);
+            var stringTableAddress = binaryReader.ReadInt32();
 
-            this.Seek( 36, SeekOrigin.Current );
+            base.Seek(36, SeekOrigin.Current);
 
-            MapName = bin.ReadFixedString( 32 );
+            MapName = binaryReader.ReadFixedString(32);
 
-            this.Seek( 4, SeekOrigin.Current );
+            base.Seek(4, SeekOrigin.Current);
 
-            Scenario = bin.ReadFixedString( 256 );
+            Scenario = binaryReader.ReadFixedString(256);
 
-            this.Seek( 4, SeekOrigin.Current );
-            int pathsCount = bin.ReadInt32();
-            int pathsTableAddress = bin.ReadInt32();
-            int pathsTableLength = bin.ReadInt32();
+            base.Seek(4, SeekOrigin.Current);
+            var pathsCount = binaryReader.ReadInt32();
+            var pathsTableAddress = binaryReader.ReadInt32();
+            var pathsTableLength = binaryReader.ReadInt32();
 
 
-            this.Seek( pathsTableAddress, SeekOrigin.Begin );
-            var Paths = Encoding.UTF8.GetString( bin.ReadBytes( pathsTableLength - 1 ) ).Split( char.MinValue );
+            base.Seek(pathsTableAddress, SeekOrigin.Begin);
+            var paths = Encoding.UTF8.GetString(binaryReader.ReadBytes(pathsTableLength - 1)).Split(char.MinValue);
 
-            Halo2.Paths.Assign( Paths );
+            Halo2.Paths.Assign(paths);
 
             //STRINGS
 
-            this.Seek( stringTableAddress, SeekOrigin.Begin );
-            Strings = Encoding.UTF8.GetString( bin.ReadBytes( stringTableLength - 1 ) ).Split( char.MinValue );
+            Seek(stringTableAddress, SeekOrigin.Begin);
+            Strings = Encoding.UTF8.GetString(binaryReader.ReadBytes(stringTableLength - 1)).Split(char.MinValue);
 
-            Halo2.Strings.Assign( new List<string>( Strings ) );
+            Halo2.Strings.Assign(new List<string>(Strings));
 
 
             //  INDEX
@@ -156,45 +133,45 @@ namespace Moonfish
              *  0xC0    'sgat'          four_cc
              * 
              *  */
-            this.Seek( indexAddress, SeekOrigin.Begin );
-            int tagClassTableVirtualAddress = bin.ReadInt32();
-            this.IndexVirtualAddress = tagClassTableVirtualAddress - 32;
+            base.Seek(indexAddress, SeekOrigin.Begin);
+            var tagClassTableVirtualAddress = binaryReader.ReadInt32();
+            IndexVirtualAddress = tagClassTableVirtualAddress - 32;
 
-            this.Seek( 4, SeekOrigin.Current );
+            base.Seek(4, SeekOrigin.Current);
 
-            int tagDatumTableVirtualAddress = bin.ReadInt32();
-            var ScenarioID = bin.ReadTagIdent();
-            var GlobalsID = bin.ReadTagIdent();
-            int tagDatumTableOffset = tagDatumTableVirtualAddress - tagClassTableVirtualAddress;
+            var tagDatumTableVirtualAddress = binaryReader.ReadInt32();
+            var ScenarioID = binaryReader.ReadTagIdent();
+            var GlobalsID = binaryReader.ReadTagIdent();
+            var tagDatumTableOffset = tagDatumTableVirtualAddress - tagClassTableVirtualAddress;
 
-            this.Seek( 4, SeekOrigin.Current );
+            base.Seek(4, SeekOrigin.Current);
 
-            int tagDatumCount = bin.ReadInt32();
+            var tagDatumCount = binaryReader.ReadInt32();
 
-            this.Seek( 4 + tagDatumTableOffset, SeekOrigin.Current );
-            Tags = new Tag[ tagDatumCount ];
-            for ( int i = 0; i < tagDatumCount; i++ )
+            base.Seek(4 + tagDatumTableOffset, SeekOrigin.Current);
+            Tags = new Tag[tagDatumCount];
+            for (var i = 0; i < tagDatumCount; i++)
             {
-                Tags[ i ] = new Tag()
+                Tags[i] = new Tag()
                 {
-                    Type = bin.ReadTagClass(),
-                    Identifier = bin.ReadInt32(),
-                    VirtualAddress = bin.ReadInt32(),
-                    Length = bin.ReadInt32()
+                    Type = binaryReader.ReadTagClass(),
+                    Identifier = binaryReader.ReadInt32(),
+                    VirtualAddress = binaryReader.ReadInt32(),
+                    Length = binaryReader.ReadInt32()
                 };
 
                 //Borky vista fix - broken paths are broken
                 //if (Tags[i].VirtualAddress == 0) continue;
                 // var tag = Tags[i];
-                Tags[ i ].Path = Paths[ Tags[ i ].Identifier.Index ];
+                Tags[i].Path = paths[Tags[i].Identifier.Index];
             }
 
             // Calculate File-pointer magic
-            SecondaryMagic = Tags[ 0 ].VirtualAddress - ( indexAddress + indexLength );
+            SecondaryMagic = Tags[0].VirtualAddress - (indexAddress + indexLength);
 
-            this.MemoryBlocks[ 1 ] = new VirtualMappedAddress()
+            MemoryBlocks[1] = new VirtualMappedAddress()
             {
-                Address = Tags[ 0 ].VirtualAddress,
+                Address = Tags[0].VirtualAddress,
                 Length = TagCacheLength,
                 Magic = SecondaryMagic,
             };
@@ -202,51 +179,51 @@ namespace Moonfish
             /* Intent: read the sbsp and lightmap address and lengths from the scenario tag 
              * and store them in the Tags array.
              */
-            if ( BuildVersion == Version.XBOX_RETAIL )
+            if (BuildVersion == Version.XBOX_RETAIL)
             {
-                this.Seek( Tags[ ScenarioID.Index ].VirtualAddress - SecondaryMagic + 528, SeekOrigin.Begin );
-                var count = bin.ReadInt32();
-                var address = bin.ReadInt32();
-                for ( int i = 0; i < count; ++i )
+                base.Seek(Tags[ScenarioID.Index].VirtualAddress - SecondaryMagic + 528, SeekOrigin.Begin);
+                var count = binaryReader.ReadInt32();
+                var address = binaryReader.ReadInt32();
+                for (var i = 0; i < count; ++i)
                 {
-                    this.Seek( address - SecondaryMagic + i * 68, SeekOrigin.Begin );
-                    var structureBlockOffset = bin.ReadInt32();
-                    var structureBlockLength = bin.ReadInt32();
-                    var structureBlockAddress = bin.ReadInt32();
-                    if ( i == 0 )
+                    base.Seek(address - SecondaryMagic + i * 68, SeekOrigin.Begin);
+                    var structureBlockOffset = binaryReader.ReadInt32();
+                    var structureBlockLength = binaryReader.ReadInt32();
+                    var structureBlockAddress = binaryReader.ReadInt32();
+                    if (i == 0)
                     {
-                        this.PrimaryMagic = structureBlockAddress - structureBlockOffset;
-                        this.MemoryBlocks[ 0 ].Address = structureBlockAddress;
-                        this.MemoryBlocks[ 0 ].Magic = this.PrimaryMagic;
-                        this.MemoryBlocks[ 0 ].Length = structureBlockLength;
+                        PrimaryMagic = structureBlockAddress - structureBlockOffset;
+                        MemoryBlocks[0].Address = structureBlockAddress;
+                        MemoryBlocks[0].Magic = PrimaryMagic;
+                        MemoryBlocks[0].Length = structureBlockLength;
                     }
-                    Seek( 8, SeekOrigin.Current );
-                    var sbspIdentifier = bin.ReadTagIdent();
-                    Seek( 4, SeekOrigin.Current );
-                    var ltmpIdentifier = bin.ReadTagIdent();
+                    base.Seek(8, SeekOrigin.Current);
+                    var sbspIdentifier = binaryReader.ReadTagIdent();
+                    base.Seek(4, SeekOrigin.Current);
+                    var ltmpIdentifier = binaryReader.ReadTagIdent();
 
-                    Seek( structureBlockOffset, SeekOrigin.Begin );
+                    base.Seek(structureBlockOffset, SeekOrigin.Begin);
 
                     // is this the total block length or minus the 16?
-                    var blockLength = bin.ReadInt32();
-                    var sbspVirtualAddress = bin.ReadInt32();
-                    var ltmpVirtualAddress = bin.ReadInt32();
-                    var sbsp = bin.ReadTagClass();
+                    var blockLength = binaryReader.ReadInt32();
+                    var sbspVirtualAddress = binaryReader.ReadInt32();
+                    var ltmpVirtualAddress = binaryReader.ReadInt32();
+                    var sbsp = binaryReader.ReadTagClass();
 
-                    var hasLightmapData = !TagIdent.IsNull( ltmpIdentifier );
+                    var hasLightmapData = !TagIdent.IsNull(ltmpIdentifier);
 
 
                     var sbspLength = hasLightmapData ? ltmpVirtualAddress - sbspVirtualAddress : blockLength;
                     var ltmpLength = blockLength - sbspLength;
 
 
-                    Tags[ sbspIdentifier.Index ].VirtualAddress = sbspVirtualAddress;
-                    Tags[ sbspIdentifier.Index ].Length = sbspLength;
+                    Tags[sbspIdentifier.Index].VirtualAddress = sbspVirtualAddress;
+                    Tags[sbspIdentifier.Index].Length = sbspLength;
 
-                    if ( hasLightmapData )
+                    if (hasLightmapData)
                     {
-                        Tags[ ltmpIdentifier.Index ].VirtualAddress = ltmpVirtualAddress;
-                        Tags[ ltmpIdentifier.Index ].Length = ltmpLength;
+                        Tags[ltmpIdentifier.Index].VirtualAddress = ltmpVirtualAddress;
+                        Tags[ltmpIdentifier.Index].Length = ltmpLength;
                     }
                 }
 
@@ -278,95 +255,95 @@ namespace Moonfish
                 //}
             }
 
-            this.deserializedTags = new Dictionary<TagIdent, dynamic>( this.Tags.Length );
-            this.hashTags = new Dictionary<TagIdent, string>( this.Tags.Length );
-            Halo2.ActiveMap( this );
+            deserializedTags = new Dictionary<TagIdent, dynamic>(Tags.Length);
+            hashTags = new Dictionary<TagIdent, string>(Tags.Length);
+            Halo2.ActiveMap(this);
         }
 
-        Tag current_tag = new Tag();
+        Tag _currentTag = new Tag();
 
-        public IMap this[ TagReference tagReference ]
+        public IMap this[TagReference tagReference]
         {
             get
             {
-                return this[ tagReference.Ident ];
+                return this[tagReference.Ident];
             }
         }
 
-        public IMap this[ string @class, string path ]
+        public IMap this[string @class, string path]
         {
             get
             {
-                if ( current_tag.Type == ( TagClass )@class && current_tag.Path.Contains( path ) )
+                if (_currentTag.Type == (TagClass)@class && _currentTag.Path.Contains(path))
                     return this;
-                else current_tag = ( from tag in Tags
-                                     where tag.Type == ( TagClass )@class
-                                     where tag.Path.Contains( path )
-                                     select tag ).First();
+                else _currentTag = (from tag in Tags
+                                    where tag.Type == (TagClass)@class
+                                    where tag.Path.Contains(path)
+                                    select tag).First();
                 return this;
             }
         }
 
-        public IMap this[ TagIdent ident ]
+        public IMap this[TagIdent ident]
         {
             get
             {
-                if ( current_tag.Identifier == ident ) return this;
-                else current_tag = TagIdent.IsNull( ident ) ? null : Tags[ ident.Index ];
+                if (_currentTag.Identifier == ident) return this;
+                else _currentTag = TagIdent.IsNull(ident) ? null : Tags[ident.Index];
                 return this;
             }
 
         }
 
-        void IMap.Seek( )
+        void IMap.Seek()
         {
-            this.Seek( this.current_tag.VirtualAddress, SeekOrigin.Begin );
+            Seek(_currentTag.VirtualAddress, SeekOrigin.Begin);
         }
 
-        public void Remove( TagIdent ident )
+        dynamic IMap.Deserialize()
         {
-            deserializedTags.Remove( ident );
+            var tagQuery = (from tag in deserializedTags
+                            where tag.Key == _currentTag.Identifier
+                            select tag).FirstOrDefault();
+            if (tagQuery.Value != null) return tagQuery.Value;
+
+            (this as IMap).Seek();
+
+            var typeQuery = (from types in Assembly.GetExecutingAssembly().GetTypes()
+                             where types.HasAttribute(typeof(TagClassAttribute))
+                             where types.Attribute<TagClassAttribute>().TagClass == (this as IMap).Meta.Type
+                             select types).FirstOrDefault();
+
+            var ident = (this as IMap).Meta.Identifier;
+
+            deserializedTags[ident] = Deserializer.Deserialize(this, typeQuery);
+            hashTags[ident] = CalculateTaghash(ident);
+            return deserializedTags[ident];
         }
 
-        dynamic IMap.Deserialize( )
+        public void Remove(TagIdent ident)
         {
-            var tagQuery = ( from tag in deserializedTags
-                             where tag.Key == current_tag.Identifier
-                             select tag ).FirstOrDefault();
-            if ( tagQuery.Value != null ) return tagQuery.Value;
-
-            ( this as IMap ).Seek();
-
-            var typeQuery = ( from types in Assembly.GetExecutingAssembly().GetTypes()
-                              where types.HasAttribute( typeof( TagClassAttribute ) )
-                              where types.Attribute<TagClassAttribute>().TagClass == ( this as IMap ).Meta.Type
-                              select types ).FirstOrDefault();
-
-            var ident = ( this as IMap ).Meta.Identifier;
-
-            deserializedTags[ ident ] = Deserializer.Deserialize( this, typeQuery );
-            this.hashTags[ ident ] = CalculateTaghash( ident );
-            return deserializedTags[ ident ];
+            deserializedTags.Remove(ident);
         }
 
-        public string CalculateTaghash( TagIdent ident )
+        public string CalculateTaghash(TagIdent ident)
         {
-            using ( SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider() )
+            using (var sha1 = new SHA1CryptoServiceProvider())
             {
-                var hash = Convert.ToBase64String( sha1.ComputeHash( this[ ident ].TagData ) );
+                var hash = Convert.ToBase64String(sha1.ComputeHash(this[ident].TagData));
                 //Console.WriteLine(hash);
                 return hash;
             }
         }
 
-        public string GetTagHash( TagIdent ident )
+        public string GetTagHash(TagIdent ident)
         {
-            return this.hashTags.ContainsKey( ident ) ? this.hashTags[ ident ] : null;
+            return hashTags.ContainsKey(ident) ? hashTags[ident] : null;
         }
 
         Tag IMap.Meta
         {
-            get { return current_tag; }
+            get { return _currentTag; }
             set { }
         }
 
@@ -374,133 +351,129 @@ namespace Moonfish
         {
             get
             {
-                int value = ( int )base.Position;
-                if ( TryConvertOffsetToPointer( ref value ) ) return value;
+                var value = (int)base.Position;
+                if (TryConvertOffsetToPointer(ref value)) return value;
                 else return base.Position;
             }
             set
             {
-                base.Position = CheckOffset( value );
+                base.Position = CheckOffset(value);
             }
         }
 
-        public override long Seek( long offset, SeekOrigin origin )
+        public override long Seek(long offset, SeekOrigin origin)
         {
-            return base.Seek( CheckOffset( offset ), origin );
+            return base.Seek(CheckOffset(offset), origin);
         }
 
-        private long CheckOffset( long value )
+        private long CheckOffset(long value)
         {
-            if ( value < 0 || value > this.Length )
+            if (value < 0 || value > Length)
             {
-                return PointerToOffset( ( int )value );
+                return PointerToOffset((int)value);
             }
             else return value;
         }
 
-        public bool TryConvertOffsetToPointer( ref int value )
+        public bool TryConvertOffsetToPointer(ref int value)
         {
-            foreach ( var block in this.MemoryBlocks )
+            foreach (var block in MemoryBlocks)
             {
-                if ( block.GetOffset( ref value, false, true ) )
+                if (block.GetOffset(ref value, false, true))
                     return true;
             }
             return false;
         }
 
-        public bool ContainsPointer( BlamPointer blamPointer )
+        public bool ContainsPointer(BlamPointer blamPointer)
         {
-            foreach ( var block in this.MemoryBlocks )
+            foreach (var block in MemoryBlocks)
             {
                 var previousAddressIsContained = true;
-                foreach ( var address in blamPointer )
+                foreach (var address in blamPointer)
                 {
-                    if ( block.Contains( address, true ) ^ previousAddressIsContained )
+                    if (block.Contains(address) ^ previousAddressIsContained)
                     {
                         previousAddressIsContained = false;
                         break;
                     }
                     else previousAddressIsContained = true;
                 }
-                if ( previousAddressIsContained ) return true;
-                else continue;
+                if (previousAddressIsContained) return true;
             }
             return false;
         }
 
-        public int ConvertOffsetToPointer( int value )
+        public int ConvertOffsetToPointer(int value)
         {
-            foreach ( var block in this.MemoryBlocks )
+            foreach (var block in MemoryBlocks)
             {
-                if ( block.GetOffset( ref value, false, true ) ) return value;
+                if (block.GetOffset(ref value, false, true)) return value;
             }
             return value;
         }
 
-        private int PointerToOffset( int value )
+        private int PointerToOffset(int value)
         {
-            foreach ( var block in this.MemoryBlocks )
+            foreach (var block in MemoryBlocks)
             {
-                if ( block.GetOffset( ref value, true, false ) ) return value;
+                if (block.GetOffset(ref value)) return value;
             }
             throw new InvalidOperationException();
         }
 
-        public bool Sign( )
+        public bool Sign()
         {
-            if ( !CanWrite ) return false;
-            int checksum = CalculateChecksum();
+            if (!CanWrite) return false;
+            var checksum = CalculateChecksum();
 
-            BinaryWriter writer = new BinaryWriter( this );
+            var writer = new BinaryWriter(this);
             writer.BaseStream.Position = 0x000002F0;
-            writer.Write( checksum );
+            writer.Write(checksum);
             return true;
         }
 
-        unsafe public int CalculateChecksum( )
+        public int CalculateChecksum()
         {
-            const int block_size = 512;
-            byte[] buffer = new byte[ block_size ];
+            const int blockSize = 512;
+            var buffer = new byte[blockSize];
 
-            int word_count = ( ( int )this.Length - 2048 ) / sizeof( uint );
-            int pass_count = word_count / ( block_size / 4 );
-            int remainder = word_count % pass_count;
+            var word_count = ((int)Length - 2048) / sizeof(uint);
+            var pass_count = word_count / (blockSize / 4);
+            var remainder = word_count % pass_count;
 
-            this.Position = 2048;
-            int checksum = 0;
-            for ( int pass = 0; pass < pass_count; pass++ )
+            Position = 2048;
+            var checksum = 0;
+            for (var pass = 0; pass < pass_count; pass++)
             {
-                this.Read( buffer, 0, block_size );
-                for ( int index = 0; index < block_size / sizeof( uint ); index += 4 )
+                Read(buffer, 0, blockSize);
+                for (var index = 0; index < blockSize / sizeof(uint); index += 4)
                 {
-                    checksum ^= BitConverter.ToInt32( buffer, ( index + 0 ) * sizeof( uint ) );
-                    checksum ^= BitConverter.ToInt32( buffer, ( index + 1 ) * sizeof( uint ) );
-                    checksum ^= BitConverter.ToInt32( buffer, ( index + 2 ) * sizeof( uint ) );
-                    checksum ^= BitConverter.ToInt32( buffer, ( index + 3 ) * sizeof( uint ) );
+                    checksum ^= BitConverter.ToInt32(buffer, (index + 0) * sizeof(uint));
+                    checksum ^= BitConverter.ToInt32(buffer, (index + 1) * sizeof(uint));
+                    checksum ^= BitConverter.ToInt32(buffer, (index + 2) * sizeof(uint));
+                    checksum ^= BitConverter.ToInt32(buffer, (index + 3) * sizeof(uint));
                 }
             }
-            this.Read( buffer, 0, remainder );
-            for ( int index = 0; index < remainder / sizeof( uint ); index += 4 )
+            Read(buffer, 0, remainder);
+            for (var index = 0; index < remainder / sizeof(uint); index += 4)
             {
-                checksum ^= BitConverter.ToInt32( buffer, ( index + 0 ) * sizeof( uint ) );
-                checksum ^= BitConverter.ToInt32( buffer, ( index + 1 ) * sizeof( uint ) );
-                checksum ^= BitConverter.ToInt32( buffer, ( index + 2 ) * sizeof( uint ) );
-                checksum ^= BitConverter.ToInt32( buffer, ( index + 3 ) * sizeof( uint ) );
+                checksum ^= BitConverter.ToInt32(buffer, (index + 0) * sizeof(uint));
+                checksum ^= BitConverter.ToInt32(buffer, (index + 1) * sizeof(uint));
+                checksum ^= BitConverter.ToInt32(buffer, (index + 2) * sizeof(uint));
+                checksum ^= BitConverter.ToInt32(buffer, (index + 3) * sizeof(uint));
             }
             return checksum;
         }
 
-        IEnumerator<Tag> IEnumerable<Tag>.GetEnumerator( )
+        IEnumerator<Tag> IEnumerable<Tag>.GetEnumerator()
         {
-            foreach ( var tag in this.Tags )
-            {
-                yield return tag;
-            }
+            return ((IEnumerable<Tag>)Tags).GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator( )
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return ((IEnumerable<Tag>)Tags).GetEnumerator();
         }
 
         byte[] IMap.TagData
@@ -508,9 +481,9 @@ namespace Moonfish
             get
             {
 
-                this.Position = this.current_tag.VirtualAddress;
-                var buffer = new byte[ this.current_tag.Length ];
-                this.Read( buffer, 0, buffer.Length );
+                Position = _currentTag.VirtualAddress;
+                var buffer = new byte[_currentTag.Length];
+                Read(buffer, 0, buffer.Length);
                 return buffer;
             }
         }
@@ -548,9 +521,9 @@ namespace Moonfish
         public StringID Name;
         public string Value;
 
-        public override string ToString( )
+        public override string ToString()
         {
-            return string.Format( "{0}:{1} : \"{2}\"", Name.Index, Name.Length, Value );
+            return string.Format("{0}:{1} : \"{2}\"", Name.Index, Name.Length, Value);
         }
     }
 
@@ -566,47 +539,47 @@ namespace Moonfish
         /// <param name="address">Address Value</param>
         /// <param name="isVirtualAddress">If true Address Value is a virtual address else Address Value is file address</param>
         /// <returns>true if address points to this map</returns>
-        bool ContainsFileOffset( long address )
+        bool ContainsFileOffset(long address)
         {
-            return Contains( address, false );
+            return Contains(address, false);
         }
-        bool ContainsVirtualOffset( long address )
+        bool ContainsVirtualOffset(long address)
         {
-            return Contains( address, true );
+            return Contains(address, true);
         }
-        public bool Contains( BlamPointer pointer )
+        public bool Contains(BlamPointer pointer)
         {
             var previousAddressIsContained = true;
-            foreach ( var address in pointer )
+            foreach (var address in pointer)
             {
-                if ( this.Contains( address, true ) ^ previousAddressIsContained )
+                if (Contains(address, true) ^ previousAddressIsContained)
                 {
                     previousAddressIsContained = false;
                     break;
                 }
                 else previousAddressIsContained = true;
             }
-            if ( previousAddressIsContained ) return true;
+            if (previousAddressIsContained) return true;
             else return false;
         }
-        public bool Contains( long address, bool isVirtualAddress = true )
+        public bool Contains(long address, bool isVirtualAddress = true)
         {
             var virtualOffset = isVirtualAddress ? 0 : Magic;
-            int fileAddress = ( int )address + virtualOffset;
-            int beginAddress = Address;
-            int endAddress = beginAddress + Length;
+            var fileAddress = (int)address + virtualOffset;
+            var beginAddress = Address;
+            var endAddress = beginAddress + Length;
             return fileAddress >= beginAddress && fileAddress < endAddress;
         }
-        public bool GetOffset( ref int address, bool addressIsVirtualAddress = true, bool returnVirtualAddress = false )
+        public bool GetOffset(ref int address, bool addressIsVirtualAddress = true, bool returnVirtualAddress = false)
         {
-            if ( addressIsVirtualAddress )
+            if (addressIsVirtualAddress)
             {
-                if ( !this.ContainsVirtualOffset( address ) ) return false;
+                if (!ContainsVirtualOffset(address)) return false;
                 address = returnVirtualAddress ? address : address - Magic;
             }
             else
             {
-                if ( !this.ContainsFileOffset( address ) ) return false;
+                if (!ContainsFileOffset(address)) return false;
                 address = returnVirtualAddress ? address + Magic : address;
             }
             return true;
@@ -619,7 +592,7 @@ namespace Moonfish
         /// Returns a TagBlock from the current class
         /// </summary>
         /// <returns></returns>
-        dynamic Deserialize( );
+        dynamic Deserialize();
         /// <summary>
         /// Access meta information about the tag
         /// </summary>
@@ -627,7 +600,7 @@ namespace Moonfish
 
         byte[] TagData { get; }
 
-        void Seek( );
+        void Seek();
     }
 
     public class Tag
@@ -638,9 +611,9 @@ namespace Moonfish
         public int VirtualAddress;
         public int Length;
 
-        internal bool Contains( int address )
+        internal bool Contains(int address)
         {
-            return ( address >= VirtualAddress && address < VirtualAddress + Length );
+            return (address >= VirtualAddress && address < VirtualAddress + Length);
         }
     }
 }

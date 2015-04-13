@@ -38,6 +38,11 @@ namespace Moonfish.Guerilla
         public List<AttributeInfo> Attributes { get; set; }
         public string BaseClass { get; set; }
 
+        public string Interfaces
+        {
+            get { return "IGuerilla"; }
+        }
+
         public string BaseClassDeclaration
         {
             get { return (String.IsNullOrWhiteSpace(BaseClass) ? "" : string.Format(": {0}", BaseClass)).Trim(); }
@@ -48,8 +53,13 @@ namespace Moonfish.Guerilla
             get
             {
                 return
-                    string.Format("{0} class {1} {2}", AccessModifiersExtensions.ToString(AccessModifiers), Value.Name,
-                        BaseClassDeclaration).Trim();
+                    string.Format("{0} class {1} {2} {3}", AccessModifiersExtensions.ToString(AccessModifiers),
+                        Value.Name,
+                        BaseClassDeclaration.Trim(),
+                        string.IsNullOrWhiteSpace(BaseClassDeclaration.Trim())
+                            ? string.Format(": {0}", Interfaces)
+                            : ""
+                        );
             }
         }
 
@@ -109,20 +119,23 @@ namespace Moonfish.Guerilla
             GenerateBinaryReaderConstructor();
 
             GenerateWriteBlockTemplateMethod();
+            GenerateWriteArrayMethod();
             GenerateWriteDataMethod();
             GenerateWriteMethod();
         }
 
         public void GenerateBinaryReaderConstructor()
         {
-            Constructors.Add(new MethodInfo
+            Constructors.Add( new MethodInfo
             {
                 ClassName = Value.Name,
-                Returns = "",
                 AccessModifiers = AccessModifiers.Internal,
-                Arguments = new List<ParameterInfo> { new ParameterInfo(typeof(BinaryReader)) },
-                Wrapper = !string.IsNullOrWhiteSpace(BaseClass)
-            });
+                Arguments = new List<ParameterInfo>
+                {
+                    new ParameterInfo( typeof ( BinaryReader ) )
+                },
+                Wrapper = !string.IsNullOrWhiteSpace( BaseClass )
+            } );
             var stringBuilder = new StringBuilder();
             foreach (var item in Fields)
             {
@@ -137,7 +150,7 @@ namespace Moonfish.Guerilla
                     // variable byte array (data)
                     else if (Type.GetType(item.FieldTypeName) == typeof(byte))
                     {
-                        stringBuilder.AppendLine(string.Format("{0} = ReadData(binaryReader);", item.Value.Name));
+                        stringBuilder.AppendLine(string.Format("{0} = Guerilla.ReadData(binaryReader);", item.Value.Name));
                     }
                     // inline array
                     else if (item.ArraySize > 0)
@@ -153,20 +166,8 @@ namespace Moonfish.Guerilla
                     // assume a TagBlock
                     else
                     {
-                        var methodInfo = MethodsTemplates.First(x => x.ClassName == "Read{0}Array");
-                        ParameterInfo[] parameters = { new ParameterInfo(typeof(BinaryReader), "binaryReader") };
-
-
-
-                        var method = methodInfo.MakeFromTemplate(item.FieldTypeName);
-                        if (!Methods.Any(x => x.ClassName == method.ClassName
-                                              && x.Arguments == method.Arguments
-                                              && x.Returns == method.Returns))
-                        {
-                            Methods.Add(method);
-                        }
-                        stringBuilder.AppendLine(string.Format("{0};",
-                            method.GetMethodCallSignature(new ParameterInfo(typeof(BinaryReader)))));
+                        var format = string.Format("{0} = Guerilla.ReadBlockArray<{1}>(binaryReader);", item.Value.Name, item.FieldTypeName);
+                        stringBuilder.AppendLine(format);
                     }
                 }
                 else
@@ -187,7 +188,7 @@ namespace Moonfish.Guerilla
                     }
                     else
                     {
-                        var value = GuerillaCs.GetBinaryReaderMethodName(Type.GetType(item.FieldTypeName));
+                        var value = BinaryIO.GetBinaryReaderMethodName(Type.GetType(item.FieldTypeName));
                         stringBuilder.AppendLine(string.Format("{0} = binaryReader.{1}();", item.Value.Name, value));
                     }
                 }
@@ -221,25 +222,25 @@ return array;",
 
         public void GenerateReadDataMethod()
         {
-            Methods.Add(new MethodInfo
-            {
-                Arguments = new List<ParameterInfo> { new ParameterInfo(typeof(BinaryReader)) },
-                AccessModifiers = AccessModifiers.Internal | AccessModifiers.Virtual,
-                ClassName = "ReadData",
-                Body =
-                    @"var blamPointer = binaryReader.ReadBlamPointer(1);
-var data = new byte[blamPointer.count];
-if(blamPointer.count > 0)
-{
-    using (binaryReader.BaseStream.Pin())
-    {
-        binaryReader.BaseStream.Position = blamPointer[0];
-        data = binaryReader.ReadBytes(blamPointer.count);
-    }
-}
-return data;",
-                Returns = "byte[]"
-            });
+//            Methods.Add(new MethodInfo
+//            {
+//                Arguments = new List<ParameterInfo> { new ParameterInfo(typeof(BinaryReader)) },
+//                AccessModifiers = AccessModifiers.Internal | AccessModifiers.Virtual,
+//                ClassName = "ReadData",
+//                Body =
+//                    @"var blamPointer = binaryReader.ReadBlamPointer(1);
+//var data = new byte[blamPointer.count];
+//if(blamPointer.count > 0)
+//{
+//    using (binaryReader.BaseStream.Pin())
+//    {
+//        binaryReader.BaseStream.Position = blamPointer[0];
+//        data = binaryReader.ReadBytes(blamPointer.count);
+//    }
+//}
+//return data;",
+//                Returns = "byte[]"
+//            });
         }
 
         public ClassInfo GenerateWrapper(string wrapperName, string baseName)
@@ -277,31 +278,36 @@ return data;",
 
         public void GenerateWriteDataMethod()
         {
-            var binaryWriterParam = new ParameterInfo(typeof(BinaryWriter), "binaryWriter");
-            var dataParam = new ParameterInfo(typeof(byte[]), "data");
-            var addressParam = new ParameterInfo(typeof(long), "nextAddress") { Modifier = ParameterModifier.Ref };
+//            var binaryWriterParam = new ParameterInfo(typeof(BinaryWriter), "binaryWriter");
+//            var dataParam = new ParameterInfo(typeof(byte[]), "data");
+//            var addressParam = new ParameterInfo(typeof(long), "nextAddress") { Modifier = ParameterModifier.Ref };
 
-            Methods.Add(new MethodInfo
-            {
-                Arguments = new List<ParameterInfo>
-                {
-                    binaryWriterParam,
-                    dataParam,
-                    addressParam
-                },
-                AccessModifiers = AccessModifiers.Internal | AccessModifiers.Virtual,
-                ClassName = "WriteData",
-                Body = string.Format(
-@"using ({0}.BaseStream.Pin())
-{{
-    {0}.BaseStream.Position = {2};
-    {0}.BaseStream.Pad(4);
-    {0}.Write({1});
-    {0}.BaseStream.Pad(4);
-    {2} = {0}.BaseStream.Position;
-}}", binaryWriterParam.Name, dataParam.Name, addressParam.Name),
-                Returns = "void"
-            });
+//            Methods.Add(new MethodInfo
+//            {
+//                Arguments = new List<ParameterInfo>
+//                {
+//                    binaryWriterParam,
+//                    dataParam,
+//                    addressParam
+//                },
+//                AccessModifiers = AccessModifiers.Internal | AccessModifiers.Virtual,
+//                ClassName = "WriteData",
+//                Body = string.Format(
+//@"using ({0}.BaseStream.Pin())
+//{{
+//    {0}.BaseStream.Position = {2};
+//    {0}.BaseStream.Pad(4);
+//    {0}.Write({1});
+//    {0}.BaseStream.Pad(4);
+//    {2} = {0}.BaseStream.Position;
+//}}", binaryWriterParam.Name, dataParam.Name, addressParam.Name),
+//                Returns = "void"
+//            });
+        }
+
+        public void GenerateWriteArrayMethod()
+        {
+
         }
 
         public void GenerateWriteMethod()
@@ -312,12 +318,14 @@ return data;",
                 AccessModifiers = AccessModifiers.Public,
                 Arguments = new List<ParameterInfo>
                 {
-                    new ParameterInfo(typeof(BinaryWriter))
+                    new ParameterInfo(typeof(BinaryWriter)),
+                    new ParameterInfo(typeof(int), "nextAddress")
                 },
                 ClassName = "Write",
-                Returns = "void"
+                Returns = "int"
             };
             var binaryWriter = writeMethod.Arguments.First();
+            var addressParam = writeMethod.Arguments[1];
             var bodyBuilder = new StringBuilder();
             bodyBuilder.AppendLine(string.Format("using({0})",
                 StaticReflection.GetMemberName((BinaryWriter b) => b.BaseStream.Pin(), binaryWriter)));
@@ -335,7 +343,7 @@ return data;",
                     // variable byte array (data)
                     else if (Type.GetType(item.FieldTypeName) == typeof(byte))
                     {
-                        bodyBuilder.AppendLine(string.Format("WriteData({0});", binaryWriter.Name));
+                        bodyBuilder.AppendLine(string.Format("Guerilla.WriteData({0});", binaryWriter.Name));
                     }
                     // inline array
                     else if (item.ArraySize > 0)
@@ -349,15 +357,9 @@ return data;",
                     // assume a TagBlock
                     else
                     {
-                        var methodInfo = MethodsTemplates.First(x => x.ClassName == "Write{0}Array");
-                        var method = methodInfo.MakeFromTemplate(item.FieldTypeName);
-                        if (!Methods.Any(x => x.ClassName == method.ClassName
-                                              && x.Arguments == method.Arguments
-                                              && x.Returns == method.Returns))
-                        {
-                            Methods.Add(method);
-                        }
-                        bodyBuilder.AppendLine(string.Format("{0};", method.GetMethodCallSignature(binaryWriter)));
+
+                        var format = string.Format("Guerilla.WriteBlockArray<{1}>({2}, {0}, {3});", item.Value.Name, item.FieldTypeName, binaryWriter.Name, addressParam.Name);
+                        bodyBuilder.AppendLine(format);
                     }
                 }
                 else
@@ -383,6 +385,7 @@ return data;",
                 }
             }
 
+            bodyBuilder.AppendLine(string.Format("return {0} = (int){1}.BaseStream.Position;", writeMethod.Arguments[1].Name, writeMethod.Arguments[0].Name));
             bodyBuilder.AppendLine("}".Tab(ref tab));
             writeMethod.Body = bodyBuilder.ToString().Trim();
             Methods.Add(writeMethod);

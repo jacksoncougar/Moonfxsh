@@ -15,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 116)]
-    public class BitmapDataBlockBase
+    [LayoutAttribute(Size = 116, Alignment = 4)]
+    public class BitmapDataBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.TagClass signature;
         internal short widthPixels;
@@ -70,32 +70,7 @@ namespace Moonfish.Guerilla.Tags
             lOD3TextureDataLength = binaryReader.ReadInt32();
             invalidName_0 = binaryReader.ReadBytes(52);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
-        {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.count];
-            if(blamPointer.count > 0)
-            {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.count);
-                }
-            }
-            return data;
-        }
-        internal  virtual void WriteData(System.IO.BinaryWriter binaryWriter, System.Byte[] data, ref Int64 nextAddress)
-        {
-            using (binaryWriter.BaseStream.Pin())
-            {
-                binaryWriter.BaseStream.Position = nextAddress;
-                binaryWriter.BaseStream.Pad(8);
-                binaryWriter.Write(data);
-                binaryWriter.BaseStream.Pad(4);
-                nextAddress = binaryWriter.BaseStream.Position;
-            }
-        }
-        public void Write(BinaryWriter binaryWriter)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {
@@ -119,25 +94,23 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(lOD2TextureDataLength);
                 binaryWriter.Write(lOD3TextureDataLength);
                 binaryWriter.Write(invalidName_0, 0, 52);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
         }
         [FlagsAttribute]
         internal enum MoreFlags : byte
-        
         {
             DeleteFromCacheFile = 1,
             BitmapCreateAttempted = 2,
             InvalidName = 4,
         };
         internal enum TypeDeterminesBitmapGeometry : short
-        
         {
             Texture2D = 0,
             Texture3D = 1,
             Cubemap = 2,
         };
         internal enum FormatDeterminesHowPixelsAreRepresentedInternally : short
-        
         {
             A8 = 0,
             Y8 = 1,
@@ -166,7 +139,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             PowerOfTwoDimensions = 1,
             Compressed = 2,

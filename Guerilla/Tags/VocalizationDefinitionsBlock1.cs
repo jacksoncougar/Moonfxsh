@@ -110,13 +110,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.count];
-            if(blamPointer.count > 0)
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.count);
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
                 }
             }
             return data;
@@ -125,10 +125,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(ResponseBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ResponseBlock[blamPointer.count];
+            var array = new ResponseBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new ResponseBlock(binaryReader);
@@ -140,10 +140,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(VocalizationDefinitionsBlock2));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new VocalizationDefinitionsBlock2[blamPointer.count];
+            var array = new VocalizationDefinitionsBlock2[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new VocalizationDefinitionsBlock2(binaryReader);

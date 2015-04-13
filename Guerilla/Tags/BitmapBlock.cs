@@ -6,6 +6,14 @@ using OpenTK;
 using System;
 using System.IO;
 
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass BitmClass = (TagClass)"bitm";
+    };
+};
+
 namespace Moonfish.Guerilla.Tags
 {
     [TagClassAttribute("bitm")]
@@ -16,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 76)]
-    public class BitmapBlockBase
+    [LayoutAttribute(Size = 76, Alignment = 4)]
+    public class BitmapBlockBase  : IGuerilla
     {
         internal Type type;
         internal Format format;
@@ -79,73 +87,10 @@ namespace Moonfish.Guerilla.Tags
             spriteUsage = (SpriteUsage)binaryReader.ReadInt16();
             spriteSpacing = binaryReader.ReadInt16();
             forceFormat = (ForceFormat)binaryReader.ReadInt16();
-            ReadBitmapGroupSequenceBlockArray(binaryReader);
-            ReadBitmapDataBlockArray(binaryReader);
+            sequences = Guerilla.ReadBlockArray<BitmapGroupSequenceBlock>(binaryReader);
+            bitmaps = Guerilla.ReadBlockArray<BitmapDataBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
-        {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.count];
-            if(blamPointer.count > 0)
-            {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.count);
-                }
-            }
-            return data;
-        }
-        internal  virtual BitmapGroupSequenceBlock[] ReadBitmapGroupSequenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(BitmapGroupSequenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new BitmapGroupSequenceBlock[blamPointer.count];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.count; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new BitmapGroupSequenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual BitmapDataBlock[] ReadBitmapDataBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(BitmapDataBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new BitmapDataBlock[blamPointer.count];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.count; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new BitmapDataBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual void WriteData(System.IO.BinaryWriter binaryWriter, System.Byte[] data, ref Int64 nextAddress)
-        {
-            using (binaryWriter.BaseStream.Pin())
-            {
-                binaryWriter.BaseStream.Position = nextAddress;
-                binaryWriter.BaseStream.Pad(8);
-                binaryWriter.Write(data);
-                binaryWriter.BaseStream.Pad(4);
-                nextAddress = binaryWriter.BaseStream.Position;
-            }
-        }
-        internal  virtual void WriteBitmapGroupSequenceBlockArray(BinaryWriter binaryWriter)
-        {
-            
-        }
-        internal  virtual void WriteBitmapDataBlockArray(BinaryWriter binaryWriter)
-        {
-            
-        }
-        public void Write(BinaryWriter binaryWriter)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {
@@ -168,12 +113,12 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)spriteUsage);
                 binaryWriter.Write(spriteSpacing);
                 binaryWriter.Write((Int16)forceFormat);
-                WriteBitmapGroupSequenceBlockArray(binaryWriter);
-                WriteBitmapDataBlockArray(binaryWriter);
+                Guerilla.WriteBlockArray<BitmapGroupSequenceBlock>(binaryWriter, sequences, nextAddress);
+                Guerilla.WriteBlockArray<BitmapDataBlock>(binaryWriter, bitmaps, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
         }
         internal enum Type : short
-        
         {
             TextureArray2D = 0,
             TextureArray3D = 1,
@@ -182,7 +127,6 @@ namespace Moonfish.Guerilla.Tags
             InterfaceBitmaps = 4,
         };
         internal enum Format : short
-        
         {
             CompressedWithColorKeyTransparency = 0,
             CompressedWithExplicitAlpha = 1,
@@ -192,7 +136,6 @@ namespace Moonfish.Guerilla.Tags
             Monochrome = 5,
         };
         internal enum Usage : short
-        
         {
             AlphaBlend = 0,
             Default = 1,
@@ -208,7 +151,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             EnableDiffusionDithering = 1,
             DisableHeightMapCompression = 2,
@@ -225,7 +167,6 @@ namespace Moonfish.Guerilla.Tags
             IntentionallyTrueColor = 4096,
         };
         internal enum SpriteSize : short
-        
         {
             Size32X32 = 0,
             Size64X64 = 1,
@@ -235,14 +176,12 @@ namespace Moonfish.Guerilla.Tags
             Size1024X1024 = 5,
         };
         internal enum SpriteUsage : short
-        
         {
             BlendAddSubtractMax = 0,
             MultiplyMin = 1,
             DoubleMultiply = 2,
         };
         internal enum ForceFormat : short
-        
         {
             Default = 0,
             ForceG8B8 = 1,

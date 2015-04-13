@@ -31,13 +31,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.count];
-            if(blamPointer.count > 0)
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.count);
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
                 }
             }
             return data;
@@ -46,10 +46,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(StructureBspClusterDebugInfoBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspClusterDebugInfoBlock[blamPointer.count];
+            var array = new StructureBspClusterDebugInfoBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new StructureBspClusterDebugInfoBlock(binaryReader);
@@ -61,10 +61,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(StructureBspFogPlaneDebugInfoBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspFogPlaneDebugInfoBlock[blamPointer.count];
+            var array = new StructureBspFogPlaneDebugInfoBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new StructureBspFogPlaneDebugInfoBlock(binaryReader);
@@ -76,10 +76,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(StructureBspFogZoneDebugInfoBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspFogZoneDebugInfoBlock[blamPointer.count];
+            var array = new StructureBspFogZoneDebugInfoBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new StructureBspFogZoneDebugInfoBlock(binaryReader);

@@ -26,8 +26,7 @@ namespace Moonfish.Guerilla
                 throw new ArgumentException(
                     "The expression cannot be null.");
             }
-
-            return expression.Body.ToString();
+            return GetMemberName(expression.Body);
         }
 
         public static string GetMemberName<T>(

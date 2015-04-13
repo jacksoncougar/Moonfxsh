@@ -134,17 +134,13 @@ namespace Moonfish.Guerilla
 
         public override string ToString()
         {
-            var stringBuilder = new StringBuilder
-                (
-
-                );
+            var stringBuilder = new StringBuilder( );
             foreach (var attribute in Attributes)
             {
                 stringBuilder.AppendLine(attribute.ToString());
             }
             stringBuilder.AppendLine(string.Format("{0} enum {1} : {2}",
                 AccessModifiersExtensions.ToString(AccessModifiers), Value.Name, BaseType.ToString().ToLowerInvariant()).Trim());
-            stringBuilder.AppendLine();
             stringBuilder.AppendLine("{");
 
             var isFlags = Attributes.Any(x => x.AttributeType == typeof(FlagsAttribute));
@@ -162,18 +158,20 @@ namespace Moonfish.Guerilla
 
     public class AttributeInfo
     {
-        public AttributeInfo(Type attributeType, params object[] namedParameters)
+        public AttributeInfo( Type attributeType, params object[] namedParameters )
         {
-            var count = namedParameters.Length % 2 == 0 ?
-                namedParameters.Length / 2 : (namedParameters.Length - 1) / 2;
-            NamedParameters = new List<Tuple<string, string>>(count);
-            Parameters = new List<string>(count);
-            for (int i = 0; i < count; i += 2)
+            var count = namedParameters.Length % 2 == 0
+                ? namedParameters.Length / 2
+                : ( namedParameters.Length - 1 ) / 2;
+            NamedParameters = new List<Tuple<string, string>>( count );
+            Parameters = new List<string>( count );
+            for ( int i = 0; i < count * 2; i += 2 )
             {
-                if (namedParameters[i] == null)
-                    Parameters.Add(namedParameters[i + 1].ToString());
+                if ( namedParameters[ i ] == null )
+                    Parameters.Add( namedParameters[ i + 1 ].ToString( ) );
                 else
-                    NamedParameters.Add(new Tuple<string, string>(namedParameters[i].ToString(), namedParameters[i + 1].ToString()));
+                    NamedParameters.Add( new Tuple<string, string>( namedParameters[ i ].ToString( ),
+                        namedParameters[ i + 1 ].ToString( ) ) );
             }
             AttributeType = attributeType;
         }

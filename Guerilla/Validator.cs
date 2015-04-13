@@ -19,10 +19,11 @@ namespace Moonfish.Guerilla
             ElementArray elementArray = null;
             if ( validateTag.ParentClass != TagClass.Null )
             {
-                var parentClass = tagPool.Where( x => x.Class == validateTag.ParentClass ).Single();
+                var guerillaTagGroups = tagPool as IList<GuerillaTagGroup> ?? tagPool.ToList();
+                var parentClass = guerillaTagGroups.Single(x => x.Class == validateTag.ParentClass);
                 if ( parentClass.ParentClass != TagClass.Null )
                 {
-                    var baseClass = tagPool.Where( x => x.Class == parentClass.ParentClass ).Single();
+                    var baseClass = guerillaTagGroups.Single(x => x.Class == parentClass.ParentClass);
                     elementArray = ProcessTagBlockDefinition( baseClass.Definition, ref offset, true );
                     elementArray.Append( ProcessTagBlockDefinition( parentClass.Definition, ref offset, true ) );
                     elementArray.Append( ProcessTagBlockDefinition( validateTag.Definition, ref offset, true ) );
@@ -57,9 +58,9 @@ namespace Moonfish.Guerilla
                         else
                         {
                             VirtualMappedAddress metaTableMemory = new VirtualMappedAddress() { Address = map.Tags[ 0 ].VirtualAddress, Length = map.TagCacheLength };
-                            isValidDelegate = new Func<BlamPointer, bool>( metaTableMemory.Contains );
+                            isValidDelegate = metaTableMemory.Contains;
                             VirtualMappedAddress virtualTagMemory = new VirtualMappedAddress() { Address = tag.VirtualAddress, Length = tag.Length };
-                            IsPointerOwnedByTagDelegate = new Func<BlamPointer, bool>( virtualTagMemory.Contains );
+                            IsPointerOwnedByTagDelegate = virtualTagMemory.Contains;
                             OnWriteMessage( string.Format( "Tag ({0})", tag.Path ) );
                             map[ tag.Identifier ].Seek();
                             offset = ( int )map.Position;
@@ -70,7 +71,7 @@ namespace Moonfish.Guerilla
                             stringWriter.Flush();
                         }
                     }
-                    Console.WriteLine( string.Format( "Parsed ({0})", map.MapName ) );
+                    Console.WriteLine(@"Parsed ({0})", map.MapName);
                     //OnWriteMessage(string.Format("End ({0})", map.MapName));
                 }
             }
@@ -81,7 +82,7 @@ namespace Moonfish.Guerilla
         private void AnalyzePointers( List<Tuple<BlamPointer, ElementArray>> arrayPointerList )
         {
             var size = arrayPointerList.First().Item1.PointedSize;
-            int nextAddress = arrayPointerList.First().Item1.address;
+            int nextAddress = arrayPointerList.First().Item1.startAddress;
 
             var arraySize = default( int );
             var arrayStartAddress = default( int );
@@ -92,7 +93,7 @@ namespace Moonfish.Guerilla
                 //if (arrayPointer.Item1.Address != arrayEndAddress)
                 //OnWriteMessage(string.Format("{1} Hole {0}", arrayPointer.Item1.Address - arrayEndAddress, arrayPointer.Item2.ToHierarchyString()));
                 arraySize = 0;
-                arrayStartAddress = arrayPointer.Item1.address;
+                arrayStartAddress = arrayPointer.Item1.startAddress;
                 foreach ( var pointer in arrayPointer.Item1 )
                 {
                     arraySize += arrayPointer.Item1.elementSize;
@@ -137,23 +138,23 @@ namespace Moonfish.Guerilla
                     if ( !allocated.Any() )
                     {
                         var alignedAddress = ( address - startOffset ) + Padding.GetCount( address - startOffset, info.Alignment );
-                        if ( pointer.address - startOffset != alignedAddress )
+                        if ( pointer.startAddress - startOffset != alignedAddress )
                         {
                             MapStream mapStream = reader.BaseStream as MapStream;
                             if ( mapStream != null )
                             {
-                                OnWriteMessage( string.Format( "{2}: Expected address \"{0}\"  - actually was \"{1}\"", address - startOffset, pointer.address - startOffset, info.Name ) );
+                                OnWriteMessage( string.Format( "{2}: Expected address \"{0}\"  - actually was \"{1}\"", address - startOffset, pointer.startAddress - startOffset, info.Name ) );
                             }
                         }
-                        address = pointer.address + pointer.PointedSize;
+                        address = pointer.startAddress + pointer.PointedSize;
                     }
                     if ( allocated.Any() ) { }
                     else if ( partiallyAllocated.Any() )
                     {
                         foreach ( var overlappingItem in partiallyAllocated )
                         {
-                            var overlap = pointer.address - overlappingItem.Item1.address - overlappingItem.Item1.PointedSize;
-                            OnWriteMessage( string.Format( "Overlap of ({0})[{3}] with ({1}) by ({2}) bytes", overlappingItem.Item2.ToHierarchyString(), info.ToHierarchyString(), overlap, overlappingItem.Item1.count ) );
+                            var overlap = pointer.startAddress - overlappingItem.Item1.startAddress - overlappingItem.Item1.PointedSize;
+                            OnWriteMessage( string.Format( "Overlap of ({0})[{3}] with ({1}) by ({2}) bytes", overlappingItem.Item2.ToHierarchyString(), info.ToHierarchyString(), overlap, overlappingItem.Item1.elementCount ) );
                         }
                     }
                 }
@@ -195,8 +196,8 @@ namespace Moonfish.Guerilla
                                                   {
                                                       binaryReader.BaseStream.Seek( child.Address, SeekOrigin.Current );
                                                       var arrayPointer = binaryReader.ReadBlamPointer( child.ElementSize );
-                                                      child.VirtualAddress = arrayPointer.address;
-                                                      child.Count = arrayPointer.count;
+                                                      child.VirtualAddress = arrayPointer.startAddress;
+                                                      child.Count = arrayPointer.elementCount;
                                                       return arrayPointer;
                                                   }
                                               } )()
@@ -205,7 +206,7 @@ namespace Moonfish.Guerilla
             {
                 if ( !ValidateBlamPointer( child.ArrayPointer, child.ElementArray, binaryReader.BaseStream as MapStream ) )
                     continue;
-                if ( !( child.ArrayPointer.count == 0 && child.ArrayPointer.address == 0 ) )
+                if ( !( child.ArrayPointer.elementCount == 0 && child.ArrayPointer.startAddress == 0 ) )
                 {
                     ValidateTagBlock( child.ElementArray, child.ArrayPointer, binaryReader, ref nextAddress );
                 }
@@ -215,15 +216,15 @@ namespace Moonfish.Guerilla
         private bool ValidateBlamPointer( BlamPointer blamPointer, ElementArray info, MapStream stream )
         {
             var stringWriter = new StringWriter();
-            if ( blamPointer.count == 0 && blamPointer.address == 0 ) return true;
-            if ( blamPointer.count == 0 ^ blamPointer.address == 0 )
-                stringWriter.WriteLine( string.Format( "-> null-value count({0}) address({1}) is invalid", blamPointer.count, blamPointer.address ) );
-            if ( blamPointer.count < 0 )
-                stringWriter.WriteLine( string.Format( "-> count({0}) is invalid", blamPointer.count ) );
-            if ( blamPointer.count > info.MaxElementCount && info.MaxElementCount > 0 )
-                stringWriter.WriteLine( string.Format( "-> count({0}) > max-count({1})", blamPointer.count, info.MaxElementCount ) );
+            if ( blamPointer.elementCount == 0 && blamPointer.startAddress == 0 ) return true;
+            if ( blamPointer.elementCount == 0 ^ blamPointer.startAddress == 0 )
+                stringWriter.WriteLine( string.Format( "-> null-value count({0}) address({1}) is invalid", blamPointer.elementCount, blamPointer.startAddress ) );
+            if ( blamPointer.elementCount < 0 )
+                stringWriter.WriteLine( string.Format( "-> count({0}) is invalid", blamPointer.elementCount ) );
+            if ( blamPointer.elementCount > info.MaxElementCount && info.MaxElementCount > 0 )
+                stringWriter.WriteLine( string.Format( "-> count({0}) > max-count({1})", blamPointer.elementCount, info.MaxElementCount ) );
             if ( !stream.ContainsPointer( blamPointer ) )
-                stringWriter.WriteLine( string.Format( "-> address({0}) not contained in stream({1})", blamPointer.address, stream.Name ) );
+                stringWriter.WriteLine( string.Format( "-> address({0}) not contained in stream({1})", blamPointer.startAddress, stream.Name ) );
 
             var errors = stringWriter.ToString();
             if ( !string.IsNullOrWhiteSpace( errors ) )
@@ -236,10 +237,10 @@ namespace Moonfish.Guerilla
 
         private ElementArray ProcessTagBlockDefinition( TagBlockDefinition tagBlock, ref int offset, bool inline = false )
         {
-            return ProcessTagBlockDefinition( null, tagBlock, ref offset, inline, "" );
+            return ProcessTagBlockDefinition( null, tagBlock, ref offset, inline );
         }
 
-        private ElementArray ProcessTagBlockDefinition( ElementArray parent, TagBlockDefinition tagBlock, ref int offset, bool inline = false, string group_tag = "" )
+        private ElementArray ProcessTagBlockDefinition( ElementArray parent, TagBlockDefinition tagBlock, ref int offset, bool inline = false )
         {
 
             var size = Guerilla.CalculateSizeOfFieldSet( tagBlock.LatestFieldSet.Fields );

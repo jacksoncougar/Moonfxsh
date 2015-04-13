@@ -10,13 +10,13 @@ namespace Moonfish.Guerilla.Tags
 {
     public  partial class BitmapGroupSpriteBlock : BitmapGroupSpriteBlockBase
     {
-        public  BitmapGroupSpriteBlock(System.IO.BinaryReader binaryReader): base(binaryReader)
+        public  BitmapGroupSpriteBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
     };
-    [LayoutAttribute(Size = 32)]
-    public class BitmapGroupSpriteBlockBase
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class BitmapGroupSpriteBlockBase  : IGuerilla
     {
         internal short bitmapIndex;
         internal byte[] invalidName_;
@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
         internal float top;
         internal float bottom;
         internal OpenTK.Vector2 registrationPoint;
-        internal  BitmapGroupSpriteBlockBase(System.IO.BinaryReader binaryReader)
+        internal  BitmapGroupSpriteBlockBase(BinaryReader binaryReader)
         {
             bitmapIndex = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -37,25 +37,7 @@ namespace Moonfish.Guerilla.Tags
             bottom = binaryReader.ReadSingle();
             registrationPoint = binaryReader.ReadVector2();
         }
-        internal  virtual byte[] ReadData(System.IO.BinaryReader binaryReader)
-        {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.Count];
-            if(blamPointer.Count > 0)
-            {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.Count);
-                }
-            }
-            return data;
-        }
-        internal  virtual void WriteData(System.IO.BinaryWriter binaryWriter)
-        {
-            
-        }
-        public void Write(System.IO.BinaryWriter binaryWriter)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {
@@ -67,6 +49,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(top);
                 binaryWriter.Write(bottom);
                 binaryWriter.Write(registrationPoint);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
         }
     };

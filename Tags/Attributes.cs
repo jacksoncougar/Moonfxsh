@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Moonfish.Tags
 {
+    [SuppressMessage( "ReSharper", "InconsistentNaming" )]
     public class LayoutAttribute : Attribute
     {
         public int Size;
@@ -9,8 +11,7 @@ namespace Moonfish.Tags
         public int MaxElements;
     }
 
-    [AttributeUsage( AttributeTargets.Class,
-        AllowMultiple = false, Inherited = false )]
+    [AttributeUsage( AttributeTargets.Class, Inherited = false )]
     public class TagClassAttribute : System.Attribute
     {
         public TagClass TagClass { get; set; }
@@ -31,20 +32,19 @@ namespace Moonfish.Tags
     [AttributeUsage( AttributeTargets.Field )]
     public class TagStructFieldAttribute : TagFieldAttribute
     {
-        public TagStructFieldAttribute( ) { }
     }
 
     [AttributeUsage( AttributeTargets.All )]
     public class TagFieldAttribute : Attribute
     {
-        public bool UsesCustomFunction = false;
-        public int Offset;
-        public bool UsesFieldOffset { get { return Offset != -1; } }
+        public bool usesCustomFunction = false;
+        public int offset;
+        public bool UsesFieldOffset { get { return offset != -1; } }
 
         public TagFieldAttribute( ) : this( -1 ) { }
         public TagFieldAttribute( int fieldOffset )
         {
-            this.Offset = fieldOffset;
+            offset = fieldOffset;
         }
     }
 

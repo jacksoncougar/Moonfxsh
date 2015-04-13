@@ -37,13 +37,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.count];
-            if(blamPointer.count > 0)
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.count);
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
                 }
             }
             return data;
@@ -52,10 +52,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(RenderStateBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderStateBlock[blamPointer.count];
+            var array = new RenderStateBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new RenderStateBlock(binaryReader);
@@ -67,10 +67,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(TextureStageStateBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TextureStageStateBlock[blamPointer.count];
+            var array = new TextureStageStateBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new TextureStageStateBlock(binaryReader);
@@ -82,10 +82,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(RenderStateParameterBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderStateParameterBlock[blamPointer.count];
+            var array = new RenderStateParameterBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new RenderStateParameterBlock(binaryReader);
@@ -97,10 +97,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(TextureStageStateParameterBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TextureStageStateParameterBlock[blamPointer.count];
+            var array = new TextureStageStateParameterBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new TextureStageStateParameterBlock(binaryReader);
@@ -112,10 +112,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(TextureBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TextureBlock[blamPointer.count];
+            var array = new TextureBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new TextureBlock(binaryReader);
@@ -127,10 +127,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(VertexShaderConstantBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new VertexShaderConstantBlock[blamPointer.count];
+            var array = new VertexShaderConstantBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new VertexShaderConstantBlock(binaryReader);

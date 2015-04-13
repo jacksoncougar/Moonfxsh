@@ -153,12 +153,16 @@
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\Track.cs" />
     <Compile Include="Graphics\VertexFunctions.cs" />
+    <Compile Include="Guerilla\BinaryIO.cs" />
     <Compile Include="Guerilla\ClassInfo.cs" />
+    <Compile Include="Guerilla\Guerilla.cs" />
     <Compile Include="Guerilla\GuerillaAttributes.cs" />
     <Compile Include="Guerilla\GuerillaBase.cs" />
     <Compile Include="Guerilla\GuerillaExtensions.cs" />
     <Compile Include="Guerilla\GuerillaToCs.cs" />
     <Compile Include="Guerilla\GuerillaToEnt.cs" />
+    <Compile Include="Guerilla\IGuerilla.cs" />
+    <Compile Include="Guerilla\IGuerillaExtensions.cs" />
     <Compile Include="Guerilla\MethodInfo.cs" />
     <Compile Include="Guerilla\ParameterInfo.cs" />
     <Compile Include="Guerilla\Preprocess\Bitmap.cs" />
@@ -2112,6 +2116,7 @@
     </Compile>
     <Compile Include="PropertyGridExtensions.cs" />
     <Compile Include="ResourceStream.cs" />
+    <Compile Include="StreamExtensions.cs" />
     <Compile Include="Tags\Attributes.cs" />
     <Compile Include="Tags\BinaryReaderExtensions.cs" />
     <Compile Include="Tags\Bitmap.Code.cs" />
@@ -2129,6 +2134,7 @@
     <Compile Include="Tags\StructureBspInstancedGeometryInstancesBlock.cs" />
     <Compile Include="Tags\StructureInstancedGeometryRenderInfoStructBlock.cs" />
     <Compile Include="Tags\TagBlockIndexStructBlock.cs" />
+    <Compile Include="Tags\TagClass.cs" />
     <Compile Include="Tags\ValueTypes.cs" />
     <Compile Include="ValueTypes\Range.cs" />
   </ItemGroup>

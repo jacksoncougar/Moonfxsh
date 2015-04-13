@@ -91,13 +91,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.count];
-            if(blamPointer.count > 0)
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.count);
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
                 }
             }
             return data;
@@ -106,10 +106,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(SkyCubemapBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SkyCubemapBlock[blamPointer.count];
+            var array = new SkyCubemapBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new SkyCubemapBlock(binaryReader);
@@ -121,10 +121,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(SkyAtmosphericFogBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SkyAtmosphericFogBlock[blamPointer.count];
+            var array = new SkyAtmosphericFogBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new SkyAtmosphericFogBlock(binaryReader);
@@ -136,10 +136,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(SkyFogBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SkyFogBlock[blamPointer.count];
+            var array = new SkyFogBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new SkyFogBlock(binaryReader);
@@ -151,10 +151,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(SkyPatchyFogBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SkyPatchyFogBlock[blamPointer.count];
+            var array = new SkyPatchyFogBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new SkyPatchyFogBlock(binaryReader);
@@ -166,10 +166,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(SkyLightBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SkyLightBlock[blamPointer.count];
+            var array = new SkyLightBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new SkyLightBlock(binaryReader);
@@ -181,10 +181,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(SkyShaderFunctionBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SkyShaderFunctionBlock[blamPointer.count];
+            var array = new SkyShaderFunctionBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new SkyShaderFunctionBlock(binaryReader);
@@ -196,10 +196,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(SkyAnimationBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SkyAnimationBlock[blamPointer.count];
+            var array = new SkyAnimationBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new SkyAnimationBlock(binaryReader);

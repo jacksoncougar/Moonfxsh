@@ -79,13 +79,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.count];
-            if(blamPointer.count > 0)
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.count);
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
                 }
             }
             return data;
@@ -116,13 +116,13 @@ namespace Moonfish.Guerilla.Tags
             internal  virtual byte[] ReadData(BinaryReader binaryReader)
             {
                 var blamPointer = binaryReader.ReadBlamPointer(1);
-                var data = new byte[blamPointer.count];
-                if(blamPointer.count > 0)
+                var data = new byte[blamPointer.elementCount];
+                if(blamPointer.elementCount > 0)
                 {
                     using (binaryReader.BaseStream.Pin())
                     {
                         binaryReader.BaseStream.Position = blamPointer[0];
-                        data = binaryReader.ReadBytes(blamPointer.count);
+                        data = binaryReader.ReadBytes(blamPointer.elementCount);
                     }
                 }
                 return data;

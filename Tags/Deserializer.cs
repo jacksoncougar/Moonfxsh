@@ -120,7 +120,6 @@ namespace Moonfish.Tags
 
             using (var provider = new CSharpCodeProvider())
             {
-                var test = provider.CreateValidIdentifier(typeof(int).ToString());
                 var binaryReaderMethods = (from method in typeof(BinaryReader).GetMethods()
                                            where method.ReturnType != typeof(void)
                                            select new { method, type = method.ReturnType }).ToList().Where(x =>
@@ -136,7 +135,7 @@ namespace Moonfish.Tags
                                            into g
                                            select g.First()).ToList();
 
-                var totalMethods = binaryReaderMethods.Union(extensionMethods);
+                var totalMethods = binaryReaderMethods.Union(extensionMethods).ToList();
                 ReadTypeMethods = new Dictionary<Type, MethodInvoker>(totalMethods.Count());
                 foreach (var item in totalMethods)
                 {
@@ -252,9 +251,9 @@ namespace Moonfish.Tags
                 {
                     if (tagFieldAttribute.UsesFieldOffset)
                     {
-                        fieldOffset = tagFieldAttribute.Offset;
+                        fieldOffset = tagFieldAttribute.offset;
                     }
-                    if (tagFieldAttribute.UsesCustomFunction)
+                    if (tagFieldAttribute.usesCustomFunction)
                     {
                         fieldMethodInfo.Add(new FieldDelegateInformation(field, new ProcessFieldInfo(PostProcessField),
                             fieldOffset));

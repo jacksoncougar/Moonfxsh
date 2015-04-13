@@ -54,13 +54,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.count];
-            if(blamPointer.count > 0)
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.count);
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
                 }
             }
             return data;
@@ -69,10 +69,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(StructureLightmapPaletteColorBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureLightmapPaletteColorBlock[blamPointer.count];
+            var array = new StructureLightmapPaletteColorBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new StructureLightmapPaletteColorBlock(binaryReader);
@@ -84,10 +84,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(LightmapGeometrySectionBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightmapGeometrySectionBlock[blamPointer.count];
+            var array = new LightmapGeometrySectionBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new LightmapGeometrySectionBlock(binaryReader);
@@ -99,10 +99,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(LightmapGeometryRenderInfoBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightmapGeometryRenderInfoBlock[blamPointer.count];
+            var array = new LightmapGeometryRenderInfoBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new LightmapGeometryRenderInfoBlock(binaryReader);
@@ -114,10 +114,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(StructureLightmapLightingEnvironmentBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureLightmapLightingEnvironmentBlock[blamPointer.count];
+            var array = new StructureLightmapLightingEnvironmentBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new StructureLightmapLightingEnvironmentBlock(binaryReader);
@@ -129,10 +129,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(LightmapVertexBufferBucketBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightmapVertexBufferBucketBlock[blamPointer.count];
+            var array = new LightmapVertexBufferBucketBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new LightmapVertexBufferBucketBlock(binaryReader);
@@ -144,10 +144,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(LightmapInstanceBucketReferenceBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightmapInstanceBucketReferenceBlock[blamPointer.count];
+            var array = new LightmapInstanceBucketReferenceBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new LightmapInstanceBucketReferenceBlock(binaryReader);
@@ -159,10 +159,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(LightmapSceneryObjectInfoBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightmapSceneryObjectInfoBlock[blamPointer.count];
+            var array = new LightmapSceneryObjectInfoBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new LightmapSceneryObjectInfoBlock(binaryReader);

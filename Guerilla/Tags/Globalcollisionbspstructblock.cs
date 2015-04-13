@@ -39,13 +39,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.count];
-            if(blamPointer.count > 0)
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.count);
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
                 }
             }
             return data;
@@ -54,10 +54,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(Bsp3dNodesBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new Bsp3dNodesBlock[blamPointer.count];
+            var array = new Bsp3dNodesBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new Bsp3dNodesBlock(binaryReader);
@@ -69,10 +69,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(PlanesBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlanesBlock[blamPointer.count];
+            var array = new PlanesBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new PlanesBlock(binaryReader);
@@ -84,10 +84,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(LeavesBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LeavesBlock[blamPointer.count];
+            var array = new LeavesBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new LeavesBlock(binaryReader);
@@ -99,10 +99,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(Bsp2dReferencesBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new Bsp2dReferencesBlock[blamPointer.count];
+            var array = new Bsp2dReferencesBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new Bsp2dReferencesBlock(binaryReader);
@@ -114,10 +114,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(Bsp2dNodesBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new Bsp2dNodesBlock[blamPointer.count];
+            var array = new Bsp2dNodesBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new Bsp2dNodesBlock(binaryReader);
@@ -129,10 +129,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(SurfacesBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SurfacesBlock[blamPointer.count];
+            var array = new SurfacesBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new SurfacesBlock(binaryReader);
@@ -144,10 +144,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(EdgesBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new EdgesBlock[blamPointer.count];
+            var array = new EdgesBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new EdgesBlock(binaryReader);
@@ -159,10 +159,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(VerticesBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new VerticesBlock[blamPointer.count];
+            var array = new VerticesBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new VerticesBlock(binaryReader);

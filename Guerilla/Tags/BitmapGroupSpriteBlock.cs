@@ -15,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32)]
-    public class BitmapGroupSpriteBlockBase
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class BitmapGroupSpriteBlockBase  : IGuerilla
     {
         internal short bitmapIndex;
         internal byte[] invalidName_;
@@ -37,32 +37,7 @@ namespace Moonfish.Guerilla.Tags
             bottom = binaryReader.ReadSingle();
             registrationPoint = binaryReader.ReadVector2();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
-        {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.count];
-            if(blamPointer.count > 0)
-            {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.count);
-                }
-            }
-            return data;
-        }
-        internal  virtual void WriteData(System.IO.BinaryWriter binaryWriter, System.Byte[] data, ref Int64 nextAddress)
-        {
-            using (binaryWriter.BaseStream.Pin())
-            {
-                binaryWriter.BaseStream.Position = nextAddress;
-                binaryWriter.BaseStream.Pad(8);
-                binaryWriter.Write(data);
-                binaryWriter.BaseStream.Pad(4);
-                nextAddress = binaryWriter.BaseStream.Position;
-            }
-        }
-        public void Write(BinaryWriter binaryWriter)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {
@@ -74,6 +49,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(top);
                 binaryWriter.Write(bottom);
                 binaryWriter.Write(registrationPoint);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
         }
     };

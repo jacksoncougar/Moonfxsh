@@ -73,13 +73,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.count];
-            if(blamPointer.count > 0)
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.count);
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
                 }
             }
             return data;
@@ -88,10 +88,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(EffectLocationsBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new EffectLocationsBlock[blamPointer.count];
+            var array = new EffectLocationsBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new EffectLocationsBlock(binaryReader);
@@ -103,10 +103,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(ParticleSystemDefinitionBlockNew));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ParticleSystemDefinitionBlockNew[blamPointer.count];
+            var array = new ParticleSystemDefinitionBlockNew[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new ParticleSystemDefinitionBlockNew(binaryReader);
@@ -118,10 +118,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(ParticleModelsBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ParticleModelsBlock[blamPointer.count];
+            var array = new ParticleModelsBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new ParticleModelsBlock(binaryReader);
@@ -133,10 +133,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(ParticleModelVerticesBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ParticleModelVerticesBlock[blamPointer.count];
+            var array = new ParticleModelVerticesBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new ParticleModelVerticesBlock(binaryReader);
@@ -148,10 +148,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(ParticleModelIndicesBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ParticleModelIndicesBlock[blamPointer.count];
+            var array = new ParticleModelIndicesBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new ParticleModelIndicesBlock(binaryReader);
@@ -163,10 +163,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(CachedDataBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new CachedDataBlock[blamPointer.count];
+            var array = new CachedDataBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new CachedDataBlock(binaryReader);

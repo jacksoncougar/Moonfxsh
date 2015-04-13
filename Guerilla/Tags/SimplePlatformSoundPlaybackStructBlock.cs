@@ -37,13 +37,13 @@ namespace Moonfish.Guerilla.Tags
         internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
             var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.count];
-            if(blamPointer.count > 0)
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
                 using (binaryReader.BaseStream.Pin())
                 {
                     binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.count);
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
                 }
             }
             return data;
@@ -52,10 +52,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(PlatformSoundOverrideMixbinsBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlatformSoundOverrideMixbinsBlock[blamPointer.count];
+            var array = new PlatformSoundOverrideMixbinsBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new PlatformSoundOverrideMixbinsBlock(binaryReader);
@@ -67,10 +67,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(PlatformSoundFilterBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlatformSoundFilterBlock[blamPointer.count];
+            var array = new PlatformSoundFilterBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new PlatformSoundFilterBlock(binaryReader);
@@ -82,10 +82,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(PlatformSoundPitchLfoBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlatformSoundPitchLfoBlock[blamPointer.count];
+            var array = new PlatformSoundPitchLfoBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new PlatformSoundPitchLfoBlock(binaryReader);
@@ -97,10 +97,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(PlatformSoundFilterLfoBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlatformSoundFilterLfoBlock[blamPointer.count];
+            var array = new PlatformSoundFilterLfoBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new PlatformSoundFilterLfoBlock(binaryReader);
@@ -112,10 +112,10 @@ namespace Moonfish.Guerilla.Tags
         {
             var elementSize = Deserializer.SizeOf(typeof(SoundEffectPlaybackBlock));
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundEffectPlaybackBlock[blamPointer.count];
+            var array = new SoundEffectPlaybackBlock[blamPointer.elementCount];
             using (binaryReader.BaseStream.Pin())
             {
-                for (int i = 0; i < blamPointer.count; ++i)
+                for (int i = 0; i < blamPointer.elementCount; ++i)
                 {
                     binaryReader.BaseStream.Position = blamPointer[i];
                     array[i] = new SoundEffectPlaybackBlock(binaryReader);

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,76 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24)]
-    public class UiLevelsDefinitionBlockBase
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class UiLevelsDefinitionBlockBase  : IGuerilla
     {
         internal UiCampaignBlock[] campaigns;
         internal GlobalUiCampaignLevelBlock[] campaignLevels;
         internal GlobalUiMultiplayerLevelBlock[] multiplayerLevels;
         internal  UiLevelsDefinitionBlockBase(BinaryReader binaryReader)
         {
-            this.campaigns = ReadUiCampaignBlockArray(binaryReader);
-            this.campaignLevels = ReadGlobalUiCampaignLevelBlockArray(binaryReader);
-            this.multiplayerLevels = ReadGlobalUiMultiplayerLevelBlockArray(binaryReader);
+            campaigns = Guerilla.ReadBlockArray<UiCampaignBlock>(binaryReader);
+            campaignLevels = Guerilla.ReadBlockArray<GlobalUiCampaignLevelBlock>(binaryReader);
+            multiplayerLevels = Guerilla.ReadBlockArray<GlobalUiMultiplayerLevelBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteBlockArray<UiCampaignBlock>(binaryWriter, campaigns, nextAddress);
+                Guerilla.WriteBlockArray<GlobalUiCampaignLevelBlock>(binaryWriter, campaignLevels, nextAddress);
+                Guerilla.WriteBlockArray<GlobalUiMultiplayerLevelBlock>(binaryWriter, multiplayerLevels, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual UiCampaignBlock[] ReadUiCampaignBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UiCampaignBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UiCampaignBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UiCampaignBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalUiCampaignLevelBlock[] ReadGlobalUiCampaignLevelBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalUiCampaignLevelBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalUiCampaignLevelBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalUiCampaignLevelBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalUiMultiplayerLevelBlock[] ReadGlobalUiMultiplayerLevelBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalUiMultiplayerLevelBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalUiMultiplayerLevelBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalUiMultiplayerLevelBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

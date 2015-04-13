@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 264)]
-    public class RasterizerDataBlockBase
+    [LayoutAttribute(Size = 264, Alignment = 4)]
+    public class RasterizerDataBlockBase  : IGuerilla
     {
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference distanceAttenuation;
@@ -70,70 +71,78 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference uNUSED10;
         internal  RasterizerDataBlockBase(BinaryReader binaryReader)
         {
-            this.distanceAttenuation = binaryReader.ReadTagReference();
-            this.vectorNormalization = binaryReader.ReadTagReference();
-            this.gradients = binaryReader.ReadTagReference();
-            this.uNUSED = binaryReader.ReadTagReference();
-            this.uNUSED0 = binaryReader.ReadTagReference();
-            this.uNUSED1 = binaryReader.ReadTagReference();
-            this.glow = binaryReader.ReadTagReference();
-            this.uNUSED2 = binaryReader.ReadTagReference();
-            this.uNUSED3 = binaryReader.ReadTagReference();
-            this.invalidName_ = binaryReader.ReadBytes(16);
-            this.globalVertexShaders = ReadVertexShaderReferenceBlockArray(binaryReader);
-            this.default2D = binaryReader.ReadTagReference();
-            this.default3D = binaryReader.ReadTagReference();
-            this.defaultCubeMap = binaryReader.ReadTagReference();
-            this.uNUSED4 = binaryReader.ReadTagReference();
-            this.uNUSED5 = binaryReader.ReadTagReference();
-            this.uNUSED6 = binaryReader.ReadTagReference();
-            this.uNUSED7 = binaryReader.ReadTagReference();
-            this.uNUSED8 = binaryReader.ReadTagReference();
-            this.uNUSED9 = binaryReader.ReadTagReference();
-            this.invalidName_0 = binaryReader.ReadBytes(36);
-            this.globalShader = binaryReader.ReadTagReference();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.invalidName_1 = binaryReader.ReadBytes(2);
-            this.refractionAmountPixels = binaryReader.ReadSingle();
-            this.distanceFalloff = binaryReader.ReadSingle();
-            this.tintColor = binaryReader.ReadColorR8G8B8();
-            this.hyperStealthRefractionPixels = binaryReader.ReadSingle();
-            this.hyperStealthDistanceFalloff = binaryReader.ReadSingle();
-            this.hyperStealthTintColor = binaryReader.ReadColorR8G8B8();
-            this.uNUSED10 = binaryReader.ReadTagReference();
+            distanceAttenuation = binaryReader.ReadTagReference();
+            vectorNormalization = binaryReader.ReadTagReference();
+            gradients = binaryReader.ReadTagReference();
+            uNUSED = binaryReader.ReadTagReference();
+            uNUSED0 = binaryReader.ReadTagReference();
+            uNUSED1 = binaryReader.ReadTagReference();
+            glow = binaryReader.ReadTagReference();
+            uNUSED2 = binaryReader.ReadTagReference();
+            uNUSED3 = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(16);
+            globalVertexShaders = Guerilla.ReadBlockArray<VertexShaderReferenceBlock>(binaryReader);
+            default2D = binaryReader.ReadTagReference();
+            default3D = binaryReader.ReadTagReference();
+            defaultCubeMap = binaryReader.ReadTagReference();
+            uNUSED4 = binaryReader.ReadTagReference();
+            uNUSED5 = binaryReader.ReadTagReference();
+            uNUSED6 = binaryReader.ReadTagReference();
+            uNUSED7 = binaryReader.ReadTagReference();
+            uNUSED8 = binaryReader.ReadTagReference();
+            uNUSED9 = binaryReader.ReadTagReference();
+            invalidName_0 = binaryReader.ReadBytes(36);
+            globalShader = binaryReader.ReadTagReference();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            refractionAmountPixels = binaryReader.ReadSingle();
+            distanceFalloff = binaryReader.ReadSingle();
+            tintColor = binaryReader.ReadColorR8G8B8();
+            hyperStealthRefractionPixels = binaryReader.ReadSingle();
+            hyperStealthDistanceFalloff = binaryReader.ReadSingle();
+            hyperStealthTintColor = binaryReader.ReadColorR8G8B8();
+            uNUSED10 = binaryReader.ReadTagReference();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(distanceAttenuation);
+                binaryWriter.Write(vectorNormalization);
+                binaryWriter.Write(gradients);
+                binaryWriter.Write(uNUSED);
+                binaryWriter.Write(uNUSED0);
+                binaryWriter.Write(uNUSED1);
+                binaryWriter.Write(glow);
+                binaryWriter.Write(uNUSED2);
+                binaryWriter.Write(uNUSED3);
+                binaryWriter.Write(invalidName_, 0, 16);
+                Guerilla.WriteBlockArray<VertexShaderReferenceBlock>(binaryWriter, globalVertexShaders, nextAddress);
+                binaryWriter.Write(default2D);
+                binaryWriter.Write(default3D);
+                binaryWriter.Write(defaultCubeMap);
+                binaryWriter.Write(uNUSED4);
+                binaryWriter.Write(uNUSED5);
+                binaryWriter.Write(uNUSED6);
+                binaryWriter.Write(uNUSED7);
+                binaryWriter.Write(uNUSED8);
+                binaryWriter.Write(uNUSED9);
+                binaryWriter.Write(invalidName_0, 0, 36);
+                binaryWriter.Write(globalShader);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(invalidName_1, 0, 2);
+                binaryWriter.Write(refractionAmountPixels);
+                binaryWriter.Write(distanceFalloff);
+                binaryWriter.Write(tintColor);
+                binaryWriter.Write(hyperStealthRefractionPixels);
+                binaryWriter.Write(hyperStealthDistanceFalloff);
+                binaryWriter.Write(hyperStealthTintColor);
+                binaryWriter.Write(uNUSED10);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual VertexShaderReferenceBlock[] ReadVertexShaderReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(VertexShaderReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new VertexShaderReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new VertexShaderReferenceBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             TintEdgeDensity = 1,
         };

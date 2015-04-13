@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,32 +15,26 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 4)]
-    public class WeaponTrackingStructBlockBase
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class WeaponTrackingStructBlockBase  : IGuerilla
     {
         internal TrackingType trackingType;
         internal byte[] invalidName_;
         internal  WeaponTrackingStructBlockBase(BinaryReader binaryReader)
         {
-            this.trackingType = (TrackingType)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
+            trackingType = (TrackingType)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)trackingType);
+                binaryWriter.Write(invalidName_, 0, 2);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum TrackingType : short
-        
         {
             NoTracking = 0,
             HumanTracking = 1,

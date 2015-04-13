@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24)]
-    public class TorqueCurveStructBlockBase
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class TorqueCurveStructBlockBase  : IGuerilla
     {
         internal float minTorque;
         internal float maxTorque;
@@ -28,26 +29,25 @@ namespace Moonfish.Guerilla.Tags
         internal float torqueAt2XMaxAngularVelocity;
         internal  TorqueCurveStructBlockBase(BinaryReader binaryReader)
         {
-            this.minTorque = binaryReader.ReadSingle();
-            this.maxTorque = binaryReader.ReadSingle();
-            this.peakTorqueScale = binaryReader.ReadSingle();
-            this.pastPeakTorqueExponent = binaryReader.ReadSingle();
-            this.torqueAtMaxAngularVelocity = binaryReader.ReadSingle();
-            this.torqueAt2XMaxAngularVelocity = binaryReader.ReadSingle();
+            minTorque = binaryReader.ReadSingle();
+            maxTorque = binaryReader.ReadSingle();
+            peakTorqueScale = binaryReader.ReadSingle();
+            pastPeakTorqueExponent = binaryReader.ReadSingle();
+            torqueAtMaxAngularVelocity = binaryReader.ReadSingle();
+            torqueAt2XMaxAngularVelocity = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(minTorque);
+                binaryWriter.Write(maxTorque);
+                binaryWriter.Write(peakTorqueScale);
+                binaryWriter.Write(pastPeakTorqueExponent);
+                binaryWriter.Write(torqueAtMaxAngularVelocity);
+                binaryWriter.Write(torqueAt2XMaxAngularVelocity);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

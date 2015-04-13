@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class ShaderStateDepthStateBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class ShaderStateDepthStateBlockBase  : IGuerilla
     {
         internal Mode mode;
         internal DepthCompareFunction depthCompareFunction;
@@ -25,35 +26,32 @@ namespace Moonfish.Guerilla.Tags
         internal float depthBias;
         internal  ShaderStateDepthStateBlockBase(BinaryReader binaryReader)
         {
-            this.mode = (Mode)binaryReader.ReadInt16();
-            this.depthCompareFunction = (DepthCompareFunction)binaryReader.ReadInt16();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.depthBiasSlopeScale = binaryReader.ReadSingle();
-            this.depthBias = binaryReader.ReadSingle();
+            mode = (Mode)binaryReader.ReadInt16();
+            depthCompareFunction = (DepthCompareFunction)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            depthBiasSlopeScale = binaryReader.ReadSingle();
+            depthBias = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)mode);
+                binaryWriter.Write((Int16)depthCompareFunction);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(depthBiasSlopeScale);
+                binaryWriter.Write(depthBias);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum Mode : short
-        
         {
             UseZ = 0,
             UseW = 1,
         };
         internal enum DepthCompareFunction : short
-        
         {
             Never = 0,
             Less = 1,
@@ -66,7 +64,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             DepthWrite = 1,
             OffsetPoints = 2,

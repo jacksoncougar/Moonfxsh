@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass PhmoClass = (TagClass)"phmo";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 272)]
-    public class PhysicsModelBlockBase
+    [LayoutAttribute(Size = 272, Alignment = 4)]
+    public class PhysicsModelBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal float mass;
@@ -60,478 +69,84 @@ namespace Moonfish.Guerilla.Tags
         internal PhantomsBlock[] phantoms;
         internal  PhysicsModelBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.mass = binaryReader.ReadSingle();
-            this.lowFreqDeactivationScale = binaryReader.ReadSingle();
-            this.highFreqDeactivationScale = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes(24);
-            this.phantomTypes = ReadPhantomTypesBlockArray(binaryReader);
-            this.nodeEdges = ReadPhysicsModelNodeConstraintEdgeBlockArray(binaryReader);
-            this.rigidBodies = ReadRigidBodiesBlockArray(binaryReader);
-            this.materials = ReadMaterialsBlockArray(binaryReader);
-            this.spheres = ReadSpheresBlockArray(binaryReader);
-            this.multiSpheres = ReadMultiSpheresBlockArray(binaryReader);
-            this.pills = ReadPillsBlockArray(binaryReader);
-            this.boxes = ReadBoxesBlockArray(binaryReader);
-            this.triangles = ReadTrianglesBlockArray(binaryReader);
-            this.polyhedra = ReadPolyhedraBlockArray(binaryReader);
-            this.polyhedronFourVectors = ReadPolyhedronFourVectorsBlockArray(binaryReader);
-            this.polyhedronPlaneEquations = ReadPolyhedronPlaneEquationsBlockArray(binaryReader);
-            this.massDistributions = ReadMassDistributionsBlockArray(binaryReader);
-            this.lists = ReadListsBlockArray(binaryReader);
-            this.listShapes = ReadListShapesBlockArray(binaryReader);
-            this.mopps = ReadMoppsBlockArray(binaryReader);
-            this.moppCodes = ReadData(binaryReader);
-            this.hingeConstraints = ReadHingeConstraintsBlockArray(binaryReader);
-            this.ragdollConstraints = ReadRagdollConstraintsBlockArray(binaryReader);
-            this.regions = ReadRegionsBlockArray(binaryReader);
-            this.nodes = ReadNodesBlockArray(binaryReader);
-            this.importInfo = ReadGlobalTagImportInfoBlockArray(binaryReader);
-            this.errors = ReadGlobalErrorReportCategoriesBlockArray(binaryReader);
-            this.pointToPathCurves = ReadPointToPathCurveBlockArray(binaryReader);
-            this.limitedHingeConstraints = ReadLimitedHingeConstraintsBlockArray(binaryReader);
-            this.ballAndSocketConstraints = ReadBallAndSocketConstraintsBlockArray(binaryReader);
-            this.stiffSpringConstraints = ReadStiffSpringConstraintsBlockArray(binaryReader);
-            this.prismaticConstraints = ReadPrismaticConstraintsBlockArray(binaryReader);
-            this.phantoms = ReadPhantomsBlockArray(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            mass = binaryReader.ReadSingle();
+            lowFreqDeactivationScale = binaryReader.ReadSingle();
+            highFreqDeactivationScale = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(24);
+            phantomTypes = Guerilla.ReadBlockArray<PhantomTypesBlock>(binaryReader);
+            nodeEdges = Guerilla.ReadBlockArray<PhysicsModelNodeConstraintEdgeBlock>(binaryReader);
+            rigidBodies = Guerilla.ReadBlockArray<RigidBodiesBlock>(binaryReader);
+            materials = Guerilla.ReadBlockArray<MaterialsBlock>(binaryReader);
+            spheres = Guerilla.ReadBlockArray<SpheresBlock>(binaryReader);
+            multiSpheres = Guerilla.ReadBlockArray<MultiSpheresBlock>(binaryReader);
+            pills = Guerilla.ReadBlockArray<PillsBlock>(binaryReader);
+            boxes = Guerilla.ReadBlockArray<BoxesBlock>(binaryReader);
+            triangles = Guerilla.ReadBlockArray<TrianglesBlock>(binaryReader);
+            polyhedra = Guerilla.ReadBlockArray<PolyhedraBlock>(binaryReader);
+            polyhedronFourVectors = Guerilla.ReadBlockArray<PolyhedronFourVectorsBlock>(binaryReader);
+            polyhedronPlaneEquations = Guerilla.ReadBlockArray<PolyhedronPlaneEquationsBlock>(binaryReader);
+            massDistributions = Guerilla.ReadBlockArray<MassDistributionsBlock>(binaryReader);
+            lists = Guerilla.ReadBlockArray<ListsBlock>(binaryReader);
+            listShapes = Guerilla.ReadBlockArray<ListShapesBlock>(binaryReader);
+            mopps = Guerilla.ReadBlockArray<MoppsBlock>(binaryReader);
+            moppCodes = Guerilla.ReadData(binaryReader);
+            hingeConstraints = Guerilla.ReadBlockArray<HingeConstraintsBlock>(binaryReader);
+            ragdollConstraints = Guerilla.ReadBlockArray<RagdollConstraintsBlock>(binaryReader);
+            regions = Guerilla.ReadBlockArray<RegionsBlock>(binaryReader);
+            nodes = Guerilla.ReadBlockArray<NodesBlock>(binaryReader);
+            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>(binaryReader);
+            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
+            pointToPathCurves = Guerilla.ReadBlockArray<PointToPathCurveBlock>(binaryReader);
+            limitedHingeConstraints = Guerilla.ReadBlockArray<LimitedHingeConstraintsBlock>(binaryReader);
+            ballAndSocketConstraints = Guerilla.ReadBlockArray<BallAndSocketConstraintsBlock>(binaryReader);
+            stiffSpringConstraints = Guerilla.ReadBlockArray<StiffSpringConstraintsBlock>(binaryReader);
+            prismaticConstraints = Guerilla.ReadBlockArray<PrismaticConstraintsBlock>(binaryReader);
+            phantoms = Guerilla.ReadBlockArray<PhantomsBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(mass);
+                binaryWriter.Write(lowFreqDeactivationScale);
+                binaryWriter.Write(highFreqDeactivationScale);
+                binaryWriter.Write(invalidName_, 0, 24);
+                Guerilla.WriteBlockArray<PhantomTypesBlock>(binaryWriter, phantomTypes, nextAddress);
+                Guerilla.WriteBlockArray<PhysicsModelNodeConstraintEdgeBlock>(binaryWriter, nodeEdges, nextAddress);
+                Guerilla.WriteBlockArray<RigidBodiesBlock>(binaryWriter, rigidBodies, nextAddress);
+                Guerilla.WriteBlockArray<MaterialsBlock>(binaryWriter, materials, nextAddress);
+                Guerilla.WriteBlockArray<SpheresBlock>(binaryWriter, spheres, nextAddress);
+                Guerilla.WriteBlockArray<MultiSpheresBlock>(binaryWriter, multiSpheres, nextAddress);
+                Guerilla.WriteBlockArray<PillsBlock>(binaryWriter, pills, nextAddress);
+                Guerilla.WriteBlockArray<BoxesBlock>(binaryWriter, boxes, nextAddress);
+                Guerilla.WriteBlockArray<TrianglesBlock>(binaryWriter, triangles, nextAddress);
+                Guerilla.WriteBlockArray<PolyhedraBlock>(binaryWriter, polyhedra, nextAddress);
+                Guerilla.WriteBlockArray<PolyhedronFourVectorsBlock>(binaryWriter, polyhedronFourVectors, nextAddress);
+                Guerilla.WriteBlockArray<PolyhedronPlaneEquationsBlock>(binaryWriter, polyhedronPlaneEquations, nextAddress);
+                Guerilla.WriteBlockArray<MassDistributionsBlock>(binaryWriter, massDistributions, nextAddress);
+                Guerilla.WriteBlockArray<ListsBlock>(binaryWriter, lists, nextAddress);
+                Guerilla.WriteBlockArray<ListShapesBlock>(binaryWriter, listShapes, nextAddress);
+                Guerilla.WriteBlockArray<MoppsBlock>(binaryWriter, mopps, nextAddress);
+                Guerilla.WriteData(binaryWriter);
+                Guerilla.WriteBlockArray<HingeConstraintsBlock>(binaryWriter, hingeConstraints, nextAddress);
+                Guerilla.WriteBlockArray<RagdollConstraintsBlock>(binaryWriter, ragdollConstraints, nextAddress);
+                Guerilla.WriteBlockArray<RegionsBlock>(binaryWriter, regions, nextAddress);
+                Guerilla.WriteBlockArray<NodesBlock>(binaryWriter, nodes, nextAddress);
+                Guerilla.WriteBlockArray<GlobalTagImportInfoBlock>(binaryWriter, importInfo, nextAddress);
+                Guerilla.WriteBlockArray<GlobalErrorReportCategoriesBlock>(binaryWriter, errors, nextAddress);
+                Guerilla.WriteBlockArray<PointToPathCurveBlock>(binaryWriter, pointToPathCurves, nextAddress);
+                Guerilla.WriteBlockArray<LimitedHingeConstraintsBlock>(binaryWriter, limitedHingeConstraints, nextAddress);
+                Guerilla.WriteBlockArray<BallAndSocketConstraintsBlock>(binaryWriter, ballAndSocketConstraints, nextAddress);
+                Guerilla.WriteBlockArray<StiffSpringConstraintsBlock>(binaryWriter, stiffSpringConstraints, nextAddress);
+                Guerilla.WriteBlockArray<PrismaticConstraintsBlock>(binaryWriter, prismaticConstraints, nextAddress);
+                Guerilla.WriteBlockArray<PhantomsBlock>(binaryWriter, phantoms, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual PhantomTypesBlock[] ReadPhantomTypesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PhantomTypesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PhantomTypesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PhantomTypesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PhysicsModelNodeConstraintEdgeBlock[] ReadPhysicsModelNodeConstraintEdgeBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PhysicsModelNodeConstraintEdgeBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PhysicsModelNodeConstraintEdgeBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PhysicsModelNodeConstraintEdgeBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RigidBodiesBlock[] ReadRigidBodiesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RigidBodiesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RigidBodiesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RigidBodiesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual MaterialsBlock[] ReadMaterialsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(MaterialsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new MaterialsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new MaterialsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SpheresBlock[] ReadSpheresBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SpheresBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SpheresBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SpheresBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual MultiSpheresBlock[] ReadMultiSpheresBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(MultiSpheresBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new MultiSpheresBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new MultiSpheresBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PillsBlock[] ReadPillsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PillsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PillsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PillsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual BoxesBlock[] ReadBoxesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(BoxesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new BoxesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new BoxesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual TrianglesBlock[] ReadTrianglesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(TrianglesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TrianglesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new TrianglesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PolyhedraBlock[] ReadPolyhedraBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PolyhedraBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PolyhedraBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PolyhedraBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PolyhedronFourVectorsBlock[] ReadPolyhedronFourVectorsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PolyhedronFourVectorsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PolyhedronFourVectorsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PolyhedronFourVectorsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PolyhedronPlaneEquationsBlock[] ReadPolyhedronPlaneEquationsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PolyhedronPlaneEquationsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PolyhedronPlaneEquationsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PolyhedronPlaneEquationsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual MassDistributionsBlock[] ReadMassDistributionsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(MassDistributionsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new MassDistributionsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new MassDistributionsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ListsBlock[] ReadListsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ListsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ListsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ListsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ListShapesBlock[] ReadListShapesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ListShapesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ListShapesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ListShapesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual MoppsBlock[] ReadMoppsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(MoppsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new MoppsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new MoppsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual HingeConstraintsBlock[] ReadHingeConstraintsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(HingeConstraintsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new HingeConstraintsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new HingeConstraintsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RagdollConstraintsBlock[] ReadRagdollConstraintsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RagdollConstraintsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RagdollConstraintsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RagdollConstraintsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RegionsBlock[] ReadRegionsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RegionsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RegionsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RegionsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual NodesBlock[] ReadNodesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(NodesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new NodesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new NodesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalTagImportInfoBlock[] ReadGlobalTagImportInfoBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalTagImportInfoBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalTagImportInfoBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalTagImportInfoBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalErrorReportCategoriesBlock[] ReadGlobalErrorReportCategoriesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalErrorReportCategoriesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalErrorReportCategoriesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalErrorReportCategoriesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PointToPathCurveBlock[] ReadPointToPathCurveBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PointToPathCurveBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PointToPathCurveBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PointToPathCurveBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual LimitedHingeConstraintsBlock[] ReadLimitedHingeConstraintsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LimitedHingeConstraintsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LimitedHingeConstraintsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LimitedHingeConstraintsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual BallAndSocketConstraintsBlock[] ReadBallAndSocketConstraintsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(BallAndSocketConstraintsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new BallAndSocketConstraintsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new BallAndSocketConstraintsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StiffSpringConstraintsBlock[] ReadStiffSpringConstraintsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StiffSpringConstraintsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StiffSpringConstraintsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StiffSpringConstraintsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PrismaticConstraintsBlock[] ReadPrismaticConstraintsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PrismaticConstraintsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PrismaticConstraintsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PrismaticConstraintsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PhantomsBlock[] ReadPhantomsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PhantomsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PhantomsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PhantomsBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             Unused = 1,
         };

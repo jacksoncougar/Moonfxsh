@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 92)]
-    public class RenderModelSectionBlockBase
+    [LayoutAttribute(Size = 92, Alignment = 4)]
+    public class RenderModelSectionBlockBase  : IGuerilla
     {
         internal GlobalGeometryClassificationEnumDefinition globalGeometryClassificationEnumDefinition;
         internal byte[] invalidName_;
@@ -26,45 +27,29 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
         internal  RenderModelSectionBlockBase(BinaryReader binaryReader)
         {
-            this.globalGeometryClassificationEnumDefinition = (GlobalGeometryClassificationEnumDefinition)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
-            this.rigidNode = binaryReader.ReadShortBlockIndex1();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.sectionData = ReadRenderModelSectionDataBlockArray(binaryReader);
-            this.geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            globalGeometryClassificationEnumDefinition = (GlobalGeometryClassificationEnumDefinition)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
+            rigidNode = binaryReader.ReadShortBlockIndex1();
+            flags = (Flags)binaryReader.ReadInt16();
+            sectionData = Guerilla.ReadBlockArray<RenderModelSectionDataBlock>(binaryReader);
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)globalGeometryClassificationEnumDefinition);
+                binaryWriter.Write(invalidName_, 0, 2);
+                sectionInfo.Write(binaryWriter);
+                binaryWriter.Write(rigidNode);
+                binaryWriter.Write((Int16)flags);
+                Guerilla.WriteBlockArray<RenderModelSectionDataBlock>(binaryWriter, sectionData, nextAddress);
+                geometryBlockInfo.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual RenderModelSectionDataBlock[] ReadRenderModelSectionDataBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RenderModelSectionDataBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderModelSectionDataBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RenderModelSectionDataBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum GlobalGeometryClassificationEnumDefinition : short
-        
         {
             Worldspace = 0,
             Rigid = 1,
@@ -74,7 +59,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             GeometryPostprocessed = 1,
         };

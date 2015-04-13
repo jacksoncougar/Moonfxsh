@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 4)]
-    public class TextureStageStateParameterBlockBase
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class TextureStageStateParameterBlockBase  : IGuerilla
     {
         internal byte parameterIndex;
         internal byte parameterType;
@@ -23,24 +24,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte stageIndex;
         internal  TextureStageStateParameterBlockBase(BinaryReader binaryReader)
         {
-            this.parameterIndex = binaryReader.ReadByte();
-            this.parameterType = binaryReader.ReadByte();
-            this.stateIndex = binaryReader.ReadByte();
-            this.stageIndex = binaryReader.ReadByte();
+            parameterIndex = binaryReader.ReadByte();
+            parameterType = binaryReader.ReadByte();
+            stateIndex = binaryReader.ReadByte();
+            stageIndex = binaryReader.ReadByte();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(parameterIndex);
+                binaryWriter.Write(parameterType);
+                binaryWriter.Write(stateIndex);
+                binaryWriter.Write(stageIndex);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

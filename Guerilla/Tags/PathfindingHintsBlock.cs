@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class PathfindingHintsBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class PathfindingHintsBlockBase  : IGuerilla
     {
         internal HintType hintType;
         internal short nextHintIndex;
@@ -29,33 +30,35 @@ namespace Moonfish.Guerilla.Tags
         internal short hintData7;
         internal  PathfindingHintsBlockBase(BinaryReader binaryReader)
         {
-            this.hintType = (HintType)binaryReader.ReadInt16();
-            this.nextHintIndex = binaryReader.ReadInt16();
-            this.hintData0 = binaryReader.ReadInt16();
-            this.hintData1 = binaryReader.ReadInt16();
-            this.hintData2 = binaryReader.ReadInt16();
-            this.hintData3 = binaryReader.ReadInt16();
-            this.hintData4 = binaryReader.ReadInt16();
-            this.hintData5 = binaryReader.ReadInt16();
-            this.hintData6 = binaryReader.ReadInt16();
-            this.hintData7 = binaryReader.ReadInt16();
+            hintType = (HintType)binaryReader.ReadInt16();
+            nextHintIndex = binaryReader.ReadInt16();
+            hintData0 = binaryReader.ReadInt16();
+            hintData1 = binaryReader.ReadInt16();
+            hintData2 = binaryReader.ReadInt16();
+            hintData3 = binaryReader.ReadInt16();
+            hintData4 = binaryReader.ReadInt16();
+            hintData5 = binaryReader.ReadInt16();
+            hintData6 = binaryReader.ReadInt16();
+            hintData7 = binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)hintType);
+                binaryWriter.Write(nextHintIndex);
+                binaryWriter.Write(hintData0);
+                binaryWriter.Write(hintData1);
+                binaryWriter.Write(hintData2);
+                binaryWriter.Write(hintData3);
+                binaryWriter.Write(hintData4);
+                binaryWriter.Write(hintData5);
+                binaryWriter.Write(hintData6);
+                binaryWriter.Write(hintData7);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum HintType : short
-        
         {
             IntersectionLink = 0,
             JumpLink = 1,

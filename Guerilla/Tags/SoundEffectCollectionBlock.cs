@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass Sfx+Class = (TagClass)"sfx+";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,42 +24,21 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8)]
-    public class SoundEffectCollectionBlockBase
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class SoundEffectCollectionBlockBase  : IGuerilla
     {
         internal PlatformSoundPlaybackBlock[] soundEffects;
         internal  SoundEffectCollectionBlockBase(BinaryReader binaryReader)
         {
-            this.soundEffects = ReadPlatformSoundPlaybackBlockArray(binaryReader);
+            soundEffects = Guerilla.ReadBlockArray<PlatformSoundPlaybackBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteBlockArray<PlatformSoundPlaybackBlock>(binaryWriter, soundEffects, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual PlatformSoundPlaybackBlock[] ReadPlatformSoundPlaybackBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PlatformSoundPlaybackBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlatformSoundPlaybackBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PlatformSoundPlaybackBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

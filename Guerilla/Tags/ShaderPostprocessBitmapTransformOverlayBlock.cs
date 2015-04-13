@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 23)]
-    public class ShaderPostprocessBitmapTransformOverlayBlockBase
+    [LayoutAttribute(Size = 23, Alignment = 4)]
+    public class ShaderPostprocessBitmapTransformOverlayBlockBase  : IGuerilla
     {
         internal byte parameterIndex;
         internal byte transformIndex;
@@ -26,27 +27,27 @@ namespace Moonfish.Guerilla.Tags
         internal ScalarFunctionStructBlock function;
         internal  ShaderPostprocessBitmapTransformOverlayBlockBase(BinaryReader binaryReader)
         {
-            this.parameterIndex = binaryReader.ReadByte();
-            this.transformIndex = binaryReader.ReadByte();
-            this.animationPropertyType = binaryReader.ReadByte();
-            this.inputName = binaryReader.ReadStringID();
-            this.rangeName = binaryReader.ReadStringID();
-            this.timePeriodInSeconds = binaryReader.ReadSingle();
-            this.function = new ScalarFunctionStructBlock(binaryReader);
+            parameterIndex = binaryReader.ReadByte();
+            transformIndex = binaryReader.ReadByte();
+            animationPropertyType = binaryReader.ReadByte();
+            inputName = binaryReader.ReadStringID();
+            rangeName = binaryReader.ReadStringID();
+            timePeriodInSeconds = binaryReader.ReadSingle();
+            function = new ScalarFunctionStructBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(parameterIndex);
+                binaryWriter.Write(transformIndex);
+                binaryWriter.Write(animationPropertyType);
+                binaryWriter.Write(inputName);
+                binaryWriter.Write(rangeName);
+                binaryWriter.Write(timePeriodInSeconds);
+                function.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

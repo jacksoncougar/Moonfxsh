@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass StemClass = (TagClass)"stem";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 96)]
-    public class ShaderTemplateBlockBase
+    [LayoutAttribute(Size = 96, Alignment = 4)]
+    public class ShaderTemplateBlockBase  : IGuerilla
     {
         internal byte[] documentation;
         internal Moonfish.Tags.StringID defaultMaterialName;
@@ -40,116 +49,50 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderTemplatePostprocessDefinitionNewBlock[] postprocessDefinition;
         internal  ShaderTemplateBlockBase(BinaryReader binaryReader)
         {
-            this.documentation = ReadData(binaryReader);
-            this.defaultMaterialName = binaryReader.ReadStringID();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.properties = ReadShaderTemplatePropertyBlockArray(binaryReader);
-            this.categories = ReadShaderTemplateCategoryBlockArray(binaryReader);
-            this.lightResponse = binaryReader.ReadTagReference();
-            this.lODs = ReadShaderTemplateLevelOfDetailBlockArray(binaryReader);
-            this.eMPTYSTRING = ReadShaderTemplateRuntimeExternalLightResponseIndexBlockArray(binaryReader);
-            this.eMPTYSTRING0 = ReadShaderTemplateRuntimeExternalLightResponseIndexBlockArray(binaryReader);
-            this.aux1Shader = binaryReader.ReadTagReference();
-            this.aux1Layer = (Aux1Layer)binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.aux2Shader = binaryReader.ReadTagReference();
-            this.aux2Layer = (Aux2Layer)binaryReader.ReadInt16();
-            this.invalidName_1 = binaryReader.ReadBytes(2);
-            this.postprocessDefinition = ReadShaderTemplatePostprocessDefinitionNewBlockArray(binaryReader);
+            documentation = Guerilla.ReadData(binaryReader);
+            defaultMaterialName = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(2);
+            flags = (Flags)binaryReader.ReadInt16();
+            properties = Guerilla.ReadBlockArray<ShaderTemplatePropertyBlock>(binaryReader);
+            categories = Guerilla.ReadBlockArray<ShaderTemplateCategoryBlock>(binaryReader);
+            lightResponse = binaryReader.ReadTagReference();
+            lODs = Guerilla.ReadBlockArray<ShaderTemplateLevelOfDetailBlock>(binaryReader);
+            eMPTYSTRING = Guerilla.ReadBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader);
+            eMPTYSTRING0 = Guerilla.ReadBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader);
+            aux1Shader = binaryReader.ReadTagReference();
+            aux1Layer = (Aux1Layer)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            aux2Shader = binaryReader.ReadTagReference();
+            aux2Layer = (Aux2Layer)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            postprocessDefinition = Guerilla.ReadBlockArray<ShaderTemplatePostprocessDefinitionNewBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteData(binaryWriter);
+                binaryWriter.Write(defaultMaterialName);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Int16)flags);
+                Guerilla.WriteBlockArray<ShaderTemplatePropertyBlock>(binaryWriter, properties, nextAddress);
+                Guerilla.WriteBlockArray<ShaderTemplateCategoryBlock>(binaryWriter, categories, nextAddress);
+                binaryWriter.Write(lightResponse);
+                Guerilla.WriteBlockArray<ShaderTemplateLevelOfDetailBlock>(binaryWriter, lODs, nextAddress);
+                Guerilla.WriteBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryWriter, eMPTYSTRING, nextAddress);
+                Guerilla.WriteBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryWriter, eMPTYSTRING0, nextAddress);
+                binaryWriter.Write(aux1Shader);
+                binaryWriter.Write((Int16)aux1Layer);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(aux2Shader);
+                binaryWriter.Write((Int16)aux2Layer);
+                binaryWriter.Write(invalidName_1, 0, 2);
+                Guerilla.WriteBlockArray<ShaderTemplatePostprocessDefinitionNewBlock>(binaryWriter, postprocessDefinition, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ShaderTemplatePropertyBlock[] ReadShaderTemplatePropertyBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderTemplatePropertyBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderTemplatePropertyBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderTemplatePropertyBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ShaderTemplateCategoryBlock[] ReadShaderTemplateCategoryBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderTemplateCategoryBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderTemplateCategoryBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderTemplateCategoryBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ShaderTemplateLevelOfDetailBlock[] ReadShaderTemplateLevelOfDetailBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderTemplateLevelOfDetailBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderTemplateLevelOfDetailBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderTemplateLevelOfDetailBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ShaderTemplateRuntimeExternalLightResponseIndexBlock[] ReadShaderTemplateRuntimeExternalLightResponseIndexBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderTemplateRuntimeExternalLightResponseIndexBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderTemplateRuntimeExternalLightResponseIndexBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderTemplateRuntimeExternalLightResponseIndexBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ShaderTemplatePostprocessDefinitionNewBlock[] ReadShaderTemplatePostprocessDefinitionNewBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderTemplatePostprocessDefinitionNewBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderTemplatePostprocessDefinitionNewBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderTemplatePostprocessDefinitionNewBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             ForceActiveCamo = 1,
             Water = 2,
@@ -157,7 +100,6 @@ namespace Moonfish.Guerilla.Tags
             HideStandardParameters = 8,
         };
         internal enum Aux1Layer : short
-        
         {
             Texaccum = 0,
             EnvironmentMap = 1,
@@ -180,7 +122,6 @@ namespace Moonfish.Guerilla.Tags
             LightAlbedo = 18,
         };
         internal enum Aux2Layer : short
-        
         {
             Texaccum = 0,
             EnvironmentMap = 1,

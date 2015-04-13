@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24)]
-    public class PhysicsModelNodeConstraintEdgeBlockBase
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class PhysicsModelNodeConstraintEdgeBlockBase  : IGuerilla
     {
         internal byte[] invalidName_;
         internal Moonfish.Tags.ShortBlockIndex1 nodeA;
@@ -31,41 +32,25 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID nodeBMaterial;
         internal  PhysicsModelNodeConstraintEdgeBlockBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.nodeA = binaryReader.ReadShortBlockIndex1();
-            this.nodeB = binaryReader.ReadShortBlockIndex1();
-            this.constraints = ReadPhysicsModelConstraintEdgeConstraintBlockArray(binaryReader);
-            this.nodeAMaterial = binaryReader.ReadStringID();
-            this.nodeBMaterial = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(4);
+            nodeA = binaryReader.ReadShortBlockIndex1();
+            nodeB = binaryReader.ReadShortBlockIndex1();
+            constraints = Guerilla.ReadBlockArray<PhysicsModelConstraintEdgeConstraintBlock>(binaryReader);
+            nodeAMaterial = binaryReader.ReadStringID();
+            nodeBMaterial = binaryReader.ReadStringID();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(nodeA);
+                binaryWriter.Write(nodeB);
+                Guerilla.WriteBlockArray<PhysicsModelConstraintEdgeConstraintBlock>(binaryWriter, constraints, nextAddress);
+                binaryWriter.Write(nodeAMaterial);
+                binaryWriter.Write(nodeBMaterial);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual PhysicsModelConstraintEdgeConstraintBlock[] ReadPhysicsModelConstraintEdgeConstraintBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PhysicsModelConstraintEdgeConstraintBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PhysicsModelConstraintEdgeConstraintBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PhysicsModelConstraintEdgeConstraintBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

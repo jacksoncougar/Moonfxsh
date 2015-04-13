@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 220)]
-    public class StructureLightmapLightingEnvironmentBlockBase
+    [LayoutAttribute(Size = 220, Alignment = 4)]
+    public class StructureLightmapLightingEnvironmentBlockBase  : IGuerilla
     {
         internal OpenTK.Vector3 samplePoint;
         internal RedCoefficients[] redCoefficients;
@@ -35,39 +36,71 @@ namespace Moonfish.Guerilla.Tags
         internal float proceduralParam1W;
         internal  StructureLightmapLightingEnvironmentBlockBase(BinaryReader binaryReader)
         {
-            this.samplePoint = binaryReader.ReadVector3();
-            this.redCoefficients = new []{ new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader),  };
-            this.greenCoefficients = new []{ new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader),  };
-            this.blueCoefficients = new []{ new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader),  };
-            this.meanIncomingLightDirection = binaryReader.ReadVector3();
-            this.incomingLightIntensity = binaryReader.ReadVector3();
-            this.specularBitmapIndex = binaryReader.ReadInt32();
-            this.rotationAxis = binaryReader.ReadVector3();
-            this.rotationSpeed = binaryReader.ReadSingle();
-            this.bumpDirection = binaryReader.ReadVector3();
-            this.colorTint = binaryReader.ReadColorR8G8B8();
-            this.proceduralOveride = (ProceduralOveride)binaryReader.ReadInt16();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.proceduralParam0 = binaryReader.ReadVector3();
-            this.proceduralParam1Xyz = binaryReader.ReadVector3();
-            this.proceduralParam1W = binaryReader.ReadSingle();
+            samplePoint = binaryReader.ReadVector3();
+            redCoefficients = new []{ new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader),  };
+            greenCoefficients = new []{ new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader),  };
+            blueCoefficients = new []{ new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader),  };
+            meanIncomingLightDirection = binaryReader.ReadVector3();
+            incomingLightIntensity = binaryReader.ReadVector3();
+            specularBitmapIndex = binaryReader.ReadInt32();
+            rotationAxis = binaryReader.ReadVector3();
+            rotationSpeed = binaryReader.ReadSingle();
+            bumpDirection = binaryReader.ReadVector3();
+            colorTint = binaryReader.ReadColorR8G8B8();
+            proceduralOveride = (ProceduralOveride)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            proceduralParam0 = binaryReader.ReadVector3();
+            proceduralParam1Xyz = binaryReader.ReadVector3();
+            proceduralParam1W = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(samplePoint);
+                redCoefficients[0].Write(binaryWriter);
+                redCoefficients[1].Write(binaryWriter);
+                redCoefficients[2].Write(binaryWriter);
+                redCoefficients[3].Write(binaryWriter);
+                redCoefficients[4].Write(binaryWriter);
+                redCoefficients[5].Write(binaryWriter);
+                redCoefficients[6].Write(binaryWriter);
+                redCoefficients[7].Write(binaryWriter);
+                redCoefficients[8].Write(binaryWriter);
+                greenCoefficients[0].Write(binaryWriter);
+                greenCoefficients[1].Write(binaryWriter);
+                greenCoefficients[2].Write(binaryWriter);
+                greenCoefficients[3].Write(binaryWriter);
+                greenCoefficients[4].Write(binaryWriter);
+                greenCoefficients[5].Write(binaryWriter);
+                greenCoefficients[6].Write(binaryWriter);
+                greenCoefficients[7].Write(binaryWriter);
+                greenCoefficients[8].Write(binaryWriter);
+                blueCoefficients[0].Write(binaryWriter);
+                blueCoefficients[1].Write(binaryWriter);
+                blueCoefficients[2].Write(binaryWriter);
+                blueCoefficients[3].Write(binaryWriter);
+                blueCoefficients[4].Write(binaryWriter);
+                blueCoefficients[5].Write(binaryWriter);
+                blueCoefficients[6].Write(binaryWriter);
+                blueCoefficients[7].Write(binaryWriter);
+                blueCoefficients[8].Write(binaryWriter);
+                binaryWriter.Write(meanIncomingLightDirection);
+                binaryWriter.Write(incomingLightIntensity);
+                binaryWriter.Write(specularBitmapIndex);
+                binaryWriter.Write(rotationAxis);
+                binaryWriter.Write(rotationSpeed);
+                binaryWriter.Write(bumpDirection);
+                binaryWriter.Write(colorTint);
+                binaryWriter.Write((Int16)proceduralOveride);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(proceduralParam0);
+                binaryWriter.Write(proceduralParam1Xyz);
+                binaryWriter.Write(proceduralParam1W);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum ProceduralOveride : short
-        
         {
             NoOveride = 0,
             CIEClearSky = 1,
@@ -80,74 +113,55 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             LeaveMeAlonePlease = 1,
         };
-        public class RedCoefficients
+        public class RedCoefficients  : IGuerilla
         {
             internal float redCoefficient;
             internal  RedCoefficients(BinaryReader binaryReader)
             {
-                this.redCoefficient = binaryReader.ReadSingle();
+                redCoefficient = binaryReader.ReadSingle();
             }
-            internal  virtual byte[] ReadData(BinaryReader binaryReader)
+            public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
-                var blamPointer = binaryReader.ReadBlamPointer(1);
-                var data = new byte[blamPointer.elementCount];
-                if(blamPointer.elementCount > 0)
+                using(binaryWriter.BaseStream.Pin())
                 {
-                    using (binaryReader.BaseStream.Pin())
-                    {
-                        binaryReader.BaseStream.Position = blamPointer[0];
-                        data = binaryReader.ReadBytes(blamPointer.elementCount);
-                    }
+                    binaryWriter.Write(redCoefficient);
+                    return nextAddress = (int)binaryWriter.BaseStream.Position;
                 }
-                return data;
             }
         };
-        public class GreenCoefficients
+        public class GreenCoefficients  : IGuerilla
         {
             internal float greenCoefficient;
             internal  GreenCoefficients(BinaryReader binaryReader)
             {
-                this.greenCoefficient = binaryReader.ReadSingle();
+                greenCoefficient = binaryReader.ReadSingle();
             }
-            internal  virtual byte[] ReadData(BinaryReader binaryReader)
+            public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
-                var blamPointer = binaryReader.ReadBlamPointer(1);
-                var data = new byte[blamPointer.elementCount];
-                if(blamPointer.elementCount > 0)
+                using(binaryWriter.BaseStream.Pin())
                 {
-                    using (binaryReader.BaseStream.Pin())
-                    {
-                        binaryReader.BaseStream.Position = blamPointer[0];
-                        data = binaryReader.ReadBytes(blamPointer.elementCount);
-                    }
+                    binaryWriter.Write(greenCoefficient);
+                    return nextAddress = (int)binaryWriter.BaseStream.Position;
                 }
-                return data;
             }
         };
-        public class BlueCoefficients
+        public class BlueCoefficients  : IGuerilla
         {
             internal float blueCoefficient;
             internal  BlueCoefficients(BinaryReader binaryReader)
             {
-                this.blueCoefficient = binaryReader.ReadSingle();
+                blueCoefficient = binaryReader.ReadSingle();
             }
-            internal  virtual byte[] ReadData(BinaryReader binaryReader)
+            public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
-                var blamPointer = binaryReader.ReadBlamPointer(1);
-                var data = new byte[blamPointer.elementCount];
-                if(blamPointer.elementCount > 0)
+                using(binaryWriter.BaseStream.Pin())
                 {
-                    using (binaryReader.BaseStream.Pin())
-                    {
-                        binaryReader.BaseStream.Position = blamPointer[0];
-                        data = binaryReader.ReadBytes(blamPointer.elementCount);
-                    }
+                    binaryWriter.Write(blueCoefficient);
+                    return nextAddress = (int)binaryWriter.BaseStream.Position;
                 }
-                return data;
             }
         };
     };

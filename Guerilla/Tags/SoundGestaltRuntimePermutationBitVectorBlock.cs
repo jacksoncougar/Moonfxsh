@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,27 +15,21 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 1)]
-    public class SoundGestaltRuntimePermutationBitVectorBlockBase
+    [LayoutAttribute(Size = 1, Alignment = 4)]
+    public class SoundGestaltRuntimePermutationBitVectorBlockBase  : IGuerilla
     {
         internal byte invalidName_;
         internal  SoundGestaltRuntimePermutationBitVectorBlockBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadByte();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

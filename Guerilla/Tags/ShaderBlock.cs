@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass ShadClass = (TagClass)"shad";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 92)]
-    public class ShaderBlockBase
+    [LayoutAttribute(Size = 92, Alignment = 4)]
+    public class ShaderBlockBase  : IGuerilla
     {
         [TagReference("stem")]
         internal Moonfish.Tags.TagReference template;
@@ -41,125 +50,60 @@ namespace Moonfish.Guerilla.Tags
         internal float addedDepthBiasSlopeScale;
         internal  ShaderBlockBase(BinaryReader binaryReader)
         {
-            this.template = binaryReader.ReadTagReference();
-            this.materialName = binaryReader.ReadStringID();
-            this.runtimeProperties = ReadShaderPropertiesBlockArray(binaryReader);
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.parameters = ReadGlobalShaderParameterBlockArray(binaryReader);
-            this.postprocessDefinition = ReadShaderPostprocessDefinitionNewBlockArray(binaryReader);
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.predictedResources = ReadPredictedResourceBlockArray(binaryReader);
-            this.lightResponse = binaryReader.ReadTagReference();
-            this.shaderLODBias = (ShaderLODBias)binaryReader.ReadInt16();
-            this.specularType = (SpecularType)binaryReader.ReadInt16();
-            this.lightmapType = (LightmapType)binaryReader.ReadInt16();
-            this.invalidName_1 = binaryReader.ReadBytes(2);
-            this.lightmapSpecularBrightness = binaryReader.ReadSingle();
-            this.lightmapAmbientBias11 = binaryReader.ReadSingle();
-            this.postprocessProperties = ReadLongBlockArray(binaryReader);
-            this.addedDepthBiasOffset = binaryReader.ReadSingle();
-            this.addedDepthBiasSlopeScale = binaryReader.ReadSingle();
+            template = binaryReader.ReadTagReference();
+            materialName = binaryReader.ReadStringID();
+            runtimeProperties = Guerilla.ReadBlockArray<ShaderPropertiesBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(2);
+            flags = (Flags)binaryReader.ReadInt16();
+            parameters = Guerilla.ReadBlockArray<GlobalShaderParameterBlock>(binaryReader);
+            postprocessDefinition = Guerilla.ReadBlockArray<ShaderPostprocessDefinitionNewBlock>(binaryReader);
+            invalidName_0 = binaryReader.ReadBytes(4);
+            predictedResources = Guerilla.ReadBlockArray<PredictedResourceBlock>(binaryReader);
+            lightResponse = binaryReader.ReadTagReference();
+            shaderLODBias = (ShaderLODBias)binaryReader.ReadInt16();
+            specularType = (SpecularType)binaryReader.ReadInt16();
+            lightmapType = (LightmapType)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            lightmapSpecularBrightness = binaryReader.ReadSingle();
+            lightmapAmbientBias11 = binaryReader.ReadSingle();
+            postprocessProperties = Guerilla.ReadBlockArray<LongBlock>(binaryReader);
+            addedDepthBiasOffset = binaryReader.ReadSingle();
+            addedDepthBiasSlopeScale = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(template);
+                binaryWriter.Write(materialName);
+                Guerilla.WriteBlockArray<ShaderPropertiesBlock>(binaryWriter, runtimeProperties, nextAddress);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Int16)flags);
+                Guerilla.WriteBlockArray<GlobalShaderParameterBlock>(binaryWriter, parameters, nextAddress);
+                Guerilla.WriteBlockArray<ShaderPostprocessDefinitionNewBlock>(binaryWriter, postprocessDefinition, nextAddress);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                Guerilla.WriteBlockArray<PredictedResourceBlock>(binaryWriter, predictedResources, nextAddress);
+                binaryWriter.Write(lightResponse);
+                binaryWriter.Write((Int16)shaderLODBias);
+                binaryWriter.Write((Int16)specularType);
+                binaryWriter.Write((Int16)lightmapType);
+                binaryWriter.Write(invalidName_1, 0, 2);
+                binaryWriter.Write(lightmapSpecularBrightness);
+                binaryWriter.Write(lightmapAmbientBias11);
+                Guerilla.WriteBlockArray<LongBlock>(binaryWriter, postprocessProperties, nextAddress);
+                binaryWriter.Write(addedDepthBiasOffset);
+                binaryWriter.Write(addedDepthBiasSlopeScale);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ShaderPropertiesBlock[] ReadShaderPropertiesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderPropertiesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderPropertiesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderPropertiesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalShaderParameterBlock[] ReadGlobalShaderParameterBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalShaderParameterBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalShaderParameterBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalShaderParameterBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ShaderPostprocessDefinitionNewBlock[] ReadShaderPostprocessDefinitionNewBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderPostprocessDefinitionNewBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderPostprocessDefinitionNewBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderPostprocessDefinitionNewBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PredictedResourceBlock[] ReadPredictedResourceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PredictedResourceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PredictedResourceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PredictedResourceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual LongBlock[] ReadLongBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LongBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LongBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LongBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             Water = 1,
             SortFirst = 2,
             NoActiveCamo = 4,
         };
         internal enum ShaderLODBias : short
-        
         {
             None = 0,
             InvalidName4XSize = 1,
@@ -170,7 +114,6 @@ namespace Moonfish.Guerilla.Tags
             Cinematic = 6,
         };
         internal enum SpecularType : short
-        
         {
             None = 0,
             Default = 1,
@@ -178,7 +121,6 @@ namespace Moonfish.Guerilla.Tags
             Shiny = 3,
         };
         internal enum LightmapType : short
-        
         {
             Diffuse = 0,
             DefaultSpecular = 1,

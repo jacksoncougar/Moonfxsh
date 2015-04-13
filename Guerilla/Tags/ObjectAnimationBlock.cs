@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class ObjectAnimationBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class ObjectAnimationBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID label;
         internal AnimationIndexStructBlock animation;
@@ -25,29 +26,27 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  ObjectAnimationBlockBase(BinaryReader binaryReader)
         {
-            this.label = binaryReader.ReadStringID();
-            this.animation = new AnimationIndexStructBlock(binaryReader);
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.functionControls = (FunctionControls)binaryReader.ReadInt16();
-            this.function = binaryReader.ReadStringID();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
+            label = binaryReader.ReadStringID();
+            animation = new AnimationIndexStructBlock(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(2);
+            functionControls = (FunctionControls)binaryReader.ReadInt16();
+            function = binaryReader.ReadStringID();
+            invalidName_0 = binaryReader.ReadBytes(4);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(label);
+                animation.Write(binaryWriter);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Int16)functionControls);
+                binaryWriter.Write(function);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum FunctionControls : short
-        
         {
             Frame = 0,
             Scale = 1,

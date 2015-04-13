@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,33 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8)]
-    public class ScenarioUnitStructBlockBase
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class ScenarioUnitStructBlockBase  : IGuerilla
     {
         internal float bodyVitality01;
         internal Flags flags;
         internal  ScenarioUnitStructBlockBase(BinaryReader binaryReader)
         {
-            this.bodyVitality01 = binaryReader.ReadSingle();
-            this.flags = (Flags)binaryReader.ReadInt32();
+            bodyVitality01 = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt32();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(bodyVitality01);
+                binaryWriter.Write((Int32)flags);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             Dead = 1,
             Closed = 2,

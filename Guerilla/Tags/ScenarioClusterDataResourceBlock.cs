@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass Clu*Class = (TagClass)"clu*";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 40)]
-    public class ScenarioClusterDataResourceBlockBase
+    [LayoutAttribute(Size = 40, Alignment = 4)]
+    public class ScenarioClusterDataResourceBlockBase  : IGuerilla
     {
         internal ScenarioClusterDataBlock[] clusterData;
         internal StructureBspBackgroundSoundPaletteBlock[] backgroundSoundPalette;
@@ -25,100 +34,23 @@ namespace Moonfish.Guerilla.Tags
         internal ScenarioAtmosphericFogPalette[] atmosphericFogPalette;
         internal  ScenarioClusterDataResourceBlockBase(BinaryReader binaryReader)
         {
-            this.clusterData = ReadScenarioClusterDataBlockArray(binaryReader);
-            this.backgroundSoundPalette = ReadStructureBspBackgroundSoundPaletteBlockArray(binaryReader);
-            this.soundEnvironmentPalette = ReadStructureBspSoundEnvironmentPaletteBlockArray(binaryReader);
-            this.weatherPalette = ReadStructureBspWeatherPaletteBlockArray(binaryReader);
-            this.atmosphericFogPalette = ReadScenarioAtmosphericFogPaletteArray(binaryReader);
+            clusterData = Guerilla.ReadBlockArray<ScenarioClusterDataBlock>(binaryReader);
+            backgroundSoundPalette = Guerilla.ReadBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryReader);
+            soundEnvironmentPalette = Guerilla.ReadBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryReader);
+            weatherPalette = Guerilla.ReadBlockArray<StructureBspWeatherPaletteBlock>(binaryReader);
+            atmosphericFogPalette = Guerilla.ReadBlockArray<ScenarioAtmosphericFogPalette>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteBlockArray<ScenarioClusterDataBlock>(binaryWriter, clusterData, nextAddress);
+                Guerilla.WriteBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryWriter, backgroundSoundPalette, nextAddress);
+                Guerilla.WriteBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryWriter, soundEnvironmentPalette, nextAddress);
+                Guerilla.WriteBlockArray<StructureBspWeatherPaletteBlock>(binaryWriter, weatherPalette, nextAddress);
+                Guerilla.WriteBlockArray<ScenarioAtmosphericFogPalette>(binaryWriter, atmosphericFogPalette, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ScenarioClusterDataBlock[] ReadScenarioClusterDataBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioClusterDataBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioClusterDataBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioClusterDataBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspBackgroundSoundPaletteBlock[] ReadStructureBspBackgroundSoundPaletteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspBackgroundSoundPaletteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspBackgroundSoundPaletteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspBackgroundSoundPaletteBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspSoundEnvironmentPaletteBlock[] ReadStructureBspSoundEnvironmentPaletteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspSoundEnvironmentPaletteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspSoundEnvironmentPaletteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspSoundEnvironmentPaletteBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspWeatherPaletteBlock[] ReadStructureBspWeatherPaletteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspWeatherPaletteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspWeatherPaletteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspWeatherPaletteBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ScenarioAtmosphericFogPalette[] ReadScenarioAtmosphericFogPaletteArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioAtmosphericFogPalette));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioAtmosphericFogPalette[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioAtmosphericFogPalette(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

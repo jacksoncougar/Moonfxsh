@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass UnitClass = (TagClass)"unit";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 304)]
+    [LayoutAttribute(Size = 304, Alignment = 4)]
     public class UnitBlockBase : ObjectBlock
     {
         internal Flags flags;
@@ -93,160 +102,108 @@ namespace Moonfish.Guerilla.Tags
         internal UnitLipsyncScalesStructBlock lipsync;
         internal  UnitBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.defaultTeam = (DefaultTeam)binaryReader.ReadInt16();
-            this.constantSoundVolume = (ConstantSoundVolume)binaryReader.ReadInt16();
-            this.integratedLightToggle = binaryReader.ReadTagReference();
-            this.cameraFieldOfViewDegrees = binaryReader.ReadSingle();
-            this.cameraStiffness = binaryReader.ReadSingle();
-            this.unitCamera = new UnitCameraStructBlock(binaryReader);
-            this.acceleration = new UnitSeatAccelerationStructBlock(binaryReader);
-            this.softPingThreshold01 = binaryReader.ReadSingle();
-            this.softPingInterruptTimeSeconds = binaryReader.ReadSingle();
-            this.hardPingThreshold01 = binaryReader.ReadSingle();
-            this.hardPingInterruptTimeSeconds = binaryReader.ReadSingle();
-            this.hardDeathThreshold01 = binaryReader.ReadSingle();
-            this.feignDeathThreshold01 = binaryReader.ReadSingle();
-            this.feignDeathTimeSeconds = binaryReader.ReadSingle();
-            this.distanceOfEvadeAnimWorldUnits = binaryReader.ReadSingle();
-            this.distanceOfDiveAnimWorldUnits = binaryReader.ReadSingle();
-            this.stunnedMovementThreshold01 = binaryReader.ReadSingle();
-            this.feignDeathChance01 = binaryReader.ReadSingle();
-            this.feignRepeatChance01 = binaryReader.ReadSingle();
-            this.spawnedTurretCharacter = binaryReader.ReadTagReference();
-            this.spawnedActorCount = binaryReader.ReadInt32();
-            this.spawnedVelocity = binaryReader.ReadSingle();
-            this.aimingVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
-            this.aimingAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
-            this.casualAimingModifier01 = binaryReader.ReadSingle();
-            this.lookingVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
-            this.lookingAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
-            this.rightHandNode = binaryReader.ReadStringID();
-            this.leftHandNode = binaryReader.ReadStringID();
-            this.moreDamnNodes = new UnitAdditionalNodeNamesStructBlock(binaryReader);
-            this.meleeDamage = binaryReader.ReadTagReference();
-            this.yourMomma = new UnitBoardingMeleeStructBlock(binaryReader);
-            this.motionSensorBlipSize = (MotionSensorBlipSize)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.postures = ReadUnitPosturesBlockArray(binaryReader);
-            this.nEWHUDINTERFACES = ReadUnitHudReferenceBlockArray(binaryReader);
-            this.dialogueVariants = ReadDialogueVariantBlockArray(binaryReader);
-            this.grenadeVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            this.grenadeType = (GrenadeType)binaryReader.ReadInt16();
-            this.grenadeCount = binaryReader.ReadInt16();
-            this.poweredSeats = ReadPoweredSeatBlockArray(binaryReader);
-            this.weapons = ReadUnitWeaponBlockArray(binaryReader);
-            this.seats = ReadUnitSeatBlockArray(binaryReader);
-            this.boost = new UnitBoostStructBlock(binaryReader);
-            this.lipsync = new UnitLipsyncScalesStructBlock(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            defaultTeam = (DefaultTeam)binaryReader.ReadInt16();
+            constantSoundVolume = (ConstantSoundVolume)binaryReader.ReadInt16();
+            integratedLightToggle = binaryReader.ReadTagReference();
+            cameraFieldOfViewDegrees = binaryReader.ReadSingle();
+            cameraStiffness = binaryReader.ReadSingle();
+            unitCamera = new UnitCameraStructBlock(binaryReader);
+            acceleration = new UnitSeatAccelerationStructBlock(binaryReader);
+            softPingThreshold01 = binaryReader.ReadSingle();
+            softPingInterruptTimeSeconds = binaryReader.ReadSingle();
+            hardPingThreshold01 = binaryReader.ReadSingle();
+            hardPingInterruptTimeSeconds = binaryReader.ReadSingle();
+            hardDeathThreshold01 = binaryReader.ReadSingle();
+            feignDeathThreshold01 = binaryReader.ReadSingle();
+            feignDeathTimeSeconds = binaryReader.ReadSingle();
+            distanceOfEvadeAnimWorldUnits = binaryReader.ReadSingle();
+            distanceOfDiveAnimWorldUnits = binaryReader.ReadSingle();
+            stunnedMovementThreshold01 = binaryReader.ReadSingle();
+            feignDeathChance01 = binaryReader.ReadSingle();
+            feignRepeatChance01 = binaryReader.ReadSingle();
+            spawnedTurretCharacter = binaryReader.ReadTagReference();
+            spawnedActorCount = binaryReader.ReadInt32();
+            spawnedVelocity = binaryReader.ReadSingle();
+            aimingVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
+            aimingAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
+            casualAimingModifier01 = binaryReader.ReadSingle();
+            lookingVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
+            lookingAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
+            rightHandNode = binaryReader.ReadStringID();
+            leftHandNode = binaryReader.ReadStringID();
+            moreDamnNodes = new UnitAdditionalNodeNamesStructBlock(binaryReader);
+            meleeDamage = binaryReader.ReadTagReference();
+            yourMomma = new UnitBoardingMeleeStructBlock(binaryReader);
+            motionSensorBlipSize = (MotionSensorBlipSize)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            postures = Guerilla.ReadBlockArray<UnitPosturesBlock>(binaryReader);
+            nEWHUDINTERFACES = Guerilla.ReadBlockArray<UnitHudReferenceBlock>(binaryReader);
+            dialogueVariants = Guerilla.ReadBlockArray<DialogueVariantBlock>(binaryReader);
+            grenadeVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            grenadeType = (GrenadeType)binaryReader.ReadInt16();
+            grenadeCount = binaryReader.ReadInt16();
+            poweredSeats = Guerilla.ReadBlockArray<PoweredSeatBlock>(binaryReader);
+            weapons = Guerilla.ReadBlockArray<UnitWeaponBlock>(binaryReader);
+            seats = Guerilla.ReadBlockArray<UnitSeatBlock>(binaryReader);
+            boost = new UnitBoostStructBlock(binaryReader);
+            lipsync = new UnitLipsyncScalesStructBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int16)defaultTeam);
+                binaryWriter.Write((Int16)constantSoundVolume);
+                binaryWriter.Write(integratedLightToggle);
+                binaryWriter.Write(cameraFieldOfViewDegrees);
+                binaryWriter.Write(cameraStiffness);
+                unitCamera.Write(binaryWriter);
+                acceleration.Write(binaryWriter);
+                binaryWriter.Write(softPingThreshold01);
+                binaryWriter.Write(softPingInterruptTimeSeconds);
+                binaryWriter.Write(hardPingThreshold01);
+                binaryWriter.Write(hardPingInterruptTimeSeconds);
+                binaryWriter.Write(hardDeathThreshold01);
+                binaryWriter.Write(feignDeathThreshold01);
+                binaryWriter.Write(feignDeathTimeSeconds);
+                binaryWriter.Write(distanceOfEvadeAnimWorldUnits);
+                binaryWriter.Write(distanceOfDiveAnimWorldUnits);
+                binaryWriter.Write(stunnedMovementThreshold01);
+                binaryWriter.Write(feignDeathChance01);
+                binaryWriter.Write(feignRepeatChance01);
+                binaryWriter.Write(spawnedTurretCharacter);
+                binaryWriter.Write(spawnedActorCount);
+                binaryWriter.Write(spawnedVelocity);
+                binaryWriter.Write(aimingVelocityMaximumDegreesPerSecond);
+                binaryWriter.Write(aimingAccelerationMaximumDegreesPerSecondSquared);
+                binaryWriter.Write(casualAimingModifier01);
+                binaryWriter.Write(lookingVelocityMaximumDegreesPerSecond);
+                binaryWriter.Write(lookingAccelerationMaximumDegreesPerSecondSquared);
+                binaryWriter.Write(rightHandNode);
+                binaryWriter.Write(leftHandNode);
+                moreDamnNodes.Write(binaryWriter);
+                binaryWriter.Write(meleeDamage);
+                yourMomma.Write(binaryWriter);
+                binaryWriter.Write((Int16)motionSensorBlipSize);
+                binaryWriter.Write(invalidName_, 0, 2);
+                Guerilla.WriteBlockArray<UnitPosturesBlock>(binaryWriter, postures, nextAddress);
+                Guerilla.WriteBlockArray<UnitHudReferenceBlock>(binaryWriter, nEWHUDINTERFACES, nextAddress);
+                Guerilla.WriteBlockArray<DialogueVariantBlock>(binaryWriter, dialogueVariants, nextAddress);
+                binaryWriter.Write(grenadeVelocityWorldUnitsPerSecond);
+                binaryWriter.Write((Int16)grenadeType);
+                binaryWriter.Write(grenadeCount);
+                Guerilla.WriteBlockArray<PoweredSeatBlock>(binaryWriter, poweredSeats, nextAddress);
+                Guerilla.WriteBlockArray<UnitWeaponBlock>(binaryWriter, weapons, nextAddress);
+                Guerilla.WriteBlockArray<UnitSeatBlock>(binaryWriter, seats, nextAddress);
+                boost.Write(binaryWriter);
+                lipsync.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual UnitPosturesBlock[] ReadUnitPosturesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UnitPosturesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UnitPosturesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UnitPosturesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UnitHudReferenceBlock[] ReadUnitHudReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UnitHudReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UnitHudReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UnitHudReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual DialogueVariantBlock[] ReadDialogueVariantBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(DialogueVariantBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new DialogueVariantBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new DialogueVariantBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PoweredSeatBlock[] ReadPoweredSeatBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PoweredSeatBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PoweredSeatBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PoweredSeatBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UnitWeaponBlock[] ReadUnitWeaponBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UnitWeaponBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UnitWeaponBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UnitWeaponBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UnitSeatBlock[] ReadUnitSeatBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UnitSeatBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UnitSeatBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UnitSeatBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             CircularAiming = 1,
             DestroyedAfterDying = 2,
@@ -279,7 +236,6 @@ namespace Moonfish.Guerilla.Tags
             UnitHasBoost = 268435456,
         };
         internal enum DefaultTeam : short
-        
         {
             Default = 0,
             Player = 1,
@@ -299,7 +255,6 @@ namespace Moonfish.Guerilla.Tags
             Unused15 = 15,
         };
         internal enum ConstantSoundVolume : short
-        
         {
             Silent = 0,
             Medium = 1,
@@ -308,14 +263,12 @@ namespace Moonfish.Guerilla.Tags
             Quiet = 4,
         };
         internal enum MotionSensorBlipSize : short
-        
         {
             Medium = 0,
             Small = 1,
             Large = 2,
         };
         internal enum GrenadeType : short
-        
         {
             HumanFragmentation = 0,
             CovenantPlasma = 1,

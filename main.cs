@@ -28,9 +28,10 @@ namespace Moonfish
             //return;
 
             GuerillaCs guerilla = new GuerillaCs(Local.GuerillaPath);
-            foreach (var tag in Guerilla.Guerilla.h2Tags.Where(x => x.Class == (TagClass)"bitm"))
+            foreach (var tag in Guerilla.Guerilla.h2Tags)
             {
                 guerilla.DumpTagLayout(tag, @"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags");
+                System.Diagnostics.Debug.WriteLine( tag.Class );
                 Application.DoEvents();
             }
             return;

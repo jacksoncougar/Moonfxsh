@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass PhysClass = (TagClass)"phys";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 116)]
-    public class PhysicsBlockBase
+    [LayoutAttribute(Size = 116, Alignment = 4)]
+    public class PhysicsBlockBase  : IGuerilla
     {
         /// <summary>
         /// positive uses old inferior physics, negative uses new improved physics
@@ -47,89 +56,61 @@ namespace Moonfish.Guerilla.Tags
         internal MassPointBlock[] massPoints;
         internal  PhysicsBlockBase(BinaryReader binaryReader)
         {
-            this.radius = binaryReader.ReadSingle();
-            this.momentScale = binaryReader.ReadSingle();
-            this.mass = binaryReader.ReadSingle();
-            this.centerOfMass = binaryReader.ReadVector3();
-            this.density = binaryReader.ReadSingle();
-            this.gravityScale = binaryReader.ReadSingle();
-            this.groundFriction = binaryReader.ReadSingle();
-            this.groundDepth = binaryReader.ReadSingle();
-            this.groundDampFraction = binaryReader.ReadSingle();
-            this.groundNormalK1 = binaryReader.ReadSingle();
-            this.groundNormalK0 = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.waterFriction = binaryReader.ReadSingle();
-            this.waterDepth = binaryReader.ReadSingle();
-            this.waterDensity = binaryReader.ReadSingle();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.airFriction = binaryReader.ReadSingle();
-            this.invalidName_1 = binaryReader.ReadBytes(4);
-            this.xxMoment = binaryReader.ReadSingle();
-            this.yyMoment = binaryReader.ReadSingle();
-            this.zzMoment = binaryReader.ReadSingle();
-            this.inertialMatrixAndInverse = ReadInertialMatrixBlockArray(binaryReader);
-            this.poweredMassPoints = ReadPoweredMassPointBlockArray(binaryReader);
-            this.massPoints = ReadMassPointBlockArray(binaryReader);
+            radius = binaryReader.ReadSingle();
+            momentScale = binaryReader.ReadSingle();
+            mass = binaryReader.ReadSingle();
+            centerOfMass = binaryReader.ReadVector3();
+            density = binaryReader.ReadSingle();
+            gravityScale = binaryReader.ReadSingle();
+            groundFriction = binaryReader.ReadSingle();
+            groundDepth = binaryReader.ReadSingle();
+            groundDampFraction = binaryReader.ReadSingle();
+            groundNormalK1 = binaryReader.ReadSingle();
+            groundNormalK0 = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(4);
+            waterFriction = binaryReader.ReadSingle();
+            waterDepth = binaryReader.ReadSingle();
+            waterDensity = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            airFriction = binaryReader.ReadSingle();
+            invalidName_1 = binaryReader.ReadBytes(4);
+            xxMoment = binaryReader.ReadSingle();
+            yyMoment = binaryReader.ReadSingle();
+            zzMoment = binaryReader.ReadSingle();
+            inertialMatrixAndInverse = Guerilla.ReadBlockArray<InertialMatrixBlock>(binaryReader);
+            poweredMassPoints = Guerilla.ReadBlockArray<PoweredMassPointBlock>(binaryReader);
+            massPoints = Guerilla.ReadBlockArray<MassPointBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(radius);
+                binaryWriter.Write(momentScale);
+                binaryWriter.Write(mass);
+                binaryWriter.Write(centerOfMass);
+                binaryWriter.Write(density);
+                binaryWriter.Write(gravityScale);
+                binaryWriter.Write(groundFriction);
+                binaryWriter.Write(groundDepth);
+                binaryWriter.Write(groundDampFraction);
+                binaryWriter.Write(groundNormalK1);
+                binaryWriter.Write(groundNormalK0);
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(waterFriction);
+                binaryWriter.Write(waterDepth);
+                binaryWriter.Write(waterDensity);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write(airFriction);
+                binaryWriter.Write(invalidName_1, 0, 4);
+                binaryWriter.Write(xxMoment);
+                binaryWriter.Write(yyMoment);
+                binaryWriter.Write(zzMoment);
+                Guerilla.WriteBlockArray<InertialMatrixBlock>(binaryWriter, inertialMatrixAndInverse, nextAddress);
+                Guerilla.WriteBlockArray<PoweredMassPointBlock>(binaryWriter, poweredMassPoints, nextAddress);
+                Guerilla.WriteBlockArray<MassPointBlock>(binaryWriter, massPoints, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual InertialMatrixBlock[] ReadInertialMatrixBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(InertialMatrixBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new InertialMatrixBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new InertialMatrixBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PoweredMassPointBlock[] ReadPoweredMassPointBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PoweredMassPointBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PoweredMassPointBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PoweredMassPointBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual MassPointBlock[] ReadMassPointBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(MassPointBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new MassPointBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new MassPointBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 144)]
-    public class RigidBodiesBlockBase
+    [LayoutAttribute(Size = 144, Alignment = 16)]
+    public class RigidBodiesBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.ShortBlockIndex1 node;
         internal Moonfish.Tags.ShortBlockIndex1 region;
@@ -58,51 +59,70 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_4;
         internal  RigidBodiesBlockBase(BinaryReader binaryReader)
         {
-            this.node = binaryReader.ReadShortBlockIndex1();
-            this.region = binaryReader.ReadShortBlockIndex1();
-            this.permutattion = binaryReader.ReadShortBlockIndex2();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.boudingSphereOffset = binaryReader.ReadVector3();
-            this.boundingSphereRadius = binaryReader.ReadSingle();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.motionType = (MotionType)binaryReader.ReadInt16();
-            this.noPhantomPowerAlt = binaryReader.ReadShortBlockIndex1();
-            this.size = (Size)binaryReader.ReadInt16();
-            this.inertiaTensorScale = binaryReader.ReadSingle();
-            this.linearDamping = binaryReader.ReadSingle();
-            this.angularDamping = binaryReader.ReadSingle();
-            this.centerOffMassOffset = binaryReader.ReadVector3();
-            this.shapeType = (ShapeType)binaryReader.ReadInt16();
-            this.shape = binaryReader.ReadShortBlockIndex2();
-            this.massKg = binaryReader.ReadSingle();
-            this.centerOfMass = binaryReader.ReadVector3();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.intertiaTensorX = binaryReader.ReadVector3();
-            this.invalidName_1 = binaryReader.ReadBytes(4);
-            this.intertiaTensorY = binaryReader.ReadVector3();
-            this.invalidName_2 = binaryReader.ReadBytes(4);
-            this.intertiaTensorZ = binaryReader.ReadVector3();
-            this.invalidName_3 = binaryReader.ReadBytes(4);
-            this.boundingSpherePad = binaryReader.ReadSingle();
-            this.invalidName_4 = binaryReader.ReadBytes(12);
+            node = binaryReader.ReadShortBlockIndex1();
+            region = binaryReader.ReadShortBlockIndex1();
+            permutattion = binaryReader.ReadShortBlockIndex2();
+            invalidName_ = binaryReader.ReadBytes(2);
+            boudingSphereOffset = binaryReader.ReadVector3();
+            boundingSphereRadius = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt16();
+            motionType = (MotionType)binaryReader.ReadInt16();
+            noPhantomPowerAlt = binaryReader.ReadShortBlockIndex1();
+            size = (Size)binaryReader.ReadInt16();
+            inertiaTensorScale = binaryReader.ReadSingle();
+            linearDamping = binaryReader.ReadSingle();
+            angularDamping = binaryReader.ReadSingle();
+            centerOffMassOffset = binaryReader.ReadVector3();
+            shapeType = (ShapeType)binaryReader.ReadInt16();
+            shape = binaryReader.ReadShortBlockIndex2();
+            massKg = binaryReader.ReadSingle();
+            centerOfMass = binaryReader.ReadVector3();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            intertiaTensorX = binaryReader.ReadVector3();
+            invalidName_1 = binaryReader.ReadBytes(4);
+            intertiaTensorY = binaryReader.ReadVector3();
+            invalidName_2 = binaryReader.ReadBytes(4);
+            intertiaTensorZ = binaryReader.ReadVector3();
+            invalidName_3 = binaryReader.ReadBytes(4);
+            boundingSpherePad = binaryReader.ReadSingle();
+            invalidName_4 = binaryReader.ReadBytes(12);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(node);
+                binaryWriter.Write(region);
+                binaryWriter.Write(permutattion);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(boudingSphereOffset);
+                binaryWriter.Write(boundingSphereRadius);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16)motionType);
+                binaryWriter.Write(noPhantomPowerAlt);
+                binaryWriter.Write((Int16)size);
+                binaryWriter.Write(inertiaTensorScale);
+                binaryWriter.Write(linearDamping);
+                binaryWriter.Write(angularDamping);
+                binaryWriter.Write(centerOffMassOffset);
+                binaryWriter.Write((Int16)shapeType);
+                binaryWriter.Write(shape);
+                binaryWriter.Write(massKg);
+                binaryWriter.Write(centerOfMass);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write(intertiaTensorX);
+                binaryWriter.Write(invalidName_1, 0, 4);
+                binaryWriter.Write(intertiaTensorY);
+                binaryWriter.Write(invalidName_2, 0, 4);
+                binaryWriter.Write(intertiaTensorZ);
+                binaryWriter.Write(invalidName_3, 0, 4);
+                binaryWriter.Write(boundingSpherePad);
+                binaryWriter.Write(invalidName_4, 0, 12);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             NoCollisionsWSelf = 1,
             OnlyCollideWEnv = 2,
@@ -112,7 +132,6 @@ namespace Moonfish.Guerilla.Tags
             HasNoPhantomPowerVersionDontCheckThisFlagWithoutTalkingToEamon = 32,
         };
         internal enum MotionType : short
-        
         {
             Sphere = 0,
             StabilizedSphere = 1,
@@ -122,7 +141,6 @@ namespace Moonfish.Guerilla.Tags
             Fixed = 5,
         };
         internal enum Size : short
-        
         {
             Default = 0,
             Tiny = 1,
@@ -133,7 +151,6 @@ namespace Moonfish.Guerilla.Tags
             ExtraHuge = 6,
         };
         internal enum ShapeType : short
-        
         {
             Sphere = 0,
             Pill = 1,

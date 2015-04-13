@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass LtmpClass = (TagClass)"ltmp";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 260)]
-    public class ScenarioStructureLightmapBlockBase
+    [LayoutAttribute(Size = 260, Alignment = 4)]
+    public class ScenarioStructureLightmapBlockBase  : IGuerilla
     {
         internal float searchDistanceLowerBound;
         internal float searchDistanceUpperBound;
@@ -39,69 +48,51 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal  ScenarioStructureLightmapBlockBase(BinaryReader binaryReader)
         {
-            this.searchDistanceLowerBound = binaryReader.ReadSingle();
-            this.searchDistanceUpperBound = binaryReader.ReadSingle();
-            this.luminelsPerWorldUnit = binaryReader.ReadSingle();
-            this.outputWhiteReference = binaryReader.ReadSingle();
-            this.outputBlackReference = binaryReader.ReadSingle();
-            this.outputSchlickParameter = binaryReader.ReadSingle();
-            this.diffuseMapScale = binaryReader.ReadSingle();
-            this.sunScale = binaryReader.ReadSingle();
-            this.skyScale = binaryReader.ReadSingle();
-            this.indirectScale = binaryReader.ReadSingle();
-            this.prtScale = binaryReader.ReadSingle();
-            this.surfaceLightScale = binaryReader.ReadSingle();
-            this.scenarioLightScale = binaryReader.ReadSingle();
-            this.lightprobeInterpolationOveride = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes(72);
-            this.lightmapGroups = ReadStructureLightmapGroupBlockArray(binaryReader);
-            this.invalidName_0 = binaryReader.ReadBytes(12);
-            this.errors = ReadGlobalErrorReportCategoriesBlockArray(binaryReader);
-            this.invalidName_1 = binaryReader.ReadBytes(104);
+            searchDistanceLowerBound = binaryReader.ReadSingle();
+            searchDistanceUpperBound = binaryReader.ReadSingle();
+            luminelsPerWorldUnit = binaryReader.ReadSingle();
+            outputWhiteReference = binaryReader.ReadSingle();
+            outputBlackReference = binaryReader.ReadSingle();
+            outputSchlickParameter = binaryReader.ReadSingle();
+            diffuseMapScale = binaryReader.ReadSingle();
+            sunScale = binaryReader.ReadSingle();
+            skyScale = binaryReader.ReadSingle();
+            indirectScale = binaryReader.ReadSingle();
+            prtScale = binaryReader.ReadSingle();
+            surfaceLightScale = binaryReader.ReadSingle();
+            scenarioLightScale = binaryReader.ReadSingle();
+            lightprobeInterpolationOveride = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(72);
+            lightmapGroups = Guerilla.ReadBlockArray<StructureLightmapGroupBlock>(binaryReader);
+            invalidName_0 = binaryReader.ReadBytes(12);
+            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
+            invalidName_1 = binaryReader.ReadBytes(104);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(searchDistanceLowerBound);
+                binaryWriter.Write(searchDistanceUpperBound);
+                binaryWriter.Write(luminelsPerWorldUnit);
+                binaryWriter.Write(outputWhiteReference);
+                binaryWriter.Write(outputBlackReference);
+                binaryWriter.Write(outputSchlickParameter);
+                binaryWriter.Write(diffuseMapScale);
+                binaryWriter.Write(sunScale);
+                binaryWriter.Write(skyScale);
+                binaryWriter.Write(indirectScale);
+                binaryWriter.Write(prtScale);
+                binaryWriter.Write(surfaceLightScale);
+                binaryWriter.Write(scenarioLightScale);
+                binaryWriter.Write(lightprobeInterpolationOveride);
+                binaryWriter.Write(invalidName_, 0, 72);
+                Guerilla.WriteBlockArray<StructureLightmapGroupBlock>(binaryWriter, lightmapGroups, nextAddress);
+                binaryWriter.Write(invalidName_0, 0, 12);
+                Guerilla.WriteBlockArray<GlobalErrorReportCategoriesBlock>(binaryWriter, errors, nextAddress);
+                binaryWriter.Write(invalidName_1, 0, 104);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual StructureLightmapGroupBlock[] ReadStructureLightmapGroupBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureLightmapGroupBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureLightmapGroupBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureLightmapGroupBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalErrorReportCategoriesBlock[] ReadGlobalErrorReportCategoriesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalErrorReportCategoriesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalErrorReportCategoriesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalErrorReportCategoriesBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

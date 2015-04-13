@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 88)]
-    public class ShaderPassPostprocessDefinitionNewBlockBase
+    [LayoutAttribute(Size = 88, Alignment = 4)]
+    public class ShaderPassPostprocessDefinitionNewBlockBase  : IGuerilla
     {
         internal ShaderPassPostprocessImplementationNewBlock[] implementations;
         internal ShaderPassPostprocessTextureNewBlock[] textures;
@@ -30,196 +31,35 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderPassPostprocessImplementationBlock[] oldImplementations;
         internal  ShaderPassPostprocessDefinitionNewBlockBase(BinaryReader binaryReader)
         {
-            this.implementations = ReadShaderPassPostprocessImplementationNewBlockArray(binaryReader);
-            this.textures = ReadShaderPassPostprocessTextureNewBlockArray(binaryReader);
-            this.renderStates = ReadRenderStateBlockArray(binaryReader);
-            this.textureStates = ReadShaderPassPostprocessTextureStateBlockArray(binaryReader);
-            this.psFragments = ReadPixelShaderFragmentBlockArray(binaryReader);
-            this.psPermutations = ReadPixelShaderPermutationNewBlockArray(binaryReader);
-            this.psCombiners = ReadPixelShaderCombinerBlockArray(binaryReader);
-            this.externs = ReadShaderPassPostprocessExternNewBlockArray(binaryReader);
-            this.constants = ReadShaderPassPostprocessConstantNewBlockArray(binaryReader);
-            this.constantInfo = ReadShaderPassPostprocessConstantInfoNewBlockArray(binaryReader);
-            this.oldImplementations = ReadShaderPassPostprocessImplementationBlockArray(binaryReader);
+            implementations = Guerilla.ReadBlockArray<ShaderPassPostprocessImplementationNewBlock>(binaryReader);
+            textures = Guerilla.ReadBlockArray<ShaderPassPostprocessTextureNewBlock>(binaryReader);
+            renderStates = Guerilla.ReadBlockArray<RenderStateBlock>(binaryReader);
+            textureStates = Guerilla.ReadBlockArray<ShaderPassPostprocessTextureStateBlock>(binaryReader);
+            psFragments = Guerilla.ReadBlockArray<PixelShaderFragmentBlock>(binaryReader);
+            psPermutations = Guerilla.ReadBlockArray<PixelShaderPermutationNewBlock>(binaryReader);
+            psCombiners = Guerilla.ReadBlockArray<PixelShaderCombinerBlock>(binaryReader);
+            externs = Guerilla.ReadBlockArray<ShaderPassPostprocessExternNewBlock>(binaryReader);
+            constants = Guerilla.ReadBlockArray<ShaderPassPostprocessConstantNewBlock>(binaryReader);
+            constantInfo = Guerilla.ReadBlockArray<ShaderPassPostprocessConstantInfoNewBlock>(binaryReader);
+            oldImplementations = Guerilla.ReadBlockArray<ShaderPassPostprocessImplementationBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteBlockArray<ShaderPassPostprocessImplementationNewBlock>(binaryWriter, implementations, nextAddress);
+                Guerilla.WriteBlockArray<ShaderPassPostprocessTextureNewBlock>(binaryWriter, textures, nextAddress);
+                Guerilla.WriteBlockArray<RenderStateBlock>(binaryWriter, renderStates, nextAddress);
+                Guerilla.WriteBlockArray<ShaderPassPostprocessTextureStateBlock>(binaryWriter, textureStates, nextAddress);
+                Guerilla.WriteBlockArray<PixelShaderFragmentBlock>(binaryWriter, psFragments, nextAddress);
+                Guerilla.WriteBlockArray<PixelShaderPermutationNewBlock>(binaryWriter, psPermutations, nextAddress);
+                Guerilla.WriteBlockArray<PixelShaderCombinerBlock>(binaryWriter, psCombiners, nextAddress);
+                Guerilla.WriteBlockArray<ShaderPassPostprocessExternNewBlock>(binaryWriter, externs, nextAddress);
+                Guerilla.WriteBlockArray<ShaderPassPostprocessConstantNewBlock>(binaryWriter, constants, nextAddress);
+                Guerilla.WriteBlockArray<ShaderPassPostprocessConstantInfoNewBlock>(binaryWriter, constantInfo, nextAddress);
+                Guerilla.WriteBlockArray<ShaderPassPostprocessImplementationBlock>(binaryWriter, oldImplementations, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ShaderPassPostprocessImplementationNewBlock[] ReadShaderPassPostprocessImplementationNewBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderPassPostprocessImplementationNewBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderPassPostprocessImplementationNewBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderPassPostprocessImplementationNewBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ShaderPassPostprocessTextureNewBlock[] ReadShaderPassPostprocessTextureNewBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderPassPostprocessTextureNewBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderPassPostprocessTextureNewBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderPassPostprocessTextureNewBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RenderStateBlock[] ReadRenderStateBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RenderStateBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderStateBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RenderStateBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ShaderPassPostprocessTextureStateBlock[] ReadShaderPassPostprocessTextureStateBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderPassPostprocessTextureStateBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderPassPostprocessTextureStateBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderPassPostprocessTextureStateBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PixelShaderFragmentBlock[] ReadPixelShaderFragmentBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PixelShaderFragmentBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PixelShaderFragmentBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PixelShaderFragmentBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PixelShaderPermutationNewBlock[] ReadPixelShaderPermutationNewBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PixelShaderPermutationNewBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PixelShaderPermutationNewBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PixelShaderPermutationNewBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PixelShaderCombinerBlock[] ReadPixelShaderCombinerBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PixelShaderCombinerBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PixelShaderCombinerBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PixelShaderCombinerBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ShaderPassPostprocessExternNewBlock[] ReadShaderPassPostprocessExternNewBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderPassPostprocessExternNewBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderPassPostprocessExternNewBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderPassPostprocessExternNewBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ShaderPassPostprocessConstantNewBlock[] ReadShaderPassPostprocessConstantNewBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderPassPostprocessConstantNewBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderPassPostprocessConstantNewBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderPassPostprocessConstantNewBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ShaderPassPostprocessConstantInfoNewBlock[] ReadShaderPassPostprocessConstantInfoNewBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderPassPostprocessConstantInfoNewBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderPassPostprocessConstantInfoNewBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderPassPostprocessConstantInfoNewBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ShaderPassPostprocessImplementationBlock[] ReadShaderPassPostprocessImplementationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderPassPostprocessImplementationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderPassPostprocessImplementationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderPassPostprocessImplementationBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

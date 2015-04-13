@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36)]
-    public class ScenarioScreenEffectReferenceBlockBase
+    [LayoutAttribute(Size = 36, Alignment = 4)]
+    public class ScenarioScreenEffectReferenceBlockBase  : IGuerilla
     {
         internal byte[] invalidName_;
         [TagReference("egor")]
@@ -26,26 +27,25 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal  ScenarioScreenEffectReferenceBlockBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(16);
-            this.screenEffect = binaryReader.ReadTagReference();
-            this.primaryInputInterpolator = binaryReader.ReadStringID();
-            this.secondaryInputInterpolator = binaryReader.ReadStringID();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.invalidName_1 = binaryReader.ReadBytes(2);
+            invalidName_ = binaryReader.ReadBytes(16);
+            screenEffect = binaryReader.ReadTagReference();
+            primaryInputInterpolator = binaryReader.ReadStringID();
+            secondaryInputInterpolator = binaryReader.ReadStringID();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(2);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 16);
+                binaryWriter.Write(screenEffect);
+                binaryWriter.Write(primaryInputInterpolator);
+                binaryWriter.Write(secondaryInputInterpolator);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(invalidName_1, 0, 2);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

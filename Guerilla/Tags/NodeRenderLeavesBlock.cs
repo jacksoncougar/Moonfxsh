@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,59 +15,24 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class NodeRenderLeavesBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class NodeRenderLeavesBlockBase  : IGuerilla
     {
         internal BspLeafBlock[] collisionLeaves;
         internal BspSurfaceReferenceBlock[] surfaceReferences;
         internal  NodeRenderLeavesBlockBase(BinaryReader binaryReader)
         {
-            this.collisionLeaves = ReadBspLeafBlockArray(binaryReader);
-            this.surfaceReferences = ReadBspSurfaceReferenceBlockArray(binaryReader);
+            collisionLeaves = Guerilla.ReadBlockArray<BspLeafBlock>(binaryReader);
+            surfaceReferences = Guerilla.ReadBlockArray<BspSurfaceReferenceBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteBlockArray<BspLeafBlock>(binaryWriter, collisionLeaves, nextAddress);
+                Guerilla.WriteBlockArray<BspSurfaceReferenceBlock>(binaryWriter, surfaceReferences, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual BspLeafBlock[] ReadBspLeafBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(BspLeafBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new BspLeafBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new BspLeafBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual BspSurfaceReferenceBlock[] ReadBspSurfaceReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(BspSurfaceReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new BspSurfaceReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new BspSurfaceReferenceBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

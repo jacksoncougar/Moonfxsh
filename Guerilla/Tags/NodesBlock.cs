@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class NodesBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class NodesBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Flags flags;
@@ -24,29 +25,26 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 child;
         internal  NodesBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.parent = binaryReader.ReadShortBlockIndex1();
-            this.sibling = binaryReader.ReadShortBlockIndex1();
-            this.child = binaryReader.ReadShortBlockIndex1();
+            name = binaryReader.ReadStringID();
+            flags = (Flags)binaryReader.ReadInt16();
+            parent = binaryReader.ReadShortBlockIndex1();
+            sibling = binaryReader.ReadShortBlockIndex1();
+            child = binaryReader.ReadShortBlockIndex1();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(parent);
+                binaryWriter.Write(sibling);
+                binaryWriter.Write(child);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             DoesNotAnimate = 1,
         };

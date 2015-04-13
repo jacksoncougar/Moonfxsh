@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class ModelVariantObjectBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class ModelVariantObjectBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID parentMarker;
         internal Moonfish.Tags.StringID childMarker;
@@ -23,23 +24,19 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference childObject;
         internal  ModelVariantObjectBlockBase(BinaryReader binaryReader)
         {
-            this.parentMarker = binaryReader.ReadStringID();
-            this.childMarker = binaryReader.ReadStringID();
-            this.childObject = binaryReader.ReadTagReference();
+            parentMarker = binaryReader.ReadStringID();
+            childMarker = binaryReader.ReadStringID();
+            childObject = binaryReader.ReadTagReference();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(parentMarker);
+                binaryWriter.Write(childMarker);
+                binaryWriter.Write(childObject);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

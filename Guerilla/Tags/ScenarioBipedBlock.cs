@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 84)]
-    public class ScenarioBipedBlockBase
+    [LayoutAttribute(Size = 84, Alignment = 4)]
+    public class ScenarioBipedBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.ShortBlockIndex1 type;
         internal Moonfish.Tags.ShortBlockIndex1 name;
@@ -25,26 +26,25 @@ namespace Moonfish.Guerilla.Tags
         internal ScenarioUnitStructBlock unitData;
         internal  ScenarioBipedBlockBase(BinaryReader binaryReader)
         {
-            this.type = binaryReader.ReadShortBlockIndex1();
-            this.name = binaryReader.ReadShortBlockIndex1();
-            this.objectData = new ScenarioObjectDatumStructBlock(binaryReader);
-            this.indexer = binaryReader.ReadBytes(4);
-            this.permutationData = new ScenarioObjectPermutationStructBlock(binaryReader);
-            this.unitData = new ScenarioUnitStructBlock(binaryReader);
+            type = binaryReader.ReadShortBlockIndex1();
+            name = binaryReader.ReadShortBlockIndex1();
+            objectData = new ScenarioObjectDatumStructBlock(binaryReader);
+            indexer = binaryReader.ReadBytes(4);
+            permutationData = new ScenarioObjectPermutationStructBlock(binaryReader);
+            unitData = new ScenarioUnitStructBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(type);
+                binaryWriter.Write(name);
+                objectData.Write(binaryWriter);
+                binaryWriter.Write(indexer, 0, 4);
+                permutationData.Write(binaryWriter);
+                unitData.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

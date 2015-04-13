@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24)]
-    public class ShaderTemplatePassReferenceBlockBase
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class ShaderTemplatePassReferenceBlockBase  : IGuerilla
     {
         internal Layer layer;
         internal byte[] invalidName_;
@@ -24,27 +25,23 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  ShaderTemplatePassReferenceBlockBase(BinaryReader binaryReader)
         {
-            this.layer = (Layer)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.pass = binaryReader.ReadTagReference();
-            this.invalidName_0 = binaryReader.ReadBytes(12);
+            layer = (Layer)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            pass = binaryReader.ReadTagReference();
+            invalidName_0 = binaryReader.ReadBytes(12);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)layer);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(pass);
+                binaryWriter.Write(invalidName_0, 0, 12);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum Layer : short
-        
         {
             Texaccum = 0,
             EnvironmentMap = 1,

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 52)]
-    public class SimplePlatformSoundPlaybackStructBlockBase
+    [LayoutAttribute(Size = 52, Alignment = 4)]
+    public class SimplePlatformSoundPlaybackStructBlockBase  : IGuerilla
     {
         internal PlatformSoundOverrideMixbinsBlock[] platformSoundOverrideMixbinsBlock;
         internal Flags flags;
@@ -26,106 +27,30 @@ namespace Moonfish.Guerilla.Tags
         internal SoundEffectPlaybackBlock[] soundEffect;
         internal  SimplePlatformSoundPlaybackStructBlockBase(BinaryReader binaryReader)
         {
-            this.platformSoundOverrideMixbinsBlock = ReadPlatformSoundOverrideMixbinsBlockArray(binaryReader);
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.invalidName_ = binaryReader.ReadBytes(8);
-            this.filter = ReadPlatformSoundFilterBlockArray(binaryReader);
-            this.pitchLfo = ReadPlatformSoundPitchLfoBlockArray(binaryReader);
-            this.filterLfo = ReadPlatformSoundFilterLfoBlockArray(binaryReader);
-            this.soundEffect = ReadSoundEffectPlaybackBlockArray(binaryReader);
+            platformSoundOverrideMixbinsBlock = Guerilla.ReadBlockArray<PlatformSoundOverrideMixbinsBlock>(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            invalidName_ = binaryReader.ReadBytes(8);
+            filter = Guerilla.ReadBlockArray<PlatformSoundFilterBlock>(binaryReader);
+            pitchLfo = Guerilla.ReadBlockArray<PlatformSoundPitchLfoBlock>(binaryReader);
+            filterLfo = Guerilla.ReadBlockArray<PlatformSoundFilterLfoBlock>(binaryReader);
+            soundEffect = Guerilla.ReadBlockArray<SoundEffectPlaybackBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteBlockArray<PlatformSoundOverrideMixbinsBlock>(binaryWriter, platformSoundOverrideMixbinsBlock, nextAddress);
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(invalidName_, 0, 8);
+                Guerilla.WriteBlockArray<PlatformSoundFilterBlock>(binaryWriter, filter, nextAddress);
+                Guerilla.WriteBlockArray<PlatformSoundPitchLfoBlock>(binaryWriter, pitchLfo, nextAddress);
+                Guerilla.WriteBlockArray<PlatformSoundFilterLfoBlock>(binaryWriter, filterLfo, nextAddress);
+                Guerilla.WriteBlockArray<SoundEffectPlaybackBlock>(binaryWriter, soundEffect, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual PlatformSoundOverrideMixbinsBlock[] ReadPlatformSoundOverrideMixbinsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PlatformSoundOverrideMixbinsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlatformSoundOverrideMixbinsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PlatformSoundOverrideMixbinsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PlatformSoundFilterBlock[] ReadPlatformSoundFilterBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PlatformSoundFilterBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlatformSoundFilterBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PlatformSoundFilterBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PlatformSoundPitchLfoBlock[] ReadPlatformSoundPitchLfoBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PlatformSoundPitchLfoBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlatformSoundPitchLfoBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PlatformSoundPitchLfoBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PlatformSoundFilterLfoBlock[] ReadPlatformSoundFilterLfoBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PlatformSoundFilterLfoBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlatformSoundFilterLfoBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PlatformSoundFilterLfoBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SoundEffectPlaybackBlock[] ReadSoundEffectPlaybackBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundEffectPlaybackBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundEffectPlaybackBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundEffectPlaybackBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             Use3DRadioHack = 1,
         };

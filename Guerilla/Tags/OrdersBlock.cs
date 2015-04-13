@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 124)]
-    public class OrdersBlockBase
+    [LayoutAttribute(Size = 124, Alignment = 4)]
+    public class OrdersBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal Moonfish.Tags.ShortBlockIndex1 style;
@@ -34,114 +35,46 @@ namespace Moonfish.Guerilla.Tags
         internal OrderEndingBlock[] orderEndings;
         internal  OrdersBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadString32();
-            this.style = binaryReader.ReadShortBlockIndex1();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.forceCombatStatus = (ForceCombatStatus)binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.entryScript = binaryReader.ReadString32();
-            this.invalidName_1 = binaryReader.ReadBytes(2);
-            this.followSquad = binaryReader.ReadShortBlockIndex1();
-            this.followRadius = binaryReader.ReadSingle();
-            this.primaryAreaSet = ReadZoneSetBlockArray(binaryReader);
-            this.secondaryAreaSet = ReadSecondaryZoneSetBlockArray(binaryReader);
-            this.secondarySetTrigger = ReadSecondarySetTriggerBlockArray(binaryReader);
-            this.specialMovement = ReadSpecialMovementBlockArray(binaryReader);
-            this.orderEndings = ReadOrderEndingBlockArray(binaryReader);
+            name = binaryReader.ReadString32();
+            style = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
+            flags = (Flags)binaryReader.ReadInt32();
+            forceCombatStatus = (ForceCombatStatus)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            entryScript = binaryReader.ReadString32();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            followSquad = binaryReader.ReadShortBlockIndex1();
+            followRadius = binaryReader.ReadSingle();
+            primaryAreaSet = Guerilla.ReadBlockArray<ZoneSetBlock>(binaryReader);
+            secondaryAreaSet = Guerilla.ReadBlockArray<SecondaryZoneSetBlock>(binaryReader);
+            secondarySetTrigger = Guerilla.ReadBlockArray<SecondarySetTriggerBlock>(binaryReader);
+            specialMovement = Guerilla.ReadBlockArray<SpecialMovementBlock>(binaryReader);
+            orderEndings = Guerilla.ReadBlockArray<OrderEndingBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write(style);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int16)forceCombatStatus);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(entryScript);
+                binaryWriter.Write(invalidName_1, 0, 2);
+                binaryWriter.Write(followSquad);
+                binaryWriter.Write(followRadius);
+                Guerilla.WriteBlockArray<ZoneSetBlock>(binaryWriter, primaryAreaSet, nextAddress);
+                Guerilla.WriteBlockArray<SecondaryZoneSetBlock>(binaryWriter, secondaryAreaSet, nextAddress);
+                Guerilla.WriteBlockArray<SecondarySetTriggerBlock>(binaryWriter, secondarySetTrigger, nextAddress);
+                Guerilla.WriteBlockArray<SpecialMovementBlock>(binaryWriter, specialMovement, nextAddress);
+                Guerilla.WriteBlockArray<OrderEndingBlock>(binaryWriter, orderEndings, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ZoneSetBlock[] ReadZoneSetBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ZoneSetBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ZoneSetBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ZoneSetBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SecondaryZoneSetBlock[] ReadSecondaryZoneSetBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SecondaryZoneSetBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SecondaryZoneSetBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SecondaryZoneSetBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SecondarySetTriggerBlock[] ReadSecondarySetTriggerBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SecondarySetTriggerBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SecondarySetTriggerBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SecondarySetTriggerBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SpecialMovementBlock[] ReadSpecialMovementBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SpecialMovementBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SpecialMovementBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SpecialMovementBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual OrderEndingBlock[] ReadOrderEndingBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(OrderEndingBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new OrderEndingBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new OrderEndingBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             Locked = 1,
             AlwaysActive = 2,
@@ -154,7 +87,6 @@ namespace Moonfish.Guerilla.Tags
             InhibitVehicleUse = 256,
         };
         internal enum ForceCombatStatus : short
-        
         {
             NONE = 0,
             Asleep = 1,

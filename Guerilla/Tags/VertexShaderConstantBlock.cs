@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 4)]
-    public class VertexShaderConstantBlockBase
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class VertexShaderConstantBlockBase  : IGuerilla
     {
         internal byte registerIndex;
         internal byte parameterIndex;
@@ -23,24 +24,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte scaleByTextureStage;
         internal  VertexShaderConstantBlockBase(BinaryReader binaryReader)
         {
-            this.registerIndex = binaryReader.ReadByte();
-            this.parameterIndex = binaryReader.ReadByte();
-            this.destinationMask = binaryReader.ReadByte();
-            this.scaleByTextureStage = binaryReader.ReadByte();
+            registerIndex = binaryReader.ReadByte();
+            parameterIndex = binaryReader.ReadByte();
+            destinationMask = binaryReader.ReadByte();
+            scaleByTextureStage = binaryReader.ReadByte();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(registerIndex);
+                binaryWriter.Write(parameterIndex);
+                binaryWriter.Write(destinationMask);
+                binaryWriter.Write(scaleByTextureStage);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,31 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class ScreenAnimationKeyframeReferenceBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class ScreenAnimationKeyframeReferenceBlockBase  : IGuerilla
     {
         internal byte[] invalidName_;
         internal float alpha;
         internal OpenTK.Vector3 position;
         internal  ScreenAnimationKeyframeReferenceBlockBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.alpha = binaryReader.ReadSingle();
-            this.position = binaryReader.ReadVector3();
+            invalidName_ = binaryReader.ReadBytes(4);
+            alpha = binaryReader.ReadSingle();
+            position = binaryReader.ReadVector3();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(alpha);
+                binaryWriter.Write(position);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 10, Alignment = 4)]
-    public class SoundGestaltPitchRangeParametersBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 10)]
+    public class SoundGestaltPitchRangeParametersBlockBase
     {
         internal short naturalPitchCents;
         /// <summary>
@@ -26,19 +25,23 @@ namespace Moonfish.Guerilla.Tags
         internal int maxGainPitchBoundsCents;
         internal  SoundGestaltPitchRangeParametersBlockBase(BinaryReader binaryReader)
         {
-            naturalPitchCents = binaryReader.ReadInt16();
-            bendBoundsCents = binaryReader.ReadInt32();
-            maxGainPitchBoundsCents = binaryReader.ReadInt32();
+            this.naturalPitchCents = binaryReader.ReadInt16();
+            this.bendBoundsCents = binaryReader.ReadInt32();
+            this.maxGainPitchBoundsCents = binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(naturalPitchCents);
-                binaryWriter.Write(bendBoundsCents);
-                binaryWriter.Write(maxGainPitchBoundsCents);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

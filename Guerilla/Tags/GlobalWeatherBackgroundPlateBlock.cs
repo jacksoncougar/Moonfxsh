@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 936, Alignment = 4)]
-    public class GlobalWeatherBackgroundPlateBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 936)]
+    public class GlobalWeatherBackgroundPlateBlockBase
     {
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference texture0;
@@ -53,76 +52,54 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  GlobalWeatherBackgroundPlateBlockBase(BinaryReader binaryReader)
         {
-            texture0 = binaryReader.ReadTagReference();
-            texture1 = binaryReader.ReadTagReference();
-            texture2 = binaryReader.ReadTagReference();
-            platePositions0 = binaryReader.ReadSingle();
-            platePositions1 = binaryReader.ReadSingle();
-            platePositions2 = binaryReader.ReadSingle();
-            moveSpeed0 = binaryReader.ReadVector3();
-            moveSpeed1 = binaryReader.ReadVector3();
-            moveSpeed2 = binaryReader.ReadVector3();
-            textureScale0 = binaryReader.ReadSingle();
-            textureScale1 = binaryReader.ReadSingle();
-            textureScale2 = binaryReader.ReadSingle();
-            jitter0 = binaryReader.ReadVector3();
-            jitter1 = binaryReader.ReadVector3();
-            jitter2 = binaryReader.ReadVector3();
-            plateZNear = binaryReader.ReadSingle();
-            plateZFar = binaryReader.ReadSingle();
-            depthBlendZNear = binaryReader.ReadSingle();
-            depthBlendZFar = binaryReader.ReadSingle();
-            opacity0 = binaryReader.ReadSingle();
-            opacity1 = binaryReader.ReadSingle();
-            opacity2 = binaryReader.ReadSingle();
-            flags = (Flags)binaryReader.ReadInt32();
-            tintColor0 = binaryReader.ReadColorR8G8B8();
-            tintColor1 = binaryReader.ReadColorR8G8B8();
-            tintColor2 = binaryReader.ReadColorR8G8B8();
-            mass1 = binaryReader.ReadSingle();
-            mass2 = binaryReader.ReadSingle();
-            mass3 = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(736);
+            this.texture0 = binaryReader.ReadTagReference();
+            this.texture1 = binaryReader.ReadTagReference();
+            this.texture2 = binaryReader.ReadTagReference();
+            this.platePositions0 = binaryReader.ReadSingle();
+            this.platePositions1 = binaryReader.ReadSingle();
+            this.platePositions2 = binaryReader.ReadSingle();
+            this.moveSpeed0 = binaryReader.ReadVector3();
+            this.moveSpeed1 = binaryReader.ReadVector3();
+            this.moveSpeed2 = binaryReader.ReadVector3();
+            this.textureScale0 = binaryReader.ReadSingle();
+            this.textureScale1 = binaryReader.ReadSingle();
+            this.textureScale2 = binaryReader.ReadSingle();
+            this.jitter0 = binaryReader.ReadVector3();
+            this.jitter1 = binaryReader.ReadVector3();
+            this.jitter2 = binaryReader.ReadVector3();
+            this.plateZNear = binaryReader.ReadSingle();
+            this.plateZFar = binaryReader.ReadSingle();
+            this.depthBlendZNear = binaryReader.ReadSingle();
+            this.depthBlendZFar = binaryReader.ReadSingle();
+            this.opacity0 = binaryReader.ReadSingle();
+            this.opacity1 = binaryReader.ReadSingle();
+            this.opacity2 = binaryReader.ReadSingle();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.tintColor0 = binaryReader.ReadColorR8G8B8();
+            this.tintColor1 = binaryReader.ReadColorR8G8B8();
+            this.tintColor2 = binaryReader.ReadColorR8G8B8();
+            this.mass1 = binaryReader.ReadSingle();
+            this.mass2 = binaryReader.ReadSingle();
+            this.mass3 = binaryReader.ReadSingle();
+            this.invalidName_ = binaryReader.ReadBytes(736);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(texture0);
-                binaryWriter.Write(texture1);
-                binaryWriter.Write(texture2);
-                binaryWriter.Write(platePositions0);
-                binaryWriter.Write(platePositions1);
-                binaryWriter.Write(platePositions2);
-                binaryWriter.Write(moveSpeed0);
-                binaryWriter.Write(moveSpeed1);
-                binaryWriter.Write(moveSpeed2);
-                binaryWriter.Write(textureScale0);
-                binaryWriter.Write(textureScale1);
-                binaryWriter.Write(textureScale2);
-                binaryWriter.Write(jitter0);
-                binaryWriter.Write(jitter1);
-                binaryWriter.Write(jitter2);
-                binaryWriter.Write(plateZNear);
-                binaryWriter.Write(plateZFar);
-                binaryWriter.Write(depthBlendZNear);
-                binaryWriter.Write(depthBlendZFar);
-                binaryWriter.Write(opacity0);
-                binaryWriter.Write(opacity1);
-                binaryWriter.Write(opacity2);
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(tintColor0);
-                binaryWriter.Write(tintColor1);
-                binaryWriter.Write(tintColor2);
-                binaryWriter.Write(mass1);
-                binaryWriter.Write(mass2);
-                binaryWriter.Write(mass3);
-                binaryWriter.Write(invalidName_, 0, 736);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             ForwardMotion = 1,
             AutoPositionPlanes = 2,

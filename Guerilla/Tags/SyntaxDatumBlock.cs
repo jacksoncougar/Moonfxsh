@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class SyntaxDatumBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 20)]
+    public class SyntaxDatumBlockBase
     {
         internal short datumHeader;
         internal short scriptIndexFunctionIndexConstantTypeUnion;
@@ -27,27 +26,27 @@ namespace Moonfish.Guerilla.Tags
         internal int sourceOffset;
         internal  SyntaxDatumBlockBase(BinaryReader binaryReader)
         {
-            datumHeader = binaryReader.ReadInt16();
-            scriptIndexFunctionIndexConstantTypeUnion = binaryReader.ReadInt16();
-            type = binaryReader.ReadInt16();
-            flags = binaryReader.ReadInt16();
-            nextNodeIndex = binaryReader.ReadInt32();
-            data = binaryReader.ReadInt32();
-            sourceOffset = binaryReader.ReadInt32();
+            this.datumHeader = binaryReader.ReadInt16();
+            this.scriptIndexFunctionIndexConstantTypeUnion = binaryReader.ReadInt16();
+            this.type = binaryReader.ReadInt16();
+            this.flags = binaryReader.ReadInt16();
+            this.nextNodeIndex = binaryReader.ReadInt32();
+            this.data = binaryReader.ReadInt32();
+            this.sourceOffset = binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(datumHeader);
-                binaryWriter.Write(scriptIndexFunctionIndexConstantTypeUnion);
-                binaryWriter.Write(type);
-                binaryWriter.Write(flags);
-                binaryWriter.Write(nextNodeIndex);
-                binaryWriter.Write(data);
-                binaryWriter.Write(sourceOffset);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

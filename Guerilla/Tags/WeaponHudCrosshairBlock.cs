@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 92, Alignment = 4)]
-    public class WeaponHudCrosshairBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 92)]
+    public class WeaponHudCrosshairBlockBase
     {
         internal CrosshairType crosshairType;
         internal byte[] invalidName_;
@@ -29,31 +28,46 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal  WeaponHudCrosshairBlockBase(BinaryReader binaryReader)
         {
-            crosshairType = (CrosshairType)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            canUseOnMapType = (CanUseOnMapType)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            invalidName_1 = binaryReader.ReadBytes(28);
-            crosshairBitmap = binaryReader.ReadTagReference();
-            crosshairOverlays = Guerilla.ReadBlockArray<WeaponHudCrosshairItemBlock>(binaryReader);
-            invalidName_2 = binaryReader.ReadBytes(40);
+            this.crosshairType = (CrosshairType)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.canUseOnMapType = (CanUseOnMapType)binaryReader.ReadInt16();
+            this.invalidName_0 = binaryReader.ReadBytes(2);
+            this.invalidName_1 = binaryReader.ReadBytes(28);
+            this.crosshairBitmap = binaryReader.ReadTagReference();
+            this.crosshairOverlays = ReadWeaponHudCrosshairItemBlockArray(binaryReader);
+            this.invalidName_2 = binaryReader.ReadBytes(40);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)crosshairType);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int16)canUseOnMapType);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write(invalidName_1, 0, 28);
-                binaryWriter.Write(crosshairBitmap);
-                Guerilla.WriteBlockArray<WeaponHudCrosshairItemBlock>(binaryWriter, crosshairOverlays, nextAddress);
-                binaryWriter.Write(invalidName_2, 0, 40);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual WeaponHudCrosshairItemBlock[] ReadWeaponHudCrosshairItemBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(WeaponHudCrosshairItemBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new WeaponHudCrosshairItemBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new WeaponHudCrosshairItemBlock(binaryReader);
+                }
+            }
+            return array;
         }
         internal enum CrosshairType : short
+        
         {
             Aim = 0,
             Zoom = 1,
@@ -76,6 +90,7 @@ namespace Moonfish.Guerilla.Tags
             FlashWhenFiringWithDepletedBattery = 18,
         };
         internal enum CanUseOnMapType : short
+        
         {
             Any = 0,
             Solo = 1,

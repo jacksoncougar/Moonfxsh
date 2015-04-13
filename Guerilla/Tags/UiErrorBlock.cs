@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class UiErrorBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class UiErrorBlockBase
     {
         internal Error error;
         internal Flags flags;
@@ -28,31 +27,31 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID cancel;
         internal  UiErrorBlockBase(BinaryReader binaryReader)
         {
-            error = (Error)binaryReader.ReadInt32();
-            flags = (Flags)binaryReader.ReadInt16();
-            defaultButton = (DefaultButton)binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(1);
-            title = binaryReader.ReadStringID();
-            message = binaryReader.ReadStringID();
-            ok = binaryReader.ReadStringID();
-            cancel = binaryReader.ReadStringID();
+            this.error = (Error)binaryReader.ReadInt32();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.defaultButton = (DefaultButton)binaryReader.ReadByte();
+            this.invalidName_ = binaryReader.ReadBytes(1);
+            this.title = binaryReader.ReadStringID();
+            this.message = binaryReader.ReadStringID();
+            this.ok = binaryReader.ReadStringID();
+            this.cancel = binaryReader.ReadStringID();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)error);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Byte)defaultButton);
-                binaryWriter.Write(invalidName_, 0, 1);
-                binaryWriter.Write(title);
-                binaryWriter.Write(message);
-                binaryWriter.Write(ok);
-                binaryWriter.Write(cancel);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum Error : int
+        
         {
             ErrorUnknown = 0,
             ErrorGeneric = 1,
@@ -311,10 +310,12 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             UseLargeDialog = 1,
         };
         internal enum DefaultButton : byte
+        
         {
             NoDefault = 0,
             DefaultOk = 1,

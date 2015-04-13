@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,27 +14,46 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class StructureBspWeatherPolyhedronBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class StructureBspWeatherPolyhedronBlockBase
     {
         internal OpenTK.Vector3 boundingSphereCenter;
         internal float boundingSphereRadius;
         internal StructureBspWeatherPolyhedronPlaneBlock[] planes;
         internal  StructureBspWeatherPolyhedronBlockBase(BinaryReader binaryReader)
         {
-            boundingSphereCenter = binaryReader.ReadVector3();
-            boundingSphereRadius = binaryReader.ReadSingle();
-            planes = Guerilla.ReadBlockArray<StructureBspWeatherPolyhedronPlaneBlock>(binaryReader);
+            this.boundingSphereCenter = binaryReader.ReadVector3();
+            this.boundingSphereRadius = binaryReader.ReadSingle();
+            this.planes = ReadStructureBspWeatherPolyhedronPlaneBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(boundingSphereCenter);
-                binaryWriter.Write(boundingSphereRadius);
-                Guerilla.WriteBlockArray<StructureBspWeatherPolyhedronPlaneBlock>(binaryWriter, planes, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual StructureBspWeatherPolyhedronPlaneBlock[] ReadStructureBspWeatherPolyhedronPlaneBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(StructureBspWeatherPolyhedronPlaneBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new StructureBspWeatherPolyhedronPlaneBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new StructureBspWeatherPolyhedronPlaneBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

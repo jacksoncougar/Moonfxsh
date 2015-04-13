@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class ResponseBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 12)]
+    public class ResponseBlockBase
     {
         internal Moonfish.Tags.StringID vocalizationName;
         internal Flags flags;
@@ -25,31 +24,35 @@ namespace Moonfish.Guerilla.Tags
         internal short dialogueIndexImport;
         internal  ResponseBlockBase(BinaryReader binaryReader)
         {
-            vocalizationName = binaryReader.ReadStringID();
-            flags = (Flags)binaryReader.ReadInt16();
-            vocalizationIndexPostProcess = binaryReader.ReadInt16();
-            responseType = (ResponseType)binaryReader.ReadInt16();
-            dialogueIndexImport = binaryReader.ReadInt16();
+            this.vocalizationName = binaryReader.ReadStringID();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.vocalizationIndexPostProcess = binaryReader.ReadInt16();
+            this.responseType = (ResponseType)binaryReader.ReadInt16();
+            this.dialogueIndexImport = binaryReader.ReadInt16();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(vocalizationName);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(vocalizationIndexPostProcess);
-                binaryWriter.Write((Int16)responseType);
-                binaryWriter.Write(dialogueIndexImport);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             Nonexclusive = 1,
             TriggerResponse = 2,
         };
         internal enum ResponseType : short
+        
         {
             Friend = 0,
             Enemy = 1,

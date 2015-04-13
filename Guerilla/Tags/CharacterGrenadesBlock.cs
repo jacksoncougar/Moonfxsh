@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 60, Alignment = 4)]
-    public class CharacterGrenadesBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 60)]
+    public class CharacterGrenadesBlockBase
     {
         internal GrenadesFlags grenadesFlags;
         /// <summary>
@@ -78,57 +77,51 @@ namespace Moonfish.Guerilla.Tags
         internal float dontDropGrenadesChance01;
         internal  CharacterGrenadesBlockBase(BinaryReader binaryReader)
         {
-            grenadesFlags = (GrenadesFlags)binaryReader.ReadInt32();
-            grenadeType = (GrenadeTypeTypeOfGrenadesThatWeThrow)binaryReader.ReadInt16();
-            trajectoryType = (TrajectoryTypeHowWeThrowOurGrenades)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            minimumEnemyCount = binaryReader.ReadInt16();
-            enemyRadiusWorldUnits = binaryReader.ReadSingle();
-            grenadeIdealVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            grenadeVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            grenadeRangesWorldUnits = binaryReader.ReadRange();
-            collateralDamageRadiusWorldUnits = binaryReader.ReadSingle();
-            grenadeChance01 = binaryReader.ReadSingle();
-            grenadeThrowDelaySeconds = binaryReader.ReadSingle();
-            grenadeUncoverChance01 = binaryReader.ReadSingle();
-            antiVehicleGrenadeChance01 = binaryReader.ReadSingle();
-            grenadeCount = binaryReader.ReadInt32();
-            dontDropGrenadesChance01 = binaryReader.ReadSingle();
+            this.grenadesFlags = (GrenadesFlags)binaryReader.ReadInt32();
+            this.grenadeType = (GrenadeTypeTypeOfGrenadesThatWeThrow)binaryReader.ReadInt16();
+            this.trajectoryType = (TrajectoryTypeHowWeThrowOurGrenades)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.minimumEnemyCount = binaryReader.ReadInt16();
+            this.enemyRadiusWorldUnits = binaryReader.ReadSingle();
+            this.grenadeIdealVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            this.grenadeVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            this.grenadeRangesWorldUnits = binaryReader.ReadRange();
+            this.collateralDamageRadiusWorldUnits = binaryReader.ReadSingle();
+            this.grenadeChance01 = binaryReader.ReadSingle();
+            this.grenadeThrowDelaySeconds = binaryReader.ReadSingle();
+            this.grenadeUncoverChance01 = binaryReader.ReadSingle();
+            this.antiVehicleGrenadeChance01 = binaryReader.ReadSingle();
+            this.grenadeCount = binaryReader.ReadInt32();
+            this.dontDropGrenadesChance01 = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)grenadesFlags);
-                binaryWriter.Write((Int16)grenadeType);
-                binaryWriter.Write((Int16)trajectoryType);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(minimumEnemyCount);
-                binaryWriter.Write(enemyRadiusWorldUnits);
-                binaryWriter.Write(grenadeIdealVelocityWorldUnitsPerSecond);
-                binaryWriter.Write(grenadeVelocityWorldUnitsPerSecond);
-                binaryWriter.Write(grenadeRangesWorldUnits);
-                binaryWriter.Write(collateralDamageRadiusWorldUnits);
-                binaryWriter.Write(grenadeChance01);
-                binaryWriter.Write(grenadeThrowDelaySeconds);
-                binaryWriter.Write(grenadeUncoverChance01);
-                binaryWriter.Write(antiVehicleGrenadeChance01);
-                binaryWriter.Write(grenadeCount);
-                binaryWriter.Write(dontDropGrenadesChance01);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum GrenadesFlags : int
+        
         {
             Flag1 = 1,
         };
         internal enum GrenadeTypeTypeOfGrenadesThatWeThrow : short
+        
         {
             HumanFragmentation = 0,
             CovenantPlasma = 1,
         };
         internal enum TrajectoryTypeHowWeThrowOurGrenades : short
+        
         {
             Toss = 0,
             Lob = 1,

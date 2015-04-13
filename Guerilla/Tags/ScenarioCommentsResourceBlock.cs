@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass Class = (TagClass)"/**/";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,21 +15,42 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ScenarioCommentsResourceBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 8)]
+    public class ScenarioCommentsResourceBlockBase
     {
         internal EditorCommentBlock[] comments;
         internal  ScenarioCommentsResourceBlockBase(BinaryReader binaryReader)
         {
-            comments = Guerilla.ReadBlockArray<EditorCommentBlock>(binaryReader);
+            this.comments = ReadEditorCommentBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                Guerilla.WriteBlockArray<EditorCommentBlock>(binaryWriter, comments, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual EditorCommentBlock[] ReadEditorCommentBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(EditorCommentBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new EditorCommentBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new EditorCommentBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

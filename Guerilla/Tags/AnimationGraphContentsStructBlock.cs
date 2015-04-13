@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,27 +14,76 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class AnimationGraphContentsStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class AnimationGraphContentsStructBlockBase
     {
         internal AnimationModeBlock[] modesAABBCC;
         internal VehicleSuspensionBlock[] vehicleSuspensionCCAABB;
         internal ObjectAnimationBlock[] objectOverlaysCCAABB;
         internal  AnimationGraphContentsStructBlockBase(BinaryReader binaryReader)
         {
-            modesAABBCC = Guerilla.ReadBlockArray<AnimationModeBlock>(binaryReader);
-            vehicleSuspensionCCAABB = Guerilla.ReadBlockArray<VehicleSuspensionBlock>(binaryReader);
-            objectOverlaysCCAABB = Guerilla.ReadBlockArray<ObjectAnimationBlock>(binaryReader);
+            this.modesAABBCC = ReadAnimationModeBlockArray(binaryReader);
+            this.vehicleSuspensionCCAABB = ReadVehicleSuspensionBlockArray(binaryReader);
+            this.objectOverlaysCCAABB = ReadObjectAnimationBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                Guerilla.WriteBlockArray<AnimationModeBlock>(binaryWriter, modesAABBCC, nextAddress);
-                Guerilla.WriteBlockArray<VehicleSuspensionBlock>(binaryWriter, vehicleSuspensionCCAABB, nextAddress);
-                Guerilla.WriteBlockArray<ObjectAnimationBlock>(binaryWriter, objectOverlaysCCAABB, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual AnimationModeBlock[] ReadAnimationModeBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(AnimationModeBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new AnimationModeBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new AnimationModeBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual VehicleSuspensionBlock[] ReadVehicleSuspensionBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(VehicleSuspensionBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new VehicleSuspensionBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new VehicleSuspensionBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ObjectAnimationBlock[] ReadObjectAnimationBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ObjectAnimationBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ObjectAnimationBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ObjectAnimationBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

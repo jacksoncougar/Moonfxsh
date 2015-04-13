@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32, Alignment = 4)]
-    public class AnimationGraphNodeBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 32)]
+    public class AnimationGraphNodeBlockBase
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 nextSiblingNodeIndex;
@@ -29,34 +28,33 @@ namespace Moonfish.Guerilla.Tags
         internal float zPos;
         internal  AnimationGraphNodeBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadStringID();
-            nextSiblingNodeIndex = binaryReader.ReadShortBlockIndex1();
-            firstChildNodeIndex = binaryReader.ReadShortBlockIndex1();
-            parentNodeIndex = binaryReader.ReadShortBlockIndex1();
-            modelFlags = (ModelFlags)binaryReader.ReadByte();
-            nodeJointFlags = (NodeJointFlags)binaryReader.ReadByte();
-            baseVector = binaryReader.ReadVector3();
-            vectorRange = binaryReader.ReadSingle();
-            zPos = binaryReader.ReadSingle();
+            this.name = binaryReader.ReadStringID();
+            this.nextSiblingNodeIndex = binaryReader.ReadShortBlockIndex1();
+            this.firstChildNodeIndex = binaryReader.ReadShortBlockIndex1();
+            this.parentNodeIndex = binaryReader.ReadShortBlockIndex1();
+            this.modelFlags = (ModelFlags)binaryReader.ReadByte();
+            this.nodeJointFlags = (NodeJointFlags)binaryReader.ReadByte();
+            this.baseVector = binaryReader.ReadVector3();
+            this.vectorRange = binaryReader.ReadSingle();
+            this.zPos = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(nextSiblingNodeIndex);
-                binaryWriter.Write(firstChildNodeIndex);
-                binaryWriter.Write(parentNodeIndex);
-                binaryWriter.Write((Byte)modelFlags);
-                binaryWriter.Write((Byte)nodeJointFlags);
-                binaryWriter.Write(baseVector);
-                binaryWriter.Write(vectorRange);
-                binaryWriter.Write(zPos);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum ModelFlags : byte
+        
         {
             PrimaryModel = 1,
             SecondaryModel = 2,
@@ -67,6 +65,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum NodeJointFlags : byte
+        
         {
             BallSocket = 1,
             Hinge = 2,

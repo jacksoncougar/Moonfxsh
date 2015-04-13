@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,27 +14,61 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 48, Alignment = 4)]
-    public class ParticleSystemLiteDataBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 48)]
+    public class ParticleSystemLiteDataBlockBase
     {
         internal ParticlesRenderDataBlock[] particlesRenderData;
         internal ParticlesUpdateDataBlock[] particlesOtherData;
         internal byte[] invalidName_;
         internal  ParticleSystemLiteDataBlockBase(BinaryReader binaryReader)
         {
-            particlesRenderData = Guerilla.ReadBlockArray<ParticlesRenderDataBlock>(binaryReader);
-            particlesOtherData = Guerilla.ReadBlockArray<ParticlesUpdateDataBlock>(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(32);
+            this.particlesRenderData = ReadParticlesRenderDataBlockArray(binaryReader);
+            this.particlesOtherData = ReadParticlesUpdateDataBlockArray(binaryReader);
+            this.invalidName_ = binaryReader.ReadBytes(32);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                Guerilla.WriteBlockArray<ParticlesRenderDataBlock>(binaryWriter, particlesRenderData, nextAddress);
-                Guerilla.WriteBlockArray<ParticlesUpdateDataBlock>(binaryWriter, particlesOtherData, nextAddress);
-                binaryWriter.Write(invalidName_, 0, 32);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual ParticlesRenderDataBlock[] ReadParticlesRenderDataBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ParticlesRenderDataBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ParticlesRenderDataBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ParticlesRenderDataBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ParticlesUpdateDataBlock[] ReadParticlesUpdateDataBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ParticlesUpdateDataBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ParticlesUpdateDataBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ParticlesUpdateDataBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

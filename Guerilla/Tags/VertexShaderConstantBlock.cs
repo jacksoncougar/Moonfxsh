@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class VertexShaderConstantBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 4)]
+    public class VertexShaderConstantBlockBase
     {
         internal byte registerIndex;
         internal byte parameterIndex;
@@ -24,21 +23,24 @@ namespace Moonfish.Guerilla.Tags
         internal byte scaleByTextureStage;
         internal  VertexShaderConstantBlockBase(BinaryReader binaryReader)
         {
-            registerIndex = binaryReader.ReadByte();
-            parameterIndex = binaryReader.ReadByte();
-            destinationMask = binaryReader.ReadByte();
-            scaleByTextureStage = binaryReader.ReadByte();
+            this.registerIndex = binaryReader.ReadByte();
+            this.parameterIndex = binaryReader.ReadByte();
+            this.destinationMask = binaryReader.ReadByte();
+            this.scaleByTextureStage = binaryReader.ReadByte();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(registerIndex);
-                binaryWriter.Write(parameterIndex);
-                binaryWriter.Write(destinationMask);
-                binaryWriter.Write(scaleByTextureStage);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

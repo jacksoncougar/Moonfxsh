@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 80, Alignment = 4)]
-    public class CharacterLookBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 80)]
+    public class CharacterLookBlockBase
     {
         /// <summary>
         /// how far we can turn our weapon
@@ -61,35 +60,31 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range combatIdleAimingSeconds;
         internal  CharacterLookBlockBase(BinaryReader binaryReader)
         {
-            maximumAimingDeviationDegrees = binaryReader.ReadVector2();
-            maximumLookingDeviationDegrees = binaryReader.ReadVector2();
-            invalidName_ = binaryReader.ReadBytes(16);
-            noncombatLookDeltaLDegrees = binaryReader.ReadSingle();
-            noncombatLookDeltaRDegrees = binaryReader.ReadSingle();
-            combatLookDeltaLDegrees = binaryReader.ReadSingle();
-            combatLookDeltaRDegrees = binaryReader.ReadSingle();
-            noncombatIdleLookingSeconds = binaryReader.ReadRange();
-            noncombatIdleAimingSeconds = binaryReader.ReadRange();
-            combatIdleLookingSeconds = binaryReader.ReadRange();
-            combatIdleAimingSeconds = binaryReader.ReadRange();
+            this.maximumAimingDeviationDegrees = binaryReader.ReadVector2();
+            this.maximumLookingDeviationDegrees = binaryReader.ReadVector2();
+            this.invalidName_ = binaryReader.ReadBytes(16);
+            this.noncombatLookDeltaLDegrees = binaryReader.ReadSingle();
+            this.noncombatLookDeltaRDegrees = binaryReader.ReadSingle();
+            this.combatLookDeltaLDegrees = binaryReader.ReadSingle();
+            this.combatLookDeltaRDegrees = binaryReader.ReadSingle();
+            this.noncombatIdleLookingSeconds = binaryReader.ReadRange();
+            this.noncombatIdleAimingSeconds = binaryReader.ReadRange();
+            this.combatIdleLookingSeconds = binaryReader.ReadRange();
+            this.combatIdleAimingSeconds = binaryReader.ReadRange();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(maximumAimingDeviationDegrees);
-                binaryWriter.Write(maximumLookingDeviationDegrees);
-                binaryWriter.Write(invalidName_, 0, 16);
-                binaryWriter.Write(noncombatLookDeltaLDegrees);
-                binaryWriter.Write(noncombatLookDeltaRDegrees);
-                binaryWriter.Write(combatLookDeltaLDegrees);
-                binaryWriter.Write(combatLookDeltaRDegrees);
-                binaryWriter.Write(noncombatIdleLookingSeconds);
-                binaryWriter.Write(noncombatIdleAimingSeconds);
-                binaryWriter.Write(combatIdleLookingSeconds);
-                binaryWriter.Write(combatIdleAimingSeconds);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

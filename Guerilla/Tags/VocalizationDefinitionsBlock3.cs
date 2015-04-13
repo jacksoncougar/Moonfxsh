@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 96, Alignment = 4)]
-    public class VocalizationDefinitionsBlock3Base  : IGuerilla
+    [LayoutAttribute(Size = 96)]
+    public class VocalizationDefinitionsBlock3Base
     {
         internal Moonfish.Tags.StringID vocalization;
         internal Moonfish.Tags.StringID parentVocalization;
@@ -80,69 +79,80 @@ namespace Moonfish.Guerilla.Tags
         internal VocalizationDefinitionsBlock4[] children;
         internal  VocalizationDefinitionsBlock3Base(BinaryReader binaryReader)
         {
-            vocalization = binaryReader.ReadStringID();
-            parentVocalization = binaryReader.ReadStringID();
-            parentIndex = binaryReader.ReadInt16();
-            priority = (Priority)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt32();
-            glanceBehavior = (GlanceBehaviorHowDoesTheSpeakerOfThisVocalizationDirectHisGaze)binaryReader.ReadInt16();
-            glanceRecipientBehavior = (GlanceRecipientBehaviorHowDoesSomeoneWhoHearsMeBehave)binaryReader.ReadInt16();
-            perceptionType = (PerceptionType)binaryReader.ReadInt16();
-            maxCombatStatus = (MaxCombatStatus)binaryReader.ReadInt16();
-            animationImpulse = (AnimationImpulse)binaryReader.ReadInt16();
-            overlapPriority = (OverlapPriority)binaryReader.ReadInt16();
-            soundRepetitionDelayMinutes = binaryReader.ReadSingle();
-            allowableQueueDelaySeconds = binaryReader.ReadSingle();
-            preVocDelaySeconds = binaryReader.ReadSingle();
-            notificationDelaySeconds = binaryReader.ReadSingle();
-            postVocDelaySeconds = binaryReader.ReadSingle();
-            repeatDelaySeconds = binaryReader.ReadSingle();
-            weight01 = binaryReader.ReadSingle();
-            speakerFreezeTime = binaryReader.ReadSingle();
-            listenerFreezeTime = binaryReader.ReadSingle();
-            speakerEmotion = (SpeakerEmotion)binaryReader.ReadInt16();
-            listenerEmotion = (ListenerEmotion)binaryReader.ReadInt16();
-            playerSkipFraction = binaryReader.ReadSingle();
-            skipFraction = binaryReader.ReadSingle();
-            sampleLine = binaryReader.ReadStringID();
-            reponses = Guerilla.ReadBlockArray<ResponseBlock>(binaryReader);
-            children = Guerilla.ReadBlockArray<VocalizationDefinitionsBlock4>(binaryReader);
+            this.vocalization = binaryReader.ReadStringID();
+            this.parentVocalization = binaryReader.ReadStringID();
+            this.parentIndex = binaryReader.ReadInt16();
+            this.priority = (Priority)binaryReader.ReadInt16();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.glanceBehavior = (GlanceBehaviorHowDoesTheSpeakerOfThisVocalizationDirectHisGaze)binaryReader.ReadInt16();
+            this.glanceRecipientBehavior = (GlanceRecipientBehaviorHowDoesSomeoneWhoHearsMeBehave)binaryReader.ReadInt16();
+            this.perceptionType = (PerceptionType)binaryReader.ReadInt16();
+            this.maxCombatStatus = (MaxCombatStatus)binaryReader.ReadInt16();
+            this.animationImpulse = (AnimationImpulse)binaryReader.ReadInt16();
+            this.overlapPriority = (OverlapPriority)binaryReader.ReadInt16();
+            this.soundRepetitionDelayMinutes = binaryReader.ReadSingle();
+            this.allowableQueueDelaySeconds = binaryReader.ReadSingle();
+            this.preVocDelaySeconds = binaryReader.ReadSingle();
+            this.notificationDelaySeconds = binaryReader.ReadSingle();
+            this.postVocDelaySeconds = binaryReader.ReadSingle();
+            this.repeatDelaySeconds = binaryReader.ReadSingle();
+            this.weight01 = binaryReader.ReadSingle();
+            this.speakerFreezeTime = binaryReader.ReadSingle();
+            this.listenerFreezeTime = binaryReader.ReadSingle();
+            this.speakerEmotion = (SpeakerEmotion)binaryReader.ReadInt16();
+            this.listenerEmotion = (ListenerEmotion)binaryReader.ReadInt16();
+            this.playerSkipFraction = binaryReader.ReadSingle();
+            this.skipFraction = binaryReader.ReadSingle();
+            this.sampleLine = binaryReader.ReadStringID();
+            this.reponses = ReadResponseBlockArray(binaryReader);
+            this.children = ReadVocalizationDefinitionsBlock4Array(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(vocalization);
-                binaryWriter.Write(parentVocalization);
-                binaryWriter.Write(parentIndex);
-                binaryWriter.Write((Int16)priority);
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)glanceBehavior);
-                binaryWriter.Write((Int16)glanceRecipientBehavior);
-                binaryWriter.Write((Int16)perceptionType);
-                binaryWriter.Write((Int16)maxCombatStatus);
-                binaryWriter.Write((Int16)animationImpulse);
-                binaryWriter.Write((Int16)overlapPriority);
-                binaryWriter.Write(soundRepetitionDelayMinutes);
-                binaryWriter.Write(allowableQueueDelaySeconds);
-                binaryWriter.Write(preVocDelaySeconds);
-                binaryWriter.Write(notificationDelaySeconds);
-                binaryWriter.Write(postVocDelaySeconds);
-                binaryWriter.Write(repeatDelaySeconds);
-                binaryWriter.Write(weight01);
-                binaryWriter.Write(speakerFreezeTime);
-                binaryWriter.Write(listenerFreezeTime);
-                binaryWriter.Write((Int16)speakerEmotion);
-                binaryWriter.Write((Int16)listenerEmotion);
-                binaryWriter.Write(playerSkipFraction);
-                binaryWriter.Write(skipFraction);
-                binaryWriter.Write(sampleLine);
-                Guerilla.WriteBlockArray<ResponseBlock>(binaryWriter, reponses, nextAddress);
-                Guerilla.WriteBlockArray<VocalizationDefinitionsBlock4>(binaryWriter, children, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual ResponseBlock[] ReadResponseBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ResponseBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ResponseBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ResponseBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual VocalizationDefinitionsBlock4[] ReadVocalizationDefinitionsBlock4Array(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(VocalizationDefinitionsBlock4));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new VocalizationDefinitionsBlock4[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new VocalizationDefinitionsBlock4(binaryReader);
+                }
+            }
+            return array;
         }
         internal enum Priority : short
+        
         {
             None = 0,
             Recall = 1,
@@ -163,12 +173,14 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             Immediate = 1,
             Interrupt = 2,
             CancelLowPriority = 4,
         };
         internal enum GlanceBehaviorHowDoesTheSpeakerOfThisVocalizationDirectHisGaze : short
+        
         {
             NONE = 0,
             GlanceSubjectShort = 1,
@@ -179,6 +191,7 @@ namespace Moonfish.Guerilla.Tags
             GlanceFriendLong = 6,
         };
         internal enum GlanceRecipientBehaviorHowDoesSomeoneWhoHearsMeBehave : short
+        
         {
             NONE = 0,
             GlanceSubjectShort = 1,
@@ -189,12 +202,14 @@ namespace Moonfish.Guerilla.Tags
             GlanceFriendLong = 6,
         };
         internal enum PerceptionType : short
+        
         {
             None = 0,
             Speaker = 1,
             Listener = 2,
         };
         internal enum MaxCombatStatus : short
+        
         {
             Asleep = 0,
             Idle = 1,
@@ -208,6 +223,7 @@ namespace Moonfish.Guerilla.Tags
             Dangerous = 9,
         };
         internal enum AnimationImpulse : short
+        
         {
             None = 0,
             Shakefist = 1,
@@ -223,6 +239,7 @@ namespace Moonfish.Guerilla.Tags
             Fallback = 11,
         };
         internal enum OverlapPriority : short
+        
         {
             None = 0,
             Recall = 1,
@@ -242,6 +259,7 @@ namespace Moonfish.Guerilla.Tags
             Death = 15,
         };
         internal enum SpeakerEmotion : short
+        
         {
             None = 0,
             Asleep = 1,
@@ -259,6 +277,7 @@ namespace Moonfish.Guerilla.Tags
             Pain = 13,
         };
         internal enum ListenerEmotion : short
+        
         {
             None = 0,
             Asleep = 1,

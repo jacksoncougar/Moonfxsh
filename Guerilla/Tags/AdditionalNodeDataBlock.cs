@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 60, Alignment = 4)]
-    public class AdditionalNodeDataBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 60)]
+    public class AdditionalNodeDataBlockBase
     {
         internal Moonfish.Tags.StringID nodeName;
         internal OpenTK.Quaternion defaultRotation;
@@ -26,25 +25,26 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 maxBounds;
         internal  AdditionalNodeDataBlockBase(BinaryReader binaryReader)
         {
-            nodeName = binaryReader.ReadStringID();
-            defaultRotation = binaryReader.ReadQuaternion();
-            defaultTranslation = binaryReader.ReadVector3();
-            defaultScale = binaryReader.ReadSingle();
-            minBounds = binaryReader.ReadVector3();
-            maxBounds = binaryReader.ReadVector3();
+            this.nodeName = binaryReader.ReadStringID();
+            this.defaultRotation = binaryReader.ReadQuaternion();
+            this.defaultTranslation = binaryReader.ReadVector3();
+            this.defaultScale = binaryReader.ReadSingle();
+            this.minBounds = binaryReader.ReadVector3();
+            this.maxBounds = binaryReader.ReadVector3();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(nodeName);
-                binaryWriter.Write(defaultRotation);
-                binaryWriter.Write(defaultTranslation);
-                binaryWriter.Write(defaultScale);
-                binaryWriter.Write(minBounds);
-                binaryWriter.Write(maxBounds);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

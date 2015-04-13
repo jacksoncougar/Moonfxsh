@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 56, Alignment = 4)]
-    public class BitmapBlockReferenceBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 56)]
+    public class BitmapBlockReferenceBlockBase
     {
         internal Flags flags;
         internal AnimationIndex animationIndex;
@@ -36,52 +35,46 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector2 progressScale;
         internal  BitmapBlockReferenceBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
-            bitmapBlendMethod = (BitmapBlendMethod)binaryReader.ReadInt16();
-            initialSpriteFrame = binaryReader.ReadInt16();
-            topLeft = binaryReader.ReadPoint();
-            horizTextureWrapsSecond = binaryReader.ReadSingle();
-            vertTextureWrapsSecond = binaryReader.ReadSingle();
-            bitmapTag = binaryReader.ReadTagReference();
-            renderDepthBias = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            spriteAnimationSpeedFps = binaryReader.ReadSingle();
-            progressBottomLeft = binaryReader.ReadPoint();
-            stringIdentifier = binaryReader.ReadStringID();
-            progressScale = binaryReader.ReadVector2();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            this.introAnimationDelayMilliseconds = binaryReader.ReadInt16();
+            this.bitmapBlendMethod = (BitmapBlendMethod)binaryReader.ReadInt16();
+            this.initialSpriteFrame = binaryReader.ReadInt16();
+            this.topLeft = binaryReader.ReadPoint();
+            this.horizTextureWrapsSecond = binaryReader.ReadSingle();
+            this.vertTextureWrapsSecond = binaryReader.ReadSingle();
+            this.bitmapTag = binaryReader.ReadTagReference();
+            this.renderDepthBias = binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.spriteAnimationSpeedFps = binaryReader.ReadSingle();
+            this.progressBottomLeft = binaryReader.ReadPoint();
+            this.stringIdentifier = binaryReader.ReadStringID();
+            this.progressScale = binaryReader.ReadVector2();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)animationIndex);
-                binaryWriter.Write(introAnimationDelayMilliseconds);
-                binaryWriter.Write((Int16)bitmapBlendMethod);
-                binaryWriter.Write(initialSpriteFrame);
-                binaryWriter.Write(topLeft);
-                binaryWriter.Write(horizTextureWrapsSecond);
-                binaryWriter.Write(vertTextureWrapsSecond);
-                binaryWriter.Write(bitmapTag);
-                binaryWriter.Write(renderDepthBias);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(spriteAnimationSpeedFps);
-                binaryWriter.Write(progressBottomLeft);
-                binaryWriter.Write(stringIdentifier);
-                binaryWriter.Write(progressScale);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             IgnoreForListSkinSizeCalculation = 1,
             SwapOnRelativeListPosition = 2,
             RenderAsProgressBar = 4,
         };
         internal enum AnimationIndex : short
+        
         {
             NONE = 0,
             InvalidName00 = 1,
@@ -150,6 +143,7 @@ namespace Moonfish.Guerilla.Tags
             InvalidName63 = 64,
         };
         internal enum BitmapBlendMethod : short
+        
         {
             Standard = 0,
             Multiply = 1,

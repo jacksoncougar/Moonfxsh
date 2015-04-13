@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 48, Alignment = 4)]
-    public class ShapeBlockReferenceBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 48)]
+    public class ShapeBlockReferenceBlockBase
     {
         internal Flags flags;
         internal AnimationIndex animationIndex;
@@ -27,34 +26,51 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  ShapeBlockReferenceBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
-            color = binaryReader.ReadVector4();
-            points = Guerilla.ReadBlockArray<PointBlockReferenceBlock>(binaryReader);
-            renderDepthBias = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(14);
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            this.introAnimationDelayMilliseconds = binaryReader.ReadInt16();
+            this.color = binaryReader.ReadVector4();
+            this.points = ReadPointBlockReferenceBlockArray(binaryReader);
+            this.renderDepthBias = binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(14);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)animationIndex);
-                binaryWriter.Write(introAnimationDelayMilliseconds);
-                binaryWriter.Write(color);
-                Guerilla.WriteBlockArray<PointBlockReferenceBlock>(binaryWriter, points, nextAddress);
-                binaryWriter.Write(renderDepthBias);
-                binaryWriter.Write(invalidName_, 0, 14);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual PointBlockReferenceBlock[] ReadPointBlockReferenceBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PointBlockReferenceBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PointBlockReferenceBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PointBlockReferenceBlock(binaryReader);
+                }
+            }
+            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             Unused = 1,
         };
         internal enum AnimationIndex : short
+        
         {
             NONE = 0,
             InvalidName00 = 1,

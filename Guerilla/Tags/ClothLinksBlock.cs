@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class ClothLinksBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 16)]
+    public class ClothLinksBlockBase
     {
         internal int attachmentBits;
         internal short index1;
@@ -25,23 +24,25 @@ namespace Moonfish.Guerilla.Tags
         internal float dampingMultiplier;
         internal  ClothLinksBlockBase(BinaryReader binaryReader)
         {
-            attachmentBits = binaryReader.ReadInt32();
-            index1 = binaryReader.ReadInt16();
-            index2 = binaryReader.ReadInt16();
-            defaultDistance = binaryReader.ReadSingle();
-            dampingMultiplier = binaryReader.ReadSingle();
+            this.attachmentBits = binaryReader.ReadInt32();
+            this.index1 = binaryReader.ReadInt16();
+            this.index2 = binaryReader.ReadInt16();
+            this.defaultDistance = binaryReader.ReadSingle();
+            this.dampingMultiplier = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(attachmentBits);
-                binaryWriter.Write(index1);
-                binaryWriter.Write(index2);
-                binaryWriter.Write(defaultDistance);
-                binaryWriter.Write(dampingMultiplier);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

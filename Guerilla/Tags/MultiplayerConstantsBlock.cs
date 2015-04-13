@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 352, Alignment = 4)]
-    public class MultiplayerConstantsBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 352)]
+    public class MultiplayerConstantsBlockBase
     {
         internal float maximumRandomSpawnBias;
         internal float teleporterRechargeTimeSeconds;
@@ -53,65 +52,46 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_6;
         internal  MultiplayerConstantsBlockBase(BinaryReader binaryReader)
         {
-            maximumRandomSpawnBias = binaryReader.ReadSingle();
-            teleporterRechargeTimeSeconds = binaryReader.ReadSingle();
-            grenadeDangerWeight = binaryReader.ReadSingle();
-            grenadeDangerInnerRadius = binaryReader.ReadSingle();
-            grenadeDangerOuterRadius = binaryReader.ReadSingle();
-            grenadeDangerLeadTimeSeconds = binaryReader.ReadSingle();
-            vehicleDangerMinSpeedWuSec = binaryReader.ReadSingle();
-            vehicleDangerWeight = binaryReader.ReadSingle();
-            vehicleDangerRadius = binaryReader.ReadSingle();
-            vehicleDangerLeadTimeSeconds = binaryReader.ReadSingle();
-            vehicleNearbyPlayerDist = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(84);
-            invalidName_0 = binaryReader.ReadBytes(32);
-            invalidName_1 = binaryReader.ReadBytes(32);
-            hillShader = binaryReader.ReadTagReference();
-            invalidName_2 = binaryReader.ReadBytes(16);
-            flagResetStopDistance = binaryReader.ReadSingle();
-            bombExplodeEffect = binaryReader.ReadTagReference();
-            bombExplodeDmgEffect = binaryReader.ReadTagReference();
-            bombDefuseEffect = binaryReader.ReadTagReference();
-            bombDefusalString = binaryReader.ReadStringID();
-            blockedTeleporterString = binaryReader.ReadStringID();
-            invalidName_3 = binaryReader.ReadBytes(4);
-            invalidName_4 = binaryReader.ReadBytes(32);
-            invalidName_5 = binaryReader.ReadBytes(32);
-            invalidName_6 = binaryReader.ReadBytes(32);
+            this.maximumRandomSpawnBias = binaryReader.ReadSingle();
+            this.teleporterRechargeTimeSeconds = binaryReader.ReadSingle();
+            this.grenadeDangerWeight = binaryReader.ReadSingle();
+            this.grenadeDangerInnerRadius = binaryReader.ReadSingle();
+            this.grenadeDangerOuterRadius = binaryReader.ReadSingle();
+            this.grenadeDangerLeadTimeSeconds = binaryReader.ReadSingle();
+            this.vehicleDangerMinSpeedWuSec = binaryReader.ReadSingle();
+            this.vehicleDangerWeight = binaryReader.ReadSingle();
+            this.vehicleDangerRadius = binaryReader.ReadSingle();
+            this.vehicleDangerLeadTimeSeconds = binaryReader.ReadSingle();
+            this.vehicleNearbyPlayerDist = binaryReader.ReadSingle();
+            this.invalidName_ = binaryReader.ReadBytes(84);
+            this.invalidName_0 = binaryReader.ReadBytes(32);
+            this.invalidName_1 = binaryReader.ReadBytes(32);
+            this.hillShader = binaryReader.ReadTagReference();
+            this.invalidName_2 = binaryReader.ReadBytes(16);
+            this.flagResetStopDistance = binaryReader.ReadSingle();
+            this.bombExplodeEffect = binaryReader.ReadTagReference();
+            this.bombExplodeDmgEffect = binaryReader.ReadTagReference();
+            this.bombDefuseEffect = binaryReader.ReadTagReference();
+            this.bombDefusalString = binaryReader.ReadStringID();
+            this.blockedTeleporterString = binaryReader.ReadStringID();
+            this.invalidName_3 = binaryReader.ReadBytes(4);
+            this.invalidName_4 = binaryReader.ReadBytes(32);
+            this.invalidName_5 = binaryReader.ReadBytes(32);
+            this.invalidName_6 = binaryReader.ReadBytes(32);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(maximumRandomSpawnBias);
-                binaryWriter.Write(teleporterRechargeTimeSeconds);
-                binaryWriter.Write(grenadeDangerWeight);
-                binaryWriter.Write(grenadeDangerInnerRadius);
-                binaryWriter.Write(grenadeDangerOuterRadius);
-                binaryWriter.Write(grenadeDangerLeadTimeSeconds);
-                binaryWriter.Write(vehicleDangerMinSpeedWuSec);
-                binaryWriter.Write(vehicleDangerWeight);
-                binaryWriter.Write(vehicleDangerRadius);
-                binaryWriter.Write(vehicleDangerLeadTimeSeconds);
-                binaryWriter.Write(vehicleNearbyPlayerDist);
-                binaryWriter.Write(invalidName_, 0, 84);
-                binaryWriter.Write(invalidName_0, 0, 32);
-                binaryWriter.Write(invalidName_1, 0, 32);
-                binaryWriter.Write(hillShader);
-                binaryWriter.Write(invalidName_2, 0, 16);
-                binaryWriter.Write(flagResetStopDistance);
-                binaryWriter.Write(bombExplodeEffect);
-                binaryWriter.Write(bombExplodeDmgEffect);
-                binaryWriter.Write(bombDefuseEffect);
-                binaryWriter.Write(bombDefusalString);
-                binaryWriter.Write(blockedTeleporterString);
-                binaryWriter.Write(invalidName_3, 0, 4);
-                binaryWriter.Write(invalidName_4, 0, 32);
-                binaryWriter.Write(invalidName_5, 0, 32);
-                binaryWriter.Write(invalidName_6, 0, 32);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

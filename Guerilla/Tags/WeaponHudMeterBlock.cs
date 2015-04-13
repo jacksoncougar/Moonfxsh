@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 165, Alignment = 4)]
-    public class WeaponHudMeterBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 165)]
+    public class WeaponHudMeterBlockBase
     {
         internal StateAttachedTo stateAttachedTo;
         internal byte[] invalidName_;
@@ -52,71 +51,66 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_5;
         internal  WeaponHudMeterBlockBase(BinaryReader binaryReader)
         {
-            stateAttachedTo = (StateAttachedTo)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            canUseOnMapType = (CanUseOnMapType)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            invalidName_1 = binaryReader.ReadBytes(28);
-            anchorOffset = binaryReader.ReadPoint();
-            widthScale = binaryReader.ReadSingle();
-            heightScale = binaryReader.ReadSingle();
-            scalingFlags = (ScalingFlags)binaryReader.ReadInt16();
-            invalidName_2 = binaryReader.ReadBytes(2);
-            invalidName_3 = binaryReader.ReadBytes(20);
-            meterBitmap = binaryReader.ReadTagReference();
-            colorAtMeterMinimum = binaryReader.ReadRGBColor();
-            colorAtMeterMaximum = binaryReader.ReadRGBColor();
-            flashColor = binaryReader.ReadRGBColor();
-            emptyColor = binaryReader.ReadColourA1R1G1B1();
-            flags = (Flags)binaryReader.ReadByte();
-            minumumMeterValue = binaryReader.ReadByte();
-            sequenceIndex = binaryReader.ReadInt16();
-            alphaMultiplier = binaryReader.ReadByte();
-            alphaBias = binaryReader.ReadByte();
-            valueScale = binaryReader.ReadInt16();
-            opacity = binaryReader.ReadSingle();
-            translucency = binaryReader.ReadSingle();
-            disabledColor = binaryReader.ReadColourA1R1G1B1();
-            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            invalidName_4 = binaryReader.ReadBytes(4);
-            invalidName_5 = binaryReader.ReadBytes(40);
+            this.stateAttachedTo = (StateAttachedTo)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.canUseOnMapType = (CanUseOnMapType)binaryReader.ReadInt16();
+            this.invalidName_0 = binaryReader.ReadBytes(2);
+            this.invalidName_1 = binaryReader.ReadBytes(28);
+            this.anchorOffset = binaryReader.ReadPoint();
+            this.widthScale = binaryReader.ReadSingle();
+            this.heightScale = binaryReader.ReadSingle();
+            this.scalingFlags = (ScalingFlags)binaryReader.ReadInt16();
+            this.invalidName_2 = binaryReader.ReadBytes(2);
+            this.invalidName_3 = binaryReader.ReadBytes(20);
+            this.meterBitmap = binaryReader.ReadTagReference();
+            this.colorAtMeterMinimum = binaryReader.ReadRGBColor();
+            this.colorAtMeterMaximum = binaryReader.ReadRGBColor();
+            this.flashColor = binaryReader.ReadRGBColor();
+            this.emptyColor = binaryReader.ReadColourA1R1G1B1();
+            this.flags = (Flags)binaryReader.ReadByte();
+            this.minumumMeterValue = binaryReader.ReadByte();
+            this.sequenceIndex = binaryReader.ReadInt16();
+            this.alphaMultiplier = binaryReader.ReadByte();
+            this.alphaBias = binaryReader.ReadByte();
+            this.valueScale = binaryReader.ReadInt16();
+            this.opacity = binaryReader.ReadSingle();
+            this.translucency = binaryReader.ReadSingle();
+            this.disabledColor = binaryReader.ReadColourA1R1G1B1();
+            this.gNullBlock = ReadGNullBlockArray(binaryReader);
+            this.invalidName_4 = binaryReader.ReadBytes(4);
+            this.invalidName_5 = binaryReader.ReadBytes(40);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)stateAttachedTo);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int16)canUseOnMapType);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write(invalidName_1, 0, 28);
-                binaryWriter.Write(anchorOffset);
-                binaryWriter.Write(widthScale);
-                binaryWriter.Write(heightScale);
-                binaryWriter.Write((Int16)scalingFlags);
-                binaryWriter.Write(invalidName_2, 0, 2);
-                binaryWriter.Write(invalidName_3, 0, 20);
-                binaryWriter.Write(meterBitmap);
-                binaryWriter.Write(colorAtMeterMinimum);
-                binaryWriter.Write(colorAtMeterMaximum);
-                binaryWriter.Write(flashColor);
-                binaryWriter.Write(emptyColor);
-                binaryWriter.Write((Byte)flags);
-                binaryWriter.Write(minumumMeterValue);
-                binaryWriter.Write(sequenceIndex);
-                binaryWriter.Write(alphaMultiplier);
-                binaryWriter.Write(alphaBias);
-                binaryWriter.Write(valueScale);
-                binaryWriter.Write(opacity);
-                binaryWriter.Write(translucency);
-                binaryWriter.Write(disabledColor);
-                Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock, nextAddress);
-                binaryWriter.Write(invalidName_4, 0, 4);
-                binaryWriter.Write(invalidName_5, 0, 40);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual GNullBlock[] ReadGNullBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(GNullBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new GNullBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new GNullBlock(binaryReader);
+                }
+            }
+            return array;
         }
         internal enum StateAttachedTo : short
+        
         {
             InventoryAmmo = 0,
             LoadedAmmo = 1,
@@ -128,6 +122,7 @@ namespace Moonfish.Guerilla.Tags
             ElevationToTarget = 7,
         };
         internal enum CanUseOnMapType : short
+        
         {
             Any = 0,
             Solo = 1,
@@ -135,12 +130,14 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum ScalingFlags : short
+        
         {
             DontScaleOffset = 1,
             DontScaleSize = 2,
         };
         [FlagsAttribute]
         internal enum Flags : byte
+        
         {
             UseMinMaxForStateChanges = 1,
             InterpolateBetweenMinMaxFlashColorsAsStateChanges = 2,

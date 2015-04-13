@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class CharacterEngageBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 16)]
+    public class CharacterEngageBlockBase
     {
         internal Flags flags;
         /// <summary>
@@ -33,24 +32,28 @@ namespace Moonfish.Guerilla.Tags
         internal float fightDangerMoveThreshold;
         internal  CharacterEngageBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            crouchDangerThreshold = binaryReader.ReadSingle();
-            standDangerThreshold = binaryReader.ReadSingle();
-            fightDangerMoveThreshold = binaryReader.ReadSingle();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.crouchDangerThreshold = binaryReader.ReadSingle();
+            this.standDangerThreshold = binaryReader.ReadSingle();
+            this.fightDangerMoveThreshold = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(crouchDangerThreshold);
-                binaryWriter.Write(standDangerThreshold);
-                binaryWriter.Write(fightDangerMoveThreshold);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             EngagePerch = 1,
             FightConstantMovement = 2,

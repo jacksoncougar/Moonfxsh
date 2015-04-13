@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,27 +14,31 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class AnimationSoundEventBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 8)]
+    public class AnimationSoundEventBlockBase
     {
         internal Moonfish.Tags.ShortBlockIndex1 sound;
         internal short frame;
         internal Moonfish.Tags.StringID markerName;
         internal  AnimationSoundEventBlockBase(BinaryReader binaryReader)
         {
-            sound = binaryReader.ReadShortBlockIndex1();
-            frame = binaryReader.ReadInt16();
-            markerName = binaryReader.ReadStringID();
+            this.sound = binaryReader.ReadShortBlockIndex1();
+            this.frame = binaryReader.ReadInt16();
+            this.markerName = binaryReader.ReadStringID();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(sound);
-                binaryWriter.Write(frame);
-                binaryWriter.Write(markerName);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

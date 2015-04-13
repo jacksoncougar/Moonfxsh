@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 72, Alignment = 4)]
-    public class RasterizerScreenEffectTexcoordGenerationAdvancedControlBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 72)]
+    public class RasterizerScreenEffectTexcoordGenerationAdvancedControlBlockBase
     {
         internal Stage0Flags stage0Flags;
         internal Stage1Flags stage1Flags;
@@ -28,47 +27,50 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector4 stage3Offset;
         internal  RasterizerScreenEffectTexcoordGenerationAdvancedControlBlockBase(BinaryReader binaryReader)
         {
-            stage0Flags = (Stage0Flags)binaryReader.ReadInt16();
-            stage1Flags = (Stage1Flags)binaryReader.ReadInt16();
-            stage2Flags = (Stage2Flags)binaryReader.ReadInt16();
-            stage3Flags = (Stage3Flags)binaryReader.ReadInt16();
-            stage0Offset = binaryReader.ReadVector4();
-            stage1Offset = binaryReader.ReadVector4();
-            stage2Offset = binaryReader.ReadVector4();
-            stage3Offset = binaryReader.ReadVector4();
+            this.stage0Flags = (Stage0Flags)binaryReader.ReadInt16();
+            this.stage1Flags = (Stage1Flags)binaryReader.ReadInt16();
+            this.stage2Flags = (Stage2Flags)binaryReader.ReadInt16();
+            this.stage3Flags = (Stage3Flags)binaryReader.ReadInt16();
+            this.stage0Offset = binaryReader.ReadVector4();
+            this.stage1Offset = binaryReader.ReadVector4();
+            this.stage2Offset = binaryReader.ReadVector4();
+            this.stage3Offset = binaryReader.ReadVector4();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)stage0Flags);
-                binaryWriter.Write((Int16)stage1Flags);
-                binaryWriter.Write((Int16)stage2Flags);
-                binaryWriter.Write((Int16)stage3Flags);
-                binaryWriter.Write(stage0Offset);
-                binaryWriter.Write(stage1Offset);
-                binaryWriter.Write(stage2Offset);
-                binaryWriter.Write(stage3Offset);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Stage0Flags : short
+        
         {
             XyScaledByZFar = 1,
         };
         [FlagsAttribute]
         internal enum Stage1Flags : short
+        
         {
             XyScaledByZFar = 1,
         };
         [FlagsAttribute]
         internal enum Stage2Flags : short
+        
         {
             XyScaledByZFar = 1,
         };
         [FlagsAttribute]
         internal enum Stage3Flags : short
+        
         {
             XyScaledByZFar = 1,
         };

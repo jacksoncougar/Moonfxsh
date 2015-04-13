@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 40, Alignment = 4)]
-    public class ShaderTemplatePostprocessDefinitionNewBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 40)]
+    public class ShaderTemplatePostprocessDefinitionNewBlockBase
     {
         internal ShaderTemplatePostprocessLevelOfDetailNewBlock[] levelsOfDetail;
         internal TagBlockIndexBlock[] layers;
@@ -25,23 +24,100 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderTemplatePostprocessRemappingNewBlock[] remappings;
         internal  ShaderTemplatePostprocessDefinitionNewBlockBase(BinaryReader binaryReader)
         {
-            levelsOfDetail = Guerilla.ReadBlockArray<ShaderTemplatePostprocessLevelOfDetailNewBlock>(binaryReader);
-            layers = Guerilla.ReadBlockArray<TagBlockIndexBlock>(binaryReader);
-            passes = Guerilla.ReadBlockArray<ShaderTemplatePostprocessPassNewBlock>(binaryReader);
-            implementations = Guerilla.ReadBlockArray<ShaderTemplatePostprocessImplementationNewBlock>(binaryReader);
-            remappings = Guerilla.ReadBlockArray<ShaderTemplatePostprocessRemappingNewBlock>(binaryReader);
+            this.levelsOfDetail = ReadShaderTemplatePostprocessLevelOfDetailNewBlockArray(binaryReader);
+            this.layers = ReadTagBlockIndexBlockArray(binaryReader);
+            this.passes = ReadShaderTemplatePostprocessPassNewBlockArray(binaryReader);
+            this.implementations = ReadShaderTemplatePostprocessImplementationNewBlockArray(binaryReader);
+            this.remappings = ReadShaderTemplatePostprocessRemappingNewBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                Guerilla.WriteBlockArray<ShaderTemplatePostprocessLevelOfDetailNewBlock>(binaryWriter, levelsOfDetail, nextAddress);
-                Guerilla.WriteBlockArray<TagBlockIndexBlock>(binaryWriter, layers, nextAddress);
-                Guerilla.WriteBlockArray<ShaderTemplatePostprocessPassNewBlock>(binaryWriter, passes, nextAddress);
-                Guerilla.WriteBlockArray<ShaderTemplatePostprocessImplementationNewBlock>(binaryWriter, implementations, nextAddress);
-                Guerilla.WriteBlockArray<ShaderTemplatePostprocessRemappingNewBlock>(binaryWriter, remappings, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual ShaderTemplatePostprocessLevelOfDetailNewBlock[] ReadShaderTemplatePostprocessLevelOfDetailNewBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderTemplatePostprocessLevelOfDetailNewBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderTemplatePostprocessLevelOfDetailNewBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderTemplatePostprocessLevelOfDetailNewBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual TagBlockIndexBlock[] ReadTagBlockIndexBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(TagBlockIndexBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new TagBlockIndexBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new TagBlockIndexBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderTemplatePostprocessPassNewBlock[] ReadShaderTemplatePostprocessPassNewBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderTemplatePostprocessPassNewBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderTemplatePostprocessPassNewBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderTemplatePostprocessPassNewBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderTemplatePostprocessImplementationNewBlock[] ReadShaderTemplatePostprocessImplementationNewBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderTemplatePostprocessImplementationNewBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderTemplatePostprocessImplementationNewBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderTemplatePostprocessImplementationNewBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderTemplatePostprocessRemappingNewBlock[] ReadShaderTemplatePostprocessRemappingNewBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderTemplatePostprocessRemappingNewBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderTemplatePostprocessRemappingNewBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderTemplatePostprocessRemappingNewBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

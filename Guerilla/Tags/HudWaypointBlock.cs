@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class HudWaypointBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class HudWaypointBlockBase
     {
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference bitmap;
@@ -28,25 +27,26 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  HudWaypointBlockBase(BinaryReader binaryReader)
         {
-            bitmap = binaryReader.ReadTagReference();
-            shader = binaryReader.ReadTagReference();
-            onscreenSequenceIndex = binaryReader.ReadInt16();
-            occludedSequenceIndex = binaryReader.ReadInt16();
-            offscreenSequenceIndex = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
+            this.bitmap = binaryReader.ReadTagReference();
+            this.shader = binaryReader.ReadTagReference();
+            this.onscreenSequenceIndex = binaryReader.ReadInt16();
+            this.occludedSequenceIndex = binaryReader.ReadInt16();
+            this.offscreenSequenceIndex = binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(bitmap);
-                binaryWriter.Write(shader);
-                binaryWriter.Write(onscreenSequenceIndex);
-                binaryWriter.Write(occludedSequenceIndex);
-                binaryWriter.Write(offscreenSequenceIndex);
-                binaryWriter.Write(invalidName_, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

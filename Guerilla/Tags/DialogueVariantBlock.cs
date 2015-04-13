@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class DialogueVariantBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 12)]
+    public class DialogueVariantBlockBase
     {
         /// <summary>
         /// variantNumber to use this dialogue with (must match the suffix in the permutations on the unit's model)
@@ -27,19 +26,23 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference dialogue;
         internal  DialogueVariantBlockBase(BinaryReader binaryReader)
         {
-            variantNumber = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            dialogue = binaryReader.ReadTagReference();
+            this.variantNumber = binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.dialogue = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(variantNumber);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(dialogue);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

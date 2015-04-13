@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 84, Alignment = 4)]
-    public class HudTextWidgetsBase  : IGuerilla
+    [LayoutAttribute(Size = 84)]
+    public class HudTextWidgetsBase
     {
         internal Moonfish.Tags.StringID name;
         internal HudWidgetInputsStructBlock hudWidgetInputsStruct;
@@ -41,55 +40,58 @@ namespace Moonfish.Guerilla.Tags
         internal HudWidgetEffectBlock[] effect;
         internal  HudTextWidgetsBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadStringID();
-            hudWidgetInputsStruct = new HudWidgetInputsStructBlock(binaryReader);
-            hudWidgetStateDefinitionStruct = new HudWidgetStateDefinitionStructBlock(binaryReader);
-            anchor = (Anchor)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            shader = binaryReader.ReadTagReference();
-            _string = binaryReader.ReadStringID();
-            justification = (Justification)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            fullscreenFontIndex = (FullscreenFontIndex)binaryReader.ReadByte();
-            halfscreenFontIndex = (HalfscreenFontIndex)binaryReader.ReadByte();
-            quarterscreenFontIndex = (QuarterscreenFontIndex)binaryReader.ReadByte();
-            invalidName_0 = binaryReader.ReadBytes(1);
-            fullscreenScale = binaryReader.ReadSingle();
-            halfscreenScale = binaryReader.ReadSingle();
-            quarterscreenScale = binaryReader.ReadSingle();
-            fullscreenOffset = binaryReader.ReadPoint();
-            halfscreenOffset = binaryReader.ReadPoint();
-            quarterscreenOffset = binaryReader.ReadPoint();
-            effect = Guerilla.ReadBlockArray<HudWidgetEffectBlock>(binaryReader);
+            this.name = binaryReader.ReadStringID();
+            this.hudWidgetInputsStruct = new HudWidgetInputsStructBlock(binaryReader);
+            this.hudWidgetStateDefinitionStruct = new HudWidgetStateDefinitionStructBlock(binaryReader);
+            this.anchor = (Anchor)binaryReader.ReadInt16();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.shader = binaryReader.ReadTagReference();
+            this._string = binaryReader.ReadStringID();
+            this.justification = (Justification)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.fullscreenFontIndex = (FullscreenFontIndex)binaryReader.ReadByte();
+            this.halfscreenFontIndex = (HalfscreenFontIndex)binaryReader.ReadByte();
+            this.quarterscreenFontIndex = (QuarterscreenFontIndex)binaryReader.ReadByte();
+            this.invalidName_0 = binaryReader.ReadBytes(1);
+            this.fullscreenScale = binaryReader.ReadSingle();
+            this.halfscreenScale = binaryReader.ReadSingle();
+            this.quarterscreenScale = binaryReader.ReadSingle();
+            this.fullscreenOffset = binaryReader.ReadPoint();
+            this.halfscreenOffset = binaryReader.ReadPoint();
+            this.quarterscreenOffset = binaryReader.ReadPoint();
+            this.effect = ReadHudWidgetEffectBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                hudWidgetInputsStruct.Write(binaryWriter);
-                hudWidgetStateDefinitionStruct.Write(binaryWriter);
-                binaryWriter.Write((Int16)anchor);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(shader);
-                binaryWriter.Write(_string);
-                binaryWriter.Write((Int16)justification);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Byte)fullscreenFontIndex);
-                binaryWriter.Write((Byte)halfscreenFontIndex);
-                binaryWriter.Write((Byte)quarterscreenFontIndex);
-                binaryWriter.Write(invalidName_0, 0, 1);
-                binaryWriter.Write(fullscreenScale);
-                binaryWriter.Write(halfscreenScale);
-                binaryWriter.Write(quarterscreenScale);
-                binaryWriter.Write(fullscreenOffset);
-                binaryWriter.Write(halfscreenOffset);
-                binaryWriter.Write(quarterscreenOffset);
-                Guerilla.WriteBlockArray<HudWidgetEffectBlock>(binaryWriter, effect, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual HudWidgetEffectBlock[] ReadHudWidgetEffectBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(HudWidgetEffectBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new HudWidgetEffectBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new HudWidgetEffectBlock(binaryReader);
+                }
+            }
+            return array;
         }
         internal enum Anchor : short
+        
         {
             HealthAndShield = 0,
             WeaponHud = 1,
@@ -100,6 +102,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             StringIsANumber = 1,
             Force2DigitNumber = 2,
@@ -107,22 +110,26 @@ namespace Moonfish.Guerilla.Tags
             TalkingPlayerHack = 8,
         };
         internal enum Justification : short
+        
         {
             Left = 0,
             Center = 1,
             Right = 2,
         };
         internal enum FullscreenFontIndex : byte
+        
         {
             Defualt = 0,
             NumberFont = 1,
         };
         internal enum HalfscreenFontIndex : byte
+        
         {
             Defualt = 0,
             NumberFont = 1,
         };
         internal enum QuarterscreenFontIndex : byte
+        
         {
             Defualt = 0,
             NumberFont = 1,

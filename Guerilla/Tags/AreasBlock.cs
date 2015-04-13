@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 136, Alignment = 4)]
-    public class AreasBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 136)]
+    public class AreasBlockBase
     {
         internal Moonfish.Tags.String32 name;
         internal AreaFlags areaFlags;
@@ -28,32 +27,47 @@ namespace Moonfish.Guerilla.Tags
         internal FlightReferenceBlock[] flightHints;
         internal  AreasBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadString32();
-            areaFlags = (AreaFlags)binaryReader.ReadInt32();
-            invalidName_ = binaryReader.ReadBytes(20);
-            invalidName_0 = binaryReader.ReadBytes(4);
-            invalidName_1 = binaryReader.ReadBytes(64);
-            manualReferenceFrame = binaryReader.ReadInt16();
-            invalidName_2 = binaryReader.ReadBytes(2);
-            flightHints = Guerilla.ReadBlockArray<FlightReferenceBlock>(binaryReader);
+            this.name = binaryReader.ReadString32();
+            this.areaFlags = (AreaFlags)binaryReader.ReadInt32();
+            this.invalidName_ = binaryReader.ReadBytes(20);
+            this.invalidName_0 = binaryReader.ReadBytes(4);
+            this.invalidName_1 = binaryReader.ReadBytes(64);
+            this.manualReferenceFrame = binaryReader.ReadInt16();
+            this.invalidName_2 = binaryReader.ReadBytes(2);
+            this.flightHints = ReadFlightReferenceBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write((Int32)areaFlags);
-                binaryWriter.Write(invalidName_, 0, 20);
-                binaryWriter.Write(invalidName_0, 0, 4);
-                binaryWriter.Write(invalidName_1, 0, 64);
-                binaryWriter.Write(manualReferenceFrame);
-                binaryWriter.Write(invalidName_2, 0, 2);
-                Guerilla.WriteBlockArray<FlightReferenceBlock>(binaryWriter, flightHints, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual FlightReferenceBlock[] ReadFlightReferenceBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(FlightReferenceBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new FlightReferenceBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new FlightReferenceBlock(binaryReader);
+                }
+            }
+            return array;
         }
         [FlagsAttribute]
         internal enum AreaFlags : int
+        
         {
             VehicleArea = 1,
             Perch = 2,

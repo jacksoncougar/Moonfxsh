@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,27 +14,31 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 264, Alignment = 4)]
-    public class RuntimeCampaignLevelBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 264)]
+    public class RuntimeCampaignLevelBlockBase
     {
         internal int campaignID;
         internal int mapID;
         internal Moonfish.Tags.String256 path;
         internal  RuntimeCampaignLevelBlockBase(BinaryReader binaryReader)
         {
-            campaignID = binaryReader.ReadInt32();
-            mapID = binaryReader.ReadInt32();
-            path = binaryReader.ReadString256();
+            this.campaignID = binaryReader.ReadInt32();
+            this.mapID = binaryReader.ReadInt32();
+            this.path = binaryReader.ReadString256();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(campaignID);
-                binaryWriter.Write(mapID);
-                binaryWriter.Write(path);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

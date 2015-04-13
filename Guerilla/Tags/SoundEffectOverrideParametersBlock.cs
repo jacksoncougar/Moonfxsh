@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32, Alignment = 4)]
-    public class SoundEffectOverrideParametersBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 32)]
+    public class SoundEffectOverrideParametersBlockBase
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.StringID input;
@@ -27,27 +26,27 @@ namespace Moonfish.Guerilla.Tags
         internal MappingFunctionBlock functionValue;
         internal  SoundEffectOverrideParametersBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadStringID();
-            input = binaryReader.ReadStringID();
-            range = binaryReader.ReadStringID();
-            timePeriodSeconds = binaryReader.ReadSingle();
-            integerValue = binaryReader.ReadInt32();
-            realValue = binaryReader.ReadSingle();
-            functionValue = new MappingFunctionBlock(binaryReader);
+            this.name = binaryReader.ReadStringID();
+            this.input = binaryReader.ReadStringID();
+            this.range = binaryReader.ReadStringID();
+            this.timePeriodSeconds = binaryReader.ReadSingle();
+            this.integerValue = binaryReader.ReadInt32();
+            this.realValue = binaryReader.ReadSingle();
+            this.functionValue = new MappingFunctionBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(input);
-                binaryWriter.Write(range);
-                binaryWriter.Write(timePeriodSeconds);
-                binaryWriter.Write(integerValue);
-                binaryWriter.Write(realValue);
-                functionValue.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

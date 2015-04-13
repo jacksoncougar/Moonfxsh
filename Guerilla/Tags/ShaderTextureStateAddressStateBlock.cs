@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ShaderTextureStateAddressStateBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 8)]
+    public class ShaderTextureStateAddressStateBlockBase
     {
         internal UAddressMode uAddressMode;
         internal VAddressMode vAddressMode;
@@ -24,23 +23,27 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  ShaderTextureStateAddressStateBlockBase(BinaryReader binaryReader)
         {
-            uAddressMode = (UAddressMode)binaryReader.ReadInt16();
-            vAddressMode = (VAddressMode)binaryReader.ReadInt16();
-            wAddressMode = (WAddressMode)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
+            this.uAddressMode = (UAddressMode)binaryReader.ReadInt16();
+            this.vAddressMode = (VAddressMode)binaryReader.ReadInt16();
+            this.wAddressMode = (WAddressMode)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)uAddressMode);
-                binaryWriter.Write((Int16)vAddressMode);
-                binaryWriter.Write((Int16)wAddressMode);
-                binaryWriter.Write(invalidName_, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum UAddressMode : short
+        
         {
             Wrap = 0,
             Mirror = 1,
@@ -49,6 +52,7 @@ namespace Moonfish.Guerilla.Tags
             ClampToEdge = 4,
         };
         internal enum VAddressMode : short
+        
         {
             Wrap = 0,
             Mirror = 1,
@@ -57,6 +61,7 @@ namespace Moonfish.Guerilla.Tags
             ClampToEdge = 4,
         };
         internal enum WAddressMode : short
+        
         {
             Wrap = 0,
             Mirror = 1,

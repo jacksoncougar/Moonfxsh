@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass HlmtClass = (TagClass)"hlmt";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 252, Alignment = 4)]
-    public class ModelBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 252)]
+    public class ModelBlockBase
     {
         [TagReference("mode")]
         internal Moonfish.Tags.TagReference renderModel;
@@ -77,145 +68,177 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID hologramControlFunction;
         internal  ModelBlockBase(BinaryReader binaryReader)
         {
-            renderModel = binaryReader.ReadTagReference();
-            collisionModel = binaryReader.ReadTagReference();
-            animation = binaryReader.ReadTagReference();
-            physics = binaryReader.ReadTagReference();
-            physicsModel = binaryReader.ReadTagReference();
-            disappearDistanceWorldUnits = binaryReader.ReadSingle();
-            beginFadeDistanceWorldUnits = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(4);
-            reduceToL1WorldUnitsSuperLow = binaryReader.ReadSingle();
-            reduceToL2WorldUnitsLow = binaryReader.ReadSingle();
-            reduceToL3WorldUnitsMedium = binaryReader.ReadSingle();
-            reduceToL4WorldUnitsHigh = binaryReader.ReadSingle();
-            reduceToL5WorldUnitsSuperHigh = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            shadowFadeDistance = (ShadowFadeDistance)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            variants = Guerilla.ReadBlockArray<ModelVariantBlock>(binaryReader);
-            materials = Guerilla.ReadBlockArray<ModelMaterialBlock>(binaryReader);
-            newDamageInfo = Guerilla.ReadBlockArray<GlobalDamageInfoBlock>(binaryReader);
-            targets = Guerilla.ReadBlockArray<ModelTargetBlock>(binaryReader);
-            modelRegionBlock = Guerilla.ReadBlockArray<ModelRegionBlock>(binaryReader);
-            modelNodeBlock = Guerilla.ReadBlockArray<ModelNodeBlock>(binaryReader);
-            invalidName_2 = binaryReader.ReadBytes(4);
-            modelObjectData = Guerilla.ReadBlockArray<ModelObjectDataBlock>(binaryReader);
-            defaultDialogue = binaryReader.ReadTagReference();
-            uNUSED = binaryReader.ReadTagReference();
-            flags = (Flags)binaryReader.ReadInt32();
-            defaultDialogueEffect = binaryReader.ReadStringID();
-            renderOnlyNodeFlags = new []{ new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader),  };
-            renderOnlySectionFlags = new []{ new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader),  };
-            runtimeFlags = (RuntimeFlags)binaryReader.ReadInt32();
-            scenarioLoadParameters = Guerilla.ReadBlockArray<GlobalScenarioLoadParametersBlock>(binaryReader);
-            hologramShader = binaryReader.ReadTagReference();
-            hologramControlFunction = binaryReader.ReadStringID();
+            this.renderModel = binaryReader.ReadTagReference();
+            this.collisionModel = binaryReader.ReadTagReference();
+            this.animation = binaryReader.ReadTagReference();
+            this.physics = binaryReader.ReadTagReference();
+            this.physicsModel = binaryReader.ReadTagReference();
+            this.disappearDistanceWorldUnits = binaryReader.ReadSingle();
+            this.beginFadeDistanceWorldUnits = binaryReader.ReadSingle();
+            this.invalidName_ = binaryReader.ReadBytes(4);
+            this.reduceToL1WorldUnitsSuperLow = binaryReader.ReadSingle();
+            this.reduceToL2WorldUnitsLow = binaryReader.ReadSingle();
+            this.reduceToL3WorldUnitsMedium = binaryReader.ReadSingle();
+            this.reduceToL4WorldUnitsHigh = binaryReader.ReadSingle();
+            this.reduceToL5WorldUnitsSuperHigh = binaryReader.ReadSingle();
+            this.invalidName_0 = binaryReader.ReadBytes(4);
+            this.shadowFadeDistance = (ShadowFadeDistance)binaryReader.ReadInt16();
+            this.invalidName_1 = binaryReader.ReadBytes(2);
+            this.variants = ReadModelVariantBlockArray(binaryReader);
+            this.materials = ReadModelMaterialBlockArray(binaryReader);
+            this.newDamageInfo = ReadGlobalDamageInfoBlockArray(binaryReader);
+            this.targets = ReadModelTargetBlockArray(binaryReader);
+            this.modelRegionBlock = ReadModelRegionBlockArray(binaryReader);
+            this.modelNodeBlock = ReadModelNodeBlockArray(binaryReader);
+            this.invalidName_2 = binaryReader.ReadBytes(4);
+            this.modelObjectData = ReadModelObjectDataBlockArray(binaryReader);
+            this.defaultDialogue = binaryReader.ReadTagReference();
+            this.uNUSED = binaryReader.ReadTagReference();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.defaultDialogueEffect = binaryReader.ReadStringID();
+            this.renderOnlyNodeFlags = new []{ new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader),  };
+            this.renderOnlySectionFlags = new []{ new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader),  };
+            this.runtimeFlags = (RuntimeFlags)binaryReader.ReadInt32();
+            this.scenarioLoadParameters = ReadGlobalScenarioLoadParametersBlockArray(binaryReader);
+            this.hologramShader = binaryReader.ReadTagReference();
+            this.hologramControlFunction = binaryReader.ReadStringID();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(renderModel);
-                binaryWriter.Write(collisionModel);
-                binaryWriter.Write(animation);
-                binaryWriter.Write(physics);
-                binaryWriter.Write(physicsModel);
-                binaryWriter.Write(disappearDistanceWorldUnits);
-                binaryWriter.Write(beginFadeDistanceWorldUnits);
-                binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write(reduceToL1WorldUnitsSuperLow);
-                binaryWriter.Write(reduceToL2WorldUnitsLow);
-                binaryWriter.Write(reduceToL3WorldUnitsMedium);
-                binaryWriter.Write(reduceToL4WorldUnitsHigh);
-                binaryWriter.Write(reduceToL5WorldUnitsSuperHigh);
-                binaryWriter.Write(invalidName_0, 0, 4);
-                binaryWriter.Write((Int16)shadowFadeDistance);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                Guerilla.WriteBlockArray<ModelVariantBlock>(binaryWriter, variants, nextAddress);
-                Guerilla.WriteBlockArray<ModelMaterialBlock>(binaryWriter, materials, nextAddress);
-                Guerilla.WriteBlockArray<GlobalDamageInfoBlock>(binaryWriter, newDamageInfo, nextAddress);
-                Guerilla.WriteBlockArray<ModelTargetBlock>(binaryWriter, targets, nextAddress);
-                Guerilla.WriteBlockArray<ModelRegionBlock>(binaryWriter, modelRegionBlock, nextAddress);
-                Guerilla.WriteBlockArray<ModelNodeBlock>(binaryWriter, modelNodeBlock, nextAddress);
-                binaryWriter.Write(invalidName_2, 0, 4);
-                Guerilla.WriteBlockArray<ModelObjectDataBlock>(binaryWriter, modelObjectData, nextAddress);
-                binaryWriter.Write(defaultDialogue);
-                binaryWriter.Write(uNUSED);
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(defaultDialogueEffect);
-                renderOnlyNodeFlags[0].Write(binaryWriter);
-                renderOnlyNodeFlags[1].Write(binaryWriter);
-                renderOnlyNodeFlags[2].Write(binaryWriter);
-                renderOnlyNodeFlags[3].Write(binaryWriter);
-                renderOnlyNodeFlags[4].Write(binaryWriter);
-                renderOnlyNodeFlags[5].Write(binaryWriter);
-                renderOnlyNodeFlags[6].Write(binaryWriter);
-                renderOnlyNodeFlags[7].Write(binaryWriter);
-                renderOnlyNodeFlags[8].Write(binaryWriter);
-                renderOnlyNodeFlags[9].Write(binaryWriter);
-                renderOnlyNodeFlags[10].Write(binaryWriter);
-                renderOnlyNodeFlags[11].Write(binaryWriter);
-                renderOnlyNodeFlags[12].Write(binaryWriter);
-                renderOnlyNodeFlags[13].Write(binaryWriter);
-                renderOnlyNodeFlags[14].Write(binaryWriter);
-                renderOnlyNodeFlags[15].Write(binaryWriter);
-                renderOnlyNodeFlags[16].Write(binaryWriter);
-                renderOnlyNodeFlags[17].Write(binaryWriter);
-                renderOnlyNodeFlags[18].Write(binaryWriter);
-                renderOnlyNodeFlags[19].Write(binaryWriter);
-                renderOnlyNodeFlags[20].Write(binaryWriter);
-                renderOnlyNodeFlags[21].Write(binaryWriter);
-                renderOnlyNodeFlags[22].Write(binaryWriter);
-                renderOnlyNodeFlags[23].Write(binaryWriter);
-                renderOnlyNodeFlags[24].Write(binaryWriter);
-                renderOnlyNodeFlags[25].Write(binaryWriter);
-                renderOnlyNodeFlags[26].Write(binaryWriter);
-                renderOnlyNodeFlags[27].Write(binaryWriter);
-                renderOnlyNodeFlags[28].Write(binaryWriter);
-                renderOnlyNodeFlags[29].Write(binaryWriter);
-                renderOnlyNodeFlags[30].Write(binaryWriter);
-                renderOnlyNodeFlags[31].Write(binaryWriter);
-                renderOnlySectionFlags[0].Write(binaryWriter);
-                renderOnlySectionFlags[1].Write(binaryWriter);
-                renderOnlySectionFlags[2].Write(binaryWriter);
-                renderOnlySectionFlags[3].Write(binaryWriter);
-                renderOnlySectionFlags[4].Write(binaryWriter);
-                renderOnlySectionFlags[5].Write(binaryWriter);
-                renderOnlySectionFlags[6].Write(binaryWriter);
-                renderOnlySectionFlags[7].Write(binaryWriter);
-                renderOnlySectionFlags[8].Write(binaryWriter);
-                renderOnlySectionFlags[9].Write(binaryWriter);
-                renderOnlySectionFlags[10].Write(binaryWriter);
-                renderOnlySectionFlags[11].Write(binaryWriter);
-                renderOnlySectionFlags[12].Write(binaryWriter);
-                renderOnlySectionFlags[13].Write(binaryWriter);
-                renderOnlySectionFlags[14].Write(binaryWriter);
-                renderOnlySectionFlags[15].Write(binaryWriter);
-                renderOnlySectionFlags[16].Write(binaryWriter);
-                renderOnlySectionFlags[17].Write(binaryWriter);
-                renderOnlySectionFlags[18].Write(binaryWriter);
-                renderOnlySectionFlags[19].Write(binaryWriter);
-                renderOnlySectionFlags[20].Write(binaryWriter);
-                renderOnlySectionFlags[21].Write(binaryWriter);
-                renderOnlySectionFlags[22].Write(binaryWriter);
-                renderOnlySectionFlags[23].Write(binaryWriter);
-                renderOnlySectionFlags[24].Write(binaryWriter);
-                renderOnlySectionFlags[25].Write(binaryWriter);
-                renderOnlySectionFlags[26].Write(binaryWriter);
-                renderOnlySectionFlags[27].Write(binaryWriter);
-                renderOnlySectionFlags[28].Write(binaryWriter);
-                renderOnlySectionFlags[29].Write(binaryWriter);
-                renderOnlySectionFlags[30].Write(binaryWriter);
-                renderOnlySectionFlags[31].Write(binaryWriter);
-                binaryWriter.Write((Int32)runtimeFlags);
-                Guerilla.WriteBlockArray<GlobalScenarioLoadParametersBlock>(binaryWriter, scenarioLoadParameters, nextAddress);
-                binaryWriter.Write(hologramShader);
-                binaryWriter.Write(hologramControlFunction);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual ModelVariantBlock[] ReadModelVariantBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ModelVariantBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ModelVariantBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ModelVariantBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ModelMaterialBlock[] ReadModelMaterialBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ModelMaterialBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ModelMaterialBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ModelMaterialBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual GlobalDamageInfoBlock[] ReadGlobalDamageInfoBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(GlobalDamageInfoBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new GlobalDamageInfoBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new GlobalDamageInfoBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ModelTargetBlock[] ReadModelTargetBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ModelTargetBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ModelTargetBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ModelTargetBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ModelRegionBlock[] ReadModelRegionBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ModelRegionBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ModelRegionBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ModelRegionBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ModelNodeBlock[] ReadModelNodeBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ModelNodeBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ModelNodeBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ModelNodeBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ModelObjectDataBlock[] ReadModelObjectDataBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ModelObjectDataBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ModelObjectDataBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ModelObjectDataBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual GlobalScenarioLoadParametersBlock[] ReadGlobalScenarioLoadParametersBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(GlobalScenarioLoadParametersBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new GlobalScenarioLoadParametersBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new GlobalScenarioLoadParametersBlock(binaryReader);
+                }
+            }
+            return array;
         }
         internal enum ShadowFadeDistance : short
+        
         {
             FadeAtSuperHighDetailLevel = 0,
             FadeAtHighDetailLevel = 1,
@@ -226,6 +249,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             ActiveCamoAlwaysOn = 1,
             ActiveCamoAlwaysMerge = 2,
@@ -233,39 +257,52 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum RuntimeFlags : int
+        
         {
             ContainsRunTimeNodes = 1,
         };
-        public class RenderOnlyNodeFlags  : IGuerilla
+        public class RenderOnlyNodeFlags
         {
             internal byte invalidName_;
             internal  RenderOnlyNodeFlags(BinaryReader binaryReader)
             {
-                invalidName_ = binaryReader.ReadByte();
+                this.invalidName_ = binaryReader.ReadByte();
             }
-            public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+            internal  virtual byte[] ReadData(BinaryReader binaryReader)
             {
-                using(binaryWriter.BaseStream.Pin())
+                var blamPointer = binaryReader.ReadBlamPointer(1);
+                var data = new byte[blamPointer.elementCount];
+                if(blamPointer.elementCount > 0)
                 {
-                    binaryWriter.Write(invalidName_);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    using (binaryReader.BaseStream.Pin())
+                    {
+                        binaryReader.BaseStream.Position = blamPointer[0];
+                        data = binaryReader.ReadBytes(blamPointer.elementCount);
+                    }
                 }
+                return data;
             }
         };
-        public class RenderOnlySectionFlags  : IGuerilla
+        public class RenderOnlySectionFlags
         {
             internal byte invalidName_;
             internal  RenderOnlySectionFlags(BinaryReader binaryReader)
             {
-                invalidName_ = binaryReader.ReadByte();
+                this.invalidName_ = binaryReader.ReadByte();
             }
-            public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+            internal  virtual byte[] ReadData(BinaryReader binaryReader)
             {
-                using(binaryWriter.BaseStream.Pin())
+                var blamPointer = binaryReader.ReadBlamPointer(1);
+                var data = new byte[blamPointer.elementCount];
+                if(blamPointer.elementCount > 0)
                 {
-                    binaryWriter.Write(invalidName_);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    using (binaryReader.BaseStream.Pin())
+                    {
+                        binaryReader.BaseStream.Position = blamPointer[0];
+                        data = binaryReader.ReadBytes(blamPointer.elementCount);
+                    }
                 }
+                return data;
             }
         };
     };

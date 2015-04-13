@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 44, Alignment = 4)]
-    public class SkyLightFogBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 44)]
+    public class SkyLightFogBlockBase
     {
         internal Moonfish.Tags.ColorR8G8B8 color;
         /// <summary>
@@ -37,29 +36,28 @@ namespace Moonfish.Guerilla.Tags
         internal float skyFogInfluence01;
         internal  SkyLightFogBlockBase(BinaryReader binaryReader)
         {
-            color = binaryReader.ReadColorR8G8B8();
-            maximumDensity01 = binaryReader.ReadSingle();
-            startDistanceWorldUnits = binaryReader.ReadSingle();
-            opaqueDistanceWorldUnits = binaryReader.ReadSingle();
-            coneDegrees = binaryReader.ReadRange();
-            atmosphericFogInfluence01 = binaryReader.ReadSingle();
-            secondaryFogInfluence01 = binaryReader.ReadSingle();
-            skyFogInfluence01 = binaryReader.ReadSingle();
+            this.color = binaryReader.ReadColorR8G8B8();
+            this.maximumDensity01 = binaryReader.ReadSingle();
+            this.startDistanceWorldUnits = binaryReader.ReadSingle();
+            this.opaqueDistanceWorldUnits = binaryReader.ReadSingle();
+            this.coneDegrees = binaryReader.ReadRange();
+            this.atmosphericFogInfluence01 = binaryReader.ReadSingle();
+            this.secondaryFogInfluence01 = binaryReader.ReadSingle();
+            this.skyFogInfluence01 = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(color);
-                binaryWriter.Write(maximumDensity01);
-                binaryWriter.Write(startDistanceWorldUnits);
-                binaryWriter.Write(opaqueDistanceWorldUnits);
-                binaryWriter.Write(coneDegrees);
-                binaryWriter.Write(atmosphericFogInfluence01);
-                binaryWriter.Write(secondaryFogInfluence01);
-                binaryWriter.Write(skyFogInfluence01);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

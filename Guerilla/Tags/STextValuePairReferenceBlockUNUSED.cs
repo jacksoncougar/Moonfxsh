@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class STextValuePairReferenceBlockUNUSEDBase  : IGuerilla
+    [LayoutAttribute(Size = 20)]
+    public class STextValuePairReferenceBlockUNUSEDBase
     {
         internal ValueType valueType;
         internal BooleanValue booleanValue;
@@ -26,27 +25,29 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID textLabelStringId;
         internal  STextValuePairReferenceBlockUNUSEDBase(BinaryReader binaryReader)
         {
-            valueType = (ValueType)binaryReader.ReadInt16();
-            booleanValue = (BooleanValue)binaryReader.ReadInt16();
-            integerValue = binaryReader.ReadInt32();
-            fpValue = binaryReader.ReadSingle();
-            textValueStringId = binaryReader.ReadStringID();
-            textLabelStringId = binaryReader.ReadStringID();
+            this.valueType = (ValueType)binaryReader.ReadInt16();
+            this.booleanValue = (BooleanValue)binaryReader.ReadInt16();
+            this.integerValue = binaryReader.ReadInt32();
+            this.fpValue = binaryReader.ReadSingle();
+            this.textValueStringId = binaryReader.ReadStringID();
+            this.textLabelStringId = binaryReader.ReadStringID();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)valueType);
-                binaryWriter.Write((Int16)booleanValue);
-                binaryWriter.Write(integerValue);
-                binaryWriter.Write(fpValue);
-                binaryWriter.Write(textValueStringId);
-                binaryWriter.Write(textLabelStringId);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum ValueType : short
+        
         {
             IntegerNumber = 0,
             FloatingPointNumber = 1,
@@ -54,6 +55,7 @@ namespace Moonfish.Guerilla.Tags
             TextString = 3,
         };
         internal enum BooleanValue : short
+        
         {
             FALSE = 0,
             TRUE = 1,

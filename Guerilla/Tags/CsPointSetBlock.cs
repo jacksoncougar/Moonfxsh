@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 48, Alignment = 4)]
-    public class CsPointSetBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 48)]
+    public class CsPointSetBlockBase
     {
         internal Moonfish.Tags.String32 name;
         internal CsPointBlock[] points;
@@ -25,26 +24,44 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal  CsPointSetBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadString32();
-            points = Guerilla.ReadBlockArray<CsPointBlock>(binaryReader);
-            bspIndex = binaryReader.ReadShortBlockIndex1();
-            manualReferenceFrame = binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt32();
+            this.name = binaryReader.ReadString32();
+            this.points = ReadCsPointBlockArray(binaryReader);
+            this.bspIndex = binaryReader.ReadShortBlockIndex1();
+            this.manualReferenceFrame = binaryReader.ReadInt16();
+            this.flags = (Flags)binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                Guerilla.WriteBlockArray<CsPointBlock>(binaryWriter, points, nextAddress);
-                binaryWriter.Write(bspIndex);
-                binaryWriter.Write(manualReferenceFrame);
-                binaryWriter.Write((Int32)flags);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual CsPointBlock[] ReadCsPointBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CsPointBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CsPointBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CsPointBlock(binaryReader);
+                }
+            }
+            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             ManualReferenceFrame = 1,
             TurretDeployment = 2,

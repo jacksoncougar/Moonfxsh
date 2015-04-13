@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 48, Alignment = 4)]
-    public class GlobalScenarioLoadParametersBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 48)]
+    public class GlobalScenarioLoadParametersBlockBase
     {
         [TagReference("scnr")]
         internal Moonfish.Tags.TagReference scenario;
@@ -24,19 +23,23 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  GlobalScenarioLoadParametersBlockBase(BinaryReader binaryReader)
         {
-            scenario = binaryReader.ReadTagReference();
-            parameters = Guerilla.ReadData(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(32);
+            this.scenario = binaryReader.ReadTagReference();
+            this.parameters = ReadData(binaryReader);
+            this.invalidName_ = binaryReader.ReadBytes(32);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(scenario);
-                Guerilla.WriteData(binaryWriter);
-                binaryWriter.Write(invalidName_, 0, 32);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

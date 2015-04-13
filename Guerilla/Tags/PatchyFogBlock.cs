@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass FpchClass = (TagClass)"fpch";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 80, Alignment = 4)]
-    public class PatchyFogBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 80)]
+    public class PatchyFogBlockBase
     {
         internal Flags flags;
         internal byte[] invalidName_;
@@ -63,52 +54,42 @@ namespace Moonfish.Guerilla.Tags
         internal float windConstantVelocityZWorldUnitsPerSecond;
         internal  PatchyFogBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            rotationMultiplier01 = binaryReader.ReadSingle();
-            strafingMultiplier01 = binaryReader.ReadSingle();
-            zoomMultiplier01 = binaryReader.ReadSingle();
-            noiseMapScale = binaryReader.ReadSingle();
-            noiseMap = binaryReader.ReadTagReference();
-            noiseVerticalScaleForward = binaryReader.ReadSingle();
-            noiseVerticalScaleUp = binaryReader.ReadSingle();
-            noiseOpacityScaleUp = binaryReader.ReadSingle();
-            animationPeriodSeconds = binaryReader.ReadSingle();
-            windVelocityWorldUnitsPerSecond = binaryReader.ReadRange();
-            windPeriodSeconds = binaryReader.ReadRange();
-            windAccelerationWeight01 = binaryReader.ReadSingle();
-            windPerpendicularWeight01 = binaryReader.ReadSingle();
-            windConstantVelocityXWorldUnitsPerSecond = binaryReader.ReadSingle();
-            windConstantVelocityYWorldUnitsPerSecond = binaryReader.ReadSingle();
-            windConstantVelocityZWorldUnitsPerSecond = binaryReader.ReadSingle();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.rotationMultiplier01 = binaryReader.ReadSingle();
+            this.strafingMultiplier01 = binaryReader.ReadSingle();
+            this.zoomMultiplier01 = binaryReader.ReadSingle();
+            this.noiseMapScale = binaryReader.ReadSingle();
+            this.noiseMap = binaryReader.ReadTagReference();
+            this.noiseVerticalScaleForward = binaryReader.ReadSingle();
+            this.noiseVerticalScaleUp = binaryReader.ReadSingle();
+            this.noiseOpacityScaleUp = binaryReader.ReadSingle();
+            this.animationPeriodSeconds = binaryReader.ReadSingle();
+            this.windVelocityWorldUnitsPerSecond = binaryReader.ReadRange();
+            this.windPeriodSeconds = binaryReader.ReadRange();
+            this.windAccelerationWeight01 = binaryReader.ReadSingle();
+            this.windPerpendicularWeight01 = binaryReader.ReadSingle();
+            this.windConstantVelocityXWorldUnitsPerSecond = binaryReader.ReadSingle();
+            this.windConstantVelocityYWorldUnitsPerSecond = binaryReader.ReadSingle();
+            this.windConstantVelocityZWorldUnitsPerSecond = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(rotationMultiplier01);
-                binaryWriter.Write(strafingMultiplier01);
-                binaryWriter.Write(zoomMultiplier01);
-                binaryWriter.Write(noiseMapScale);
-                binaryWriter.Write(noiseMap);
-                binaryWriter.Write(noiseVerticalScaleForward);
-                binaryWriter.Write(noiseVerticalScaleUp);
-                binaryWriter.Write(noiseOpacityScaleUp);
-                binaryWriter.Write(animationPeriodSeconds);
-                binaryWriter.Write(windVelocityWorldUnitsPerSecond);
-                binaryWriter.Write(windPeriodSeconds);
-                binaryWriter.Write(windAccelerationWeight01);
-                binaryWriter.Write(windPerpendicularWeight01);
-                binaryWriter.Write(windConstantVelocityXWorldUnitsPerSecond);
-                binaryWriter.Write(windConstantVelocityYWorldUnitsPerSecond);
-                binaryWriter.Write(windConstantVelocityZWorldUnitsPerSecond);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             SeparateLayerDepths = 1,
             SortBehindTransparents = 2,

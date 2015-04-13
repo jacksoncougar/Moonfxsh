@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,21 +14,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class ScenarioNetgameEquipmentOrientationStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 12)]
+    public class ScenarioNetgameEquipmentOrientationStructBlockBase
     {
         internal OpenTK.Vector3 orientation;
         internal  ScenarioNetgameEquipmentOrientationStructBlockBase(BinaryReader binaryReader)
         {
-            orientation = binaryReader.ReadVector3();
+            this.orientation = binaryReader.ReadVector3();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(orientation);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

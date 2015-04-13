@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass CtrlClass = (TagClass)"ctrl";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,7 +15,7 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36, Alignment = 4)]
+    [LayoutAttribute(Size = 36)]
     public class DeviceControlBlockBase : DeviceBlock
     {
         internal Type type;
@@ -39,29 +30,30 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference deny;
         internal  DeviceControlBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            type = (Type)binaryReader.ReadInt16();
-            triggersWhen = (TriggersWhen)binaryReader.ReadInt16();
-            callValue01 = binaryReader.ReadSingle();
-            actionString = binaryReader.ReadStringID();
-            on = binaryReader.ReadTagReference();
-            off = binaryReader.ReadTagReference();
-            deny = binaryReader.ReadTagReference();
+            this.type = (Type)binaryReader.ReadInt16();
+            this.triggersWhen = (TriggersWhen)binaryReader.ReadInt16();
+            this.callValue01 = binaryReader.ReadSingle();
+            this.actionString = binaryReader.ReadStringID();
+            this.on = binaryReader.ReadTagReference();
+            this.off = binaryReader.ReadTagReference();
+            this.deny = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write((Int16)triggersWhen);
-                binaryWriter.Write(callValue01);
-                binaryWriter.Write(actionString);
-                binaryWriter.Write(on);
-                binaryWriter.Write(off);
-                binaryWriter.Write(deny);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum Type : short
+        
         {
             ToggleSwitch = 0,
             OnButton = 1,
@@ -69,6 +61,7 @@ namespace Moonfish.Guerilla.Tags
             CallButton = 3,
         };
         internal enum TriggersWhen : short
+        
         {
             TouchedByPlayer = 0,
             Destroyed = 1,

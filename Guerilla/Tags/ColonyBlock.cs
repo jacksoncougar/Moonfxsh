@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass ColnClass = (TagClass)"coln";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 60, Alignment = 4)]
-    public class ColonyBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 60)]
+    public class ColonyBlockBase
     {
         internal Flags flags;
         internal byte[] invalidName_;
@@ -39,32 +30,32 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference detailMap;
         internal  ColonyBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(4);
-            radius = binaryReader.ReadRange();
-            invalidName_1 = binaryReader.ReadBytes(12);
-            debugColor = binaryReader.ReadVector4();
-            baseMap = binaryReader.ReadTagReference();
-            detailMap = binaryReader.ReadTagReference();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.invalidName_0 = binaryReader.ReadBytes(4);
+            this.radius = binaryReader.ReadRange();
+            this.invalidName_1 = binaryReader.ReadBytes(12);
+            this.debugColor = binaryReader.ReadVector4();
+            this.baseMap = binaryReader.ReadTagReference();
+            this.detailMap = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(invalidName_0, 0, 4);
-                binaryWriter.Write(radius);
-                binaryWriter.Write(invalidName_1, 0, 12);
-                binaryWriter.Write(debugColor);
-                binaryWriter.Write(baseMap);
-                binaryWriter.Write(detailMap);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             Unused = 1,
         };

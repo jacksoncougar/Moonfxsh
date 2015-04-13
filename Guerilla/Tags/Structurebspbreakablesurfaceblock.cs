@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class StructureBspBreakableSurfaceBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class StructureBspBreakableSurfaceBlockBase
     {
         internal Moonfish.Tags.ShortBlockIndex1 instancedGeometryInstance;
         internal short breakableSurfaceIndex;
@@ -25,23 +24,25 @@ namespace Moonfish.Guerilla.Tags
         internal int collisionSurfaceIndex;
         internal  StructureBspBreakableSurfaceBlockBase(BinaryReader binaryReader)
         {
-            instancedGeometryInstance = binaryReader.ReadShortBlockIndex1();
-            breakableSurfaceIndex = binaryReader.ReadInt16();
-            centroid = binaryReader.ReadVector3();
-            radius = binaryReader.ReadSingle();
-            collisionSurfaceIndex = binaryReader.ReadInt32();
+            this.instancedGeometryInstance = binaryReader.ReadShortBlockIndex1();
+            this.breakableSurfaceIndex = binaryReader.ReadInt16();
+            this.centroid = binaryReader.ReadVector3();
+            this.radius = binaryReader.ReadSingle();
+            this.collisionSurfaceIndex = binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(instancedGeometryInstance);
-                binaryWriter.Write(breakableSurfaceIndex);
-                binaryWriter.Write(centroid);
-                binaryWriter.Write(radius);
-                binaryWriter.Write(collisionSurfaceIndex);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

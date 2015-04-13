@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 80, Alignment = 4)]
-    public class InstantaneousDamageRepsonseBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 80)]
+    public class InstantaneousDamageRepsonseBlockBase
     {
         internal ResponseType responseType;
         internal ConstraintDamageType constraintDamageType;
@@ -47,59 +46,49 @@ namespace Moonfish.Guerilla.Tags
         internal float totalDamageThreshold;
         internal  InstantaneousDamageRepsonseBlockBase(BinaryReader binaryReader)
         {
-            responseType = (ResponseType)binaryReader.ReadInt16();
-            constraintDamageType = (ConstraintDamageType)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt32();
-            damageThreshold = binaryReader.ReadSingle();
-            transitionEffect = binaryReader.ReadTagReference();
-            damageEffect = new InstantaneousResponseDamageEffectStructBlock(binaryReader);
-            region = binaryReader.ReadStringID();
-            newState = (NewState)binaryReader.ReadInt16();
-            runtimeRegionIndex = binaryReader.ReadInt16();
-            effectMarkerName = binaryReader.ReadStringID();
-            damageEffectMarker = new InstantaneousResponseDamageEffectMarkerStructBlock(binaryReader);
-            responseDelay = binaryReader.ReadSingle();
-            delayEffect = binaryReader.ReadTagReference();
-            delayEffectMarkerName = binaryReader.ReadStringID();
-            constraintGroupName = binaryReader.ReadStringID();
-            ejectingSeatLabel = binaryReader.ReadStringID();
-            skipFraction = binaryReader.ReadSingle();
-            destroyedChildObjectMarkerName = binaryReader.ReadStringID();
-            totalDamageThreshold = binaryReader.ReadSingle();
+            this.responseType = (ResponseType)binaryReader.ReadInt16();
+            this.constraintDamageType = (ConstraintDamageType)binaryReader.ReadInt16();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.damageThreshold = binaryReader.ReadSingle();
+            this.transitionEffect = binaryReader.ReadTagReference();
+            this.damageEffect = new InstantaneousResponseDamageEffectStructBlock(binaryReader);
+            this.region = binaryReader.ReadStringID();
+            this.newState = (NewState)binaryReader.ReadInt16();
+            this.runtimeRegionIndex = binaryReader.ReadInt16();
+            this.effectMarkerName = binaryReader.ReadStringID();
+            this.damageEffectMarker = new InstantaneousResponseDamageEffectMarkerStructBlock(binaryReader);
+            this.responseDelay = binaryReader.ReadSingle();
+            this.delayEffect = binaryReader.ReadTagReference();
+            this.delayEffectMarkerName = binaryReader.ReadStringID();
+            this.constraintGroupName = binaryReader.ReadStringID();
+            this.ejectingSeatLabel = binaryReader.ReadStringID();
+            this.skipFraction = binaryReader.ReadSingle();
+            this.destroyedChildObjectMarkerName = binaryReader.ReadStringID();
+            this.totalDamageThreshold = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)responseType);
-                binaryWriter.Write((Int16)constraintDamageType);
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(damageThreshold);
-                binaryWriter.Write(transitionEffect);
-                damageEffect.Write(binaryWriter);
-                binaryWriter.Write(region);
-                binaryWriter.Write((Int16)newState);
-                binaryWriter.Write(runtimeRegionIndex);
-                binaryWriter.Write(effectMarkerName);
-                damageEffectMarker.Write(binaryWriter);
-                binaryWriter.Write(responseDelay);
-                binaryWriter.Write(delayEffect);
-                binaryWriter.Write(delayEffectMarkerName);
-                binaryWriter.Write(constraintGroupName);
-                binaryWriter.Write(ejectingSeatLabel);
-                binaryWriter.Write(skipFraction);
-                binaryWriter.Write(destroyedChildObjectMarkerName);
-                binaryWriter.Write(totalDamageThreshold);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum ResponseType : short
+        
         {
             ReceivesAllDamage = 0,
             ReceivesAreaEffectDamage = 1,
             ReceivesLocalDamage = 2,
         };
         internal enum ConstraintDamageType : short
+        
         {
             None = 0,
             DestroyOneOfGroup = 1,
@@ -109,6 +98,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             KillsObject = 1,
             InhibitsMeleeAttack = 2,
@@ -137,6 +127,7 @@ namespace Moonfish.Guerilla.Tags
             OnlyNOTOnSpecialDeath = 16777216,
         };
         internal enum NewState : short
+        
         {
             Default = 0,
             MinorDamage = 1,

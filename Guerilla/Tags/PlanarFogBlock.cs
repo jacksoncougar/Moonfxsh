@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass FogClass = (TagClass)"fog ";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 96, Alignment = 4)]
-    public class PlanarFogBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 96)]
+    public class PlanarFogBlockBase
     {
         internal Flags flags;
         internal short priority;
@@ -72,52 +63,57 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference exitSound;
         internal  PlanarFogBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            priority = binaryReader.ReadInt16();
-            globalMaterialName = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(2);
-            maximumDensity01 = binaryReader.ReadSingle();
-            opaqueDistanceWorldUnits = binaryReader.ReadSingle();
-            opaqueDepthWorldUnits = binaryReader.ReadSingle();
-            atmosphericPlanarDepthWorldUnits = binaryReader.ReadRange();
-            eyeOffsetScale11 = binaryReader.ReadSingle();
-            color = binaryReader.ReadColorR8G8B8();
-            patchyFog = Guerilla.ReadBlockArray<PlanarFogPatchyFogBlock>(binaryReader);
-            backgroundSound = binaryReader.ReadTagReference();
-            soundEnvironment = binaryReader.ReadTagReference();
-            environmentDampingFactor = binaryReader.ReadSingle();
-            backgroundSoundGain = binaryReader.ReadSingle();
-            enterSound = binaryReader.ReadTagReference();
-            exitSound = binaryReader.ReadTagReference();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.priority = binaryReader.ReadInt16();
+            this.globalMaterialName = binaryReader.ReadStringID();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.invalidName_0 = binaryReader.ReadBytes(2);
+            this.maximumDensity01 = binaryReader.ReadSingle();
+            this.opaqueDistanceWorldUnits = binaryReader.ReadSingle();
+            this.opaqueDepthWorldUnits = binaryReader.ReadSingle();
+            this.atmosphericPlanarDepthWorldUnits = binaryReader.ReadRange();
+            this.eyeOffsetScale11 = binaryReader.ReadSingle();
+            this.color = binaryReader.ReadColorR8G8B8();
+            this.patchyFog = ReadPlanarFogPatchyFogBlockArray(binaryReader);
+            this.backgroundSound = binaryReader.ReadTagReference();
+            this.soundEnvironment = binaryReader.ReadTagReference();
+            this.environmentDampingFactor = binaryReader.ReadSingle();
+            this.backgroundSoundGain = binaryReader.ReadSingle();
+            this.enterSound = binaryReader.ReadTagReference();
+            this.exitSound = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(priority);
-                binaryWriter.Write(globalMaterialName);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write(maximumDensity01);
-                binaryWriter.Write(opaqueDistanceWorldUnits);
-                binaryWriter.Write(opaqueDepthWorldUnits);
-                binaryWriter.Write(atmosphericPlanarDepthWorldUnits);
-                binaryWriter.Write(eyeOffsetScale11);
-                binaryWriter.Write(color);
-                Guerilla.WriteBlockArray<PlanarFogPatchyFogBlock>(binaryWriter, patchyFog, nextAddress);
-                binaryWriter.Write(backgroundSound);
-                binaryWriter.Write(soundEnvironment);
-                binaryWriter.Write(environmentDampingFactor);
-                binaryWriter.Write(backgroundSoundGain);
-                binaryWriter.Write(enterSound);
-                binaryWriter.Write(exitSound);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual PlanarFogPatchyFogBlock[] ReadPlanarFogPatchyFogBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PlanarFogPatchyFogBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PlanarFogPatchyFogBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PlanarFogPatchyFogBlock(binaryReader);
+                }
+            }
+            return array;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             RenderOnlySubmergedGeometry = 1,
             ExtendInfinitelyWhileVisible = 2,

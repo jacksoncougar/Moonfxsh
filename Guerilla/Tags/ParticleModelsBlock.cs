@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,27 +14,31 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ParticleModelsBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 8)]
+    public class ParticleModelsBlockBase
     {
         internal Moonfish.Tags.StringID modelName;
         internal short indexStart;
         internal short indexCount;
         internal  ParticleModelsBlockBase(BinaryReader binaryReader)
         {
-            modelName = binaryReader.ReadStringID();
-            indexStart = binaryReader.ReadInt16();
-            indexCount = binaryReader.ReadInt16();
+            this.modelName = binaryReader.ReadStringID();
+            this.indexStart = binaryReader.ReadInt16();
+            this.indexCount = binaryReader.ReadInt16();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(modelName);
-                binaryWriter.Write(indexStart);
-                binaryWriter.Write(indexCount);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

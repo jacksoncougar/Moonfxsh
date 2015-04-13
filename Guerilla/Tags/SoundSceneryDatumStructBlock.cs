@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 28, Alignment = 4)]
-    public class SoundSceneryDatumStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 28)]
+    public class SoundSceneryDatumStructBlockBase
     {
         internal VolumeType volumeType;
         internal float height;
@@ -25,25 +24,28 @@ namespace Moonfish.Guerilla.Tags
         internal float overrideOuterConeGainDB;
         internal  SoundSceneryDatumStructBlockBase(BinaryReader binaryReader)
         {
-            volumeType = (VolumeType)binaryReader.ReadInt32();
-            height = binaryReader.ReadSingle();
-            overrideDistanceBounds = binaryReader.ReadRange();
-            overrideConeAngleBounds = binaryReader.ReadRange();
-            overrideOuterConeGainDB = binaryReader.ReadSingle();
+            this.volumeType = (VolumeType)binaryReader.ReadInt32();
+            this.height = binaryReader.ReadSingle();
+            this.overrideDistanceBounds = binaryReader.ReadRange();
+            this.overrideConeAngleBounds = binaryReader.ReadRange();
+            this.overrideOuterConeGainDB = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)volumeType);
-                binaryWriter.Write(height);
-                binaryWriter.Write(overrideDistanceBounds);
-                binaryWriter.Write(overrideConeAngleBounds);
-                binaryWriter.Write(overrideOuterConeGainDB);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum VolumeType : int
+        
         {
             Sphere = 0,
             VerticalCylinder = 1,

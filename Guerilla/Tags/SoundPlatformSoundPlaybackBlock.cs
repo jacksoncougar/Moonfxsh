@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,24 +14,44 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 60, Alignment = 4)]
-    public class SoundPlatformSoundPlaybackBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 60)]
+    public class SoundPlatformSoundPlaybackBlockBase
     {
         internal SimplePlatformSoundPlaybackStructBlock playbackDefinition;
         internal GNullBlock[] gNullBlock;
         internal  SoundPlatformSoundPlaybackBlockBase(BinaryReader binaryReader)
         {
-            playbackDefinition = new SimplePlatformSoundPlaybackStructBlock(binaryReader);
-            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            this.playbackDefinition = new SimplePlatformSoundPlaybackStructBlock(binaryReader);
+            this.gNullBlock = ReadGNullBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                playbackDefinition.Write(binaryWriter);
-                Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual GNullBlock[] ReadGNullBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(GNullBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new GNullBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new GNullBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

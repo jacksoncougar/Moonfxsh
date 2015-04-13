@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 40, Alignment = 4)]
-    public class SoundEffectStructDefinitionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 40)]
+    public class SoundEffectStructDefinitionBlockBase
     {
         [TagReference("<fx>")]
         internal Moonfish.Tags.TagReference invalidName_;
@@ -26,23 +25,70 @@ namespace Moonfish.Guerilla.Tags
         internal PlatformSoundEffectCollectionBlock[] platformSoundEffectCollectionBlock;
         internal  SoundEffectStructDefinitionBlockBase(BinaryReader binaryReader)
         {
-            invalidName_ = binaryReader.ReadTagReference();
-            components = Guerilla.ReadBlockArray<SoundEffectComponentBlock>(binaryReader);
-            soundEffectOverridesBlock = Guerilla.ReadBlockArray<SoundEffectOverridesBlock>(binaryReader);
-            invalidName_0 = Guerilla.ReadData(binaryReader);
-            platformSoundEffectCollectionBlock = Guerilla.ReadBlockArray<PlatformSoundEffectCollectionBlock>(binaryReader);
+            this.invalidName_ = binaryReader.ReadTagReference();
+            this.components = ReadSoundEffectComponentBlockArray(binaryReader);
+            this.soundEffectOverridesBlock = ReadSoundEffectOverridesBlockArray(binaryReader);
+            this.invalidName_0 = ReadData(binaryReader);
+            this.platformSoundEffectCollectionBlock = ReadPlatformSoundEffectCollectionBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(invalidName_);
-                Guerilla.WriteBlockArray<SoundEffectComponentBlock>(binaryWriter, components, nextAddress);
-                Guerilla.WriteBlockArray<SoundEffectOverridesBlock>(binaryWriter, soundEffectOverridesBlock, nextAddress);
-                Guerilla.WriteData(binaryWriter);
-                Guerilla.WriteBlockArray<PlatformSoundEffectCollectionBlock>(binaryWriter, platformSoundEffectCollectionBlock, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual SoundEffectComponentBlock[] ReadSoundEffectComponentBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(SoundEffectComponentBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new SoundEffectComponentBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new SoundEffectComponentBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual SoundEffectOverridesBlock[] ReadSoundEffectOverridesBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(SoundEffectOverridesBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new SoundEffectOverridesBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new SoundEffectOverridesBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual PlatformSoundEffectCollectionBlock[] ReadPlatformSoundEffectCollectionBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PlatformSoundEffectCollectionBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PlatformSoundEffectCollectionBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PlatformSoundEffectCollectionBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

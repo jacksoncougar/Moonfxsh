@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,30 +14,35 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ScenarioDeviceStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 8)]
+    public class ScenarioDeviceStructBlockBase
     {
         internal Moonfish.Tags.ShortBlockIndex1 powerGroup;
         internal Moonfish.Tags.ShortBlockIndex1 positionGroup;
         internal Flags flags;
         internal  ScenarioDeviceStructBlockBase(BinaryReader binaryReader)
         {
-            powerGroup = binaryReader.ReadShortBlockIndex1();
-            positionGroup = binaryReader.ReadShortBlockIndex1();
-            flags = (Flags)binaryReader.ReadInt32();
+            this.powerGroup = binaryReader.ReadShortBlockIndex1();
+            this.positionGroup = binaryReader.ReadShortBlockIndex1();
+            this.flags = (Flags)binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(powerGroup);
-                binaryWriter.Write(positionGroup);
-                binaryWriter.Write((Int32)flags);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             InitiallyOpen10 = 1,
             InitiallyOff00 = 2,

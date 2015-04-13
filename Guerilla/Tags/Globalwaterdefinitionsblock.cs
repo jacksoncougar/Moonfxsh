@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 172, Alignment = 4)]
-    public class GlobalWaterDefinitionsBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 172)]
+    public class GlobalWaterDefinitionsBlockBase
     {
         [TagReference("shad")]
         internal Moonfish.Tags.TagReference shader;
@@ -44,59 +43,58 @@ namespace Moonfish.Guerilla.Tags
         internal float dynamicHeightBias;
         internal  GlobalWaterDefinitionsBlockBase(BinaryReader binaryReader)
         {
-            shader = binaryReader.ReadTagReference();
-            section = Guerilla.ReadBlockArray<WaterGeometrySectionBlock>(binaryReader);
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            sunSpotColor = binaryReader.ReadColorR8G8B8();
-            reflectionTint = binaryReader.ReadColorR8G8B8();
-            refractionTint = binaryReader.ReadColorR8G8B8();
-            horizonColor = binaryReader.ReadColorR8G8B8();
-            sunSpecularPower = binaryReader.ReadSingle();
-            reflectionBumpScale = binaryReader.ReadSingle();
-            refractionBumpScale = binaryReader.ReadSingle();
-            fresnelScale = binaryReader.ReadSingle();
-            sunDirHeading = binaryReader.ReadSingle();
-            sunDirPitch = binaryReader.ReadSingle();
-            fOV = binaryReader.ReadSingle();
-            aspect = binaryReader.ReadSingle();
-            height = binaryReader.ReadSingle();
-            farz = binaryReader.ReadSingle();
-            rotateOffset = binaryReader.ReadSingle();
-            center = binaryReader.ReadVector2();
-            extents = binaryReader.ReadVector2();
-            fogNear = binaryReader.ReadSingle();
-            fogFar = binaryReader.ReadSingle();
-            dynamicHeightBias = binaryReader.ReadSingle();
+            this.shader = binaryReader.ReadTagReference();
+            this.section = ReadWaterGeometrySectionBlockArray(binaryReader);
+            this.geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            this.sunSpotColor = binaryReader.ReadColorR8G8B8();
+            this.reflectionTint = binaryReader.ReadColorR8G8B8();
+            this.refractionTint = binaryReader.ReadColorR8G8B8();
+            this.horizonColor = binaryReader.ReadColorR8G8B8();
+            this.sunSpecularPower = binaryReader.ReadSingle();
+            this.reflectionBumpScale = binaryReader.ReadSingle();
+            this.refractionBumpScale = binaryReader.ReadSingle();
+            this.fresnelScale = binaryReader.ReadSingle();
+            this.sunDirHeading = binaryReader.ReadSingle();
+            this.sunDirPitch = binaryReader.ReadSingle();
+            this.fOV = binaryReader.ReadSingle();
+            this.aspect = binaryReader.ReadSingle();
+            this.height = binaryReader.ReadSingle();
+            this.farz = binaryReader.ReadSingle();
+            this.rotateOffset = binaryReader.ReadSingle();
+            this.center = binaryReader.ReadVector2();
+            this.extents = binaryReader.ReadVector2();
+            this.fogNear = binaryReader.ReadSingle();
+            this.fogFar = binaryReader.ReadSingle();
+            this.dynamicHeightBias = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(shader);
-                Guerilla.WriteBlockArray<WaterGeometrySectionBlock>(binaryWriter, section, nextAddress);
-                geometryBlockInfo.Write(binaryWriter);
-                binaryWriter.Write(sunSpotColor);
-                binaryWriter.Write(reflectionTint);
-                binaryWriter.Write(refractionTint);
-                binaryWriter.Write(horizonColor);
-                binaryWriter.Write(sunSpecularPower);
-                binaryWriter.Write(reflectionBumpScale);
-                binaryWriter.Write(refractionBumpScale);
-                binaryWriter.Write(fresnelScale);
-                binaryWriter.Write(sunDirHeading);
-                binaryWriter.Write(sunDirPitch);
-                binaryWriter.Write(fOV);
-                binaryWriter.Write(aspect);
-                binaryWriter.Write(height);
-                binaryWriter.Write(farz);
-                binaryWriter.Write(rotateOffset);
-                binaryWriter.Write(center);
-                binaryWriter.Write(extents);
-                binaryWriter.Write(fogNear);
-                binaryWriter.Write(fogFar);
-                binaryWriter.Write(dynamicHeightBias);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual WaterGeometrySectionBlock[] ReadWaterGeometrySectionBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(WaterGeometrySectionBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new WaterGeometrySectionBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new WaterGeometrySectionBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 48, Alignment = 4)]
-    public class LensFlareReflectionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 48)]
+    public class LensFlareReflectionBlockBase
     {
         internal Flags flags;
         internal byte[] invalidName_;
@@ -39,36 +38,34 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ColorR8G8B8 color;
         internal  LensFlareReflectionBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            bitmapIndex = binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            positionAlongFlareAxis = binaryReader.ReadSingle();
-            rotationOffsetDegrees = binaryReader.ReadSingle();
-            radiusWorldUnits = binaryReader.ReadRange();
-            brightness01 = binaryReader.ReadVector2();
-            modulationFactor01 = binaryReader.ReadSingle();
-            color = binaryReader.ReadColorR8G8B8();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.bitmapIndex = binaryReader.ReadInt16();
+            this.invalidName_0 = binaryReader.ReadBytes(2);
+            this.positionAlongFlareAxis = binaryReader.ReadSingle();
+            this.rotationOffsetDegrees = binaryReader.ReadSingle();
+            this.radiusWorldUnits = binaryReader.ReadRange();
+            this.brightness01 = binaryReader.ReadVector2();
+            this.modulationFactor01 = binaryReader.ReadSingle();
+            this.color = binaryReader.ReadColorR8G8B8();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(bitmapIndex);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write(positionAlongFlareAxis);
-                binaryWriter.Write(rotationOffsetDegrees);
-                binaryWriter.Write(radiusWorldUnits);
-                binaryWriter.Write(brightness01);
-                binaryWriter.Write(modulationFactor01);
-                binaryWriter.Write(color);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             AlignRotationWithScreenCenter = 1,
             RadiusNOTScaledByDistance = 2,

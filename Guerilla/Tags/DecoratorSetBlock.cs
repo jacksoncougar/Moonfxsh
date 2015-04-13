@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass DECRClass = (TagClass)"DECR";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 112, Alignment = 4)]
-    public class DecoratorSetBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 112)]
+    public class DecoratorSetBlockBase
     {
         internal DecoratorShaderReferenceBlock[] shaders;
         /// <summary>
@@ -46,35 +37,121 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  DecoratorSetBlockBase(BinaryReader binaryReader)
         {
-            shaders = Guerilla.ReadBlockArray<DecoratorShaderReferenceBlock>(binaryReader);
-            lightingMinScale = binaryReader.ReadSingle();
-            lightingMaxScale = binaryReader.ReadSingle();
-            classes = Guerilla.ReadBlockArray<DecoratorClassesBlock>(binaryReader);
-            models = Guerilla.ReadBlockArray<DecoratorModelsBlock>(binaryReader);
-            rawVertices = Guerilla.ReadBlockArray<DecoratorModelVerticesBlock>(binaryReader);
-            indices = Guerilla.ReadBlockArray<DecoratorModelIndicesBlock>(binaryReader);
-            cachedData = Guerilla.ReadBlockArray<CachedDataBlock>(binaryReader);
-            geometrySectionInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(16);
-            invalidName_0 = binaryReader.ReadBytes(4);
+            this.shaders = ReadDecoratorShaderReferenceBlockArray(binaryReader);
+            this.lightingMinScale = binaryReader.ReadSingle();
+            this.lightingMaxScale = binaryReader.ReadSingle();
+            this.classes = ReadDecoratorClassesBlockArray(binaryReader);
+            this.models = ReadDecoratorModelsBlockArray(binaryReader);
+            this.rawVertices = ReadDecoratorModelVerticesBlockArray(binaryReader);
+            this.indices = ReadDecoratorModelIndicesBlockArray(binaryReader);
+            this.cachedData = ReadCachedDataBlockArray(binaryReader);
+            this.geometrySectionInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            this.invalidName_ = binaryReader.ReadBytes(16);
+            this.invalidName_0 = binaryReader.ReadBytes(4);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                Guerilla.WriteBlockArray<DecoratorShaderReferenceBlock>(binaryWriter, shaders, nextAddress);
-                binaryWriter.Write(lightingMinScale);
-                binaryWriter.Write(lightingMaxScale);
-                Guerilla.WriteBlockArray<DecoratorClassesBlock>(binaryWriter, classes, nextAddress);
-                Guerilla.WriteBlockArray<DecoratorModelsBlock>(binaryWriter, models, nextAddress);
-                Guerilla.WriteBlockArray<DecoratorModelVerticesBlock>(binaryWriter, rawVertices, nextAddress);
-                Guerilla.WriteBlockArray<DecoratorModelIndicesBlock>(binaryWriter, indices, nextAddress);
-                Guerilla.WriteBlockArray<CachedDataBlock>(binaryWriter, cachedData, nextAddress);
-                geometrySectionInfo.Write(binaryWriter);
-                binaryWriter.Write(invalidName_, 0, 16);
-                binaryWriter.Write(invalidName_0, 0, 4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual DecoratorShaderReferenceBlock[] ReadDecoratorShaderReferenceBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(DecoratorShaderReferenceBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new DecoratorShaderReferenceBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new DecoratorShaderReferenceBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual DecoratorClassesBlock[] ReadDecoratorClassesBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(DecoratorClassesBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new DecoratorClassesBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new DecoratorClassesBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual DecoratorModelsBlock[] ReadDecoratorModelsBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(DecoratorModelsBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new DecoratorModelsBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new DecoratorModelsBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual DecoratorModelVerticesBlock[] ReadDecoratorModelVerticesBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(DecoratorModelVerticesBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new DecoratorModelVerticesBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new DecoratorModelVerticesBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual DecoratorModelIndicesBlock[] ReadDecoratorModelIndicesBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(DecoratorModelIndicesBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new DecoratorModelIndicesBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new DecoratorModelIndicesBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CachedDataBlock[] ReadCachedDataBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CachedDataBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CachedDataBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CachedDataBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

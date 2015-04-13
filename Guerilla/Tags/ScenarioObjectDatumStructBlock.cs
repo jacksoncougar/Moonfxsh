@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 48, Alignment = 4)]
-    public class ScenarioObjectDatumStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 48)]
+    public class ScenarioObjectDatumStructBlockBase
     {
         internal PlacementFlags placementFlags;
         internal OpenTK.Vector3 position;
@@ -30,36 +29,34 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 editorFolder;
         internal  ScenarioObjectDatumStructBlockBase(BinaryReader binaryReader)
         {
-            placementFlags = (PlacementFlags)binaryReader.ReadInt32();
-            position = binaryReader.ReadVector3();
-            rotation = binaryReader.ReadVector3();
-            scale = binaryReader.ReadSingle();
-            transformFlags = (TransformFlags)binaryReader.ReadInt16();
-            manualBSPFlags = binaryReader.ReadBlockFlags16();
-            objectID = new ScenarioObjectIdStructBlock(binaryReader);
-            bSPPolicy = (BSPPolicy)binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(1);
-            editorFolder = binaryReader.ReadShortBlockIndex1();
+            this.placementFlags = (PlacementFlags)binaryReader.ReadInt32();
+            this.position = binaryReader.ReadVector3();
+            this.rotation = binaryReader.ReadVector3();
+            this.scale = binaryReader.ReadSingle();
+            this.transformFlags = (TransformFlags)binaryReader.ReadInt16();
+            this.manualBSPFlags = binaryReader.ReadBlockFlags16();
+            this.objectID = new ScenarioObjectIdStructBlock(binaryReader);
+            this.bSPPolicy = (BSPPolicy)binaryReader.ReadByte();
+            this.invalidName_ = binaryReader.ReadBytes(1);
+            this.editorFolder = binaryReader.ReadShortBlockIndex1();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)placementFlags);
-                binaryWriter.Write(position);
-                binaryWriter.Write(rotation);
-                binaryWriter.Write(scale);
-                binaryWriter.Write((Int16)transformFlags);
-                binaryWriter.Write(manualBSPFlags);
-                objectID.Write(binaryWriter);
-                binaryWriter.Write((Byte)bSPPolicy);
-                binaryWriter.Write(invalidName_, 0, 1);
-                binaryWriter.Write(editorFolder);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum PlacementFlags : int
+        
         {
             NotAutomatically = 1,
             Unused = 2,
@@ -73,10 +70,12 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum TransformFlags : short
+        
         {
             Mirrored = 1,
         };
         internal enum BSPPolicy : byte
+        
         {
             Default = 0,
             AlwaysPlaced = 1,

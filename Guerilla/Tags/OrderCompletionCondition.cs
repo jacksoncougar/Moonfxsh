@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 56, Alignment = 4)]
-    public class OrderCompletionConditionBase  : IGuerilla
+    [LayoutAttribute(Size = 56)]
+    public class OrderCompletionConditionBase
     {
         internal RuleType ruleType;
         internal Moonfish.Tags.ShortBlockIndex1 squad;
@@ -31,37 +30,34 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal  OrderCompletionConditionBase(BinaryReader binaryReader)
         {
-            ruleType = (RuleType)binaryReader.ReadInt16();
-            squad = binaryReader.ReadShortBlockIndex1();
-            squadGroup = binaryReader.ReadShortBlockIndex1();
-            a = binaryReader.ReadInt16();
-            x = binaryReader.ReadSingle();
-            triggerVolume = binaryReader.ReadShortBlockIndex1();
-            invalidName_ = binaryReader.ReadBytes(2);
-            exitConditionScript = binaryReader.ReadString32();
-            invalidName_0 = binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            flags = (Flags)binaryReader.ReadInt32();
+            this.ruleType = (RuleType)binaryReader.ReadInt16();
+            this.squad = binaryReader.ReadShortBlockIndex1();
+            this.squadGroup = binaryReader.ReadShortBlockIndex1();
+            this.a = binaryReader.ReadInt16();
+            this.x = binaryReader.ReadSingle();
+            this.triggerVolume = binaryReader.ReadShortBlockIndex1();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.exitConditionScript = binaryReader.ReadString32();
+            this.invalidName_0 = binaryReader.ReadInt16();
+            this.invalidName_1 = binaryReader.ReadBytes(2);
+            this.flags = (Flags)binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)ruleType);
-                binaryWriter.Write(squad);
-                binaryWriter.Write(squadGroup);
-                binaryWriter.Write(a);
-                binaryWriter.Write(x);
-                binaryWriter.Write(triggerVolume);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(exitConditionScript);
-                binaryWriter.Write(invalidName_0);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                binaryWriter.Write((Int32)flags);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum RuleType : short
+        
         {
             AOrGreaterAlive = 0,
             AOrFewerAlive = 1,
@@ -87,6 +83,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             NOT = 1,
         };

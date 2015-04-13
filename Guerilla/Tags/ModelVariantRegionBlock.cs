@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class ModelVariantRegionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 20)]
+    public class ModelVariantRegionBlockBase
     {
         internal Moonfish.Tags.StringID regionNameMustMatchRegionNameInRenderModel;
         internal byte[] invalidName_;
@@ -30,29 +29,45 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal  ModelVariantRegionBlockBase(BinaryReader binaryReader)
         {
-            regionNameMustMatchRegionNameInRenderModel = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(1);
-            invalidName_0 = binaryReader.ReadBytes(1);
-            parentVariant = binaryReader.ReadShortBlockIndex1();
-            permutations = Guerilla.ReadBlockArray<ModelVariantPermutationBlock>(binaryReader);
-            sortOrder = (SortOrderNegativeValuesMeanCloserToTheCamera)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
+            this.regionNameMustMatchRegionNameInRenderModel = binaryReader.ReadStringID();
+            this.invalidName_ = binaryReader.ReadBytes(1);
+            this.invalidName_0 = binaryReader.ReadBytes(1);
+            this.parentVariant = binaryReader.ReadShortBlockIndex1();
+            this.permutations = ReadModelVariantPermutationBlockArray(binaryReader);
+            this.sortOrder = (SortOrderNegativeValuesMeanCloserToTheCamera)binaryReader.ReadInt16();
+            this.invalidName_1 = binaryReader.ReadBytes(2);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(regionNameMustMatchRegionNameInRenderModel);
-                binaryWriter.Write(invalidName_, 0, 1);
-                binaryWriter.Write(invalidName_0, 0, 1);
-                binaryWriter.Write(parentVariant);
-                Guerilla.WriteBlockArray<ModelVariantPermutationBlock>(binaryWriter, permutations, nextAddress);
-                binaryWriter.Write((Int16)sortOrder);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual ModelVariantPermutationBlock[] ReadModelVariantPermutationBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ModelVariantPermutationBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ModelVariantPermutationBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ModelVariantPermutationBlock(binaryReader);
+                }
+            }
+            return array;
         }
         internal enum SortOrderNegativeValuesMeanCloserToTheCamera : short
+        
         {
             NoSorting = 0,
             Minus5Closest = 1,

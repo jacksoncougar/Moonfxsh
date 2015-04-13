@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 84, Alignment = 4)]
-    public class ScenarioLightFixtureBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 84)]
+    public class ScenarioLightFixtureBlockBase
     {
         internal Moonfish.Tags.ShortBlockIndex1 type;
         internal Moonfish.Tags.ShortBlockIndex1 name;
@@ -25,23 +24,25 @@ namespace Moonfish.Guerilla.Tags
         internal ScenarioLightFixtureStructBlock lightFixtureData;
         internal  ScenarioLightFixtureBlockBase(BinaryReader binaryReader)
         {
-            type = binaryReader.ReadShortBlockIndex1();
-            name = binaryReader.ReadShortBlockIndex1();
-            objectData = new ScenarioObjectDatumStructBlock(binaryReader);
-            deviceData = new ScenarioDeviceStructBlock(binaryReader);
-            lightFixtureData = new ScenarioLightFixtureStructBlock(binaryReader);
+            this.type = binaryReader.ReadShortBlockIndex1();
+            this.name = binaryReader.ReadShortBlockIndex1();
+            this.objectData = new ScenarioObjectDatumStructBlock(binaryReader);
+            this.deviceData = new ScenarioDeviceStructBlock(binaryReader);
+            this.lightFixtureData = new ScenarioLightFixtureStructBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(type);
-                binaryWriter.Write(name);
-                objectData.Write(binaryWriter);
-                deviceData.Write(binaryWriter);
-                lightFixtureData.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class ScenarioPlanarFogPaletteBase  : IGuerilla
+    [LayoutAttribute(Size = 16)]
+    public class ScenarioPlanarFogPaletteBase
     {
         internal Moonfish.Tags.StringID name;
         [TagReference("fog ")]
@@ -25,21 +24,24 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  ScenarioPlanarFogPaletteBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadStringID();
-            planarFog = binaryReader.ReadTagReference();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(2);
+            this.name = binaryReader.ReadStringID();
+            this.planarFog = binaryReader.ReadTagReference();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.invalidName_0 = binaryReader.ReadBytes(2);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(planarFog);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

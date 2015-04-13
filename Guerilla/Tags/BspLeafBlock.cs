@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,27 +14,31 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class BspLeafBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 8)]
+    public class BspLeafBlockBase
     {
         internal short cluster;
         internal short surfaceReferenceCount;
         internal int firstSurfaceReferenceIndex;
         internal  BspLeafBlockBase(BinaryReader binaryReader)
         {
-            cluster = binaryReader.ReadInt16();
-            surfaceReferenceCount = binaryReader.ReadInt16();
-            firstSurfaceReferenceIndex = binaryReader.ReadInt32();
+            this.cluster = binaryReader.ReadInt16();
+            this.surfaceReferenceCount = binaryReader.ReadInt16();
+            this.firstSurfaceReferenceIndex = binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(cluster);
-                binaryWriter.Write(surfaceReferenceCount);
-                binaryWriter.Write(firstSurfaceReferenceIndex);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,21 +14,42 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class RuntimeLevelsDefinitionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 8)]
+    public class RuntimeLevelsDefinitionBlockBase
     {
         internal RuntimeCampaignLevelBlock[] campaignLevels;
         internal  RuntimeLevelsDefinitionBlockBase(BinaryReader binaryReader)
         {
-            campaignLevels = Guerilla.ReadBlockArray<RuntimeCampaignLevelBlock>(binaryReader);
+            this.campaignLevels = ReadRuntimeCampaignLevelBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                Guerilla.WriteBlockArray<RuntimeCampaignLevelBlock>(binaryWriter, campaignLevels, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual RuntimeCampaignLevelBlock[] ReadRuntimeCampaignLevelBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(RuntimeCampaignLevelBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new RuntimeCampaignLevelBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new RuntimeCampaignLevelBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 284, Alignment = 4)]
-    public class PlayerInformationBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 284)]
+    public class PlayerInformationBlockBase
     {
         [TagReference("unit")]
         internal Moonfish.Tags.TagReference unused;
@@ -84,89 +83,58 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference iceCream;
         internal  PlayerInformationBlockBase(BinaryReader binaryReader)
         {
-            unused = binaryReader.ReadTagReference();
-            invalidName_ = binaryReader.ReadBytes(28);
-            walkingSpeedWorldUnitsPerSecond = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            runForwardWorldUnitsPerSecond = binaryReader.ReadSingle();
-            runBackwardWorldUnitsPerSecond = binaryReader.ReadSingle();
-            runSidewaysWorldUnitsPerSecond = binaryReader.ReadSingle();
-            runAccelerationWorldUnitsPerSecondSquared = binaryReader.ReadSingle();
-            sneakForwardWorldUnitsPerSecond = binaryReader.ReadSingle();
-            sneakBackwardWorldUnitsPerSecond = binaryReader.ReadSingle();
-            sneakSidewaysWorldUnitsPerSecond = binaryReader.ReadSingle();
-            sneakAccelerationWorldUnitsPerSecondSquared = binaryReader.ReadSingle();
-            airborneAccelerationWorldUnitsPerSecondSquared = binaryReader.ReadSingle();
-            invalidName_1 = binaryReader.ReadBytes(16);
-            grenadeOrigin = binaryReader.ReadVector3();
-            invalidName_2 = binaryReader.ReadBytes(12);
-            stunMovementPenalty01 = binaryReader.ReadSingle();
-            stunTurningPenalty01 = binaryReader.ReadSingle();
-            stunJumpingPenalty01 = binaryReader.ReadSingle();
-            minimumStunTimeSeconds = binaryReader.ReadSingle();
-            maximumStunTimeSeconds = binaryReader.ReadSingle();
-            invalidName_3 = binaryReader.ReadBytes(8);
-            firstPersonIdleTimeSeconds = binaryReader.ReadRange();
-            firstPersonSkipFraction01 = binaryReader.ReadSingle();
-            invalidName_4 = binaryReader.ReadBytes(16);
-            coopRespawnEffect = binaryReader.ReadTagReference();
-            binocularsZoomCount = binaryReader.ReadInt32();
-            binocularsZoomRange = binaryReader.ReadRange();
-            binocularsZoomInSound = binaryReader.ReadTagReference();
-            binocularsZoomOutSound = binaryReader.ReadTagReference();
-            invalidName_5 = binaryReader.ReadBytes(16);
-            activeCamouflageOn = binaryReader.ReadTagReference();
-            activeCamouflageOff = binaryReader.ReadTagReference();
-            activeCamouflageError = binaryReader.ReadTagReference();
-            activeCamouflageReady = binaryReader.ReadTagReference();
-            flashlightOn = binaryReader.ReadTagReference();
-            flashlightOff = binaryReader.ReadTagReference();
-            iceCream = binaryReader.ReadTagReference();
+            this.unused = binaryReader.ReadTagReference();
+            this.invalidName_ = binaryReader.ReadBytes(28);
+            this.walkingSpeedWorldUnitsPerSecond = binaryReader.ReadSingle();
+            this.invalidName_0 = binaryReader.ReadBytes(4);
+            this.runForwardWorldUnitsPerSecond = binaryReader.ReadSingle();
+            this.runBackwardWorldUnitsPerSecond = binaryReader.ReadSingle();
+            this.runSidewaysWorldUnitsPerSecond = binaryReader.ReadSingle();
+            this.runAccelerationWorldUnitsPerSecondSquared = binaryReader.ReadSingle();
+            this.sneakForwardWorldUnitsPerSecond = binaryReader.ReadSingle();
+            this.sneakBackwardWorldUnitsPerSecond = binaryReader.ReadSingle();
+            this.sneakSidewaysWorldUnitsPerSecond = binaryReader.ReadSingle();
+            this.sneakAccelerationWorldUnitsPerSecondSquared = binaryReader.ReadSingle();
+            this.airborneAccelerationWorldUnitsPerSecondSquared = binaryReader.ReadSingle();
+            this.invalidName_1 = binaryReader.ReadBytes(16);
+            this.grenadeOrigin = binaryReader.ReadVector3();
+            this.invalidName_2 = binaryReader.ReadBytes(12);
+            this.stunMovementPenalty01 = binaryReader.ReadSingle();
+            this.stunTurningPenalty01 = binaryReader.ReadSingle();
+            this.stunJumpingPenalty01 = binaryReader.ReadSingle();
+            this.minimumStunTimeSeconds = binaryReader.ReadSingle();
+            this.maximumStunTimeSeconds = binaryReader.ReadSingle();
+            this.invalidName_3 = binaryReader.ReadBytes(8);
+            this.firstPersonIdleTimeSeconds = binaryReader.ReadRange();
+            this.firstPersonSkipFraction01 = binaryReader.ReadSingle();
+            this.invalidName_4 = binaryReader.ReadBytes(16);
+            this.coopRespawnEffect = binaryReader.ReadTagReference();
+            this.binocularsZoomCount = binaryReader.ReadInt32();
+            this.binocularsZoomRange = binaryReader.ReadRange();
+            this.binocularsZoomInSound = binaryReader.ReadTagReference();
+            this.binocularsZoomOutSound = binaryReader.ReadTagReference();
+            this.invalidName_5 = binaryReader.ReadBytes(16);
+            this.activeCamouflageOn = binaryReader.ReadTagReference();
+            this.activeCamouflageOff = binaryReader.ReadTagReference();
+            this.activeCamouflageError = binaryReader.ReadTagReference();
+            this.activeCamouflageReady = binaryReader.ReadTagReference();
+            this.flashlightOn = binaryReader.ReadTagReference();
+            this.flashlightOff = binaryReader.ReadTagReference();
+            this.iceCream = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(unused);
-                binaryWriter.Write(invalidName_, 0, 28);
-                binaryWriter.Write(walkingSpeedWorldUnitsPerSecond);
-                binaryWriter.Write(invalidName_0, 0, 4);
-                binaryWriter.Write(runForwardWorldUnitsPerSecond);
-                binaryWriter.Write(runBackwardWorldUnitsPerSecond);
-                binaryWriter.Write(runSidewaysWorldUnitsPerSecond);
-                binaryWriter.Write(runAccelerationWorldUnitsPerSecondSquared);
-                binaryWriter.Write(sneakForwardWorldUnitsPerSecond);
-                binaryWriter.Write(sneakBackwardWorldUnitsPerSecond);
-                binaryWriter.Write(sneakSidewaysWorldUnitsPerSecond);
-                binaryWriter.Write(sneakAccelerationWorldUnitsPerSecondSquared);
-                binaryWriter.Write(airborneAccelerationWorldUnitsPerSecondSquared);
-                binaryWriter.Write(invalidName_1, 0, 16);
-                binaryWriter.Write(grenadeOrigin);
-                binaryWriter.Write(invalidName_2, 0, 12);
-                binaryWriter.Write(stunMovementPenalty01);
-                binaryWriter.Write(stunTurningPenalty01);
-                binaryWriter.Write(stunJumpingPenalty01);
-                binaryWriter.Write(minimumStunTimeSeconds);
-                binaryWriter.Write(maximumStunTimeSeconds);
-                binaryWriter.Write(invalidName_3, 0, 8);
-                binaryWriter.Write(firstPersonIdleTimeSeconds);
-                binaryWriter.Write(firstPersonSkipFraction01);
-                binaryWriter.Write(invalidName_4, 0, 16);
-                binaryWriter.Write(coopRespawnEffect);
-                binaryWriter.Write(binocularsZoomCount);
-                binaryWriter.Write(binocularsZoomRange);
-                binaryWriter.Write(binocularsZoomInSound);
-                binaryWriter.Write(binocularsZoomOutSound);
-                binaryWriter.Write(invalidName_5, 0, 16);
-                binaryWriter.Write(activeCamouflageOn);
-                binaryWriter.Write(activeCamouflageOff);
-                binaryWriter.Write(activeCamouflageError);
-                binaryWriter.Write(activeCamouflageReady);
-                binaryWriter.Write(flashlightOn);
-                binaryWriter.Write(flashlightOff);
-                binaryWriter.Write(iceCream);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 52, Alignment = 4)]
-    public class SkyLightBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 52)]
+    public class SkyLightBlockBase
     {
         internal OpenTK.Vector3 directionVector;
         internal OpenTK.Vector2 direction;
@@ -27,25 +26,56 @@ namespace Moonfish.Guerilla.Tags
         internal SkyRadiosityLightBlock[] radiosity;
         internal  SkyLightBlockBase(BinaryReader binaryReader)
         {
-            directionVector = binaryReader.ReadVector3();
-            direction = binaryReader.ReadVector2();
-            lensFlare = binaryReader.ReadTagReference();
-            fog = Guerilla.ReadBlockArray<SkyLightFogBlock>(binaryReader);
-            fogOpposite = Guerilla.ReadBlockArray<SkyLightFogBlock>(binaryReader);
-            radiosity = Guerilla.ReadBlockArray<SkyRadiosityLightBlock>(binaryReader);
+            this.directionVector = binaryReader.ReadVector3();
+            this.direction = binaryReader.ReadVector2();
+            this.lensFlare = binaryReader.ReadTagReference();
+            this.fog = ReadSkyLightFogBlockArray(binaryReader);
+            this.fogOpposite = ReadSkyLightFogBlockArray(binaryReader);
+            this.radiosity = ReadSkyRadiosityLightBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(directionVector);
-                binaryWriter.Write(direction);
-                binaryWriter.Write(lensFlare);
-                Guerilla.WriteBlockArray<SkyLightFogBlock>(binaryWriter, fog, nextAddress);
-                Guerilla.WriteBlockArray<SkyLightFogBlock>(binaryWriter, fogOpposite, nextAddress);
-                Guerilla.WriteBlockArray<SkyRadiosityLightBlock>(binaryWriter, radiosity, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual SkyLightFogBlock[] ReadSkyLightFogBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(SkyLightFogBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new SkyLightFogBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new SkyLightFogBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual SkyRadiosityLightBlock[] ReadSkyRadiosityLightBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(SkyRadiosityLightBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new SkyRadiosityLightBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new SkyRadiosityLightBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

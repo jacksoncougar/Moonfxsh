@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 104, Alignment = 4)]
-    public class FallingDamageBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 104)]
+    public class FallingDamageBlockBase
     {
         internal byte[] invalidName_;
         internal Moonfish.Model.Range harmfulFallingDistanceWorldUnits;
@@ -37,35 +36,31 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal  FallingDamageBlockBase(BinaryReader binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes(8);
-            harmfulFallingDistanceWorldUnits = binaryReader.ReadRange();
-            fallingDamage = binaryReader.ReadTagReference();
-            invalidName_0 = binaryReader.ReadBytes(8);
-            maximumFallingDistanceWorldUnits = binaryReader.ReadSingle();
-            distanceDamage = binaryReader.ReadTagReference();
-            vehicleEnvironemtnCollisionDamageEffect = binaryReader.ReadTagReference();
-            vehicleKilledUnitDamageEffect = binaryReader.ReadTagReference();
-            vehicleCollisionDamage = binaryReader.ReadTagReference();
-            flamingDeathDamage = binaryReader.ReadTagReference();
-            invalidName_1 = binaryReader.ReadBytes(28);
+            this.invalidName_ = binaryReader.ReadBytes(8);
+            this.harmfulFallingDistanceWorldUnits = binaryReader.ReadRange();
+            this.fallingDamage = binaryReader.ReadTagReference();
+            this.invalidName_0 = binaryReader.ReadBytes(8);
+            this.maximumFallingDistanceWorldUnits = binaryReader.ReadSingle();
+            this.distanceDamage = binaryReader.ReadTagReference();
+            this.vehicleEnvironemtnCollisionDamageEffect = binaryReader.ReadTagReference();
+            this.vehicleKilledUnitDamageEffect = binaryReader.ReadTagReference();
+            this.vehicleCollisionDamage = binaryReader.ReadTagReference();
+            this.flamingDeathDamage = binaryReader.ReadTagReference();
+            this.invalidName_1 = binaryReader.ReadBytes(28);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(invalidName_, 0, 8);
-                binaryWriter.Write(harmfulFallingDistanceWorldUnits);
-                binaryWriter.Write(fallingDamage);
-                binaryWriter.Write(invalidName_0, 0, 8);
-                binaryWriter.Write(maximumFallingDistanceWorldUnits);
-                binaryWriter.Write(distanceDamage);
-                binaryWriter.Write(vehicleEnvironemtnCollisionDamageEffect);
-                binaryWriter.Write(vehicleKilledUnitDamageEffect);
-                binaryWriter.Write(vehicleCollisionDamage);
-                binaryWriter.Write(flamingDeathDamage);
-                binaryWriter.Write(invalidName_1, 0, 28);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,27 +14,31 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class BspSurfaceReferenceBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 8)]
+    public class BspSurfaceReferenceBlockBase
     {
         internal short stripIndex;
         internal short lightmapTriangleIndex;
         internal int bspNodeIndex;
         internal  BspSurfaceReferenceBlockBase(BinaryReader binaryReader)
         {
-            stripIndex = binaryReader.ReadInt16();
-            lightmapTriangleIndex = binaryReader.ReadInt16();
-            bspNodeIndex = binaryReader.ReadInt32();
+            this.stripIndex = binaryReader.ReadInt16();
+            this.lightmapTriangleIndex = binaryReader.ReadInt16();
+            this.bspNodeIndex = binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(stripIndex);
-                binaryWriter.Write(lightmapTriangleIndex);
-                binaryWriter.Write(bspNodeIndex);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

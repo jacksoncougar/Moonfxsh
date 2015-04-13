@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class HudWidgetInputsStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 4)]
+    public class HudWidgetInputsStructBlockBase
     {
         internal Input1 input1;
         internal Input2 input2;
@@ -24,23 +23,27 @@ namespace Moonfish.Guerilla.Tags
         internal Input4 input4;
         internal  HudWidgetInputsStructBlockBase(BinaryReader binaryReader)
         {
-            input1 = (Input1)binaryReader.ReadByte();
-            input2 = (Input2)binaryReader.ReadByte();
-            input3 = (Input3)binaryReader.ReadByte();
-            input4 = (Input4)binaryReader.ReadByte();
+            this.input1 = (Input1)binaryReader.ReadByte();
+            this.input2 = (Input2)binaryReader.ReadByte();
+            this.input3 = (Input3)binaryReader.ReadByte();
+            this.input4 = (Input4)binaryReader.ReadByte();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Byte)input1);
-                binaryWriter.Write((Byte)input2);
-                binaryWriter.Write((Byte)input3);
-                binaryWriter.Write((Byte)input4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum Input1 : byte
+        
         {
             BASICZero = 0,
             BASICOne = 1,
@@ -125,6 +128,7 @@ namespace Moonfish.Guerilla.Tags
             InvalidName50 = 80,
         };
         internal enum Input2 : byte
+        
         {
             BASICZero = 0,
             BASICOne = 1,
@@ -209,6 +213,7 @@ namespace Moonfish.Guerilla.Tags
             InvalidName50 = 80,
         };
         internal enum Input3 : byte
+        
         {
             BASICZero = 0,
             BASICOne = 1,
@@ -293,6 +298,7 @@ namespace Moonfish.Guerilla.Tags
             InvalidName50 = 80,
         };
         internal enum Input4 : byte
+        
         {
             BASICZero = 0,
             BASICOne = 1,

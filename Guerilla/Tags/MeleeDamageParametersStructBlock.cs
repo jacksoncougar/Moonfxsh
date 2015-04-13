@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 76, Alignment = 4)]
-    public class MeleeDamageParametersStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 76)]
+    public class MeleeDamageParametersStructBlockBase
     {
         internal OpenTK.Vector2 damagePyramidAngles;
         internal float damagePyramidDepth;
@@ -44,33 +43,30 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference lungeMeleeResponse;
         internal  MeleeDamageParametersStructBlockBase(BinaryReader binaryReader)
         {
-            damagePyramidAngles = binaryReader.ReadVector2();
-            damagePyramidDepth = binaryReader.ReadSingle();
-            invalidName_1StHitMeleeDamage = binaryReader.ReadTagReference();
-            invalidName_1StHitMeleeResponse = binaryReader.ReadTagReference();
-            invalidName_2NdHitMeleeDamage = binaryReader.ReadTagReference();
-            invalidName_2NdHitMeleeResponse = binaryReader.ReadTagReference();
-            invalidName_3RdHitMeleeDamage = binaryReader.ReadTagReference();
-            invalidName_3RdHitMeleeResponse = binaryReader.ReadTagReference();
-            lungeMeleeDamage = binaryReader.ReadTagReference();
-            lungeMeleeResponse = binaryReader.ReadTagReference();
+            this.damagePyramidAngles = binaryReader.ReadVector2();
+            this.damagePyramidDepth = binaryReader.ReadSingle();
+            this.invalidName_1StHitMeleeDamage = binaryReader.ReadTagReference();
+            this.invalidName_1StHitMeleeResponse = binaryReader.ReadTagReference();
+            this.invalidName_2NdHitMeleeDamage = binaryReader.ReadTagReference();
+            this.invalidName_2NdHitMeleeResponse = binaryReader.ReadTagReference();
+            this.invalidName_3RdHitMeleeDamage = binaryReader.ReadTagReference();
+            this.invalidName_3RdHitMeleeResponse = binaryReader.ReadTagReference();
+            this.lungeMeleeDamage = binaryReader.ReadTagReference();
+            this.lungeMeleeResponse = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(damagePyramidAngles);
-                binaryWriter.Write(damagePyramidDepth);
-                binaryWriter.Write(invalidName_1StHitMeleeDamage);
-                binaryWriter.Write(invalidName_1StHitMeleeResponse);
-                binaryWriter.Write(invalidName_2NdHitMeleeDamage);
-                binaryWriter.Write(invalidName_2NdHitMeleeResponse);
-                binaryWriter.Write(invalidName_3RdHitMeleeDamage);
-                binaryWriter.Write(invalidName_3RdHitMeleeResponse);
-                binaryWriter.Write(lungeMeleeDamage);
-                binaryWriter.Write(lungeMeleeResponse);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

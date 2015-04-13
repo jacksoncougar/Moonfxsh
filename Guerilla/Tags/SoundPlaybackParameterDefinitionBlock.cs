@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,24 +14,29 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class SoundPlaybackParameterDefinitionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 16)]
+    public class SoundPlaybackParameterDefinitionBlockBase
     {
         internal Moonfish.Model.Range scaleBounds;
         internal Moonfish.Model.Range randomBaseAndVariance;
         internal  SoundPlaybackParameterDefinitionBlockBase(BinaryReader binaryReader)
         {
-            scaleBounds = binaryReader.ReadRange();
-            randomBaseAndVariance = binaryReader.ReadRange();
+            this.scaleBounds = binaryReader.ReadRange();
+            this.randomBaseAndVariance = binaryReader.ReadRange();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(scaleBounds);
-                binaryWriter.Write(randomBaseAndVariance);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

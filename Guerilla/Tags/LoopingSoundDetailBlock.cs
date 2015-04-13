@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 52, Alignment = 4)]
-    public class LoopingSoundDetailBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 52)]
+    public class LoopingSoundDetailBlockBase
     {
         internal Moonfish.Tags.StringID name;
         [TagReference("snd!")]
@@ -41,32 +40,32 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range distanceBoundsWorldUnits;
         internal  LoopingSoundDetailBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadStringID();
-            sound = binaryReader.ReadTagReference();
-            randomPeriodBoundsSeconds = binaryReader.ReadRange();
-            invalidName_ = binaryReader.ReadSingle();
-            flags = (Flags)binaryReader.ReadInt32();
-            yawBoundsDegrees = binaryReader.ReadRange();
-            pitchBoundsDegrees = binaryReader.ReadRange();
-            distanceBoundsWorldUnits = binaryReader.ReadRange();
+            this.name = binaryReader.ReadStringID();
+            this.sound = binaryReader.ReadTagReference();
+            this.randomPeriodBoundsSeconds = binaryReader.ReadRange();
+            this.invalidName_ = binaryReader.ReadSingle();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.yawBoundsDegrees = binaryReader.ReadRange();
+            this.pitchBoundsDegrees = binaryReader.ReadRange();
+            this.distanceBoundsWorldUnits = binaryReader.ReadRange();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(sound);
-                binaryWriter.Write(randomPeriodBoundsSeconds);
-                binaryWriter.Write(invalidName_);
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(yawBoundsDegrees);
-                binaryWriter.Write(pitchBoundsDegrees);
-                binaryWriter.Write(distanceBoundsWorldUnits);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             DontPlayWithAlternate = 1,
             DontPlayWithoutAlternate = 2,

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 52, Alignment = 4)]
-    public class BarrelFiringEffectBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 52)]
+    public class BarrelFiringEffectBlockBase
     {
         /// <summary>
         /// the minimum number of times this firing effect will be used, once it has been chosen
@@ -58,29 +57,28 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference emptyDamage;
         internal  BarrelFiringEffectBlockBase(BinaryReader binaryReader)
         {
-            shotCountLowerBound = binaryReader.ReadInt16();
-            shotCountUpperBound = binaryReader.ReadInt16();
-            firingEffect = binaryReader.ReadTagReference();
-            misfireEffect = binaryReader.ReadTagReference();
-            emptyEffect = binaryReader.ReadTagReference();
-            firingDamage = binaryReader.ReadTagReference();
-            misfireDamage = binaryReader.ReadTagReference();
-            emptyDamage = binaryReader.ReadTagReference();
+            this.shotCountLowerBound = binaryReader.ReadInt16();
+            this.shotCountUpperBound = binaryReader.ReadInt16();
+            this.firingEffect = binaryReader.ReadTagReference();
+            this.misfireEffect = binaryReader.ReadTagReference();
+            this.emptyEffect = binaryReader.ReadTagReference();
+            this.firingDamage = binaryReader.ReadTagReference();
+            this.misfireDamage = binaryReader.ReadTagReference();
+            this.emptyDamage = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(shotCountLowerBound);
-                binaryWriter.Write(shotCountUpperBound);
-                binaryWriter.Write(firingEffect);
-                binaryWriter.Write(misfireEffect);
-                binaryWriter.Write(emptyEffect);
-                binaryWriter.Write(firingDamage);
-                binaryWriter.Write(misfireDamage);
-                binaryWriter.Write(emptyDamage);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

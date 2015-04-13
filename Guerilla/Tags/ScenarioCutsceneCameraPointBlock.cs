@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 64, Alignment = 4)]
-    public class ScenarioCutsceneCameraPointBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 64)]
+    public class ScenarioCutsceneCameraPointBlockBase
     {
         internal Flags flags;
         internal Type type;
@@ -26,32 +25,35 @@ namespace Moonfish.Guerilla.Tags
         internal float unused;
         internal  ScenarioCutsceneCameraPointBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            type = (Type)binaryReader.ReadInt16();
-            name = binaryReader.ReadString32();
-            position = binaryReader.ReadVector3();
-            orientation = binaryReader.ReadVector3();
-            unused = binaryReader.ReadSingle();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.type = (Type)binaryReader.ReadInt16();
+            this.name = binaryReader.ReadString32();
+            this.position = binaryReader.ReadVector3();
+            this.orientation = binaryReader.ReadVector3();
+            this.unused = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write(name);
-                binaryWriter.Write(position);
-                binaryWriter.Write(orientation);
-                binaryWriter.Write(unused);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             EditAsRelative = 1,
         };
         internal enum Type : short
+        
         {
             Normal = 0,
             IgnoreTargetOrientation = 1,

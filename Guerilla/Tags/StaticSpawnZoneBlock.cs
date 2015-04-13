@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 48, Alignment = 4)]
-    public class StaticSpawnZoneBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 48)]
+    public class StaticSpawnZoneBlockBase
     {
         internal StaticSpawnZoneDataStructBlock data;
         internal OpenTK.Vector3 position;
@@ -27,27 +26,27 @@ namespace Moonfish.Guerilla.Tags
         internal float weight;
         internal  StaticSpawnZoneBlockBase(BinaryReader binaryReader)
         {
-            data = new StaticSpawnZoneDataStructBlock(binaryReader);
-            position = binaryReader.ReadVector3();
-            lowerHeight = binaryReader.ReadSingle();
-            upperHeight = binaryReader.ReadSingle();
-            innerRadius = binaryReader.ReadSingle();
-            outerRadius = binaryReader.ReadSingle();
-            weight = binaryReader.ReadSingle();
+            this.data = new StaticSpawnZoneDataStructBlock(binaryReader);
+            this.position = binaryReader.ReadVector3();
+            this.lowerHeight = binaryReader.ReadSingle();
+            this.upperHeight = binaryReader.ReadSingle();
+            this.innerRadius = binaryReader.ReadSingle();
+            this.outerRadius = binaryReader.ReadSingle();
+            this.weight = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                data.Write(binaryWriter);
-                binaryWriter.Write(position);
-                binaryWriter.Write(lowerHeight);
-                binaryWriter.Write(upperHeight);
-                binaryWriter.Write(innerRadius);
-                binaryWriter.Write(outerRadius);
-                binaryWriter.Write(weight);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

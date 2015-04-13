@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32, Alignment = 4)]
-    public class GlobalGeometryPointDataStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 32)]
+    public class GlobalGeometryPointDataStructBlockBase
     {
         internal GlobalGeometryRawPointBlock[] rawPoints;
         internal byte[] runtimePointData;
@@ -24,21 +23,69 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalGeometryPointDataIndexBlock[] vertexPointIndices;
         internal  GlobalGeometryPointDataStructBlockBase(BinaryReader binaryReader)
         {
-            rawPoints = Guerilla.ReadBlockArray<GlobalGeometryRawPointBlock>(binaryReader);
-            runtimePointData = Guerilla.ReadData(binaryReader);
-            rigidPointGroups = Guerilla.ReadBlockArray<GlobalGeometryRigidPointGroupBlock>(binaryReader);
-            vertexPointIndices = Guerilla.ReadBlockArray<GlobalGeometryPointDataIndexBlock>(binaryReader);
+            this.rawPoints = ReadGlobalGeometryRawPointBlockArray(binaryReader);
+            this.runtimePointData = ReadData(binaryReader);
+            this.rigidPointGroups = ReadGlobalGeometryRigidPointGroupBlockArray(binaryReader);
+            this.vertexPointIndices = ReadGlobalGeometryPointDataIndexBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                Guerilla.WriteBlockArray<GlobalGeometryRawPointBlock>(binaryWriter, rawPoints, nextAddress);
-                Guerilla.WriteData(binaryWriter);
-                Guerilla.WriteBlockArray<GlobalGeometryRigidPointGroupBlock>(binaryWriter, rigidPointGroups, nextAddress);
-                Guerilla.WriteBlockArray<GlobalGeometryPointDataIndexBlock>(binaryWriter, vertexPointIndices, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual GlobalGeometryRawPointBlock[] ReadGlobalGeometryRawPointBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(GlobalGeometryRawPointBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new GlobalGeometryRawPointBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new GlobalGeometryRawPointBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual GlobalGeometryRigidPointGroupBlock[] ReadGlobalGeometryRigidPointGroupBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(GlobalGeometryRigidPointGroupBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new GlobalGeometryRigidPointGroupBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new GlobalGeometryRigidPointGroupBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual GlobalGeometryPointDataIndexBlock[] ReadGlobalGeometryPointDataIndexBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(GlobalGeometryPointDataIndexBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new GlobalGeometryPointDataIndexBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new GlobalGeometryPointDataIndexBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

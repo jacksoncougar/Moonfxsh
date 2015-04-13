@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 88, Alignment = 4)]
-    public class StructureBspDebugInfoBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 88)]
+    public class StructureBspDebugInfoBlockBase
     {
         internal byte[] invalidName_;
         internal StructureBspClusterDebugInfoBlock[] clusters;
@@ -24,21 +23,69 @@ namespace Moonfish.Guerilla.Tags
         internal StructureBspFogZoneDebugInfoBlock[] fogZones;
         internal  StructureBspDebugInfoBlockBase(BinaryReader binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes(64);
-            clusters = Guerilla.ReadBlockArray<StructureBspClusterDebugInfoBlock>(binaryReader);
-            fogPlanes = Guerilla.ReadBlockArray<StructureBspFogPlaneDebugInfoBlock>(binaryReader);
-            fogZones = Guerilla.ReadBlockArray<StructureBspFogZoneDebugInfoBlock>(binaryReader);
+            this.invalidName_ = binaryReader.ReadBytes(64);
+            this.clusters = ReadStructureBspClusterDebugInfoBlockArray(binaryReader);
+            this.fogPlanes = ReadStructureBspFogPlaneDebugInfoBlockArray(binaryReader);
+            this.fogZones = ReadStructureBspFogZoneDebugInfoBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(invalidName_, 0, 64);
-                Guerilla.WriteBlockArray<StructureBspClusterDebugInfoBlock>(binaryWriter, clusters, nextAddress);
-                Guerilla.WriteBlockArray<StructureBspFogPlaneDebugInfoBlock>(binaryWriter, fogPlanes, nextAddress);
-                Guerilla.WriteBlockArray<StructureBspFogZoneDebugInfoBlock>(binaryWriter, fogZones, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual StructureBspClusterDebugInfoBlock[] ReadStructureBspClusterDebugInfoBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(StructureBspClusterDebugInfoBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new StructureBspClusterDebugInfoBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new StructureBspClusterDebugInfoBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual StructureBspFogPlaneDebugInfoBlock[] ReadStructureBspFogPlaneDebugInfoBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(StructureBspFogPlaneDebugInfoBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new StructureBspFogPlaneDebugInfoBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new StructureBspFogPlaneDebugInfoBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual StructureBspFogZoneDebugInfoBlock[] ReadStructureBspFogZoneDebugInfoBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(StructureBspFogZoneDebugInfoBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new StructureBspFogZoneDebugInfoBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new StructureBspFogZoneDebugInfoBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

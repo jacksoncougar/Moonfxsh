@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 100, Alignment = 4)]
-    public class ActorStartingLocationsBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 100)]
+    public class ActorStartingLocationsBlockBase
     {
         internal Moonfish.Tags.StringID name;
         internal OpenTK.Vector3 position;
@@ -48,60 +47,46 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal  ActorStartingLocationsBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadStringID();
-            position = binaryReader.ReadVector3();
-            referenceFrame = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            facingYawPitchDegrees = binaryReader.ReadVector2();
-            flags = (Flags)binaryReader.ReadInt32();
-            characterType = binaryReader.ReadShortBlockIndex1();
-            initialWeapon = binaryReader.ReadShortBlockIndex1();
-            initialSecondaryWeapon = binaryReader.ReadShortBlockIndex1();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            vehicleType = binaryReader.ReadShortBlockIndex1();
-            seatType = (SeatType)binaryReader.ReadInt16();
-            grenadeType = (GrenadeType)binaryReader.ReadInt16();
-            swarmCount = binaryReader.ReadInt16();
-            actorVariantName = binaryReader.ReadStringID();
-            vehicleVariantName = binaryReader.ReadStringID();
-            initialMovementDistance = binaryReader.ReadSingle();
-            emitterVehicle = binaryReader.ReadShortBlockIndex1();
-            initialMovementMode = (InitialMovementMode)binaryReader.ReadInt16();
-            placementScript = binaryReader.ReadString32();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            invalidName_2 = binaryReader.ReadBytes(2);
+            this.name = binaryReader.ReadStringID();
+            this.position = binaryReader.ReadVector3();
+            this.referenceFrame = binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.facingYawPitchDegrees = binaryReader.ReadVector2();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.characterType = binaryReader.ReadShortBlockIndex1();
+            this.initialWeapon = binaryReader.ReadShortBlockIndex1();
+            this.initialSecondaryWeapon = binaryReader.ReadShortBlockIndex1();
+            this.invalidName_0 = binaryReader.ReadBytes(2);
+            this.vehicleType = binaryReader.ReadShortBlockIndex1();
+            this.seatType = (SeatType)binaryReader.ReadInt16();
+            this.grenadeType = (GrenadeType)binaryReader.ReadInt16();
+            this.swarmCount = binaryReader.ReadInt16();
+            this.actorVariantName = binaryReader.ReadStringID();
+            this.vehicleVariantName = binaryReader.ReadStringID();
+            this.initialMovementDistance = binaryReader.ReadSingle();
+            this.emitterVehicle = binaryReader.ReadShortBlockIndex1();
+            this.initialMovementMode = (InitialMovementMode)binaryReader.ReadInt16();
+            this.placementScript = binaryReader.ReadString32();
+            this.invalidName_1 = binaryReader.ReadBytes(2);
+            this.invalidName_2 = binaryReader.ReadBytes(2);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(position);
-                binaryWriter.Write(referenceFrame);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(facingYawPitchDegrees);
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(characterType);
-                binaryWriter.Write(initialWeapon);
-                binaryWriter.Write(initialSecondaryWeapon);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write(vehicleType);
-                binaryWriter.Write((Int16)seatType);
-                binaryWriter.Write((Int16)grenadeType);
-                binaryWriter.Write(swarmCount);
-                binaryWriter.Write(actorVariantName);
-                binaryWriter.Write(vehicleVariantName);
-                binaryWriter.Write(initialMovementDistance);
-                binaryWriter.Write(emitterVehicle);
-                binaryWriter.Write((Int16)initialMovementMode);
-                binaryWriter.Write(placementScript);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                binaryWriter.Write(invalidName_2, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             InitiallyAsleep = 1,
             InfectionFormExplode = 2,
@@ -110,6 +95,7 @@ namespace Moonfish.Guerilla.Tags
             InitiallyHidden = 16,
         };
         internal enum SeatType : short
+        
         {
             DEFAULT = 0,
             Passenger = 1,
@@ -121,12 +107,14 @@ namespace Moonfish.Guerilla.Tags
             NOVehicle = 7,
         };
         internal enum GrenadeType : short
+        
         {
             NONE = 0,
             HumanGrenade = 1,
             CovenantPlasma = 2,
         };
         internal enum InitialMovementMode : short
+        
         {
             Default = 0,
             Climbing = 1,

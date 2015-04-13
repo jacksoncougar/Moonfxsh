@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ScenarioObjectIdStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 8)]
+    public class ScenarioObjectIdStructBlockBase
     {
         internal int uniqueID;
         internal Moonfish.Tags.ShortBlockIndex1 originBSPIndex;
@@ -24,23 +23,27 @@ namespace Moonfish.Guerilla.Tags
         internal Source source;
         internal  ScenarioObjectIdStructBlockBase(BinaryReader binaryReader)
         {
-            uniqueID = binaryReader.ReadInt32();
-            originBSPIndex = binaryReader.ReadShortBlockIndex1();
-            type = (Type)binaryReader.ReadByte();
-            source = (Source)binaryReader.ReadByte();
+            this.uniqueID = binaryReader.ReadInt32();
+            this.originBSPIndex = binaryReader.ReadShortBlockIndex1();
+            this.type = (Type)binaryReader.ReadByte();
+            this.source = (Source)binaryReader.ReadByte();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(uniqueID);
-                binaryWriter.Write(originBSPIndex);
-                binaryWriter.Write((Byte)type);
-                binaryWriter.Write((Byte)source);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum Type : byte
+        
         {
             Biped = 0,
             Vehicle = 1,
@@ -57,6 +60,7 @@ namespace Moonfish.Guerilla.Tags
             Creature = 12,
         };
         internal enum Source : byte
+        
         {
             Structure = 0,
             Editor = 1,

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class OrderEndingBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 20)]
+    public class OrderEndingBlockBase
     {
         internal Moonfish.Tags.ShortBlockIndex1 nextOrder;
         internal CombinationRule combinationRule;
@@ -29,32 +28,50 @@ namespace Moonfish.Guerilla.Tags
         internal TriggerReferences[] triggers;
         internal  OrderEndingBlockBase(BinaryReader binaryReader)
         {
-            nextOrder = binaryReader.ReadShortBlockIndex1();
-            combinationRule = (CombinationRule)binaryReader.ReadInt16();
-            delayTime = binaryReader.ReadSingle();
-            dialogueType = (DialogueTypeWhenThisEndingIsTriggeredLaunchADialogueEventOfTheGivenType)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            triggers = Guerilla.ReadBlockArray<TriggerReferences>(binaryReader);
+            this.nextOrder = binaryReader.ReadShortBlockIndex1();
+            this.combinationRule = (CombinationRule)binaryReader.ReadInt16();
+            this.delayTime = binaryReader.ReadSingle();
+            this.dialogueType = (DialogueTypeWhenThisEndingIsTriggeredLaunchADialogueEventOfTheGivenType)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.triggers = ReadTriggerReferencesArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(nextOrder);
-                binaryWriter.Write((Int16)combinationRule);
-                binaryWriter.Write(delayTime);
-                binaryWriter.Write((Int16)dialogueType);
-                binaryWriter.Write(invalidName_, 0, 2);
-                Guerilla.WriteBlockArray<TriggerReferences>(binaryWriter, triggers, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual TriggerReferences[] ReadTriggerReferencesArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(TriggerReferences));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new TriggerReferences[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new TriggerReferences(binaryReader);
+                }
+            }
+            return array;
         }
         internal enum CombinationRule : short
+        
         {
             OR = 0,
             AND = 1,
         };
         internal enum DialogueTypeWhenThisEndingIsTriggeredLaunchADialogueEventOfTheGivenType : short
+        
         {
             None = 0,
             Advance = 1,

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class ShaderTemplatePassReferenceBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class ShaderTemplatePassReferenceBlockBase
     {
         internal Layer layer;
         internal byte[] invalidName_;
@@ -25,23 +24,27 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  ShaderTemplatePassReferenceBlockBase(BinaryReader binaryReader)
         {
-            layer = (Layer)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            pass = binaryReader.ReadTagReference();
-            invalidName_0 = binaryReader.ReadBytes(12);
+            this.layer = (Layer)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.pass = binaryReader.ReadTagReference();
+            this.invalidName_0 = binaryReader.ReadBytes(12);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)layer);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(pass);
-                binaryWriter.Write(invalidName_0, 0, 12);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum Layer : short
+        
         {
             Texaccum = 0,
             EnvironmentMap = 1,

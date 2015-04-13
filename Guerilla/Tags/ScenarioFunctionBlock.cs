@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 120, Alignment = 4)]
-    public class ScenarioFunctionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 120)]
+    public class ScenarioFunctionBlockBase
     {
         internal Flags flags;
         internal Moonfish.Tags.String32 name;
@@ -78,60 +77,46 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_3;
         internal  ScenarioFunctionBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            name = binaryReader.ReadString32();
-            periodSeconds = binaryReader.ReadSingle();
-            scalePeriodBy = binaryReader.ReadShortBlockIndex1();
-            function = (Function)binaryReader.ReadInt16();
-            scaleFunctionBy = binaryReader.ReadShortBlockIndex1();
-            wobbleFunction = (WobbleFunctionCurveUsedForWobble)binaryReader.ReadInt16();
-            wobblePeriodSeconds = binaryReader.ReadSingle();
-            wobbleMagnitudePercent = binaryReader.ReadSingle();
-            squareWaveThreshold = binaryReader.ReadSingle();
-            stepCount = binaryReader.ReadInt16();
-            mapTo = (MapTo)binaryReader.ReadInt16();
-            sawtoothCount = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            scaleResultBy = binaryReader.ReadShortBlockIndex1();
-            boundsMode = (BoundsModeControlsHowBoundsBelowAreUsed)binaryReader.ReadInt16();
-            bounds = binaryReader.ReadVector2();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            invalidName_1 = binaryReader.ReadBytes(2);
-            turnOffWith = binaryReader.ReadShortBlockIndex1();
-            invalidName_2 = binaryReader.ReadBytes(16);
-            invalidName_3 = binaryReader.ReadBytes(16);
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.name = binaryReader.ReadString32();
+            this.periodSeconds = binaryReader.ReadSingle();
+            this.scalePeriodBy = binaryReader.ReadShortBlockIndex1();
+            this.function = (Function)binaryReader.ReadInt16();
+            this.scaleFunctionBy = binaryReader.ReadShortBlockIndex1();
+            this.wobbleFunction = (WobbleFunctionCurveUsedForWobble)binaryReader.ReadInt16();
+            this.wobblePeriodSeconds = binaryReader.ReadSingle();
+            this.wobbleMagnitudePercent = binaryReader.ReadSingle();
+            this.squareWaveThreshold = binaryReader.ReadSingle();
+            this.stepCount = binaryReader.ReadInt16();
+            this.mapTo = (MapTo)binaryReader.ReadInt16();
+            this.sawtoothCount = binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.scaleResultBy = binaryReader.ReadShortBlockIndex1();
+            this.boundsMode = (BoundsModeControlsHowBoundsBelowAreUsed)binaryReader.ReadInt16();
+            this.bounds = binaryReader.ReadVector2();
+            this.invalidName_0 = binaryReader.ReadBytes(4);
+            this.invalidName_1 = binaryReader.ReadBytes(2);
+            this.turnOffWith = binaryReader.ReadShortBlockIndex1();
+            this.invalidName_2 = binaryReader.ReadBytes(16);
+            this.invalidName_3 = binaryReader.ReadBytes(16);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(name);
-                binaryWriter.Write(periodSeconds);
-                binaryWriter.Write(scalePeriodBy);
-                binaryWriter.Write((Int16)function);
-                binaryWriter.Write(scaleFunctionBy);
-                binaryWriter.Write((Int16)wobbleFunction);
-                binaryWriter.Write(wobblePeriodSeconds);
-                binaryWriter.Write(wobbleMagnitudePercent);
-                binaryWriter.Write(squareWaveThreshold);
-                binaryWriter.Write(stepCount);
-                binaryWriter.Write((Int16)mapTo);
-                binaryWriter.Write(sawtoothCount);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(scaleResultBy);
-                binaryWriter.Write((Int16)boundsMode);
-                binaryWriter.Write(bounds);
-                binaryWriter.Write(invalidName_0, 0, 4);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                binaryWriter.Write(turnOffWith);
-                binaryWriter.Write(invalidName_2, 0, 16);
-                binaryWriter.Write(invalidName_3, 0, 16);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             ScriptedLevelScriptWillSetThisValueOtherSettingsHereWillBeIgnored = 1,
             InvertResultOfFunctionIs1MinusActualResult = 2,
@@ -139,6 +124,7 @@ namespace Moonfish.Guerilla.Tags
             AlwaysActiveFunctionDoesNotDeactivateWhenAtOrBelowLowerBound = 8,
         };
         internal enum Function : short
+        
         {
             One = 0,
             Zero = 1,
@@ -154,6 +140,7 @@ namespace Moonfish.Guerilla.Tags
             Spark = 11,
         };
         internal enum WobbleFunctionCurveUsedForWobble : short
+        
         {
             One = 0,
             Zero = 1,
@@ -169,6 +156,7 @@ namespace Moonfish.Guerilla.Tags
             Spark = 11,
         };
         internal enum MapTo : short
+        
         {
             Linear = 0,
             Early = 1,
@@ -180,6 +168,7 @@ namespace Moonfish.Guerilla.Tags
             Zero = 7,
         };
         internal enum BoundsModeControlsHowBoundsBelowAreUsed : short
+        
         {
             Clip = 0,
             ClipAndNormalize = 1,

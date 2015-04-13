@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 64, Alignment = 4)]
-    public class VocalizationPatternsBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 64)]
+    public class VocalizationPatternsBlockBase
     {
         internal DialogueType dialogueType;
         internal short vocalizationIndex;
@@ -55,61 +54,46 @@ namespace Moonfish.Guerilla.Tags
         internal Conditions conditions;
         internal  VocalizationPatternsBlockBase(BinaryReader binaryReader)
         {
-            dialogueType = (DialogueType)binaryReader.ReadInt16();
-            vocalizationIndex = binaryReader.ReadInt16();
-            vocalizationName = binaryReader.ReadStringID();
-            speakerType = (SpeakerType)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            listenerTarget = (ListenerTargetWhoWhatAmISpeakingToOf)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(4);
-            hostility = (HostilityTheRelationshipBetweenTheSubjectAndTheCause)binaryReader.ReadInt16();
-            damageType = (DamageType)binaryReader.ReadInt16();
-            dangerLevel = (DangerLevelSpeakerMustHaveDangerLevelOfAtLeastThisMuch)binaryReader.ReadInt16();
-            attitude = (Attitude)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(4);
-            subjectActorType = (SubjectActorType)binaryReader.ReadInt16();
-            causeActorType = (CauseActorType)binaryReader.ReadInt16();
-            causeType = (CauseType)binaryReader.ReadInt16();
-            subjectType = (SubjectType)binaryReader.ReadInt16();
-            causeAiTypeName = binaryReader.ReadStringID();
-            spatialRelation = (SpatialRelationWithRespectToTheSubjectTheCauseIs)binaryReader.ReadInt16();
-            invalidName_2 = binaryReader.ReadBytes(2);
-            subjectAiTypeName = binaryReader.ReadStringID();
-            invalidName_3 = binaryReader.ReadBytes(8);
-            conditions = (Conditions)binaryReader.ReadInt32();
+            this.dialogueType = (DialogueType)binaryReader.ReadInt16();
+            this.vocalizationIndex = binaryReader.ReadInt16();
+            this.vocalizationName = binaryReader.ReadStringID();
+            this.speakerType = (SpeakerType)binaryReader.ReadInt16();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.listenerTarget = (ListenerTargetWhoWhatAmISpeakingToOf)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.invalidName_0 = binaryReader.ReadBytes(4);
+            this.hostility = (HostilityTheRelationshipBetweenTheSubjectAndTheCause)binaryReader.ReadInt16();
+            this.damageType = (DamageType)binaryReader.ReadInt16();
+            this.dangerLevel = (DangerLevelSpeakerMustHaveDangerLevelOfAtLeastThisMuch)binaryReader.ReadInt16();
+            this.attitude = (Attitude)binaryReader.ReadInt16();
+            this.invalidName_1 = binaryReader.ReadBytes(4);
+            this.subjectActorType = (SubjectActorType)binaryReader.ReadInt16();
+            this.causeActorType = (CauseActorType)binaryReader.ReadInt16();
+            this.causeType = (CauseType)binaryReader.ReadInt16();
+            this.subjectType = (SubjectType)binaryReader.ReadInt16();
+            this.causeAiTypeName = binaryReader.ReadStringID();
+            this.spatialRelation = (SpatialRelationWithRespectToTheSubjectTheCauseIs)binaryReader.ReadInt16();
+            this.invalidName_2 = binaryReader.ReadBytes(2);
+            this.subjectAiTypeName = binaryReader.ReadStringID();
+            this.invalidName_3 = binaryReader.ReadBytes(8);
+            this.conditions = (Conditions)binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)dialogueType);
-                binaryWriter.Write(vocalizationIndex);
-                binaryWriter.Write(vocalizationName);
-                binaryWriter.Write((Int16)speakerType);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Int16)listenerTarget);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(invalidName_0, 0, 4);
-                binaryWriter.Write((Int16)hostility);
-                binaryWriter.Write((Int16)damageType);
-                binaryWriter.Write((Int16)dangerLevel);
-                binaryWriter.Write((Int16)attitude);
-                binaryWriter.Write(invalidName_1, 0, 4);
-                binaryWriter.Write((Int16)subjectActorType);
-                binaryWriter.Write((Int16)causeActorType);
-                binaryWriter.Write((Int16)causeType);
-                binaryWriter.Write((Int16)subjectType);
-                binaryWriter.Write(causeAiTypeName);
-                binaryWriter.Write((Int16)spatialRelation);
-                binaryWriter.Write(invalidName_2, 0, 2);
-                binaryWriter.Write(subjectAiTypeName);
-                binaryWriter.Write(invalidName_3, 0, 8);
-                binaryWriter.Write((Int32)conditions);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum DialogueType : short
+        
         {
             Death = 0,
             Unused = 1,
@@ -313,6 +297,7 @@ namespace Moonfish.Guerilla.Tags
             Unused89 = 199,
         };
         internal enum SpeakerType : short
+        
         {
             Subject = 0,
             Cause = 1,
@@ -329,6 +314,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             SubjectVisible = 1,
             CauseVisible = 2,
@@ -341,6 +327,7 @@ namespace Moonfish.Guerilla.Tags
             CauseIsPrimaryPlayerAlly = 256,
         };
         internal enum ListenerTargetWhoWhatAmISpeakingToOf : short
+        
         {
             Subject = 0,
             Cause = 1,
@@ -356,6 +343,7 @@ namespace Moonfish.Guerilla.Tags
             Peer = 11,
         };
         internal enum HostilityTheRelationshipBetweenTheSubjectAndTheCause : short
+        
         {
             NONE = 0,
             Self = 1,
@@ -365,6 +353,7 @@ namespace Moonfish.Guerilla.Tags
             Traitor = 5,
         };
         internal enum DamageType : short
+        
         {
             NONE = 0,
             Falling = 1,
@@ -381,6 +370,7 @@ namespace Moonfish.Guerilla.Tags
             Shotgun = 12,
         };
         internal enum DangerLevelSpeakerMustHaveDangerLevelOfAtLeastThisMuch : short
+        
         {
             NONE = 0,
             BroadlyFacing = 1,
@@ -393,12 +383,14 @@ namespace Moonfish.Guerilla.Tags
             BodyExtendedDamage = 8,
         };
         internal enum Attitude : short
+        
         {
             Normal = 0,
             Timid = 1,
             Aggressive = 2,
         };
         internal enum SubjectActorType : short
+        
         {
             NONE = 0,
             Elite = 1,
@@ -423,6 +415,7 @@ namespace Moonfish.Guerilla.Tags
             Juggernaut = 20,
         };
         internal enum CauseActorType : short
+        
         {
             NONE = 0,
             Elite = 1,
@@ -447,6 +440,7 @@ namespace Moonfish.Guerilla.Tags
             Juggernaut = 20,
         };
         internal enum CauseType : short
+        
         {
             NONE = 0,
             Player = 1,
@@ -475,6 +469,7 @@ namespace Moonfish.Guerilla.Tags
             Grenade = 24,
         };
         internal enum SubjectType : short
+        
         {
             NONE = 0,
             Player = 1,
@@ -503,6 +498,7 @@ namespace Moonfish.Guerilla.Tags
             Grenade = 24,
         };
         internal enum SpatialRelationWithRespectToTheSubjectTheCauseIs : short
+        
         {
             None = 0,
             VeryNear1Wu = 1,
@@ -517,6 +513,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Conditions : int
+        
         {
             Asleep = 1,
             Idle = 2,

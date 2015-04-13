@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,27 +14,31 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 6, Alignment = 4)]
-    public class PixelShaderPermutationNewBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 6)]
+    public class PixelShaderPermutationNewBlockBase
     {
         internal short enumIndex;
         internal short flags;
         internal TagBlockIndexStructBlock combiners;
         internal  PixelShaderPermutationNewBlockBase(BinaryReader binaryReader)
         {
-            enumIndex = binaryReader.ReadInt16();
-            flags = binaryReader.ReadInt16();
-            combiners = new TagBlockIndexStructBlock(binaryReader);
+            this.enumIndex = binaryReader.ReadInt16();
+            this.flags = binaryReader.ReadInt16();
+            this.combiners = new TagBlockIndexStructBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(enumIndex);
-                binaryWriter.Write(flags);
-                combiners.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

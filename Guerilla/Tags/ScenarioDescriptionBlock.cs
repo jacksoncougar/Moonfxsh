@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 52, Alignment = 4)]
-    public class ScenarioDescriptionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 52)]
+    public class ScenarioDescriptionBlockBase
     {
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference descriptiveBitmap;
@@ -29,21 +28,24 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  ScenarioDescriptionBlockBase(BinaryReader binaryReader)
         {
-            descriptiveBitmap = binaryReader.ReadTagReference();
-            displayedMapName = binaryReader.ReadTagReference();
-            scenarioTagDirectoryPath = binaryReader.ReadString32();
-            invalidName_ = binaryReader.ReadBytes(4);
+            this.descriptiveBitmap = binaryReader.ReadTagReference();
+            this.displayedMapName = binaryReader.ReadTagReference();
+            this.scenarioTagDirectoryPath = binaryReader.ReadString32();
+            this.invalidName_ = binaryReader.ReadBytes(4);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(descriptiveBitmap);
-                binaryWriter.Write(displayedMapName);
-                binaryWriter.Write(scenarioTagDirectoryPath);
-                binaryWriter.Write(invalidName_, 0, 4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

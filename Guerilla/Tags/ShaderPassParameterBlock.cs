@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 44, Alignment = 4)]
-    public class ShaderPassParameterBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 44)]
+    public class ShaderPassParameterBlockBase
     {
         internal Moonfish.Tags.StringID name;
         internal byte[] explanation;
@@ -30,33 +29,32 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  ShaderPassParameterBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadStringID();
-            explanation = Guerilla.ReadData(binaryReader);
-            type = (Type)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            defaultBitmap = binaryReader.ReadTagReference();
-            defaultConstValue = binaryReader.ReadSingle();
-            defaultConstColor = binaryReader.ReadColorR8G8B8();
-            sourceExtern = (SourceExtern)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
+            this.name = binaryReader.ReadStringID();
+            this.explanation = ReadData(binaryReader);
+            this.type = (Type)binaryReader.ReadInt16();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.defaultBitmap = binaryReader.ReadTagReference();
+            this.defaultConstValue = binaryReader.ReadSingle();
+            this.defaultConstColor = binaryReader.ReadColorR8G8B8();
+            this.sourceExtern = (SourceExtern)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                Guerilla.WriteData(binaryWriter);
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(defaultBitmap);
-                binaryWriter.Write(defaultConstValue);
-                binaryWriter.Write(defaultConstColor);
-                binaryWriter.Write((Int16)sourceExtern);
-                binaryWriter.Write(invalidName_, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum Type : short
+        
         {
             Bitmap = 0,
             Value = 1,
@@ -65,11 +63,13 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             NoBitmapLOD = 1,
             RequiredParameter = 2,
         };
         internal enum SourceExtern : short
+        
         {
             None = 0,
             GLOBALEyeForwardVectorZ = 1,

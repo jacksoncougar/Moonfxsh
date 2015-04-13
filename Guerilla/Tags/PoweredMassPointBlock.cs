@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 128, Alignment = 4)]
-    public class PoweredMassPointBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 128)]
+    public class PoweredMassPointBlockBase
     {
         internal Moonfish.Tags.String32 name;
         internal Flags flags;
@@ -30,36 +29,34 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  PoweredMassPointBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadString32();
-            flags = (Flags)binaryReader.ReadInt32();
-            antigravStrength = binaryReader.ReadSingle();
-            antigravOffset = binaryReader.ReadSingle();
-            antigravHeight = binaryReader.ReadSingle();
-            antigravDampFraction = binaryReader.ReadSingle();
-            antigravNormalK1 = binaryReader.ReadSingle();
-            antigravNormalK0 = binaryReader.ReadSingle();
-            damageSourceRegionName = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(64);
+            this.name = binaryReader.ReadString32();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.antigravStrength = binaryReader.ReadSingle();
+            this.antigravOffset = binaryReader.ReadSingle();
+            this.antigravHeight = binaryReader.ReadSingle();
+            this.antigravDampFraction = binaryReader.ReadSingle();
+            this.antigravNormalK1 = binaryReader.ReadSingle();
+            this.antigravNormalK0 = binaryReader.ReadSingle();
+            this.damageSourceRegionName = binaryReader.ReadStringID();
+            this.invalidName_ = binaryReader.ReadBytes(64);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(antigravStrength);
-                binaryWriter.Write(antigravOffset);
-                binaryWriter.Write(antigravHeight);
-                binaryWriter.Write(antigravDampFraction);
-                binaryWriter.Write(antigravNormalK1);
-                binaryWriter.Write(antigravNormalK0);
-                binaryWriter.Write(damageSourceRegionName);
-                binaryWriter.Write(invalidName_, 0, 64);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             GroundFriction = 1,
             WaterFriction = 2,

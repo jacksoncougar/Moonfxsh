@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class ObjectAiPropertiesBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 16)]
+    public class ObjectAiPropertiesBlockBase
     {
         internal AiFlags aiFlags;
         /// <summary>
@@ -28,32 +27,36 @@ namespace Moonfish.Guerilla.Tags
         internal LeapJumpSpeed leapJumpSpeed;
         internal  ObjectAiPropertiesBlockBase(BinaryReader binaryReader)
         {
-            aiFlags = (AiFlags)binaryReader.ReadInt32();
-            aiTypeName = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(4);
-            aiSize = (AiSize)binaryReader.ReadInt16();
-            leapJumpSpeed = (LeapJumpSpeed)binaryReader.ReadInt16();
+            this.aiFlags = (AiFlags)binaryReader.ReadInt32();
+            this.aiTypeName = binaryReader.ReadStringID();
+            this.invalidName_ = binaryReader.ReadBytes(4);
+            this.aiSize = (AiSize)binaryReader.ReadInt16();
+            this.leapJumpSpeed = (LeapJumpSpeed)binaryReader.ReadInt16();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)aiFlags);
-                binaryWriter.Write(aiTypeName);
-                binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write((Int16)aiSize);
-                binaryWriter.Write((Int16)leapJumpSpeed);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum AiFlags : int
+        
         {
             DetroyableCover = 1,
             PathfindingIgnoreWhenDead = 2,
             DynamicCover = 4,
         };
         internal enum AiSize : short
+        
         {
             Default = 0,
             Tiny = 1,
@@ -64,6 +67,7 @@ namespace Moonfish.Guerilla.Tags
             Immobile = 6,
         };
         internal enum LeapJumpSpeed : short
+        
         {
             NONE = 0,
             Down = 1,

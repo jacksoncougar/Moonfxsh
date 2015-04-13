@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass UnicClass = (TagClass)"unic";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,27 +15,46 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 52, Alignment = 4)]
-    public class MultilingualUnicodeStringListBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 52)]
+    public class MultilingualUnicodeStringListBlockBase
     {
         internal MultilingualUnicodeStringReferenceBlock[] stringReferences;
         internal byte[] stringDataUtf8;
         internal byte[] invalidName_;
         internal  MultilingualUnicodeStringListBlockBase(BinaryReader binaryReader)
         {
-            stringReferences = Guerilla.ReadBlockArray<MultilingualUnicodeStringReferenceBlock>(binaryReader);
-            stringDataUtf8 = Guerilla.ReadData(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(36);
+            this.stringReferences = ReadMultilingualUnicodeStringReferenceBlockArray(binaryReader);
+            this.stringDataUtf8 = ReadData(binaryReader);
+            this.invalidName_ = binaryReader.ReadBytes(36);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                Guerilla.WriteBlockArray<MultilingualUnicodeStringReferenceBlock>(binaryWriter, stringReferences, nextAddress);
-                Guerilla.WriteData(binaryWriter);
-                binaryWriter.Write(invalidName_, 0, 36);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual MultilingualUnicodeStringReferenceBlock[] ReadMultilingualUnicodeStringReferenceBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(MultilingualUnicodeStringReferenceBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new MultilingualUnicodeStringReferenceBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new MultilingualUnicodeStringReferenceBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

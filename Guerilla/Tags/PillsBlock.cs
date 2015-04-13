@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 80, Alignment = 16)]
-    public class PillsBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 80)]
+    public class PillsBlockBase
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 material;
@@ -39,54 +38,43 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_3;
         internal  PillsBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadStringID();
-            material = binaryReader.ReadShortBlockIndex1();
-            flags = (Flags)binaryReader.ReadInt16();
-            relativeMassScale = binaryReader.ReadSingle();
-            friction = binaryReader.ReadSingle();
-            restitution = binaryReader.ReadSingle();
-            volume = binaryReader.ReadSingle();
-            mass = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(2);
-            phantom = binaryReader.ReadShortBlockIndex1();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            size = binaryReader.ReadInt16();
-            count = binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(4);
-            radius = binaryReader.ReadSingle();
-            bottom = binaryReader.ReadVector3();
-            invalidName_2 = binaryReader.ReadBytes(4);
-            top = binaryReader.ReadVector3();
-            invalidName_3 = binaryReader.ReadBytes(4);
+            this.name = binaryReader.ReadStringID();
+            this.material = binaryReader.ReadShortBlockIndex1();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.relativeMassScale = binaryReader.ReadSingle();
+            this.friction = binaryReader.ReadSingle();
+            this.restitution = binaryReader.ReadSingle();
+            this.volume = binaryReader.ReadSingle();
+            this.mass = binaryReader.ReadSingle();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.phantom = binaryReader.ReadShortBlockIndex1();
+            this.invalidName_0 = binaryReader.ReadBytes(4);
+            this.size = binaryReader.ReadInt16();
+            this.count = binaryReader.ReadInt16();
+            this.invalidName_1 = binaryReader.ReadBytes(4);
+            this.radius = binaryReader.ReadSingle();
+            this.bottom = binaryReader.ReadVector3();
+            this.invalidName_2 = binaryReader.ReadBytes(4);
+            this.top = binaryReader.ReadVector3();
+            this.invalidName_3 = binaryReader.ReadBytes(4);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(material);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(relativeMassScale);
-                binaryWriter.Write(friction);
-                binaryWriter.Write(restitution);
-                binaryWriter.Write(volume);
-                binaryWriter.Write(mass);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(phantom);
-                binaryWriter.Write(invalidName_0, 0, 4);
-                binaryWriter.Write(size);
-                binaryWriter.Write(count);
-                binaryWriter.Write(invalidName_1, 0, 4);
-                binaryWriter.Write(radius);
-                binaryWriter.Write(bottom);
-                binaryWriter.Write(invalidName_2, 0, 4);
-                binaryWriter.Write(top);
-                binaryWriter.Write(invalidName_3, 0, 4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             Unused = 1,
         };

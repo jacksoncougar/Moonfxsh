@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,24 +14,29 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class VibrationDefinitionStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class VibrationDefinitionStructBlockBase
     {
         internal VibrationFrequencyDefinitionStructBlock lowFrequencyVibration;
         internal VibrationFrequencyDefinitionStructBlock highFrequencyVibration;
         internal  VibrationDefinitionStructBlockBase(BinaryReader binaryReader)
         {
-            lowFrequencyVibration = new VibrationFrequencyDefinitionStructBlock(binaryReader);
-            highFrequencyVibration = new VibrationFrequencyDefinitionStructBlock(binaryReader);
+            this.lowFrequencyVibration = new VibrationFrequencyDefinitionStructBlock(binaryReader);
+            this.highFrequencyVibration = new VibrationFrequencyDefinitionStructBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                lowFrequencyVibration.Write(binaryWriter);
-                highFrequencyVibration.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

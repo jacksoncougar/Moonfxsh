@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class ScenarioLevelDataBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class ScenarioLevelDataBlockBase
     {
         [TagReference("unic")]
         internal Moonfish.Tags.TagReference levelDescription;
@@ -24,19 +23,53 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalUiMultiplayerLevelBlock[] multiplayer;
         internal  ScenarioLevelDataBlockBase(BinaryReader binaryReader)
         {
-            levelDescription = binaryReader.ReadTagReference();
-            campaignLevelData = Guerilla.ReadBlockArray<GlobalUiCampaignLevelBlock>(binaryReader);
-            multiplayer = Guerilla.ReadBlockArray<GlobalUiMultiplayerLevelBlock>(binaryReader);
+            this.levelDescription = binaryReader.ReadTagReference();
+            this.campaignLevelData = ReadGlobalUiCampaignLevelBlockArray(binaryReader);
+            this.multiplayer = ReadGlobalUiMultiplayerLevelBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(levelDescription);
-                Guerilla.WriteBlockArray<GlobalUiCampaignLevelBlock>(binaryWriter, campaignLevelData, nextAddress);
-                Guerilla.WriteBlockArray<GlobalUiMultiplayerLevelBlock>(binaryWriter, multiplayer, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual GlobalUiCampaignLevelBlock[] ReadGlobalUiCampaignLevelBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(GlobalUiCampaignLevelBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new GlobalUiCampaignLevelBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new GlobalUiCampaignLevelBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual GlobalUiMultiplayerLevelBlock[] ReadGlobalUiMultiplayerLevelBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(GlobalUiMultiplayerLevelBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new GlobalUiMultiplayerLevelBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new GlobalUiMultiplayerLevelBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

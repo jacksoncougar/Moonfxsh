@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass NhdtClass = (TagClass)"nhdt";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 40, Alignment = 4)]
-    public class NewHudDefinitionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 40)]
+    public class NewHudDefinitionBlockBase
     {
         [TagReference("nhdt")]
         internal Moonfish.Tags.TagReference dONOTUSE;
@@ -35,23 +26,70 @@ namespace Moonfish.Guerilla.Tags
         internal HudScreenEffectWidgets[] screenEffectWidgets;
         internal  NewHudDefinitionBlockBase(BinaryReader binaryReader)
         {
-            dONOTUSE = binaryReader.ReadTagReference();
-            bitmapWidgets = Guerilla.ReadBlockArray<HudBitmapWidgets>(binaryReader);
-            textWidgets = Guerilla.ReadBlockArray<HudTextWidgets>(binaryReader);
-            dashlightData = new NewHudDashlightDataStructBlock(binaryReader);
-            screenEffectWidgets = Guerilla.ReadBlockArray<HudScreenEffectWidgets>(binaryReader);
+            this.dONOTUSE = binaryReader.ReadTagReference();
+            this.bitmapWidgets = ReadHudBitmapWidgetsArray(binaryReader);
+            this.textWidgets = ReadHudTextWidgetsArray(binaryReader);
+            this.dashlightData = new NewHudDashlightDataStructBlock(binaryReader);
+            this.screenEffectWidgets = ReadHudScreenEffectWidgetsArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(dONOTUSE);
-                Guerilla.WriteBlockArray<HudBitmapWidgets>(binaryWriter, bitmapWidgets, nextAddress);
-                Guerilla.WriteBlockArray<HudTextWidgets>(binaryWriter, textWidgets, nextAddress);
-                dashlightData.Write(binaryWriter);
-                Guerilla.WriteBlockArray<HudScreenEffectWidgets>(binaryWriter, screenEffectWidgets, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual HudBitmapWidgets[] ReadHudBitmapWidgetsArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(HudBitmapWidgets));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new HudBitmapWidgets[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new HudBitmapWidgets(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual HudTextWidgets[] ReadHudTextWidgetsArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(HudTextWidgets));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new HudTextWidgets[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new HudTextWidgets(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual HudScreenEffectWidgets[] ReadHudScreenEffectWidgetsArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(HudScreenEffectWidgets));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new HudScreenEffectWidgets[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new HudScreenEffectWidgets(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

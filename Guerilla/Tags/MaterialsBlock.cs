@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,102 +14,39 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 180, Alignment = 4)]
-    public class MaterialsBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 12)]
+    public class MaterialsBlockBase
     {
         internal Moonfish.Tags.StringID name;
-        internal Moonfish.Tags.StringID parentName;
-        internal byte[] invalidName_;
+        internal Moonfish.Tags.StringID globalMaterialName;
+        internal Moonfish.Tags.ShortBlockIndex1 phantomType;
         internal Flags flags;
-        internal OldMaterialType oldMaterialType;
-        internal byte[] invalidName_0;
-        internal Moonfish.Tags.StringID generalArmor;
-        internal Moonfish.Tags.StringID specificArmor;
-        internal MaterialPhysicsPropertiesStructBlock physicsProperties;
-        [TagReference("mpdt")]
-        internal Moonfish.Tags.TagReference oldMaterialPhysics;
-        [TagReference("bsdt")]
-        internal Moonfish.Tags.TagReference breakableSurface;
-        internal MaterialsSweetenersStructBlock sweeteners;
-        [TagReference("foot")]
-        internal Moonfish.Tags.TagReference materialEffects;
         internal  MaterialsBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadStringID();
-            parentName = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(2);
-            flags = (Flags)binaryReader.ReadInt16();
-            oldMaterialType = (OldMaterialType)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            generalArmor = binaryReader.ReadStringID();
-            specificArmor = binaryReader.ReadStringID();
-            physicsProperties = new MaterialPhysicsPropertiesStructBlock(binaryReader);
-            oldMaterialPhysics = binaryReader.ReadTagReference();
-            breakableSurface = binaryReader.ReadTagReference();
-            sweeteners = new MaterialsSweetenersStructBlock(binaryReader);
-            materialEffects = binaryReader.ReadTagReference();
+            this.name = binaryReader.ReadStringID();
+            this.globalMaterialName = binaryReader.ReadStringID();
+            this.phantomType = binaryReader.ReadShortBlockIndex1();
+            this.flags = (Flags)binaryReader.ReadInt16();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(parentName);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Int16)oldMaterialType);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write(generalArmor);
-                binaryWriter.Write(specificArmor);
-                physicsProperties.Write(binaryWriter);
-                binaryWriter.Write(oldMaterialPhysics);
-                binaryWriter.Write(breakableSurface);
-                sweeteners.Write(binaryWriter);
-                binaryWriter.Write(materialEffects);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
-            Flammable = 1,
-            Biomass = 2,
-        };
-        internal enum OldMaterialType : short
-        {
-            Dirt = 0,
-            Sand = 1,
-            Stone = 2,
-            Snow = 3,
-            Wood = 4,
-            MetalHollow = 5,
-            MetalThin = 6,
-            MetalThick = 7,
-            Rubber = 8,
-            Glass = 9,
-            ForceField = 10,
-            Grunt = 11,
-            HunterArmor = 12,
-            HunterSkin = 13,
-            Elite = 14,
-            Jackal = 15,
-            JackalEnergyShield = 16,
-            EngineerSkin = 17,
-            EngineerForceField = 18,
-            FloodCombatForm = 19,
-            FloodCarrierForm = 20,
-            CyborgArmor = 21,
-            CyborgEnergyShield = 22,
-            HumanArmor = 23,
-            HumanSkin = 24,
-            Sentinel = 25,
-            Monitor = 26,
-            Plastic = 27,
-            Water = 28,
-            Leaves = 29,
-            EliteEnergyShield = 30,
-            Ice = 31,
-            HunterShield = 32,
+            DoesNotCollideWithFixedBodies = 1,
         };
     };
 }

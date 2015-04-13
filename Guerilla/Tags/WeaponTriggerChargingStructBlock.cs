@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36, Alignment = 4)]
-    public class WeaponTriggerChargingStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 36)]
+    public class WeaponTriggerChargingStructBlockBase
     {
         /// <summary>
         /// the amount of time it takes for this trigger to become fully charged
@@ -48,31 +47,31 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference chargingDamageEffect;
         internal  WeaponTriggerChargingStructBlockBase(BinaryReader binaryReader)
         {
-            chargingTimeSeconds = binaryReader.ReadSingle();
-            chargedTimeSeconds = binaryReader.ReadSingle();
-            overchargedAction = (OverchargedAction)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            chargedIllumination01 = binaryReader.ReadSingle();
-            spewTimeSeconds = binaryReader.ReadSingle();
-            chargingEffect = binaryReader.ReadTagReference();
-            chargingDamageEffect = binaryReader.ReadTagReference();
+            this.chargingTimeSeconds = binaryReader.ReadSingle();
+            this.chargedTimeSeconds = binaryReader.ReadSingle();
+            this.overchargedAction = (OverchargedAction)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.chargedIllumination01 = binaryReader.ReadSingle();
+            this.spewTimeSeconds = binaryReader.ReadSingle();
+            this.chargingEffect = binaryReader.ReadTagReference();
+            this.chargingDamageEffect = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(chargingTimeSeconds);
-                binaryWriter.Write(chargedTimeSeconds);
-                binaryWriter.Write((Int16)overchargedAction);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(chargedIllumination01);
-                binaryWriter.Write(spewTimeSeconds);
-                binaryWriter.Write(chargingEffect);
-                binaryWriter.Write(chargingDamageEffect);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum OverchargedAction : short
+        
         {
             None = 0,
             Explode = 1,

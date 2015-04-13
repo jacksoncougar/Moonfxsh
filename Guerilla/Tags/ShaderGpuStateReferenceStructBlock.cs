@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 14, Alignment = 4)]
-    public class ShaderGpuStateReferenceStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 14)]
+    public class ShaderGpuStateReferenceStructBlockBase
     {
         internal TagBlockIndexStructBlock renderStates;
         internal TagBlockIndexStructBlock textureStageStates;
@@ -27,27 +26,27 @@ namespace Moonfish.Guerilla.Tags
         internal TagBlockIndexStructBlock cnConstants;
         internal  ShaderGpuStateReferenceStructBlockBase(BinaryReader binaryReader)
         {
-            renderStates = new TagBlockIndexStructBlock(binaryReader);
-            textureStageStates = new TagBlockIndexStructBlock(binaryReader);
-            renderStateParameters = new TagBlockIndexStructBlock(binaryReader);
-            textureStageParameters = new TagBlockIndexStructBlock(binaryReader);
-            textures = new TagBlockIndexStructBlock(binaryReader);
-            vnConstants = new TagBlockIndexStructBlock(binaryReader);
-            cnConstants = new TagBlockIndexStructBlock(binaryReader);
+            this.renderStates = new TagBlockIndexStructBlock(binaryReader);
+            this.textureStageStates = new TagBlockIndexStructBlock(binaryReader);
+            this.renderStateParameters = new TagBlockIndexStructBlock(binaryReader);
+            this.textureStageParameters = new TagBlockIndexStructBlock(binaryReader);
+            this.textures = new TagBlockIndexStructBlock(binaryReader);
+            this.vnConstants = new TagBlockIndexStructBlock(binaryReader);
+            this.cnConstants = new TagBlockIndexStructBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                renderStates.Write(binaryWriter);
-                textureStageStates.Write(binaryWriter);
-                renderStateParameters.Write(binaryWriter);
-                textureStageParameters.Write(binaryWriter);
-                textures.Write(binaryWriter);
-                vnConstants.Write(binaryWriter);
-                cnConstants.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 438, Alignment = 4)]
-    public class ShaderPassPostprocessImplementationBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 438)]
+    public class ShaderPassPostprocessImplementationBlockBase
     {
         internal ShaderGpuStateStructBlock gPUState;
         internal ShaderGpuStateReferenceStructBlock gPUConstantState;
@@ -42,55 +41,116 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_6;
         internal  ShaderPassPostprocessImplementationBlockBase(BinaryReader binaryReader)
         {
-            gPUState = new ShaderGpuStateStructBlock(binaryReader);
-            gPUConstantState = new ShaderGpuStateReferenceStructBlock(binaryReader);
-            gPUVolatileState = new ShaderGpuStateReferenceStructBlock(binaryReader);
-            gPUDefaultState = new ShaderGpuStateReferenceStructBlock(binaryReader);
-            vertexShader = binaryReader.ReadTagReference();
-            invalidName_ = binaryReader.ReadBytes(8);
-            invalidName_0 = binaryReader.ReadBytes(8);
-            invalidName_1 = binaryReader.ReadBytes(4);
-            invalidName_2 = binaryReader.ReadBytes(4);
-            valueExterns = Guerilla.ReadBlockArray<ExternReferenceBlock>(binaryReader);
-            colorExterns = Guerilla.ReadBlockArray<ExternReferenceBlock>(binaryReader);
-            switchExterns = Guerilla.ReadBlockArray<ExternReferenceBlock>(binaryReader);
-            bitmapParameterCount = binaryReader.ReadInt16();
-            invalidName_3 = binaryReader.ReadBytes(2);
-            invalidName_4 = binaryReader.ReadBytes(240);
-            pixelShaderFragments = Guerilla.ReadBlockArray<PixelShaderFragmentBlock>(binaryReader);
-            pixelShaderPermutations = Guerilla.ReadBlockArray<PixelShaderPermutationBlock>(binaryReader);
-            pixelShaderCombiners = Guerilla.ReadBlockArray<PixelShaderCombinerBlock>(binaryReader);
-            pixelShaderConstants = Guerilla.ReadBlockArray<PixelShaderConstantBlock>(binaryReader);
-            invalidName_5 = binaryReader.ReadBytes(4);
-            invalidName_6 = binaryReader.ReadBytes(4);
+            this.gPUState = new ShaderGpuStateStructBlock(binaryReader);
+            this.gPUConstantState = new ShaderGpuStateReferenceStructBlock(binaryReader);
+            this.gPUVolatileState = new ShaderGpuStateReferenceStructBlock(binaryReader);
+            this.gPUDefaultState = new ShaderGpuStateReferenceStructBlock(binaryReader);
+            this.vertexShader = binaryReader.ReadTagReference();
+            this.invalidName_ = binaryReader.ReadBytes(8);
+            this.invalidName_0 = binaryReader.ReadBytes(8);
+            this.invalidName_1 = binaryReader.ReadBytes(4);
+            this.invalidName_2 = binaryReader.ReadBytes(4);
+            this.valueExterns = ReadExternReferenceBlockArray(binaryReader);
+            this.colorExterns = ReadExternReferenceBlockArray(binaryReader);
+            this.switchExterns = ReadExternReferenceBlockArray(binaryReader);
+            this.bitmapParameterCount = binaryReader.ReadInt16();
+            this.invalidName_3 = binaryReader.ReadBytes(2);
+            this.invalidName_4 = binaryReader.ReadBytes(240);
+            this.pixelShaderFragments = ReadPixelShaderFragmentBlockArray(binaryReader);
+            this.pixelShaderPermutations = ReadPixelShaderPermutationBlockArray(binaryReader);
+            this.pixelShaderCombiners = ReadPixelShaderCombinerBlockArray(binaryReader);
+            this.pixelShaderConstants = ReadPixelShaderConstantBlockArray(binaryReader);
+            this.invalidName_5 = binaryReader.ReadBytes(4);
+            this.invalidName_6 = binaryReader.ReadBytes(4);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                gPUState.Write(binaryWriter);
-                gPUConstantState.Write(binaryWriter);
-                gPUVolatileState.Write(binaryWriter);
-                gPUDefaultState.Write(binaryWriter);
-                binaryWriter.Write(vertexShader);
-                binaryWriter.Write(invalidName_, 0, 8);
-                binaryWriter.Write(invalidName_0, 0, 8);
-                binaryWriter.Write(invalidName_1, 0, 4);
-                binaryWriter.Write(invalidName_2, 0, 4);
-                Guerilla.WriteBlockArray<ExternReferenceBlock>(binaryWriter, valueExterns, nextAddress);
-                Guerilla.WriteBlockArray<ExternReferenceBlock>(binaryWriter, colorExterns, nextAddress);
-                Guerilla.WriteBlockArray<ExternReferenceBlock>(binaryWriter, switchExterns, nextAddress);
-                binaryWriter.Write(bitmapParameterCount);
-                binaryWriter.Write(invalidName_3, 0, 2);
-                binaryWriter.Write(invalidName_4, 0, 240);
-                Guerilla.WriteBlockArray<PixelShaderFragmentBlock>(binaryWriter, pixelShaderFragments, nextAddress);
-                Guerilla.WriteBlockArray<PixelShaderPermutationBlock>(binaryWriter, pixelShaderPermutations, nextAddress);
-                Guerilla.WriteBlockArray<PixelShaderCombinerBlock>(binaryWriter, pixelShaderCombiners, nextAddress);
-                Guerilla.WriteBlockArray<PixelShaderConstantBlock>(binaryWriter, pixelShaderConstants, nextAddress);
-                binaryWriter.Write(invalidName_5, 0, 4);
-                binaryWriter.Write(invalidName_6, 0, 4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual ExternReferenceBlock[] ReadExternReferenceBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ExternReferenceBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ExternReferenceBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ExternReferenceBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual PixelShaderFragmentBlock[] ReadPixelShaderFragmentBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PixelShaderFragmentBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PixelShaderFragmentBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PixelShaderFragmentBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual PixelShaderPermutationBlock[] ReadPixelShaderPermutationBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PixelShaderPermutationBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PixelShaderPermutationBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PixelShaderPermutationBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual PixelShaderCombinerBlock[] ReadPixelShaderCombinerBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PixelShaderCombinerBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PixelShaderCombinerBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PixelShaderCombinerBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual PixelShaderConstantBlock[] ReadPixelShaderConstantBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PixelShaderConstantBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PixelShaderConstantBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PixelShaderConstantBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

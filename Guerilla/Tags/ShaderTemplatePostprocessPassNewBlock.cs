@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,25 +14,30 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 10, Alignment = 4)]
-    public class ShaderTemplatePostprocessPassNewBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 10)]
+    public class ShaderTemplatePostprocessPassNewBlockBase
     {
         [TagReference("spas")]
         internal Moonfish.Tags.TagReference pass;
         internal TagBlockIndexStructBlock implementations;
         internal  ShaderTemplatePostprocessPassNewBlockBase(BinaryReader binaryReader)
         {
-            pass = binaryReader.ReadTagReference();
-            implementations = new TagBlockIndexStructBlock(binaryReader);
+            this.pass = binaryReader.ReadTagReference();
+            this.implementations = new TagBlockIndexStructBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(pass);
-                implementations.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

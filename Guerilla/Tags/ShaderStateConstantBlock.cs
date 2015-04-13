@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,29 +14,34 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ShaderStateConstantBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 8)]
+    public class ShaderStateConstantBlockBase
     {
         internal Moonfish.Tags.StringID sourceParameter;
         internal byte[] invalidName_;
         internal Constant constant;
         internal  ShaderStateConstantBlockBase(BinaryReader binaryReader)
         {
-            sourceParameter = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(2);
-            constant = (Constant)binaryReader.ReadInt16();
+            this.sourceParameter = binaryReader.ReadStringID();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.constant = (Constant)binaryReader.ReadInt16();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(sourceParameter);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int16)constant);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum Constant : short
+        
         {
             ConstantBlendColor = 0,
             ConstantBlendAlphaValue = 1,

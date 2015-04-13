@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class SkyAtmosphericFogBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class SkyAtmosphericFogBlockBase
     {
         internal Moonfish.Tags.ColorR8G8B8 color;
         /// <summary>
@@ -33,21 +32,24 @@ namespace Moonfish.Guerilla.Tags
         internal float opaqueDistanceWorldUnits;
         internal  SkyAtmosphericFogBlockBase(BinaryReader binaryReader)
         {
-            color = binaryReader.ReadColorR8G8B8();
-            maximumDensity01 = binaryReader.ReadSingle();
-            startDistanceWorldUnits = binaryReader.ReadSingle();
-            opaqueDistanceWorldUnits = binaryReader.ReadSingle();
+            this.color = binaryReader.ReadColorR8G8B8();
+            this.maximumDensity01 = binaryReader.ReadSingle();
+            this.startDistanceWorldUnits = binaryReader.ReadSingle();
+            this.opaqueDistanceWorldUnits = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(color);
-                binaryWriter.Write(maximumDensity01);
-                binaryWriter.Write(startDistanceWorldUnits);
-                binaryWriter.Write(opaqueDistanceWorldUnits);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

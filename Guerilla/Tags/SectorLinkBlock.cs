@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class SectorLinkBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 16)]
+    public class SectorLinkBlockBase
     {
         internal short vertex1;
         internal short vertex2;
@@ -28,32 +27,32 @@ namespace Moonfish.Guerilla.Tags
         internal short rightSector;
         internal  SectorLinkBlockBase(BinaryReader binaryReader)
         {
-            vertex1 = binaryReader.ReadInt16();
-            vertex2 = binaryReader.ReadInt16();
-            linkFlags = (LinkFlags)binaryReader.ReadInt16();
-            hintIndex = binaryReader.ReadInt16();
-            forwardLink = binaryReader.ReadInt16();
-            reverseLink = binaryReader.ReadInt16();
-            leftSector = binaryReader.ReadInt16();
-            rightSector = binaryReader.ReadInt16();
+            this.vertex1 = binaryReader.ReadInt16();
+            this.vertex2 = binaryReader.ReadInt16();
+            this.linkFlags = (LinkFlags)binaryReader.ReadInt16();
+            this.hintIndex = binaryReader.ReadInt16();
+            this.forwardLink = binaryReader.ReadInt16();
+            this.reverseLink = binaryReader.ReadInt16();
+            this.leftSector = binaryReader.ReadInt16();
+            this.rightSector = binaryReader.ReadInt16();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(vertex1);
-                binaryWriter.Write(vertex2);
-                binaryWriter.Write((Int16)linkFlags);
-                binaryWriter.Write(hintIndex);
-                binaryWriter.Write(forwardLink);
-                binaryWriter.Write(reverseLink);
-                binaryWriter.Write(leftSector);
-                binaryWriter.Write(rightSector);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum LinkFlags : short
+        
         {
             SectorLinkFromCollisionEdge = 1,
             SectorIntersectionLink = 2,

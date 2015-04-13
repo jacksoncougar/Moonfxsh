@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 64, Alignment = 4)]
-    public class SoundResponseExtraSoundsStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 64)]
+    public class SoundResponseExtraSoundsStructBlockBase
     {
         [TagReference("snd!")]
         internal Moonfish.Tags.TagReference japaneseSound;
@@ -36,29 +35,28 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference portugueseSound;
         internal  SoundResponseExtraSoundsStructBlockBase(BinaryReader binaryReader)
         {
-            japaneseSound = binaryReader.ReadTagReference();
-            germanSound = binaryReader.ReadTagReference();
-            frenchSound = binaryReader.ReadTagReference();
-            spanishSound = binaryReader.ReadTagReference();
-            italianSound = binaryReader.ReadTagReference();
-            koreanSound = binaryReader.ReadTagReference();
-            chineseSound = binaryReader.ReadTagReference();
-            portugueseSound = binaryReader.ReadTagReference();
+            this.japaneseSound = binaryReader.ReadTagReference();
+            this.germanSound = binaryReader.ReadTagReference();
+            this.frenchSound = binaryReader.ReadTagReference();
+            this.spanishSound = binaryReader.ReadTagReference();
+            this.italianSound = binaryReader.ReadTagReference();
+            this.koreanSound = binaryReader.ReadTagReference();
+            this.chineseSound = binaryReader.ReadTagReference();
+            this.portugueseSound = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(japaneseSound);
-                binaryWriter.Write(germanSound);
-                binaryWriter.Write(frenchSound);
-                binaryWriter.Write(spanishSound);
-                binaryWriter.Write(italianSound);
-                binaryWriter.Write(koreanSound);
-                binaryWriter.Write(chineseSound);
-                binaryWriter.Write(portugueseSound);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

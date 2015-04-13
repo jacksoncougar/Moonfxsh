@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 176, Alignment = 4)]
-    public class StructureBspClusterBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 176)]
+    public class StructureBspClusterBlockBase
     {
         internal GlobalGeometrySectionInfoStructBlock sectionInfo;
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
@@ -46,68 +45,125 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] collisionMoppCode;
         internal  StructureBspClusterBlockBase(BinaryReader binaryReader)
         {
-            sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            clusterData = Guerilla.ReadBlockArray<StructureBspClusterDataBlockNew>(binaryReader);
-            boundsX = binaryReader.ReadRange();
-            boundsY = binaryReader.ReadRange();
-            boundsZ = binaryReader.ReadRange();
-            scenarioSkyIndex = binaryReader.ReadByte();
-            mediaIndex = binaryReader.ReadByte();
-            scenarioVisibleSkyIndex = binaryReader.ReadByte();
-            scenarioAtmosphericFogIndex = binaryReader.ReadByte();
-            planarFogDesignator = binaryReader.ReadByte();
-            visibleFogPlaneIndex = binaryReader.ReadByte();
-            backgroundSound = binaryReader.ReadShortBlockIndex1();
-            soundEnvironment = binaryReader.ReadShortBlockIndex1();
-            weather = binaryReader.ReadShortBlockIndex1();
-            transitionStructureBSP = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(4);
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            predictedResources = Guerilla.ReadBlockArray<PredictedResourceBlock>(binaryReader);
-            portals = Guerilla.ReadBlockArray<StructureBspClusterPortalIndexBlock>(binaryReader);
-            checksumFromStructure = binaryReader.ReadInt32();
-            instancedGeometryIndices = Guerilla.ReadBlockArray<StructureBspClusterInstancedGeometryIndexBlock>(binaryReader);
-            indexReorderTable = Guerilla.ReadBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryReader);
-            collisionMoppCode = Guerilla.ReadData(binaryReader);
+            this.sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
+            this.geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            this.clusterData = ReadStructureBspClusterDataBlockNewArray(binaryReader);
+            this.boundsX = binaryReader.ReadRange();
+            this.boundsY = binaryReader.ReadRange();
+            this.boundsZ = binaryReader.ReadRange();
+            this.scenarioSkyIndex = binaryReader.ReadByte();
+            this.mediaIndex = binaryReader.ReadByte();
+            this.scenarioVisibleSkyIndex = binaryReader.ReadByte();
+            this.scenarioAtmosphericFogIndex = binaryReader.ReadByte();
+            this.planarFogDesignator = binaryReader.ReadByte();
+            this.visibleFogPlaneIndex = binaryReader.ReadByte();
+            this.backgroundSound = binaryReader.ReadShortBlockIndex1();
+            this.soundEnvironment = binaryReader.ReadShortBlockIndex1();
+            this.weather = binaryReader.ReadShortBlockIndex1();
+            this.transitionStructureBSP = binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.invalidName_0 = binaryReader.ReadBytes(4);
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.invalidName_1 = binaryReader.ReadBytes(2);
+            this.predictedResources = ReadPredictedResourceBlockArray(binaryReader);
+            this.portals = ReadStructureBspClusterPortalIndexBlockArray(binaryReader);
+            this.checksumFromStructure = binaryReader.ReadInt32();
+            this.instancedGeometryIndices = ReadStructureBspClusterInstancedGeometryIndexBlockArray(binaryReader);
+            this.indexReorderTable = ReadGlobalGeometrySectionStripIndexBlockArray(binaryReader);
+            this.collisionMoppCode = ReadData(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                sectionInfo.Write(binaryWriter);
-                geometryBlockInfo.Write(binaryWriter);
-                Guerilla.WriteBlockArray<StructureBspClusterDataBlockNew>(binaryWriter, clusterData, nextAddress);
-                binaryWriter.Write(boundsX);
-                binaryWriter.Write(boundsY);
-                binaryWriter.Write(boundsZ);
-                binaryWriter.Write(scenarioSkyIndex);
-                binaryWriter.Write(mediaIndex);
-                binaryWriter.Write(scenarioVisibleSkyIndex);
-                binaryWriter.Write(scenarioAtmosphericFogIndex);
-                binaryWriter.Write(planarFogDesignator);
-                binaryWriter.Write(visibleFogPlaneIndex);
-                binaryWriter.Write(backgroundSound);
-                binaryWriter.Write(soundEnvironment);
-                binaryWriter.Write(weather);
-                binaryWriter.Write(transitionStructureBSP);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(invalidName_0, 0, 4);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                Guerilla.WriteBlockArray<PredictedResourceBlock>(binaryWriter, predictedResources, nextAddress);
-                Guerilla.WriteBlockArray<StructureBspClusterPortalIndexBlock>(binaryWriter, portals, nextAddress);
-                binaryWriter.Write(checksumFromStructure);
-                Guerilla.WriteBlockArray<StructureBspClusterInstancedGeometryIndexBlock>(binaryWriter, instancedGeometryIndices, nextAddress);
-                Guerilla.WriteBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryWriter, indexReorderTable, nextAddress);
-                Guerilla.WriteData(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual StructureBspClusterDataBlockNew[] ReadStructureBspClusterDataBlockNewArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(StructureBspClusterDataBlockNew));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new StructureBspClusterDataBlockNew[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new StructureBspClusterDataBlockNew(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual PredictedResourceBlock[] ReadPredictedResourceBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PredictedResourceBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PredictedResourceBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PredictedResourceBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual StructureBspClusterPortalIndexBlock[] ReadStructureBspClusterPortalIndexBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(StructureBspClusterPortalIndexBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new StructureBspClusterPortalIndexBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new StructureBspClusterPortalIndexBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual StructureBspClusterInstancedGeometryIndexBlock[] ReadStructureBspClusterInstancedGeometryIndexBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(StructureBspClusterInstancedGeometryIndexBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new StructureBspClusterInstancedGeometryIndexBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new StructureBspClusterInstancedGeometryIndexBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual GlobalGeometrySectionStripIndexBlock[] ReadGlobalGeometrySectionStripIndexBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(GlobalGeometrySectionStripIndexBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new GlobalGeometrySectionStripIndexBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new GlobalGeometrySectionStripIndexBlock(binaryReader);
+                }
+            }
+            return array;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             OneWayPortal = 1,
             DoorPortal = 2,

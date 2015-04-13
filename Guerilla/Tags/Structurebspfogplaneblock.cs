@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class StructureBspFogPlaneBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class StructureBspFogPlaneBlockBase
     {
         internal short scenarioPlanarFogIndex;
         internal byte[] invalidName_;
@@ -25,26 +24,29 @@ namespace Moonfish.Guerilla.Tags
         internal short priority;
         internal  StructureBspFogPlaneBlockBase(BinaryReader binaryReader)
         {
-            scenarioPlanarFogIndex = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            plane = binaryReader.ReadVector4();
-            flags = (Flags)binaryReader.ReadInt16();
-            priority = binaryReader.ReadInt16();
+            this.scenarioPlanarFogIndex = binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.plane = binaryReader.ReadVector4();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.priority = binaryReader.ReadInt16();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(scenarioPlanarFogIndex);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(plane);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(priority);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             ExtendInfinitelyWhileVisible = 1,
             DoNotFloodfill = 2,

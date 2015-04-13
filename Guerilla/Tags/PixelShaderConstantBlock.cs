@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 6, Alignment = 4)]
-    public class PixelShaderConstantBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 6)]
+    public class PixelShaderConstantBlockBase
     {
         internal ParameterType parameterType;
         internal byte combinerIndex;
@@ -26,27 +25,29 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  PixelShaderConstantBlockBase(BinaryReader binaryReader)
         {
-            parameterType = (ParameterType)binaryReader.ReadByte();
-            combinerIndex = binaryReader.ReadByte();
-            registerIndex = binaryReader.ReadByte();
-            componentMask = (ComponentMask)binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(1);
-            invalidName_0 = binaryReader.ReadBytes(1);
+            this.parameterType = (ParameterType)binaryReader.ReadByte();
+            this.combinerIndex = binaryReader.ReadByte();
+            this.registerIndex = binaryReader.ReadByte();
+            this.componentMask = (ComponentMask)binaryReader.ReadByte();
+            this.invalidName_ = binaryReader.ReadBytes(1);
+            this.invalidName_0 = binaryReader.ReadBytes(1);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Byte)parameterType);
-                binaryWriter.Write(combinerIndex);
-                binaryWriter.Write(registerIndex);
-                binaryWriter.Write((Byte)componentMask);
-                binaryWriter.Write(invalidName_, 0, 1);
-                binaryWriter.Write(invalidName_0, 0, 1);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum ParameterType : byte
+        
         {
             Bitmap = 0,
             Value = 1,
@@ -54,6 +55,7 @@ namespace Moonfish.Guerilla.Tags
             Switch = 3,
         };
         internal enum ComponentMask : byte
+        
         {
             XValue = 0,
             YValue = 1,

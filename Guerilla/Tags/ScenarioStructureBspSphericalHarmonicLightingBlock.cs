@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,25 +14,45 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class ScenarioStructureBspSphericalHarmonicLightingBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 16)]
+    public class ScenarioStructureBspSphericalHarmonicLightingBlockBase
     {
         [TagReference("sbsp")]
         internal Moonfish.Tags.TagReference bSP;
         internal ScenarioSphericalHarmonicLightingPoint[] lightingPoints;
         internal  ScenarioStructureBspSphericalHarmonicLightingBlockBase(BinaryReader binaryReader)
         {
-            bSP = binaryReader.ReadTagReference();
-            lightingPoints = Guerilla.ReadBlockArray<ScenarioSphericalHarmonicLightingPoint>(binaryReader);
+            this.bSP = binaryReader.ReadTagReference();
+            this.lightingPoints = ReadScenarioSphericalHarmonicLightingPointArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(bSP);
-                Guerilla.WriteBlockArray<ScenarioSphericalHarmonicLightingPoint>(binaryWriter, lightingPoints, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual ScenarioSphericalHarmonicLightingPoint[] ReadScenarioSphericalHarmonicLightingPointArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ScenarioSphericalHarmonicLightingPoint));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ScenarioSphericalHarmonicLightingPoint[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ScenarioSphericalHarmonicLightingPoint(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

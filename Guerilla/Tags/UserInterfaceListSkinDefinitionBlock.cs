@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass SkinClass = (TagClass)"skin";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 60, Alignment = 4)]
-    public class UserInterfaceListSkinDefinitionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 60)]
+    public class UserInterfaceListSkinDefinitionBlockBase
     {
         internal ListFlags listFlags;
         [TagReference("bitm")]
@@ -39,34 +30,108 @@ namespace Moonfish.Guerilla.Tags
         internal PlayerBlockReferenceBlock[] playerBlocks;
         internal  UserInterfaceListSkinDefinitionBlockBase(BinaryReader binaryReader)
         {
-            listFlags = (ListFlags)binaryReader.ReadInt32();
-            arrowsBitmap = binaryReader.ReadTagReference();
-            upArrowsOffsetFromBotLeftOf1StItem = binaryReader.ReadPoint();
-            downArrowsOffsetFromBotLeftOf1StItem = binaryReader.ReadPoint();
-            itemAnimations = Guerilla.ReadBlockArray<SingleAnimationReferenceBlock>(binaryReader);
-            textBlocks = Guerilla.ReadBlockArray<TextBlockReferenceBlock>(binaryReader);
-            bitmapBlocks = Guerilla.ReadBlockArray<BitmapBlockReferenceBlock>(binaryReader);
-            hudBlocks = Guerilla.ReadBlockArray<HudBlockReferenceBlock>(binaryReader);
-            playerBlocks = Guerilla.ReadBlockArray<PlayerBlockReferenceBlock>(binaryReader);
+            this.listFlags = (ListFlags)binaryReader.ReadInt32();
+            this.arrowsBitmap = binaryReader.ReadTagReference();
+            this.upArrowsOffsetFromBotLeftOf1StItem = binaryReader.ReadPoint();
+            this.downArrowsOffsetFromBotLeftOf1StItem = binaryReader.ReadPoint();
+            this.itemAnimations = ReadSingleAnimationReferenceBlockArray(binaryReader);
+            this.textBlocks = ReadTextBlockReferenceBlockArray(binaryReader);
+            this.bitmapBlocks = ReadBitmapBlockReferenceBlockArray(binaryReader);
+            this.hudBlocks = ReadHudBlockReferenceBlockArray(binaryReader);
+            this.playerBlocks = ReadPlayerBlockReferenceBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)listFlags);
-                binaryWriter.Write(arrowsBitmap);
-                binaryWriter.Write(upArrowsOffsetFromBotLeftOf1StItem);
-                binaryWriter.Write(downArrowsOffsetFromBotLeftOf1StItem);
-                Guerilla.WriteBlockArray<SingleAnimationReferenceBlock>(binaryWriter, itemAnimations, nextAddress);
-                Guerilla.WriteBlockArray<TextBlockReferenceBlock>(binaryWriter, textBlocks, nextAddress);
-                Guerilla.WriteBlockArray<BitmapBlockReferenceBlock>(binaryWriter, bitmapBlocks, nextAddress);
-                Guerilla.WriteBlockArray<HudBlockReferenceBlock>(binaryWriter, hudBlocks, nextAddress);
-                Guerilla.WriteBlockArray<PlayerBlockReferenceBlock>(binaryWriter, playerBlocks, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual SingleAnimationReferenceBlock[] ReadSingleAnimationReferenceBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(SingleAnimationReferenceBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new SingleAnimationReferenceBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new SingleAnimationReferenceBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual TextBlockReferenceBlock[] ReadTextBlockReferenceBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(TextBlockReferenceBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new TextBlockReferenceBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new TextBlockReferenceBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual BitmapBlockReferenceBlock[] ReadBitmapBlockReferenceBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(BitmapBlockReferenceBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new BitmapBlockReferenceBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new BitmapBlockReferenceBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual HudBlockReferenceBlock[] ReadHudBlockReferenceBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(HudBlockReferenceBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new HudBlockReferenceBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new HudBlockReferenceBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual PlayerBlockReferenceBlock[] ReadPlayerBlockReferenceBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PlayerBlockReferenceBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PlayerBlockReferenceBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PlayerBlockReferenceBlock(binaryReader);
+                }
+            }
+            return array;
         }
         [FlagsAttribute]
         internal enum ListFlags : int
+        
         {
             Unused = 1,
         };

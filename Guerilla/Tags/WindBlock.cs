@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass WindClass = (TagClass)"wind";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 64, Alignment = 4)]
-    public class WindBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 64)]
+    public class WindBlockBase
     {
         /// <summary>
         /// the wind magnitude in the weather region scales the wind between these bounds
@@ -41,25 +32,26 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  WindBlockBase(BinaryReader binaryReader)
         {
-            velocityWorldUnits = binaryReader.ReadRange();
-            variationArea = binaryReader.ReadVector2();
-            localVariationWeight = binaryReader.ReadSingle();
-            localVariationRate = binaryReader.ReadSingle();
-            damping = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(36);
+            this.velocityWorldUnits = binaryReader.ReadRange();
+            this.variationArea = binaryReader.ReadVector2();
+            this.localVariationWeight = binaryReader.ReadSingle();
+            this.localVariationRate = binaryReader.ReadSingle();
+            this.damping = binaryReader.ReadSingle();
+            this.invalidName_ = binaryReader.ReadBytes(36);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(velocityWorldUnits);
-                binaryWriter.Write(variationArea);
-                binaryWriter.Write(localVariationWeight);
-                binaryWriter.Write(localVariationRate);
-                binaryWriter.Write(damping);
-                binaryWriter.Write(invalidName_, 0, 36);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

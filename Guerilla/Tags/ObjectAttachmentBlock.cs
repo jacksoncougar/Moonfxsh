@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class ObjectAttachmentBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class ObjectAttachmentBlockBase
     {
         [TagReference("null")]
         internal Moonfish.Tags.TagReference type;
@@ -27,27 +26,29 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID secondaryScale;
         internal  ObjectAttachmentBlockBase(BinaryReader binaryReader)
         {
-            type = binaryReader.ReadTagReference();
-            marker = binaryReader.ReadStringID();
-            changeColor = (ChangeColor)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            primaryScale = binaryReader.ReadStringID();
-            secondaryScale = binaryReader.ReadStringID();
+            this.type = binaryReader.ReadTagReference();
+            this.marker = binaryReader.ReadStringID();
+            this.changeColor = (ChangeColor)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.primaryScale = binaryReader.ReadStringID();
+            this.secondaryScale = binaryReader.ReadStringID();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(type);
-                binaryWriter.Write(marker);
-                binaryWriter.Write((Int16)changeColor);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(primaryScale);
-                binaryWriter.Write(secondaryScale);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum ChangeColor : short
+        
         {
             None = 0,
             Primary = 1,

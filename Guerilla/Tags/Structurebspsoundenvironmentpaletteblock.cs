@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 72, Alignment = 4)]
-    public class StructureBspSoundEnvironmentPaletteBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 72)]
+    public class StructureBspSoundEnvironmentPaletteBlockBase
     {
         internal Moonfish.Tags.String32 name;
         [TagReference("snde")]
@@ -26,23 +25,25 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  StructureBspSoundEnvironmentPaletteBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadString32();
-            soundEnvironment = binaryReader.ReadTagReference();
-            cutoffDistance = binaryReader.ReadSingle();
-            interpolationSpeed1Sec = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(24);
+            this.name = binaryReader.ReadString32();
+            this.soundEnvironment = binaryReader.ReadTagReference();
+            this.cutoffDistance = binaryReader.ReadSingle();
+            this.interpolationSpeed1Sec = binaryReader.ReadSingle();
+            this.invalidName_ = binaryReader.ReadBytes(24);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(soundEnvironment);
-                binaryWriter.Write(cutoffDistance);
-                binaryWriter.Write(interpolationSpeed1Sec);
-                binaryWriter.Write(invalidName_, 0, 24);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 64, Alignment = 4)]
-    public class PlatformSoundFilterLfoBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 64)]
+    public class PlatformSoundFilterLfoBlockBase
     {
         internal SoundPlaybackParameterDefinitionBlock delay;
         internal SoundPlaybackParameterDefinitionBlock frequency;
@@ -24,21 +23,24 @@ namespace Moonfish.Guerilla.Tags
         internal SoundPlaybackParameterDefinitionBlock gainModulation;
         internal  PlatformSoundFilterLfoBlockBase(BinaryReader binaryReader)
         {
-            delay = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            frequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            cutoffModulation = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            gainModulation = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            this.delay = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            this.frequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            this.cutoffModulation = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            this.gainModulation = new SoundPlaybackParameterDefinitionBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                delay.Write(binaryWriter);
-                frequency.Write(binaryWriter);
-                cutoffModulation.Write(binaryWriter);
-                gainModulation.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

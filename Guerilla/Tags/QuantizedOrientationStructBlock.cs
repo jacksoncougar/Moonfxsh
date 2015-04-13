@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class QuantizedOrientationStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class QuantizedOrientationStructBlockBase
     {
         internal short rotationX;
         internal short rotationY;
@@ -26,25 +25,26 @@ namespace Moonfish.Guerilla.Tags
         internal float defaultScale;
         internal  QuantizedOrientationStructBlockBase(BinaryReader binaryReader)
         {
-            rotationX = binaryReader.ReadInt16();
-            rotationY = binaryReader.ReadInt16();
-            rotationZ = binaryReader.ReadInt16();
-            rotationW = binaryReader.ReadInt16();
-            defaultTranslation = binaryReader.ReadVector3();
-            defaultScale = binaryReader.ReadSingle();
+            this.rotationX = binaryReader.ReadInt16();
+            this.rotationY = binaryReader.ReadInt16();
+            this.rotationZ = binaryReader.ReadInt16();
+            this.rotationW = binaryReader.ReadInt16();
+            this.defaultTranslation = binaryReader.ReadVector3();
+            this.defaultScale = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(rotationX);
-                binaryWriter.Write(rotationY);
-                binaryWriter.Write(rotationZ);
-                binaryWriter.Write(rotationW);
-                binaryWriter.Write(defaultTranslation);
-                binaryWriter.Write(defaultScale);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

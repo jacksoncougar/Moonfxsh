@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,27 +14,48 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class ScenarioMachineStructV3BlockBase  : IGuerilla
+    [LayoutAttribute(Size = 12)]
+    public class ScenarioMachineStructV3BlockBase
     {
         internal Flags flags;
         internal PathfindingObjectIndexListBlock[] pathfindingReferences;
         internal  ScenarioMachineStructV3BlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            pathfindingReferences = Guerilla.ReadBlockArray<PathfindingObjectIndexListBlock>(binaryReader);
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.pathfindingReferences = ReadPathfindingObjectIndexListBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)flags);
-                Guerilla.WriteBlockArray<PathfindingObjectIndexListBlock>(binaryWriter, pathfindingReferences, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual PathfindingObjectIndexListBlock[] ReadPathfindingObjectIndexListBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PathfindingObjectIndexListBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PathfindingObjectIndexListBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PathfindingObjectIndexListBlock(binaryReader);
+                }
+            }
+            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             DoesNotOperateAutomatically = 1,
             OneSided = 2,

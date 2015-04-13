@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 48, Alignment = 4)]
-    public class ScenarioLightStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 48)]
+    public class ScenarioLightStructBlockBase
     {
         internal Type type;
         internal Flags flags;
@@ -32,39 +31,35 @@ namespace Moonfish.Guerilla.Tags
         internal float cutoffDistanceWorldUnitsFromFarPlane;
         internal  ScenarioLightStructBlockBase(BinaryReader binaryReader)
         {
-            type = (Type)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            lightmapType = (LightmapType)binaryReader.ReadInt16();
-            lightmapFlags = (LightmapFlags)binaryReader.ReadInt16();
-            lightmapHalfLife = binaryReader.ReadSingle();
-            lightmapLightScale = binaryReader.ReadSingle();
-            targetPoint = binaryReader.ReadVector3();
-            widthWorldUnits = binaryReader.ReadSingle();
-            heightScaleWorldUnits = binaryReader.ReadSingle();
-            fieldOfViewDegrees = binaryReader.ReadSingle();
-            falloffDistanceWorldUnits = binaryReader.ReadSingle();
-            cutoffDistanceWorldUnitsFromFarPlane = binaryReader.ReadSingle();
+            this.type = (Type)binaryReader.ReadInt16();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.lightmapType = (LightmapType)binaryReader.ReadInt16();
+            this.lightmapFlags = (LightmapFlags)binaryReader.ReadInt16();
+            this.lightmapHalfLife = binaryReader.ReadSingle();
+            this.lightmapLightScale = binaryReader.ReadSingle();
+            this.targetPoint = binaryReader.ReadVector3();
+            this.widthWorldUnits = binaryReader.ReadSingle();
+            this.heightScaleWorldUnits = binaryReader.ReadSingle();
+            this.fieldOfViewDegrees = binaryReader.ReadSingle();
+            this.falloffDistanceWorldUnits = binaryReader.ReadSingle();
+            this.cutoffDistanceWorldUnitsFromFarPlane = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Int16)lightmapType);
-                binaryWriter.Write((Int16)lightmapFlags);
-                binaryWriter.Write(lightmapHalfLife);
-                binaryWriter.Write(lightmapLightScale);
-                binaryWriter.Write(targetPoint);
-                binaryWriter.Write(widthWorldUnits);
-                binaryWriter.Write(heightScaleWorldUnits);
-                binaryWriter.Write(fieldOfViewDegrees);
-                binaryWriter.Write(falloffDistanceWorldUnits);
-                binaryWriter.Write(cutoffDistanceWorldUnitsFromFarPlane);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum Type : short
+        
         {
             Sphere = 0,
             Orthogonal = 1,
@@ -73,12 +68,14 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             CustomGeometry = 1,
             Unused = 2,
             CinematicOnly = 4,
         };
         internal enum LightmapType : short
+        
         {
             UseLightTagSetting = 0,
             DynamicOnly = 1,
@@ -87,6 +84,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum LightmapFlags : short
+        
         {
             Unused = 1,
         };

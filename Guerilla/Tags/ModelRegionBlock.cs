@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class ModelRegionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 16)]
+    public class ModelRegionBlockBase
     {
         internal Moonfish.Tags.StringID name;
         internal byte collisionRegionIndex;
@@ -25,23 +24,40 @@ namespace Moonfish.Guerilla.Tags
         internal ModelPermutationBlock[] permutations;
         internal  ModelRegionBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadStringID();
-            collisionRegionIndex = binaryReader.ReadByte();
-            physicsRegionIndex = binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(2);
-            permutations = Guerilla.ReadBlockArray<ModelPermutationBlock>(binaryReader);
+            this.name = binaryReader.ReadStringID();
+            this.collisionRegionIndex = binaryReader.ReadByte();
+            this.physicsRegionIndex = binaryReader.ReadByte();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.permutations = ReadModelPermutationBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(collisionRegionIndex);
-                binaryWriter.Write(physicsRegionIndex);
-                binaryWriter.Write(invalidName_, 0, 2);
-                Guerilla.WriteBlockArray<ModelPermutationBlock>(binaryWriter, permutations, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual ModelPermutationBlock[] ReadModelPermutationBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ModelPermutationBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ModelPermutationBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ModelPermutationBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

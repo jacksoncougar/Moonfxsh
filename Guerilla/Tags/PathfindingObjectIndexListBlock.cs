@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,24 +14,29 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class PathfindingObjectIndexListBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 4)]
+    public class PathfindingObjectIndexListBlockBase
     {
         internal short bSPIndex;
         internal short pathfindingObjectIndex;
         internal  PathfindingObjectIndexListBlockBase(BinaryReader binaryReader)
         {
-            bSPIndex = binaryReader.ReadInt16();
-            pathfindingObjectIndex = binaryReader.ReadInt16();
+            this.bSPIndex = binaryReader.ReadInt16();
+            this.pathfindingObjectIndex = binaryReader.ReadInt16();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(bSPIndex);
-                binaryWriter.Write(pathfindingObjectIndex);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

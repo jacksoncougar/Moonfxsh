@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32, Alignment = 4)]
-    public class ObjectFunctionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 32)]
+    public class ObjectFunctionBlockBase
     {
         internal Flags flags;
         internal Moonfish.Tags.StringID importName;
@@ -33,30 +32,31 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID scaleBy;
         internal  ObjectFunctionBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            importName = binaryReader.ReadStringID();
-            exportName = binaryReader.ReadStringID();
-            turnOffWith = binaryReader.ReadStringID();
-            minValue = binaryReader.ReadSingle();
-            defaultFunction = new MappingFunctionBlock(binaryReader);
-            scaleBy = binaryReader.ReadStringID();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.importName = binaryReader.ReadStringID();
+            this.exportName = binaryReader.ReadStringID();
+            this.turnOffWith = binaryReader.ReadStringID();
+            this.minValue = binaryReader.ReadSingle();
+            this.defaultFunction = new MappingFunctionBlock(binaryReader);
+            this.scaleBy = binaryReader.ReadStringID();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(importName);
-                binaryWriter.Write(exportName);
-                binaryWriter.Write(turnOffWith);
-                binaryWriter.Write(minValue);
-                defaultFunction.Write(binaryWriter);
-                binaryWriter.Write(scaleBy);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             InvertResultOfFunctionIsOneMinusActualResult = 1,
             MappingDoesNotControlsActiveTheCurveMappingCanMakeTheFunctionActiveInactive = 2,

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class StructureCollisionMaterialsBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 20)]
+    public class StructureCollisionMaterialsBlockBase
     {
         [TagReference("shad")]
         internal Moonfish.Tags.TagReference oldShader;
@@ -26,21 +25,24 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference newShader;
         internal  StructureCollisionMaterialsBlockBase(BinaryReader binaryReader)
         {
-            oldShader = binaryReader.ReadTagReference();
-            invalidName_ = binaryReader.ReadBytes(2);
-            conveyorSurfaceIndex = binaryReader.ReadShortBlockIndex1();
-            newShader = binaryReader.ReadTagReference();
+            this.oldShader = binaryReader.ReadTagReference();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.conveyorSurfaceIndex = binaryReader.ReadShortBlockIndex1();
+            this.newShader = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(oldShader);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(conveyorSurfaceIndex);
-                binaryWriter.Write(newShader);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,24 +14,29 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 5, Alignment = 4)]
-    public class ShaderPostprocessValueBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 5)]
+    public class ShaderPostprocessValueBlockBase
     {
         internal byte parameterIndex;
         internal float value;
         internal  ShaderPostprocessValueBlockBase(BinaryReader binaryReader)
         {
-            parameterIndex = binaryReader.ReadByte();
-            value = binaryReader.ReadSingle();
+            this.parameterIndex = binaryReader.ReadByte();
+            this.value = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(parameterIndex);
-                binaryWriter.Write(value);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

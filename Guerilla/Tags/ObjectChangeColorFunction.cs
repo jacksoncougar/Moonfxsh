@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 40, Alignment = 4)]
-    public class ObjectChangeColorFunctionBase  : IGuerilla
+    [LayoutAttribute(Size = 40)]
+    public class ObjectChangeColorFunctionBase
     {
         internal byte[] invalidName_;
         internal ScaleFlags scaleFlags;
@@ -26,28 +25,30 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID scaleBy;
         internal  ObjectChangeColorFunctionBase(BinaryReader binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes(4);
-            scaleFlags = (ScaleFlags)binaryReader.ReadInt32();
-            colorLowerBound = binaryReader.ReadColorR8G8B8();
-            colorUpperBound = binaryReader.ReadColorR8G8B8();
-            darkenBy = binaryReader.ReadStringID();
-            scaleBy = binaryReader.ReadStringID();
+            this.invalidName_ = binaryReader.ReadBytes(4);
+            this.scaleFlags = (ScaleFlags)binaryReader.ReadInt32();
+            this.colorLowerBound = binaryReader.ReadColorR8G8B8();
+            this.colorUpperBound = binaryReader.ReadColorR8G8B8();
+            this.darkenBy = binaryReader.ReadStringID();
+            this.scaleBy = binaryReader.ReadStringID();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write((Int32)scaleFlags);
-                binaryWriter.Write(colorLowerBound);
-                binaryWriter.Write(colorUpperBound);
-                binaryWriter.Write(darkenBy);
-                binaryWriter.Write(scaleBy);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum ScaleFlags : int
+        
         {
             BlendInHsvBlendsColorsInHsvRatherThanRgbSpace = 1,
             MoreColorsBlendsColorsThroughMoreHuesGoesTheLongWayAroundTheColorWheel = 2,

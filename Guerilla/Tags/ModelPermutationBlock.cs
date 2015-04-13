@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ModelPermutationBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 8)]
+    public class ModelPermutationBlockBase
     {
         internal Moonfish.Tags.StringID name;
         internal Flags flags;
@@ -24,24 +23,28 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  ModelPermutationBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadStringID();
-            flags = (Flags)binaryReader.ReadByte();
-            collisionPermutationIndex = binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(2);
+            this.name = binaryReader.ReadStringID();
+            this.flags = (Flags)binaryReader.ReadByte();
+            this.collisionPermutationIndex = binaryReader.ReadByte();
+            this.invalidName_ = binaryReader.ReadBytes(2);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write((Byte)flags);
-                binaryWriter.Write(collisionPermutationIndex);
-                binaryWriter.Write(invalidName_, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : byte
+        
         {
             CannotBeChosenRandomly = 1,
         };

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class ModelVariantStateBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class ModelVariantStateBlockBase
     {
         internal Moonfish.Tags.StringID permutationName;
         internal byte[] invalidName_;
@@ -31,36 +30,38 @@ namespace Moonfish.Guerilla.Tags
         internal float initialProbability;
         internal  ModelVariantStateBlockBase(BinaryReader binaryReader)
         {
-            permutationName = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(1);
-            propertyFlags = (PropertyFlags)binaryReader.ReadByte();
-            state = (State)binaryReader.ReadInt16();
-            loopingEffect = binaryReader.ReadTagReference();
-            loopingEffectMarkerName = binaryReader.ReadStringID();
-            initialProbability = binaryReader.ReadSingle();
+            this.permutationName = binaryReader.ReadStringID();
+            this.invalidName_ = binaryReader.ReadBytes(1);
+            this.propertyFlags = (PropertyFlags)binaryReader.ReadByte();
+            this.state = (State)binaryReader.ReadInt16();
+            this.loopingEffect = binaryReader.ReadTagReference();
+            this.loopingEffectMarkerName = binaryReader.ReadStringID();
+            this.initialProbability = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(permutationName);
-                binaryWriter.Write(invalidName_, 0, 1);
-                binaryWriter.Write((Byte)propertyFlags);
-                binaryWriter.Write((Int16)state);
-                binaryWriter.Write(loopingEffect);
-                binaryWriter.Write(loopingEffectMarkerName);
-                binaryWriter.Write(initialProbability);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum PropertyFlags : byte
+        
         {
             Blurred = 1,
             HellaBlurred = 2,
             Shielded = 4,
         };
         internal enum State : short
+        
         {
             Default = 0,
             MinorDamage = 1,

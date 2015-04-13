@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 28, Alignment = 4)]
-    public class PlatformSoundEffectBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 28)]
+    public class PlatformSoundEffectBlockBase
     {
         internal PlatformSoundEffectFunctionBlock[] functionInputs;
         internal PlatformSoundEffectConstantBlock[] constantInputs;
@@ -24,21 +23,69 @@ namespace Moonfish.Guerilla.Tags
         internal int inputOverrides;
         internal  PlatformSoundEffectBlockBase(BinaryReader binaryReader)
         {
-            functionInputs = Guerilla.ReadBlockArray<PlatformSoundEffectFunctionBlock>(binaryReader);
-            constantInputs = Guerilla.ReadBlockArray<PlatformSoundEffectConstantBlock>(binaryReader);
-            templateOverrideDescriptors = Guerilla.ReadBlockArray<PlatformSoundEffectOverrideDescriptorBlock>(binaryReader);
-            inputOverrides = binaryReader.ReadInt32();
+            this.functionInputs = ReadPlatformSoundEffectFunctionBlockArray(binaryReader);
+            this.constantInputs = ReadPlatformSoundEffectConstantBlockArray(binaryReader);
+            this.templateOverrideDescriptors = ReadPlatformSoundEffectOverrideDescriptorBlockArray(binaryReader);
+            this.inputOverrides = binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                Guerilla.WriteBlockArray<PlatformSoundEffectFunctionBlock>(binaryWriter, functionInputs, nextAddress);
-                Guerilla.WriteBlockArray<PlatformSoundEffectConstantBlock>(binaryWriter, constantInputs, nextAddress);
-                Guerilla.WriteBlockArray<PlatformSoundEffectOverrideDescriptorBlock>(binaryWriter, templateOverrideDescriptors, nextAddress);
-                binaryWriter.Write(inputOverrides);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual PlatformSoundEffectFunctionBlock[] ReadPlatformSoundEffectFunctionBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PlatformSoundEffectFunctionBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PlatformSoundEffectFunctionBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PlatformSoundEffectFunctionBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual PlatformSoundEffectConstantBlock[] ReadPlatformSoundEffectConstantBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PlatformSoundEffectConstantBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PlatformSoundEffectConstantBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PlatformSoundEffectConstantBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual PlatformSoundEffectOverrideDescriptorBlock[] ReadPlatformSoundEffectOverrideDescriptorBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PlatformSoundEffectOverrideDescriptorBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PlatformSoundEffectOverrideDescriptorBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PlatformSoundEffectOverrideDescriptorBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

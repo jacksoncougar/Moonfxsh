@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,24 +14,29 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class PointToPathCurvePointBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 16)]
+    public class PointToPathCurvePointBlockBase
     {
         internal OpenTK.Vector3 position;
         internal float tValue;
         internal  PointToPathCurvePointBlockBase(BinaryReader binaryReader)
         {
-            position = binaryReader.ReadVector3();
-            tValue = binaryReader.ReadSingle();
+            this.position = binaryReader.ReadVector3();
+            this.tValue = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(position);
-                binaryWriter.Write(tValue);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

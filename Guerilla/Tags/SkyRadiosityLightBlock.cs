@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 40, Alignment = 4)]
-    public class SkyRadiosityLightBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 40)]
+    public class SkyRadiosityLightBlockBase
     {
         internal Flags flags;
         /// <summary>
@@ -38,28 +37,30 @@ namespace Moonfish.Guerilla.Tags
         internal float diameterDegrees;
         internal  SkyRadiosityLightBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            color = binaryReader.ReadColorR8G8B8();
-            power0Inf = binaryReader.ReadSingle();
-            testDistanceWorldUnits = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(12);
-            diameterDegrees = binaryReader.ReadSingle();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.color = binaryReader.ReadColorR8G8B8();
+            this.power0Inf = binaryReader.ReadSingle();
+            this.testDistanceWorldUnits = binaryReader.ReadSingle();
+            this.invalidName_ = binaryReader.ReadBytes(12);
+            this.diameterDegrees = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(color);
-                binaryWriter.Write(power0Inf);
-                binaryWriter.Write(testDistanceWorldUnits);
-                binaryWriter.Write(invalidName_, 0, 12);
-                binaryWriter.Write(diameterDegrees);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             AffectsExteriors = 1,
             AffectsInteriors = 2,

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class GlobalSubpartsBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 8)]
+    public class GlobalSubpartsBlockBase
     {
         internal short indicesStartIndex;
         internal short indicesLength;
@@ -24,21 +23,24 @@ namespace Moonfish.Guerilla.Tags
         internal short partIndex;
         internal  GlobalSubpartsBlockBase(BinaryReader binaryReader)
         {
-            indicesStartIndex = binaryReader.ReadInt16();
-            indicesLength = binaryReader.ReadInt16();
-            visibilityBoundsIndex = binaryReader.ReadInt16();
-            partIndex = binaryReader.ReadInt16();
+            this.indicesStartIndex = binaryReader.ReadInt16();
+            this.indicesLength = binaryReader.ReadInt16();
+            this.visibilityBoundsIndex = binaryReader.ReadInt16();
+            this.partIndex = binaryReader.ReadInt16();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(indicesStartIndex);
-                binaryWriter.Write(indicesLength);
-                binaryWriter.Write(visibilityBoundsIndex);
-                binaryWriter.Write(partIndex);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

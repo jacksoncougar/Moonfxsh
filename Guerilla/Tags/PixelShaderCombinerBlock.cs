@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32, Alignment = 4)]
-    public class PixelShaderCombinerBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 32)]
+    public class PixelShaderCombinerBlockBase
     {
         internal byte[] invalidName_;
         internal Moonfish.Tags.ColourA1R1G1B1 constantColor0;
@@ -31,35 +30,31 @@ namespace Moonfish.Guerilla.Tags
         internal byte alphaDRegisterPtrIndex;
         internal  PixelShaderCombinerBlockBase(BinaryReader binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes(16);
-            constantColor0 = binaryReader.ReadColourA1R1G1B1();
-            constantColor1 = binaryReader.ReadColourA1R1G1B1();
-            colorARegisterPtrIndex = binaryReader.ReadByte();
-            colorBRegisterPtrIndex = binaryReader.ReadByte();
-            colorCRegisterPtrIndex = binaryReader.ReadByte();
-            colorDRegisterPtrIndex = binaryReader.ReadByte();
-            alphaARegisterPtrIndex = binaryReader.ReadByte();
-            alphaBRegisterPtrIndex = binaryReader.ReadByte();
-            alphaCRegisterPtrIndex = binaryReader.ReadByte();
-            alphaDRegisterPtrIndex = binaryReader.ReadByte();
+            this.invalidName_ = binaryReader.ReadBytes(16);
+            this.constantColor0 = binaryReader.ReadColourA1R1G1B1();
+            this.constantColor1 = binaryReader.ReadColourA1R1G1B1();
+            this.colorARegisterPtrIndex = binaryReader.ReadByte();
+            this.colorBRegisterPtrIndex = binaryReader.ReadByte();
+            this.colorCRegisterPtrIndex = binaryReader.ReadByte();
+            this.colorDRegisterPtrIndex = binaryReader.ReadByte();
+            this.alphaARegisterPtrIndex = binaryReader.ReadByte();
+            this.alphaBRegisterPtrIndex = binaryReader.ReadByte();
+            this.alphaCRegisterPtrIndex = binaryReader.ReadByte();
+            this.alphaDRegisterPtrIndex = binaryReader.ReadByte();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(invalidName_, 0, 16);
-                binaryWriter.Write(constantColor0);
-                binaryWriter.Write(constantColor1);
-                binaryWriter.Write(colorARegisterPtrIndex);
-                binaryWriter.Write(colorBRegisterPtrIndex);
-                binaryWriter.Write(colorCRegisterPtrIndex);
-                binaryWriter.Write(colorDRegisterPtrIndex);
-                binaryWriter.Write(alphaARegisterPtrIndex);
-                binaryWriter.Write(alphaBRegisterPtrIndex);
-                binaryWriter.Write(alphaCRegisterPtrIndex);
-                binaryWriter.Write(alphaDRegisterPtrIndex);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

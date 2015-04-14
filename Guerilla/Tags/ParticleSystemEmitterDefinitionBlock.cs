@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 184, Alignment = 4)]
-    public class ParticleSystemEmitterDefinitionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 184)]
+    public class ParticleSystemEmitterDefinitionBlockBase
     {
         [TagReference("pmov")]
         internal Moonfish.Tags.TagReference particlePhysics;
@@ -38,43 +37,37 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  ParticleSystemEmitterDefinitionBlockBase(BinaryReader binaryReader)
         {
-            particlePhysics = binaryReader.ReadTagReference();
-            particleEmissionRate = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            particleLifespan = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            particleVelocity = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            particleAngularVelocity = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            particleSize = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            particleTint = new ParticlePropertyColorStructNewBlock(binaryReader);
-            particleAlpha = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            emissionShape = (EmissionShape)binaryReader.ReadInt32();
-            emissionRadius = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            emissionAngle = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            translationalOffset = binaryReader.ReadVector3();
-            relativeDirection = binaryReader.ReadVector2();
-            invalidName_ = binaryReader.ReadBytes(8);
+            this.particlePhysics = binaryReader.ReadTagReference();
+            this.particleEmissionRate = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            this.particleLifespan = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            this.particleVelocity = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            this.particleAngularVelocity = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            this.particleSize = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            this.particleTint = new ParticlePropertyColorStructNewBlock(binaryReader);
+            this.particleAlpha = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            this.emissionShape = (EmissionShape)binaryReader.ReadInt32();
+            this.emissionRadius = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            this.emissionAngle = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            this.translationalOffset = binaryReader.ReadVector3();
+            this.relativeDirection = binaryReader.ReadVector2();
+            this.invalidName_ = binaryReader.ReadBytes(8);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(particlePhysics);
-                particleEmissionRate.Write(binaryWriter);
-                particleLifespan.Write(binaryWriter);
-                particleVelocity.Write(binaryWriter);
-                particleAngularVelocity.Write(binaryWriter);
-                particleSize.Write(binaryWriter);
-                particleTint.Write(binaryWriter);
-                particleAlpha.Write(binaryWriter);
-                binaryWriter.Write((Int32)emissionShape);
-                emissionRadius.Write(binaryWriter);
-                emissionAngle.Write(binaryWriter);
-                binaryWriter.Write(translationalOffset);
-                binaryWriter.Write(relativeDirection);
-                binaryWriter.Write(invalidName_, 0, 8);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum EmissionShape : int
+        
         {
             Sprayer = 0,
             Disc = 1,

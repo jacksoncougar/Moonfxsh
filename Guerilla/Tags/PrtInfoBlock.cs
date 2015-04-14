@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 88, Alignment = 4)]
-    public class PrtInfoBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 88)]
+    public class PrtInfoBlockBase
     {
         internal short sHOrder;
         internal short numOfClusters;
@@ -34,41 +33,94 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
         internal  PrtInfoBlockBase(BinaryReader binaryReader)
         {
-            sHOrder = binaryReader.ReadInt16();
-            numOfClusters = binaryReader.ReadInt16();
-            pcaVectorsPerCluster = binaryReader.ReadInt16();
-            numberOfRays = binaryReader.ReadInt16();
-            numberOfBounces = binaryReader.ReadInt16();
-            matIndexForSbsfcScattering = binaryReader.ReadInt16();
-            lengthScale = binaryReader.ReadSingle();
-            numberOfLodsInModel = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            lodInfo = Guerilla.ReadBlockArray<PrtLodInfoBlock>(binaryReader);
-            clusterBasis = Guerilla.ReadBlockArray<PrtClusterBasisBlock>(binaryReader);
-            rawPcaData = Guerilla.ReadBlockArray<PrtRawPcaDataBlock>(binaryReader);
-            vertexBuffers = Guerilla.ReadBlockArray<PrtVertexBuffersBlock>(binaryReader);
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            this.sHOrder = binaryReader.ReadInt16();
+            this.numOfClusters = binaryReader.ReadInt16();
+            this.pcaVectorsPerCluster = binaryReader.ReadInt16();
+            this.numberOfRays = binaryReader.ReadInt16();
+            this.numberOfBounces = binaryReader.ReadInt16();
+            this.matIndexForSbsfcScattering = binaryReader.ReadInt16();
+            this.lengthScale = binaryReader.ReadSingle();
+            this.numberOfLodsInModel = binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.lodInfo = ReadPrtLodInfoBlockArray(binaryReader);
+            this.clusterBasis = ReadPrtClusterBasisBlockArray(binaryReader);
+            this.rawPcaData = ReadPrtRawPcaDataBlockArray(binaryReader);
+            this.vertexBuffers = ReadPrtVertexBuffersBlockArray(binaryReader);
+            this.geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(sHOrder);
-                binaryWriter.Write(numOfClusters);
-                binaryWriter.Write(pcaVectorsPerCluster);
-                binaryWriter.Write(numberOfRays);
-                binaryWriter.Write(numberOfBounces);
-                binaryWriter.Write(matIndexForSbsfcScattering);
-                binaryWriter.Write(lengthScale);
-                binaryWriter.Write(numberOfLodsInModel);
-                binaryWriter.Write(invalidName_, 0, 2);
-                Guerilla.WriteBlockArray<PrtLodInfoBlock>(binaryWriter, lodInfo, nextAddress);
-                Guerilla.WriteBlockArray<PrtClusterBasisBlock>(binaryWriter, clusterBasis, nextAddress);
-                Guerilla.WriteBlockArray<PrtRawPcaDataBlock>(binaryWriter, rawPcaData, nextAddress);
-                Guerilla.WriteBlockArray<PrtVertexBuffersBlock>(binaryWriter, vertexBuffers, nextAddress);
-                geometryBlockInfo.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual PrtLodInfoBlock[] ReadPrtLodInfoBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PrtLodInfoBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PrtLodInfoBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PrtLodInfoBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual PrtClusterBasisBlock[] ReadPrtClusterBasisBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PrtClusterBasisBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PrtClusterBasisBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PrtClusterBasisBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual PrtRawPcaDataBlock[] ReadPrtRawPcaDataBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PrtRawPcaDataBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PrtRawPcaDataBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PrtRawPcaDataBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual PrtVertexBuffersBlock[] ReadPrtVertexBuffersBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PrtVertexBuffersBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PrtVertexBuffersBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PrtVertexBuffersBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

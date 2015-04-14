@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class ShaderStateFillStateBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 12)]
+    public class ShaderStateFillStateBlockBase
     {
         internal Flags flags;
         internal FillMode fillMode;
@@ -25,37 +24,42 @@ namespace Moonfish.Guerilla.Tags
         internal float lineWidth;
         internal  ShaderStateFillStateBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            fillMode = (FillMode)binaryReader.ReadInt16();
-            backFillMode = (BackFillMode)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            lineWidth = binaryReader.ReadSingle();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.fillMode = (FillMode)binaryReader.ReadInt16();
+            this.backFillMode = (BackFillMode)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.lineWidth = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Int16)fillMode);
-                binaryWriter.Write((Int16)backFillMode);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(lineWidth);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             FlatShading = 1,
             EdgeAntialiasing = 2,
         };
         internal enum FillMode : short
+        
         {
             Solid = 0,
             Wireframe = 1,
             Points = 2,
         };
         internal enum BackFillMode : short
+        
         {
             Solid = 0,
             Wireframe = 1,

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 18, Alignment = 4)]
-    public class ShaderPostprocessVertexShaderConstantBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 18)]
+    public class ShaderPostprocessVertexShaderConstantBlockBase
     {
         internal byte registerIndex;
         internal byte registerBank;
@@ -26,25 +25,26 @@ namespace Moonfish.Guerilla.Tags
         internal float data2;
         internal  ShaderPostprocessVertexShaderConstantBlockBase(BinaryReader binaryReader)
         {
-            registerIndex = binaryReader.ReadByte();
-            registerBank = binaryReader.ReadByte();
-            data = binaryReader.ReadSingle();
-            data0 = binaryReader.ReadSingle();
-            data1 = binaryReader.ReadSingle();
-            data2 = binaryReader.ReadSingle();
+            this.registerIndex = binaryReader.ReadByte();
+            this.registerBank = binaryReader.ReadByte();
+            this.data = binaryReader.ReadSingle();
+            this.data0 = binaryReader.ReadSingle();
+            this.data1 = binaryReader.ReadSingle();
+            this.data2 = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(registerIndex);
-                binaryWriter.Write(registerBank);
-                binaryWriter.Write(data);
-                binaryWriter.Write(data0);
-                binaryWriter.Write(data1);
-                binaryWriter.Write(data2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

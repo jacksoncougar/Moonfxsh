@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class PhysicsModelConstraintEdgeConstraintBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 12)]
+    public class PhysicsModelConstraintEdgeConstraintBlockBase
     {
         internal Type type;
         internal Moonfish.Tags.ShortBlockIndex2 index;
@@ -27,23 +26,27 @@ namespace Moonfish.Guerilla.Tags
         internal float friction;
         internal  PhysicsModelConstraintEdgeConstraintBlockBase(BinaryReader binaryReader)
         {
-            type = (Type)binaryReader.ReadInt16();
-            index = binaryReader.ReadShortBlockIndex2();
-            flags = (Flags)binaryReader.ReadInt32();
-            friction = binaryReader.ReadSingle();
+            this.type = (Type)binaryReader.ReadInt16();
+            this.index = binaryReader.ReadShortBlockIndex2();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.friction = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write(index);
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(friction);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum Type : short
+        
         {
             Hinge = 0,
             LimitedHinge = 1,
@@ -54,6 +57,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             IsRigidThisConstraintMakesTheEdgeRigidUntilItIsLoosenedByDamage = 1,
             DisableEffectsThisConstraintWillNotGenerateImpactEffects = 2,

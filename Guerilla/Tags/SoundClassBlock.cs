@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 92, Alignment = 4)]
-    public class SoundClassBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 92)]
+    public class SoundClassBlockBase
     {
         /// <summary>
         /// maximum number of sounds playing per individual sound tag
@@ -63,66 +62,49 @@ namespace Moonfish.Guerilla.Tags
         internal float occlusionMaxBend;
         internal  SoundClassBlockBase(BinaryReader binaryReader)
         {
-            maxSoundsPerTag116 = binaryReader.ReadInt16();
-            maxSoundsPerObject116 = binaryReader.ReadInt16();
-            preemptionTimeMs = binaryReader.ReadInt32();
-            internalFlags = (InternalFlags)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            priority = binaryReader.ReadInt16();
-            cacheMissMode = (CacheMissMode)binaryReader.ReadInt16();
-            reverbGainDB = binaryReader.ReadSingle();
-            overrideSpeakerGainDB = binaryReader.ReadSingle();
-            distanceBounds = binaryReader.ReadRange();
-            gainBoundsDB = binaryReader.ReadRange();
-            cutsceneDuckingDB = binaryReader.ReadSingle();
-            cutsceneDuckingFadeInTimeSeconds = binaryReader.ReadSingle();
-            cutsceneDuckingSustainTimeSeconds = binaryReader.ReadSingle();
-            cutsceneDuckingFadeOutTimeSeconds = binaryReader.ReadSingle();
-            scriptedDialogDuckingDB = binaryReader.ReadSingle();
-            scriptedDialogDuckingFadeInTimeSeconds = binaryReader.ReadSingle();
-            scriptedDialogDuckingSustainTimeSeconds = binaryReader.ReadSingle();
-            scriptedDialogDuckingFadeOutTimeSeconds = binaryReader.ReadSingle();
-            dopplerFactor = binaryReader.ReadSingle();
-            stereoPlaybackType = (StereoPlaybackType)binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(3);
-            transmissionMultiplier = binaryReader.ReadSingle();
-            obstructionMaxBend = binaryReader.ReadSingle();
-            occlusionMaxBend = binaryReader.ReadSingle();
+            this.maxSoundsPerTag116 = binaryReader.ReadInt16();
+            this.maxSoundsPerObject116 = binaryReader.ReadInt16();
+            this.preemptionTimeMs = binaryReader.ReadInt32();
+            this.internalFlags = (InternalFlags)binaryReader.ReadInt16();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.priority = binaryReader.ReadInt16();
+            this.cacheMissMode = (CacheMissMode)binaryReader.ReadInt16();
+            this.reverbGainDB = binaryReader.ReadSingle();
+            this.overrideSpeakerGainDB = binaryReader.ReadSingle();
+            this.distanceBounds = binaryReader.ReadRange();
+            this.gainBoundsDB = binaryReader.ReadRange();
+            this.cutsceneDuckingDB = binaryReader.ReadSingle();
+            this.cutsceneDuckingFadeInTimeSeconds = binaryReader.ReadSingle();
+            this.cutsceneDuckingSustainTimeSeconds = binaryReader.ReadSingle();
+            this.cutsceneDuckingFadeOutTimeSeconds = binaryReader.ReadSingle();
+            this.scriptedDialogDuckingDB = binaryReader.ReadSingle();
+            this.scriptedDialogDuckingFadeInTimeSeconds = binaryReader.ReadSingle();
+            this.scriptedDialogDuckingSustainTimeSeconds = binaryReader.ReadSingle();
+            this.scriptedDialogDuckingFadeOutTimeSeconds = binaryReader.ReadSingle();
+            this.dopplerFactor = binaryReader.ReadSingle();
+            this.stereoPlaybackType = (StereoPlaybackType)binaryReader.ReadByte();
+            this.invalidName_ = binaryReader.ReadBytes(3);
+            this.transmissionMultiplier = binaryReader.ReadSingle();
+            this.obstructionMaxBend = binaryReader.ReadSingle();
+            this.occlusionMaxBend = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(maxSoundsPerTag116);
-                binaryWriter.Write(maxSoundsPerObject116);
-                binaryWriter.Write(preemptionTimeMs);
-                binaryWriter.Write((Int16)internalFlags);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(priority);
-                binaryWriter.Write((Int16)cacheMissMode);
-                binaryWriter.Write(reverbGainDB);
-                binaryWriter.Write(overrideSpeakerGainDB);
-                binaryWriter.Write(distanceBounds);
-                binaryWriter.Write(gainBoundsDB);
-                binaryWriter.Write(cutsceneDuckingDB);
-                binaryWriter.Write(cutsceneDuckingFadeInTimeSeconds);
-                binaryWriter.Write(cutsceneDuckingSustainTimeSeconds);
-                binaryWriter.Write(cutsceneDuckingFadeOutTimeSeconds);
-                binaryWriter.Write(scriptedDialogDuckingDB);
-                binaryWriter.Write(scriptedDialogDuckingFadeInTimeSeconds);
-                binaryWriter.Write(scriptedDialogDuckingSustainTimeSeconds);
-                binaryWriter.Write(scriptedDialogDuckingFadeOutTimeSeconds);
-                binaryWriter.Write(dopplerFactor);
-                binaryWriter.Write((Byte)stereoPlaybackType);
-                binaryWriter.Write(invalidName_, 0, 3);
-                binaryWriter.Write(transmissionMultiplier);
-                binaryWriter.Write(obstructionMaxBend);
-                binaryWriter.Write(occlusionMaxBend);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum InternalFlags : short
+        
         {
             Valid = 1,
             IsSpeech = 2,
@@ -135,6 +117,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             PlaysDuringPause = 1,
             DryStereoMix = 2,
@@ -151,11 +134,13 @@ namespace Moonfish.Guerilla.Tags
             AllowCacheFileEditing = 4096,
         };
         internal enum CacheMissMode : short
+        
         {
             Discard = 0,
             Postpone = 1,
         };
         internal enum StereoPlaybackType : byte
+        
         {
             FirstPerson = 0,
             Ambient = 1,

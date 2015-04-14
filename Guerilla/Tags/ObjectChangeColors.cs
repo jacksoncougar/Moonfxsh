@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,24 +14,59 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class ObjectChangeColorsBase  : IGuerilla
+    [LayoutAttribute(Size = 16)]
+    public class ObjectChangeColorsBase
     {
         internal ObjectChangeColorInitialPermutation[] initialPermutations;
         internal ObjectChangeColorFunction[] functions;
         internal  ObjectChangeColorsBase(BinaryReader binaryReader)
         {
-            initialPermutations = Guerilla.ReadBlockArray<ObjectChangeColorInitialPermutation>(binaryReader);
-            functions = Guerilla.ReadBlockArray<ObjectChangeColorFunction>(binaryReader);
+            this.initialPermutations = ReadObjectChangeColorInitialPermutationArray(binaryReader);
+            this.functions = ReadObjectChangeColorFunctionArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                Guerilla.WriteBlockArray<ObjectChangeColorInitialPermutation>(binaryWriter, initialPermutations, nextAddress);
-                Guerilla.WriteBlockArray<ObjectChangeColorFunction>(binaryWriter, functions, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual ObjectChangeColorInitialPermutation[] ReadObjectChangeColorInitialPermutationArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ObjectChangeColorInitialPermutation));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ObjectChangeColorInitialPermutation[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ObjectChangeColorInitialPermutation(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ObjectChangeColorFunction[] ReadObjectChangeColorFunctionArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ObjectChangeColorFunction));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ObjectChangeColorFunction[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ObjectChangeColorFunction(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

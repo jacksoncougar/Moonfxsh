@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32, Alignment = 4)]
-    public class ScreenFlashDefinitionStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 32)]
+    public class ScreenFlashDefinitionStructBlockBase
     {
         internal Type type;
         internal Priority priority;
@@ -27,29 +26,30 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector4 color;
         internal  ScreenFlashDefinitionStructBlockBase(BinaryReader binaryReader)
         {
-            type = (Type)binaryReader.ReadInt16();
-            priority = (Priority)binaryReader.ReadInt16();
-            durationSeconds = binaryReader.ReadSingle();
-            fadeFunction = (FadeFunction)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            maximumIntensity01 = binaryReader.ReadSingle();
-            color = binaryReader.ReadVector4();
+            this.type = (Type)binaryReader.ReadInt16();
+            this.priority = (Priority)binaryReader.ReadInt16();
+            this.durationSeconds = binaryReader.ReadSingle();
+            this.fadeFunction = (FadeFunction)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.maximumIntensity01 = binaryReader.ReadSingle();
+            this.color = binaryReader.ReadVector4();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write((Int16)priority);
-                binaryWriter.Write(durationSeconds);
-                binaryWriter.Write((Int16)fadeFunction);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(maximumIntensity01);
-                binaryWriter.Write(color);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum Type : short
+        
         {
             None = 0,
             Lighten = 1,
@@ -60,12 +60,14 @@ namespace Moonfish.Guerilla.Tags
             Tint = 6,
         };
         internal enum Priority : short
+        
         {
             Low = 0,
             Medium = 1,
             High = 2,
         };
         internal enum FadeFunction : short
+        
         {
             Linear = 0,
             Late = 1,

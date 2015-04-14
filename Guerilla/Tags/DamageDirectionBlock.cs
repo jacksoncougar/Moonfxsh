@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,21 +14,42 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class DamageDirectionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 8)]
+    public class DamageDirectionBlockBase
     {
         internal DamageRegionBlock[] regionsAABBCC;
         internal  DamageDirectionBlockBase(BinaryReader binaryReader)
         {
-            regionsAABBCC = Guerilla.ReadBlockArray<DamageRegionBlock>(binaryReader);
+            this.regionsAABBCC = ReadDamageRegionBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                Guerilla.WriteBlockArray<DamageRegionBlock>(binaryWriter, regionsAABBCC, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual DamageRegionBlock[] ReadDamageRegionBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(DamageRegionBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new DamageRegionBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new DamageRegionBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 180, Alignment = 4)]
-    public class CharacterVehicleBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 180)]
+    public class CharacterVehicleBlockBase
     {
         [TagReference("unit")]
         internal Moonfish.Tags.TagReference unit;
@@ -176,106 +175,72 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  CharacterVehicleBlockBase(BinaryReader binaryReader)
         {
-            unit = binaryReader.ReadTagReference();
-            style = binaryReader.ReadTagReference();
-            vehicleFlags = (VehicleFlags)binaryReader.ReadInt32();
-            aiPathfindingRadiusWorldUnits = binaryReader.ReadSingle();
-            aiDestinationRadiusWorldUnits = binaryReader.ReadSingle();
-            aiDecelerationDistanceworldUnits = binaryReader.ReadSingle();
-            aiTurningRadius = binaryReader.ReadSingle();
-            aiInnerTurningRadiusTr = binaryReader.ReadSingle();
-            aiIdealTurningRadiusTr = binaryReader.ReadSingle();
-            aiBansheeSteeringMaximum = binaryReader.ReadSingle();
-            aiMaxSteeringAngleDegrees = binaryReader.ReadSingle();
-            aiMaxSteeringDeltaDegrees = binaryReader.ReadSingle();
-            aiOversteeringScale = binaryReader.ReadSingle();
-            aiOversteeringBounds = binaryReader.ReadRange();
-            aiSideslipDistance = binaryReader.ReadSingle();
-            aiAvoidanceDistanceWorldUnits = binaryReader.ReadSingle();
-            aiMinUrgency01 = binaryReader.ReadSingle();
-            aiThrottleMaximum01 = binaryReader.ReadSingle();
-            aiGoalMinThrottleScale = binaryReader.ReadSingle();
-            aiTurnMinThrottleScale = binaryReader.ReadSingle();
-            aiDirectionMinThrottleScale = binaryReader.ReadSingle();
-            aiAccelerationScale01 = binaryReader.ReadSingle();
-            aiThrottleBlend01 = binaryReader.ReadSingle();
-            theoreticalMaxSpeedWuS = binaryReader.ReadSingle();
-            errorScale = binaryReader.ReadSingle();
-            aiAllowableAimDeviationAngle = binaryReader.ReadSingle();
-            aiChargeTightAngleDistance = binaryReader.ReadSingle();
-            aiChargeTightAngle01 = binaryReader.ReadSingle();
-            aiChargeRepeatTimeout = binaryReader.ReadSingle();
-            aiChargeLookAheadTime = binaryReader.ReadSingle();
-            aiChargeConsiderDistance = binaryReader.ReadSingle();
-            aiChargeAbortDistance = binaryReader.ReadSingle();
-            vehicleRamTimeout = binaryReader.ReadSingle();
-            ramParalysisTime = binaryReader.ReadSingle();
-            aiCoverDamageThreshold = binaryReader.ReadSingle();
-            aiCoverMinDistance = binaryReader.ReadSingle();
-            aiCoverTime = binaryReader.ReadSingle();
-            aiCoverMinBoostDistance = binaryReader.ReadSingle();
-            turtlingRecentDamageThreshold = binaryReader.ReadSingle();
-            turtlingMinTimeSeconds = binaryReader.ReadSingle();
-            turtlingTimeoutSeconds = binaryReader.ReadSingle();
-            obstacleIgnoreSize = (ObstacleIgnoreSize)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
+            this.unit = binaryReader.ReadTagReference();
+            this.style = binaryReader.ReadTagReference();
+            this.vehicleFlags = (VehicleFlags)binaryReader.ReadInt32();
+            this.aiPathfindingRadiusWorldUnits = binaryReader.ReadSingle();
+            this.aiDestinationRadiusWorldUnits = binaryReader.ReadSingle();
+            this.aiDecelerationDistanceworldUnits = binaryReader.ReadSingle();
+            this.aiTurningRadius = binaryReader.ReadSingle();
+            this.aiInnerTurningRadiusTr = binaryReader.ReadSingle();
+            this.aiIdealTurningRadiusTr = binaryReader.ReadSingle();
+            this.aiBansheeSteeringMaximum = binaryReader.ReadSingle();
+            this.aiMaxSteeringAngleDegrees = binaryReader.ReadSingle();
+            this.aiMaxSteeringDeltaDegrees = binaryReader.ReadSingle();
+            this.aiOversteeringScale = binaryReader.ReadSingle();
+            this.aiOversteeringBounds = binaryReader.ReadRange();
+            this.aiSideslipDistance = binaryReader.ReadSingle();
+            this.aiAvoidanceDistanceWorldUnits = binaryReader.ReadSingle();
+            this.aiMinUrgency01 = binaryReader.ReadSingle();
+            this.aiThrottleMaximum01 = binaryReader.ReadSingle();
+            this.aiGoalMinThrottleScale = binaryReader.ReadSingle();
+            this.aiTurnMinThrottleScale = binaryReader.ReadSingle();
+            this.aiDirectionMinThrottleScale = binaryReader.ReadSingle();
+            this.aiAccelerationScale01 = binaryReader.ReadSingle();
+            this.aiThrottleBlend01 = binaryReader.ReadSingle();
+            this.theoreticalMaxSpeedWuS = binaryReader.ReadSingle();
+            this.errorScale = binaryReader.ReadSingle();
+            this.aiAllowableAimDeviationAngle = binaryReader.ReadSingle();
+            this.aiChargeTightAngleDistance = binaryReader.ReadSingle();
+            this.aiChargeTightAngle01 = binaryReader.ReadSingle();
+            this.aiChargeRepeatTimeout = binaryReader.ReadSingle();
+            this.aiChargeLookAheadTime = binaryReader.ReadSingle();
+            this.aiChargeConsiderDistance = binaryReader.ReadSingle();
+            this.aiChargeAbortDistance = binaryReader.ReadSingle();
+            this.vehicleRamTimeout = binaryReader.ReadSingle();
+            this.ramParalysisTime = binaryReader.ReadSingle();
+            this.aiCoverDamageThreshold = binaryReader.ReadSingle();
+            this.aiCoverMinDistance = binaryReader.ReadSingle();
+            this.aiCoverTime = binaryReader.ReadSingle();
+            this.aiCoverMinBoostDistance = binaryReader.ReadSingle();
+            this.turtlingRecentDamageThreshold = binaryReader.ReadSingle();
+            this.turtlingMinTimeSeconds = binaryReader.ReadSingle();
+            this.turtlingTimeoutSeconds = binaryReader.ReadSingle();
+            this.obstacleIgnoreSize = (ObstacleIgnoreSize)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(unit);
-                binaryWriter.Write(style);
-                binaryWriter.Write((Int32)vehicleFlags);
-                binaryWriter.Write(aiPathfindingRadiusWorldUnits);
-                binaryWriter.Write(aiDestinationRadiusWorldUnits);
-                binaryWriter.Write(aiDecelerationDistanceworldUnits);
-                binaryWriter.Write(aiTurningRadius);
-                binaryWriter.Write(aiInnerTurningRadiusTr);
-                binaryWriter.Write(aiIdealTurningRadiusTr);
-                binaryWriter.Write(aiBansheeSteeringMaximum);
-                binaryWriter.Write(aiMaxSteeringAngleDegrees);
-                binaryWriter.Write(aiMaxSteeringDeltaDegrees);
-                binaryWriter.Write(aiOversteeringScale);
-                binaryWriter.Write(aiOversteeringBounds);
-                binaryWriter.Write(aiSideslipDistance);
-                binaryWriter.Write(aiAvoidanceDistanceWorldUnits);
-                binaryWriter.Write(aiMinUrgency01);
-                binaryWriter.Write(aiThrottleMaximum01);
-                binaryWriter.Write(aiGoalMinThrottleScale);
-                binaryWriter.Write(aiTurnMinThrottleScale);
-                binaryWriter.Write(aiDirectionMinThrottleScale);
-                binaryWriter.Write(aiAccelerationScale01);
-                binaryWriter.Write(aiThrottleBlend01);
-                binaryWriter.Write(theoreticalMaxSpeedWuS);
-                binaryWriter.Write(errorScale);
-                binaryWriter.Write(aiAllowableAimDeviationAngle);
-                binaryWriter.Write(aiChargeTightAngleDistance);
-                binaryWriter.Write(aiChargeTightAngle01);
-                binaryWriter.Write(aiChargeRepeatTimeout);
-                binaryWriter.Write(aiChargeLookAheadTime);
-                binaryWriter.Write(aiChargeConsiderDistance);
-                binaryWriter.Write(aiChargeAbortDistance);
-                binaryWriter.Write(vehicleRamTimeout);
-                binaryWriter.Write(ramParalysisTime);
-                binaryWriter.Write(aiCoverDamageThreshold);
-                binaryWriter.Write(aiCoverMinDistance);
-                binaryWriter.Write(aiCoverTime);
-                binaryWriter.Write(aiCoverMinBoostDistance);
-                binaryWriter.Write(turtlingRecentDamageThreshold);
-                binaryWriter.Write(turtlingMinTimeSeconds);
-                binaryWriter.Write(turtlingTimeoutSeconds);
-                binaryWriter.Write((Int16)obstacleIgnoreSize);
-                binaryWriter.Write(invalidName_, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum VehicleFlags : int
+        
         {
             PassengersAdoptOriginalSquad = 1,
         };
         internal enum ObstacleIgnoreSize : short
+        
         {
             None = 0,
             Tiny = 1,

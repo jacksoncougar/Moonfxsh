@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 88, Alignment = 4)]
-    public class ProjectileMaterialResponseBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 88)]
+    public class ProjectileMaterialResponseBlockBase
     {
         internal Flags flags;
         internal Response response;
@@ -61,60 +60,49 @@ namespace Moonfish.Guerilla.Tags
         internal float perpendicularFriction;
         internal  ProjectileMaterialResponseBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            response = (Response)binaryReader.ReadInt16();
-            dONOTUSEOLDEffect = binaryReader.ReadTagReference();
-            materialName = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(4);
-            response0 = (Response)binaryReader.ReadInt16();
-            flags0 = (Flags)binaryReader.ReadInt16();
-            chanceFraction01 = binaryReader.ReadSingle();
-            betweenDegrees = binaryReader.ReadRange();
-            andWorldUnitsPerSecond = binaryReader.ReadRange();
-            dONOTUSEOLDEffect0 = binaryReader.ReadTagReference();
-            scaleEffectsBy = (ScaleEffectsBy)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            angularNoiseDegrees = binaryReader.ReadSingle();
-            velocityNoiseWorldUnitsPerSecond = binaryReader.ReadSingle();
-            dONOTUSEOLDDetonationEffect = binaryReader.ReadTagReference();
-            initialFriction = binaryReader.ReadSingle();
-            maximumDistance = binaryReader.ReadSingle();
-            parallelFriction = binaryReader.ReadSingle();
-            perpendicularFriction = binaryReader.ReadSingle();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.response = (Response)binaryReader.ReadInt16();
+            this.dONOTUSEOLDEffect = binaryReader.ReadTagReference();
+            this.materialName = binaryReader.ReadStringID();
+            this.invalidName_ = binaryReader.ReadBytes(4);
+            this.response0 = (Response)binaryReader.ReadInt16();
+            this.flags0 = (Flags)binaryReader.ReadInt16();
+            this.chanceFraction01 = binaryReader.ReadSingle();
+            this.betweenDegrees = binaryReader.ReadRange();
+            this.andWorldUnitsPerSecond = binaryReader.ReadRange();
+            this.dONOTUSEOLDEffect0 = binaryReader.ReadTagReference();
+            this.scaleEffectsBy = (ScaleEffectsBy)binaryReader.ReadInt16();
+            this.invalidName_0 = binaryReader.ReadBytes(2);
+            this.angularNoiseDegrees = binaryReader.ReadSingle();
+            this.velocityNoiseWorldUnitsPerSecond = binaryReader.ReadSingle();
+            this.dONOTUSEOLDDetonationEffect = binaryReader.ReadTagReference();
+            this.initialFriction = binaryReader.ReadSingle();
+            this.maximumDistance = binaryReader.ReadSingle();
+            this.parallelFriction = binaryReader.ReadSingle();
+            this.perpendicularFriction = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Int16)response);
-                binaryWriter.Write(dONOTUSEOLDEffect);
-                binaryWriter.Write(materialName);
-                binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write((Int16)response0);
-                binaryWriter.Write((Int16)flags0);
-                binaryWriter.Write(chanceFraction01);
-                binaryWriter.Write(betweenDegrees);
-                binaryWriter.Write(andWorldUnitsPerSecond);
-                binaryWriter.Write(dONOTUSEOLDEffect0);
-                binaryWriter.Write((Int16)scaleEffectsBy);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write(angularNoiseDegrees);
-                binaryWriter.Write(velocityNoiseWorldUnitsPerSecond);
-                binaryWriter.Write(dONOTUSEOLDDetonationEffect);
-                binaryWriter.Write(initialFriction);
-                binaryWriter.Write(maximumDistance);
-                binaryWriter.Write(parallelFriction);
-                binaryWriter.Write(perpendicularFriction);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             CannotBeOverpenetrated = 1,
         };
         internal enum Response : short
+        
         {
             ImpactDetonate = 0,
             Fizzle = 1,
@@ -125,6 +113,7 @@ namespace Moonfish.Guerilla.Tags
             FizzleRicochet = 6,
         };
         internal enum Response0 : short
+        
         {
             ImpactDetonate = 0,
             Fizzle = 1,
@@ -136,11 +125,13 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags0 : short
+        
         {
             OnlyAgainstUnits = 1,
             NeverAgainstUnits = 2,
         };
         internal enum ScaleEffectsBy : short
+        
         {
             Damage = 0,
             Angle = 1,

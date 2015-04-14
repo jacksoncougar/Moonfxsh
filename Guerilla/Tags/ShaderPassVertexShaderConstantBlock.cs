@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class ShaderPassVertexShaderConstantBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 12)]
+    public class ShaderPassVertexShaderConstantBlockBase
     {
         internal Moonfish.Tags.StringID sourceParameter;
         internal ScaleByTextureStage scaleByTextureStage;
@@ -25,25 +24,28 @@ namespace Moonfish.Guerilla.Tags
         internal ComponentMask componentMask;
         internal  ShaderPassVertexShaderConstantBlockBase(BinaryReader binaryReader)
         {
-            sourceParameter = binaryReader.ReadStringID();
-            scaleByTextureStage = (ScaleByTextureStage)binaryReader.ReadInt16();
-            registerBank = (RegisterBank)binaryReader.ReadInt16();
-            registerIndex = binaryReader.ReadInt16();
-            componentMask = (ComponentMask)binaryReader.ReadInt16();
+            this.sourceParameter = binaryReader.ReadStringID();
+            this.scaleByTextureStage = (ScaleByTextureStage)binaryReader.ReadInt16();
+            this.registerBank = (RegisterBank)binaryReader.ReadInt16();
+            this.registerIndex = binaryReader.ReadInt16();
+            this.componentMask = (ComponentMask)binaryReader.ReadInt16();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(sourceParameter);
-                binaryWriter.Write((Int16)scaleByTextureStage);
-                binaryWriter.Write((Int16)registerBank);
-                binaryWriter.Write(registerIndex);
-                binaryWriter.Write((Int16)componentMask);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum ScaleByTextureStage : short
+        
         {
             None = 0,
             Stage0 = 1,
@@ -52,11 +54,13 @@ namespace Moonfish.Guerilla.Tags
             Stage3 = 4,
         };
         internal enum RegisterBank : short
+        
         {
             Vn015 = 0,
             Cn012 = 1,
         };
         internal enum ComponentMask : short
+        
         {
             XValue = 0,
             YValue = 1,

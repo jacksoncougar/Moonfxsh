@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 76, Alignment = 4)]
-    public class FrictionPointDefinitionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 76)]
+    public class FrictionPointDefinitionBlockBase
     {
         internal Moonfish.Tags.StringID markerName;
         internal Flags flags;
@@ -49,50 +48,41 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal  FrictionPointDefinitionBlockBase(BinaryReader binaryReader)
         {
-            markerName = binaryReader.ReadStringID();
-            flags = (Flags)binaryReader.ReadInt32();
-            fractionOfTotalMass = binaryReader.ReadSingle();
-            radius = binaryReader.ReadSingle();
-            damagedRadius = binaryReader.ReadSingle();
-            frictionType = (FrictionType)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            movingFrictionVelocityDiff = binaryReader.ReadSingle();
-            eBrakeMovingFriction = binaryReader.ReadSingle();
-            eBrakeFriction = binaryReader.ReadSingle();
-            eBrakeMovingFrictionVelDiff = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(20);
-            collisionGlobalMaterialName = binaryReader.ReadStringID();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            modelStateDestroyed = (ModelStateDestroyedOnlyNeedPointCanDestroyFlagSet)binaryReader.ReadInt16();
-            regionName = binaryReader.ReadStringID();
-            invalidName_2 = binaryReader.ReadBytes(4);
+            this.markerName = binaryReader.ReadStringID();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.fractionOfTotalMass = binaryReader.ReadSingle();
+            this.radius = binaryReader.ReadSingle();
+            this.damagedRadius = binaryReader.ReadSingle();
+            this.frictionType = (FrictionType)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.movingFrictionVelocityDiff = binaryReader.ReadSingle();
+            this.eBrakeMovingFriction = binaryReader.ReadSingle();
+            this.eBrakeFriction = binaryReader.ReadSingle();
+            this.eBrakeMovingFrictionVelDiff = binaryReader.ReadSingle();
+            this.invalidName_0 = binaryReader.ReadBytes(20);
+            this.collisionGlobalMaterialName = binaryReader.ReadStringID();
+            this.invalidName_1 = binaryReader.ReadBytes(2);
+            this.modelStateDestroyed = (ModelStateDestroyedOnlyNeedPointCanDestroyFlagSet)binaryReader.ReadInt16();
+            this.regionName = binaryReader.ReadStringID();
+            this.invalidName_2 = binaryReader.ReadBytes(4);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(markerName);
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(fractionOfTotalMass);
-                binaryWriter.Write(radius);
-                binaryWriter.Write(damagedRadius);
-                binaryWriter.Write((Int16)frictionType);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(movingFrictionVelocityDiff);
-                binaryWriter.Write(eBrakeMovingFriction);
-                binaryWriter.Write(eBrakeFriction);
-                binaryWriter.Write(eBrakeMovingFrictionVelDiff);
-                binaryWriter.Write(invalidName_0, 0, 20);
-                binaryWriter.Write(collisionGlobalMaterialName);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                binaryWriter.Write((Int16)modelStateDestroyed);
-                binaryWriter.Write(regionName);
-                binaryWriter.Write(invalidName_2, 0, 4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             GetsDamageFromRegion = 1,
             Powered = 2,
@@ -102,11 +92,13 @@ namespace Moonfish.Guerilla.Tags
             CanBeDestroyed = 32,
         };
         internal enum FrictionType : short
+        
         {
             Point = 0,
             Forward = 1,
         };
         internal enum ModelStateDestroyedOnlyNeedPointCanDestroyFlagSet : short
+        
         {
             Default = 0,
             MinorDamage = 1,

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36, Alignment = 4)]
-    public class PrimaryLightStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 36)]
+    public class PrimaryLightStructBlockBase
     {
         internal Moonfish.Tags.ColorR8G8B8 minLightmapColor;
         internal Moonfish.Tags.ColorR8G8B8 maxLightmapColor;
@@ -27,21 +26,24 @@ namespace Moonfish.Guerilla.Tags
         internal MappingFunctionBlock function;
         internal  PrimaryLightStructBlockBase(BinaryReader binaryReader)
         {
-            minLightmapColor = binaryReader.ReadColorR8G8B8();
-            maxLightmapColor = binaryReader.ReadColorR8G8B8();
-            exclusionAngleFromUp = binaryReader.ReadSingle();
-            function = new MappingFunctionBlock(binaryReader);
+            this.minLightmapColor = binaryReader.ReadColorR8G8B8();
+            this.maxLightmapColor = binaryReader.ReadColorR8G8B8();
+            this.exclusionAngleFromUp = binaryReader.ReadSingle();
+            this.function = new MappingFunctionBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(minLightmapColor);
-                binaryWriter.Write(maxLightmapColor);
-                binaryWriter.Write(exclusionAngleFromUp);
-                function.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

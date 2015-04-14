@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 28, Alignment = 4)]
-    public class ModelTargetBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 28)]
+    public class ModelTargetBlockBase
     {
         /// <summary>
         /// multiple markers become multiple spheres of the same radius
@@ -45,27 +44,27 @@ namespace Moonfish.Guerilla.Tags
         internal ModelTargetLockOnDataStructBlock lockOnData;
         internal  ModelTargetBlockBase(BinaryReader binaryReader)
         {
-            markerName = binaryReader.ReadStringID();
-            size = binaryReader.ReadSingle();
-            coneAngle = binaryReader.ReadSingle();
-            damageSection = binaryReader.ReadShortBlockIndex2();
-            variant = binaryReader.ReadShortBlockIndex1();
-            targetingRelevance = binaryReader.ReadSingle();
-            lockOnData = new ModelTargetLockOnDataStructBlock(binaryReader);
+            this.markerName = binaryReader.ReadStringID();
+            this.size = binaryReader.ReadSingle();
+            this.coneAngle = binaryReader.ReadSingle();
+            this.damageSection = binaryReader.ReadShortBlockIndex2();
+            this.variant = binaryReader.ReadShortBlockIndex1();
+            this.targetingRelevance = binaryReader.ReadSingle();
+            this.lockOnData = new ModelTargetLockOnDataStructBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(markerName);
-                binaryWriter.Write(size);
-                binaryWriter.Write(coneAngle);
-                binaryWriter.Write(damageSection);
-                binaryWriter.Write(variant);
-                binaryWriter.Write(targetingRelevance);
-                lockOnData.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

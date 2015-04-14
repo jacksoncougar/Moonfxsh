@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass WphiClass = (TagClass)"wphi";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 344, Alignment = 4)]
-    public class WeaponHudInterfaceBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 344)]
+    public class WeaponHudInterfaceBlockBase
     {
         [TagReference("wphi")]
         internal Moonfish.Tags.TagReference childHud;
@@ -64,76 +55,162 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_5;
         internal  WeaponHudInterfaceBlockBase(BinaryReader binaryReader)
         {
-            childHud = binaryReader.ReadTagReference();
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            inventoryAmmoCutoff = binaryReader.ReadInt16();
-            loadedAmmoCutoff = binaryReader.ReadInt16();
-            heatCutoff = binaryReader.ReadInt16();
-            ageCutoff = binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(32);
-            anchor = (Anchor)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            invalidName_2 = binaryReader.ReadBytes(32);
-            staticElements = Guerilla.ReadBlockArray<WeaponHudStaticBlock>(binaryReader);
-            meterElements = Guerilla.ReadBlockArray<WeaponHudMeterBlock>(binaryReader);
-            numberElements = Guerilla.ReadBlockArray<WeaponHudNumberBlock>(binaryReader);
-            crosshairs = Guerilla.ReadBlockArray<WeaponHudCrosshairBlock>(binaryReader);
-            overlayElements = Guerilla.ReadBlockArray<WeaponHudOverlaysBlock>(binaryReader);
-            invalidName_3 = binaryReader.ReadBytes(4);
-            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            screenEffect = Guerilla.ReadBlockArray<GlobalHudScreenEffectDefinition>(binaryReader);
-            invalidName_4 = binaryReader.ReadBytes(132);
-            sequenceIndex = binaryReader.ReadInt16();
-            widthOffset = binaryReader.ReadInt16();
-            offsetFromReferenceCorner = binaryReader.ReadPoint();
-            overrideIconColor = binaryReader.ReadColourA1R1G1B1();
-            frameRate030 = binaryReader.ReadByte();
-            flags0 = (Flags)binaryReader.ReadInt16();
-            textIndex = binaryReader.ReadInt16();
-            invalidName_5 = binaryReader.ReadBytes(48);
+            this.childHud = binaryReader.ReadTagReference();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.inventoryAmmoCutoff = binaryReader.ReadInt16();
+            this.loadedAmmoCutoff = binaryReader.ReadInt16();
+            this.heatCutoff = binaryReader.ReadInt16();
+            this.ageCutoff = binaryReader.ReadInt16();
+            this.invalidName_0 = binaryReader.ReadBytes(32);
+            this.anchor = (Anchor)binaryReader.ReadInt16();
+            this.invalidName_1 = binaryReader.ReadBytes(2);
+            this.invalidName_2 = binaryReader.ReadBytes(32);
+            this.staticElements = ReadWeaponHudStaticBlockArray(binaryReader);
+            this.meterElements = ReadWeaponHudMeterBlockArray(binaryReader);
+            this.numberElements = ReadWeaponHudNumberBlockArray(binaryReader);
+            this.crosshairs = ReadWeaponHudCrosshairBlockArray(binaryReader);
+            this.overlayElements = ReadWeaponHudOverlaysBlockArray(binaryReader);
+            this.invalidName_3 = binaryReader.ReadBytes(4);
+            this.gNullBlock = ReadGNullBlockArray(binaryReader);
+            this.screenEffect = ReadGlobalHudScreenEffectDefinitionArray(binaryReader);
+            this.invalidName_4 = binaryReader.ReadBytes(132);
+            this.sequenceIndex = binaryReader.ReadInt16();
+            this.widthOffset = binaryReader.ReadInt16();
+            this.offsetFromReferenceCorner = binaryReader.ReadPoint();
+            this.overrideIconColor = binaryReader.ReadColourA1R1G1B1();
+            this.frameRate030 = binaryReader.ReadByte();
+            this.flags0 = (Flags)binaryReader.ReadInt16();
+            this.textIndex = binaryReader.ReadInt16();
+            this.invalidName_5 = binaryReader.ReadBytes(48);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(childHud);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(inventoryAmmoCutoff);
-                binaryWriter.Write(loadedAmmoCutoff);
-                binaryWriter.Write(heatCutoff);
-                binaryWriter.Write(ageCutoff);
-                binaryWriter.Write(invalidName_0, 0, 32);
-                binaryWriter.Write((Int16)anchor);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                binaryWriter.Write(invalidName_2, 0, 32);
-                Guerilla.WriteBlockArray<WeaponHudStaticBlock>(binaryWriter, staticElements, nextAddress);
-                Guerilla.WriteBlockArray<WeaponHudMeterBlock>(binaryWriter, meterElements, nextAddress);
-                Guerilla.WriteBlockArray<WeaponHudNumberBlock>(binaryWriter, numberElements, nextAddress);
-                Guerilla.WriteBlockArray<WeaponHudCrosshairBlock>(binaryWriter, crosshairs, nextAddress);
-                Guerilla.WriteBlockArray<WeaponHudOverlaysBlock>(binaryWriter, overlayElements, nextAddress);
-                binaryWriter.Write(invalidName_3, 0, 4);
-                Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock, nextAddress);
-                Guerilla.WriteBlockArray<GlobalHudScreenEffectDefinition>(binaryWriter, screenEffect, nextAddress);
-                binaryWriter.Write(invalidName_4, 0, 132);
-                binaryWriter.Write(sequenceIndex);
-                binaryWriter.Write(widthOffset);
-                binaryWriter.Write(offsetFromReferenceCorner);
-                binaryWriter.Write(overrideIconColor);
-                binaryWriter.Write(frameRate030);
-                binaryWriter.Write((Int16)flags0);
-                binaryWriter.Write(textIndex);
-                binaryWriter.Write(invalidName_5, 0, 48);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual WeaponHudStaticBlock[] ReadWeaponHudStaticBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(WeaponHudStaticBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new WeaponHudStaticBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new WeaponHudStaticBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual WeaponHudMeterBlock[] ReadWeaponHudMeterBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(WeaponHudMeterBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new WeaponHudMeterBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new WeaponHudMeterBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual WeaponHudNumberBlock[] ReadWeaponHudNumberBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(WeaponHudNumberBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new WeaponHudNumberBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new WeaponHudNumberBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual WeaponHudCrosshairBlock[] ReadWeaponHudCrosshairBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(WeaponHudCrosshairBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new WeaponHudCrosshairBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new WeaponHudCrosshairBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual WeaponHudOverlaysBlock[] ReadWeaponHudOverlaysBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(WeaponHudOverlaysBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new WeaponHudOverlaysBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new WeaponHudOverlaysBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual GNullBlock[] ReadGNullBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(GNullBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new GNullBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new GNullBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual GlobalHudScreenEffectDefinition[] ReadGlobalHudScreenEffectDefinitionArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(GlobalHudScreenEffectDefinition));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new GlobalHudScreenEffectDefinition[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new GlobalHudScreenEffectDefinition(binaryReader);
+                }
+            }
+            return array;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             UseParentHudFlashingParameters = 1,
         };
         internal enum Anchor : short
+        
         {
             TopLeft = 0,
             TopRight = 1,
@@ -144,6 +221,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags0 : byte
+        
         {
             UseTextFromStringListInstead = 1,
             OverrideDefaultColor = 2,

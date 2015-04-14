@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class PlatformSoundEffectFunctionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 16)]
+    public class PlatformSoundEffectFunctionBlockBase
     {
         internal Input input;
         internal Range range;
@@ -24,23 +23,27 @@ namespace Moonfish.Guerilla.Tags
         internal float timePeriodSeconds;
         internal  PlatformSoundEffectFunctionBlockBase(BinaryReader binaryReader)
         {
-            input = (Input)binaryReader.ReadInt16();
-            range = (Range)binaryReader.ReadInt16();
-            function = new MappingFunctionBlock(binaryReader);
-            timePeriodSeconds = binaryReader.ReadSingle();
+            this.input = (Input)binaryReader.ReadInt16();
+            this.range = (Range)binaryReader.ReadInt16();
+            this.function = new MappingFunctionBlock(binaryReader);
+            this.timePeriodSeconds = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)input);
-                binaryWriter.Write((Int16)range);
-                function.Write(binaryWriter);
-                binaryWriter.Write(timePeriodSeconds);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum Input : short
+        
         {
             Zero = 0,
             Time = 1,
@@ -48,6 +51,7 @@ namespace Moonfish.Guerilla.Tags
             Rolloff = 3,
         };
         internal enum Range : short
+        
         {
             Zero = 0,
             Time = 1,

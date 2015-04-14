@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 44, Alignment = 4)]
-    public class ShaderPostprocessImplementationBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 44)]
+    public class ShaderPostprocessImplementationBlockBase
     {
         internal ShaderGpuStateReferenceStructBlock gPUConstantState;
         internal ShaderGpuStateReferenceStructBlock gPUVolatileState;
@@ -30,33 +29,30 @@ namespace Moonfish.Guerilla.Tags
         internal TagBlockIndexStructBlock vertexShaderConstants;
         internal  ShaderPostprocessImplementationBlockBase(BinaryReader binaryReader)
         {
-            gPUConstantState = new ShaderGpuStateReferenceStructBlock(binaryReader);
-            gPUVolatileState = new ShaderGpuStateReferenceStructBlock(binaryReader);
-            bitmapParameters = new TagBlockIndexStructBlock(binaryReader);
-            bitmapTransforms = new TagBlockIndexStructBlock(binaryReader);
-            valueParameters = new TagBlockIndexStructBlock(binaryReader);
-            colorParameters = new TagBlockIndexStructBlock(binaryReader);
-            bitmapTransformOverlays = new TagBlockIndexStructBlock(binaryReader);
-            valueOverlays = new TagBlockIndexStructBlock(binaryReader);
-            colorOverlays = new TagBlockIndexStructBlock(binaryReader);
-            vertexShaderConstants = new TagBlockIndexStructBlock(binaryReader);
+            this.gPUConstantState = new ShaderGpuStateReferenceStructBlock(binaryReader);
+            this.gPUVolatileState = new ShaderGpuStateReferenceStructBlock(binaryReader);
+            this.bitmapParameters = new TagBlockIndexStructBlock(binaryReader);
+            this.bitmapTransforms = new TagBlockIndexStructBlock(binaryReader);
+            this.valueParameters = new TagBlockIndexStructBlock(binaryReader);
+            this.colorParameters = new TagBlockIndexStructBlock(binaryReader);
+            this.bitmapTransformOverlays = new TagBlockIndexStructBlock(binaryReader);
+            this.valueOverlays = new TagBlockIndexStructBlock(binaryReader);
+            this.colorOverlays = new TagBlockIndexStructBlock(binaryReader);
+            this.vertexShaderConstants = new TagBlockIndexStructBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                gPUConstantState.Write(binaryWriter);
-                gPUVolatileState.Write(binaryWriter);
-                bitmapParameters.Write(binaryWriter);
-                bitmapTransforms.Write(binaryWriter);
-                valueParameters.Write(binaryWriter);
-                colorParameters.Write(binaryWriter);
-                bitmapTransformOverlays.Write(binaryWriter);
-                valueOverlays.Write(binaryWriter);
-                colorOverlays.Write(binaryWriter);
-                vertexShaderConstants.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

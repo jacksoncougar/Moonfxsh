@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass McsrClass = (TagClass)"mcsr";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,24 +15,44 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class MouseCursorDefinitionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 12)]
+    public class MouseCursorDefinitionBlockBase
     {
         internal MouseCursorBitmapReferenceBlock[] mouseCursorBitmaps;
         internal float animationSpeedFps;
         internal  MouseCursorDefinitionBlockBase(BinaryReader binaryReader)
         {
-            mouseCursorBitmaps = Guerilla.ReadBlockArray<MouseCursorBitmapReferenceBlock>(binaryReader);
-            animationSpeedFps = binaryReader.ReadSingle();
+            this.mouseCursorBitmaps = ReadMouseCursorBitmapReferenceBlockArray(binaryReader);
+            this.animationSpeedFps = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                Guerilla.WriteBlockArray<MouseCursorBitmapReferenceBlock>(binaryWriter, mouseCursorBitmaps, nextAddress);
-                binaryWriter.Write(animationSpeedFps);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual MouseCursorBitmapReferenceBlock[] ReadMouseCursorBitmapReferenceBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(MouseCursorBitmapReferenceBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new MouseCursorBitmapReferenceBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new MouseCursorBitmapReferenceBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

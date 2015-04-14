@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class DamageSeatInfoBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 20)]
+    public class DamageSeatInfoBlockBase
     {
         internal Moonfish.Tags.StringID seatLabel;
         /// <summary>
@@ -28,23 +27,25 @@ namespace Moonfish.Guerilla.Tags
         internal float minimumTransferDamageScale;
         internal  DamageSeatInfoBlockBase(BinaryReader binaryReader)
         {
-            seatLabel = binaryReader.ReadStringID();
-            directDamageScale = binaryReader.ReadSingle();
-            damageTransferFallOffRadius = binaryReader.ReadSingle();
-            maximumTransferDamageScale = binaryReader.ReadSingle();
-            minimumTransferDamageScale = binaryReader.ReadSingle();
+            this.seatLabel = binaryReader.ReadStringID();
+            this.directDamageScale = binaryReader.ReadSingle();
+            this.damageTransferFallOffRadius = binaryReader.ReadSingle();
+            this.maximumTransferDamageScale = binaryReader.ReadSingle();
+            this.minimumTransferDamageScale = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(seatLabel);
-                binaryWriter.Write(directDamageScale);
-                binaryWriter.Write(damageTransferFallOffRadius);
-                binaryWriter.Write(maximumTransferDamageScale);
-                binaryWriter.Write(minimumTransferDamageScale);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 48, Alignment = 4)]
-    public class ClothPropertiesBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 48)]
+    public class ClothPropertiesBlockBase
     {
         internal IntegrationType integrationType;
         /// <summary>
@@ -46,31 +45,31 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  ClothPropertiesBlockBase(BinaryReader binaryReader)
         {
-            integrationType = (IntegrationType)binaryReader.ReadInt16();
-            numberIterations = binaryReader.ReadInt16();
-            weight = binaryReader.ReadSingle();
-            drag = binaryReader.ReadSingle();
-            windScale = binaryReader.ReadSingle();
-            windFlappinessScale = binaryReader.ReadSingle();
-            longestRod = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(24);
+            this.integrationType = (IntegrationType)binaryReader.ReadInt16();
+            this.numberIterations = binaryReader.ReadInt16();
+            this.weight = binaryReader.ReadSingle();
+            this.drag = binaryReader.ReadSingle();
+            this.windScale = binaryReader.ReadSingle();
+            this.windFlappinessScale = binaryReader.ReadSingle();
+            this.longestRod = binaryReader.ReadSingle();
+            this.invalidName_ = binaryReader.ReadBytes(24);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)integrationType);
-                binaryWriter.Write(numberIterations);
-                binaryWriter.Write(weight);
-                binaryWriter.Write(drag);
-                binaryWriter.Write(windScale);
-                binaryWriter.Write(windFlappinessScale);
-                binaryWriter.Write(longestRod);
-                binaryWriter.Write(invalidName_, 0, 24);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum IntegrationType : short
+        
         {
             Verlet = 0,
         };

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 56, Alignment = 4)]
-    public class EffectPartBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 56)]
+    public class EffectPartBlockBase
     {
         internal CreateIn createIn;
         internal CreateIn createIn0;
@@ -39,39 +38,35 @@ namespace Moonfish.Guerilla.Tags
         internal BScalesValues bScalesValues;
         internal  EffectPartBlockBase(BinaryReader binaryReader)
         {
-            createIn = (CreateIn)binaryReader.ReadInt16();
-            createIn0 = (CreateIn)binaryReader.ReadInt16();
-            location = binaryReader.ReadShortBlockIndex1();
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(4);
-            type = binaryReader.ReadTagReference();
-            velocityBoundsWorldUnitsPerSecond = binaryReader.ReadRange();
-            velocityConeAngleDegrees = binaryReader.ReadSingle();
-            angularVelocityBoundsDegreesPerSecond = binaryReader.ReadRange();
-            radiusModifierBounds = binaryReader.ReadRange();
-            aScalesValues = (AScalesValues)binaryReader.ReadInt32();
-            bScalesValues = (BScalesValues)binaryReader.ReadInt32();
+            this.createIn = (CreateIn)binaryReader.ReadInt16();
+            this.createIn0 = (CreateIn)binaryReader.ReadInt16();
+            this.location = binaryReader.ReadShortBlockIndex1();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(4);
+            this.type = binaryReader.ReadTagReference();
+            this.velocityBoundsWorldUnitsPerSecond = binaryReader.ReadRange();
+            this.velocityConeAngleDegrees = binaryReader.ReadSingle();
+            this.angularVelocityBoundsDegreesPerSecond = binaryReader.ReadRange();
+            this.radiusModifierBounds = binaryReader.ReadRange();
+            this.aScalesValues = (AScalesValues)binaryReader.ReadInt32();
+            this.bScalesValues = (BScalesValues)binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)createIn);
-                binaryWriter.Write((Int16)createIn0);
-                binaryWriter.Write(location);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write(type);
-                binaryWriter.Write(velocityBoundsWorldUnitsPerSecond);
-                binaryWriter.Write(velocityConeAngleDegrees);
-                binaryWriter.Write(angularVelocityBoundsDegreesPerSecond);
-                binaryWriter.Write(radiusModifierBounds);
-                binaryWriter.Write((Int32)aScalesValues);
-                binaryWriter.Write((Int32)bScalesValues);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum CreateIn : short
+        
         {
             AnyEnvironment = 0,
             AirOnly = 1,
@@ -79,6 +74,7 @@ namespace Moonfish.Guerilla.Tags
             SpaceOnly = 3,
         };
         internal enum CreateIn0 : short
+        
         {
             EitherMode = 0,
             ViolentModeOnly = 1,
@@ -86,6 +82,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             FaceDownRegardlessOfLocationDecals = 1,
             OffsetOriginAwayFromGeometryLights = 2,
@@ -95,6 +92,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum AScalesValues : int
+        
         {
             Velocity = 1,
             VelocityDelta = 2,
@@ -105,6 +103,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum BScalesValues : int
+        
         {
             Velocity = 1,
             VelocityDelta = 2,

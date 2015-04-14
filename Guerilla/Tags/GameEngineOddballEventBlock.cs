@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 168, Alignment = 4)]
-    public class GameEngineOddballEventBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 168)]
+    public class GameEngineOddballEventBlockBase
     {
         internal Flags flags;
         internal byte[] invalidName_;
@@ -42,62 +41,65 @@ namespace Moonfish.Guerilla.Tags
         internal SoundResponseDefinitionBlock[] soundPermutations;
         internal  GameEngineOddballEventBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            _event = (Event)binaryReader.ReadInt16();
-            audience = (Audience)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            invalidName_1 = binaryReader.ReadBytes(2);
-            displayString = binaryReader.ReadStringID();
-            requiredField = (RequiredField)binaryReader.ReadInt16();
-            excludedAudience = (ExcludedAudience)binaryReader.ReadInt16();
-            primaryString = binaryReader.ReadStringID();
-            primaryStringDurationSeconds = binaryReader.ReadInt32();
-            pluralDisplayString = binaryReader.ReadStringID();
-            invalidName_2 = binaryReader.ReadBytes(28);
-            soundDelayAnnouncerOnly = binaryReader.ReadSingle();
-            soundFlags = (SoundFlags)binaryReader.ReadInt16();
-            invalidName_3 = binaryReader.ReadBytes(2);
-            sound = binaryReader.ReadTagReference();
-            extraSounds = new SoundResponseExtraSoundsStructBlock(binaryReader);
-            invalidName_4 = binaryReader.ReadBytes(4);
-            invalidName_5 = binaryReader.ReadBytes(16);
-            soundPermutations = Guerilla.ReadBlockArray<SoundResponseDefinitionBlock>(binaryReader);
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this._event = (Event)binaryReader.ReadInt16();
+            this.audience = (Audience)binaryReader.ReadInt16();
+            this.invalidName_0 = binaryReader.ReadBytes(2);
+            this.invalidName_1 = binaryReader.ReadBytes(2);
+            this.displayString = binaryReader.ReadStringID();
+            this.requiredField = (RequiredField)binaryReader.ReadInt16();
+            this.excludedAudience = (ExcludedAudience)binaryReader.ReadInt16();
+            this.primaryString = binaryReader.ReadStringID();
+            this.primaryStringDurationSeconds = binaryReader.ReadInt32();
+            this.pluralDisplayString = binaryReader.ReadStringID();
+            this.invalidName_2 = binaryReader.ReadBytes(28);
+            this.soundDelayAnnouncerOnly = binaryReader.ReadSingle();
+            this.soundFlags = (SoundFlags)binaryReader.ReadInt16();
+            this.invalidName_3 = binaryReader.ReadBytes(2);
+            this.sound = binaryReader.ReadTagReference();
+            this.extraSounds = new SoundResponseExtraSoundsStructBlock(binaryReader);
+            this.invalidName_4 = binaryReader.ReadBytes(4);
+            this.invalidName_5 = binaryReader.ReadBytes(16);
+            this.soundPermutations = ReadSoundResponseDefinitionBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int16)_event);
-                binaryWriter.Write((Int16)audience);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                binaryWriter.Write(displayString);
-                binaryWriter.Write((Int16)requiredField);
-                binaryWriter.Write((Int16)excludedAudience);
-                binaryWriter.Write(primaryString);
-                binaryWriter.Write(primaryStringDurationSeconds);
-                binaryWriter.Write(pluralDisplayString);
-                binaryWriter.Write(invalidName_2, 0, 28);
-                binaryWriter.Write(soundDelayAnnouncerOnly);
-                binaryWriter.Write((Int16)soundFlags);
-                binaryWriter.Write(invalidName_3, 0, 2);
-                binaryWriter.Write(sound);
-                extraSounds.Write(binaryWriter);
-                binaryWriter.Write(invalidName_4, 0, 4);
-                binaryWriter.Write(invalidName_5, 0, 16);
-                Guerilla.WriteBlockArray<SoundResponseDefinitionBlock>(binaryWriter, soundPermutations, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual SoundResponseDefinitionBlock[] ReadSoundResponseDefinitionBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(SoundResponseDefinitionBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new SoundResponseDefinitionBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new SoundResponseDefinitionBlock(binaryReader);
+                }
+            }
+            return array;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             QuantityMessage = 1,
         };
         internal enum Event : short
+        
         {
             GameStart = 0,
             BallSpawned = 1,
@@ -107,6 +109,7 @@ namespace Moonfish.Guerilla.Tags
             BallTick = 5,
         };
         internal enum Audience : short
+        
         {
             CausePlayer = 0,
             CauseTeam = 1,
@@ -115,6 +118,7 @@ namespace Moonfish.Guerilla.Tags
             All = 4,
         };
         internal enum RequiredField : short
+        
         {
             NONE = 0,
             CausePlayer = 1,
@@ -123,6 +127,7 @@ namespace Moonfish.Guerilla.Tags
             EffectTeam = 4,
         };
         internal enum ExcludedAudience : short
+        
         {
             NONE = 0,
             CausePlayer = 1,
@@ -132,6 +137,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum SoundFlags : short
+        
         {
             AnnouncerSound = 1,
         };

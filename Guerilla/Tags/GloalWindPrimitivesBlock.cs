@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class GloalWindPrimitivesBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class GloalWindPrimitivesBlockBase
     {
         internal OpenTK.Vector3 position;
         internal float radius;
@@ -25,25 +24,28 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  GloalWindPrimitivesBlockBase(BinaryReader binaryReader)
         {
-            position = binaryReader.ReadVector3();
-            radius = binaryReader.ReadSingle();
-            strength = binaryReader.ReadSingle();
-            windPrimitiveType = (WindPrimitiveType)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
+            this.position = binaryReader.ReadVector3();
+            this.radius = binaryReader.ReadSingle();
+            this.strength = binaryReader.ReadSingle();
+            this.windPrimitiveType = (WindPrimitiveType)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(position);
-                binaryWriter.Write(radius);
-                binaryWriter.Write(strength);
-                binaryWriter.Write((Int16)windPrimitiveType);
-                binaryWriter.Write(invalidName_, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum WindPrimitiveType : short
+        
         {
             Vortex = 0,
             Gust = 1,

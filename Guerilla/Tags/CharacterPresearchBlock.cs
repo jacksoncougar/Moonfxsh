@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36, Alignment = 4)]
-    public class CharacterPresearchBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 36)]
+    public class CharacterPresearchBlockBase
     {
         internal PreSearchFlags preSearchFlags;
         /// <summary>
@@ -35,28 +34,30 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range minSuppressingTime;
         internal  CharacterPresearchBlockBase(BinaryReader binaryReader)
         {
-            preSearchFlags = (PreSearchFlags)binaryReader.ReadInt32();
-            minPresearchTimeSeconds = binaryReader.ReadRange();
-            maxPresearchTimeSeconds = binaryReader.ReadRange();
-            minCertaintyRadius = binaryReader.ReadSingle();
-            dEPRECATED = binaryReader.ReadSingle();
-            minSuppressingTime = binaryReader.ReadRange();
+            this.preSearchFlags = (PreSearchFlags)binaryReader.ReadInt32();
+            this.minPresearchTimeSeconds = binaryReader.ReadRange();
+            this.maxPresearchTimeSeconds = binaryReader.ReadRange();
+            this.minCertaintyRadius = binaryReader.ReadSingle();
+            this.dEPRECATED = binaryReader.ReadSingle();
+            this.minSuppressingTime = binaryReader.ReadRange();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)preSearchFlags);
-                binaryWriter.Write(minPresearchTimeSeconds);
-                binaryWriter.Write(maxPresearchTimeSeconds);
-                binaryWriter.Write(minCertaintyRadius);
-                binaryWriter.Write(dEPRECATED);
-                binaryWriter.Write(minSuppressingTime);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum PreSearchFlags : int
+        
         {
             Flag1 = 1,
         };

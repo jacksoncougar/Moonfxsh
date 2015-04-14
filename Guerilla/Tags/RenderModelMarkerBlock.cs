@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36, Alignment = 4)]
-    public class RenderModelMarkerBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 36)]
+    public class RenderModelMarkerBlockBase
     {
         internal byte regionIndex;
         internal byte permutationIndex;
@@ -27,27 +26,27 @@ namespace Moonfish.Guerilla.Tags
         internal float scale;
         internal  RenderModelMarkerBlockBase(BinaryReader binaryReader)
         {
-            regionIndex = binaryReader.ReadByte();
-            permutationIndex = binaryReader.ReadByte();
-            nodeIndex = binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(1);
-            translation = binaryReader.ReadVector3();
-            rotation = binaryReader.ReadQuaternion();
-            scale = binaryReader.ReadSingle();
+            this.regionIndex = binaryReader.ReadByte();
+            this.permutationIndex = binaryReader.ReadByte();
+            this.nodeIndex = binaryReader.ReadByte();
+            this.invalidName_ = binaryReader.ReadBytes(1);
+            this.translation = binaryReader.ReadVector3();
+            this.rotation = binaryReader.ReadQuaternion();
+            this.scale = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(regionIndex);
-                binaryWriter.Write(permutationIndex);
-                binaryWriter.Write(nodeIndex);
-                binaryWriter.Write(invalidName_, 0, 1);
-                binaryWriter.Write(translation);
-                binaryWriter.Write(rotation);
-                binaryWriter.Write(scale);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

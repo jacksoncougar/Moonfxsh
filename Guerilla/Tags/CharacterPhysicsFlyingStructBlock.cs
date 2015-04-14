@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 44, Alignment = 4)]
-    public class CharacterPhysicsFlyingStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 44)]
+    public class CharacterPhysicsFlyingStructBlockBase
     {
         /// <summary>
         /// angle at which we bank left/right when sidestepping or turning while moving forwards
@@ -58,35 +57,31 @@ namespace Moonfish.Guerilla.Tags
         internal float crouchVelocityModifier01;
         internal  CharacterPhysicsFlyingStructBlockBase(BinaryReader binaryReader)
         {
-            bankAngleDegrees = binaryReader.ReadSingle();
-            bankApplyTimeSeconds = binaryReader.ReadSingle();
-            bankDecayTimeSeconds = binaryReader.ReadSingle();
-            pitchRatio = binaryReader.ReadSingle();
-            maxVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            maxSidestepVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            accelerationWorldUnitsPerSecondSquared = binaryReader.ReadSingle();
-            decelerationWorldUnitsPerSecondSquared = binaryReader.ReadSingle();
-            angularVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
-            angularAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
-            crouchVelocityModifier01 = binaryReader.ReadSingle();
+            this.bankAngleDegrees = binaryReader.ReadSingle();
+            this.bankApplyTimeSeconds = binaryReader.ReadSingle();
+            this.bankDecayTimeSeconds = binaryReader.ReadSingle();
+            this.pitchRatio = binaryReader.ReadSingle();
+            this.maxVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            this.maxSidestepVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            this.accelerationWorldUnitsPerSecondSquared = binaryReader.ReadSingle();
+            this.decelerationWorldUnitsPerSecondSquared = binaryReader.ReadSingle();
+            this.angularVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
+            this.angularAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
+            this.crouchVelocityModifier01 = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(bankAngleDegrees);
-                binaryWriter.Write(bankApplyTimeSeconds);
-                binaryWriter.Write(bankDecayTimeSeconds);
-                binaryWriter.Write(pitchRatio);
-                binaryWriter.Write(maxVelocityWorldUnitsPerSecond);
-                binaryWriter.Write(maxSidestepVelocityWorldUnitsPerSecond);
-                binaryWriter.Write(accelerationWorldUnitsPerSecondSquared);
-                binaryWriter.Write(decelerationWorldUnitsPerSecondSquared);
-                binaryWriter.Write(angularVelocityMaximumDegreesPerSecond);
-                binaryWriter.Write(angularAccelerationMaximumDegreesPerSecondSquared);
-                binaryWriter.Write(crouchVelocityModifier01);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

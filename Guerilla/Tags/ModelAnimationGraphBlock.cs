@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass JmadClass = (TagClass)"jmad";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 172, Alignment = 4)]
-    public class ModelAnimationGraphBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 172)]
+    public class ModelAnimationGraphBlockBase
     {
         internal AnimationGraphResourcesStructBlock resources;
         internal AnimationGraphContentsStructBlock content;
@@ -34,23 +25,40 @@ namespace Moonfish.Guerilla.Tags
         internal AdditionalNodeDataBlock[] additionalNodeData;
         internal  ModelAnimationGraphBlockBase(BinaryReader binaryReader)
         {
-            resources = new AnimationGraphResourcesStructBlock(binaryReader);
-            content = new AnimationGraphContentsStructBlock(binaryReader);
-            runTimeData = new ModelAnimationRuntimeDataStructBlock(binaryReader);
-            lastImportResults = Guerilla.ReadData(binaryReader);
-            additionalNodeData = Guerilla.ReadBlockArray<AdditionalNodeDataBlock>(binaryReader);
+            this.resources = new AnimationGraphResourcesStructBlock(binaryReader);
+            this.content = new AnimationGraphContentsStructBlock(binaryReader);
+            this.runTimeData = new ModelAnimationRuntimeDataStructBlock(binaryReader);
+            this.lastImportResults = ReadData(binaryReader);
+            this.additionalNodeData = ReadAdditionalNodeDataBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                resources.Write(binaryWriter);
-                content.Write(binaryWriter);
-                runTimeData.Write(binaryWriter);
-                Guerilla.WriteData(binaryWriter);
-                Guerilla.WriteBlockArray<AdditionalNodeDataBlock>(binaryWriter, additionalNodeData, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual AdditionalNodeDataBlock[] ReadAdditionalNodeDataBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(AdditionalNodeDataBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new AdditionalNodeDataBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new AdditionalNodeDataBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

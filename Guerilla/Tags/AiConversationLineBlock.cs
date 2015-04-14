@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 76, Alignment = 4)]
-    public class AiConversationLineBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 76)]
+    public class AiConversationLineBlockBase
     {
         internal Flags flags;
         internal Moonfish.Tags.ShortBlockIndex1 participant;
@@ -42,42 +41,37 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference variant6;
         internal  AiConversationLineBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            participant = binaryReader.ReadShortBlockIndex1();
-            addressee = (Addressee)binaryReader.ReadInt16();
-            addresseeParticipant = binaryReader.ReadShortBlockIndex1();
-            invalidName_ = binaryReader.ReadBytes(4);
-            lineDelayTime = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(12);
-            variant1 = binaryReader.ReadTagReference();
-            variant2 = binaryReader.ReadTagReference();
-            variant3 = binaryReader.ReadTagReference();
-            variant4 = binaryReader.ReadTagReference();
-            variant5 = binaryReader.ReadTagReference();
-            variant6 = binaryReader.ReadTagReference();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.participant = binaryReader.ReadShortBlockIndex1();
+            this.addressee = (Addressee)binaryReader.ReadInt16();
+            this.addresseeParticipant = binaryReader.ReadShortBlockIndex1();
+            this.invalidName_ = binaryReader.ReadBytes(4);
+            this.lineDelayTime = binaryReader.ReadSingle();
+            this.invalidName_0 = binaryReader.ReadBytes(12);
+            this.variant1 = binaryReader.ReadTagReference();
+            this.variant2 = binaryReader.ReadTagReference();
+            this.variant3 = binaryReader.ReadTagReference();
+            this.variant4 = binaryReader.ReadTagReference();
+            this.variant5 = binaryReader.ReadTagReference();
+            this.variant6 = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(participant);
-                binaryWriter.Write((Int16)addressee);
-                binaryWriter.Write(addresseeParticipant);
-                binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write(lineDelayTime);
-                binaryWriter.Write(invalidName_0, 0, 12);
-                binaryWriter.Write(variant1);
-                binaryWriter.Write(variant2);
-                binaryWriter.Write(variant3);
-                binaryWriter.Write(variant4);
-                binaryWriter.Write(variant5);
-                binaryWriter.Write(variant6);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             AddresseeLookAtSpeaker = 1,
             EveryoneLookAtSpeaker = 2,
@@ -87,6 +81,7 @@ namespace Moonfish.Guerilla.Tags
             WaitUntilEveryoneNearby = 32,
         };
         internal enum Addressee : short
+        
         {
             None = 0,
             Player = 1,

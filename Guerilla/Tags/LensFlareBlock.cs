@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass LensClass = (TagClass)"lens";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 100, Alignment = 4)]
-    public class LensFlareBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 100)]
+    public class LensFlareBlockBase
     {
         internal float falloffAngleDegrees;
         internal float cutoffAngleDegrees;
@@ -66,69 +57,99 @@ namespace Moonfish.Guerilla.Tags
         internal LensFlareScalarAnimationBlock[] rotation;
         internal  LensFlareBlockBase(BinaryReader binaryReader)
         {
-            falloffAngleDegrees = binaryReader.ReadSingle();
-            cutoffAngleDegrees = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(4);
-            invalidName_0 = binaryReader.ReadBytes(4);
-            occlusionRadiusWorldUnits = binaryReader.ReadSingle();
-            occlusionOffsetDirection = (OcclusionOffsetDirection)binaryReader.ReadInt16();
-            occlusionInnerRadiusScale = (OcclusionInnerRadiusScale)binaryReader.ReadInt16();
-            nearFadeDistanceWorldUnits = binaryReader.ReadSingle();
-            farFadeDistanceWorldUnits = binaryReader.ReadSingle();
-            bitmap = binaryReader.ReadTagReference();
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            rotationFunction = (RotationFunction)binaryReader.ReadInt16();
-            invalidName_2 = binaryReader.ReadBytes(2);
-            rotationFunctionScaleDegrees = binaryReader.ReadSingle();
-            coronaScale = binaryReader.ReadVector2();
-            falloffFunction = (FalloffFunction)binaryReader.ReadInt16();
-            invalidName_3 = binaryReader.ReadBytes(2);
-            reflections = Guerilla.ReadBlockArray<LensFlareReflectionBlock>(binaryReader);
-            flags0 = (Flags)binaryReader.ReadInt16();
-            invalidName_4 = binaryReader.ReadBytes(2);
-            brightness = Guerilla.ReadBlockArray<LensFlareScalarAnimationBlock>(binaryReader);
-            color = Guerilla.ReadBlockArray<LensFlareColorAnimationBlock>(binaryReader);
-            rotation = Guerilla.ReadBlockArray<LensFlareScalarAnimationBlock>(binaryReader);
+            this.falloffAngleDegrees = binaryReader.ReadSingle();
+            this.cutoffAngleDegrees = binaryReader.ReadSingle();
+            this.invalidName_ = binaryReader.ReadBytes(4);
+            this.invalidName_0 = binaryReader.ReadBytes(4);
+            this.occlusionRadiusWorldUnits = binaryReader.ReadSingle();
+            this.occlusionOffsetDirection = (OcclusionOffsetDirection)binaryReader.ReadInt16();
+            this.occlusionInnerRadiusScale = (OcclusionInnerRadiusScale)binaryReader.ReadInt16();
+            this.nearFadeDistanceWorldUnits = binaryReader.ReadSingle();
+            this.farFadeDistanceWorldUnits = binaryReader.ReadSingle();
+            this.bitmap = binaryReader.ReadTagReference();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.invalidName_1 = binaryReader.ReadBytes(2);
+            this.rotationFunction = (RotationFunction)binaryReader.ReadInt16();
+            this.invalidName_2 = binaryReader.ReadBytes(2);
+            this.rotationFunctionScaleDegrees = binaryReader.ReadSingle();
+            this.coronaScale = binaryReader.ReadVector2();
+            this.falloffFunction = (FalloffFunction)binaryReader.ReadInt16();
+            this.invalidName_3 = binaryReader.ReadBytes(2);
+            this.reflections = ReadLensFlareReflectionBlockArray(binaryReader);
+            this.flags0 = (Flags)binaryReader.ReadInt16();
+            this.invalidName_4 = binaryReader.ReadBytes(2);
+            this.brightness = ReadLensFlareScalarAnimationBlockArray(binaryReader);
+            this.color = ReadLensFlareColorAnimationBlockArray(binaryReader);
+            this.rotation = ReadLensFlareScalarAnimationBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(falloffAngleDegrees);
-                binaryWriter.Write(cutoffAngleDegrees);
-                binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write(invalidName_0, 0, 4);
-                binaryWriter.Write(occlusionRadiusWorldUnits);
-                binaryWriter.Write((Int16)occlusionOffsetDirection);
-                binaryWriter.Write((Int16)occlusionInnerRadiusScale);
-                binaryWriter.Write(nearFadeDistanceWorldUnits);
-                binaryWriter.Write(farFadeDistanceWorldUnits);
-                binaryWriter.Write(bitmap);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                binaryWriter.Write((Int16)rotationFunction);
-                binaryWriter.Write(invalidName_2, 0, 2);
-                binaryWriter.Write(rotationFunctionScaleDegrees);
-                binaryWriter.Write(coronaScale);
-                binaryWriter.Write((Int16)falloffFunction);
-                binaryWriter.Write(invalidName_3, 0, 2);
-                Guerilla.WriteBlockArray<LensFlareReflectionBlock>(binaryWriter, reflections, nextAddress);
-                binaryWriter.Write((Int16)flags0);
-                binaryWriter.Write(invalidName_4, 0, 2);
-                Guerilla.WriteBlockArray<LensFlareScalarAnimationBlock>(binaryWriter, brightness, nextAddress);
-                Guerilla.WriteBlockArray<LensFlareColorAnimationBlock>(binaryWriter, color, nextAddress);
-                Guerilla.WriteBlockArray<LensFlareScalarAnimationBlock>(binaryWriter, rotation, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual LensFlareReflectionBlock[] ReadLensFlareReflectionBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(LensFlareReflectionBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new LensFlareReflectionBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new LensFlareReflectionBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual LensFlareScalarAnimationBlock[] ReadLensFlareScalarAnimationBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(LensFlareScalarAnimationBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new LensFlareScalarAnimationBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new LensFlareScalarAnimationBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual LensFlareColorAnimationBlock[] ReadLensFlareColorAnimationBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(LensFlareColorAnimationBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new LensFlareColorAnimationBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new LensFlareColorAnimationBlock(binaryReader);
+                }
+            }
+            return array;
         }
         internal enum OcclusionOffsetDirection : short
+        
         {
             TowardViewer = 0,
             MarkerForward = 1,
             None = 2,
         };
         internal enum OcclusionInnerRadiusScale : short
+        
         {
             None = 0,
             InvalidName12 = 1,
@@ -140,6 +161,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             Sun = 1,
             NoOcclusionTest = 2,
@@ -150,6 +172,7 @@ namespace Moonfish.Guerilla.Tags
             ScaleByMarker = 64,
         };
         internal enum RotationFunction : short
+        
         {
             None = 0,
             RotationA = 1,
@@ -158,6 +181,7 @@ namespace Moonfish.Guerilla.Tags
             Translation = 4,
         };
         internal enum FalloffFunction : short
+        
         {
             Linear = 0,
             Late = 1,
@@ -170,6 +194,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags0 : short
+        
         {
             Synchronized = 1,
         };

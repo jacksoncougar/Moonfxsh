@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 28, Alignment = 4)]
-    public class LightVolumeAspectBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 28)]
+    public class LightVolumeAspectBlockBase
     {
         internal ScalarFunctionStructBlock alongAxis;
         internal ScalarFunctionStructBlock awayFromAxis;
@@ -25,23 +24,25 @@ namespace Moonfish.Guerilla.Tags
         internal float parallelExponent;
         internal  LightVolumeAspectBlockBase(BinaryReader binaryReader)
         {
-            alongAxis = new ScalarFunctionStructBlock(binaryReader);
-            awayFromAxis = new ScalarFunctionStructBlock(binaryReader);
-            parallelScale = binaryReader.ReadSingle();
-            parallelThresholdAngleDegrees = binaryReader.ReadSingle();
-            parallelExponent = binaryReader.ReadSingle();
+            this.alongAxis = new ScalarFunctionStructBlock(binaryReader);
+            this.awayFromAxis = new ScalarFunctionStructBlock(binaryReader);
+            this.parallelScale = binaryReader.ReadSingle();
+            this.parallelThresholdAngleDegrees = binaryReader.ReadSingle();
+            this.parallelExponent = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                alongAxis.Write(binaryWriter);
-                awayFromAxis.Write(binaryWriter);
-                binaryWriter.Write(parallelScale);
-                binaryWriter.Write(parallelThresholdAngleDegrees);
-                binaryWriter.Write(parallelExponent);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

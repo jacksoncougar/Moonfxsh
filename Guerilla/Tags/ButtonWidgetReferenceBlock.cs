@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 60, Alignment = 4)]
-    public class ButtonWidgetReferenceBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 60)]
+    public class ButtonWidgetReferenceBlockBase
     {
         internal TextFlags textFlags;
         internal AnimationIndex animationIndex;
@@ -37,42 +36,37 @@ namespace Moonfish.Guerilla.Tags
         internal ButtonFlags buttonFlags;
         internal  ButtonWidgetReferenceBlockBase(BinaryReader binaryReader)
         {
-            textFlags = (TextFlags)binaryReader.ReadInt32();
-            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            customFont = (CustomFont)binaryReader.ReadInt16();
-            textColor = binaryReader.ReadVector4();
-            bounds = binaryReader.ReadVector2();
-            bitmap = binaryReader.ReadTagReference();
-            bitmapOffset = binaryReader.ReadPoint();
-            stringId = binaryReader.ReadStringID();
-            renderDepthBias = binaryReader.ReadInt16();
-            mouseRegionTopOffset = binaryReader.ReadInt16();
-            buttonFlags = (ButtonFlags)binaryReader.ReadInt32();
+            this.textFlags = (TextFlags)binaryReader.ReadInt32();
+            this.animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            this.introAnimationDelayMilliseconds = binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.customFont = (CustomFont)binaryReader.ReadInt16();
+            this.textColor = binaryReader.ReadVector4();
+            this.bounds = binaryReader.ReadVector2();
+            this.bitmap = binaryReader.ReadTagReference();
+            this.bitmapOffset = binaryReader.ReadPoint();
+            this.stringId = binaryReader.ReadStringID();
+            this.renderDepthBias = binaryReader.ReadInt16();
+            this.mouseRegionTopOffset = binaryReader.ReadInt16();
+            this.buttonFlags = (ButtonFlags)binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)textFlags);
-                binaryWriter.Write((Int16)animationIndex);
-                binaryWriter.Write(introAnimationDelayMilliseconds);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int16)customFont);
-                binaryWriter.Write(textColor);
-                binaryWriter.Write(bounds);
-                binaryWriter.Write(bitmap);
-                binaryWriter.Write(bitmapOffset);
-                binaryWriter.Write(stringId);
-                binaryWriter.Write(renderDepthBias);
-                binaryWriter.Write(mouseRegionTopOffset);
-                binaryWriter.Write((Int32)buttonFlags);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum TextFlags : int
+        
         {
             LeftJustifyText = 1,
             RightJustifyText = 2,
@@ -81,6 +75,7 @@ namespace Moonfish.Guerilla.Tags
             Small31CharBuffer = 16,
         };
         internal enum AnimationIndex : short
+        
         {
             NONE = 0,
             InvalidName00 = 1,
@@ -149,6 +144,7 @@ namespace Moonfish.Guerilla.Tags
             InvalidName63 = 64,
         };
         internal enum CustomFont : short
+        
         {
             Terminal = 0,
             BodyText = 1,
@@ -165,6 +161,7 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum ButtonFlags : int
+        
         {
             DOESNTTabVertically = 1,
             DOESNTTabHorizontally = 2,

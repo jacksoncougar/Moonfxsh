@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass CharClass = (TagClass)"char";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 236, Alignment = 4)]
-    public class CharacterBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 236)]
+    public class CharacterBlockBase
     {
         internal CharacterFlags characterFlags;
         [TagReference("char")]
@@ -67,76 +58,414 @@ namespace Moonfish.Guerilla.Tags
         internal CharacterVehicleBlock[] vehicleProperties;
         internal  CharacterBlockBase(BinaryReader binaryReader)
         {
-            characterFlags = (CharacterFlags)binaryReader.ReadInt32();
-            parentCharacter = binaryReader.ReadTagReference();
-            unit = binaryReader.ReadTagReference();
-            creature = binaryReader.ReadTagReference();
-            style = binaryReader.ReadTagReference();
-            majorCharacter = binaryReader.ReadTagReference();
-            variants = Guerilla.ReadBlockArray<CharacterVariantsBlock>(binaryReader);
-            generalProperties = Guerilla.ReadBlockArray<CharacterGeneralBlock>(binaryReader);
-            vitalityProperties = Guerilla.ReadBlockArray<CharacterVitalityBlock>(binaryReader);
-            placementProperties = Guerilla.ReadBlockArray<CharacterPlacementBlock>(binaryReader);
-            perceptionProperties = Guerilla.ReadBlockArray<CharacterPerceptionBlock>(binaryReader);
-            lookProperties = Guerilla.ReadBlockArray<CharacterLookBlock>(binaryReader);
-            movementProperties = Guerilla.ReadBlockArray<CharacterMovementBlock>(binaryReader);
-            swarmProperties = Guerilla.ReadBlockArray<CharacterSwarmBlock>(binaryReader);
-            readyProperties = Guerilla.ReadBlockArray<CharacterReadyBlock>(binaryReader);
-            engageProperties = Guerilla.ReadBlockArray<CharacterEngageBlock>(binaryReader);
-            chargeProperties = Guerilla.ReadBlockArray<CharacterChargeBlock>(binaryReader);
-            evasionProperties = Guerilla.ReadBlockArray<CharacterEvasionBlock>(binaryReader);
-            coverProperties = Guerilla.ReadBlockArray<CharacterCoverBlock>(binaryReader);
-            retreatProperties = Guerilla.ReadBlockArray<CharacterRetreatBlock>(binaryReader);
-            searchProperties = Guerilla.ReadBlockArray<CharacterSearchBlock>(binaryReader);
-            preSearchProperties = Guerilla.ReadBlockArray<CharacterPresearchBlock>(binaryReader);
-            idleProperties = Guerilla.ReadBlockArray<CharacterIdleBlock>(binaryReader);
-            vocalizationProperties = Guerilla.ReadBlockArray<CharacterVocalizationBlock>(binaryReader);
-            boardingProperties = Guerilla.ReadBlockArray<CharacterBoardingBlock>(binaryReader);
-            bossProperties = Guerilla.ReadBlockArray<CharacterBossBlock>(binaryReader);
-            weaponsProperties = Guerilla.ReadBlockArray<CharacterWeaponsBlock>(binaryReader);
-            firingPatternProperties = Guerilla.ReadBlockArray<CharacterFiringPatternPropertiesBlock>(binaryReader);
-            grenadesProperties = Guerilla.ReadBlockArray<CharacterGrenadesBlock>(binaryReader);
-            vehicleProperties = Guerilla.ReadBlockArray<CharacterVehicleBlock>(binaryReader);
+            this.characterFlags = (CharacterFlags)binaryReader.ReadInt32();
+            this.parentCharacter = binaryReader.ReadTagReference();
+            this.unit = binaryReader.ReadTagReference();
+            this.creature = binaryReader.ReadTagReference();
+            this.style = binaryReader.ReadTagReference();
+            this.majorCharacter = binaryReader.ReadTagReference();
+            this.variants = ReadCharacterVariantsBlockArray(binaryReader);
+            this.generalProperties = ReadCharacterGeneralBlockArray(binaryReader);
+            this.vitalityProperties = ReadCharacterVitalityBlockArray(binaryReader);
+            this.placementProperties = ReadCharacterPlacementBlockArray(binaryReader);
+            this.perceptionProperties = ReadCharacterPerceptionBlockArray(binaryReader);
+            this.lookProperties = ReadCharacterLookBlockArray(binaryReader);
+            this.movementProperties = ReadCharacterMovementBlockArray(binaryReader);
+            this.swarmProperties = ReadCharacterSwarmBlockArray(binaryReader);
+            this.readyProperties = ReadCharacterReadyBlockArray(binaryReader);
+            this.engageProperties = ReadCharacterEngageBlockArray(binaryReader);
+            this.chargeProperties = ReadCharacterChargeBlockArray(binaryReader);
+            this.evasionProperties = ReadCharacterEvasionBlockArray(binaryReader);
+            this.coverProperties = ReadCharacterCoverBlockArray(binaryReader);
+            this.retreatProperties = ReadCharacterRetreatBlockArray(binaryReader);
+            this.searchProperties = ReadCharacterSearchBlockArray(binaryReader);
+            this.preSearchProperties = ReadCharacterPresearchBlockArray(binaryReader);
+            this.idleProperties = ReadCharacterIdleBlockArray(binaryReader);
+            this.vocalizationProperties = ReadCharacterVocalizationBlockArray(binaryReader);
+            this.boardingProperties = ReadCharacterBoardingBlockArray(binaryReader);
+            this.bossProperties = ReadCharacterBossBlockArray(binaryReader);
+            this.weaponsProperties = ReadCharacterWeaponsBlockArray(binaryReader);
+            this.firingPatternProperties = ReadCharacterFiringPatternPropertiesBlockArray(binaryReader);
+            this.grenadesProperties = ReadCharacterGrenadesBlockArray(binaryReader);
+            this.vehicleProperties = ReadCharacterVehicleBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)characterFlags);
-                binaryWriter.Write(parentCharacter);
-                binaryWriter.Write(unit);
-                binaryWriter.Write(creature);
-                binaryWriter.Write(style);
-                binaryWriter.Write(majorCharacter);
-                Guerilla.WriteBlockArray<CharacterVariantsBlock>(binaryWriter, variants, nextAddress);
-                Guerilla.WriteBlockArray<CharacterGeneralBlock>(binaryWriter, generalProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterVitalityBlock>(binaryWriter, vitalityProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterPlacementBlock>(binaryWriter, placementProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterPerceptionBlock>(binaryWriter, perceptionProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterLookBlock>(binaryWriter, lookProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterMovementBlock>(binaryWriter, movementProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterSwarmBlock>(binaryWriter, swarmProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterReadyBlock>(binaryWriter, readyProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterEngageBlock>(binaryWriter, engageProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterChargeBlock>(binaryWriter, chargeProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterEvasionBlock>(binaryWriter, evasionProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterCoverBlock>(binaryWriter, coverProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterRetreatBlock>(binaryWriter, retreatProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterSearchBlock>(binaryWriter, searchProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterPresearchBlock>(binaryWriter, preSearchProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterIdleBlock>(binaryWriter, idleProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterVocalizationBlock>(binaryWriter, vocalizationProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterBoardingBlock>(binaryWriter, boardingProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterBossBlock>(binaryWriter, bossProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterWeaponsBlock>(binaryWriter, weaponsProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterFiringPatternPropertiesBlock>(binaryWriter, firingPatternProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterGrenadesBlock>(binaryWriter, grenadesProperties, nextAddress);
-                Guerilla.WriteBlockArray<CharacterVehicleBlock>(binaryWriter, vehicleProperties, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual CharacterVariantsBlock[] ReadCharacterVariantsBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterVariantsBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterVariantsBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterVariantsBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterGeneralBlock[] ReadCharacterGeneralBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterGeneralBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterGeneralBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterGeneralBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterVitalityBlock[] ReadCharacterVitalityBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterVitalityBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterVitalityBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterVitalityBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterPlacementBlock[] ReadCharacterPlacementBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterPlacementBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterPlacementBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterPlacementBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterPerceptionBlock[] ReadCharacterPerceptionBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterPerceptionBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterPerceptionBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterPerceptionBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterLookBlock[] ReadCharacterLookBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterLookBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterLookBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterLookBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterMovementBlock[] ReadCharacterMovementBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterMovementBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterMovementBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterMovementBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterSwarmBlock[] ReadCharacterSwarmBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterSwarmBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterSwarmBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterSwarmBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterReadyBlock[] ReadCharacterReadyBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterReadyBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterReadyBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterReadyBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterEngageBlock[] ReadCharacterEngageBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterEngageBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterEngageBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterEngageBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterChargeBlock[] ReadCharacterChargeBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterChargeBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterChargeBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterChargeBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterEvasionBlock[] ReadCharacterEvasionBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterEvasionBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterEvasionBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterEvasionBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterCoverBlock[] ReadCharacterCoverBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterCoverBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterCoverBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterCoverBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterRetreatBlock[] ReadCharacterRetreatBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterRetreatBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterRetreatBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterRetreatBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterSearchBlock[] ReadCharacterSearchBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterSearchBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterSearchBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterSearchBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterPresearchBlock[] ReadCharacterPresearchBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterPresearchBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterPresearchBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterPresearchBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterIdleBlock[] ReadCharacterIdleBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterIdleBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterIdleBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterIdleBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterVocalizationBlock[] ReadCharacterVocalizationBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterVocalizationBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterVocalizationBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterVocalizationBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterBoardingBlock[] ReadCharacterBoardingBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterBoardingBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterBoardingBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterBoardingBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterBossBlock[] ReadCharacterBossBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterBossBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterBossBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterBossBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterWeaponsBlock[] ReadCharacterWeaponsBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterWeaponsBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterWeaponsBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterWeaponsBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterFiringPatternPropertiesBlock[] ReadCharacterFiringPatternPropertiesBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterFiringPatternPropertiesBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterFiringPatternPropertiesBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterFiringPatternPropertiesBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterGrenadesBlock[] ReadCharacterGrenadesBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterGrenadesBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterGrenadesBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterGrenadesBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual CharacterVehicleBlock[] ReadCharacterVehicleBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(CharacterVehicleBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new CharacterVehicleBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new CharacterVehicleBlock(binaryReader);
+                }
+            }
+            return array;
         }
         [FlagsAttribute]
         internal enum CharacterFlags : int
+        
         {
             Flag1 = 1,
         };

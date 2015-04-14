@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,24 +14,44 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class DamageAnimationBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 12)]
+    public class DamageAnimationBlockBase
     {
         internal Moonfish.Tags.StringID label;
         internal DamageDirectionBlock[] directionsAABBCC;
         internal  DamageAnimationBlockBase(BinaryReader binaryReader)
         {
-            label = binaryReader.ReadStringID();
-            directionsAABBCC = Guerilla.ReadBlockArray<DamageDirectionBlock>(binaryReader);
+            this.label = binaryReader.ReadStringID();
+            this.directionsAABBCC = ReadDamageDirectionBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(label);
-                Guerilla.WriteBlockArray<DamageDirectionBlock>(binaryWriter, directionsAABBCC, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual DamageDirectionBlock[] ReadDamageDirectionBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(DamageDirectionBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new DamageDirectionBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new DamageDirectionBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

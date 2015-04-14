@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 56, Alignment = 4)]
-    public class ParticleModelVerticesBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 56)]
+    public class ParticleModelVerticesBlockBase
     {
         internal OpenTK.Vector3 position;
         internal OpenTK.Vector3 normal;
@@ -25,23 +24,25 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector2 texcoord;
         internal  ParticleModelVerticesBlockBase(BinaryReader binaryReader)
         {
-            position = binaryReader.ReadVector3();
-            normal = binaryReader.ReadVector3();
-            tangent = binaryReader.ReadVector3();
-            binormal = binaryReader.ReadVector3();
-            texcoord = binaryReader.ReadVector2();
+            this.position = binaryReader.ReadVector3();
+            this.normal = binaryReader.ReadVector3();
+            this.tangent = binaryReader.ReadVector3();
+            this.binormal = binaryReader.ReadVector3();
+            this.texcoord = binaryReader.ReadVector2();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(position);
-                binaryWriter.Write(normal);
-                binaryWriter.Write(tangent);
-                binaryWriter.Write(binormal);
-                binaryWriter.Write(texcoord);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

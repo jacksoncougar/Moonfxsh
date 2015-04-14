@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 60, Alignment = 4)]
-    public class ShaderPassTextureBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 60)]
+    public class ShaderPassTextureBlockBase
     {
         internal Moonfish.Tags.StringID sourceParameter;
         internal SourceExtern sourceExtern;
@@ -34,43 +33,112 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderTextureStateConstantBlock[] constants;
         internal  ShaderPassTextureBlockBase(BinaryReader binaryReader)
         {
-            sourceParameter = binaryReader.ReadStringID();
-            sourceExtern = (SourceExtern)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(2);
-            mode = (Mode)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            dotMapping = (DotMapping)binaryReader.ReadInt16();
-            inputStage03 = binaryReader.ReadInt16();
-            invalidName_2 = binaryReader.ReadBytes(2);
-            addressState = Guerilla.ReadBlockArray<ShaderTextureStateAddressStateBlock>(binaryReader);
-            filterState = Guerilla.ReadBlockArray<ShaderTextureStateFilterStateBlock>(binaryReader);
-            killState = Guerilla.ReadBlockArray<ShaderTextureStateKillStateBlock>(binaryReader);
-            miscState = Guerilla.ReadBlockArray<ShaderTextureStateMiscStateBlock>(binaryReader);
-            constants = Guerilla.ReadBlockArray<ShaderTextureStateConstantBlock>(binaryReader);
+            this.sourceParameter = binaryReader.ReadStringID();
+            this.sourceExtern = (SourceExtern)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.invalidName_0 = binaryReader.ReadBytes(2);
+            this.mode = (Mode)binaryReader.ReadInt16();
+            this.invalidName_1 = binaryReader.ReadBytes(2);
+            this.dotMapping = (DotMapping)binaryReader.ReadInt16();
+            this.inputStage03 = binaryReader.ReadInt16();
+            this.invalidName_2 = binaryReader.ReadBytes(2);
+            this.addressState = ReadShaderTextureStateAddressStateBlockArray(binaryReader);
+            this.filterState = ReadShaderTextureStateFilterStateBlockArray(binaryReader);
+            this.killState = ReadShaderTextureStateKillStateBlockArray(binaryReader);
+            this.miscState = ReadShaderTextureStateMiscStateBlockArray(binaryReader);
+            this.constants = ReadShaderTextureStateConstantBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(sourceParameter);
-                binaryWriter.Write((Int16)sourceExtern);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write((Int16)mode);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                binaryWriter.Write((Int16)dotMapping);
-                binaryWriter.Write(inputStage03);
-                binaryWriter.Write(invalidName_2, 0, 2);
-                Guerilla.WriteBlockArray<ShaderTextureStateAddressStateBlock>(binaryWriter, addressState, nextAddress);
-                Guerilla.WriteBlockArray<ShaderTextureStateFilterStateBlock>(binaryWriter, filterState, nextAddress);
-                Guerilla.WriteBlockArray<ShaderTextureStateKillStateBlock>(binaryWriter, killState, nextAddress);
-                Guerilla.WriteBlockArray<ShaderTextureStateMiscStateBlock>(binaryWriter, miscState, nextAddress);
-                Guerilla.WriteBlockArray<ShaderTextureStateConstantBlock>(binaryWriter, constants, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual ShaderTextureStateAddressStateBlock[] ReadShaderTextureStateAddressStateBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderTextureStateAddressStateBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderTextureStateAddressStateBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderTextureStateAddressStateBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderTextureStateFilterStateBlock[] ReadShaderTextureStateFilterStateBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderTextureStateFilterStateBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderTextureStateFilterStateBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderTextureStateFilterStateBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderTextureStateKillStateBlock[] ReadShaderTextureStateKillStateBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderTextureStateKillStateBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderTextureStateKillStateBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderTextureStateKillStateBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderTextureStateMiscStateBlock[] ReadShaderTextureStateMiscStateBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderTextureStateMiscStateBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderTextureStateMiscStateBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderTextureStateMiscStateBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderTextureStateConstantBlock[] ReadShaderTextureStateConstantBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderTextureStateConstantBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderTextureStateConstantBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderTextureStateConstantBlock(binaryReader);
+                }
+            }
+            return array;
         }
         internal enum SourceExtern : short
+        
         {
             None = 0,
             GLOBALVectorNormalization = 1,
@@ -102,6 +170,7 @@ namespace Moonfish.Guerilla.Tags
             FIRSTPERSONScope = 27,
         };
         internal enum Mode : short
+        
         {
             InvalidName2D = 0,
             InvalidName3D = 1,
@@ -124,6 +193,7 @@ namespace Moonfish.Guerilla.Tags
             None = 18,
         };
         internal enum DotMapping : short
+        
         {
             InvalidName0To1 = 0,
             SignedD3D = 1,

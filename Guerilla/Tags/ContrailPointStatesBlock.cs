@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 64, Alignment = 4)]
-    public class ContrailPointStatesBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 64)]
+    public class ContrailPointStatesBlockBase
     {
         /// <summary>
         /// the time a point spends in this state
@@ -46,30 +45,31 @@ namespace Moonfish.Guerilla.Tags
         internal ScaleFlagsTheseFlagsDetermineWhichFieldsAreScaledByTheContrailDensity scaleFlags;
         internal  ContrailPointStatesBlockBase(BinaryReader binaryReader)
         {
-            durationSecondsSeconds = binaryReader.ReadRange();
-            transitionDurationSeconds = binaryReader.ReadRange();
-            physics = binaryReader.ReadTagReference();
-            widthWorldUnits = binaryReader.ReadSingle();
-            colorLowerBound = binaryReader.ReadVector4();
-            colorUpperBound = binaryReader.ReadVector4();
-            scaleFlags = (ScaleFlagsTheseFlagsDetermineWhichFieldsAreScaledByTheContrailDensity)binaryReader.ReadInt32();
+            this.durationSecondsSeconds = binaryReader.ReadRange();
+            this.transitionDurationSeconds = binaryReader.ReadRange();
+            this.physics = binaryReader.ReadTagReference();
+            this.widthWorldUnits = binaryReader.ReadSingle();
+            this.colorLowerBound = binaryReader.ReadVector4();
+            this.colorUpperBound = binaryReader.ReadVector4();
+            this.scaleFlags = (ScaleFlagsTheseFlagsDetermineWhichFieldsAreScaledByTheContrailDensity)binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(durationSecondsSeconds);
-                binaryWriter.Write(transitionDurationSeconds);
-                binaryWriter.Write(physics);
-                binaryWriter.Write(widthWorldUnits);
-                binaryWriter.Write(colorLowerBound);
-                binaryWriter.Write(colorUpperBound);
-                binaryWriter.Write((Int32)scaleFlags);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum ScaleFlagsTheseFlagsDetermineWhichFieldsAreScaledByTheContrailDensity : int
+        
         {
             Duration = 1,
             DurationDelta = 2,

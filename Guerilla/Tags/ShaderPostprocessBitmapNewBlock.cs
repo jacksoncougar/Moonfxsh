@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,27 +14,31 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class ShaderPostprocessBitmapNewBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 12)]
+    public class ShaderPostprocessBitmapNewBlockBase
     {
         internal Moonfish.Tags.TagIdent bitmapGroup;
         internal int bitmapIndex;
         internal float logBitmapDimension;
         internal  ShaderPostprocessBitmapNewBlockBase(BinaryReader binaryReader)
         {
-            bitmapGroup = binaryReader.ReadTagIdent();
-            bitmapIndex = binaryReader.ReadInt32();
-            logBitmapDimension = binaryReader.ReadSingle();
+            this.bitmapGroup = binaryReader.ReadTagIdent();
+            this.bitmapIndex = binaryReader.ReadInt32();
+            this.logBitmapDimension = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(bitmapGroup);
-                binaryWriter.Write(bitmapIndex);
-                binaryWriter.Write(logBitmapDimension);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

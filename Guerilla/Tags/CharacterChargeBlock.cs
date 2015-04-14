@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 64, Alignment = 4)]
-    public class CharacterChargeBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 64)]
+    public class CharacterChargeBlockBase
     {
         internal ChargeFlags chargeFlags;
         internal float meleeConsiderRange;
@@ -50,44 +49,38 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference berserkWeapon;
         internal  CharacterChargeBlockBase(BinaryReader binaryReader)
         {
-            chargeFlags = (ChargeFlags)binaryReader.ReadInt32();
-            meleeConsiderRange = binaryReader.ReadSingle();
-            meleeChance = binaryReader.ReadSingle();
-            meleeAttackRange = binaryReader.ReadSingle();
-            meleeAbortRange = binaryReader.ReadSingle();
-            meleeAttackTimeoutSeconds = binaryReader.ReadSingle();
-            meleeAttackDelayTimerSeconds = binaryReader.ReadSingle();
-            meleeLeapRange = binaryReader.ReadRange();
-            meleeLeapChance = binaryReader.ReadSingle();
-            idealLeapVelocity = binaryReader.ReadSingle();
-            maxLeapVelocity = binaryReader.ReadSingle();
-            meleeLeapBallistic = binaryReader.ReadSingle();
-            meleeDelayTimerSeconds = binaryReader.ReadSingle();
-            berserkWeapon = binaryReader.ReadTagReference();
+            this.chargeFlags = (ChargeFlags)binaryReader.ReadInt32();
+            this.meleeConsiderRange = binaryReader.ReadSingle();
+            this.meleeChance = binaryReader.ReadSingle();
+            this.meleeAttackRange = binaryReader.ReadSingle();
+            this.meleeAbortRange = binaryReader.ReadSingle();
+            this.meleeAttackTimeoutSeconds = binaryReader.ReadSingle();
+            this.meleeAttackDelayTimerSeconds = binaryReader.ReadSingle();
+            this.meleeLeapRange = binaryReader.ReadRange();
+            this.meleeLeapChance = binaryReader.ReadSingle();
+            this.idealLeapVelocity = binaryReader.ReadSingle();
+            this.maxLeapVelocity = binaryReader.ReadSingle();
+            this.meleeLeapBallistic = binaryReader.ReadSingle();
+            this.meleeDelayTimerSeconds = binaryReader.ReadSingle();
+            this.berserkWeapon = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)chargeFlags);
-                binaryWriter.Write(meleeConsiderRange);
-                binaryWriter.Write(meleeChance);
-                binaryWriter.Write(meleeAttackRange);
-                binaryWriter.Write(meleeAbortRange);
-                binaryWriter.Write(meleeAttackTimeoutSeconds);
-                binaryWriter.Write(meleeAttackDelayTimerSeconds);
-                binaryWriter.Write(meleeLeapRange);
-                binaryWriter.Write(meleeLeapChance);
-                binaryWriter.Write(idealLeapVelocity);
-                binaryWriter.Write(maxLeapVelocity);
-                binaryWriter.Write(meleeLeapBallistic);
-                binaryWriter.Write(meleeDelayTimerSeconds);
-                binaryWriter.Write(berserkWeapon);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum ChargeFlags : int
+        
         {
             OffhandMeleeAllowed = 1,
             BerserkWheneverCharge = 2,

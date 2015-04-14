@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 40, Alignment = 4)]
-    public class UnitBoardingMeleeStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 40)]
+    public class UnitBoardingMeleeStructBlockBase
     {
         [TagReference("jpt!")]
         internal Moonfish.Tags.TagReference boardingMeleeDamage;
@@ -30,23 +29,25 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference obstacleSmashDamage;
         internal  UnitBoardingMeleeStructBlockBase(BinaryReader binaryReader)
         {
-            boardingMeleeDamage = binaryReader.ReadTagReference();
-            boardingMeleeResponse = binaryReader.ReadTagReference();
-            landingMeleeDamage = binaryReader.ReadTagReference();
-            flurryMeleeDamage = binaryReader.ReadTagReference();
-            obstacleSmashDamage = binaryReader.ReadTagReference();
+            this.boardingMeleeDamage = binaryReader.ReadTagReference();
+            this.boardingMeleeResponse = binaryReader.ReadTagReference();
+            this.landingMeleeDamage = binaryReader.ReadTagReference();
+            this.flurryMeleeDamage = binaryReader.ReadTagReference();
+            this.obstacleSmashDamage = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(boardingMeleeDamage);
-                binaryWriter.Write(boardingMeleeResponse);
-                binaryWriter.Write(landingMeleeDamage);
-                binaryWriter.Write(flurryMeleeDamage);
-                binaryWriter.Write(obstacleSmashDamage);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 152, Alignment = 4)]
-    public class ShaderPostprocessLevelOfDetailBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 152)]
+    public class ShaderPostprocessLevelOfDetailBlockBase
     {
         internal float projectedHeightPercentage;
         internal int availableLayers;
@@ -34,41 +33,199 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderGpuStateStructBlock gPUState;
         internal  ShaderPostprocessLevelOfDetailBlockBase(BinaryReader binaryReader)
         {
-            projectedHeightPercentage = binaryReader.ReadSingle();
-            availableLayers = binaryReader.ReadInt32();
-            layers = Guerilla.ReadBlockArray<ShaderPostprocessLayerBlock>(binaryReader);
-            passes = Guerilla.ReadBlockArray<ShaderPostprocessPassBlock>(binaryReader);
-            implementations = Guerilla.ReadBlockArray<ShaderPostprocessImplementationBlock>(binaryReader);
-            bitmaps = Guerilla.ReadBlockArray<ShaderPostprocessBitmapBlock>(binaryReader);
-            bitmapTransforms = Guerilla.ReadBlockArray<ShaderPostprocessBitmapTransformBlock>(binaryReader);
-            values = Guerilla.ReadBlockArray<ShaderPostprocessValueBlock>(binaryReader);
-            colors = Guerilla.ReadBlockArray<ShaderPostprocessColorBlock>(binaryReader);
-            bitmapTransformOverlays = Guerilla.ReadBlockArray<ShaderPostprocessBitmapTransformOverlayBlock>(binaryReader);
-            valueOverlays = Guerilla.ReadBlockArray<ShaderPostprocessValueOverlayBlock>(binaryReader);
-            colorOverlays = Guerilla.ReadBlockArray<ShaderPostprocessColorOverlayBlock>(binaryReader);
-            vertexShaderConstants = Guerilla.ReadBlockArray<ShaderPostprocessVertexShaderConstantBlock>(binaryReader);
-            gPUState = new ShaderGpuStateStructBlock(binaryReader);
+            this.projectedHeightPercentage = binaryReader.ReadSingle();
+            this.availableLayers = binaryReader.ReadInt32();
+            this.layers = ReadShaderPostprocessLayerBlockArray(binaryReader);
+            this.passes = ReadShaderPostprocessPassBlockArray(binaryReader);
+            this.implementations = ReadShaderPostprocessImplementationBlockArray(binaryReader);
+            this.bitmaps = ReadShaderPostprocessBitmapBlockArray(binaryReader);
+            this.bitmapTransforms = ReadShaderPostprocessBitmapTransformBlockArray(binaryReader);
+            this.values = ReadShaderPostprocessValueBlockArray(binaryReader);
+            this.colors = ReadShaderPostprocessColorBlockArray(binaryReader);
+            this.bitmapTransformOverlays = ReadShaderPostprocessBitmapTransformOverlayBlockArray(binaryReader);
+            this.valueOverlays = ReadShaderPostprocessValueOverlayBlockArray(binaryReader);
+            this.colorOverlays = ReadShaderPostprocessColorOverlayBlockArray(binaryReader);
+            this.vertexShaderConstants = ReadShaderPostprocessVertexShaderConstantBlockArray(binaryReader);
+            this.gPUState = new ShaderGpuStateStructBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(projectedHeightPercentage);
-                binaryWriter.Write(availableLayers);
-                Guerilla.WriteBlockArray<ShaderPostprocessLayerBlock>(binaryWriter, layers, nextAddress);
-                Guerilla.WriteBlockArray<ShaderPostprocessPassBlock>(binaryWriter, passes, nextAddress);
-                Guerilla.WriteBlockArray<ShaderPostprocessImplementationBlock>(binaryWriter, implementations, nextAddress);
-                Guerilla.WriteBlockArray<ShaderPostprocessBitmapBlock>(binaryWriter, bitmaps, nextAddress);
-                Guerilla.WriteBlockArray<ShaderPostprocessBitmapTransformBlock>(binaryWriter, bitmapTransforms, nextAddress);
-                Guerilla.WriteBlockArray<ShaderPostprocessValueBlock>(binaryWriter, values, nextAddress);
-                Guerilla.WriteBlockArray<ShaderPostprocessColorBlock>(binaryWriter, colors, nextAddress);
-                Guerilla.WriteBlockArray<ShaderPostprocessBitmapTransformOverlayBlock>(binaryWriter, bitmapTransformOverlays, nextAddress);
-                Guerilla.WriteBlockArray<ShaderPostprocessValueOverlayBlock>(binaryWriter, valueOverlays, nextAddress);
-                Guerilla.WriteBlockArray<ShaderPostprocessColorOverlayBlock>(binaryWriter, colorOverlays, nextAddress);
-                Guerilla.WriteBlockArray<ShaderPostprocessVertexShaderConstantBlock>(binaryWriter, vertexShaderConstants, nextAddress);
-                gPUState.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual ShaderPostprocessLayerBlock[] ReadShaderPostprocessLayerBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderPostprocessLayerBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderPostprocessLayerBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderPostprocessLayerBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderPostprocessPassBlock[] ReadShaderPostprocessPassBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderPostprocessPassBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderPostprocessPassBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderPostprocessPassBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderPostprocessImplementationBlock[] ReadShaderPostprocessImplementationBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderPostprocessImplementationBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderPostprocessImplementationBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderPostprocessImplementationBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderPostprocessBitmapBlock[] ReadShaderPostprocessBitmapBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderPostprocessBitmapBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderPostprocessBitmapBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderPostprocessBitmapBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderPostprocessBitmapTransformBlock[] ReadShaderPostprocessBitmapTransformBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderPostprocessBitmapTransformBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderPostprocessBitmapTransformBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderPostprocessBitmapTransformBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderPostprocessValueBlock[] ReadShaderPostprocessValueBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderPostprocessValueBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderPostprocessValueBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderPostprocessValueBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderPostprocessColorBlock[] ReadShaderPostprocessColorBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderPostprocessColorBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderPostprocessColorBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderPostprocessColorBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderPostprocessBitmapTransformOverlayBlock[] ReadShaderPostprocessBitmapTransformOverlayBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderPostprocessBitmapTransformOverlayBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderPostprocessBitmapTransformOverlayBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderPostprocessBitmapTransformOverlayBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderPostprocessValueOverlayBlock[] ReadShaderPostprocessValueOverlayBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderPostprocessValueOverlayBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderPostprocessValueOverlayBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderPostprocessValueOverlayBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderPostprocessColorOverlayBlock[] ReadShaderPostprocessColorOverlayBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderPostprocessColorOverlayBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderPostprocessColorOverlayBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderPostprocessColorOverlayBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderPostprocessVertexShaderConstantBlock[] ReadShaderPostprocessVertexShaderConstantBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderPostprocessVertexShaderConstantBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderPostprocessVertexShaderConstantBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderPostprocessVertexShaderConstantBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

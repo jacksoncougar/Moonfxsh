@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,30 +14,35 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class LeavesBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 4)]
+    public class LeavesBlockBase
     {
         internal Flags flags;
         internal byte bSP2DReferenceCount;
         internal short firstBSP2DReference;
         internal  LeavesBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadByte();
-            bSP2DReferenceCount = binaryReader.ReadByte();
-            firstBSP2DReference = binaryReader.ReadInt16();
+            this.flags = (Flags)binaryReader.ReadByte();
+            this.bSP2DReferenceCount = binaryReader.ReadByte();
+            this.firstBSP2DReference = binaryReader.ReadInt16();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Byte)flags);
-                binaryWriter.Write(bSP2DReferenceCount);
-                binaryWriter.Write(firstBSP2DReference);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : byte
+        
         {
             ContainsDoubleSidedSurfaces = 1,
         };

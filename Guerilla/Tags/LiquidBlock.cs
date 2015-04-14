@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass TdtlClass = (TagClass)"tdtl";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 112, Alignment = 4)]
-    public class LiquidBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 112)]
+    public class LiquidBlockBase
     {
         internal byte[] invalidName_;
         internal Type type;
@@ -37,31 +28,46 @@ namespace Moonfish.Guerilla.Tags
         internal LiquidArcBlock[] arcs;
         internal  LiquidBlockBase(BinaryReader binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes(2);
-            type = (Type)binaryReader.ReadInt16();
-            attachmentMarkerName = binaryReader.ReadStringID();
-            invalidName_0 = binaryReader.ReadBytes(56);
-            falloffDistanceFromCameraWorldUnits = binaryReader.ReadSingle();
-            cutoffDistanceFromCameraWorldUnits = binaryReader.ReadSingle();
-            invalidName_1 = binaryReader.ReadBytes(32);
-            arcs = Guerilla.ReadBlockArray<LiquidArcBlock>(binaryReader);
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.type = (Type)binaryReader.ReadInt16();
+            this.attachmentMarkerName = binaryReader.ReadStringID();
+            this.invalidName_0 = binaryReader.ReadBytes(56);
+            this.falloffDistanceFromCameraWorldUnits = binaryReader.ReadSingle();
+            this.cutoffDistanceFromCameraWorldUnits = binaryReader.ReadSingle();
+            this.invalidName_1 = binaryReader.ReadBytes(32);
+            this.arcs = ReadLiquidArcBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write(attachmentMarkerName);
-                binaryWriter.Write(invalidName_0, 0, 56);
-                binaryWriter.Write(falloffDistanceFromCameraWorldUnits);
-                binaryWriter.Write(cutoffDistanceFromCameraWorldUnits);
-                binaryWriter.Write(invalidName_1, 0, 32);
-                Guerilla.WriteBlockArray<LiquidArcBlock>(binaryWriter, arcs, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual LiquidArcBlock[] ReadLiquidArcBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(LiquidArcBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new LiquidArcBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new LiquidArcBlock(binaryReader);
+                }
+            }
+            return array;
         }
         internal enum Type : short
+        
         {
             Standard = 0,
             WeaponToProjectile = 1,

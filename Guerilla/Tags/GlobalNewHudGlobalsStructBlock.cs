@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 144, Alignment = 4)]
-    public class GlobalNewHudGlobalsStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 144)]
+    public class GlobalNewHudGlobalsStructBlockBase
     {
         [TagReference("unic")]
         internal Moonfish.Tags.TagReference hudText;
@@ -28,27 +27,102 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalNewHudGlobalsConstantsStructBlock constants;
         internal  GlobalNewHudGlobalsStructBlockBase(BinaryReader binaryReader)
         {
-            hudText = binaryReader.ReadTagReference();
-            dashlights = Guerilla.ReadBlockArray<HudDashlightsBlock>(binaryReader);
-            waypointArrows = Guerilla.ReadBlockArray<HudWaypointArrowBlock>(binaryReader);
-            waypoints = Guerilla.ReadBlockArray<HudWaypointBlock>(binaryReader);
-            hudSounds = Guerilla.ReadBlockArray<NewHudSoundBlock>(binaryReader);
-            playerTrainingData = Guerilla.ReadBlockArray<PlayerTrainingEntryDataBlock>(binaryReader);
-            constants = new GlobalNewHudGlobalsConstantsStructBlock(binaryReader);
+            this.hudText = binaryReader.ReadTagReference();
+            this.dashlights = ReadHudDashlightsBlockArray(binaryReader);
+            this.waypointArrows = ReadHudWaypointArrowBlockArray(binaryReader);
+            this.waypoints = ReadHudWaypointBlockArray(binaryReader);
+            this.hudSounds = ReadNewHudSoundBlockArray(binaryReader);
+            this.playerTrainingData = ReadPlayerTrainingEntryDataBlockArray(binaryReader);
+            this.constants = new GlobalNewHudGlobalsConstantsStructBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(hudText);
-                Guerilla.WriteBlockArray<HudDashlightsBlock>(binaryWriter, dashlights, nextAddress);
-                Guerilla.WriteBlockArray<HudWaypointArrowBlock>(binaryWriter, waypointArrows, nextAddress);
-                Guerilla.WriteBlockArray<HudWaypointBlock>(binaryWriter, waypoints, nextAddress);
-                Guerilla.WriteBlockArray<NewHudSoundBlock>(binaryWriter, hudSounds, nextAddress);
-                Guerilla.WriteBlockArray<PlayerTrainingEntryDataBlock>(binaryWriter, playerTrainingData, nextAddress);
-                constants.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual HudDashlightsBlock[] ReadHudDashlightsBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(HudDashlightsBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new HudDashlightsBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new HudDashlightsBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual HudWaypointArrowBlock[] ReadHudWaypointArrowBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(HudWaypointArrowBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new HudWaypointArrowBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new HudWaypointArrowBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual HudWaypointBlock[] ReadHudWaypointBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(HudWaypointBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new HudWaypointBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new HudWaypointBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual NewHudSoundBlock[] ReadNewHudSoundBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(NewHudSoundBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new NewHudSoundBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new NewHudSoundBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual PlayerTrainingEntryDataBlock[] ReadPlayerTrainingEntryDataBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PlayerTrainingEntryDataBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PlayerTrainingEntryDataBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PlayerTrainingEntryDataBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

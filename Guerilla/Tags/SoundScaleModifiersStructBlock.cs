@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,27 +14,31 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class SoundScaleModifiersStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 20)]
+    public class SoundScaleModifiersStructBlockBase
     {
         internal Moonfish.Model.Range gainModifierDB;
         internal int pitchModifierCents;
         internal OpenTK.Vector2 skipFractionModifier;
         internal  SoundScaleModifiersStructBlockBase(BinaryReader binaryReader)
         {
-            gainModifierDB = binaryReader.ReadRange();
-            pitchModifierCents = binaryReader.ReadInt32();
-            skipFractionModifier = binaryReader.ReadVector2();
+            this.gainModifierDB = binaryReader.ReadRange();
+            this.pitchModifierCents = binaryReader.ReadInt32();
+            this.skipFractionModifier = binaryReader.ReadVector2();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(gainModifierDB);
-                binaryWriter.Write(pitchModifierCents);
-                binaryWriter.Write(skipFractionModifier);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

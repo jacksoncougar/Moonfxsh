@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32, Alignment = 4)]
-    public class MultiplayerUiBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 32)]
+    public class MultiplayerUiBlockBase
     {
         [TagReference("unic")]
         internal Moonfish.Tags.TagReference randomPlayerNames;
@@ -26,21 +25,39 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference teamNames;
         internal  MultiplayerUiBlockBase(BinaryReader binaryReader)
         {
-            randomPlayerNames = binaryReader.ReadTagReference();
-            obsoleteProfileColors = Guerilla.ReadBlockArray<MultiplayerColorBlock>(binaryReader);
-            teamColors = Guerilla.ReadBlockArray<MultiplayerColorBlock>(binaryReader);
-            teamNames = binaryReader.ReadTagReference();
+            this.randomPlayerNames = binaryReader.ReadTagReference();
+            this.obsoleteProfileColors = ReadMultiplayerColorBlockArray(binaryReader);
+            this.teamColors = ReadMultiplayerColorBlockArray(binaryReader);
+            this.teamNames = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(randomPlayerNames);
-                Guerilla.WriteBlockArray<MultiplayerColorBlock>(binaryWriter, obsoleteProfileColors, nextAddress);
-                Guerilla.WriteBlockArray<MultiplayerColorBlock>(binaryWriter, teamColors, nextAddress);
-                binaryWriter.Write(teamNames);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual MultiplayerColorBlock[] ReadMultiplayerColorBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(MultiplayerColorBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new MultiplayerColorBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new MultiplayerColorBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

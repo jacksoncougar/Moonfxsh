@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class AnimationIkBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 8)]
+    public class AnimationIkBlockBase
     {
         /// <summary>
         /// the marker name on the object being attached
@@ -28,17 +27,22 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID attachToMarker;
         internal  AnimationIkBlockBase(BinaryReader binaryReader)
         {
-            marker = binaryReader.ReadStringID();
-            attachToMarker = binaryReader.ReadStringID();
+            this.marker = binaryReader.ReadStringID();
+            this.attachToMarker = binaryReader.ReadStringID();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(marker);
-                binaryWriter.Write(attachToMarker);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

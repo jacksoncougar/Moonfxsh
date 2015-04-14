@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass Prt3Class = (TagClass)"prt3";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 188, Alignment = 4)]
-    public class ParticleBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 188)]
+    public class ParticleBlockBase
     {
         internal Flags flags;
         internal ParticleBillboardStyle particleBillboardStyle;
@@ -58,56 +49,104 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal  ParticleBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            particleBillboardStyle = (ParticleBillboardStyle)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            firstSequenceIndex = binaryReader.ReadInt16();
-            sequenceCount = binaryReader.ReadInt16();
-            shaderTemplate = binaryReader.ReadTagReference();
-            shaderParameters = Guerilla.ReadBlockArray<GlobalShaderParameterBlock>(binaryReader);
-            color = new ParticlePropertyColorStructNewBlock(binaryReader);
-            alpha = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            scale = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            rotation = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            frameIndex = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            collisionEffect = binaryReader.ReadTagReference();
-            deathEffect = binaryReader.ReadTagReference();
-            locations = Guerilla.ReadBlockArray<EffectLocationsBlock>(binaryReader);
-            attachedParticleSystems = Guerilla.ReadBlockArray<ParticleSystemDefinitionBlockNew>(binaryReader);
-            shaderPostprocessDefinitionNewBlock = Guerilla.ReadBlockArray<ShaderPostprocessDefinitionNewBlock>(binaryReader);
-            invalidName_0 = binaryReader.ReadBytes(8);
-            invalidName_1 = binaryReader.ReadBytes(16);
-            invalidName_2 = binaryReader.ReadBytes(16);
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.particleBillboardStyle = (ParticleBillboardStyle)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.firstSequenceIndex = binaryReader.ReadInt16();
+            this.sequenceCount = binaryReader.ReadInt16();
+            this.shaderTemplate = binaryReader.ReadTagReference();
+            this.shaderParameters = ReadGlobalShaderParameterBlockArray(binaryReader);
+            this.color = new ParticlePropertyColorStructNewBlock(binaryReader);
+            this.alpha = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            this.scale = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            this.rotation = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            this.frameIndex = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            this.collisionEffect = binaryReader.ReadTagReference();
+            this.deathEffect = binaryReader.ReadTagReference();
+            this.locations = ReadEffectLocationsBlockArray(binaryReader);
+            this.attachedParticleSystems = ReadParticleSystemDefinitionBlockNewArray(binaryReader);
+            this.shaderPostprocessDefinitionNewBlock = ReadShaderPostprocessDefinitionNewBlockArray(binaryReader);
+            this.invalidName_0 = binaryReader.ReadBytes(8);
+            this.invalidName_1 = binaryReader.ReadBytes(16);
+            this.invalidName_2 = binaryReader.ReadBytes(16);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)particleBillboardStyle);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(firstSequenceIndex);
-                binaryWriter.Write(sequenceCount);
-                binaryWriter.Write(shaderTemplate);
-                Guerilla.WriteBlockArray<GlobalShaderParameterBlock>(binaryWriter, shaderParameters, nextAddress);
-                color.Write(binaryWriter);
-                alpha.Write(binaryWriter);
-                scale.Write(binaryWriter);
-                rotation.Write(binaryWriter);
-                frameIndex.Write(binaryWriter);
-                binaryWriter.Write(collisionEffect);
-                binaryWriter.Write(deathEffect);
-                Guerilla.WriteBlockArray<EffectLocationsBlock>(binaryWriter, locations, nextAddress);
-                Guerilla.WriteBlockArray<ParticleSystemDefinitionBlockNew>(binaryWriter, attachedParticleSystems, nextAddress);
-                Guerilla.WriteBlockArray<ShaderPostprocessDefinitionNewBlock>(binaryWriter, shaderPostprocessDefinitionNewBlock, nextAddress);
-                binaryWriter.Write(invalidName_0, 0, 8);
-                binaryWriter.Write(invalidName_1, 0, 16);
-                binaryWriter.Write(invalidName_2, 0, 16);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual GlobalShaderParameterBlock[] ReadGlobalShaderParameterBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(GlobalShaderParameterBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new GlobalShaderParameterBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new GlobalShaderParameterBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual EffectLocationsBlock[] ReadEffectLocationsBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(EffectLocationsBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new EffectLocationsBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new EffectLocationsBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ParticleSystemDefinitionBlockNew[] ReadParticleSystemDefinitionBlockNewArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ParticleSystemDefinitionBlockNew));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ParticleSystemDefinitionBlockNew[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ParticleSystemDefinitionBlockNew(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ShaderPostprocessDefinitionNewBlock[] ReadShaderPostprocessDefinitionNewBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ShaderPostprocessDefinitionNewBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ShaderPostprocessDefinitionNewBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ShaderPostprocessDefinitionNewBlock(binaryReader);
+                }
+            }
+            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             Spins = 1,
             RandomUMirror = 2,
@@ -126,6 +165,7 @@ namespace Moonfish.Guerilla.Tags
             HasSweetener = 16384,
         };
         internal enum ParticleBillboardStyle : short
+        
         {
             ScreenFacing = 0,
             ParallelToDirection = 1,

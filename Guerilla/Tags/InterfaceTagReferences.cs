@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 152, Alignment = 4)]
-    public class InterfaceTagReferencesBase  : IGuerilla
+    [LayoutAttribute(Size = 152)]
+    public class InterfaceTagReferencesBase
     {
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference obsolete1;
@@ -58,51 +57,39 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference multiplayerUiGlobals;
         internal  InterfaceTagReferencesBase(BinaryReader binaryReader)
         {
-            obsolete1 = binaryReader.ReadTagReference();
-            obsolete2 = binaryReader.ReadTagReference();
-            screenColorTable = binaryReader.ReadTagReference();
-            hudColorTable = binaryReader.ReadTagReference();
-            editorColorTable = binaryReader.ReadTagReference();
-            dialogColorTable = binaryReader.ReadTagReference();
-            hudGlobals = binaryReader.ReadTagReference();
-            motionSensorSweepBitmap = binaryReader.ReadTagReference();
-            motionSensorSweepBitmapMask = binaryReader.ReadTagReference();
-            multiplayerHudBitmap = binaryReader.ReadTagReference();
-            invalidName_ = binaryReader.ReadTagReference();
-            hudDigitsDefinition = binaryReader.ReadTagReference();
-            motionSensorBlipBitmap = binaryReader.ReadTagReference();
-            interfaceGooMap1 = binaryReader.ReadTagReference();
-            interfaceGooMap2 = binaryReader.ReadTagReference();
-            interfaceGooMap3 = binaryReader.ReadTagReference();
-            mainmenuUiGlobals = binaryReader.ReadTagReference();
-            singleplayerUiGlobals = binaryReader.ReadTagReference();
-            multiplayerUiGlobals = binaryReader.ReadTagReference();
+            this.obsolete1 = binaryReader.ReadTagReference();
+            this.obsolete2 = binaryReader.ReadTagReference();
+            this.screenColorTable = binaryReader.ReadTagReference();
+            this.hudColorTable = binaryReader.ReadTagReference();
+            this.editorColorTable = binaryReader.ReadTagReference();
+            this.dialogColorTable = binaryReader.ReadTagReference();
+            this.hudGlobals = binaryReader.ReadTagReference();
+            this.motionSensorSweepBitmap = binaryReader.ReadTagReference();
+            this.motionSensorSweepBitmapMask = binaryReader.ReadTagReference();
+            this.multiplayerHudBitmap = binaryReader.ReadTagReference();
+            this.invalidName_ = binaryReader.ReadTagReference();
+            this.hudDigitsDefinition = binaryReader.ReadTagReference();
+            this.motionSensorBlipBitmap = binaryReader.ReadTagReference();
+            this.interfaceGooMap1 = binaryReader.ReadTagReference();
+            this.interfaceGooMap2 = binaryReader.ReadTagReference();
+            this.interfaceGooMap3 = binaryReader.ReadTagReference();
+            this.mainmenuUiGlobals = binaryReader.ReadTagReference();
+            this.singleplayerUiGlobals = binaryReader.ReadTagReference();
+            this.multiplayerUiGlobals = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(obsolete1);
-                binaryWriter.Write(obsolete2);
-                binaryWriter.Write(screenColorTable);
-                binaryWriter.Write(hudColorTable);
-                binaryWriter.Write(editorColorTable);
-                binaryWriter.Write(dialogColorTable);
-                binaryWriter.Write(hudGlobals);
-                binaryWriter.Write(motionSensorSweepBitmap);
-                binaryWriter.Write(motionSensorSweepBitmapMask);
-                binaryWriter.Write(multiplayerHudBitmap);
-                binaryWriter.Write(invalidName_);
-                binaryWriter.Write(hudDigitsDefinition);
-                binaryWriter.Write(motionSensorBlipBitmap);
-                binaryWriter.Write(interfaceGooMap1);
-                binaryWriter.Write(interfaceGooMap2);
-                binaryWriter.Write(interfaceGooMap3);
-                binaryWriter.Write(mainmenuUiGlobals);
-                binaryWriter.Write(singleplayerUiGlobals);
-                binaryWriter.Write(multiplayerUiGlobals);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

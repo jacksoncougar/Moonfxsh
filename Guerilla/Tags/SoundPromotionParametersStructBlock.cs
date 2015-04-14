@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class SoundPromotionParametersStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 20)]
+    public class SoundPromotionParametersStructBlockBase
     {
         [TagReference("snd!")]
         internal Moonfish.Tags.TagReference promotionSound;
@@ -28,21 +27,24 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  SoundPromotionParametersStructBlockBase(BinaryReader binaryReader)
         {
-            promotionSound = binaryReader.ReadTagReference();
-            promotionCount = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(8);
+            this.promotionSound = binaryReader.ReadTagReference();
+            this.promotionCount = binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.invalidName_0 = binaryReader.ReadBytes(8);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(promotionSound);
-                binaryWriter.Write(promotionCount);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(invalidName_0, 0, 8);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

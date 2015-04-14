@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         /// <param name="binaryReader"></param>
         /// <returns></returns>
-        internal RenderModelSectionDataBlock[] ReadRenderModelSectionDataBlockArray(BinaryReader binaryReader)
+        internal override RenderModelSectionDataBlock[] ReadRenderModelSectionDataBlockArray(BinaryReader binaryReader)
         {
             binaryReader.ReadBytes(8);
             using (binaryReader.BaseStream.Pin())
@@ -103,7 +103,7 @@ namespace Moonfish.Guerilla.Tags
 
     partial class GlobalGeometrySectionStructBlock
     {
-        internal GlobalGeometrySectionVertexBufferBlock[] ReadGlobalGeometrySectionVertexBufferBlockArray(BinaryReader binaryReader)
+        internal override GlobalGeometrySectionVertexBufferBlock[] ReadGlobalGeometrySectionVertexBufferBlockArray(BinaryReader binaryReader)
         {
             var vertexBuffers = base.ReadGlobalGeometrySectionVertexBufferBlockArray(binaryReader);
             using (binaryReader.BaseStream.Pin())

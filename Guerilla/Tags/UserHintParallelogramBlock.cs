@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 68, Alignment = 4)]
-    public class UserHintParallelogramBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 68)]
+    public class UserHintParallelogramBlockBase
     {
         internal Flags flags;
         internal OpenTK.Vector3 point0;
@@ -33,42 +32,37 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal  UserHintParallelogramBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            point0 = binaryReader.ReadVector3();
-            referenceFrame = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            point1 = binaryReader.ReadVector3();
-            referenceFrame0 = binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            point2 = binaryReader.ReadVector3();
-            referenceFrame1 = binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            point3 = binaryReader.ReadVector3();
-            referenceFrame2 = binaryReader.ReadInt16();
-            invalidName_2 = binaryReader.ReadBytes(2);
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.point0 = binaryReader.ReadVector3();
+            this.referenceFrame = binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.point1 = binaryReader.ReadVector3();
+            this.referenceFrame0 = binaryReader.ReadInt16();
+            this.invalidName_0 = binaryReader.ReadBytes(2);
+            this.point2 = binaryReader.ReadVector3();
+            this.referenceFrame1 = binaryReader.ReadInt16();
+            this.invalidName_1 = binaryReader.ReadBytes(2);
+            this.point3 = binaryReader.ReadVector3();
+            this.referenceFrame2 = binaryReader.ReadInt16();
+            this.invalidName_2 = binaryReader.ReadBytes(2);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(point0);
-                binaryWriter.Write(referenceFrame);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(point1);
-                binaryWriter.Write(referenceFrame0);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write(point2);
-                binaryWriter.Write(referenceFrame1);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                binaryWriter.Write(point3);
-                binaryWriter.Write(referenceFrame2);
-                binaryWriter.Write(invalidName_2, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             Bidirectional = 1,
             Closed = 2,

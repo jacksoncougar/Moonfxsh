@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 56, Alignment = 4)]
-    public class ModelVariantBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 56)]
+    public class ModelVariantBlockBase
     {
         internal Moonfish.Tags.StringID name;
         internal byte[] invalidName_;
@@ -28,27 +27,57 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference dialogue;
         internal  ModelVariantBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(16);
-            regions = Guerilla.ReadBlockArray<ModelVariantRegionBlock>(binaryReader);
-            objects = Guerilla.ReadBlockArray<ModelVariantObjectBlock>(binaryReader);
-            invalidName_0 = binaryReader.ReadBytes(8);
-            dialogueSoundEffect = binaryReader.ReadStringID();
-            dialogue = binaryReader.ReadTagReference();
+            this.name = binaryReader.ReadStringID();
+            this.invalidName_ = binaryReader.ReadBytes(16);
+            this.regions = ReadModelVariantRegionBlockArray(binaryReader);
+            this.objects = ReadModelVariantObjectBlockArray(binaryReader);
+            this.invalidName_0 = binaryReader.ReadBytes(8);
+            this.dialogueSoundEffect = binaryReader.ReadStringID();
+            this.dialogue = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(invalidName_, 0, 16);
-                Guerilla.WriteBlockArray<ModelVariantRegionBlock>(binaryWriter, regions, nextAddress);
-                Guerilla.WriteBlockArray<ModelVariantObjectBlock>(binaryWriter, objects, nextAddress);
-                binaryWriter.Write(invalidName_0, 0, 8);
-                binaryWriter.Write(dialogueSoundEffect);
-                binaryWriter.Write(dialogue);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual ModelVariantRegionBlock[] ReadModelVariantRegionBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ModelVariantRegionBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ModelVariantRegionBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ModelVariantRegionBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual ModelVariantObjectBlock[] ReadModelVariantObjectBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(ModelVariantObjectBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new ModelVariantObjectBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new ModelVariantObjectBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

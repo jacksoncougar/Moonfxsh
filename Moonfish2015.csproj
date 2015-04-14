@@ -828,9 +828,7 @@
     <Compile Include="Guerilla\Tags\MaterialEffectMaterialBlock.cs" />
     <Compile Include="Guerilla\Tags\MaterialEffectsBlock.cs" />
     <Compile Include="Guerilla\Tags\MaterialPhysicsBlock.cs" />
-    <Compile Include="Guerilla\Tags\MaterialPhysicsPropertiesStructBlock.cs" />
     <Compile Include="Guerilla\Tags\MaterialsBlock.cs" />
-    <Compile Include="Guerilla\Tags\MaterialsSweetenersStructBlock.cs" />
     <Compile Include="Guerilla\Tags\MeleeAimAssistStructBlock.cs">
       <SubType>Code</SubType>
     </Compile>

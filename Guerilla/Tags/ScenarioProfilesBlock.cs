@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 68, Alignment = 4)]
-    public class ScenarioProfilesBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 68)]
+    public class ScenarioProfilesBlockBase
     {
         internal Moonfish.Tags.String32 name;
         internal float startingHealthDamage01;
@@ -35,39 +34,33 @@ namespace Moonfish.Guerilla.Tags
         internal byte startingUnknownGrenadeCount0;
         internal  ScenarioProfilesBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadString32();
-            startingHealthDamage01 = binaryReader.ReadSingle();
-            startingShieldDamage01 = binaryReader.ReadSingle();
-            primaryWeapon = binaryReader.ReadTagReference();
-            roundsLoaded = binaryReader.ReadInt16();
-            roundsTotal = binaryReader.ReadInt16();
-            secondaryWeapon = binaryReader.ReadTagReference();
-            roundsLoaded0 = binaryReader.ReadInt16();
-            roundsTotal0 = binaryReader.ReadInt16();
-            startingFragmentationGrenadeCount = binaryReader.ReadByte();
-            startingPlasmaGrenadeCount = binaryReader.ReadByte();
-            startingUnknownGrenadeCount = binaryReader.ReadByte();
-            startingUnknownGrenadeCount0 = binaryReader.ReadByte();
+            this.name = binaryReader.ReadString32();
+            this.startingHealthDamage01 = binaryReader.ReadSingle();
+            this.startingShieldDamage01 = binaryReader.ReadSingle();
+            this.primaryWeapon = binaryReader.ReadTagReference();
+            this.roundsLoaded = binaryReader.ReadInt16();
+            this.roundsTotal = binaryReader.ReadInt16();
+            this.secondaryWeapon = binaryReader.ReadTagReference();
+            this.roundsLoaded0 = binaryReader.ReadInt16();
+            this.roundsTotal0 = binaryReader.ReadInt16();
+            this.startingFragmentationGrenadeCount = binaryReader.ReadByte();
+            this.startingPlasmaGrenadeCount = binaryReader.ReadByte();
+            this.startingUnknownGrenadeCount = binaryReader.ReadByte();
+            this.startingUnknownGrenadeCount0 = binaryReader.ReadByte();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(startingHealthDamage01);
-                binaryWriter.Write(startingShieldDamage01);
-                binaryWriter.Write(primaryWeapon);
-                binaryWriter.Write(roundsLoaded);
-                binaryWriter.Write(roundsTotal);
-                binaryWriter.Write(secondaryWeapon);
-                binaryWriter.Write(roundsLoaded0);
-                binaryWriter.Write(roundsTotal0);
-                binaryWriter.Write(startingFragmentationGrenadeCount);
-                binaryWriter.Write(startingPlasmaGrenadeCount);
-                binaryWriter.Write(startingUnknownGrenadeCount);
-                binaryWriter.Write(startingUnknownGrenadeCount0);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass MulgClass = (TagClass)"mulg";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,24 +15,59 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class MultiplayerGlobalsBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 16)]
+    public class MultiplayerGlobalsBlockBase
     {
         internal MultiplayerUniversalBlock[] universal;
         internal MultiplayerRuntimeBlock[] runtime;
         internal  MultiplayerGlobalsBlockBase(BinaryReader binaryReader)
         {
-            universal = Guerilla.ReadBlockArray<MultiplayerUniversalBlock>(binaryReader);
-            runtime = Guerilla.ReadBlockArray<MultiplayerRuntimeBlock>(binaryReader);
+            this.universal = ReadMultiplayerUniversalBlockArray(binaryReader);
+            this.runtime = ReadMultiplayerRuntimeBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                Guerilla.WriteBlockArray<MultiplayerUniversalBlock>(binaryWriter, universal, nextAddress);
-                Guerilla.WriteBlockArray<MultiplayerRuntimeBlock>(binaryWriter, runtime, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual MultiplayerUniversalBlock[] ReadMultiplayerUniversalBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(MultiplayerUniversalBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new MultiplayerUniversalBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new MultiplayerUniversalBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual MultiplayerRuntimeBlock[] ReadMultiplayerRuntimeBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(MultiplayerRuntimeBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new MultiplayerRuntimeBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new MultiplayerRuntimeBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

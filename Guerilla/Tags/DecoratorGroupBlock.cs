@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class DecoratorGroupBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class DecoratorGroupBlockBase
     {
         internal Moonfish.Tags.ByteBlockIndex1 decoratorSet;
         internal DecoratorType decoratorType;
@@ -33,41 +32,36 @@ namespace Moonfish.Guerilla.Tags
         internal int compressedBoundingCenter;
         internal  DecoratorGroupBlockBase(BinaryReader binaryReader)
         {
-            decoratorSet = binaryReader.ReadByteBlockIndex1();
-            decoratorType = (DecoratorType)binaryReader.ReadByte();
-            shaderIndex = binaryReader.ReadByte();
-            compressedRadius = binaryReader.ReadByte();
-            cluster = binaryReader.ReadInt16();
-            cacheBlock = binaryReader.ReadShortBlockIndex1();
-            decoratorStartIndex = binaryReader.ReadInt16();
-            decoratorCount = binaryReader.ReadInt16();
-            vertexStartOffset = binaryReader.ReadInt16();
-            vertexCount = binaryReader.ReadInt16();
-            indexStartOffset = binaryReader.ReadInt16();
-            indexCount = binaryReader.ReadInt16();
-            compressedBoundingCenter = binaryReader.ReadInt32();
+            this.decoratorSet = binaryReader.ReadByteBlockIndex1();
+            this.decoratorType = (DecoratorType)binaryReader.ReadByte();
+            this.shaderIndex = binaryReader.ReadByte();
+            this.compressedRadius = binaryReader.ReadByte();
+            this.cluster = binaryReader.ReadInt16();
+            this.cacheBlock = binaryReader.ReadShortBlockIndex1();
+            this.decoratorStartIndex = binaryReader.ReadInt16();
+            this.decoratorCount = binaryReader.ReadInt16();
+            this.vertexStartOffset = binaryReader.ReadInt16();
+            this.vertexCount = binaryReader.ReadInt16();
+            this.indexStartOffset = binaryReader.ReadInt16();
+            this.indexCount = binaryReader.ReadInt16();
+            this.compressedBoundingCenter = binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(decoratorSet);
-                binaryWriter.Write((Byte)decoratorType);
-                binaryWriter.Write(shaderIndex);
-                binaryWriter.Write(compressedRadius);
-                binaryWriter.Write(cluster);
-                binaryWriter.Write(cacheBlock);
-                binaryWriter.Write(decoratorStartIndex);
-                binaryWriter.Write(decoratorCount);
-                binaryWriter.Write(vertexStartOffset);
-                binaryWriter.Write(vertexCount);
-                binaryWriter.Write(indexStartOffset);
-                binaryWriter.Write(indexCount);
-                binaryWriter.Write(compressedBoundingCenter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum DecoratorType : byte
+        
         {
             Model = 0,
             FloatingDecal = 1,

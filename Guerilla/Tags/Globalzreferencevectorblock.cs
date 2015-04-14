@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class GlobalZReferenceVectorBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 16)]
+    public class GlobalZReferenceVectorBlockBase
     {
         internal float invalidName_;
         internal float invalidName_0;
@@ -24,21 +23,24 @@ namespace Moonfish.Guerilla.Tags
         internal float invalidName_2;
         internal  GlobalZReferenceVectorBlockBase(BinaryReader binaryReader)
         {
-            invalidName_ = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadSingle();
-            invalidName_1 = binaryReader.ReadSingle();
-            invalidName_2 = binaryReader.ReadSingle();
+            this.invalidName_ = binaryReader.ReadSingle();
+            this.invalidName_0 = binaryReader.ReadSingle();
+            this.invalidName_1 = binaryReader.ReadSingle();
+            this.invalidName_2 = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(invalidName_);
-                binaryWriter.Write(invalidName_0);
-                binaryWriter.Write(invalidName_1);
-                binaryWriter.Write(invalidName_2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

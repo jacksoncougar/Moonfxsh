@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class CharacterSearchBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 20)]
+    public class CharacterSearchBlockBase
     {
         internal SearchFlags searchFlags;
         internal Moonfish.Model.Range searchTime;
@@ -26,22 +25,27 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range uncoverDistanceBounds;
         internal  CharacterSearchBlockBase(BinaryReader binaryReader)
         {
-            searchFlags = (SearchFlags)binaryReader.ReadInt32();
-            searchTime = binaryReader.ReadRange();
-            uncoverDistanceBounds = binaryReader.ReadRange();
+            this.searchFlags = (SearchFlags)binaryReader.ReadInt32();
+            this.searchTime = binaryReader.ReadRange();
+            this.uncoverDistanceBounds = binaryReader.ReadRange();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)searchFlags);
-                binaryWriter.Write(searchTime);
-                binaryWriter.Write(uncoverDistanceBounds);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum SearchFlags : int
+        
         {
             CrouchOnInvestigate = 1,
             WalkOnPursuit = 2,

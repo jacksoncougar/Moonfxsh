@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class AiSceneBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 24)]
+    public class AiSceneBlockBase
     {
         internal Moonfish.Tags.StringID name;
         internal Flags flags;
@@ -24,24 +23,58 @@ namespace Moonfish.Guerilla.Tags
         internal AiSceneRoleBlock[] roles;
         internal  AiSceneBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadStringID();
-            flags = (Flags)binaryReader.ReadInt32();
-            triggerConditions = Guerilla.ReadBlockArray<AiSceneTriggerBlock>(binaryReader);
-            roles = Guerilla.ReadBlockArray<AiSceneRoleBlock>(binaryReader);
+            this.name = binaryReader.ReadStringID();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.triggerConditions = ReadAiSceneTriggerBlockArray(binaryReader);
+            this.roles = ReadAiSceneRoleBlockArray(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write((Int32)flags);
-                Guerilla.WriteBlockArray<AiSceneTriggerBlock>(binaryWriter, triggerConditions, nextAddress);
-                Guerilla.WriteBlockArray<AiSceneRoleBlock>(binaryWriter, roles, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual AiSceneTriggerBlock[] ReadAiSceneTriggerBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(AiSceneTriggerBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new AiSceneTriggerBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new AiSceneTriggerBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual AiSceneRoleBlock[] ReadAiSceneRoleBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(AiSceneRoleBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new AiSceneRoleBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new AiSceneRoleBlock(binaryReader);
+                }
+            }
+            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             SceneCanPlayMultipleTimes = 1,
             EnableCombatDialogue = 2,

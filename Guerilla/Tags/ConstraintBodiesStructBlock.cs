@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 116, Alignment = 4)]
-    public class ConstraintBodiesStructBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 116)]
+    public class ConstraintBodiesStructBlockBase
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 nodeA;
@@ -35,43 +34,35 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  ConstraintBodiesStructBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadStringID();
-            nodeA = binaryReader.ReadShortBlockIndex1();
-            nodeB = binaryReader.ReadShortBlockIndex1();
-            aScale = binaryReader.ReadSingle();
-            aForward = binaryReader.ReadVector3();
-            aLeft = binaryReader.ReadVector3();
-            aUp = binaryReader.ReadVector3();
-            aPosition = binaryReader.ReadVector3();
-            bScale = binaryReader.ReadSingle();
-            bForward = binaryReader.ReadVector3();
-            bLeft = binaryReader.ReadVector3();
-            bUp = binaryReader.ReadVector3();
-            bPosition = binaryReader.ReadVector3();
-            edgeIndex = binaryReader.ReadShortBlockIndex1();
-            invalidName_ = binaryReader.ReadBytes(2);
+            this.name = binaryReader.ReadStringID();
+            this.nodeA = binaryReader.ReadShortBlockIndex1();
+            this.nodeB = binaryReader.ReadShortBlockIndex1();
+            this.aScale = binaryReader.ReadSingle();
+            this.aForward = binaryReader.ReadVector3();
+            this.aLeft = binaryReader.ReadVector3();
+            this.aUp = binaryReader.ReadVector3();
+            this.aPosition = binaryReader.ReadVector3();
+            this.bScale = binaryReader.ReadSingle();
+            this.bForward = binaryReader.ReadVector3();
+            this.bLeft = binaryReader.ReadVector3();
+            this.bUp = binaryReader.ReadVector3();
+            this.bPosition = binaryReader.ReadVector3();
+            this.edgeIndex = binaryReader.ReadShortBlockIndex1();
+            this.invalidName_ = binaryReader.ReadBytes(2);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(nodeA);
-                binaryWriter.Write(nodeB);
-                binaryWriter.Write(aScale);
-                binaryWriter.Write(aForward);
-                binaryWriter.Write(aLeft);
-                binaryWriter.Write(aUp);
-                binaryWriter.Write(aPosition);
-                binaryWriter.Write(bScale);
-                binaryWriter.Write(bForward);
-                binaryWriter.Write(bLeft);
-                binaryWriter.Write(bUp);
-                binaryWriter.Write(bPosition);
-                binaryWriter.Write(edgeIndex);
-                binaryWriter.Write(invalidName_, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

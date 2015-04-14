@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 68, Alignment = 4)]
-    public class GearBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 68)]
+    public class GearBlockBase
     {
         internal TorqueCurveStructBlock loadedTorqueCurve;
         internal TorqueCurveStructBlock cruisingTorqueCurve;
@@ -39,27 +38,27 @@ namespace Moonfish.Guerilla.Tags
         internal float engineDownShiftScale;
         internal  GearBlockBase(BinaryReader binaryReader)
         {
-            loadedTorqueCurve = new TorqueCurveStructBlock(binaryReader);
-            cruisingTorqueCurve = new TorqueCurveStructBlock(binaryReader);
-            minTimeToUpshift = binaryReader.ReadSingle();
-            engineUpShiftScale = binaryReader.ReadSingle();
-            gearRatio = binaryReader.ReadSingle();
-            minTimeToDownshift = binaryReader.ReadSingle();
-            engineDownShiftScale = binaryReader.ReadSingle();
+            this.loadedTorqueCurve = new TorqueCurveStructBlock(binaryReader);
+            this.cruisingTorqueCurve = new TorqueCurveStructBlock(binaryReader);
+            this.minTimeToUpshift = binaryReader.ReadSingle();
+            this.engineUpShiftScale = binaryReader.ReadSingle();
+            this.gearRatio = binaryReader.ReadSingle();
+            this.minTimeToDownshift = binaryReader.ReadSingle();
+            this.engineDownShiftScale = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                loadedTorqueCurve.Write(binaryWriter);
-                cruisingTorqueCurve.Write(binaryWriter);
-                binaryWriter.Write(minTimeToUpshift);
-                binaryWriter.Write(engineUpShiftScale);
-                binaryWriter.Write(gearRatio);
-                binaryWriter.Write(minTimeToDownshift);
-                binaryWriter.Write(engineDownShiftScale);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class CharacterIdleBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 12)]
+    public class CharacterIdleBlockBase
     {
         internal byte[] invalidName_;
         /// <summary>
@@ -25,17 +24,22 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range idlePoseDelayTimeSeconds;
         internal  CharacterIdleBlockBase(BinaryReader binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes(4);
-            idlePoseDelayTimeSeconds = binaryReader.ReadRange();
+            this.invalidName_ = binaryReader.ReadBytes(4);
+            this.idlePoseDelayTimeSeconds = binaryReader.ReadRange();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write(idlePoseDelayTimeSeconds);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

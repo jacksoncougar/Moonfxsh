@@ -5,7 +5,7 @@ namespace Moonfish.Guerilla.Tags
 {
     partial class StructureInstancedGeometryRenderInfoStructBlock
     {
-        internal StructureBspClusterDataBlockNew[] ReadStructureBspClusterDataBlockNewArray( System.IO.BinaryReader binaryReader )
+        internal override StructureBspClusterDataBlockNew[] ReadStructureBspClusterDataBlockNewArray( System.IO.BinaryReader binaryReader )
         {
             binaryReader.ReadBytes( 8 );
             using ( binaryReader.BaseStream.Pin() )

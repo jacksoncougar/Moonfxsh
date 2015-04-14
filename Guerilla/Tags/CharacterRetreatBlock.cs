@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 76, Alignment = 4)]
-    public class CharacterRetreatBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 76)]
+    public class CharacterRetreatBlockBase
     {
         internal RetreatFlags retreatFlags;
         /// <summary>
@@ -82,48 +81,40 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference backupWeapon;
         internal  CharacterRetreatBlockBase(BinaryReader binaryReader)
         {
-            retreatFlags = (RetreatFlags)binaryReader.ReadInt32();
-            shieldThreshold = binaryReader.ReadSingle();
-            scaryTargetThreshold = binaryReader.ReadSingle();
-            dangerThreshold = binaryReader.ReadSingle();
-            proximityThreshold = binaryReader.ReadSingle();
-            minMaxForcedCowerTimeBounds = binaryReader.ReadRange();
-            minMaxCowerTimeoutBounds = binaryReader.ReadRange();
-            proximityAmbushThreshold = binaryReader.ReadSingle();
-            awarenessAmbushThreshold = binaryReader.ReadSingle();
-            leaderDeadRetreatChance = binaryReader.ReadSingle();
-            peerDeadRetreatChance = binaryReader.ReadSingle();
-            secondPeerDeadRetreatChance = binaryReader.ReadSingle();
-            zigZagAngleDegrees = binaryReader.ReadSingle();
-            zigZagPeriodSeconds = binaryReader.ReadSingle();
-            retreatGrenadeChance = binaryReader.ReadSingle();
-            backupWeapon = binaryReader.ReadTagReference();
+            this.retreatFlags = (RetreatFlags)binaryReader.ReadInt32();
+            this.shieldThreshold = binaryReader.ReadSingle();
+            this.scaryTargetThreshold = binaryReader.ReadSingle();
+            this.dangerThreshold = binaryReader.ReadSingle();
+            this.proximityThreshold = binaryReader.ReadSingle();
+            this.minMaxForcedCowerTimeBounds = binaryReader.ReadRange();
+            this.minMaxCowerTimeoutBounds = binaryReader.ReadRange();
+            this.proximityAmbushThreshold = binaryReader.ReadSingle();
+            this.awarenessAmbushThreshold = binaryReader.ReadSingle();
+            this.leaderDeadRetreatChance = binaryReader.ReadSingle();
+            this.peerDeadRetreatChance = binaryReader.ReadSingle();
+            this.secondPeerDeadRetreatChance = binaryReader.ReadSingle();
+            this.zigZagAngleDegrees = binaryReader.ReadSingle();
+            this.zigZagPeriodSeconds = binaryReader.ReadSingle();
+            this.retreatGrenadeChance = binaryReader.ReadSingle();
+            this.backupWeapon = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)retreatFlags);
-                binaryWriter.Write(shieldThreshold);
-                binaryWriter.Write(scaryTargetThreshold);
-                binaryWriter.Write(dangerThreshold);
-                binaryWriter.Write(proximityThreshold);
-                binaryWriter.Write(minMaxForcedCowerTimeBounds);
-                binaryWriter.Write(minMaxCowerTimeoutBounds);
-                binaryWriter.Write(proximityAmbushThreshold);
-                binaryWriter.Write(awarenessAmbushThreshold);
-                binaryWriter.Write(leaderDeadRetreatChance);
-                binaryWriter.Write(peerDeadRetreatChance);
-                binaryWriter.Write(secondPeerDeadRetreatChance);
-                binaryWriter.Write(zigZagAngleDegrees);
-                binaryWriter.Write(zigZagPeriodSeconds);
-                binaryWriter.Write(retreatGrenadeChance);
-                binaryWriter.Write(backupWeapon);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum RetreatFlags : int
+        
         {
             ZigZagWhenFleeing = 1,
             Unused1 = 2,

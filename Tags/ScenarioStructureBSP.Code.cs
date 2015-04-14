@@ -54,7 +54,7 @@ namespace Moonfish.Guerilla.Tags
 {
     partial class StructureBspClusterBlock
     {
-        internal StructureBspClusterDataBlockNew[] ReadStructureBspClusterDataBlockNewArray( BinaryReader binaryReader )
+        internal override StructureBspClusterDataBlockNew[] ReadStructureBspClusterDataBlockNewArray( BinaryReader binaryReader )
         {
             binaryReader.ReadBytes( 8 );
             using ( binaryReader.BaseStream.Pin() )

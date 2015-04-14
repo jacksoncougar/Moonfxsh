@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 10, Alignment = 4)]
-    public class ShaderPostprocessImplementationNewBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 10)]
+    public class ShaderPostprocessImplementationNewBlockBase
     {
         internal TagBlockIndexStructBlock bitmapTransforms;
         internal TagBlockIndexStructBlock renderStates;
@@ -25,23 +24,25 @@ namespace Moonfish.Guerilla.Tags
         internal TagBlockIndexStructBlock vertexConstants;
         internal  ShaderPostprocessImplementationNewBlockBase(BinaryReader binaryReader)
         {
-            bitmapTransforms = new TagBlockIndexStructBlock(binaryReader);
-            renderStates = new TagBlockIndexStructBlock(binaryReader);
-            textureStates = new TagBlockIndexStructBlock(binaryReader);
-            pixelConstants = new TagBlockIndexStructBlock(binaryReader);
-            vertexConstants = new TagBlockIndexStructBlock(binaryReader);
+            this.bitmapTransforms = new TagBlockIndexStructBlock(binaryReader);
+            this.renderStates = new TagBlockIndexStructBlock(binaryReader);
+            this.textureStates = new TagBlockIndexStructBlock(binaryReader);
+            this.pixelConstants = new TagBlockIndexStructBlock(binaryReader);
+            this.vertexConstants = new TagBlockIndexStructBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                bitmapTransforms.Write(binaryWriter);
-                renderStates.Write(binaryWriter);
-                textureStates.Write(binaryWriter);
-                pixelConstants.Write(binaryWriter);
-                vertexConstants.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
     };
 }

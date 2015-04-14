@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 80, Alignment = 4)]
-    public class SoundResponseDefinitionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 80)]
+    public class SoundResponseDefinitionBlockBase
     {
         internal SoundFlags soundFlags;
         internal byte[] invalidName_;
@@ -26,26 +25,29 @@ namespace Moonfish.Guerilla.Tags
         internal float probability;
         internal  SoundResponseDefinitionBlockBase(BinaryReader binaryReader)
         {
-            soundFlags = (SoundFlags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            englishSound = binaryReader.ReadTagReference();
-            extraSounds = new SoundResponseExtraSoundsStructBlock(binaryReader);
-            probability = binaryReader.ReadSingle();
+            this.soundFlags = (SoundFlags)binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.englishSound = binaryReader.ReadTagReference();
+            this.extraSounds = new SoundResponseExtraSoundsStructBlock(binaryReader);
+            this.probability = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int16)soundFlags);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(englishSound);
-                extraSounds.Write(binaryWriter);
-                binaryWriter.Write(probability);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum SoundFlags : short
+        
         {
             AnnouncerSound = 1,
         };

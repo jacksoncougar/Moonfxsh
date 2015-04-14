@@ -1,18 +1,9 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-
-namespace Moonfish.Tags
-{
-    public partial struct TagClass
-    {
-        public static readonly TagClass CreaClass = (TagClass)"crea";
-    };
-};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -24,7 +15,7 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 196, Alignment = 4)]
+    [LayoutAttribute(Size = 196)]
     public class CreatureBlockBase : ObjectBlock
     {
         internal Flags flags;
@@ -48,38 +39,35 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range destroyAfterDeathTimeSeconds;
         internal  CreatureBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            defaultTeam = (DefaultTeam)binaryReader.ReadInt16();
-            motionSensorBlipSize = (MotionSensorBlipSize)binaryReader.ReadInt16();
-            turningVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
-            turningAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
-            casualTurningModifier01 = binaryReader.ReadSingle();
-            autoaimWidthWorldUnits = binaryReader.ReadSingle();
-            physics = new CharacterPhysicsStructBlock(binaryReader);
-            impactDamage = binaryReader.ReadTagReference();
-            impactShieldDamage = binaryReader.ReadTagReference();
-            destroyAfterDeathTimeSeconds = binaryReader.ReadRange();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.defaultTeam = (DefaultTeam)binaryReader.ReadInt16();
+            this.motionSensorBlipSize = (MotionSensorBlipSize)binaryReader.ReadInt16();
+            this.turningVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
+            this.turningAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
+            this.casualTurningModifier01 = binaryReader.ReadSingle();
+            this.autoaimWidthWorldUnits = binaryReader.ReadSingle();
+            this.physics = new CharacterPhysicsStructBlock(binaryReader);
+            this.impactDamage = binaryReader.ReadTagReference();
+            this.impactShieldDamage = binaryReader.ReadTagReference();
+            this.destroyAfterDeathTimeSeconds = binaryReader.ReadRange();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)defaultTeam);
-                binaryWriter.Write((Int16)motionSensorBlipSize);
-                binaryWriter.Write(turningVelocityMaximumDegreesPerSecond);
-                binaryWriter.Write(turningAccelerationMaximumDegreesPerSecondSquared);
-                binaryWriter.Write(casualTurningModifier01);
-                binaryWriter.Write(autoaimWidthWorldUnits);
-                physics.Write(binaryWriter);
-                binaryWriter.Write(impactDamage);
-                binaryWriter.Write(impactShieldDamage);
-                binaryWriter.Write(destroyAfterDeathTimeSeconds);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             Unused = 1,
             InfectionForm = 2,
@@ -90,6 +78,7 @@ namespace Moonfish.Guerilla.Tags
             NotOnMotionSensor = 64,
         };
         internal enum DefaultTeam : short
+        
         {
             Default = 0,
             Player = 1,
@@ -109,6 +98,7 @@ namespace Moonfish.Guerilla.Tags
             Unused15 = 15,
         };
         internal enum MotionSensorBlipSize : short
+        
         {
             Medium = 0,
             Small = 1,

@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,27 +14,61 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class PlatformSoundEffectCollectionBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 20)]
+    public class PlatformSoundEffectCollectionBlockBase
     {
         internal PlatformSoundEffectBlock[] soundEffects;
         internal PlatformSoundEffectFunctionBlock[] lowFrequencyInput;
         internal int soundEffectOverrides;
         internal  PlatformSoundEffectCollectionBlockBase(BinaryReader binaryReader)
         {
-            soundEffects = Guerilla.ReadBlockArray<PlatformSoundEffectBlock>(binaryReader);
-            lowFrequencyInput = Guerilla.ReadBlockArray<PlatformSoundEffectFunctionBlock>(binaryReader);
-            soundEffectOverrides = binaryReader.ReadInt32();
+            this.soundEffects = ReadPlatformSoundEffectBlockArray(binaryReader);
+            this.lowFrequencyInput = ReadPlatformSoundEffectFunctionBlockArray(binaryReader);
+            this.soundEffectOverrides = binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                Guerilla.WriteBlockArray<PlatformSoundEffectBlock>(binaryWriter, soundEffects, nextAddress);
-                Guerilla.WriteBlockArray<PlatformSoundEffectFunctionBlock>(binaryWriter, lowFrequencyInput, nextAddress);
-                binaryWriter.Write(soundEffectOverrides);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual PlatformSoundEffectBlock[] ReadPlatformSoundEffectBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PlatformSoundEffectBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PlatformSoundEffectBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PlatformSoundEffectBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual PlatformSoundEffectFunctionBlock[] ReadPlatformSoundEffectFunctionBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(PlatformSoundEffectFunctionBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new PlatformSoundEffectFunctionBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new PlatformSoundEffectFunctionBlock(binaryReader);
+                }
+            }
+            return array;
         }
     };
 }

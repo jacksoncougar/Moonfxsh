@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32, Alignment = 4)]
-    public class FiringPositionsBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 32)]
+    public class FiringPositionsBlockBase
     {
         internal OpenTK.Vector3 positionLocal;
         internal short referenceFrame;
@@ -27,30 +26,31 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector2 normal;
         internal  FiringPositionsBlockBase(BinaryReader binaryReader)
         {
-            positionLocal = binaryReader.ReadVector3();
-            referenceFrame = binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            area = binaryReader.ReadShortBlockIndex1();
-            clusterIndex = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(4);
-            normal = binaryReader.ReadVector2();
+            this.positionLocal = binaryReader.ReadVector3();
+            this.referenceFrame = binaryReader.ReadInt16();
+            this.flags = (Flags)binaryReader.ReadInt16();
+            this.area = binaryReader.ReadShortBlockIndex1();
+            this.clusterIndex = binaryReader.ReadInt16();
+            this.invalidName_ = binaryReader.ReadBytes(4);
+            this.normal = binaryReader.ReadVector2();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write(positionLocal);
-                binaryWriter.Write(referenceFrame);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(area);
-                binaryWriter.Write(clusterIndex);
-                binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write(normal);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
+        
         {
             Open = 1,
             Partial = 2,

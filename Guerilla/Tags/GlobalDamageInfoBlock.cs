@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 248, Alignment = 4)]
-    public class GlobalDamageInfoBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 248)]
+    public class GlobalDamageInfoBlockBase
     {
         internal Flags flags;
         /// <summary>
@@ -93,88 +92,120 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference overshieldShader;
         internal  GlobalDamageInfoBlockBase(BinaryReader binaryReader)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            globalIndirectMaterialName = binaryReader.ReadStringID();
-            indirectDamageSection = binaryReader.ReadShortBlockIndex2();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(4);
-            collisionDamageReportingType = (CollisionDamageReportingType)binaryReader.ReadByte();
-            responseDamageReportingType = (ResponseDamageReportingType)binaryReader.ReadByte();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            invalidName_2 = binaryReader.ReadBytes(20);
-            maximumVitality = binaryReader.ReadSingle();
-            minimumStunDamage = binaryReader.ReadSingle();
-            stunTimeSeconds = binaryReader.ReadSingle();
-            rechargeTimeSeconds = binaryReader.ReadSingle();
-            rechargeFraction = binaryReader.ReadSingle();
-            invalidName_3 = binaryReader.ReadBytes(64);
-            shieldDamagedFirstPersonShader = binaryReader.ReadTagReference();
-            shieldDamagedShader = binaryReader.ReadTagReference();
-            maximumShieldVitality = binaryReader.ReadSingle();
-            globalShieldMaterialName = binaryReader.ReadStringID();
-            minimumStunDamage0 = binaryReader.ReadSingle();
-            stunTimeSeconds0 = binaryReader.ReadSingle();
-            rechargeTimeSeconds0 = binaryReader.ReadSingle();
-            shieldDamagedThreshold = binaryReader.ReadSingle();
-            shieldDamagedEffect = binaryReader.ReadTagReference();
-            shieldDepletedEffect = binaryReader.ReadTagReference();
-            shieldRechargingEffect = binaryReader.ReadTagReference();
-            damageSections = Guerilla.ReadBlockArray<GlobalDamageSectionBlock>(binaryReader);
-            nodes = Guerilla.ReadBlockArray<GlobalDamageNodesBlock>(binaryReader);
-            invalidName_4 = binaryReader.ReadBytes(2);
-            invalidName_5 = binaryReader.ReadBytes(2);
-            invalidName_6 = binaryReader.ReadBytes(4);
-            invalidName_7 = binaryReader.ReadBytes(4);
-            damageSeats = Guerilla.ReadBlockArray<DamageSeatInfoBlock>(binaryReader);
-            damageConstraints = Guerilla.ReadBlockArray<DamageConstraintInfoBlock>(binaryReader);
-            overshieldFirstPersonShader = binaryReader.ReadTagReference();
-            overshieldShader = binaryReader.ReadTagReference();
+            this.flags = (Flags)binaryReader.ReadInt32();
+            this.globalIndirectMaterialName = binaryReader.ReadStringID();
+            this.indirectDamageSection = binaryReader.ReadShortBlockIndex2();
+            this.invalidName_ = binaryReader.ReadBytes(2);
+            this.invalidName_0 = binaryReader.ReadBytes(4);
+            this.collisionDamageReportingType = (CollisionDamageReportingType)binaryReader.ReadByte();
+            this.responseDamageReportingType = (ResponseDamageReportingType)binaryReader.ReadByte();
+            this.invalidName_1 = binaryReader.ReadBytes(2);
+            this.invalidName_2 = binaryReader.ReadBytes(20);
+            this.maximumVitality = binaryReader.ReadSingle();
+            this.minimumStunDamage = binaryReader.ReadSingle();
+            this.stunTimeSeconds = binaryReader.ReadSingle();
+            this.rechargeTimeSeconds = binaryReader.ReadSingle();
+            this.rechargeFraction = binaryReader.ReadSingle();
+            this.invalidName_3 = binaryReader.ReadBytes(64);
+            this.shieldDamagedFirstPersonShader = binaryReader.ReadTagReference();
+            this.shieldDamagedShader = binaryReader.ReadTagReference();
+            this.maximumShieldVitality = binaryReader.ReadSingle();
+            this.globalShieldMaterialName = binaryReader.ReadStringID();
+            this.minimumStunDamage0 = binaryReader.ReadSingle();
+            this.stunTimeSeconds0 = binaryReader.ReadSingle();
+            this.rechargeTimeSeconds0 = binaryReader.ReadSingle();
+            this.shieldDamagedThreshold = binaryReader.ReadSingle();
+            this.shieldDamagedEffect = binaryReader.ReadTagReference();
+            this.shieldDepletedEffect = binaryReader.ReadTagReference();
+            this.shieldRechargingEffect = binaryReader.ReadTagReference();
+            this.damageSections = ReadGlobalDamageSectionBlockArray(binaryReader);
+            this.nodes = ReadGlobalDamageNodesBlockArray(binaryReader);
+            this.invalidName_4 = binaryReader.ReadBytes(2);
+            this.invalidName_5 = binaryReader.ReadBytes(2);
+            this.invalidName_6 = binaryReader.ReadBytes(4);
+            this.invalidName_7 = binaryReader.ReadBytes(4);
+            this.damageSeats = ReadDamageSeatInfoBlockArray(binaryReader);
+            this.damageConstraints = ReadDamageConstraintInfoBlockArray(binaryReader);
+            this.overshieldFirstPersonShader = binaryReader.ReadTagReference();
+            this.overshieldShader = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(globalIndirectMaterialName);
-                binaryWriter.Write(indirectDamageSection);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(invalidName_0, 0, 4);
-                binaryWriter.Write((Byte)collisionDamageReportingType);
-                binaryWriter.Write((Byte)responseDamageReportingType);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                binaryWriter.Write(invalidName_2, 0, 20);
-                binaryWriter.Write(maximumVitality);
-                binaryWriter.Write(minimumStunDamage);
-                binaryWriter.Write(stunTimeSeconds);
-                binaryWriter.Write(rechargeTimeSeconds);
-                binaryWriter.Write(rechargeFraction);
-                binaryWriter.Write(invalidName_3, 0, 64);
-                binaryWriter.Write(shieldDamagedFirstPersonShader);
-                binaryWriter.Write(shieldDamagedShader);
-                binaryWriter.Write(maximumShieldVitality);
-                binaryWriter.Write(globalShieldMaterialName);
-                binaryWriter.Write(minimumStunDamage0);
-                binaryWriter.Write(stunTimeSeconds0);
-                binaryWriter.Write(rechargeTimeSeconds0);
-                binaryWriter.Write(shieldDamagedThreshold);
-                binaryWriter.Write(shieldDamagedEffect);
-                binaryWriter.Write(shieldDepletedEffect);
-                binaryWriter.Write(shieldRechargingEffect);
-                Guerilla.WriteBlockArray<GlobalDamageSectionBlock>(binaryWriter, damageSections, nextAddress);
-                Guerilla.WriteBlockArray<GlobalDamageNodesBlock>(binaryWriter, nodes, nextAddress);
-                binaryWriter.Write(invalidName_4, 0, 2);
-                binaryWriter.Write(invalidName_5, 0, 2);
-                binaryWriter.Write(invalidName_6, 0, 4);
-                binaryWriter.Write(invalidName_7, 0, 4);
-                Guerilla.WriteBlockArray<DamageSeatInfoBlock>(binaryWriter, damageSeats, nextAddress);
-                Guerilla.WriteBlockArray<DamageConstraintInfoBlock>(binaryWriter, damageConstraints, nextAddress);
-                binaryWriter.Write(overshieldFirstPersonShader);
-                binaryWriter.Write(overshieldShader);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
+        }
+        internal  virtual GlobalDamageSectionBlock[] ReadGlobalDamageSectionBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(GlobalDamageSectionBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new GlobalDamageSectionBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new GlobalDamageSectionBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual GlobalDamageNodesBlock[] ReadGlobalDamageNodesBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(GlobalDamageNodesBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new GlobalDamageNodesBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new GlobalDamageNodesBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual DamageSeatInfoBlock[] ReadDamageSeatInfoBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(DamageSeatInfoBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new DamageSeatInfoBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new DamageSeatInfoBlock(binaryReader);
+                }
+            }
+            return array;
+        }
+        internal  virtual DamageConstraintInfoBlock[] ReadDamageConstraintInfoBlockArray(BinaryReader binaryReader)
+        {
+            var elementSize = Deserializer.SizeOf(typeof(DamageConstraintInfoBlock));
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            var array = new DamageConstraintInfoBlock[blamPointer.elementCount];
+            using (binaryReader.BaseStream.Pin())
+            {
+                for (int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    array[i] = new DamageConstraintInfoBlock(binaryReader);
+                }
+            }
+            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
+        
         {
             TakesShieldDamageForChildren = 1,
             TakesBodyDamageForChildren = 2,
@@ -187,6 +218,7 @@ namespace Moonfish.Guerilla.Tags
             PassesAttachedDamageToRiders = 256,
         };
         internal enum CollisionDamageReportingType : byte
+        
         {
             TehGuardians11 = 0,
             FallingDamage = 1,
@@ -232,6 +264,7 @@ namespace Moonfish.Guerilla.Tags
             Teleporter = 41,
         };
         internal enum ResponseDamageReportingType : byte
+        
         {
             TehGuardians11 = 0,
             FallingDamage = 1,

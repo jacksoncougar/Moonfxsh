@@ -1,4 +1,3 @@
-// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -15,8 +14,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class PlatformSoundEffectTemplateComponentBlockBase  : IGuerilla
+    [LayoutAttribute(Size = 16)]
+    public class PlatformSoundEffectTemplateComponentBlockBase
     {
         internal ValueType valueType;
         internal float defaultValue;
@@ -24,23 +23,27 @@ namespace Moonfish.Guerilla.Tags
         internal float maximumValue;
         internal  PlatformSoundEffectTemplateComponentBlockBase(BinaryReader binaryReader)
         {
-            valueType = (ValueType)binaryReader.ReadInt32();
-            defaultValue = binaryReader.ReadSingle();
-            minimumValue = binaryReader.ReadSingle();
-            maximumValue = binaryReader.ReadSingle();
+            this.valueType = (ValueType)binaryReader.ReadInt32();
+            this.defaultValue = binaryReader.ReadSingle();
+            this.minimumValue = binaryReader.ReadSingle();
+            this.maximumValue = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        internal  virtual byte[] ReadData(BinaryReader binaryReader)
         {
-            using(binaryWriter.BaseStream.Pin())
+            var blamPointer = binaryReader.ReadBlamPointer(1);
+            var data = new byte[blamPointer.elementCount];
+            if(blamPointer.elementCount > 0)
             {
-                binaryWriter.Write((Int32)valueType);
-                binaryWriter.Write(defaultValue);
-                binaryWriter.Write(minimumValue);
-                binaryWriter.Write(maximumValue);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                using (binaryReader.BaseStream.Pin())
+                {
+                    binaryReader.BaseStream.Position = blamPointer[0];
+                    data = binaryReader.ReadBytes(blamPointer.elementCount);
+                }
             }
+            return data;
         }
         internal enum ValueType : int
+        
         {
             Zero = 0,
             Time = 1,

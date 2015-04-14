@@ -171,6 +171,14 @@ namespace Moonfish.Tags
             binaryWriter.Write(value.Y);
         }
 
+        public static void Write(this BinaryWriter binaryWriter, ColourA1R1G1B1 value)
+        {
+            binaryWriter.Write(value.Alpha);
+            binaryWriter.Write(value.Red);
+            binaryWriter.Write(value.Blue);
+            binaryWriter.Write(value.Green);
+        }
+
         public static void Write(this BinaryWriter binaryWriter, ColorR8G8B8 value)
         {
             binaryWriter.Write(value.R);

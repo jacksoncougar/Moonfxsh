@@ -343,7 +343,7 @@ return array;",
                     // variable byte array (data)
                     else if (Type.GetType(item.FieldTypeName) == typeof(byte))
                     {
-                        bodyBuilder.AppendLine(string.Format("Guerilla.WriteData({0});", binaryWriter.Name));
+                        bodyBuilder.AppendLine(string.Format("{1} = Guerilla.WriteData({0}, {2}, {1});", binaryWriter.Name, addressParam.Name, item.Value.Name));
                     }
                     // inline array
                     else if (item.ArraySize > 0)
@@ -358,7 +358,7 @@ return array;",
                     else
                     {
 
-                        var format = string.Format("Guerilla.WriteBlockArray<{1}>({2}, {0}, {3});", item.Value.Name, item.FieldTypeName, binaryWriter.Name, addressParam.Name);
+                        var format = string.Format("{3} = Guerilla.WriteBlockArray<{1}>({2}, {0}, {3});", item.Value.Name, item.FieldTypeName, binaryWriter.Name, addressParam.Name);
                         bodyBuilder.AppendLine(format);
                     }
                 }

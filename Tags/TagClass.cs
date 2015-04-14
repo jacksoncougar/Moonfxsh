@@ -107,14 +107,13 @@ namespace Moonfish.Tags
             return this == ( TagClass ) other;
         }
 
-        public string ToSafeString( )
+        public string ToTokenString( )
         {
-            var value = ToString( );
-            var illegalChars = new List<char>( new[] {'<', '>'} );
-            illegalChars.ForEach( x => { value = value.Replace( x, '_' ); } );
-            illegalChars = Path.GetInvalidFileNameChars( ).ToList( );
-            illegalChars.ForEach( x => { value = value.Replace( x.ToString( ), string.Empty ); } );
-            return value.Trim( );
+            var value = ToString();
+            if ( value == "$#!+" ) return "shit";
+
+            var chars = value.Where(x => (char.IsLetterOrDigit(x))).ToArray();
+            return new string(chars);
         }
 
         public static readonly TagClass Null = new TagClass( 0xFF, 0xFF, 0xFF, 0xFF );

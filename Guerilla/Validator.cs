@@ -12,7 +12,7 @@ namespace Moonfish.Guerilla
         public string Validate( GuerillaTagGroup validateTag, IEnumerable<GuerillaTagGroup> tagPool )
         {
             PointersList = new List<Tuple<BlamPointer, ElementArray>>();
-            StreamWriter stringWriter = File.CreateText( string.Format( @"C:\Users\stem\Documents\Plugins\analysis\{0}.txt", validateTag.Class.ToSafeString() ) );
+            StreamWriter stringWriter = File.CreateText( string.Format( @"C:\Users\stem\Documents\Plugins\analysis\{0}.txt", validateTag.Class.ToTokenString() ) );
             WriteMessage = new Log( stringWriter.WriteLine );
 
             int offset = 0;

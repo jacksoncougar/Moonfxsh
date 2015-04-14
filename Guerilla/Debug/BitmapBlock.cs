@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Moonfish.Tags
 {
-    public partial class TagClass
+    public partial struct TagClass
     {
         public static readonly TagClass BitmClass = (TagClass)"bitm";
     };

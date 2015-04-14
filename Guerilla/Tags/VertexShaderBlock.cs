@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass VrtxClass = (TagClass)"vrtx";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class VertexShaderBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class VertexShaderBlockBase  : IGuerilla
     {
         internal Platform platform;
         internal byte[] invalidName_;
@@ -24,42 +33,23 @@ namespace Moonfish.Guerilla.Tags
         internal int outputSwizzles;
         internal  VertexShaderBlockBase(BinaryReader binaryReader)
         {
-            this.platform = (Platform)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.geometryClassifications = ReadVertexShaderClassificationBlockArray(binaryReader);
-            this.outputSwizzles = binaryReader.ReadInt32();
+            platform = (Platform)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            geometryClassifications = Guerilla.ReadBlockArray<VertexShaderClassificationBlock>(binaryReader);
+            outputSwizzles = binaryReader.ReadInt32();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)platform);
+                binaryWriter.Write(invalidName_, 0, 2);
+                nextAddress = Guerilla.WriteBlockArray<VertexShaderClassificationBlock>(binaryWriter, geometryClassifications, nextAddress);
+                binaryWriter.Write(outputSwizzles);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual VertexShaderClassificationBlock[] ReadVertexShaderClassificationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(VertexShaderClassificationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new VertexShaderClassificationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new VertexShaderClassificationBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum Platform : short
-        
         {
             Pc = 0,
             Xbox = 1,

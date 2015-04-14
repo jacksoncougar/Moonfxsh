@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 64)]
-    public class CharacterCoverBlockBase
+    [LayoutAttribute(Size = 64, Alignment = 4)]
+    public class CharacterCoverBlockBase  : IGuerilla
     {
         internal CoverFlags coverFlags;
         /// <summary>
@@ -72,38 +73,44 @@ namespace Moonfish.Guerilla.Tags
         internal float scaryTargetThreshold;
         internal  CharacterCoverBlockBase(BinaryReader binaryReader)
         {
-            this.coverFlags = (CoverFlags)binaryReader.ReadInt32();
-            this.hideBehindCoverTimeSeconds = binaryReader.ReadRange();
-            this.coverVitalityThreshold = binaryReader.ReadSingle();
-            this.coverShieldFraction = binaryReader.ReadSingle();
-            this.coverCheckDelay = binaryReader.ReadSingle();
-            this.emergeFromCoverWhenShieldFractionReachesThreshold = binaryReader.ReadSingle();
-            this.coverDangerThreshold = binaryReader.ReadSingle();
-            this.dangerUpperThreshold = binaryReader.ReadSingle();
-            this.coverChance = binaryReader.ReadRange();
-            this.proximitySelfPreserveWus = binaryReader.ReadSingle();
-            this.disallowCoverDistanceWorldUnits = binaryReader.ReadSingle();
-            this.proximityMeleeDistance = binaryReader.ReadSingle();
-            this.unreachableEnemyDangerThreshold = binaryReader.ReadSingle();
-            this.scaryTargetThreshold = binaryReader.ReadSingle();
+            coverFlags = (CoverFlags)binaryReader.ReadInt32();
+            hideBehindCoverTimeSeconds = binaryReader.ReadRange();
+            coverVitalityThreshold = binaryReader.ReadSingle();
+            coverShieldFraction = binaryReader.ReadSingle();
+            coverCheckDelay = binaryReader.ReadSingle();
+            emergeFromCoverWhenShieldFractionReachesThreshold = binaryReader.ReadSingle();
+            coverDangerThreshold = binaryReader.ReadSingle();
+            dangerUpperThreshold = binaryReader.ReadSingle();
+            coverChance = binaryReader.ReadRange();
+            proximitySelfPreserveWus = binaryReader.ReadSingle();
+            disallowCoverDistanceWorldUnits = binaryReader.ReadSingle();
+            proximityMeleeDistance = binaryReader.ReadSingle();
+            unreachableEnemyDangerThreshold = binaryReader.ReadSingle();
+            scaryTargetThreshold = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)coverFlags);
+                binaryWriter.Write(hideBehindCoverTimeSeconds);
+                binaryWriter.Write(coverVitalityThreshold);
+                binaryWriter.Write(coverShieldFraction);
+                binaryWriter.Write(coverCheckDelay);
+                binaryWriter.Write(emergeFromCoverWhenShieldFractionReachesThreshold);
+                binaryWriter.Write(coverDangerThreshold);
+                binaryWriter.Write(dangerUpperThreshold);
+                binaryWriter.Write(coverChance);
+                binaryWriter.Write(proximitySelfPreserveWus);
+                binaryWriter.Write(disallowCoverDistanceWorldUnits);
+                binaryWriter.Write(proximityMeleeDistance);
+                binaryWriter.Write(unreachableEnemyDangerThreshold);
+                binaryWriter.Write(scaryTargetThreshold);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum CoverFlags : int
-        
         {
             Flag1 = 1,
         };

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 116)]
-    public class SquadsBlockBase
+    [LayoutAttribute(Size = 116, Alignment = 4)]
+    public class SquadsBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal Flags flags;
@@ -47,61 +48,60 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal  SquadsBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadString32();
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.team = (Team)binaryReader.ReadInt16();
-            this.parent = binaryReader.ReadShortBlockIndex1();
-            this.squadDelayTimeSeconds = binaryReader.ReadSingle();
-            this.normalDiffCount = binaryReader.ReadInt16();
-            this.insaneDiffCount = binaryReader.ReadInt16();
-            this.majorUpgrade = (MajorUpgrade)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.vehicleType = binaryReader.ReadShortBlockIndex1();
-            this.characterType = binaryReader.ReadShortBlockIndex1();
-            this.initialZone = binaryReader.ReadShortBlockIndex1();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.initialWeapon = binaryReader.ReadShortBlockIndex1();
-            this.initialSecondaryWeapon = binaryReader.ReadShortBlockIndex1();
-            this.grenadeType = (GrenadeType)binaryReader.ReadInt16();
-            this.initialOrder = binaryReader.ReadShortBlockIndex1();
-            this.vehicleVariant = binaryReader.ReadStringID();
-            this.startingLocations = ReadActorStartingLocationsBlockArray(binaryReader);
-            this.placementScript = binaryReader.ReadString32();
-            this.invalidName_1 = binaryReader.ReadBytes(2);
-            this.invalidName_2 = binaryReader.ReadBytes(2);
+            name = binaryReader.ReadString32();
+            flags = (Flags)binaryReader.ReadInt32();
+            team = (Team)binaryReader.ReadInt16();
+            parent = binaryReader.ReadShortBlockIndex1();
+            squadDelayTimeSeconds = binaryReader.ReadSingle();
+            normalDiffCount = binaryReader.ReadInt16();
+            insaneDiffCount = binaryReader.ReadInt16();
+            majorUpgrade = (MajorUpgrade)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            vehicleType = binaryReader.ReadShortBlockIndex1();
+            characterType = binaryReader.ReadShortBlockIndex1();
+            initialZone = binaryReader.ReadShortBlockIndex1();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            initialWeapon = binaryReader.ReadShortBlockIndex1();
+            initialSecondaryWeapon = binaryReader.ReadShortBlockIndex1();
+            grenadeType = (GrenadeType)binaryReader.ReadInt16();
+            initialOrder = binaryReader.ReadShortBlockIndex1();
+            vehicleVariant = binaryReader.ReadStringID();
+            startingLocations = Guerilla.ReadBlockArray<ActorStartingLocationsBlock>(binaryReader);
+            placementScript = binaryReader.ReadString32();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            invalidName_2 = binaryReader.ReadBytes(2);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int16)team);
+                binaryWriter.Write(parent);
+                binaryWriter.Write(squadDelayTimeSeconds);
+                binaryWriter.Write(normalDiffCount);
+                binaryWriter.Write(insaneDiffCount);
+                binaryWriter.Write((Int16)majorUpgrade);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(vehicleType);
+                binaryWriter.Write(characterType);
+                binaryWriter.Write(initialZone);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(initialWeapon);
+                binaryWriter.Write(initialSecondaryWeapon);
+                binaryWriter.Write((Int16)grenadeType);
+                binaryWriter.Write(initialOrder);
+                binaryWriter.Write(vehicleVariant);
+                nextAddress = Guerilla.WriteBlockArray<ActorStartingLocationsBlock>(binaryWriter, startingLocations, nextAddress);
+                binaryWriter.Write(placementScript);
+                binaryWriter.Write(invalidName_1, 0, 2);
+                binaryWriter.Write(invalidName_2, 0, 2);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ActorStartingLocationsBlock[] ReadActorStartingLocationsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ActorStartingLocationsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ActorStartingLocationsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ActorStartingLocationsBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             Unused = 1,
             NeverSearch = 2,
@@ -119,7 +119,6 @@ namespace Moonfish.Guerilla.Tags
             UnitsNotEnterableByPlayer = 8192,
         };
         internal enum Team : short
-        
         {
             Default = 0,
             Player = 1,
@@ -139,7 +138,6 @@ namespace Moonfish.Guerilla.Tags
             Unused15 = 15,
         };
         internal enum MajorUpgrade : short
-        
         {
             Normal = 0,
             Few = 1,
@@ -148,7 +146,6 @@ namespace Moonfish.Guerilla.Tags
             All = 4,
         };
         internal enum GrenadeType : short
-        
         {
             NONE = 0,
             HumanGrenade = 1,

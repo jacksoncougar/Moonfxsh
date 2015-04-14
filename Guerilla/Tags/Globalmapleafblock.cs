@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,59 +15,24 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class GlobalMapLeafBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class GlobalMapLeafBlockBase  : IGuerilla
     {
         internal MapLeafFaceBlock[] faces;
         internal MapLeafConnectionIndexBlock[] connectionIndices;
         internal  GlobalMapLeafBlockBase(BinaryReader binaryReader)
         {
-            this.faces = ReadMapLeafFaceBlockArray(binaryReader);
-            this.connectionIndices = ReadMapLeafConnectionIndexBlockArray(binaryReader);
+            faces = Guerilla.ReadBlockArray<MapLeafFaceBlock>(binaryReader);
+            connectionIndices = Guerilla.ReadBlockArray<MapLeafConnectionIndexBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                nextAddress = Guerilla.WriteBlockArray<MapLeafFaceBlock>(binaryWriter, faces, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MapLeafConnectionIndexBlock>(binaryWriter, connectionIndices, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual MapLeafFaceBlock[] ReadMapLeafFaceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(MapLeafFaceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new MapLeafFaceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new MapLeafFaceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual MapLeafConnectionIndexBlock[] ReadMapLeafConnectionIndexBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(MapLeafConnectionIndexBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new MapLeafConnectionIndexBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new MapLeafConnectionIndexBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

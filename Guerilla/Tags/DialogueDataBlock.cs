@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,29 +15,24 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 4)]
-    public class DialogueDataBlockBase
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class DialogueDataBlockBase  : IGuerilla
     {
         internal short startIndexPostprocess;
         internal short lengthPostprocess;
         internal  DialogueDataBlockBase(BinaryReader binaryReader)
         {
-            this.startIndexPostprocess = binaryReader.ReadInt16();
-            this.lengthPostprocess = binaryReader.ReadInt16();
+            startIndexPostprocess = binaryReader.ReadInt16();
+            lengthPostprocess = binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(startIndexPostprocess);
+                binaryWriter.Write(lengthPostprocess);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

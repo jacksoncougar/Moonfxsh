@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,31 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32)]
-    public class AmbientLightStructBlockBase
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class AmbientLightStructBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.ColorR8G8B8 minLightmapSample;
         internal Moonfish.Tags.ColorR8G8B8 maxLightmapSample;
         internal MappingFunctionBlock function;
         internal  AmbientLightStructBlockBase(BinaryReader binaryReader)
         {
-            this.minLightmapSample = binaryReader.ReadColorR8G8B8();
-            this.maxLightmapSample = binaryReader.ReadColorR8G8B8();
-            this.function = new MappingFunctionBlock(binaryReader);
+            minLightmapSample = binaryReader.ReadColorR8G8B8();
+            maxLightmapSample = binaryReader.ReadColorR8G8B8();
+            function = new MappingFunctionBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(minLightmapSample);
+                binaryWriter.Write(maxLightmapSample);
+                function.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

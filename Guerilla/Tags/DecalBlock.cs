@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass DecaClass = (TagClass)"deca";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 172)]
-    public class DecalBlockBase
+    [LayoutAttribute(Size = 172, Alignment = 4)]
+    public class DecalBlockBase  : IGuerilla
     {
         internal Flags flags;
         /// <summary>
@@ -49,45 +58,58 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_6;
         internal  DecalBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.type = (TypeControlsHowTheDecalWrapsOntoSurfaceGeometry)binaryReader.ReadInt16();
-            this.layer = (Layer)binaryReader.ReadInt16();
-            this.maxOverlappingCount = binaryReader.ReadInt16();
-            this.nextDecalInChain = binaryReader.ReadTagReference();
-            this.radiusWorldUnits = binaryReader.ReadRange();
-            this.radiusOverlapRejectionMuliplier = binaryReader.ReadSingle();
-            this.colorLowerBounds = binaryReader.ReadColorR8G8B8();
-            this.colorUpperBounds = binaryReader.ReadColorR8G8B8();
-            this.lifetimeSeconds = binaryReader.ReadRange();
-            this.decayTimeSeconds = binaryReader.ReadRange();
-            this.invalidName_ = binaryReader.ReadBytes(40);
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.invalidName_1 = binaryReader.ReadBytes(2);
-            this.invalidName_2 = binaryReader.ReadBytes(2);
-            this.invalidName_3 = binaryReader.ReadBytes(2);
-            this.invalidName_4 = binaryReader.ReadBytes(20);
-            this.bitmap = binaryReader.ReadTagReference();
-            this.invalidName_5 = binaryReader.ReadBytes(20);
-            this.maximumSpriteExtentPixels = binaryReader.ReadSingle();
-            this.invalidName_6 = binaryReader.ReadBytes(4);
+            flags = (Flags)binaryReader.ReadInt16();
+            type = (TypeControlsHowTheDecalWrapsOntoSurfaceGeometry)binaryReader.ReadInt16();
+            layer = (Layer)binaryReader.ReadInt16();
+            maxOverlappingCount = binaryReader.ReadInt16();
+            nextDecalInChain = binaryReader.ReadTagReference();
+            radiusWorldUnits = binaryReader.ReadRange();
+            radiusOverlapRejectionMuliplier = binaryReader.ReadSingle();
+            colorLowerBounds = binaryReader.ReadColorR8G8B8();
+            colorUpperBounds = binaryReader.ReadColorR8G8B8();
+            lifetimeSeconds = binaryReader.ReadRange();
+            decayTimeSeconds = binaryReader.ReadRange();
+            invalidName_ = binaryReader.ReadBytes(40);
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(2);
+            invalidName_2 = binaryReader.ReadBytes(2);
+            invalidName_3 = binaryReader.ReadBytes(2);
+            invalidName_4 = binaryReader.ReadBytes(20);
+            bitmap = binaryReader.ReadTagReference();
+            invalidName_5 = binaryReader.ReadBytes(20);
+            maximumSpriteExtentPixels = binaryReader.ReadSingle();
+            invalidName_6 = binaryReader.ReadBytes(4);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write((Int16)layer);
+                binaryWriter.Write(maxOverlappingCount);
+                binaryWriter.Write(nextDecalInChain);
+                binaryWriter.Write(radiusWorldUnits);
+                binaryWriter.Write(radiusOverlapRejectionMuliplier);
+                binaryWriter.Write(colorLowerBounds);
+                binaryWriter.Write(colorUpperBounds);
+                binaryWriter.Write(lifetimeSeconds);
+                binaryWriter.Write(decayTimeSeconds);
+                binaryWriter.Write(invalidName_, 0, 40);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(invalidName_1, 0, 2);
+                binaryWriter.Write(invalidName_2, 0, 2);
+                binaryWriter.Write(invalidName_3, 0, 2);
+                binaryWriter.Write(invalidName_4, 0, 20);
+                binaryWriter.Write(bitmap);
+                binaryWriter.Write(invalidName_5, 0, 20);
+                binaryWriter.Write(maximumSpriteExtentPixels);
+                binaryWriter.Write(invalidName_6, 0, 4);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             GeometryInheritedByNextDecalInChain = 1,
             InterpolateColorInHsv = 2,
@@ -101,7 +123,6 @@ namespace Moonfish.Guerilla.Tags
             UNUSED1 = 512,
         };
         internal enum TypeControlsHowTheDecalWrapsOntoSurfaceGeometry : short
-        
         {
             Scratch = 0,
             Splatter = 1,
@@ -109,7 +130,6 @@ namespace Moonfish.Guerilla.Tags
             PaintedSign = 3,
         };
         internal enum Layer : short
-        
         {
             LitAlphaBlendPrelight = 0,
             LitAlphaBlend = 1,

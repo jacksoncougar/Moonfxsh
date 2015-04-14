@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24)]
-    public class ScenarioLightFixtureStructBlockBase
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class ScenarioLightFixtureStructBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.ColorR8G8B8 color;
         internal float intensity;
@@ -23,24 +24,21 @@ namespace Moonfish.Guerilla.Tags
         internal float cutoffAngleDegrees;
         internal  ScenarioLightFixtureStructBlockBase(BinaryReader binaryReader)
         {
-            this.color = binaryReader.ReadColorR8G8B8();
-            this.intensity = binaryReader.ReadSingle();
-            this.falloffAngleDegrees = binaryReader.ReadSingle();
-            this.cutoffAngleDegrees = binaryReader.ReadSingle();
+            color = binaryReader.ReadColorR8G8B8();
+            intensity = binaryReader.ReadSingle();
+            falloffAngleDegrees = binaryReader.ReadSingle();
+            cutoffAngleDegrees = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(color);
+                binaryWriter.Write(intensity);
+                binaryWriter.Write(falloffAngleDegrees);
+                binaryWriter.Write(cutoffAngleDegrees);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

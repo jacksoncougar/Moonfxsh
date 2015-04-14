@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class SoundGestaltPermutationsBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class SoundGestaltPermutationsBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.ShortBlockIndex1 name;
         internal short encodedSkipFraction;
@@ -27,28 +28,29 @@ namespace Moonfish.Guerilla.Tags
         internal short chunkCount;
         internal  SoundGestaltPermutationsBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadShortBlockIndex1();
-            this.encodedSkipFraction = binaryReader.ReadInt16();
-            this.encodedGainDB = binaryReader.ReadByte();
-            this.permutationInfoIndex = binaryReader.ReadByte();
-            this.languageNeutralTimeMs = binaryReader.ReadInt16();
-            this.sampleSize = binaryReader.ReadInt32();
-            this.firstChunk = binaryReader.ReadShortBlockIndex1();
-            this.chunkCount = binaryReader.ReadInt16();
+            name = binaryReader.ReadShortBlockIndex1();
+            encodedSkipFraction = binaryReader.ReadInt16();
+            encodedGainDB = binaryReader.ReadByte();
+            permutationInfoIndex = binaryReader.ReadByte();
+            languageNeutralTimeMs = binaryReader.ReadInt16();
+            sampleSize = binaryReader.ReadInt32();
+            firstChunk = binaryReader.ReadShortBlockIndex1();
+            chunkCount = binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write(encodedSkipFraction);
+                binaryWriter.Write(encodedGainDB);
+                binaryWriter.Write(permutationInfoIndex);
+                binaryWriter.Write(languageNeutralTimeMs);
+                binaryWriter.Write(sampleSize);
+                binaryWriter.Write(firstChunk);
+                binaryWriter.Write(chunkCount);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

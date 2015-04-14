@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 28)]
-    public class SoundPermutationsBlockBase
+    [LayoutAttribute(Size = 28, Alignment = 4)]
+    public class SoundPermutationsBlockBase  : IGuerilla
     {
         /// <summary>
         /// name of the file from which this sample was imported
@@ -35,42 +36,27 @@ namespace Moonfish.Guerilla.Tags
         internal SoundPermutationChunkBlock[] soundPermutationChunkBlock;
         internal  SoundPermutationsBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.skipFraction = binaryReader.ReadSingle();
-            this.gainDB = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadInt32();
-            this.invalidName_0 = binaryReader.ReadShortBlockIndex2();
-            this.invalidName_1 = binaryReader.ReadInt16();
-            this.soundPermutationChunkBlock = ReadSoundPermutationChunkBlockArray(binaryReader);
+            name = binaryReader.ReadStringID();
+            skipFraction = binaryReader.ReadSingle();
+            gainDB = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadInt32();
+            invalidName_0 = binaryReader.ReadShortBlockIndex2();
+            invalidName_1 = binaryReader.ReadInt16();
+            soundPermutationChunkBlock = Guerilla.ReadBlockArray<SoundPermutationChunkBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write(skipFraction);
+                binaryWriter.Write(gainDB);
+                binaryWriter.Write(invalidName_);
+                binaryWriter.Write(invalidName_0);
+                binaryWriter.Write(invalidName_1);
+                nextAddress = Guerilla.WriteBlockArray<SoundPermutationChunkBlock>(binaryWriter, soundPermutationChunkBlock, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual SoundPermutationChunkBlock[] ReadSoundPermutationChunkBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundPermutationChunkBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundPermutationChunkBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundPermutationChunkBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

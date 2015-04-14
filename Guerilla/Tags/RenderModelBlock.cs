@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass ModeClass = (TagClass)"mode";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 132)]
-    public class RenderModelBlockBase
+    [LayoutAttribute(Size = 132, Alignment = 4)]
+    public class RenderModelBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Flags flags;
@@ -49,245 +58,68 @@ namespace Moonfish.Guerilla.Tags
         internal SectionRenderLeavesBlock[] sectionRenderLeaves;
         internal  RenderModelBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.importInfo = ReadGlobalTagImportInfoBlockArray(binaryReader);
-            this.compressionInfo = ReadGlobalGeometryCompressionInfoBlockArray(binaryReader);
-            this.regions = ReadRenderModelRegionBlockArray(binaryReader);
-            this.sections = ReadRenderModelSectionBlockArray(binaryReader);
-            this.invalidSectionPairBits = ReadRenderModelInvalidSectionPairsBlockArray(binaryReader);
-            this.sectionGroups = ReadRenderModelSectionGroupBlockArray(binaryReader);
-            this.l1SectionGroupIndexSuperLow = binaryReader.ReadByte();
-            this.l2SectionGroupIndexLow = binaryReader.ReadByte();
-            this.l3SectionGroupIndexMedium = binaryReader.ReadByte();
-            this.l4SectionGroupIndexHigh = binaryReader.ReadByte();
-            this.l5SectionGroupIndexSuperHigh = binaryReader.ReadByte();
-            this.l6SectionGroupIndexHollywood = binaryReader.ReadByte();
-            this.invalidName_1 = binaryReader.ReadBytes(2);
-            this.nodeListChecksum = binaryReader.ReadInt32();
-            this.nodes = ReadRenderModelNodeBlockArray(binaryReader);
-            this.nodeMapOLD = ReadRenderModelNodeMapBlockOLDArray(binaryReader);
-            this.markerGroups = ReadRenderModelMarkerGroupBlockArray(binaryReader);
-            this.materials = ReadGlobalGeometryMaterialBlockArray(binaryReader);
-            this.errors = ReadGlobalErrorReportCategoriesBlockArray(binaryReader);
-            this.dontDrawOverCameraCosineAngle = binaryReader.ReadSingle();
-            this.pRTInfo = ReadPrtInfoBlockArray(binaryReader);
-            this.sectionRenderLeaves = ReadSectionRenderLeavesBlockArray(binaryReader);
+            name = binaryReader.ReadStringID();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(4);
+            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>(binaryReader);
+            compressionInfo = Guerilla.ReadBlockArray<GlobalGeometryCompressionInfoBlock>(binaryReader);
+            regions = Guerilla.ReadBlockArray<RenderModelRegionBlock>(binaryReader);
+            sections = Guerilla.ReadBlockArray<RenderModelSectionBlock>(binaryReader);
+            invalidSectionPairBits = Guerilla.ReadBlockArray<RenderModelInvalidSectionPairsBlock>(binaryReader);
+            sectionGroups = Guerilla.ReadBlockArray<RenderModelSectionGroupBlock>(binaryReader);
+            l1SectionGroupIndexSuperLow = binaryReader.ReadByte();
+            l2SectionGroupIndexLow = binaryReader.ReadByte();
+            l3SectionGroupIndexMedium = binaryReader.ReadByte();
+            l4SectionGroupIndexHigh = binaryReader.ReadByte();
+            l5SectionGroupIndexSuperHigh = binaryReader.ReadByte();
+            l6SectionGroupIndexHollywood = binaryReader.ReadByte();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            nodeListChecksum = binaryReader.ReadInt32();
+            nodes = Guerilla.ReadBlockArray<RenderModelNodeBlock>(binaryReader);
+            nodeMapOLD = Guerilla.ReadBlockArray<RenderModelNodeMapBlockOLD>(binaryReader);
+            markerGroups = Guerilla.ReadBlockArray<RenderModelMarkerGroupBlock>(binaryReader);
+            materials = Guerilla.ReadBlockArray<GlobalGeometryMaterialBlock>(binaryReader);
+            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
+            dontDrawOverCameraCosineAngle = binaryReader.ReadSingle();
+            pRTInfo = Guerilla.ReadBlockArray<PrtInfoBlock>(binaryReader);
+            sectionRenderLeaves = Guerilla.ReadBlockArray<SectionRenderLeavesBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                nextAddress = Guerilla.WriteBlockArray<GlobalTagImportInfoBlock>(binaryWriter, importInfo, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GlobalGeometryCompressionInfoBlock>(binaryWriter, compressionInfo, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<RenderModelRegionBlock>(binaryWriter, regions, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<RenderModelSectionBlock>(binaryWriter, sections, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<RenderModelInvalidSectionPairsBlock>(binaryWriter, invalidSectionPairBits, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<RenderModelSectionGroupBlock>(binaryWriter, sectionGroups, nextAddress);
+                binaryWriter.Write(l1SectionGroupIndexSuperLow);
+                binaryWriter.Write(l2SectionGroupIndexLow);
+                binaryWriter.Write(l3SectionGroupIndexMedium);
+                binaryWriter.Write(l4SectionGroupIndexHigh);
+                binaryWriter.Write(l5SectionGroupIndexSuperHigh);
+                binaryWriter.Write(l6SectionGroupIndexHollywood);
+                binaryWriter.Write(invalidName_1, 0, 2);
+                binaryWriter.Write(nodeListChecksum);
+                nextAddress = Guerilla.WriteBlockArray<RenderModelNodeBlock>(binaryWriter, nodes, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<RenderModelNodeMapBlockOLD>(binaryWriter, nodeMapOLD, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<RenderModelMarkerGroupBlock>(binaryWriter, markerGroups, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GlobalGeometryMaterialBlock>(binaryWriter, materials, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GlobalErrorReportCategoriesBlock>(binaryWriter, errors, nextAddress);
+                binaryWriter.Write(dontDrawOverCameraCosineAngle);
+                nextAddress = Guerilla.WriteBlockArray<PrtInfoBlock>(binaryWriter, pRTInfo, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SectionRenderLeavesBlock>(binaryWriter, sectionRenderLeaves, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual GlobalTagImportInfoBlock[] ReadGlobalTagImportInfoBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalTagImportInfoBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalTagImportInfoBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalTagImportInfoBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalGeometryCompressionInfoBlock[] ReadGlobalGeometryCompressionInfoBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalGeometryCompressionInfoBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalGeometryCompressionInfoBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalGeometryCompressionInfoBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RenderModelRegionBlock[] ReadRenderModelRegionBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RenderModelRegionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderModelRegionBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RenderModelRegionBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RenderModelSectionBlock[] ReadRenderModelSectionBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RenderModelSectionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderModelSectionBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RenderModelSectionBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RenderModelInvalidSectionPairsBlock[] ReadRenderModelInvalidSectionPairsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RenderModelInvalidSectionPairsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderModelInvalidSectionPairsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RenderModelInvalidSectionPairsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RenderModelSectionGroupBlock[] ReadRenderModelSectionGroupBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RenderModelSectionGroupBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderModelSectionGroupBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RenderModelSectionGroupBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RenderModelNodeBlock[] ReadRenderModelNodeBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RenderModelNodeBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderModelNodeBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RenderModelNodeBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RenderModelNodeMapBlockOLD[] ReadRenderModelNodeMapBlockOLDArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RenderModelNodeMapBlockOLD));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderModelNodeMapBlockOLD[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RenderModelNodeMapBlockOLD(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RenderModelMarkerGroupBlock[] ReadRenderModelMarkerGroupBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RenderModelMarkerGroupBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderModelMarkerGroupBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RenderModelMarkerGroupBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalGeometryMaterialBlock[] ReadGlobalGeometryMaterialBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalGeometryMaterialBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalGeometryMaterialBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalGeometryMaterialBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalErrorReportCategoriesBlock[] ReadGlobalErrorReportCategoriesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalErrorReportCategoriesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalErrorReportCategoriesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalErrorReportCategoriesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PrtInfoBlock[] ReadPrtInfoBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PrtInfoBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PrtInfoBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PrtInfoBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SectionRenderLeavesBlock[] ReadSectionRenderLeavesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SectionRenderLeavesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SectionRenderLeavesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SectionRenderLeavesBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             RenderModelForceThirdPersonBit = 1,
             ForceCarmackReverse = 2,

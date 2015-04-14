@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass TrgClass = (TagClass)"trg*";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,59 +24,24 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class ScenarioTriggerVolumesResourceBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class ScenarioTriggerVolumesResourceBlockBase  : IGuerilla
     {
         internal ScenarioTriggerVolumeBlock[] killTriggerVolumes;
         internal ScenarioObjectNamesBlock[] objectNames;
         internal  ScenarioTriggerVolumesResourceBlockBase(BinaryReader binaryReader)
         {
-            this.killTriggerVolumes = ReadScenarioTriggerVolumeBlockArray(binaryReader);
-            this.objectNames = ReadScenarioObjectNamesBlockArray(binaryReader);
+            killTriggerVolumes = Guerilla.ReadBlockArray<ScenarioTriggerVolumeBlock>(binaryReader);
+            objectNames = Guerilla.ReadBlockArray<ScenarioObjectNamesBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                nextAddress = Guerilla.WriteBlockArray<ScenarioTriggerVolumeBlock>(binaryWriter, killTriggerVolumes, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioObjectNamesBlock>(binaryWriter, objectNames, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ScenarioTriggerVolumeBlock[] ReadScenarioTriggerVolumeBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioTriggerVolumeBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioTriggerVolumeBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioTriggerVolumeBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ScenarioObjectNamesBlock[] ReadScenarioObjectNamesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioObjectNamesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioObjectNamesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioObjectNamesBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

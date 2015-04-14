@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass MetrClass = (TagClass)"metr";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 144)]
-    public class MeterBlockBase
+    [LayoutAttribute(Size = 144, Alignment = 4)]
+    public class MeterBlockBase  : IGuerilla
     {
         internal Flags flags;
         /// <summary>
@@ -51,45 +60,53 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] encodedStencil;
         internal  MeterBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.stencilBitmaps = binaryReader.ReadTagReference();
-            this.sourceBitmap = binaryReader.ReadTagReference();
-            this.stencilSequenceIndex = binaryReader.ReadInt16();
-            this.sourceSequenceIndex = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(16);
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.interpolateColors = (InterpolateColors)binaryReader.ReadInt16();
-            this.anchorColors = (AnchorColors)binaryReader.ReadInt16();
-            this.invalidName_1 = binaryReader.ReadBytes(8);
-            this.emptyColor = binaryReader.ReadVector4();
-            this.fullColor = binaryReader.ReadVector4();
-            this.invalidName_2 = binaryReader.ReadBytes(20);
-            this.unmaskDistanceMeterUnits = binaryReader.ReadSingle();
-            this.maskDistanceMeterUnits = binaryReader.ReadSingle();
-            this.invalidName_3 = binaryReader.ReadBytes(20);
-            this.encodedStencil = ReadData(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            stencilBitmaps = binaryReader.ReadTagReference();
+            sourceBitmap = binaryReader.ReadTagReference();
+            stencilSequenceIndex = binaryReader.ReadInt16();
+            sourceSequenceIndex = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(16);
+            invalidName_0 = binaryReader.ReadBytes(4);
+            interpolateColors = (InterpolateColors)binaryReader.ReadInt16();
+            anchorColors = (AnchorColors)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(8);
+            emptyColor = binaryReader.ReadVector4();
+            fullColor = binaryReader.ReadVector4();
+            invalidName_2 = binaryReader.ReadBytes(20);
+            unmaskDistanceMeterUnits = binaryReader.ReadSingle();
+            maskDistanceMeterUnits = binaryReader.ReadSingle();
+            invalidName_3 = binaryReader.ReadBytes(20);
+            encodedStencil = Guerilla.ReadData(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(stencilBitmaps);
+                binaryWriter.Write(sourceBitmap);
+                binaryWriter.Write(stencilSequenceIndex);
+                binaryWriter.Write(sourceSequenceIndex);
+                binaryWriter.Write(invalidName_, 0, 16);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write((Int16)interpolateColors);
+                binaryWriter.Write((Int16)anchorColors);
+                binaryWriter.Write(invalidName_1, 0, 8);
+                binaryWriter.Write(emptyColor);
+                binaryWriter.Write(fullColor);
+                binaryWriter.Write(invalidName_2, 0, 20);
+                binaryWriter.Write(unmaskDistanceMeterUnits);
+                binaryWriter.Write(maskDistanceMeterUnits);
+                binaryWriter.Write(invalidName_3, 0, 20);
+                nextAddress = Guerilla.WriteData(binaryWriter, encodedStencil, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
         };
         internal enum InterpolateColors : short
-        
         {
             Linearly = 0,
             FasterNearEmpty = 1,
@@ -97,7 +114,6 @@ namespace Moonfish.Guerilla.Tags
             ThroughRandomNoise = 3,
         };
         internal enum AnchorColors : short
-        
         {
             AtBothEnds = 0,
             AtEmpty = 1,

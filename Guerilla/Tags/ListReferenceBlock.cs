@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24)]
-    public class ListReferenceBlockBase
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class ListReferenceBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal SkinIndex skinIndex;
@@ -26,52 +27,35 @@ namespace Moonfish.Guerilla.Tags
         internal STextValuePairReferenceBlockUNUSED[] uNUSED;
         internal  ListReferenceBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.skinIndex = (SkinIndex)binaryReader.ReadInt16();
-            this.numVisibleItems = binaryReader.ReadInt16();
-            this.bottomLeft = binaryReader.ReadPoint();
-            this.animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            this.introAnimationDelayMilliseconds = binaryReader.ReadInt16();
-            this.uNUSED = ReadSTextValuePairReferenceBlockUNUSEDArray(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            skinIndex = (SkinIndex)binaryReader.ReadInt16();
+            numVisibleItems = binaryReader.ReadInt16();
+            bottomLeft = binaryReader.ReadPoint();
+            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
+            uNUSED = Guerilla.ReadBlockArray<STextValuePairReferenceBlockUNUSED>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int16)skinIndex);
+                binaryWriter.Write(numVisibleItems);
+                binaryWriter.Write(bottomLeft);
+                binaryWriter.Write((Int16)animationIndex);
+                binaryWriter.Write(introAnimationDelayMilliseconds);
+                nextAddress = Guerilla.WriteBlockArray<STextValuePairReferenceBlockUNUSED>(binaryWriter, uNUSED, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual STextValuePairReferenceBlockUNUSED[] ReadSTextValuePairReferenceBlockUNUSEDArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(STextValuePairReferenceBlockUNUSED));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new STextValuePairReferenceBlockUNUSED[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new STextValuePairReferenceBlockUNUSED(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             ListWraps = 1,
             Interactive = 2,
         };
         internal enum SkinIndex : short
-        
         {
             Default = 0,
             SquadLobbyPlayerList = 1,
@@ -107,7 +91,6 @@ namespace Moonfish.Guerilla.Tags
             Unused31 = 31,
         };
         internal enum AnimationIndex : short
-        
         {
             NONE = 0,
             InvalidName00 = 1,

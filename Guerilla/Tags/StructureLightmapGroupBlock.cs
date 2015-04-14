@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 104)]
-    public class StructureLightmapGroupBlockBase
+    [LayoutAttribute(Size = 104, Alignment = 4)]
+    public class StructureLightmapGroupBlockBase  : IGuerilla
     {
         internal Type type;
         internal Flags flags;
@@ -35,149 +36,50 @@ namespace Moonfish.Guerilla.Tags
         internal LightmapInstanceBucketReferenceBlock[] sceneryObjectBucketRefs;
         internal  StructureLightmapGroupBlockBase(BinaryReader binaryReader)
         {
-            this.type = (Type)binaryReader.ReadInt16();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.structureChecksum = binaryReader.ReadInt32();
-            this.sectionPalette = ReadStructureLightmapPaletteColorBlockArray(binaryReader);
-            this.writablePalettes = ReadStructureLightmapPaletteColorBlockArray(binaryReader);
-            this.bitmapGroup = binaryReader.ReadTagReference();
-            this.clusters = ReadLightmapGeometrySectionBlockArray(binaryReader);
-            this.clusterRenderInfo = ReadLightmapGeometryRenderInfoBlockArray(binaryReader);
-            this.poopDefinitions = ReadLightmapGeometrySectionBlockArray(binaryReader);
-            this.lightingEnvironments = ReadStructureLightmapLightingEnvironmentBlockArray(binaryReader);
-            this.geometryBuckets = ReadLightmapVertexBufferBucketBlockArray(binaryReader);
-            this.instanceRenderInfo = ReadLightmapGeometryRenderInfoBlockArray(binaryReader);
-            this.instanceBucketRefs = ReadLightmapInstanceBucketReferenceBlockArray(binaryReader);
-            this.sceneryObjectInfo = ReadLightmapSceneryObjectInfoBlockArray(binaryReader);
-            this.sceneryObjectBucketRefs = ReadLightmapInstanceBucketReferenceBlockArray(binaryReader);
+            type = (Type)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            structureChecksum = binaryReader.ReadInt32();
+            sectionPalette = Guerilla.ReadBlockArray<StructureLightmapPaletteColorBlock>(binaryReader);
+            writablePalettes = Guerilla.ReadBlockArray<StructureLightmapPaletteColorBlock>(binaryReader);
+            bitmapGroup = binaryReader.ReadTagReference();
+            clusters = Guerilla.ReadBlockArray<LightmapGeometrySectionBlock>(binaryReader);
+            clusterRenderInfo = Guerilla.ReadBlockArray<LightmapGeometryRenderInfoBlock>(binaryReader);
+            poopDefinitions = Guerilla.ReadBlockArray<LightmapGeometrySectionBlock>(binaryReader);
+            lightingEnvironments = Guerilla.ReadBlockArray<StructureLightmapLightingEnvironmentBlock>(binaryReader);
+            geometryBuckets = Guerilla.ReadBlockArray<LightmapVertexBufferBucketBlock>(binaryReader);
+            instanceRenderInfo = Guerilla.ReadBlockArray<LightmapGeometryRenderInfoBlock>(binaryReader);
+            instanceBucketRefs = Guerilla.ReadBlockArray<LightmapInstanceBucketReferenceBlock>(binaryReader);
+            sceneryObjectInfo = Guerilla.ReadBlockArray<LightmapSceneryObjectInfoBlock>(binaryReader);
+            sceneryObjectBucketRefs = Guerilla.ReadBlockArray<LightmapInstanceBucketReferenceBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(structureChecksum);
+                nextAddress = Guerilla.WriteBlockArray<StructureLightmapPaletteColorBlock>(binaryWriter, sectionPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureLightmapPaletteColorBlock>(binaryWriter, writablePalettes, nextAddress);
+                binaryWriter.Write(bitmapGroup);
+                nextAddress = Guerilla.WriteBlockArray<LightmapGeometrySectionBlock>(binaryWriter, clusters, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<LightmapGeometryRenderInfoBlock>(binaryWriter, clusterRenderInfo, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<LightmapGeometrySectionBlock>(binaryWriter, poopDefinitions, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureLightmapLightingEnvironmentBlock>(binaryWriter, lightingEnvironments, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<LightmapVertexBufferBucketBlock>(binaryWriter, geometryBuckets, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<LightmapGeometryRenderInfoBlock>(binaryWriter, instanceRenderInfo, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<LightmapInstanceBucketReferenceBlock>(binaryWriter, instanceBucketRefs, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<LightmapSceneryObjectInfoBlock>(binaryWriter, sceneryObjectInfo, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<LightmapInstanceBucketReferenceBlock>(binaryWriter, sceneryObjectBucketRefs, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual StructureLightmapPaletteColorBlock[] ReadStructureLightmapPaletteColorBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureLightmapPaletteColorBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureLightmapPaletteColorBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureLightmapPaletteColorBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual LightmapGeometrySectionBlock[] ReadLightmapGeometrySectionBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LightmapGeometrySectionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightmapGeometrySectionBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LightmapGeometrySectionBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual LightmapGeometryRenderInfoBlock[] ReadLightmapGeometryRenderInfoBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LightmapGeometryRenderInfoBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightmapGeometryRenderInfoBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LightmapGeometryRenderInfoBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureLightmapLightingEnvironmentBlock[] ReadStructureLightmapLightingEnvironmentBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureLightmapLightingEnvironmentBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureLightmapLightingEnvironmentBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureLightmapLightingEnvironmentBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual LightmapVertexBufferBucketBlock[] ReadLightmapVertexBufferBucketBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LightmapVertexBufferBucketBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightmapVertexBufferBucketBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LightmapVertexBufferBucketBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual LightmapInstanceBucketReferenceBlock[] ReadLightmapInstanceBucketReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LightmapInstanceBucketReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightmapInstanceBucketReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LightmapInstanceBucketReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual LightmapSceneryObjectInfoBlock[] ReadLightmapSceneryObjectInfoBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LightmapSceneryObjectInfoBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightmapSceneryObjectInfoBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LightmapSceneryObjectInfoBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum Type : short
-        
         {
             Normal = 0,
         };
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             Unused = 1,
         };

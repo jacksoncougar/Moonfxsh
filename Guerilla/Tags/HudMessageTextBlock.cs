@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass HmtClass = (TagClass)"hmt ";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 108)]
-    public class HudMessageTextBlockBase
+    [LayoutAttribute(Size = 108, Alignment = 4)]
+    public class HudMessageTextBlockBase  : IGuerilla
     {
         internal byte[] textData;
         internal HudMessageElementsBlock[] messageElements;
@@ -24,54 +33,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  HudMessageTextBlockBase(BinaryReader binaryReader)
         {
-            this.textData = ReadData(binaryReader);
-            this.messageElements = ReadHudMessageElementsBlockArray(binaryReader);
-            this.messages = ReadHudMessagesBlockArray(binaryReader);
-            this.invalidName_ = binaryReader.ReadBytes(84);
+            textData = Guerilla.ReadData(binaryReader);
+            messageElements = Guerilla.ReadBlockArray<HudMessageElementsBlock>(binaryReader);
+            messages = Guerilla.ReadBlockArray<HudMessagesBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(84);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                nextAddress = Guerilla.WriteData(binaryWriter, textData, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<HudMessageElementsBlock>(binaryWriter, messageElements, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<HudMessagesBlock>(binaryWriter, messages, nextAddress);
+                binaryWriter.Write(invalidName_, 0, 84);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual HudMessageElementsBlock[] ReadHudMessageElementsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(HudMessageElementsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new HudMessageElementsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new HudMessageElementsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual HudMessagesBlock[] ReadHudMessagesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(HudMessagesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new HudMessagesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new HudMessagesBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

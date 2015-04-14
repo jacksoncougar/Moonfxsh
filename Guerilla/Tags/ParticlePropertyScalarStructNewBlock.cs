@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class ParticlePropertyScalarStructNewBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class ParticlePropertyScalarStructNewBlockBase  : IGuerilla
     {
         internal InputVariable inputVariable;
         internal RangeVariable rangeVariable;
@@ -24,28 +25,25 @@ namespace Moonfish.Guerilla.Tags
         internal MappingFunctionBlock mapping;
         internal  ParticlePropertyScalarStructNewBlockBase(BinaryReader binaryReader)
         {
-            this.inputVariable = (InputVariable)binaryReader.ReadInt16();
-            this.rangeVariable = (RangeVariable)binaryReader.ReadInt16();
-            this.outputModifier = (OutputModifier)binaryReader.ReadInt16();
-            this.outputModifierInput = (OutputModifierInput)binaryReader.ReadInt16();
-            this.mapping = new MappingFunctionBlock(binaryReader);
+            inputVariable = (InputVariable)binaryReader.ReadInt16();
+            rangeVariable = (RangeVariable)binaryReader.ReadInt16();
+            outputModifier = (OutputModifier)binaryReader.ReadInt16();
+            outputModifierInput = (OutputModifierInput)binaryReader.ReadInt16();
+            mapping = new MappingFunctionBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)inputVariable);
+                binaryWriter.Write((Int16)rangeVariable);
+                binaryWriter.Write((Int16)outputModifier);
+                binaryWriter.Write((Int16)outputModifierInput);
+                mapping.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum InputVariable : short
-        
         {
             ParticleAge = 0,
             ParticleEmitTime = 1,
@@ -66,7 +64,6 @@ namespace Moonfish.Guerilla.Tags
             LocationRandom = 16,
         };
         internal enum RangeVariable : short
-        
         {
             ParticleAge = 0,
             ParticleEmitTime = 1,
@@ -87,14 +84,12 @@ namespace Moonfish.Guerilla.Tags
             LocationRandom = 16,
         };
         internal enum OutputModifier : short
-        
         {
             InvalidName = 0,
             Plus = 1,
             Times = 2,
         };
         internal enum OutputModifierInput : short
-        
         {
             ParticleAge = 0,
             ParticleEmitTime = 1,

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class AnimationGraphSoundReferenceBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class AnimationGraphSoundReferenceBlockBase  : IGuerilla
     {
         [TagReference("snd!")]
         internal Moonfish.Tags.TagReference sound;
@@ -23,27 +24,22 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  AnimationGraphSoundReferenceBlockBase(BinaryReader binaryReader)
         {
-            this.sound = binaryReader.ReadTagReference();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
+            sound = binaryReader.ReadTagReference();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(sound);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(invalidName_, 0, 2);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             AllowOnPlayer = 1,
             LeftArmOnly = 2,

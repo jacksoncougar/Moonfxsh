@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,29 +15,24 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class VibrationFrequencyDefinitionStructBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class VibrationFrequencyDefinitionStructBlockBase  : IGuerilla
     {
         internal float durationSeconds;
         internal MappingFunctionBlock dirtyWhore;
         internal  VibrationFrequencyDefinitionStructBlockBase(BinaryReader binaryReader)
         {
-            this.durationSeconds = binaryReader.ReadSingle();
-            this.dirtyWhore = new MappingFunctionBlock(binaryReader);
+            durationSeconds = binaryReader.ReadSingle();
+            dirtyWhore = new MappingFunctionBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(durationSeconds);
+                dirtyWhore.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

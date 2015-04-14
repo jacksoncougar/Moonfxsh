@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 188)]
-    public class PlayerRepresentationBlockBase
+    [LayoutAttribute(Size = 188, Alignment = 4)]
+    public class PlayerRepresentationBlockBase  : IGuerilla
     {
         [TagReference("mode")]
         internal Moonfish.Tags.TagReference firstPersonHands;
@@ -28,26 +29,25 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID thirdPersonVariant;
         internal  PlayerRepresentationBlockBase(BinaryReader binaryReader)
         {
-            this.firstPersonHands = binaryReader.ReadTagReference();
-            this.firstPersonBody = binaryReader.ReadTagReference();
-            this.invalidName_ = binaryReader.ReadBytes(40);
-            this.invalidName_0 = binaryReader.ReadBytes(120);
-            this.thirdPersonUnit = binaryReader.ReadTagReference();
-            this.thirdPersonVariant = binaryReader.ReadStringID();
+            firstPersonHands = binaryReader.ReadTagReference();
+            firstPersonBody = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(40);
+            invalidName_0 = binaryReader.ReadBytes(120);
+            thirdPersonUnit = binaryReader.ReadTagReference();
+            thirdPersonVariant = binaryReader.ReadStringID();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(firstPersonHands);
+                binaryWriter.Write(firstPersonBody);
+                binaryWriter.Write(invalidName_, 0, 40);
+                binaryWriter.Write(invalidName_0, 0, 120);
+                binaryWriter.Write(thirdPersonUnit);
+                binaryWriter.Write(thirdPersonVariant);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,44 +15,24 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class ShaderTemplateLevelOfDetailBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class ShaderTemplateLevelOfDetailBlockBase  : IGuerilla
     {
         internal float projectedDiameterPixels;
         internal ShaderTemplatePassReferenceBlock[] pass;
         internal  ShaderTemplateLevelOfDetailBlockBase(BinaryReader binaryReader)
         {
-            this.projectedDiameterPixels = binaryReader.ReadSingle();
-            this.pass = ReadShaderTemplatePassReferenceBlockArray(binaryReader);
+            projectedDiameterPixels = binaryReader.ReadSingle();
+            pass = Guerilla.ReadBlockArray<ShaderTemplatePassReferenceBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(projectedDiameterPixels);
+                nextAddress = Guerilla.WriteBlockArray<ShaderTemplatePassReferenceBlock>(binaryWriter, pass, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ShaderTemplatePassReferenceBlock[] ReadShaderTemplatePassReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderTemplatePassReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderTemplatePassReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderTemplatePassReferenceBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

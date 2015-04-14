@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 40)]
-    public class UiErrorCategoryBlockBase
+    [LayoutAttribute(Size = 40, Alignment = 4)]
+    public class UiErrorCategoryBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID categoryName;
         internal Flags flags;
@@ -30,54 +31,40 @@ namespace Moonfish.Guerilla.Tags
         internal UiErrorBlock[] errorBlock;
         internal  UiErrorCategoryBlockBase(BinaryReader binaryReader)
         {
-            this.categoryName = binaryReader.ReadStringID();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.defaultButton = (DefaultButton)binaryReader.ReadByte();
-            this.invalidName_ = binaryReader.ReadBytes(1);
-            this.stringTag = binaryReader.ReadTagReference();
-            this.defaultTitle = binaryReader.ReadStringID();
-            this.defaultMessage = binaryReader.ReadStringID();
-            this.defaultOk = binaryReader.ReadStringID();
-            this.defaultCancel = binaryReader.ReadStringID();
-            this.errorBlock = ReadUiErrorBlockArray(binaryReader);
+            categoryName = binaryReader.ReadStringID();
+            flags = (Flags)binaryReader.ReadInt16();
+            defaultButton = (DefaultButton)binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes(1);
+            stringTag = binaryReader.ReadTagReference();
+            defaultTitle = binaryReader.ReadStringID();
+            defaultMessage = binaryReader.ReadStringID();
+            defaultOk = binaryReader.ReadStringID();
+            defaultCancel = binaryReader.ReadStringID();
+            errorBlock = Guerilla.ReadBlockArray<UiErrorBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(categoryName);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Byte)defaultButton);
+                binaryWriter.Write(invalidName_, 0, 1);
+                binaryWriter.Write(stringTag);
+                binaryWriter.Write(defaultTitle);
+                binaryWriter.Write(defaultMessage);
+                binaryWriter.Write(defaultOk);
+                binaryWriter.Write(defaultCancel);
+                nextAddress = Guerilla.WriteBlockArray<UiErrorBlock>(binaryWriter, errorBlock, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual UiErrorBlock[] ReadUiErrorBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UiErrorBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UiErrorBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UiErrorBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             UseLargeDialog = 1,
         };
         internal enum DefaultButton : byte
-        
         {
             NoDefault = 0,
             DefaultOk = 1,

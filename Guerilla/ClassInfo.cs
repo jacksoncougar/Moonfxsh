@@ -348,7 +348,7 @@ return array;",
                     // inline array
                     else if (item.ArraySize > 0)
                     {
-                        for (var i = 0; i <= item.ArraySize - 1; i++)
+                        for (var i = 0; i < item.ArraySize; i++)
                         {
                             bodyBuilder.AppendLine(string.Format("{0}[{1}].Write({2});", item.Value.Name, i,
                                 binaryWriter.Name));

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 304)]
-    public class EditorCommentBlockBase
+    [LayoutAttribute(Size = 304, Alignment = 4)]
+    public class EditorCommentBlockBase  : IGuerilla
     {
         internal OpenTK.Vector3 position;
         internal Type type;
@@ -23,27 +24,23 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.String256 comment;
         internal  EditorCommentBlockBase(BinaryReader binaryReader)
         {
-            this.position = binaryReader.ReadVector3();
-            this.type = (Type)binaryReader.ReadInt32();
-            this.name = binaryReader.ReadString32();
-            this.comment = binaryReader.ReadString256();
+            position = binaryReader.ReadVector3();
+            type = (Type)binaryReader.ReadInt32();
+            name = binaryReader.ReadString32();
+            comment = binaryReader.ReadString256();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(position);
+                binaryWriter.Write((Int32)type);
+                binaryWriter.Write(name);
+                binaryWriter.Write(comment);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum Type : int
-        
         {
             Generic = 0,
         };

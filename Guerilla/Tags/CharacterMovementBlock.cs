@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36)]
-    public class CharacterMovementBlockBase
+    [LayoutAttribute(Size = 36, Alignment = 4)]
+    public class CharacterMovementBlockBase  : IGuerilla
     {
         internal MovementFlags movementFlags;
         internal float pathfindingRadius;
@@ -31,36 +32,40 @@ namespace Moonfish.Guerilla.Tags
         internal float throttleScale;
         internal  CharacterMovementBlockBase(BinaryReader binaryReader)
         {
-            this.movementFlags = (MovementFlags)binaryReader.ReadInt32();
-            this.pathfindingRadius = binaryReader.ReadSingle();
-            this.destinationRadius = binaryReader.ReadSingle();
-            this.diveGrenadeChance = binaryReader.ReadSingle();
-            this.obstacleLeapMinSize = (ObstacleLeapMinSize)binaryReader.ReadInt16();
-            this.obstacleLeapMaxSize = (ObstacleLeapMaxSize)binaryReader.ReadInt16();
-            this.obstacleIgnoreSize = (ObstacleIgnoreSize)binaryReader.ReadInt16();
-            this.obstacleSmashableSize = (ObstacleSmashableSize)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.jumpHeight = (JumpHeight)binaryReader.ReadInt16();
-            this.movementHints = (MovementHints)binaryReader.ReadInt32();
-            this.throttleScale = binaryReader.ReadSingle();
+            movementFlags = (MovementFlags)binaryReader.ReadInt32();
+            pathfindingRadius = binaryReader.ReadSingle();
+            destinationRadius = binaryReader.ReadSingle();
+            diveGrenadeChance = binaryReader.ReadSingle();
+            obstacleLeapMinSize = (ObstacleLeapMinSize)binaryReader.ReadInt16();
+            obstacleLeapMaxSize = (ObstacleLeapMaxSize)binaryReader.ReadInt16();
+            obstacleIgnoreSize = (ObstacleIgnoreSize)binaryReader.ReadInt16();
+            obstacleSmashableSize = (ObstacleSmashableSize)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            jumpHeight = (JumpHeight)binaryReader.ReadInt16();
+            movementHints = (MovementHints)binaryReader.ReadInt32();
+            throttleScale = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)movementFlags);
+                binaryWriter.Write(pathfindingRadius);
+                binaryWriter.Write(destinationRadius);
+                binaryWriter.Write(diveGrenadeChance);
+                binaryWriter.Write((Int16)obstacleLeapMinSize);
+                binaryWriter.Write((Int16)obstacleLeapMaxSize);
+                binaryWriter.Write((Int16)obstacleIgnoreSize);
+                binaryWriter.Write((Int16)obstacleSmashableSize);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Int16)jumpHeight);
+                binaryWriter.Write((Int32)movementHints);
+                binaryWriter.Write(throttleScale);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum MovementFlags : int
-        
         {
             DangerCrouchAllowMovement = 1,
             NoSideStep = 2,
@@ -71,7 +76,6 @@ namespace Moonfish.Guerilla.Tags
             DisallowCrouch = 64,
         };
         internal enum ObstacleLeapMinSize : short
-        
         {
             None = 0,
             Tiny = 1,
@@ -82,7 +86,6 @@ namespace Moonfish.Guerilla.Tags
             Immobile = 6,
         };
         internal enum ObstacleLeapMaxSize : short
-        
         {
             None = 0,
             Tiny = 1,
@@ -93,7 +96,6 @@ namespace Moonfish.Guerilla.Tags
             Immobile = 6,
         };
         internal enum ObstacleIgnoreSize : short
-        
         {
             None = 0,
             Tiny = 1,
@@ -104,7 +106,6 @@ namespace Moonfish.Guerilla.Tags
             Immobile = 6,
         };
         internal enum ObstacleSmashableSize : short
-        
         {
             None = 0,
             Tiny = 1,
@@ -115,7 +116,6 @@ namespace Moonfish.Guerilla.Tags
             Immobile = 6,
         };
         internal enum JumpHeight : short
-        
         {
             NONE = 0,
             Down = 1,
@@ -128,7 +128,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum MovementHints : int
-        
         {
             VaultStep = 1,
             VaultCrouch = 2,

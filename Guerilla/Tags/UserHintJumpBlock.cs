@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8)]
-    public class UserHintJumpBlockBase
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class UserHintJumpBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal Moonfish.Tags.ShortBlockIndex1 geometryIndex;
@@ -23,34 +24,29 @@ namespace Moonfish.Guerilla.Tags
         internal ControlFlags controlFlags;
         internal  UserHintJumpBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.geometryIndex = binaryReader.ReadShortBlockIndex1();
-            this.forceJumpHeight = (ForceJumpHeight)binaryReader.ReadInt16();
-            this.controlFlags = (ControlFlags)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            geometryIndex = binaryReader.ReadShortBlockIndex1();
+            forceJumpHeight = (ForceJumpHeight)binaryReader.ReadInt16();
+            controlFlags = (ControlFlags)binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(geometryIndex);
+                binaryWriter.Write((Int16)forceJumpHeight);
+                binaryWriter.Write((Int16)controlFlags);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             Bidirectional = 1,
             Closed = 2,
         };
         internal enum ForceJumpHeight : short
-        
         {
             NONE = 0,
             Down = 1,
@@ -63,7 +59,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum ControlFlags : short
-        
         {
             MagicLift = 1,
         };

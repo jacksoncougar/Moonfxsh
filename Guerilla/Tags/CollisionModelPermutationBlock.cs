@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,61 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class CollisionModelPermutationBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class CollisionModelPermutationBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal CollisionModelBspBlock[] bsps;
         internal CollisionBspPhysicsBlock[] bspPhysics;
         internal  CollisionModelPermutationBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.bsps = ReadCollisionModelBspBlockArray(binaryReader);
-            this.bspPhysics = ReadCollisionBspPhysicsBlockArray(binaryReader);
+            name = binaryReader.ReadStringID();
+            bsps = Guerilla.ReadBlockArray<CollisionModelBspBlock>(binaryReader);
+            bspPhysics = Guerilla.ReadBlockArray<CollisionBspPhysicsBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                nextAddress = Guerilla.WriteBlockArray<CollisionModelBspBlock>(binaryWriter, bsps, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CollisionBspPhysicsBlock>(binaryWriter, bspPhysics, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual CollisionModelBspBlock[] ReadCollisionModelBspBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(CollisionModelBspBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new CollisionModelBspBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new CollisionModelBspBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual CollisionBspPhysicsBlock[] ReadCollisionBspPhysicsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(CollisionBspPhysicsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new CollisionBspPhysicsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new CollisionBspPhysicsBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

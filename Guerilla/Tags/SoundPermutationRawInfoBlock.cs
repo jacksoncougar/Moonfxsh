@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 40)]
-    public class SoundPermutationRawInfoBlockBase
+    [LayoutAttribute(Size = 40, Alignment = 4)]
+    public class SoundPermutationRawInfoBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID skipFractionName;
         internal byte[] invalidName_;
@@ -27,46 +28,31 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal  SoundPermutationRawInfoBlockBase(BinaryReader binaryReader)
         {
-            this.skipFractionName = binaryReader.ReadStringID();
-            this.invalidName_ = ReadData(binaryReader);
-            this.invalidName_0 = ReadData(binaryReader);
-            this.invalidName_1 = ReadData(binaryReader);
-            this.soundPermutationMarkerBlock = ReadSoundPermutationMarkerBlockArray(binaryReader);
-            this.compression = (Compression)binaryReader.ReadInt16();
-            this.language = (Language)binaryReader.ReadByte();
-            this.invalidName_2 = binaryReader.ReadBytes(1);
+            skipFractionName = binaryReader.ReadStringID();
+            invalidName_ = Guerilla.ReadData(binaryReader);
+            invalidName_0 = Guerilla.ReadData(binaryReader);
+            invalidName_1 = Guerilla.ReadData(binaryReader);
+            soundPermutationMarkerBlock = Guerilla.ReadBlockArray<SoundPermutationMarkerBlock>(binaryReader);
+            compression = (Compression)binaryReader.ReadInt16();
+            language = (Language)binaryReader.ReadByte();
+            invalidName_2 = binaryReader.ReadBytes(1);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(skipFractionName);
+                nextAddress = Guerilla.WriteData(binaryWriter, invalidName_, nextAddress);
+                nextAddress = Guerilla.WriteData(binaryWriter, invalidName_0, nextAddress);
+                nextAddress = Guerilla.WriteData(binaryWriter, invalidName_1, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundPermutationMarkerBlock>(binaryWriter, soundPermutationMarkerBlock, nextAddress);
+                binaryWriter.Write((Int16)compression);
+                binaryWriter.Write((Byte)language);
+                binaryWriter.Write(invalidName_2, 0, 1);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual SoundPermutationMarkerBlock[] ReadSoundPermutationMarkerBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundPermutationMarkerBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundPermutationMarkerBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundPermutationMarkerBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum Compression : short
-        
         {
             NoneBigEndian = 0,
             XboxAdpcm = 1,
@@ -75,7 +61,6 @@ namespace Moonfish.Guerilla.Tags
             Wma = 4,
         };
         internal enum Language : byte
-        
         {
             English = 0,
             Japanese = 1,

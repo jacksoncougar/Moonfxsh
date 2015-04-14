@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 28)]
-    public class FlockSourceBlockBase
+    [LayoutAttribute(Size = 28, Alignment = 4)]
+    public class FlockSourceBlockBase  : IGuerilla
     {
         internal OpenTK.Vector3 position;
         internal OpenTK.Vector2 startingYawPitchDegrees;
@@ -26,24 +27,21 @@ namespace Moonfish.Guerilla.Tags
         internal float weight;
         internal  FlockSourceBlockBase(BinaryReader binaryReader)
         {
-            this.position = binaryReader.ReadVector3();
-            this.startingYawPitchDegrees = binaryReader.ReadVector2();
-            this.radius = binaryReader.ReadSingle();
-            this.weight = binaryReader.ReadSingle();
+            position = binaryReader.ReadVector3();
+            startingYawPitchDegrees = binaryReader.ReadVector2();
+            radius = binaryReader.ReadSingle();
+            weight = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(position);
+                binaryWriter.Write(startingYawPitchDegrees);
+                binaryWriter.Write(radius);
+                binaryWriter.Write(weight);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

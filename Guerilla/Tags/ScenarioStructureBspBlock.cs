@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass SbspClass = (TagClass)"sbsp";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 572)]
-    public class ScenarioStructureBspBlockBase
+    [LayoutAttribute(Size = 572, Alignment = 4)]
+    public class ScenarioStructureBspBlockBase  : IGuerilla
     {
         internal GlobalTagImportInfoBlock[] importInfo;
         internal byte[] invalidName_;
@@ -88,660 +97,123 @@ namespace Moonfish.Guerilla.Tags
         internal DecoratorPlacementDefinitionBlock[] decorators0;
         internal  ScenarioStructureBspBlockBase(BinaryReader binaryReader)
         {
-            this.importInfo = ReadGlobalTagImportInfoBlockArray(binaryReader);
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.collisionMaterials = ReadStructureCollisionMaterialsBlockArray(binaryReader);
-            this.collisionBSP = ReadGlobalCollisionBspBlockArray(binaryReader);
-            this.vehicleFloorWorldUnits = binaryReader.ReadSingle();
-            this.vehicleCeilingWorldUnits = binaryReader.ReadSingle();
-            this.uNUSEDNodes = ReadUNUSEDStructureBspNodeBlockArray(binaryReader);
-            this.leaves = ReadStructureBspLeafBlockArray(binaryReader);
-            this.worldBoundsX = binaryReader.ReadRange();
-            this.worldBoundsY = binaryReader.ReadRange();
-            this.worldBoundsZ = binaryReader.ReadRange();
-            this.surfaceReferences = ReadStructureBspSurfaceReferenceBlockArray(binaryReader);
-            this.clusterData = ReadData(binaryReader);
-            this.clusterPortals = ReadStructureBspClusterPortalBlockArray(binaryReader);
-            this.fogPlanes = ReadStructureBspFogPlaneBlockArray(binaryReader);
-            this.invalidName_0 = binaryReader.ReadBytes(24);
-            this.weatherPalette = ReadStructureBspWeatherPaletteBlockArray(binaryReader);
-            this.weatherPolyhedra = ReadStructureBspWeatherPolyhedronBlockArray(binaryReader);
-            this.detailObjects = ReadStructureBspDetailObjectDataBlockArray(binaryReader);
-            this.clusters = ReadStructureBspClusterBlockArray(binaryReader);
-            this.materials = ReadGlobalGeometryMaterialBlockArray(binaryReader);
-            this.skyOwnerCluster = ReadStructureBspSkyOwnerClusterBlockArray(binaryReader);
-            this.conveyorSurfaces = ReadStructureBspConveyorSurfaceBlockArray(binaryReader);
-            this.breakableSurfaces = ReadStructureBspBreakableSurfaceBlockArray(binaryReader);
-            this.pathfindingData = ReadPathfindingDataBlockArray(binaryReader);
-            this.pathfindingEdges = ReadStructureBspPathfindingEdgesBlockArray(binaryReader);
-            this.backgroundSoundPalette = ReadStructureBspBackgroundSoundPaletteBlockArray(binaryReader);
-            this.soundEnvironmentPalette = ReadStructureBspSoundEnvironmentPaletteBlockArray(binaryReader);
-            this.soundPASData = ReadData(binaryReader);
-            this.markers = ReadStructureBspMarkerBlockArray(binaryReader);
-            this.runtimeDecals = ReadStructureBspRuntimeDecalBlockArray(binaryReader);
-            this.environmentObjectPalette = ReadStructureBspEnvironmentObjectPaletteBlockArray(binaryReader);
-            this.environmentObjects = ReadStructureBspEnvironmentObjectBlockArray(binaryReader);
-            this.lightmaps = ReadStructureBspLightmapDataBlockArray(binaryReader);
-            this.invalidName_1 = binaryReader.ReadBytes(4);
-            this.leafMapLeaves = ReadGlobalMapLeafBlockArray(binaryReader);
-            this.leafMapConnections = ReadGlobalLeafConnectionBlockArray(binaryReader);
-            this.errors = ReadGlobalErrorReportCategoriesBlockArray(binaryReader);
-            this.precomputedLighting = ReadStructureBspPrecomputedLightingBlockArray(binaryReader);
-            this.instancedGeometriesDefinitions = ReadStructureBspInstancedGeometryDefinitionBlockArray(binaryReader);
-            this.instancedGeometryInstances = ReadStructureBspInstancedGeometryInstancesBlockArray(binaryReader);
-            this.ambienceSoundClusters = ReadStructureBspSoundClusterBlockArray(binaryReader);
-            this.reverbSoundClusters = ReadStructureBspSoundClusterBlockArray(binaryReader);
-            this.transparentPlanes = ReadTransparentPlanesBlockArray(binaryReader);
-            this.invalidName_2 = binaryReader.ReadBytes(96);
-            this.vehicleSpericalLimitRadius = binaryReader.ReadSingle();
-            this.vehicleSpericalLimitCenter = binaryReader.ReadVector3();
-            this.debugInfo = ReadStructureBspDebugInfoBlockArray(binaryReader);
-            this.decorators = binaryReader.ReadTagReference();
-            this.structurePhysics = new GlobalStructurePhysicsStructBlock(binaryReader);
-            this.waterDefinitions = ReadGlobalWaterDefinitionsBlockArray(binaryReader);
-            this.portalDeviceMapping = ReadStructurePortalDeviceMappingBlockArray(binaryReader);
-            this.audibility = ReadStructureBspAudibilityBlockArray(binaryReader);
-            this.objectFakeLightprobes = ReadStructureBspFakeLightprobesBlockArray(binaryReader);
-            this.decorators0 = ReadDecoratorPlacementDefinitionBlockArray(binaryReader);
+            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(4);
+            collisionMaterials = Guerilla.ReadBlockArray<StructureCollisionMaterialsBlock>(binaryReader);
+            collisionBSP = Guerilla.ReadBlockArray<GlobalCollisionBspBlock>(binaryReader);
+            vehicleFloorWorldUnits = binaryReader.ReadSingle();
+            vehicleCeilingWorldUnits = binaryReader.ReadSingle();
+            uNUSEDNodes = Guerilla.ReadBlockArray<UNUSEDStructureBspNodeBlock>(binaryReader);
+            leaves = Guerilla.ReadBlockArray<StructureBspLeafBlock>(binaryReader);
+            worldBoundsX = binaryReader.ReadRange();
+            worldBoundsY = binaryReader.ReadRange();
+            worldBoundsZ = binaryReader.ReadRange();
+            surfaceReferences = Guerilla.ReadBlockArray<StructureBspSurfaceReferenceBlock>(binaryReader);
+            clusterData = Guerilla.ReadData(binaryReader);
+            clusterPortals = Guerilla.ReadBlockArray<StructureBspClusterPortalBlock>(binaryReader);
+            fogPlanes = Guerilla.ReadBlockArray<StructureBspFogPlaneBlock>(binaryReader);
+            invalidName_0 = binaryReader.ReadBytes(24);
+            weatherPalette = Guerilla.ReadBlockArray<StructureBspWeatherPaletteBlock>(binaryReader);
+            weatherPolyhedra = Guerilla.ReadBlockArray<StructureBspWeatherPolyhedronBlock>(binaryReader);
+            detailObjects = Guerilla.ReadBlockArray<StructureBspDetailObjectDataBlock>(binaryReader);
+            clusters = Guerilla.ReadBlockArray<StructureBspClusterBlock>(binaryReader);
+            materials = Guerilla.ReadBlockArray<GlobalGeometryMaterialBlock>(binaryReader);
+            skyOwnerCluster = Guerilla.ReadBlockArray<StructureBspSkyOwnerClusterBlock>(binaryReader);
+            conveyorSurfaces = Guerilla.ReadBlockArray<StructureBspConveyorSurfaceBlock>(binaryReader);
+            breakableSurfaces = Guerilla.ReadBlockArray<StructureBspBreakableSurfaceBlock>(binaryReader);
+            pathfindingData = Guerilla.ReadBlockArray<PathfindingDataBlock>(binaryReader);
+            pathfindingEdges = Guerilla.ReadBlockArray<StructureBspPathfindingEdgesBlock>(binaryReader);
+            backgroundSoundPalette = Guerilla.ReadBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryReader);
+            soundEnvironmentPalette = Guerilla.ReadBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryReader);
+            soundPASData = Guerilla.ReadData(binaryReader);
+            markers = Guerilla.ReadBlockArray<StructureBspMarkerBlock>(binaryReader);
+            runtimeDecals = Guerilla.ReadBlockArray<StructureBspRuntimeDecalBlock>(binaryReader);
+            environmentObjectPalette = Guerilla.ReadBlockArray<StructureBspEnvironmentObjectPaletteBlock>(binaryReader);
+            environmentObjects = Guerilla.ReadBlockArray<StructureBspEnvironmentObjectBlock>(binaryReader);
+            lightmaps = Guerilla.ReadBlockArray<StructureBspLightmapDataBlock>(binaryReader);
+            invalidName_1 = binaryReader.ReadBytes(4);
+            leafMapLeaves = Guerilla.ReadBlockArray<GlobalMapLeafBlock>(binaryReader);
+            leafMapConnections = Guerilla.ReadBlockArray<GlobalLeafConnectionBlock>(binaryReader);
+            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
+            precomputedLighting = Guerilla.ReadBlockArray<StructureBspPrecomputedLightingBlock>(binaryReader);
+            instancedGeometriesDefinitions = Guerilla.ReadBlockArray<StructureBspInstancedGeometryDefinitionBlock>(binaryReader);
+            instancedGeometryInstances = Guerilla.ReadBlockArray<StructureBspInstancedGeometryInstancesBlock>(binaryReader);
+            ambienceSoundClusters = Guerilla.ReadBlockArray<StructureBspSoundClusterBlock>(binaryReader);
+            reverbSoundClusters = Guerilla.ReadBlockArray<StructureBspSoundClusterBlock>(binaryReader);
+            transparentPlanes = Guerilla.ReadBlockArray<TransparentPlanesBlock>(binaryReader);
+            invalidName_2 = binaryReader.ReadBytes(96);
+            vehicleSpericalLimitRadius = binaryReader.ReadSingle();
+            vehicleSpericalLimitCenter = binaryReader.ReadVector3();
+            debugInfo = Guerilla.ReadBlockArray<StructureBspDebugInfoBlock>(binaryReader);
+            decorators = binaryReader.ReadTagReference();
+            structurePhysics = new GlobalStructurePhysicsStructBlock(binaryReader);
+            waterDefinitions = Guerilla.ReadBlockArray<GlobalWaterDefinitionsBlock>(binaryReader);
+            portalDeviceMapping = Guerilla.ReadBlockArray<StructurePortalDeviceMappingBlock>(binaryReader);
+            audibility = Guerilla.ReadBlockArray<StructureBspAudibilityBlock>(binaryReader);
+            objectFakeLightprobes = Guerilla.ReadBlockArray<StructureBspFakeLightprobesBlock>(binaryReader);
+            decorators0 = Guerilla.ReadBlockArray<DecoratorPlacementDefinitionBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                nextAddress = Guerilla.WriteBlockArray<GlobalTagImportInfoBlock>(binaryWriter, importInfo, nextAddress);
+                binaryWriter.Write(invalidName_, 0, 4);
+                nextAddress = Guerilla.WriteBlockArray<StructureCollisionMaterialsBlock>(binaryWriter, collisionMaterials, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GlobalCollisionBspBlock>(binaryWriter, collisionBSP, nextAddress);
+                binaryWriter.Write(vehicleFloorWorldUnits);
+                binaryWriter.Write(vehicleCeilingWorldUnits);
+                nextAddress = Guerilla.WriteBlockArray<UNUSEDStructureBspNodeBlock>(binaryWriter, uNUSEDNodes, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspLeafBlock>(binaryWriter, leaves, nextAddress);
+                binaryWriter.Write(worldBoundsX);
+                binaryWriter.Write(worldBoundsY);
+                binaryWriter.Write(worldBoundsZ);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspSurfaceReferenceBlock>(binaryWriter, surfaceReferences, nextAddress);
+                nextAddress = Guerilla.WriteData(binaryWriter, clusterData, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspClusterPortalBlock>(binaryWriter, clusterPortals, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspFogPlaneBlock>(binaryWriter, fogPlanes, nextAddress);
+                binaryWriter.Write(invalidName_0, 0, 24);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspWeatherPaletteBlock>(binaryWriter, weatherPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspWeatherPolyhedronBlock>(binaryWriter, weatherPolyhedra, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspDetailObjectDataBlock>(binaryWriter, detailObjects, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspClusterBlock>(binaryWriter, clusters, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GlobalGeometryMaterialBlock>(binaryWriter, materials, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspSkyOwnerClusterBlock>(binaryWriter, skyOwnerCluster, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspConveyorSurfaceBlock>(binaryWriter, conveyorSurfaces, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspBreakableSurfaceBlock>(binaryWriter, breakableSurfaces, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PathfindingDataBlock>(binaryWriter, pathfindingData, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspPathfindingEdgesBlock>(binaryWriter, pathfindingEdges, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryWriter, backgroundSoundPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryWriter, soundEnvironmentPalette, nextAddress);
+                nextAddress = Guerilla.WriteData(binaryWriter, soundPASData, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspMarkerBlock>(binaryWriter, markers, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspRuntimeDecalBlock>(binaryWriter, runtimeDecals, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspEnvironmentObjectPaletteBlock>(binaryWriter, environmentObjectPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspEnvironmentObjectBlock>(binaryWriter, environmentObjects, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspLightmapDataBlock>(binaryWriter, lightmaps, nextAddress);
+                binaryWriter.Write(invalidName_1, 0, 4);
+                nextAddress = Guerilla.WriteBlockArray<GlobalMapLeafBlock>(binaryWriter, leafMapLeaves, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GlobalLeafConnectionBlock>(binaryWriter, leafMapConnections, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GlobalErrorReportCategoriesBlock>(binaryWriter, errors, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspPrecomputedLightingBlock>(binaryWriter, precomputedLighting, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspInstancedGeometryDefinitionBlock>(binaryWriter, instancedGeometriesDefinitions, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspInstancedGeometryInstancesBlock>(binaryWriter, instancedGeometryInstances, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspSoundClusterBlock>(binaryWriter, ambienceSoundClusters, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspSoundClusterBlock>(binaryWriter, reverbSoundClusters, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<TransparentPlanesBlock>(binaryWriter, transparentPlanes, nextAddress);
+                binaryWriter.Write(invalidName_2, 0, 96);
+                binaryWriter.Write(vehicleSpericalLimitRadius);
+                binaryWriter.Write(vehicleSpericalLimitCenter);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspDebugInfoBlock>(binaryWriter, debugInfo, nextAddress);
+                binaryWriter.Write(decorators);
+                structurePhysics.Write(binaryWriter);
+                nextAddress = Guerilla.WriteBlockArray<GlobalWaterDefinitionsBlock>(binaryWriter, waterDefinitions, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructurePortalDeviceMappingBlock>(binaryWriter, portalDeviceMapping, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspAudibilityBlock>(binaryWriter, audibility, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspFakeLightprobesBlock>(binaryWriter, objectFakeLightprobes, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<DecoratorPlacementDefinitionBlock>(binaryWriter, decorators0, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual GlobalTagImportInfoBlock[] ReadGlobalTagImportInfoBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalTagImportInfoBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalTagImportInfoBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalTagImportInfoBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureCollisionMaterialsBlock[] ReadStructureCollisionMaterialsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureCollisionMaterialsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureCollisionMaterialsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureCollisionMaterialsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalCollisionBspBlock[] ReadGlobalCollisionBspBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalCollisionBspBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalCollisionBspBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalCollisionBspBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UNUSEDStructureBspNodeBlock[] ReadUNUSEDStructureBspNodeBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UNUSEDStructureBspNodeBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UNUSEDStructureBspNodeBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UNUSEDStructureBspNodeBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspLeafBlock[] ReadStructureBspLeafBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspLeafBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspLeafBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspLeafBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspSurfaceReferenceBlock[] ReadStructureBspSurfaceReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspSurfaceReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspSurfaceReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspSurfaceReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspClusterPortalBlock[] ReadStructureBspClusterPortalBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspClusterPortalBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspClusterPortalBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspClusterPortalBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspFogPlaneBlock[] ReadStructureBspFogPlaneBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspFogPlaneBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspFogPlaneBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspFogPlaneBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspWeatherPaletteBlock[] ReadStructureBspWeatherPaletteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspWeatherPaletteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspWeatherPaletteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspWeatherPaletteBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspWeatherPolyhedronBlock[] ReadStructureBspWeatherPolyhedronBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspWeatherPolyhedronBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspWeatherPolyhedronBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspWeatherPolyhedronBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspDetailObjectDataBlock[] ReadStructureBspDetailObjectDataBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspDetailObjectDataBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspDetailObjectDataBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspDetailObjectDataBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspClusterBlock[] ReadStructureBspClusterBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspClusterBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspClusterBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspClusterBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalGeometryMaterialBlock[] ReadGlobalGeometryMaterialBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalGeometryMaterialBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalGeometryMaterialBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalGeometryMaterialBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspSkyOwnerClusterBlock[] ReadStructureBspSkyOwnerClusterBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspSkyOwnerClusterBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspSkyOwnerClusterBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspSkyOwnerClusterBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspConveyorSurfaceBlock[] ReadStructureBspConveyorSurfaceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspConveyorSurfaceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspConveyorSurfaceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspConveyorSurfaceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspBreakableSurfaceBlock[] ReadStructureBspBreakableSurfaceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspBreakableSurfaceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspBreakableSurfaceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspBreakableSurfaceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PathfindingDataBlock[] ReadPathfindingDataBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PathfindingDataBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PathfindingDataBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PathfindingDataBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspPathfindingEdgesBlock[] ReadStructureBspPathfindingEdgesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspPathfindingEdgesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspPathfindingEdgesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspPathfindingEdgesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspBackgroundSoundPaletteBlock[] ReadStructureBspBackgroundSoundPaletteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspBackgroundSoundPaletteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspBackgroundSoundPaletteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspBackgroundSoundPaletteBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspSoundEnvironmentPaletteBlock[] ReadStructureBspSoundEnvironmentPaletteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspSoundEnvironmentPaletteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspSoundEnvironmentPaletteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspSoundEnvironmentPaletteBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspMarkerBlock[] ReadStructureBspMarkerBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspMarkerBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspMarkerBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspMarkerBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspRuntimeDecalBlock[] ReadStructureBspRuntimeDecalBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspRuntimeDecalBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspRuntimeDecalBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspRuntimeDecalBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspEnvironmentObjectPaletteBlock[] ReadStructureBspEnvironmentObjectPaletteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspEnvironmentObjectPaletteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspEnvironmentObjectPaletteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspEnvironmentObjectPaletteBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspEnvironmentObjectBlock[] ReadStructureBspEnvironmentObjectBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspEnvironmentObjectBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspEnvironmentObjectBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspEnvironmentObjectBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspLightmapDataBlock[] ReadStructureBspLightmapDataBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspLightmapDataBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspLightmapDataBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspLightmapDataBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalMapLeafBlock[] ReadGlobalMapLeafBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalMapLeafBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalMapLeafBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalMapLeafBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalLeafConnectionBlock[] ReadGlobalLeafConnectionBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalLeafConnectionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalLeafConnectionBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalLeafConnectionBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalErrorReportCategoriesBlock[] ReadGlobalErrorReportCategoriesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalErrorReportCategoriesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalErrorReportCategoriesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalErrorReportCategoriesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspPrecomputedLightingBlock[] ReadStructureBspPrecomputedLightingBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspPrecomputedLightingBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspPrecomputedLightingBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspPrecomputedLightingBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspInstancedGeometryDefinitionBlock[] ReadStructureBspInstancedGeometryDefinitionBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspInstancedGeometryDefinitionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspInstancedGeometryDefinitionBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspInstancedGeometryDefinitionBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspInstancedGeometryInstancesBlock[] ReadStructureBspInstancedGeometryInstancesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspInstancedGeometryInstancesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspInstancedGeometryInstancesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspInstancedGeometryInstancesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspSoundClusterBlock[] ReadStructureBspSoundClusterBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspSoundClusterBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspSoundClusterBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspSoundClusterBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual TransparentPlanesBlock[] ReadTransparentPlanesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(TransparentPlanesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TransparentPlanesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new TransparentPlanesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspDebugInfoBlock[] ReadStructureBspDebugInfoBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspDebugInfoBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspDebugInfoBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspDebugInfoBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalWaterDefinitionsBlock[] ReadGlobalWaterDefinitionsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalWaterDefinitionsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalWaterDefinitionsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalWaterDefinitionsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructurePortalDeviceMappingBlock[] ReadStructurePortalDeviceMappingBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructurePortalDeviceMappingBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructurePortalDeviceMappingBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructurePortalDeviceMappingBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspAudibilityBlock[] ReadStructureBspAudibilityBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspAudibilityBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspAudibilityBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspAudibilityBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureBspFakeLightprobesBlock[] ReadStructureBspFakeLightprobesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspFakeLightprobesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspFakeLightprobesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspFakeLightprobesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual DecoratorPlacementDefinitionBlock[] ReadDecoratorPlacementDefinitionBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(DecoratorPlacementDefinitionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new DecoratorPlacementDefinitionBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new DecoratorPlacementDefinitionBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

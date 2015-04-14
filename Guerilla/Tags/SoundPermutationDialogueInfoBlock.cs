@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class SoundPermutationDialogueInfoBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class SoundPermutationDialogueInfoBlockBase  : IGuerilla
     {
         internal int mouthDataOffset;
         internal int mouthDataLength;
@@ -23,24 +24,21 @@ namespace Moonfish.Guerilla.Tags
         internal int lipsyncDataLength;
         internal  SoundPermutationDialogueInfoBlockBase(BinaryReader binaryReader)
         {
-            this.mouthDataOffset = binaryReader.ReadInt32();
-            this.mouthDataLength = binaryReader.ReadInt32();
-            this.lipsyncDataOffset = binaryReader.ReadInt32();
-            this.lipsyncDataLength = binaryReader.ReadInt32();
+            mouthDataOffset = binaryReader.ReadInt32();
+            mouthDataLength = binaryReader.ReadInt32();
+            lipsyncDataOffset = binaryReader.ReadInt32();
+            lipsyncDataLength = binaryReader.ReadInt32();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(mouthDataOffset);
+                binaryWriter.Write(mouthDataLength);
+                binaryWriter.Write(lipsyncDataOffset);
+                binaryWriter.Write(lipsyncDataLength);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

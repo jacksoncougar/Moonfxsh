@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class CharacterVariantsBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class CharacterVariantsBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID variantName;
         internal short variantIndex;
@@ -23,24 +24,21 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID variantDesignator;
         internal  CharacterVariantsBlockBase(BinaryReader binaryReader)
         {
-            this.variantName = binaryReader.ReadStringID();
-            this.variantIndex = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.variantDesignator = binaryReader.ReadStringID();
+            variantName = binaryReader.ReadStringID();
+            variantIndex = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            variantDesignator = binaryReader.ReadStringID();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(variantName);
+                binaryWriter.Write(variantIndex);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(variantDesignator);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

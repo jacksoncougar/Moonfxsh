@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class StructureBspSoundClusterBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class StructureBspSoundClusterBlockBase  : IGuerilla
     {
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
@@ -23,54 +24,21 @@ namespace Moonfish.Guerilla.Tags
         internal StructureSoundClusterInteriorClusterIndices[] interiorClusterIndices;
         internal  StructureBspSoundClusterBlockBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.enclosingPortalDesignators = ReadStructureSoundClusterPortalDesignatorsArray(binaryReader);
-            this.interiorClusterIndices = ReadStructureSoundClusterInteriorClusterIndicesArray(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(2);
+            enclosingPortalDesignators = Guerilla.ReadBlockArray<StructureSoundClusterPortalDesignators>(binaryReader);
+            interiorClusterIndices = Guerilla.ReadBlockArray<StructureSoundClusterInteriorClusterIndices>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                nextAddress = Guerilla.WriteBlockArray<StructureSoundClusterPortalDesignators>(binaryWriter, enclosingPortalDesignators, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureSoundClusterInteriorClusterIndices>(binaryWriter, interiorClusterIndices, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual StructureSoundClusterPortalDesignators[] ReadStructureSoundClusterPortalDesignatorsArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureSoundClusterPortalDesignators));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureSoundClusterPortalDesignators[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureSoundClusterPortalDesignators(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StructureSoundClusterInteriorClusterIndices[] ReadStructureSoundClusterInteriorClusterIndicesArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureSoundClusterInteriorClusterIndices));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureSoundClusterInteriorClusterIndices[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureSoundClusterInteriorClusterIndices(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

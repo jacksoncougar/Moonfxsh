@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 64)]
-    public class MassDistributionsBlockBase
+    [LayoutAttribute(Size = 64, Alignment = 16)]
+    public class MassDistributionsBlockBase  : IGuerilla
     {
         internal OpenTK.Vector3 centerOfMass;
         internal byte[] invalidName_;
@@ -27,28 +28,29 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal  MassDistributionsBlockBase(BinaryReader binaryReader)
         {
-            this.centerOfMass = binaryReader.ReadVector3();
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.inertiaTensorI = binaryReader.ReadVector3();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.inertiaTensorJ = binaryReader.ReadVector3();
-            this.invalidName_1 = binaryReader.ReadBytes(4);
-            this.inertiaTensorK = binaryReader.ReadVector3();
-            this.invalidName_2 = binaryReader.ReadBytes(4);
+            centerOfMass = binaryReader.ReadVector3();
+            invalidName_ = binaryReader.ReadBytes(4);
+            inertiaTensorI = binaryReader.ReadVector3();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            inertiaTensorJ = binaryReader.ReadVector3();
+            invalidName_1 = binaryReader.ReadBytes(4);
+            inertiaTensorK = binaryReader.ReadVector3();
+            invalidName_2 = binaryReader.ReadBytes(4);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(centerOfMass);
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(inertiaTensorI);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write(inertiaTensorJ);
+                binaryWriter.Write(invalidName_1, 0, 4);
+                binaryWriter.Write(inertiaTensorK);
+                binaryWriter.Write(invalidName_2, 0, 4);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

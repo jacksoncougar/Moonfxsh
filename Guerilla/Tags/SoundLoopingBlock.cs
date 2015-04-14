@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass LsndClass = (TagClass)"lsnd";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 44)]
-    public class SoundLoopingBlockBase
+    [LayoutAttribute(Size = 44, Alignment = 4)]
+    public class SoundLoopingBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal float martysMusicTimeSeconds;
@@ -34,61 +43,30 @@ namespace Moonfish.Guerilla.Tags
         internal LoopingSoundDetailBlock[] detailSounds;
         internal  SoundLoopingBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.martysMusicTimeSeconds = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadSingle();
-            this.invalidName_0 = binaryReader.ReadBytes(8);
-            this.invalidName_1 = binaryReader.ReadTagReference();
-            this.tracks = ReadLoopingSoundTrackBlockArray(binaryReader);
-            this.detailSounds = ReadLoopingSoundDetailBlockArray(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            martysMusicTimeSeconds = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(8);
+            invalidName_1 = binaryReader.ReadTagReference();
+            tracks = Guerilla.ReadBlockArray<LoopingSoundTrackBlock>(binaryReader);
+            detailSounds = Guerilla.ReadBlockArray<LoopingSoundDetailBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(martysMusicTimeSeconds);
+                binaryWriter.Write(invalidName_);
+                binaryWriter.Write(invalidName_0, 0, 8);
+                binaryWriter.Write(invalidName_1);
+                nextAddress = Guerilla.WriteBlockArray<LoopingSoundTrackBlock>(binaryWriter, tracks, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<LoopingSoundDetailBlock>(binaryWriter, detailSounds, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual LoopingSoundTrackBlock[] ReadLoopingSoundTrackBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LoopingSoundTrackBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LoopingSoundTrackBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LoopingSoundTrackBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual LoopingSoundDetailBlock[] ReadLoopingSoundDetailBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LoopingSoundDetailBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LoopingSoundDetailBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LoopingSoundDetailBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             DeafeningToAIsWhenUsedAsABackgroundStereoTrackCausesNearbyAIsToBeUnableToHear = 1,
             NotALoopThisIsACollectionOfPermutationsStrungTogetherThatShouldPlayOnceThenStop = 2,

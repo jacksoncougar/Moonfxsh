@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass WeatClass = (TagClass)"weat";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 176)]
-    public class WeatherSystemBlockBase
+    [LayoutAttribute(Size = 176, Alignment = 4)]
+    public class WeatherSystemBlockBase  : IGuerilla
     {
         internal GlobalParticleSystemLiteBlock[] particleSystem;
         internal GlobalWeatherBackgroundPlateBlock[] backgroundPlates;
@@ -24,54 +33,21 @@ namespace Moonfish.Guerilla.Tags
         internal float fadeRadius;
         internal  WeatherSystemBlockBase(BinaryReader binaryReader)
         {
-            this.particleSystem = ReadGlobalParticleSystemLiteBlockArray(binaryReader);
-            this.backgroundPlates = ReadGlobalWeatherBackgroundPlateBlockArray(binaryReader);
-            this.windModel = new GlobalWindModelStructBlock(binaryReader);
-            this.fadeRadius = binaryReader.ReadSingle();
+            particleSystem = Guerilla.ReadBlockArray<GlobalParticleSystemLiteBlock>(binaryReader);
+            backgroundPlates = Guerilla.ReadBlockArray<GlobalWeatherBackgroundPlateBlock>(binaryReader);
+            windModel = new GlobalWindModelStructBlock(binaryReader);
+            fadeRadius = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                nextAddress = Guerilla.WriteBlockArray<GlobalParticleSystemLiteBlock>(binaryWriter, particleSystem, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GlobalWeatherBackgroundPlateBlock>(binaryWriter, backgroundPlates, nextAddress);
+                windModel.Write(binaryWriter);
+                binaryWriter.Write(fadeRadius);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual GlobalParticleSystemLiteBlock[] ReadGlobalParticleSystemLiteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalParticleSystemLiteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalParticleSystemLiteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalParticleSystemLiteBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalWeatherBackgroundPlateBlock[] ReadGlobalWeatherBackgroundPlateBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalWeatherBackgroundPlateBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalWeatherBackgroundPlateBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalWeatherBackgroundPlateBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

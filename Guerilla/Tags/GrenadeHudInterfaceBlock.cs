@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass GrhiClass = (TagClass)"grhi";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 464)]
-    public class GrenadeHudInterfaceBlockBase
+    [LayoutAttribute(Size = 464, Alignment = 4)]
+    public class GrenadeHudInterfaceBlockBase  : IGuerilla
     {
         internal Anchor anchor;
         internal byte[] invalidName_;
@@ -124,145 +133,169 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_18;
         internal  GrenadeHudInterfaceBlockBase(BinaryReader binaryReader)
         {
-            this.anchor = (Anchor)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.invalidName_0 = binaryReader.ReadBytes(32);
-            this.anchorOffset = binaryReader.ReadPoint();
-            this.widthScale = binaryReader.ReadSingle();
-            this.heightScale = binaryReader.ReadSingle();
-            this.scalingFlags = (ScalingFlags)binaryReader.ReadInt16();
-            this.invalidName_1 = binaryReader.ReadBytes(2);
-            this.invalidName_2 = binaryReader.ReadBytes(20);
-            this.interfaceBitmap = binaryReader.ReadTagReference();
-            this.defaultColor = binaryReader.ReadColourA1R1G1B1();
-            this.flashingColor = binaryReader.ReadColourA1R1G1B1();
-            this.flashPeriod = binaryReader.ReadSingle();
-            this.flashDelay = binaryReader.ReadSingle();
-            this.numberOfFlashes = binaryReader.ReadInt16();
-            this.flashFlags = (FlashFlags)binaryReader.ReadInt16();
-            this.flashLength = binaryReader.ReadSingle();
-            this.disabledColor = binaryReader.ReadColourA1R1G1B1();
-            this.invalidName_3 = binaryReader.ReadBytes(4);
-            this.sequenceIndex = binaryReader.ReadInt16();
-            this.invalidName_4 = binaryReader.ReadBytes(2);
-            this.multitexOverlay = ReadGlobalHudMultitextureOverlayDefinitionArray(binaryReader);
-            this.invalidName_5 = binaryReader.ReadBytes(4);
-            this.anchorOffset0 = binaryReader.ReadPoint();
-            this.widthScale0 = binaryReader.ReadSingle();
-            this.heightScale0 = binaryReader.ReadSingle();
-            this.scalingFlags0 = (ScalingFlags)binaryReader.ReadInt16();
-            this.invalidName_6 = binaryReader.ReadBytes(2);
-            this.invalidName_7 = binaryReader.ReadBytes(20);
-            this.interfaceBitmap0 = binaryReader.ReadTagReference();
-            this.defaultColor0 = binaryReader.ReadColourA1R1G1B1();
-            this.flashingColor0 = binaryReader.ReadColourA1R1G1B1();
-            this.flashPeriod0 = binaryReader.ReadSingle();
-            this.flashDelay0 = binaryReader.ReadSingle();
-            this.numberOfFlashes0 = binaryReader.ReadInt16();
-            this.flashFlags0 = (FlashFlags)binaryReader.ReadInt16();
-            this.flashLength0 = binaryReader.ReadSingle();
-            this.disabledColor0 = binaryReader.ReadColourA1R1G1B1();
-            this.invalidName_8 = binaryReader.ReadBytes(4);
-            this.sequenceIndex0 = binaryReader.ReadInt16();
-            this.invalidName_9 = binaryReader.ReadBytes(2);
-            this.multitexOverlay0 = ReadGlobalHudMultitextureOverlayDefinitionArray(binaryReader);
-            this.invalidName_10 = binaryReader.ReadBytes(4);
-            this.anchorOffset1 = binaryReader.ReadPoint();
-            this.widthScale1 = binaryReader.ReadSingle();
-            this.heightScale1 = binaryReader.ReadSingle();
-            this.scalingFlags1 = (ScalingFlags)binaryReader.ReadInt16();
-            this.invalidName_11 = binaryReader.ReadBytes(2);
-            this.invalidName_12 = binaryReader.ReadBytes(20);
-            this.defaultColor1 = binaryReader.ReadColourA1R1G1B1();
-            this.flashingColor1 = binaryReader.ReadColourA1R1G1B1();
-            this.flashPeriod1 = binaryReader.ReadSingle();
-            this.flashDelay1 = binaryReader.ReadSingle();
-            this.numberOfFlashes1 = binaryReader.ReadInt16();
-            this.flashFlags1 = (FlashFlags)binaryReader.ReadInt16();
-            this.flashLength1 = binaryReader.ReadSingle();
-            this.disabledColor1 = binaryReader.ReadColourA1R1G1B1();
-            this.invalidName_13 = binaryReader.ReadBytes(4);
-            this.maximumNumberOfDigits = binaryReader.ReadByte();
-            this.flags = (Flags)binaryReader.ReadByte();
-            this.numberOfFractionalDigits = binaryReader.ReadByte();
-            this.invalidName_14 = binaryReader.ReadBytes(1);
-            this.invalidName_15 = binaryReader.ReadBytes(12);
-            this.flashCutoff = binaryReader.ReadInt16();
-            this.invalidName_16 = binaryReader.ReadBytes(2);
-            this.overlayBitmap = binaryReader.ReadTagReference();
-            this.overlays = ReadGrenadeHudOverlayBlockArray(binaryReader);
-            this.warningSounds = ReadGrenadeHudSoundBlockArray(binaryReader);
-            this.invalidName_17 = binaryReader.ReadBytes(68);
-            this.sequenceIndex1 = binaryReader.ReadInt16();
-            this.widthOffset = binaryReader.ReadInt16();
-            this.offsetFromReferenceCorner = binaryReader.ReadPoint();
-            this.overrideIconColor = binaryReader.ReadColourA1R1G1B1();
-            this.frameRate030 = binaryReader.ReadByte();
-            this.flags0 = (Flags)binaryReader.ReadByte();
-            this.textIndex = binaryReader.ReadInt16();
-            this.invalidName_18 = binaryReader.ReadBytes(48);
+            anchor = (Anchor)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(32);
+            anchorOffset = binaryReader.ReadPoint();
+            widthScale = binaryReader.ReadSingle();
+            heightScale = binaryReader.ReadSingle();
+            scalingFlags = (ScalingFlags)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            invalidName_2 = binaryReader.ReadBytes(20);
+            interfaceBitmap = binaryReader.ReadTagReference();
+            defaultColor = binaryReader.ReadColourA1R1G1B1();
+            flashingColor = binaryReader.ReadColourA1R1G1B1();
+            flashPeriod = binaryReader.ReadSingle();
+            flashDelay = binaryReader.ReadSingle();
+            numberOfFlashes = binaryReader.ReadInt16();
+            flashFlags = (FlashFlags)binaryReader.ReadInt16();
+            flashLength = binaryReader.ReadSingle();
+            disabledColor = binaryReader.ReadColourA1R1G1B1();
+            invalidName_3 = binaryReader.ReadBytes(4);
+            sequenceIndex = binaryReader.ReadInt16();
+            invalidName_4 = binaryReader.ReadBytes(2);
+            multitexOverlay = Guerilla.ReadBlockArray<GlobalHudMultitextureOverlayDefinition>(binaryReader);
+            invalidName_5 = binaryReader.ReadBytes(4);
+            anchorOffset0 = binaryReader.ReadPoint();
+            widthScale0 = binaryReader.ReadSingle();
+            heightScale0 = binaryReader.ReadSingle();
+            scalingFlags0 = (ScalingFlags)binaryReader.ReadInt16();
+            invalidName_6 = binaryReader.ReadBytes(2);
+            invalidName_7 = binaryReader.ReadBytes(20);
+            interfaceBitmap0 = binaryReader.ReadTagReference();
+            defaultColor0 = binaryReader.ReadColourA1R1G1B1();
+            flashingColor0 = binaryReader.ReadColourA1R1G1B1();
+            flashPeriod0 = binaryReader.ReadSingle();
+            flashDelay0 = binaryReader.ReadSingle();
+            numberOfFlashes0 = binaryReader.ReadInt16();
+            flashFlags0 = (FlashFlags)binaryReader.ReadInt16();
+            flashLength0 = binaryReader.ReadSingle();
+            disabledColor0 = binaryReader.ReadColourA1R1G1B1();
+            invalidName_8 = binaryReader.ReadBytes(4);
+            sequenceIndex0 = binaryReader.ReadInt16();
+            invalidName_9 = binaryReader.ReadBytes(2);
+            multitexOverlay0 = Guerilla.ReadBlockArray<GlobalHudMultitextureOverlayDefinition>(binaryReader);
+            invalidName_10 = binaryReader.ReadBytes(4);
+            anchorOffset1 = binaryReader.ReadPoint();
+            widthScale1 = binaryReader.ReadSingle();
+            heightScale1 = binaryReader.ReadSingle();
+            scalingFlags1 = (ScalingFlags)binaryReader.ReadInt16();
+            invalidName_11 = binaryReader.ReadBytes(2);
+            invalidName_12 = binaryReader.ReadBytes(20);
+            defaultColor1 = binaryReader.ReadColourA1R1G1B1();
+            flashingColor1 = binaryReader.ReadColourA1R1G1B1();
+            flashPeriod1 = binaryReader.ReadSingle();
+            flashDelay1 = binaryReader.ReadSingle();
+            numberOfFlashes1 = binaryReader.ReadInt16();
+            flashFlags1 = (FlashFlags)binaryReader.ReadInt16();
+            flashLength1 = binaryReader.ReadSingle();
+            disabledColor1 = binaryReader.ReadColourA1R1G1B1();
+            invalidName_13 = binaryReader.ReadBytes(4);
+            maximumNumberOfDigits = binaryReader.ReadByte();
+            flags = (Flags)binaryReader.ReadByte();
+            numberOfFractionalDigits = binaryReader.ReadByte();
+            invalidName_14 = binaryReader.ReadBytes(1);
+            invalidName_15 = binaryReader.ReadBytes(12);
+            flashCutoff = binaryReader.ReadInt16();
+            invalidName_16 = binaryReader.ReadBytes(2);
+            overlayBitmap = binaryReader.ReadTagReference();
+            overlays = Guerilla.ReadBlockArray<GrenadeHudOverlayBlock>(binaryReader);
+            warningSounds = Guerilla.ReadBlockArray<GrenadeHudSoundBlock>(binaryReader);
+            invalidName_17 = binaryReader.ReadBytes(68);
+            sequenceIndex1 = binaryReader.ReadInt16();
+            widthOffset = binaryReader.ReadInt16();
+            offsetFromReferenceCorner = binaryReader.ReadPoint();
+            overrideIconColor = binaryReader.ReadColourA1R1G1B1();
+            frameRate030 = binaryReader.ReadByte();
+            flags0 = (Flags)binaryReader.ReadByte();
+            textIndex = binaryReader.ReadInt16();
+            invalidName_18 = binaryReader.ReadBytes(48);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)anchor);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(invalidName_0, 0, 32);
+                binaryWriter.Write(anchorOffset);
+                binaryWriter.Write(widthScale);
+                binaryWriter.Write(heightScale);
+                binaryWriter.Write((Int16)scalingFlags);
+                binaryWriter.Write(invalidName_1, 0, 2);
+                binaryWriter.Write(invalidName_2, 0, 20);
+                binaryWriter.Write(interfaceBitmap);
+                binaryWriter.Write(defaultColor);
+                binaryWriter.Write(flashingColor);
+                binaryWriter.Write(flashPeriod);
+                binaryWriter.Write(flashDelay);
+                binaryWriter.Write(numberOfFlashes);
+                binaryWriter.Write((Int16)flashFlags);
+                binaryWriter.Write(flashLength);
+                binaryWriter.Write(disabledColor);
+                binaryWriter.Write(invalidName_3, 0, 4);
+                binaryWriter.Write(sequenceIndex);
+                binaryWriter.Write(invalidName_4, 0, 2);
+                nextAddress = Guerilla.WriteBlockArray<GlobalHudMultitextureOverlayDefinition>(binaryWriter, multitexOverlay, nextAddress);
+                binaryWriter.Write(invalidName_5, 0, 4);
+                binaryWriter.Write(anchorOffset0);
+                binaryWriter.Write(widthScale0);
+                binaryWriter.Write(heightScale0);
+                binaryWriter.Write((Int16)scalingFlags0);
+                binaryWriter.Write(invalidName_6, 0, 2);
+                binaryWriter.Write(invalidName_7, 0, 20);
+                binaryWriter.Write(interfaceBitmap0);
+                binaryWriter.Write(defaultColor0);
+                binaryWriter.Write(flashingColor0);
+                binaryWriter.Write(flashPeriod0);
+                binaryWriter.Write(flashDelay0);
+                binaryWriter.Write(numberOfFlashes0);
+                binaryWriter.Write((Int16)flashFlags0);
+                binaryWriter.Write(flashLength0);
+                binaryWriter.Write(disabledColor0);
+                binaryWriter.Write(invalidName_8, 0, 4);
+                binaryWriter.Write(sequenceIndex0);
+                binaryWriter.Write(invalidName_9, 0, 2);
+                nextAddress = Guerilla.WriteBlockArray<GlobalHudMultitextureOverlayDefinition>(binaryWriter, multitexOverlay0, nextAddress);
+                binaryWriter.Write(invalidName_10, 0, 4);
+                binaryWriter.Write(anchorOffset1);
+                binaryWriter.Write(widthScale1);
+                binaryWriter.Write(heightScale1);
+                binaryWriter.Write((Int16)scalingFlags1);
+                binaryWriter.Write(invalidName_11, 0, 2);
+                binaryWriter.Write(invalidName_12, 0, 20);
+                binaryWriter.Write(defaultColor1);
+                binaryWriter.Write(flashingColor1);
+                binaryWriter.Write(flashPeriod1);
+                binaryWriter.Write(flashDelay1);
+                binaryWriter.Write(numberOfFlashes1);
+                binaryWriter.Write((Int16)flashFlags1);
+                binaryWriter.Write(flashLength1);
+                binaryWriter.Write(disabledColor1);
+                binaryWriter.Write(invalidName_13, 0, 4);
+                binaryWriter.Write(maximumNumberOfDigits);
+                binaryWriter.Write((Byte)flags);
+                binaryWriter.Write(numberOfFractionalDigits);
+                binaryWriter.Write(invalidName_14, 0, 1);
+                binaryWriter.Write(invalidName_15, 0, 12);
+                binaryWriter.Write(flashCutoff);
+                binaryWriter.Write(invalidName_16, 0, 2);
+                binaryWriter.Write(overlayBitmap);
+                nextAddress = Guerilla.WriteBlockArray<GrenadeHudOverlayBlock>(binaryWriter, overlays, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GrenadeHudSoundBlock>(binaryWriter, warningSounds, nextAddress);
+                binaryWriter.Write(invalidName_17, 0, 68);
+                binaryWriter.Write(sequenceIndex1);
+                binaryWriter.Write(widthOffset);
+                binaryWriter.Write(offsetFromReferenceCorner);
+                binaryWriter.Write(overrideIconColor);
+                binaryWriter.Write(frameRate030);
+                binaryWriter.Write((Byte)flags0);
+                binaryWriter.Write(textIndex);
+                binaryWriter.Write(invalidName_18, 0, 48);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual GlobalHudMultitextureOverlayDefinition[] ReadGlobalHudMultitextureOverlayDefinitionArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalHudMultitextureOverlayDefinition));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalHudMultitextureOverlayDefinition[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalHudMultitextureOverlayDefinition(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GrenadeHudOverlayBlock[] ReadGrenadeHudOverlayBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GrenadeHudOverlayBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GrenadeHudOverlayBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GrenadeHudOverlayBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GrenadeHudSoundBlock[] ReadGrenadeHudSoundBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GrenadeHudSoundBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GrenadeHudSoundBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GrenadeHudSoundBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum Anchor : short
-        
         {
             TopLeft = 0,
             TopRight = 1,
@@ -273,46 +306,39 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum ScalingFlags : short
-        
         {
             DontScaleOffset = 1,
             DontScaleSize = 2,
         };
         [FlagsAttribute]
         internal enum FlashFlags : short
-        
         {
             ReverseDefaultFlashingColors = 1,
         };
         [FlagsAttribute]
         internal enum ScalingFlags0 : short
-        
         {
             DontScaleOffset = 1,
             DontScaleSize = 2,
         };
         [FlagsAttribute]
         internal enum FlashFlags0 : short
-        
         {
             ReverseDefaultFlashingColors = 1,
         };
         [FlagsAttribute]
         internal enum ScalingFlags1 : short
-        
         {
             DontScaleOffset = 1,
             DontScaleSize = 2,
         };
         [FlagsAttribute]
         internal enum FlashFlags1 : short
-        
         {
             ReverseDefaultFlashingColors = 1,
         };
         [FlagsAttribute]
         internal enum Flags : byte
-        
         {
             ShowLeadingZeros = 1,
             OnlyShowWhenZoomed = 2,
@@ -320,7 +346,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags0 : byte
-        
         {
             UseTextFromStringListInstead = 1,
             OverrideDefaultColor = 2,

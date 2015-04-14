@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass ItemClass = (TagClass)"item";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 112)]
+    [LayoutAttribute(Size = 112, Alignment = 4)]
     public class ItemBlockBase : ObjectBlock
     {
         internal Flags flags;
@@ -47,61 +56,60 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference detonationEffect;
         internal  ItemBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.oLDMessageIndex = binaryReader.ReadInt16();
-            this.sortOrder = binaryReader.ReadInt16();
-            this.multiplayerOnGroundScale = binaryReader.ReadSingle();
-            this.campaignOnGroundScale = binaryReader.ReadSingle();
-            this.pickupMessage = binaryReader.ReadStringID();
-            this.swapMessage = binaryReader.ReadStringID();
-            this.pickupOrDualMsg = binaryReader.ReadStringID();
-            this.swapOrDualMsg = binaryReader.ReadStringID();
-            this.dualOnlyMsg = binaryReader.ReadStringID();
-            this.pickedUpMsg = binaryReader.ReadStringID();
-            this.singluarQuantityMsg = binaryReader.ReadStringID();
-            this.pluralQuantityMsg = binaryReader.ReadStringID();
-            this.switchToMsg = binaryReader.ReadStringID();
-            this.switchToFromAiMsg = binaryReader.ReadStringID();
-            this.uNUSED = binaryReader.ReadTagReference();
-            this.collisionSound = binaryReader.ReadTagReference();
-            this.predictedBitmaps = ReadPredictedBitmapsBlockArray(binaryReader);
-            this.detonationDamageEffect = binaryReader.ReadTagReference();
-            this.detonationDelaySeconds = binaryReader.ReadRange();
-            this.detonatingEffect = binaryReader.ReadTagReference();
-            this.detonationEffect = binaryReader.ReadTagReference();
+            flags = (Flags)binaryReader.ReadInt32();
+            oLDMessageIndex = binaryReader.ReadInt16();
+            sortOrder = binaryReader.ReadInt16();
+            multiplayerOnGroundScale = binaryReader.ReadSingle();
+            campaignOnGroundScale = binaryReader.ReadSingle();
+            pickupMessage = binaryReader.ReadStringID();
+            swapMessage = binaryReader.ReadStringID();
+            pickupOrDualMsg = binaryReader.ReadStringID();
+            swapOrDualMsg = binaryReader.ReadStringID();
+            dualOnlyMsg = binaryReader.ReadStringID();
+            pickedUpMsg = binaryReader.ReadStringID();
+            singluarQuantityMsg = binaryReader.ReadStringID();
+            pluralQuantityMsg = binaryReader.ReadStringID();
+            switchToMsg = binaryReader.ReadStringID();
+            switchToFromAiMsg = binaryReader.ReadStringID();
+            uNUSED = binaryReader.ReadTagReference();
+            collisionSound = binaryReader.ReadTagReference();
+            predictedBitmaps = Guerilla.ReadBlockArray<PredictedBitmapsBlock>(binaryReader);
+            detonationDamageEffect = binaryReader.ReadTagReference();
+            detonationDelaySeconds = binaryReader.ReadRange();
+            detonatingEffect = binaryReader.ReadTagReference();
+            detonationEffect = binaryReader.ReadTagReference();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(oLDMessageIndex);
+                binaryWriter.Write(sortOrder);
+                binaryWriter.Write(multiplayerOnGroundScale);
+                binaryWriter.Write(campaignOnGroundScale);
+                binaryWriter.Write(pickupMessage);
+                binaryWriter.Write(swapMessage);
+                binaryWriter.Write(pickupOrDualMsg);
+                binaryWriter.Write(swapOrDualMsg);
+                binaryWriter.Write(dualOnlyMsg);
+                binaryWriter.Write(pickedUpMsg);
+                binaryWriter.Write(singluarQuantityMsg);
+                binaryWriter.Write(pluralQuantityMsg);
+                binaryWriter.Write(switchToMsg);
+                binaryWriter.Write(switchToFromAiMsg);
+                binaryWriter.Write(uNUSED);
+                binaryWriter.Write(collisionSound);
+                nextAddress = Guerilla.WriteBlockArray<PredictedBitmapsBlock>(binaryWriter, predictedBitmaps, nextAddress);
+                binaryWriter.Write(detonationDamageEffect);
+                binaryWriter.Write(detonationDelaySeconds);
+                binaryWriter.Write(detonatingEffect);
+                binaryWriter.Write(detonationEffect);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual PredictedBitmapsBlock[] ReadPredictedBitmapsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PredictedBitmapsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PredictedBitmapsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PredictedBitmapsBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             AlwaysMaintainsZUp = 1,
             DestroyedByExplosions = 2,

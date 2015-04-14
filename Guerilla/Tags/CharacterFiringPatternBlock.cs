@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 64)]
-    public class CharacterFiringPatternBlockBase
+    [LayoutAttribute(Size = 64, Alignment = 4)]
+    public class CharacterFiringPatternBlockBase  : IGuerilla
     {
         /// <summary>
         /// how many times per second we pull the trigger (zero = continuously held down)
@@ -71,33 +72,39 @@ namespace Moonfish.Guerilla.Tags
         internal float maximumErrorAngleDegrees;
         internal  CharacterFiringPatternBlockBase(BinaryReader binaryReader)
         {
-            this.rateOfFire = binaryReader.ReadSingle();
-            this.targetTracking01 = binaryReader.ReadSingle();
-            this.targetLeading01 = binaryReader.ReadSingle();
-            this.burstOriginRadiusWorldUnits = binaryReader.ReadSingle();
-            this.burstOriginAngleDegrees = binaryReader.ReadSingle();
-            this.burstReturnLengthWorldUnits = binaryReader.ReadRange();
-            this.burstReturnAngleDegrees = binaryReader.ReadSingle();
-            this.burstDurationSeconds = binaryReader.ReadRange();
-            this.burstSeparationSeconds = binaryReader.ReadRange();
-            this.weaponDamageModifier = binaryReader.ReadSingle();
-            this.projectileErrorDegrees = binaryReader.ReadSingle();
-            this.burstAngularVelocityDegreesPerSecond = binaryReader.ReadSingle();
-            this.maximumErrorAngleDegrees = binaryReader.ReadSingle();
+            rateOfFire = binaryReader.ReadSingle();
+            targetTracking01 = binaryReader.ReadSingle();
+            targetLeading01 = binaryReader.ReadSingle();
+            burstOriginRadiusWorldUnits = binaryReader.ReadSingle();
+            burstOriginAngleDegrees = binaryReader.ReadSingle();
+            burstReturnLengthWorldUnits = binaryReader.ReadRange();
+            burstReturnAngleDegrees = binaryReader.ReadSingle();
+            burstDurationSeconds = binaryReader.ReadRange();
+            burstSeparationSeconds = binaryReader.ReadRange();
+            weaponDamageModifier = binaryReader.ReadSingle();
+            projectileErrorDegrees = binaryReader.ReadSingle();
+            burstAngularVelocityDegreesPerSecond = binaryReader.ReadSingle();
+            maximumErrorAngleDegrees = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(rateOfFire);
+                binaryWriter.Write(targetTracking01);
+                binaryWriter.Write(targetLeading01);
+                binaryWriter.Write(burstOriginRadiusWorldUnits);
+                binaryWriter.Write(burstOriginAngleDegrees);
+                binaryWriter.Write(burstReturnLengthWorldUnits);
+                binaryWriter.Write(burstReturnAngleDegrees);
+                binaryWriter.Write(burstDurationSeconds);
+                binaryWriter.Write(burstSeparationSeconds);
+                binaryWriter.Write(weaponDamageModifier);
+                binaryWriter.Write(projectileErrorDegrees);
+                binaryWriter.Write(burstAngularVelocityDegreesPerSecond);
+                binaryWriter.Write(maximumErrorAngleDegrees);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

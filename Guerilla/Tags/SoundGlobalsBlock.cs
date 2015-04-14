@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36)]
-    public class SoundGlobalsBlockBase
+    [LayoutAttribute(Size = 36, Alignment = 4)]
+    public class SoundGlobalsBlockBase  : IGuerilla
     {
         [TagReference("sncl")]
         internal Moonfish.Tags.TagReference soundClasses;
@@ -28,25 +29,23 @@ namespace Moonfish.Guerilla.Tags
         internal int invalidName_;
         internal  SoundGlobalsBlockBase(BinaryReader binaryReader)
         {
-            this.soundClasses = binaryReader.ReadTagReference();
-            this.soundEffects = binaryReader.ReadTagReference();
-            this.soundMix = binaryReader.ReadTagReference();
-            this.soundCombatDialogueConstants = binaryReader.ReadTagReference();
-            this.invalidName_ = binaryReader.ReadInt32();
+            soundClasses = binaryReader.ReadTagReference();
+            soundEffects = binaryReader.ReadTagReference();
+            soundMix = binaryReader.ReadTagReference();
+            soundCombatDialogueConstants = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadInt32();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(soundClasses);
+                binaryWriter.Write(soundEffects);
+                binaryWriter.Write(soundMix);
+                binaryWriter.Write(soundCombatDialogueConstants);
+                binaryWriter.Write(invalidName_);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

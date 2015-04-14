@@ -113,8 +113,8 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)spriteUsage);
                 binaryWriter.Write(spriteSpacing);
                 binaryWriter.Write((Int16)forceFormat);
-                Guerilla.WriteBlockArray<BitmapGroupSequenceBlock>(binaryWriter, sequences, nextAddress);
-                Guerilla.WriteBlockArray<BitmapDataBlock>(binaryWriter, bitmaps, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<BitmapGroupSequenceBlock>(binaryWriter, sequences, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<BitmapDataBlock>(binaryWriter, bitmaps, nextAddress);
                 return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
         }

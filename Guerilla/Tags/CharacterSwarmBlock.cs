@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 40)]
-    public class CharacterSwarmBlockBase
+    [LayoutAttribute(Size = 40, Alignment = 4)]
+    public class CharacterSwarmBlockBase  : IGuerilla
     {
         /// <summary>
         /// After the given number of deaths, the swarm scatters
@@ -50,30 +51,33 @@ namespace Moonfish.Guerilla.Tags
         internal float perlinCombatMovementThreshold01;
         internal  CharacterSwarmBlockBase(BinaryReader binaryReader)
         {
-            this.scatterKilledCount = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.scatterRadius = binaryReader.ReadSingle();
-            this.scatterTime = binaryReader.ReadSingle();
-            this.houndMinDistance = binaryReader.ReadSingle();
-            this.houndMaxDistance = binaryReader.ReadSingle();
-            this.perlinOffsetScale01 = binaryReader.ReadSingle();
-            this.offsetPeriodS = binaryReader.ReadRange();
-            this.perlinIdleMovementThreshold01 = binaryReader.ReadSingle();
-            this.perlinCombatMovementThreshold01 = binaryReader.ReadSingle();
+            scatterKilledCount = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            scatterRadius = binaryReader.ReadSingle();
+            scatterTime = binaryReader.ReadSingle();
+            houndMinDistance = binaryReader.ReadSingle();
+            houndMaxDistance = binaryReader.ReadSingle();
+            perlinOffsetScale01 = binaryReader.ReadSingle();
+            offsetPeriodS = binaryReader.ReadRange();
+            perlinIdleMovementThreshold01 = binaryReader.ReadSingle();
+            perlinCombatMovementThreshold01 = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(scatterKilledCount);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(scatterRadius);
+                binaryWriter.Write(scatterTime);
+                binaryWriter.Write(houndMinDistance);
+                binaryWriter.Write(houndMaxDistance);
+                binaryWriter.Write(perlinOffsetScale01);
+                binaryWriter.Write(offsetPeriodS);
+                binaryWriter.Write(perlinIdleMovementThreshold01);
+                binaryWriter.Write(perlinCombatMovementThreshold01);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

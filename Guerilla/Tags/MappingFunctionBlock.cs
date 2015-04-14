@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,42 +15,21 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8)]
-    public class MappingFunctionBlockBase
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class MappingFunctionBlockBase  : IGuerilla
     {
         internal ByteBlock[] data;
         internal  MappingFunctionBlockBase(BinaryReader binaryReader)
         {
-            this.data = ReadByteBlockArray(binaryReader);
+            data = Guerilla.ReadBlockArray<ByteBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                nextAddress = Guerilla.WriteBlockArray<ByteBlock>(binaryWriter, data, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ByteBlock[] ReadByteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ByteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ByteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ByteBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

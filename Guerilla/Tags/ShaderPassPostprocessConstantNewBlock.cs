@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 7)]
-    public class ShaderPassPostprocessConstantNewBlockBase
+    [LayoutAttribute(Size = 7, Alignment = 4)]
+    public class ShaderPassPostprocessConstantNewBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID parameterName;
         internal byte componentMask;
@@ -23,24 +24,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte functionIndex;
         internal  ShaderPassPostprocessConstantNewBlockBase(BinaryReader binaryReader)
         {
-            this.parameterName = binaryReader.ReadStringID();
-            this.componentMask = binaryReader.ReadByte();
-            this.scaleByTextureStage = binaryReader.ReadByte();
-            this.functionIndex = binaryReader.ReadByte();
+            parameterName = binaryReader.ReadStringID();
+            componentMask = binaryReader.ReadByte();
+            scaleByTextureStage = binaryReader.ReadByte();
+            functionIndex = binaryReader.ReadByte();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(parameterName);
+                binaryWriter.Write(componentMask);
+                binaryWriter.Write(scaleByTextureStage);
+                binaryWriter.Write(functionIndex);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

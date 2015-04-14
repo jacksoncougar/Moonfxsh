@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,44 +15,24 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class PlatformSoundEffectTemplateCollectionBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class PlatformSoundEffectTemplateCollectionBlockBase  : IGuerilla
     {
         internal PlatformSoundEffectTemplateBlock[] platformEffectTemplates;
         internal Moonfish.Tags.StringID inputDspEffectName;
         internal  PlatformSoundEffectTemplateCollectionBlockBase(BinaryReader binaryReader)
         {
-            this.platformEffectTemplates = ReadPlatformSoundEffectTemplateBlockArray(binaryReader);
-            this.inputDspEffectName = binaryReader.ReadStringID();
+            platformEffectTemplates = Guerilla.ReadBlockArray<PlatformSoundEffectTemplateBlock>(binaryReader);
+            inputDspEffectName = binaryReader.ReadStringID();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                nextAddress = Guerilla.WriteBlockArray<PlatformSoundEffectTemplateBlock>(binaryWriter, platformEffectTemplates, nextAddress);
+                binaryWriter.Write(inputDspEffectName);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual PlatformSoundEffectTemplateBlock[] ReadPlatformSoundEffectTemplateBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PlatformSoundEffectTemplateBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlatformSoundEffectTemplateBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PlatformSoundEffectTemplateBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

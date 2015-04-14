@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class HudWidgetStateDefinitionStructBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class HudWidgetStateDefinitionStructBlockBase  : IGuerilla
     {
         internal YUnitFlags yUnitFlags;
         internal YExtraFlags yExtraFlags;
@@ -31,36 +32,40 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  HudWidgetStateDefinitionStructBlockBase(BinaryReader binaryReader)
         {
-            this.yUnitFlags = (YUnitFlags)binaryReader.ReadInt16();
-            this.yExtraFlags = (YExtraFlags)binaryReader.ReadInt16();
-            this.yWeaponFlags = (YWeaponFlags)binaryReader.ReadInt16();
-            this.yGameEngineStateFlags = (YGameEngineStateFlags)binaryReader.ReadInt16();
-            this.nUnitFlags = (NUnitFlags)binaryReader.ReadInt16();
-            this.nExtraFlags = (NExtraFlags)binaryReader.ReadInt16();
-            this.nWeaponFlags = (NWeaponFlags)binaryReader.ReadInt16();
-            this.nGameEngineStateFlags = (NGameEngineStateFlags)binaryReader.ReadInt16();
-            this.ageCutoff = binaryReader.ReadByte();
-            this.clipCutoff = binaryReader.ReadByte();
-            this.totalCutoff = binaryReader.ReadByte();
-            this.invalidName_ = binaryReader.ReadBytes(1);
+            yUnitFlags = (YUnitFlags)binaryReader.ReadInt16();
+            yExtraFlags = (YExtraFlags)binaryReader.ReadInt16();
+            yWeaponFlags = (YWeaponFlags)binaryReader.ReadInt16();
+            yGameEngineStateFlags = (YGameEngineStateFlags)binaryReader.ReadInt16();
+            nUnitFlags = (NUnitFlags)binaryReader.ReadInt16();
+            nExtraFlags = (NExtraFlags)binaryReader.ReadInt16();
+            nWeaponFlags = (NWeaponFlags)binaryReader.ReadInt16();
+            nGameEngineStateFlags = (NGameEngineStateFlags)binaryReader.ReadInt16();
+            ageCutoff = binaryReader.ReadByte();
+            clipCutoff = binaryReader.ReadByte();
+            totalCutoff = binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes(1);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)yUnitFlags);
+                binaryWriter.Write((Int16)yExtraFlags);
+                binaryWriter.Write((Int16)yWeaponFlags);
+                binaryWriter.Write((Int16)yGameEngineStateFlags);
+                binaryWriter.Write((Int16)nUnitFlags);
+                binaryWriter.Write((Int16)nExtraFlags);
+                binaryWriter.Write((Int16)nWeaponFlags);
+                binaryWriter.Write((Int16)nGameEngineStateFlags);
+                binaryWriter.Write(ageCutoff);
+                binaryWriter.Write(clipCutoff);
+                binaryWriter.Write(totalCutoff);
+                binaryWriter.Write(invalidName_, 0, 1);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum YUnitFlags : short
-        
         {
             Default = 1,
             GrenadeTypeIsNONE = 2,
@@ -79,7 +84,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum YExtraFlags : short
-        
         {
             AutoaimFriendly = 1,
             AutoaimPlasma = 2,
@@ -89,7 +93,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum YWeaponFlags : short
-        
         {
             PrimaryWeapon = 1,
             SecondaryWeapon = 2,
@@ -105,7 +108,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum YGameEngineStateFlags : short
-        
         {
             CampaignSolo = 1,
             CampaignCoop = 2,
@@ -122,7 +124,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum NUnitFlags : short
-        
         {
             Default = 1,
             GrenadeTypeIsNONE = 2,
@@ -141,7 +142,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum NExtraFlags : short
-        
         {
             AutoaimFriendly = 1,
             AutoaimPlasma = 2,
@@ -151,7 +151,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum NWeaponFlags : short
-        
         {
             PrimaryWeapon = 1,
             SecondaryWeapon = 2,
@@ -167,7 +166,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum NGameEngineStateFlags : short
-        
         {
             CampaignSolo = 1,
             CampaignCoop = 2,

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class RenderModelPermutationBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class RenderModelPermutationBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal short l1SectionIndexSuperLow;
@@ -26,27 +27,27 @@ namespace Moonfish.Guerilla.Tags
         internal short l6SectionIndexHollywood;
         internal  RenderModelPermutationBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.l1SectionIndexSuperLow = binaryReader.ReadInt16();
-            this.l2SectionIndexLow = binaryReader.ReadInt16();
-            this.l3SectionIndexMedium = binaryReader.ReadInt16();
-            this.l4SectionIndexHigh = binaryReader.ReadInt16();
-            this.l5SectionIndexSuperHigh = binaryReader.ReadInt16();
-            this.l6SectionIndexHollywood = binaryReader.ReadInt16();
+            name = binaryReader.ReadStringID();
+            l1SectionIndexSuperLow = binaryReader.ReadInt16();
+            l2SectionIndexLow = binaryReader.ReadInt16();
+            l3SectionIndexMedium = binaryReader.ReadInt16();
+            l4SectionIndexHigh = binaryReader.ReadInt16();
+            l5SectionIndexSuperHigh = binaryReader.ReadInt16();
+            l6SectionIndexHollywood = binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write(l1SectionIndexSuperLow);
+                binaryWriter.Write(l2SectionIndexLow);
+                binaryWriter.Write(l3SectionIndexMedium);
+                binaryWriter.Write(l4SectionIndexHigh);
+                binaryWriter.Write(l5SectionIndexSuperHigh);
+                binaryWriter.Write(l6SectionIndexHollywood);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

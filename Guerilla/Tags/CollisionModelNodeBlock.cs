@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class CollisionModelNodeBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class CollisionModelNodeBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal byte[] invalidName_;
@@ -24,25 +25,23 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 firstChildNode;
         internal  CollisionModelNodeBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.parentNode = binaryReader.ReadShortBlockIndex1();
-            this.nextSiblingNode = binaryReader.ReadShortBlockIndex1();
-            this.firstChildNode = binaryReader.ReadShortBlockIndex1();
+            name = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(2);
+            parentNode = binaryReader.ReadShortBlockIndex1();
+            nextSiblingNode = binaryReader.ReadShortBlockIndex1();
+            firstChildNode = binaryReader.ReadShortBlockIndex1();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(parentNode);
+                binaryWriter.Write(nextSiblingNode);
+                binaryWriter.Write(firstChildNode);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

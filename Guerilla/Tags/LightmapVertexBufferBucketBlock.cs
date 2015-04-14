@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 56)]
-    public class LightmapVertexBufferBucketBlockBase
+    [LayoutAttribute(Size = 56, Alignment = 4)]
+    public class LightmapVertexBufferBucketBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal byte[] invalidName_;
@@ -24,59 +25,26 @@ namespace Moonfish.Guerilla.Tags
         internal LightmapVertexBufferBucketCacheDataBlock[] cacheData;
         internal  LightmapVertexBufferBucketBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.rawVertices = ReadLightmapBucketRawVertexBlockArray(binaryReader);
-            this.geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            this.cacheData = ReadLightmapVertexBufferBucketCacheDataBlockArray(binaryReader);
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            rawVertices = Guerilla.ReadBlockArray<LightmapBucketRawVertexBlock>(binaryReader);
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            cacheData = Guerilla.ReadBlockArray<LightmapVertexBufferBucketCacheDataBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(invalidName_, 0, 2);
+                nextAddress = Guerilla.WriteBlockArray<LightmapBucketRawVertexBlock>(binaryWriter, rawVertices, nextAddress);
+                geometryBlockInfo.Write(binaryWriter);
+                nextAddress = Guerilla.WriteBlockArray<LightmapVertexBufferBucketCacheDataBlock>(binaryWriter, cacheData, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual LightmapBucketRawVertexBlock[] ReadLightmapBucketRawVertexBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LightmapBucketRawVertexBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightmapBucketRawVertexBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LightmapBucketRawVertexBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual LightmapVertexBufferBucketCacheDataBlock[] ReadLightmapVertexBufferBucketCacheDataBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LightmapVertexBufferBucketCacheDataBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightmapVertexBufferBucketCacheDataBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LightmapVertexBufferBucketCacheDataBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             IncidentDirection = 1,
             Color = 2,

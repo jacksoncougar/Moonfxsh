@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class CollisionModelPathfindingSphereBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class CollisionModelPathfindingSphereBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.ShortBlockIndex1 node;
         internal Flags flags;
@@ -23,28 +24,24 @@ namespace Moonfish.Guerilla.Tags
         internal float radius;
         internal  CollisionModelPathfindingSphereBlockBase(BinaryReader binaryReader)
         {
-            this.node = binaryReader.ReadShortBlockIndex1();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.center = binaryReader.ReadVector3();
-            this.radius = binaryReader.ReadSingle();
+            node = binaryReader.ReadShortBlockIndex1();
+            flags = (Flags)binaryReader.ReadInt16();
+            center = binaryReader.ReadVector3();
+            radius = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(node);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(center);
+                binaryWriter.Write(radius);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             RemainsWhenOpen = 1,
             VehicleOnly = 2,

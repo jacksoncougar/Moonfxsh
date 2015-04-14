@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass BipdClass = (TagClass)"bipd";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 296)]
+    [LayoutAttribute(Size = 296, Alignment = 4)]
     public class BipedBlockBase : UnitBlock
     {
         internal float movingTurningSpeedDegreesPerSecond;
@@ -105,70 +114,78 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  BipedBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            this.movingTurningSpeedDegreesPerSecond = binaryReader.ReadSingle();
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.stationaryTurningThreshold = binaryReader.ReadSingle();
-            this.jumpVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            this.maximumSoftLandingTimeSeconds = binaryReader.ReadSingle();
-            this.maximumHardLandingTimeSeconds = binaryReader.ReadSingle();
-            this.minimumSoftLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            this.minimumHardLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            this.maximumHardLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            this.deathHardLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            this.stunDuration = binaryReader.ReadSingle();
-            this.standingCameraHeightWorldUnits = binaryReader.ReadSingle();
-            this.crouchingCameraHeightWorldUnits = binaryReader.ReadSingle();
-            this.crouchTransitionTimeSeconds = binaryReader.ReadSingle();
-            this.cameraInterpolationStartDegrees = binaryReader.ReadSingle();
-            this.cameraInterpolationEndDegrees = binaryReader.ReadSingle();
-            this.cameraForwardMovementScale = binaryReader.ReadSingle();
-            this.cameraSideMovementScale = binaryReader.ReadSingle();
-            this.cameraVerticalMovementScale = binaryReader.ReadSingle();
-            this.cameraExclusionDistanceWorldUnits = binaryReader.ReadSingle();
-            this.autoaimWidthWorldUnits = binaryReader.ReadSingle();
-            this.lockOnData = new BipedLockOnDataStructBlock(binaryReader);
-            this.invalidName_ = binaryReader.ReadBytes(16);
-            this.headShotAccScale = binaryReader.ReadSingle();
-            this.areaDamageEffect = binaryReader.ReadTagReference();
-            this.physics = new CharacterPhysicsStructBlock(binaryReader);
-            this.contactPoints = ReadContactPointBlockArray(binaryReader);
-            this.reanimationCharacter = binaryReader.ReadTagReference();
-            this.deathSpawnCharacter = binaryReader.ReadTagReference();
-            this.deathSpawnCount = binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
+            movingTurningSpeedDegreesPerSecond = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt32();
+            stationaryTurningThreshold = binaryReader.ReadSingle();
+            jumpVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            maximumSoftLandingTimeSeconds = binaryReader.ReadSingle();
+            maximumHardLandingTimeSeconds = binaryReader.ReadSingle();
+            minimumSoftLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            minimumHardLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            maximumHardLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            deathHardLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            stunDuration = binaryReader.ReadSingle();
+            standingCameraHeightWorldUnits = binaryReader.ReadSingle();
+            crouchingCameraHeightWorldUnits = binaryReader.ReadSingle();
+            crouchTransitionTimeSeconds = binaryReader.ReadSingle();
+            cameraInterpolationStartDegrees = binaryReader.ReadSingle();
+            cameraInterpolationEndDegrees = binaryReader.ReadSingle();
+            cameraForwardMovementScale = binaryReader.ReadSingle();
+            cameraSideMovementScale = binaryReader.ReadSingle();
+            cameraVerticalMovementScale = binaryReader.ReadSingle();
+            cameraExclusionDistanceWorldUnits = binaryReader.ReadSingle();
+            autoaimWidthWorldUnits = binaryReader.ReadSingle();
+            lockOnData = new BipedLockOnDataStructBlock(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(16);
+            headShotAccScale = binaryReader.ReadSingle();
+            areaDamageEffect = binaryReader.ReadTagReference();
+            physics = new CharacterPhysicsStructBlock(binaryReader);
+            contactPoints = Guerilla.ReadBlockArray<ContactPointBlock>(binaryReader);
+            reanimationCharacter = binaryReader.ReadTagReference();
+            deathSpawnCharacter = binaryReader.ReadTagReference();
+            deathSpawnCount = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(movingTurningSpeedDegreesPerSecond);
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(stationaryTurningThreshold);
+                binaryWriter.Write(jumpVelocityWorldUnitsPerSecond);
+                binaryWriter.Write(maximumSoftLandingTimeSeconds);
+                binaryWriter.Write(maximumHardLandingTimeSeconds);
+                binaryWriter.Write(minimumSoftLandingVelocityWorldUnitsPerSecond);
+                binaryWriter.Write(minimumHardLandingVelocityWorldUnitsPerSecond);
+                binaryWriter.Write(maximumHardLandingVelocityWorldUnitsPerSecond);
+                binaryWriter.Write(deathHardLandingVelocityWorldUnitsPerSecond);
+                binaryWriter.Write(stunDuration);
+                binaryWriter.Write(standingCameraHeightWorldUnits);
+                binaryWriter.Write(crouchingCameraHeightWorldUnits);
+                binaryWriter.Write(crouchTransitionTimeSeconds);
+                binaryWriter.Write(cameraInterpolationStartDegrees);
+                binaryWriter.Write(cameraInterpolationEndDegrees);
+                binaryWriter.Write(cameraForwardMovementScale);
+                binaryWriter.Write(cameraSideMovementScale);
+                binaryWriter.Write(cameraVerticalMovementScale);
+                binaryWriter.Write(cameraExclusionDistanceWorldUnits);
+                binaryWriter.Write(autoaimWidthWorldUnits);
+                lockOnData.Write(binaryWriter);
+                binaryWriter.Write(invalidName_, 0, 16);
+                binaryWriter.Write(headShotAccScale);
+                binaryWriter.Write(areaDamageEffect);
+                physics.Write(binaryWriter);
+                nextAddress = Guerilla.WriteBlockArray<ContactPointBlock>(binaryWriter, contactPoints, nextAddress);
+                binaryWriter.Write(reanimationCharacter);
+                binaryWriter.Write(deathSpawnCharacter);
+                binaryWriter.Write(deathSpawnCount);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ContactPointBlock[] ReadContactPointBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ContactPointBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ContactPointBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ContactPointBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             TurnsWithoutAnimating = 1,
             PassesThroughOtherBipeds = 2,

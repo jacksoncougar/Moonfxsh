@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass ContClass = (TagClass)"cont";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 240)]
-    public class ContrailBlockBase
+    [LayoutAttribute(Size = 240, Alignment = 4)]
+    public class ContrailBlockBase  : IGuerilla
     {
         internal Flags flags;
         /// <summary>
@@ -115,84 +124,106 @@ namespace Moonfish.Guerilla.Tags
         internal ContrailPointStatesBlock[] pointStates;
         internal  ContrailBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.scaleFlags = (ScaleFlagsTheseFlagsDetermineWhichFieldsAreScaledByTheContrailDensity)binaryReader.ReadInt16();
-            this.pointGenerationRatePointsPerSecond = binaryReader.ReadSingle();
-            this.pointVelocityWorldUnitsPerSecond = binaryReader.ReadRange();
-            this.pointVelocityConeAngleDegrees = binaryReader.ReadSingle();
-            this.inheritedVelocityFraction = binaryReader.ReadSingle();
-            this.renderType = (RenderTypeThisSpecifiesHowTheContrailIsOrientedInSpace)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.textureRepeatsU = binaryReader.ReadSingle();
-            this.textureRepeatsV = binaryReader.ReadSingle();
-            this.textureAnimationURepeatsPerSecond = binaryReader.ReadSingle();
-            this.textureAnimationVRepeatsPerSecond = binaryReader.ReadSingle();
-            this.animationRateFramesPerSecond = binaryReader.ReadSingle();
-            this.bitmap = binaryReader.ReadTagReference();
-            this.firstSequenceIndex = binaryReader.ReadInt16();
-            this.sequenceCount = binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(40);
-            this.shaderFlags = (ShaderFlags)binaryReader.ReadInt16();
-            this.framebufferBlendFunction = (FramebufferBlendFunction)binaryReader.ReadInt16();
-            this.framebufferFadeMode = (FramebufferFadeMode)binaryReader.ReadInt16();
-            this.mapFlags = (MapFlags)binaryReader.ReadInt16();
-            this.invalidName_1 = binaryReader.ReadBytes(28);
-            this.bitmap0 = binaryReader.ReadTagReference();
-            this.anchor = (Anchor)binaryReader.ReadInt16();
-            this.flags0 = (Flags)binaryReader.ReadInt16();
-            this.invalidName_2 = binaryReader.ReadBytes(2);
-            this.uAnimationFunction = (UAnimationFunction)binaryReader.ReadInt16();
-            this.uAnimationPeriodSeconds = binaryReader.ReadSingle();
-            this.uAnimationPhase = binaryReader.ReadSingle();
-            this.uAnimationScaleRepeats = binaryReader.ReadSingle();
-            this.invalidName_3 = binaryReader.ReadBytes(2);
-            this.vAnimationFunction = (VAnimationFunction)binaryReader.ReadInt16();
-            this.vAnimationPeriodSeconds = binaryReader.ReadSingle();
-            this.vAnimationPhase = binaryReader.ReadSingle();
-            this.vAnimationScaleRepeats = binaryReader.ReadSingle();
-            this.invalidName_4 = binaryReader.ReadBytes(2);
-            this.rotationAnimationFunction = (RotationAnimationFunction)binaryReader.ReadInt16();
-            this.rotationAnimationPeriodSeconds = binaryReader.ReadSingle();
-            this.rotationAnimationPhase = binaryReader.ReadSingle();
-            this.rotationAnimationScaleDegrees = binaryReader.ReadSingle();
-            this.rotationAnimationCenter = binaryReader.ReadVector2();
-            this.invalidName_5 = binaryReader.ReadBytes(4);
-            this.zspriteRadiusScale = binaryReader.ReadSingle();
-            this.invalidName_6 = binaryReader.ReadBytes(20);
-            this.pointStates = ReadContrailPointStatesBlockArray(binaryReader);
+            flags = (Flags)binaryReader.ReadInt16();
+            scaleFlags = (ScaleFlagsTheseFlagsDetermineWhichFieldsAreScaledByTheContrailDensity)binaryReader.ReadInt16();
+            pointGenerationRatePointsPerSecond = binaryReader.ReadSingle();
+            pointVelocityWorldUnitsPerSecond = binaryReader.ReadRange();
+            pointVelocityConeAngleDegrees = binaryReader.ReadSingle();
+            inheritedVelocityFraction = binaryReader.ReadSingle();
+            renderType = (RenderTypeThisSpecifiesHowTheContrailIsOrientedInSpace)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            textureRepeatsU = binaryReader.ReadSingle();
+            textureRepeatsV = binaryReader.ReadSingle();
+            textureAnimationURepeatsPerSecond = binaryReader.ReadSingle();
+            textureAnimationVRepeatsPerSecond = binaryReader.ReadSingle();
+            animationRateFramesPerSecond = binaryReader.ReadSingle();
+            bitmap = binaryReader.ReadTagReference();
+            firstSequenceIndex = binaryReader.ReadInt16();
+            sequenceCount = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(40);
+            shaderFlags = (ShaderFlags)binaryReader.ReadInt16();
+            framebufferBlendFunction = (FramebufferBlendFunction)binaryReader.ReadInt16();
+            framebufferFadeMode = (FramebufferFadeMode)binaryReader.ReadInt16();
+            mapFlags = (MapFlags)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(28);
+            bitmap0 = binaryReader.ReadTagReference();
+            anchor = (Anchor)binaryReader.ReadInt16();
+            flags0 = (Flags)binaryReader.ReadInt16();
+            invalidName_2 = binaryReader.ReadBytes(2);
+            uAnimationFunction = (UAnimationFunction)binaryReader.ReadInt16();
+            uAnimationPeriodSeconds = binaryReader.ReadSingle();
+            uAnimationPhase = binaryReader.ReadSingle();
+            uAnimationScaleRepeats = binaryReader.ReadSingle();
+            invalidName_3 = binaryReader.ReadBytes(2);
+            vAnimationFunction = (VAnimationFunction)binaryReader.ReadInt16();
+            vAnimationPeriodSeconds = binaryReader.ReadSingle();
+            vAnimationPhase = binaryReader.ReadSingle();
+            vAnimationScaleRepeats = binaryReader.ReadSingle();
+            invalidName_4 = binaryReader.ReadBytes(2);
+            rotationAnimationFunction = (RotationAnimationFunction)binaryReader.ReadInt16();
+            rotationAnimationPeriodSeconds = binaryReader.ReadSingle();
+            rotationAnimationPhase = binaryReader.ReadSingle();
+            rotationAnimationScaleDegrees = binaryReader.ReadSingle();
+            rotationAnimationCenter = binaryReader.ReadVector2();
+            invalidName_5 = binaryReader.ReadBytes(4);
+            zspriteRadiusScale = binaryReader.ReadSingle();
+            invalidName_6 = binaryReader.ReadBytes(20);
+            pointStates = Guerilla.ReadBlockArray<ContrailPointStatesBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16)scaleFlags);
+                binaryWriter.Write(pointGenerationRatePointsPerSecond);
+                binaryWriter.Write(pointVelocityWorldUnitsPerSecond);
+                binaryWriter.Write(pointVelocityConeAngleDegrees);
+                binaryWriter.Write(inheritedVelocityFraction);
+                binaryWriter.Write((Int16)renderType);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(textureRepeatsU);
+                binaryWriter.Write(textureRepeatsV);
+                binaryWriter.Write(textureAnimationURepeatsPerSecond);
+                binaryWriter.Write(textureAnimationVRepeatsPerSecond);
+                binaryWriter.Write(animationRateFramesPerSecond);
+                binaryWriter.Write(bitmap);
+                binaryWriter.Write(firstSequenceIndex);
+                binaryWriter.Write(sequenceCount);
+                binaryWriter.Write(invalidName_0, 0, 40);
+                binaryWriter.Write((Int16)shaderFlags);
+                binaryWriter.Write((Int16)framebufferBlendFunction);
+                binaryWriter.Write((Int16)framebufferFadeMode);
+                binaryWriter.Write((Int16)mapFlags);
+                binaryWriter.Write(invalidName_1, 0, 28);
+                binaryWriter.Write(bitmap0);
+                binaryWriter.Write((Int16)anchor);
+                binaryWriter.Write((Int16)flags0);
+                binaryWriter.Write(invalidName_2, 0, 2);
+                binaryWriter.Write((Int16)uAnimationFunction);
+                binaryWriter.Write(uAnimationPeriodSeconds);
+                binaryWriter.Write(uAnimationPhase);
+                binaryWriter.Write(uAnimationScaleRepeats);
+                binaryWriter.Write(invalidName_3, 0, 2);
+                binaryWriter.Write((Int16)vAnimationFunction);
+                binaryWriter.Write(vAnimationPeriodSeconds);
+                binaryWriter.Write(vAnimationPhase);
+                binaryWriter.Write(vAnimationScaleRepeats);
+                binaryWriter.Write(invalidName_4, 0, 2);
+                binaryWriter.Write((Int16)rotationAnimationFunction);
+                binaryWriter.Write(rotationAnimationPeriodSeconds);
+                binaryWriter.Write(rotationAnimationPhase);
+                binaryWriter.Write(rotationAnimationScaleDegrees);
+                binaryWriter.Write(rotationAnimationCenter);
+                binaryWriter.Write(invalidName_5, 0, 4);
+                binaryWriter.Write(zspriteRadiusScale);
+                binaryWriter.Write(invalidName_6, 0, 20);
+                nextAddress = Guerilla.WriteBlockArray<ContrailPointStatesBlock>(binaryWriter, pointStates, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ContrailPointStatesBlock[] ReadContrailPointStatesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ContrailPointStatesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ContrailPointStatesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ContrailPointStatesBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             FirstPointUnfaded = 1,
             LastPointUnfaded = 2,
@@ -205,7 +236,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum ScaleFlagsTheseFlagsDetermineWhichFieldsAreScaledByTheContrailDensity : short
-        
         {
             PointGenerationRate = 1,
             PointVelocity = 2,
@@ -219,7 +249,6 @@ namespace Moonfish.Guerilla.Tags
             TextureAnimationV = 512,
         };
         internal enum RenderTypeThisSpecifiesHowTheContrailIsOrientedInSpace : short
-        
         {
             VerticalOrientation = 0,
             HorizontalOrientation = 1,
@@ -230,14 +259,12 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum ShaderFlags : short
-        
         {
             SortBias = 1,
             NonlinearTint = 2,
             DontOverdrawFpWeapon = 4,
         };
         internal enum FramebufferBlendFunction : short
-        
         {
             AlphaBlend = 0,
             Multiply = 1,
@@ -252,7 +279,6 @@ namespace Moonfish.Guerilla.Tags
             None = 10,
         };
         internal enum FramebufferFadeMode : short
-        
         {
             None = 0,
             FadeWhenPerpendicular = 1,
@@ -260,12 +286,10 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum MapFlags : short
-        
         {
             Unfiltered = 1,
         };
         internal enum Anchor : short
-        
         {
             WithPrimary = 0,
             WithScreenSpace = 1,
@@ -273,12 +297,10 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags0 : short
-        
         {
             Unfiltered = 1,
         };
         internal enum UAnimationFunction : short
-        
         {
             One = 0,
             Zero = 1,
@@ -294,7 +316,6 @@ namespace Moonfish.Guerilla.Tags
             Spark = 11,
         };
         internal enum VAnimationFunction : short
-        
         {
             One = 0,
             Zero = 1,
@@ -310,7 +331,6 @@ namespace Moonfish.Guerilla.Tags
             Spark = 11,
         };
         internal enum RotationAnimationFunction : short
-        
         {
             One = 0,
             Zero = 1,

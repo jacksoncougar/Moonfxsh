@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24)]
-    public class PlayerBlockReferenceBlockBase
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class PlayerBlockReferenceBlockBase  : IGuerilla
     {
         internal byte[] invalidName_;
         [TagReference("skin")]
@@ -29,32 +30,33 @@ namespace Moonfish.Guerilla.Tags
         internal short columnWidth;
         internal  PlayerBlockReferenceBlockBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.skin = binaryReader.ReadTagReference();
-            this.bottomLeft = binaryReader.ReadPoint();
-            this.tableOrder = (TableOrder)binaryReader.ReadByte();
-            this.maximumPlayerCount = binaryReader.ReadByte();
-            this.rowCount = binaryReader.ReadByte();
-            this.columnCount = binaryReader.ReadByte();
-            this.rowHeight = binaryReader.ReadInt16();
-            this.columnWidth = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(4);
+            skin = binaryReader.ReadTagReference();
+            bottomLeft = binaryReader.ReadPoint();
+            tableOrder = (TableOrder)binaryReader.ReadByte();
+            maximumPlayerCount = binaryReader.ReadByte();
+            rowCount = binaryReader.ReadByte();
+            columnCount = binaryReader.ReadByte();
+            rowHeight = binaryReader.ReadInt16();
+            columnWidth = binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(skin);
+                binaryWriter.Write(bottomLeft);
+                binaryWriter.Write((Byte)tableOrder);
+                binaryWriter.Write(maximumPlayerCount);
+                binaryWriter.Write(rowCount);
+                binaryWriter.Write(columnCount);
+                binaryWriter.Write(rowHeight);
+                binaryWriter.Write(columnWidth);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum TableOrder : byte
-        
         {
             RowMajor = 0,
             ColumnMajor = 1,

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class TableViewListRowReferenceBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class TableViewListRowReferenceBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal short rowHeight;
@@ -23,43 +24,24 @@ namespace Moonfish.Guerilla.Tags
         internal TableViewListItemReferenceBlock[] rowCells;
         internal  TableViewListRowReferenceBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.rowHeight = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.rowCells = ReadTableViewListItemReferenceBlockArray(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            rowHeight = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            rowCells = Guerilla.ReadBlockArray<TableViewListItemReferenceBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(rowHeight);
+                binaryWriter.Write(invalidName_, 0, 2);
+                nextAddress = Guerilla.WriteBlockArray<TableViewListItemReferenceBlock>(binaryWriter, rowCells, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual TableViewListItemReferenceBlock[] ReadTableViewListItemReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(TableViewListItemReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TableViewListItemReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new TableViewListItemReferenceBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             Unused = 1,
         };

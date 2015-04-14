@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 148)]
-    public class RagdollConstraintsBlockBase
+    [LayoutAttribute(Size = 148, Alignment = 4)]
+    public class RagdollConstraintsBlockBase  : IGuerilla
     {
         internal ConstraintBodiesStructBlock constraintBodies;
         internal byte[] invalidName_;
@@ -28,29 +29,31 @@ namespace Moonfish.Guerilla.Tags
         internal float maxFricitonTorque;
         internal  RagdollConstraintsBlockBase(BinaryReader binaryReader)
         {
-            this.constraintBodies = new ConstraintBodiesStructBlock(binaryReader);
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.minTwist = binaryReader.ReadSingle();
-            this.maxTwist = binaryReader.ReadSingle();
-            this.minCone = binaryReader.ReadSingle();
-            this.maxCone = binaryReader.ReadSingle();
-            this.minPlane = binaryReader.ReadSingle();
-            this.maxPlane = binaryReader.ReadSingle();
-            this.maxFricitonTorque = binaryReader.ReadSingle();
+            constraintBodies = new ConstraintBodiesStructBlock(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(4);
+            minTwist = binaryReader.ReadSingle();
+            maxTwist = binaryReader.ReadSingle();
+            minCone = binaryReader.ReadSingle();
+            maxCone = binaryReader.ReadSingle();
+            minPlane = binaryReader.ReadSingle();
+            maxPlane = binaryReader.ReadSingle();
+            maxFricitonTorque = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                constraintBodies.Write(binaryWriter);
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(minTwist);
+                binaryWriter.Write(maxTwist);
+                binaryWriter.Write(minCone);
+                binaryWriter.Write(maxCone);
+                binaryWriter.Write(minPlane);
+                binaryWriter.Write(maxPlane);
+                binaryWriter.Write(maxFricitonTorque);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

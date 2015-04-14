@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 112)]
-    public class RenderModelSectionDataBlockBase
+    [LayoutAttribute(Size = 112, Alignment = 4)]
+    public class RenderModelSectionDataBlockBase  : IGuerilla
     {
         internal GlobalGeometrySectionStructBlock section;
         internal GlobalGeometryPointDataStructBlock pointData;
@@ -23,39 +24,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  RenderModelSectionDataBlockBase(BinaryReader binaryReader)
         {
-            this.section = new GlobalGeometrySectionStructBlock(binaryReader);
-            this.pointData = new GlobalGeometryPointDataStructBlock(binaryReader);
-            this.nodeMap = ReadRenderModelNodeMapBlockArray(binaryReader);
-            this.invalidName_ = binaryReader.ReadBytes(4);
+            section = new GlobalGeometrySectionStructBlock(binaryReader);
+            pointData = new GlobalGeometryPointDataStructBlock(binaryReader);
+            nodeMap = Guerilla.ReadBlockArray<RenderModelNodeMapBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(4);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                section.Write(binaryWriter);
+                pointData.Write(binaryWriter);
+                nextAddress = Guerilla.WriteBlockArray<RenderModelNodeMapBlock>(binaryWriter, nodeMap, nextAddress);
+                binaryWriter.Write(invalidName_, 0, 4);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual RenderModelNodeMapBlock[] ReadRenderModelNodeMapBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RenderModelNodeMapBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderModelNodeMapBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RenderModelNodeMapBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

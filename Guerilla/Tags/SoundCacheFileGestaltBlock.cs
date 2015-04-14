@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass UghClass = (TagClass)"ugh!";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 88)]
-    public class SoundCacheFileGestaltBlockBase
+    [LayoutAttribute(Size = 88, Alignment = 4)]
+    public class SoundCacheFileGestaltBlockBase  : IGuerilla
     {
         internal SoundGestaltPlaybackBlock[] playbacks;
         internal SoundGestaltScaleBlock[] scales;
@@ -31,196 +40,35 @@ namespace Moonfish.Guerilla.Tags
         internal SoundGestaltExtraInfoBlock[] extraInfos;
         internal  SoundCacheFileGestaltBlockBase(BinaryReader binaryReader)
         {
-            this.playbacks = ReadSoundGestaltPlaybackBlockArray(binaryReader);
-            this.scales = ReadSoundGestaltScaleBlockArray(binaryReader);
-            this.importNames = ReadSoundGestaltImportNamesBlockArray(binaryReader);
-            this.pitchRangeParameters = ReadSoundGestaltPitchRangeParametersBlockArray(binaryReader);
-            this.pitchRanges = ReadSoundGestaltPitchRangesBlockArray(binaryReader);
-            this.permutations = ReadSoundGestaltPermutationsBlockArray(binaryReader);
-            this.customPlaybacks = ReadSoundGestaltCustomPlaybackBlockArray(binaryReader);
-            this.runtimePermutationFlags = ReadSoundGestaltRuntimePermutationBitVectorBlockArray(binaryReader);
-            this.chunks = ReadSoundPermutationChunkBlockArray(binaryReader);
-            this.promotions = ReadSoundGestaltPromotionsBlockArray(binaryReader);
-            this.extraInfos = ReadSoundGestaltExtraInfoBlockArray(binaryReader);
+            playbacks = Guerilla.ReadBlockArray<SoundGestaltPlaybackBlock>(binaryReader);
+            scales = Guerilla.ReadBlockArray<SoundGestaltScaleBlock>(binaryReader);
+            importNames = Guerilla.ReadBlockArray<SoundGestaltImportNamesBlock>(binaryReader);
+            pitchRangeParameters = Guerilla.ReadBlockArray<SoundGestaltPitchRangeParametersBlock>(binaryReader);
+            pitchRanges = Guerilla.ReadBlockArray<SoundGestaltPitchRangesBlock>(binaryReader);
+            permutations = Guerilla.ReadBlockArray<SoundGestaltPermutationsBlock>(binaryReader);
+            customPlaybacks = Guerilla.ReadBlockArray<SoundGestaltCustomPlaybackBlock>(binaryReader);
+            runtimePermutationFlags = Guerilla.ReadBlockArray<SoundGestaltRuntimePermutationBitVectorBlock>(binaryReader);
+            chunks = Guerilla.ReadBlockArray<SoundPermutationChunkBlock>(binaryReader);
+            promotions = Guerilla.ReadBlockArray<SoundGestaltPromotionsBlock>(binaryReader);
+            extraInfos = Guerilla.ReadBlockArray<SoundGestaltExtraInfoBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltPlaybackBlock>(binaryWriter, playbacks, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltScaleBlock>(binaryWriter, scales, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltImportNamesBlock>(binaryWriter, importNames, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltPitchRangeParametersBlock>(binaryWriter, pitchRangeParameters, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltPitchRangesBlock>(binaryWriter, pitchRanges, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltPermutationsBlock>(binaryWriter, permutations, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltCustomPlaybackBlock>(binaryWriter, customPlaybacks, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltRuntimePermutationBitVectorBlock>(binaryWriter, runtimePermutationFlags, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundPermutationChunkBlock>(binaryWriter, chunks, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltPromotionsBlock>(binaryWriter, promotions, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltExtraInfoBlock>(binaryWriter, extraInfos, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual SoundGestaltPlaybackBlock[] ReadSoundGestaltPlaybackBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundGestaltPlaybackBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundGestaltPlaybackBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundGestaltPlaybackBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SoundGestaltScaleBlock[] ReadSoundGestaltScaleBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundGestaltScaleBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundGestaltScaleBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundGestaltScaleBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SoundGestaltImportNamesBlock[] ReadSoundGestaltImportNamesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundGestaltImportNamesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundGestaltImportNamesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundGestaltImportNamesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SoundGestaltPitchRangeParametersBlock[] ReadSoundGestaltPitchRangeParametersBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundGestaltPitchRangeParametersBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundGestaltPitchRangeParametersBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundGestaltPitchRangeParametersBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SoundGestaltPitchRangesBlock[] ReadSoundGestaltPitchRangesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundGestaltPitchRangesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundGestaltPitchRangesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundGestaltPitchRangesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SoundGestaltPermutationsBlock[] ReadSoundGestaltPermutationsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundGestaltPermutationsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundGestaltPermutationsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundGestaltPermutationsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SoundGestaltCustomPlaybackBlock[] ReadSoundGestaltCustomPlaybackBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundGestaltCustomPlaybackBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundGestaltCustomPlaybackBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundGestaltCustomPlaybackBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SoundGestaltRuntimePermutationBitVectorBlock[] ReadSoundGestaltRuntimePermutationBitVectorBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundGestaltRuntimePermutationBitVectorBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundGestaltRuntimePermutationBitVectorBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundGestaltRuntimePermutationBitVectorBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SoundPermutationChunkBlock[] ReadSoundPermutationChunkBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundPermutationChunkBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundPermutationChunkBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundPermutationChunkBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SoundGestaltPromotionsBlock[] ReadSoundGestaltPromotionsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundGestaltPromotionsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundGestaltPromotionsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundGestaltPromotionsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SoundGestaltExtraInfoBlock[] ReadSoundGestaltExtraInfoBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundGestaltExtraInfoBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundGestaltExtraInfoBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundGestaltExtraInfoBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

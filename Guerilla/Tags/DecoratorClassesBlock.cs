@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class DecoratorClassesBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class DecoratorClassesBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Type type;
@@ -24,43 +25,25 @@ namespace Moonfish.Guerilla.Tags
         internal DecoratorPermutationsBlock[] permutations;
         internal  DecoratorClassesBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.type = (Type)binaryReader.ReadByte();
-            this.invalidName_ = binaryReader.ReadBytes(3);
-            this.scale = binaryReader.ReadSingle();
-            this.permutations = ReadDecoratorPermutationsBlockArray(binaryReader);
+            name = binaryReader.ReadStringID();
+            type = (Type)binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes(3);
+            scale = binaryReader.ReadSingle();
+            permutations = Guerilla.ReadBlockArray<DecoratorPermutationsBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write((Byte)type);
+                binaryWriter.Write(invalidName_, 0, 3);
+                binaryWriter.Write(scale);
+                nextAddress = Guerilla.WriteBlockArray<DecoratorPermutationsBlock>(binaryWriter, permutations, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual DecoratorPermutationsBlock[] ReadDecoratorPermutationsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(DecoratorPermutationsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new DecoratorPermutationsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new DecoratorPermutationsBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum Type : byte
-        
         {
             Model = 0,
             FloatingDecal = 1,

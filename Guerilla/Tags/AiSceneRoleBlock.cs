@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class AiSceneRoleBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class AiSceneRoleBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Group group;
@@ -23,42 +24,23 @@ namespace Moonfish.Guerilla.Tags
         internal AiSceneRoleVariantsBlock[] roleVariants;
         internal  AiSceneRoleBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.group = (Group)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.roleVariants = ReadAiSceneRoleVariantsBlockArray(binaryReader);
+            name = binaryReader.ReadStringID();
+            group = (Group)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            roleVariants = Guerilla.ReadBlockArray<AiSceneRoleVariantsBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int16)group);
+                binaryWriter.Write(invalidName_, 0, 2);
+                nextAddress = Guerilla.WriteBlockArray<AiSceneRoleVariantsBlock>(binaryWriter, roleVariants, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual AiSceneRoleVariantsBlock[] ReadAiSceneRoleVariantsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AiSceneRoleVariantsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AiSceneRoleVariantsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AiSceneRoleVariantsBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum Group : short
-        
         {
             Group1 = 0,
             Group2 = 1,

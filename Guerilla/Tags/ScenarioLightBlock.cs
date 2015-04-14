@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 108)]
-    public class ScenarioLightBlockBase
+    [LayoutAttribute(Size = 108, Alignment = 4)]
+    public class ScenarioLightBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.ShortBlockIndex1 type;
         internal Moonfish.Tags.ShortBlockIndex1 name;
@@ -24,25 +25,23 @@ namespace Moonfish.Guerilla.Tags
         internal ScenarioLightStructBlock lightData;
         internal  ScenarioLightBlockBase(BinaryReader binaryReader)
         {
-            this.type = binaryReader.ReadShortBlockIndex1();
-            this.name = binaryReader.ReadShortBlockIndex1();
-            this.objectData = new ScenarioObjectDatumStructBlock(binaryReader);
-            this.deviceData = new ScenarioDeviceStructBlock(binaryReader);
-            this.lightData = new ScenarioLightStructBlock(binaryReader);
+            type = binaryReader.ReadShortBlockIndex1();
+            name = binaryReader.ReadShortBlockIndex1();
+            objectData = new ScenarioObjectDatumStructBlock(binaryReader);
+            deviceData = new ScenarioDeviceStructBlock(binaryReader);
+            lightData = new ScenarioLightStructBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(type);
+                binaryWriter.Write(name);
+                objectData.Write(binaryWriter);
+                deviceData.Write(binaryWriter);
+                lightData.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

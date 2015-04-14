@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,34 +15,29 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8)]
-    public class ShaderTemplatePropertyBlockBase
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class ShaderTemplatePropertyBlockBase  : IGuerilla
     {
         internal Property property;
         internal byte[] invalidName_;
         internal Moonfish.Tags.StringID parameterName;
         internal  ShaderTemplatePropertyBlockBase(BinaryReader binaryReader)
         {
-            this.property = (Property)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.parameterName = binaryReader.ReadStringID();
+            property = (Property)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            parameterName = binaryReader.ReadStringID();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)property);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(parameterName);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum Property : short
-        
         {
             Unused = 0,
             DiffuseMap = 1,

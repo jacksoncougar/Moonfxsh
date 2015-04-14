@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass PmovClass = (TagClass)"pmov";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class ParticlePhysicsBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class ParticlePhysicsBlockBase  : IGuerilla
     {
         [TagReference("pmov")]
         internal Moonfish.Tags.TagReference template;
@@ -24,42 +33,22 @@ namespace Moonfish.Guerilla.Tags
         internal ParticleController[] movements;
         internal  ParticlePhysicsBlockBase(BinaryReader binaryReader)
         {
-            this.template = binaryReader.ReadTagReference();
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.movements = ReadParticleControllerArray(binaryReader);
+            template = binaryReader.ReadTagReference();
+            flags = (Flags)binaryReader.ReadInt32();
+            movements = Guerilla.ReadBlockArray<ParticleController>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(template);
+                binaryWriter.Write((Int32)flags);
+                nextAddress = Guerilla.WriteBlockArray<ParticleController>(binaryWriter, movements, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ParticleController[] ReadParticleControllerArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ParticleController));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ParticleController[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ParticleController(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             Physics = 1,
             CollideWithStructure = 2,

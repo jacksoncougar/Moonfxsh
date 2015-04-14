@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass CinClass = (TagClass)"cin*";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,76 +24,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24)]
-    public class ScenarioCinematicsResourceBlockBase
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class ScenarioCinematicsResourceBlockBase  : IGuerilla
     {
         internal ScenarioCutsceneFlagBlock[] flags;
         internal ScenarioCutsceneCameraPointBlock[] cameraPoints;
         internal RecordedAnimationBlock[] recordedAnimations;
         internal  ScenarioCinematicsResourceBlockBase(BinaryReader binaryReader)
         {
-            this.flags = ReadScenarioCutsceneFlagBlockArray(binaryReader);
-            this.cameraPoints = ReadScenarioCutsceneCameraPointBlockArray(binaryReader);
-            this.recordedAnimations = ReadRecordedAnimationBlockArray(binaryReader);
+            flags = Guerilla.ReadBlockArray<ScenarioCutsceneFlagBlock>(binaryReader);
+            cameraPoints = Guerilla.ReadBlockArray<ScenarioCutsceneCameraPointBlock>(binaryReader);
+            recordedAnimations = Guerilla.ReadBlockArray<RecordedAnimationBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                nextAddress = Guerilla.WriteBlockArray<ScenarioCutsceneFlagBlock>(binaryWriter, flags, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioCutsceneCameraPointBlock>(binaryWriter, cameraPoints, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<RecordedAnimationBlock>(binaryWriter, recordedAnimations, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ScenarioCutsceneFlagBlock[] ReadScenarioCutsceneFlagBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioCutsceneFlagBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioCutsceneFlagBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioCutsceneFlagBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ScenarioCutsceneCameraPointBlock[] ReadScenarioCutsceneCameraPointBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioCutsceneCameraPointBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioCutsceneCameraPointBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioCutsceneCameraPointBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RecordedAnimationBlock[] ReadRecordedAnimationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RecordedAnimationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RecordedAnimationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RecordedAnimationBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

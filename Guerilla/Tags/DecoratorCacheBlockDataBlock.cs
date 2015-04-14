@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 136)]
-    public class DecoratorCacheBlockDataBlockBase
+    [LayoutAttribute(Size = 136, Alignment = 4)]
+    public class DecoratorCacheBlockDataBlockBase  : IGuerilla
     {
         internal DecoratorPlacementBlock[] placements;
         internal DecalVerticesBlock[] decalVertices;
@@ -28,89 +29,31 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  DecoratorCacheBlockDataBlockBase(BinaryReader binaryReader)
         {
-            this.placements = ReadDecoratorPlacementBlockArray(binaryReader);
-            this.decalVertices = ReadDecalVerticesBlockArray(binaryReader);
-            this.decalIndices = ReadIndicesBlockArray(binaryReader);
-            this.decalVertexBuffer = binaryReader.ReadVertexBuffer();
-            this.invalidName_ = binaryReader.ReadBytes(16);
-            this.spriteVertices = ReadSpriteVerticesBlockArray(binaryReader);
-            this.spriteIndices = ReadIndicesBlockArray(binaryReader);
-            this.spriteVertexBuffer = binaryReader.ReadVertexBuffer();
-            this.invalidName_0 = binaryReader.ReadBytes(16);
+            placements = Guerilla.ReadBlockArray<DecoratorPlacementBlock>(binaryReader);
+            decalVertices = Guerilla.ReadBlockArray<DecalVerticesBlock>(binaryReader);
+            decalIndices = Guerilla.ReadBlockArray<IndicesBlock>(binaryReader);
+            decalVertexBuffer = binaryReader.ReadVertexBuffer();
+            invalidName_ = binaryReader.ReadBytes(16);
+            spriteVertices = Guerilla.ReadBlockArray<SpriteVerticesBlock>(binaryReader);
+            spriteIndices = Guerilla.ReadBlockArray<IndicesBlock>(binaryReader);
+            spriteVertexBuffer = binaryReader.ReadVertexBuffer();
+            invalidName_0 = binaryReader.ReadBytes(16);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                nextAddress = Guerilla.WriteBlockArray<DecoratorPlacementBlock>(binaryWriter, placements, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<DecalVerticesBlock>(binaryWriter, decalVertices, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<IndicesBlock>(binaryWriter, decalIndices, nextAddress);
+                binaryWriter.Write(decalVertexBuffer);
+                binaryWriter.Write(invalidName_, 0, 16);
+                nextAddress = Guerilla.WriteBlockArray<SpriteVerticesBlock>(binaryWriter, spriteVertices, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<IndicesBlock>(binaryWriter, spriteIndices, nextAddress);
+                binaryWriter.Write(spriteVertexBuffer);
+                binaryWriter.Write(invalidName_0, 0, 16);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual DecoratorPlacementBlock[] ReadDecoratorPlacementBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(DecoratorPlacementBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new DecoratorPlacementBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new DecoratorPlacementBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual DecalVerticesBlock[] ReadDecalVerticesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(DecalVerticesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new DecalVerticesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new DecalVerticesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual IndicesBlock[] ReadIndicesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(IndicesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new IndicesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new IndicesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SpriteVerticesBlock[] ReadSpriteVerticesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SpriteVerticesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SpriteVerticesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SpriteVerticesBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

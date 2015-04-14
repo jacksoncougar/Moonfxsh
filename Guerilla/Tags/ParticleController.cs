@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class ParticleControllerBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class ParticleControllerBase  : IGuerilla
     {
         internal Type type;
         internal byte[] invalidName_;
@@ -23,42 +24,23 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  ParticleControllerBase(BinaryReader binaryReader)
         {
-            this.type = (Type)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.parameters = ReadParticleControllerParametersArray(binaryReader);
-            this.invalidName_0 = binaryReader.ReadBytes(8);
+            type = (Type)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            parameters = Guerilla.ReadBlockArray<ParticleControllerParameters>(binaryReader);
+            invalidName_0 = binaryReader.ReadBytes(8);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write(invalidName_, 0, 2);
+                nextAddress = Guerilla.WriteBlockArray<ParticleControllerParameters>(binaryWriter, parameters, nextAddress);
+                binaryWriter.Write(invalidName_0, 0, 8);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ParticleControllerParameters[] ReadParticleControllerParametersArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ParticleControllerParameters));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ParticleControllerParameters[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ParticleControllerParameters(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum Type : short
-        
         {
             Physics = 0,
             Collider = 1,

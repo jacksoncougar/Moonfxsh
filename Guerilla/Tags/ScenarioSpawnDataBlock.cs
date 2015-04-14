@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 96)]
-    public class ScenarioSpawnDataBlockBase
+    [LayoutAttribute(Size = 96, Alignment = 4)]
+    public class ScenarioSpawnDataBlockBase  : IGuerilla
     {
         internal float dynamicSpawnLowerHeight;
         internal float dynamicSpawnUpperHeight;
@@ -26,57 +27,27 @@ namespace Moonfish.Guerilla.Tags
         internal StaticSpawnZoneBlock[] staticInitialSpawnZones;
         internal  ScenarioSpawnDataBlockBase(BinaryReader binaryReader)
         {
-            this.dynamicSpawnLowerHeight = binaryReader.ReadSingle();
-            this.dynamicSpawnUpperHeight = binaryReader.ReadSingle();
-            this.gameObjectResetHeight = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes(60);
-            this.dynamicSpawnOverloads = ReadDynamicSpawnZoneOverloadBlockArray(binaryReader);
-            this.staticRespawnZones = ReadStaticSpawnZoneBlockArray(binaryReader);
-            this.staticInitialSpawnZones = ReadStaticSpawnZoneBlockArray(binaryReader);
+            dynamicSpawnLowerHeight = binaryReader.ReadSingle();
+            dynamicSpawnUpperHeight = binaryReader.ReadSingle();
+            gameObjectResetHeight = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(60);
+            dynamicSpawnOverloads = Guerilla.ReadBlockArray<DynamicSpawnZoneOverloadBlock>(binaryReader);
+            staticRespawnZones = Guerilla.ReadBlockArray<StaticSpawnZoneBlock>(binaryReader);
+            staticInitialSpawnZones = Guerilla.ReadBlockArray<StaticSpawnZoneBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(dynamicSpawnLowerHeight);
+                binaryWriter.Write(dynamicSpawnUpperHeight);
+                binaryWriter.Write(gameObjectResetHeight);
+                binaryWriter.Write(invalidName_, 0, 60);
+                nextAddress = Guerilla.WriteBlockArray<DynamicSpawnZoneOverloadBlock>(binaryWriter, dynamicSpawnOverloads, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StaticSpawnZoneBlock>(binaryWriter, staticRespawnZones, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StaticSpawnZoneBlock>(binaryWriter, staticInitialSpawnZones, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual DynamicSpawnZoneOverloadBlock[] ReadDynamicSpawnZoneOverloadBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(DynamicSpawnZoneOverloadBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new DynamicSpawnZoneOverloadBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new DynamicSpawnZoneOverloadBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual StaticSpawnZoneBlock[] ReadStaticSpawnZoneBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StaticSpawnZoneBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StaticSpawnZoneBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StaticSpawnZoneBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

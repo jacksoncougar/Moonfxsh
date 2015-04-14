@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 64)]
-    public class DecoratorProjectedDecalBlockBase
+    [LayoutAttribute(Size = 64, Alignment = 4)]
+    public class DecoratorProjectedDecalBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.ByteBlockIndex1 decoratorSet;
         internal byte decoratorClass;
@@ -28,29 +29,31 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 previousPosition;
         internal  DecoratorProjectedDecalBlockBase(BinaryReader binaryReader)
         {
-            this.decoratorSet = binaryReader.ReadByteBlockIndex1();
-            this.decoratorClass = binaryReader.ReadByte();
-            this.decoratorPermutation = binaryReader.ReadByte();
-            this.spriteIndex = binaryReader.ReadByte();
-            this.position = binaryReader.ReadVector3();
-            this.left = binaryReader.ReadVector3();
-            this.up = binaryReader.ReadVector3();
-            this.extents = binaryReader.ReadVector3();
-            this.previousPosition = binaryReader.ReadVector3();
+            decoratorSet = binaryReader.ReadByteBlockIndex1();
+            decoratorClass = binaryReader.ReadByte();
+            decoratorPermutation = binaryReader.ReadByte();
+            spriteIndex = binaryReader.ReadByte();
+            position = binaryReader.ReadVector3();
+            left = binaryReader.ReadVector3();
+            up = binaryReader.ReadVector3();
+            extents = binaryReader.ReadVector3();
+            previousPosition = binaryReader.ReadVector3();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(decoratorSet);
+                binaryWriter.Write(decoratorClass);
+                binaryWriter.Write(decoratorPermutation);
+                binaryWriter.Write(spriteIndex);
+                binaryWriter.Write(position);
+                binaryWriter.Write(left);
+                binaryWriter.Write(up);
+                binaryWriter.Write(extents);
+                binaryWriter.Write(previousPosition);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 84)]
-    public class RulesBlockBase
+    [LayoutAttribute(Size = 84, Alignment = 4)]
+    public class RulesBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal Moonfish.Tags.ColorR8G8B8 tintColor;
@@ -23,39 +24,21 @@ namespace Moonfish.Guerilla.Tags
         internal StatesBlock[] states;
         internal  RulesBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadString32();
-            this.tintColor = binaryReader.ReadColorR8G8B8();
-            this.invalidName_ = binaryReader.ReadBytes(32);
-            this.states = ReadStatesBlockArray(binaryReader);
+            name = binaryReader.ReadString32();
+            tintColor = binaryReader.ReadColorR8G8B8();
+            invalidName_ = binaryReader.ReadBytes(32);
+            states = Guerilla.ReadBlockArray<StatesBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write(tintColor);
+                binaryWriter.Write(invalidName_, 0, 32);
+                nextAddress = Guerilla.WriteBlockArray<StatesBlock>(binaryWriter, states, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual StatesBlock[] ReadStatesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StatesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StatesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StatesBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

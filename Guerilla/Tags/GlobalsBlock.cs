@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass MatgClass = (TagClass)"matg";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 644)]
-    public class GlobalsBlockBase
+    [LayoutAttribute(Size = 644, Alignment = 4)]
+    public class GlobalsBlockBase  : IGuerilla
     {
         internal byte[] invalidName_;
         internal Language language;
@@ -52,428 +61,75 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  GlobalsBlockBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(172);
-            this.language = (Language)binaryReader.ReadInt32();
-            this.havokCleanupResources = ReadHavokCleanupResourcesBlockArray(binaryReader);
-            this.collisionDamage = ReadCollisionDamageBlockArray(binaryReader);
-            this.soundGlobals = ReadSoundGlobalsBlockArray(binaryReader);
-            this.aiGlobals = ReadAiGlobalsBlockArray(binaryReader);
-            this.damageTable = ReadGameGlobalsDamageBlockArray(binaryReader);
-            this.gNullBlock = ReadGNullBlockArray(binaryReader);
-            this.sounds = ReadSoundBlockArray(binaryReader);
-            this.camera = ReadCameraBlockArray(binaryReader);
-            this.playerControl = ReadPlayerControlBlockArray(binaryReader);
-            this.difficulty = ReadDifficultyBlockArray(binaryReader);
-            this.grenades = ReadGrenadesBlockArray(binaryReader);
-            this.rasterizerData = ReadRasterizerDataBlockArray(binaryReader);
-            this.interfaceTags = ReadInterfaceTagReferencesArray(binaryReader);
-            this.weaponListUpdateWeaponListEnumInGameGlobalsH = ReadCheatWeaponsBlockArray(binaryReader);
-            this.cheatPowerups = ReadCheatPowerupsBlockArray(binaryReader);
-            this.multiplayerInformation = ReadMultiplayerInformationBlockArray(binaryReader);
-            this.playerInformation = ReadPlayerInformationBlockArray(binaryReader);
-            this.playerRepresentation = ReadPlayerRepresentationBlockArray(binaryReader);
-            this.fallingDamage = ReadFallingDamageBlockArray(binaryReader);
-            this.oldMaterials = ReadOldMaterialsBlockArray(binaryReader);
-            this.materials = ReadMaterialsBlockArray(binaryReader);
-            this.multiplayerUI = ReadMultiplayerUiBlockArray(binaryReader);
-            this.profileColors = ReadMultiplayerColorBlockArray(binaryReader);
-            this.multiplayerGlobals = binaryReader.ReadTagReference();
-            this.runtimeLevelData = ReadRuntimeLevelsDefinitionBlockArray(binaryReader);
-            this.uiLevelData = ReadUiLevelsDefinitionBlockArray(binaryReader);
-            this.defaultGlobalLighting = binaryReader.ReadTagReference();
-            this.invalidName_0 = binaryReader.ReadBytes(252);
+            invalidName_ = binaryReader.ReadBytes(172);
+            language = (Language)binaryReader.ReadInt32();
+            havokCleanupResources = Guerilla.ReadBlockArray<HavokCleanupResourcesBlock>(binaryReader);
+            collisionDamage = Guerilla.ReadBlockArray<CollisionDamageBlock>(binaryReader);
+            soundGlobals = Guerilla.ReadBlockArray<SoundGlobalsBlock>(binaryReader);
+            aiGlobals = Guerilla.ReadBlockArray<AiGlobalsBlock>(binaryReader);
+            damageTable = Guerilla.ReadBlockArray<GameGlobalsDamageBlock>(binaryReader);
+            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            sounds = Guerilla.ReadBlockArray<SoundBlock>(binaryReader);
+            camera = Guerilla.ReadBlockArray<CameraBlock>(binaryReader);
+            playerControl = Guerilla.ReadBlockArray<PlayerControlBlock>(binaryReader);
+            difficulty = Guerilla.ReadBlockArray<DifficultyBlock>(binaryReader);
+            grenades = Guerilla.ReadBlockArray<GrenadesBlock>(binaryReader);
+            rasterizerData = Guerilla.ReadBlockArray<RasterizerDataBlock>(binaryReader);
+            interfaceTags = Guerilla.ReadBlockArray<InterfaceTagReferences>(binaryReader);
+            weaponListUpdateWeaponListEnumInGameGlobalsH = Guerilla.ReadBlockArray<CheatWeaponsBlock>(binaryReader);
+            cheatPowerups = Guerilla.ReadBlockArray<CheatPowerupsBlock>(binaryReader);
+            multiplayerInformation = Guerilla.ReadBlockArray<MultiplayerInformationBlock>(binaryReader);
+            playerInformation = Guerilla.ReadBlockArray<PlayerInformationBlock>(binaryReader);
+            playerRepresentation = Guerilla.ReadBlockArray<PlayerRepresentationBlock>(binaryReader);
+            fallingDamage = Guerilla.ReadBlockArray<FallingDamageBlock>(binaryReader);
+            oldMaterials = Guerilla.ReadBlockArray<OldMaterialsBlock>(binaryReader);
+            materials = Guerilla.ReadBlockArray<MaterialsBlock>(binaryReader);
+            multiplayerUI = Guerilla.ReadBlockArray<MultiplayerUiBlock>(binaryReader);
+            profileColors = Guerilla.ReadBlockArray<MultiplayerColorBlock>(binaryReader);
+            multiplayerGlobals = binaryReader.ReadTagReference();
+            runtimeLevelData = Guerilla.ReadBlockArray<RuntimeLevelsDefinitionBlock>(binaryReader);
+            uiLevelData = Guerilla.ReadBlockArray<UiLevelsDefinitionBlock>(binaryReader);
+            defaultGlobalLighting = binaryReader.ReadTagReference();
+            invalidName_0 = binaryReader.ReadBytes(252);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 172);
+                binaryWriter.Write((Int32)language);
+                nextAddress = Guerilla.WriteBlockArray<HavokCleanupResourcesBlock>(binaryWriter, havokCleanupResources, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CollisionDamageBlock>(binaryWriter, collisionDamage, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGlobalsBlock>(binaryWriter, soundGlobals, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AiGlobalsBlock>(binaryWriter, aiGlobals, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GameGlobalsDamageBlock>(binaryWriter, damageTable, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundBlock>(binaryWriter, sounds, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CameraBlock>(binaryWriter, camera, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PlayerControlBlock>(binaryWriter, playerControl, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<DifficultyBlock>(binaryWriter, difficulty, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GrenadesBlock>(binaryWriter, grenades, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<RasterizerDataBlock>(binaryWriter, rasterizerData, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<InterfaceTagReferences>(binaryWriter, interfaceTags, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CheatWeaponsBlock>(binaryWriter, weaponListUpdateWeaponListEnumInGameGlobalsH, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CheatPowerupsBlock>(binaryWriter, cheatPowerups, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MultiplayerInformationBlock>(binaryWriter, multiplayerInformation, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PlayerInformationBlock>(binaryWriter, playerInformation, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PlayerRepresentationBlock>(binaryWriter, playerRepresentation, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<FallingDamageBlock>(binaryWriter, fallingDamage, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<OldMaterialsBlock>(binaryWriter, oldMaterials, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MaterialsBlock>(binaryWriter, materials, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MultiplayerUiBlock>(binaryWriter, multiplayerUI, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MultiplayerColorBlock>(binaryWriter, profileColors, nextAddress);
+                binaryWriter.Write(multiplayerGlobals);
+                nextAddress = Guerilla.WriteBlockArray<RuntimeLevelsDefinitionBlock>(binaryWriter, runtimeLevelData, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<UiLevelsDefinitionBlock>(binaryWriter, uiLevelData, nextAddress);
+                binaryWriter.Write(defaultGlobalLighting);
+                binaryWriter.Write(invalidName_0, 0, 252);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual HavokCleanupResourcesBlock[] ReadHavokCleanupResourcesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(HavokCleanupResourcesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new HavokCleanupResourcesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new HavokCleanupResourcesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual CollisionDamageBlock[] ReadCollisionDamageBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(CollisionDamageBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new CollisionDamageBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new CollisionDamageBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SoundGlobalsBlock[] ReadSoundGlobalsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundGlobalsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundGlobalsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundGlobalsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual AiGlobalsBlock[] ReadAiGlobalsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AiGlobalsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AiGlobalsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AiGlobalsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GameGlobalsDamageBlock[] ReadGameGlobalsDamageBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GameGlobalsDamageBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GameGlobalsDamageBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GameGlobalsDamageBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GNullBlock[] ReadGNullBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GNullBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GNullBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GNullBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SoundBlock[] ReadSoundBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual CameraBlock[] ReadCameraBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(CameraBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new CameraBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new CameraBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PlayerControlBlock[] ReadPlayerControlBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PlayerControlBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlayerControlBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PlayerControlBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual DifficultyBlock[] ReadDifficultyBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(DifficultyBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new DifficultyBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new DifficultyBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GrenadesBlock[] ReadGrenadesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GrenadesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GrenadesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GrenadesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RasterizerDataBlock[] ReadRasterizerDataBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RasterizerDataBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RasterizerDataBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RasterizerDataBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual InterfaceTagReferences[] ReadInterfaceTagReferencesArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(InterfaceTagReferences));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new InterfaceTagReferences[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new InterfaceTagReferences(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual CheatWeaponsBlock[] ReadCheatWeaponsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(CheatWeaponsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new CheatWeaponsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new CheatWeaponsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual CheatPowerupsBlock[] ReadCheatPowerupsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(CheatPowerupsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new CheatPowerupsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new CheatPowerupsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual MultiplayerInformationBlock[] ReadMultiplayerInformationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(MultiplayerInformationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new MultiplayerInformationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new MultiplayerInformationBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PlayerInformationBlock[] ReadPlayerInformationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PlayerInformationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlayerInformationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PlayerInformationBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PlayerRepresentationBlock[] ReadPlayerRepresentationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PlayerRepresentationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlayerRepresentationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PlayerRepresentationBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual FallingDamageBlock[] ReadFallingDamageBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(FallingDamageBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new FallingDamageBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new FallingDamageBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual OldMaterialsBlock[] ReadOldMaterialsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(OldMaterialsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new OldMaterialsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new OldMaterialsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual MaterialsBlock[] ReadMaterialsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(MaterialsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new MaterialsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new MaterialsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual MultiplayerUiBlock[] ReadMultiplayerUiBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(MultiplayerUiBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new MultiplayerUiBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new MultiplayerUiBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual MultiplayerColorBlock[] ReadMultiplayerColorBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(MultiplayerColorBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new MultiplayerColorBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new MultiplayerColorBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RuntimeLevelsDefinitionBlock[] ReadRuntimeLevelsDefinitionBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RuntimeLevelsDefinitionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RuntimeLevelsDefinitionBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RuntimeLevelsDefinitionBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UiLevelsDefinitionBlock[] ReadUiLevelsDefinitionBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UiLevelsDefinitionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UiLevelsDefinitionBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UiLevelsDefinitionBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum Language : int
-        
         {
             English = 0,
             Japanese = 1,

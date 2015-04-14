@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 56)]
-    public class GlobalDamageSectionBlockBase
+    [LayoutAttribute(Size = 56, Alignment = 4)]
+    public class GlobalDamageSectionBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Flags flags;
@@ -33,65 +34,38 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  GlobalDamageSectionBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.vitalityPercentage01 = binaryReader.ReadSingle();
-            this.instantResponses = ReadInstantaneousDamageRepsonseBlockArray(binaryReader);
-            this.gNullBlock = ReadGNullBlockArray(binaryReader);
-            this.gNullBlock0 = ReadGNullBlockArray(binaryReader);
-            this.stunTimeSeconds = binaryReader.ReadSingle();
-            this.rechargeTimeSeconds = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.resurrectionRestoredRegionName = binaryReader.ReadStringID();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
+            name = binaryReader.ReadStringID();
+            flags = (Flags)binaryReader.ReadInt32();
+            vitalityPercentage01 = binaryReader.ReadSingle();
+            instantResponses = Guerilla.ReadBlockArray<InstantaneousDamageRepsonseBlock>(binaryReader);
+            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            gNullBlock0 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            stunTimeSeconds = binaryReader.ReadSingle();
+            rechargeTimeSeconds = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(4);
+            resurrectionRestoredRegionName = binaryReader.ReadStringID();
+            invalidName_0 = binaryReader.ReadBytes(4);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(vitalityPercentage01);
+                nextAddress = Guerilla.WriteBlockArray<InstantaneousDamageRepsonseBlock>(binaryWriter, instantResponses, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock0, nextAddress);
+                binaryWriter.Write(stunTimeSeconds);
+                binaryWriter.Write(rechargeTimeSeconds);
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(resurrectionRestoredRegionName);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual InstantaneousDamageRepsonseBlock[] ReadInstantaneousDamageRepsonseBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(InstantaneousDamageRepsonseBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new InstantaneousDamageRepsonseBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new InstantaneousDamageRepsonseBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GNullBlock[] ReadGNullBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GNullBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GNullBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GNullBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             AbsorbsBodyDamage = 1,
             TakesFullDmgWhenObjectDies = 2,

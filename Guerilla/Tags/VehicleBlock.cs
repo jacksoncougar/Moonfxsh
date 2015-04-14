@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass VehiClass = (TagClass)"vehi";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 276)]
+    [LayoutAttribute(Size = 276, Alignment = 4)]
     public class VehicleBlockBase : UnitBlock
     {
         internal Flags flags;
@@ -98,85 +107,108 @@ namespace Moonfish.Guerilla.Tags
         internal HavokVehiclePhysicsStructBlock havokVehiclePhysics;
         internal  VehicleBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.type = (Type)binaryReader.ReadInt16();
-            this.control = (Control)binaryReader.ReadInt16();
-            this.maximumForwardSpeed = binaryReader.ReadSingle();
-            this.maximumReverseSpeed = binaryReader.ReadSingle();
-            this.speedAcceleration = binaryReader.ReadSingle();
-            this.speedDeceleration = binaryReader.ReadSingle();
-            this.maximumLeftTurn = binaryReader.ReadSingle();
-            this.maximumRightTurnNegative = binaryReader.ReadSingle();
-            this.wheelCircumference = binaryReader.ReadSingle();
-            this.turnRate = binaryReader.ReadSingle();
-            this.blurSpeed = binaryReader.ReadSingle();
-            this.specificType = (SpecificTypeIfYourTypeCorrespondsToSomethingInThisListChooseIt)binaryReader.ReadInt16();
-            this.playerTrainingVehicleType = (PlayerTrainingVehicleType)binaryReader.ReadInt16();
-            this.flipMessage = binaryReader.ReadStringID();
-            this.turnScale = binaryReader.ReadSingle();
-            this.speedTurnPenaltyPower052 = binaryReader.ReadSingle();
-            this.speedTurnPenalty0None1CantTurnAtTopSpeed = binaryReader.ReadSingle();
-            this.maximumLeftSlide = binaryReader.ReadSingle();
-            this.maximumRightSlide = binaryReader.ReadSingle();
-            this.slideAcceleration = binaryReader.ReadSingle();
-            this.slideDeceleration = binaryReader.ReadSingle();
-            this.minimumFlippingAngularVelocity = binaryReader.ReadSingle();
-            this.maximumFlippingAngularVelocity = binaryReader.ReadSingle();
-            this.vehicleSize = (VehicleSizeTheSizeDetermineWhatKindOfSeatsInLargerVehiclesItMayOccupyIESmallOrLargeCargoSeats)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.fixedGunYaw = binaryReader.ReadSingle();
-            this.fixedGunPitch = binaryReader.ReadSingle();
-            this.overdampenCuspAngleDegrees = binaryReader.ReadSingle();
-            this.overdampenExponent = binaryReader.ReadSingle();
-            this.crouchTransitionTimeSeconds = binaryReader.ReadSingle();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.engineMoment = binaryReader.ReadSingle();
-            this.engineMaxAngularVelocity = binaryReader.ReadSingle();
-            this.gears = ReadGearBlockArray(binaryReader);
-            this.flyingTorqueScale = binaryReader.ReadSingle();
-            this.seatEnteranceAccelerationScale = binaryReader.ReadSingle();
-            this.seatExitAccelersationScale = binaryReader.ReadSingle();
-            this.airFrictionDeceleration = binaryReader.ReadSingle();
-            this.thrustScale = binaryReader.ReadSingle();
-            this.suspensionSound = binaryReader.ReadTagReference();
-            this.crashSound = binaryReader.ReadTagReference();
-            this.uNUSED = binaryReader.ReadTagReference();
-            this.specialEffect = binaryReader.ReadTagReference();
-            this.unusedEffect = binaryReader.ReadTagReference();
-            this.havokVehiclePhysics = new HavokVehiclePhysicsStructBlock(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            type = (Type)binaryReader.ReadInt16();
+            control = (Control)binaryReader.ReadInt16();
+            maximumForwardSpeed = binaryReader.ReadSingle();
+            maximumReverseSpeed = binaryReader.ReadSingle();
+            speedAcceleration = binaryReader.ReadSingle();
+            speedDeceleration = binaryReader.ReadSingle();
+            maximumLeftTurn = binaryReader.ReadSingle();
+            maximumRightTurnNegative = binaryReader.ReadSingle();
+            wheelCircumference = binaryReader.ReadSingle();
+            turnRate = binaryReader.ReadSingle();
+            blurSpeed = binaryReader.ReadSingle();
+            specificType = (SpecificTypeIfYourTypeCorrespondsToSomethingInThisListChooseIt)binaryReader.ReadInt16();
+            playerTrainingVehicleType = (PlayerTrainingVehicleType)binaryReader.ReadInt16();
+            flipMessage = binaryReader.ReadStringID();
+            turnScale = binaryReader.ReadSingle();
+            speedTurnPenaltyPower052 = binaryReader.ReadSingle();
+            speedTurnPenalty0None1CantTurnAtTopSpeed = binaryReader.ReadSingle();
+            maximumLeftSlide = binaryReader.ReadSingle();
+            maximumRightSlide = binaryReader.ReadSingle();
+            slideAcceleration = binaryReader.ReadSingle();
+            slideDeceleration = binaryReader.ReadSingle();
+            minimumFlippingAngularVelocity = binaryReader.ReadSingle();
+            maximumFlippingAngularVelocity = binaryReader.ReadSingle();
+            vehicleSize = (VehicleSizeTheSizeDetermineWhatKindOfSeatsInLargerVehiclesItMayOccupyIESmallOrLargeCargoSeats)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            fixedGunYaw = binaryReader.ReadSingle();
+            fixedGunPitch = binaryReader.ReadSingle();
+            overdampenCuspAngleDegrees = binaryReader.ReadSingle();
+            overdampenExponent = binaryReader.ReadSingle();
+            crouchTransitionTimeSeconds = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            engineMoment = binaryReader.ReadSingle();
+            engineMaxAngularVelocity = binaryReader.ReadSingle();
+            gears = Guerilla.ReadBlockArray<GearBlock>(binaryReader);
+            flyingTorqueScale = binaryReader.ReadSingle();
+            seatEnteranceAccelerationScale = binaryReader.ReadSingle();
+            seatExitAccelersationScale = binaryReader.ReadSingle();
+            airFrictionDeceleration = binaryReader.ReadSingle();
+            thrustScale = binaryReader.ReadSingle();
+            suspensionSound = binaryReader.ReadTagReference();
+            crashSound = binaryReader.ReadTagReference();
+            uNUSED = binaryReader.ReadTagReference();
+            specialEffect = binaryReader.ReadTagReference();
+            unusedEffect = binaryReader.ReadTagReference();
+            havokVehiclePhysics = new HavokVehiclePhysicsStructBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write((Int16)control);
+                binaryWriter.Write(maximumForwardSpeed);
+                binaryWriter.Write(maximumReverseSpeed);
+                binaryWriter.Write(speedAcceleration);
+                binaryWriter.Write(speedDeceleration);
+                binaryWriter.Write(maximumLeftTurn);
+                binaryWriter.Write(maximumRightTurnNegative);
+                binaryWriter.Write(wheelCircumference);
+                binaryWriter.Write(turnRate);
+                binaryWriter.Write(blurSpeed);
+                binaryWriter.Write((Int16)specificType);
+                binaryWriter.Write((Int16)playerTrainingVehicleType);
+                binaryWriter.Write(flipMessage);
+                binaryWriter.Write(turnScale);
+                binaryWriter.Write(speedTurnPenaltyPower052);
+                binaryWriter.Write(speedTurnPenalty0None1CantTurnAtTopSpeed);
+                binaryWriter.Write(maximumLeftSlide);
+                binaryWriter.Write(maximumRightSlide);
+                binaryWriter.Write(slideAcceleration);
+                binaryWriter.Write(slideDeceleration);
+                binaryWriter.Write(minimumFlippingAngularVelocity);
+                binaryWriter.Write(maximumFlippingAngularVelocity);
+                binaryWriter.Write((Int16)vehicleSize);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(fixedGunYaw);
+                binaryWriter.Write(fixedGunPitch);
+                binaryWriter.Write(overdampenCuspAngleDegrees);
+                binaryWriter.Write(overdampenExponent);
+                binaryWriter.Write(crouchTransitionTimeSeconds);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write(engineMoment);
+                binaryWriter.Write(engineMaxAngularVelocity);
+                nextAddress = Guerilla.WriteBlockArray<GearBlock>(binaryWriter, gears, nextAddress);
+                binaryWriter.Write(flyingTorqueScale);
+                binaryWriter.Write(seatEnteranceAccelerationScale);
+                binaryWriter.Write(seatExitAccelersationScale);
+                binaryWriter.Write(airFrictionDeceleration);
+                binaryWriter.Write(thrustScale);
+                binaryWriter.Write(suspensionSound);
+                binaryWriter.Write(crashSound);
+                binaryWriter.Write(uNUSED);
+                binaryWriter.Write(specialEffect);
+                binaryWriter.Write(unusedEffect);
+                havokVehiclePhysics.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual GearBlock[] ReadGearBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GearBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GearBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GearBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             SpeedWakesPhysics = 1,
             TurnWakesPhysics = 2,
@@ -202,7 +234,6 @@ namespace Moonfish.Guerilla.Tags
             AutoaimWhenTeamless = 2097152,
         };
         internal enum Type : short
-        
         {
             HumanTank = 0,
             HumanJeep = 1,
@@ -213,14 +244,12 @@ namespace Moonfish.Guerilla.Tags
             Turret = 6,
         };
         internal enum Control : short
-        
         {
             VehicleControlNormal = 0,
             VehicleControlUnused = 1,
             VehicleControlTank = 2,
         };
         internal enum SpecificTypeIfYourTypeCorrespondsToSomethingInThisListChooseIt : short
-        
         {
             None = 0,
             Ghost = 1,
@@ -229,7 +258,6 @@ namespace Moonfish.Guerilla.Tags
             SentinelEnforcer = 4,
         };
         internal enum PlayerTrainingVehicleType : short
-        
         {
             None = 0,
             Warthog = 1,
@@ -240,7 +268,6 @@ namespace Moonfish.Guerilla.Tags
             Wraith = 6,
         };
         internal enum VehicleSizeTheSizeDetermineWhatKindOfSeatsInLargerVehiclesItMayOccupyIESmallOrLargeCargoSeats : short
-        
         {
             Small = 0,
             Large = 1,

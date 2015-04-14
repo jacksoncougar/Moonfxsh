@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,31 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class TransparentPlanesBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class TransparentPlanesBlockBase  : IGuerilla
     {
         internal short sectionIndex;
         internal short partIndex;
         internal OpenTK.Vector4 plane;
         internal  TransparentPlanesBlockBase(BinaryReader binaryReader)
         {
-            this.sectionIndex = binaryReader.ReadInt16();
-            this.partIndex = binaryReader.ReadInt16();
-            this.plane = binaryReader.ReadVector4();
+            sectionIndex = binaryReader.ReadInt16();
+            partIndex = binaryReader.ReadInt16();
+            plane = binaryReader.ReadVector4();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(sectionIndex);
+                binaryWriter.Write(partIndex);
+                binaryWriter.Write(plane);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

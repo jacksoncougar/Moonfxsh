@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass CollClass = (TagClass)"coll";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 52)]
-    public class CollisionModelBlockBase
+    [LayoutAttribute(Size = 52, Alignment = 4)]
+    public class CollisionModelBlockBase  : IGuerilla
     {
         internal GlobalTagImportInfoBlock[] importInfo;
         internal GlobalErrorReportCategoriesBlock[] errors;
@@ -27,121 +36,30 @@ namespace Moonfish.Guerilla.Tags
         internal CollisionModelNodeBlock[] nodes;
         internal  CollisionModelBlockBase(BinaryReader binaryReader)
         {
-            this.importInfo = ReadGlobalTagImportInfoBlockArray(binaryReader);
-            this.errors = ReadGlobalErrorReportCategoriesBlockArray(binaryReader);
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.materials = ReadCollisionModelMaterialBlockArray(binaryReader);
-            this.regions = ReadCollisionModelRegionBlockArray(binaryReader);
-            this.pathfindingSpheres = ReadCollisionModelPathfindingSphereBlockArray(binaryReader);
-            this.nodes = ReadCollisionModelNodeBlockArray(binaryReader);
+            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>(binaryReader);
+            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            materials = Guerilla.ReadBlockArray<CollisionModelMaterialBlock>(binaryReader);
+            regions = Guerilla.ReadBlockArray<CollisionModelRegionBlock>(binaryReader);
+            pathfindingSpheres = Guerilla.ReadBlockArray<CollisionModelPathfindingSphereBlock>(binaryReader);
+            nodes = Guerilla.ReadBlockArray<CollisionModelNodeBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                nextAddress = Guerilla.WriteBlockArray<GlobalTagImportInfoBlock>(binaryWriter, importInfo, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GlobalErrorReportCategoriesBlock>(binaryWriter, errors, nextAddress);
+                binaryWriter.Write((Int32)flags);
+                nextAddress = Guerilla.WriteBlockArray<CollisionModelMaterialBlock>(binaryWriter, materials, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CollisionModelRegionBlock>(binaryWriter, regions, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CollisionModelPathfindingSphereBlock>(binaryWriter, pathfindingSpheres, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CollisionModelNodeBlock>(binaryWriter, nodes, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual GlobalTagImportInfoBlock[] ReadGlobalTagImportInfoBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalTagImportInfoBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalTagImportInfoBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalTagImportInfoBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalErrorReportCategoriesBlock[] ReadGlobalErrorReportCategoriesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalErrorReportCategoriesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalErrorReportCategoriesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalErrorReportCategoriesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual CollisionModelMaterialBlock[] ReadCollisionModelMaterialBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(CollisionModelMaterialBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new CollisionModelMaterialBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new CollisionModelMaterialBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual CollisionModelRegionBlock[] ReadCollisionModelRegionBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(CollisionModelRegionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new CollisionModelRegionBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new CollisionModelRegionBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual CollisionModelPathfindingSphereBlock[] ReadCollisionModelPathfindingSphereBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(CollisionModelPathfindingSphereBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new CollisionModelPathfindingSphereBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new CollisionModelPathfindingSphereBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual CollisionModelNodeBlock[] ReadCollisionModelNodeBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(CollisionModelNodeBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new CollisionModelNodeBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new CollisionModelNodeBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             ContainsOpenEdges = 1,
         };

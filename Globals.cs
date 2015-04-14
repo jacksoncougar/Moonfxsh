@@ -76,7 +76,7 @@ namespace Moonfish
         public static ResourceStream GetResourceBlock( Guerilla.Tags.GlobalGeometryBlockInfoStructBlock blockInfo )
         {
             Stream resourceStream = mapStream;
-            if ( blockInfo.ResourceLocation != Halo2.ResourceSource.Local
+            if ( blockInfo.ResourceLocation != ResourceSource.Local
                 && !TryGettingResourceStream( blockInfo.blockOffset, out resourceStream ) )
                 return null;
             resourceStream.Position = blockInfo.ResourceOffset + 8;

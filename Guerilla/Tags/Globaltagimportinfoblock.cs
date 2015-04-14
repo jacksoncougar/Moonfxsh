@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 592)]
-    public class GlobalTagImportInfoBlockBase
+    [LayoutAttribute(Size = 592, Alignment = 4)]
+    public class GlobalTagImportInfoBlockBase  : IGuerilla
     {
         internal int build;
         internal Moonfish.Tags.String256 version;
@@ -28,44 +29,31 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal  GlobalTagImportInfoBlockBase(BinaryReader binaryReader)
         {
-            this.build = binaryReader.ReadInt32();
-            this.version = binaryReader.ReadString256();
-            this.importDate = binaryReader.ReadString32();
-            this.culprit = binaryReader.ReadString32();
-            this.invalidName_ = binaryReader.ReadBytes(96);
-            this.importTime = binaryReader.ReadString32();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.files = ReadTagImportFileBlockArray(binaryReader);
-            this.invalidName_1 = binaryReader.ReadBytes(128);
+            build = binaryReader.ReadInt32();
+            version = binaryReader.ReadString256();
+            importDate = binaryReader.ReadString32();
+            culprit = binaryReader.ReadString32();
+            invalidName_ = binaryReader.ReadBytes(96);
+            importTime = binaryReader.ReadString32();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            files = Guerilla.ReadBlockArray<TagImportFileBlock>(binaryReader);
+            invalidName_1 = binaryReader.ReadBytes(128);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(build);
+                binaryWriter.Write(version);
+                binaryWriter.Write(importDate);
+                binaryWriter.Write(culprit);
+                binaryWriter.Write(invalidName_, 0, 96);
+                binaryWriter.Write(importTime);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                nextAddress = Guerilla.WriteBlockArray<TagImportFileBlock>(binaryWriter, files, nextAddress);
+                binaryWriter.Write(invalidName_1, 0, 128);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual TagImportFileBlock[] ReadTagImportFileBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(TagImportFileBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TagImportFileBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new TagImportFileBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

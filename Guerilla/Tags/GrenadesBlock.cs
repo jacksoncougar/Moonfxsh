@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 44)]
-    public class GrenadesBlockBase
+    [LayoutAttribute(Size = 44, Alignment = 4)]
+    public class GrenadesBlockBase  : IGuerilla
     {
         internal short maximumCount;
         internal byte[] invalidName_;
@@ -28,26 +29,25 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference projectile;
         internal  GrenadesBlockBase(BinaryReader binaryReader)
         {
-            this.maximumCount = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.throwingEffect = binaryReader.ReadTagReference();
-            this.invalidName_0 = binaryReader.ReadBytes(16);
-            this.equipment = binaryReader.ReadTagReference();
-            this.projectile = binaryReader.ReadTagReference();
+            maximumCount = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            throwingEffect = binaryReader.ReadTagReference();
+            invalidName_0 = binaryReader.ReadBytes(16);
+            equipment = binaryReader.ReadTagReference();
+            projectile = binaryReader.ReadTagReference();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(maximumCount);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(throwingEffect);
+                binaryWriter.Write(invalidName_0, 0, 16);
+                binaryWriter.Write(equipment);
+                binaryWriter.Write(projectile);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

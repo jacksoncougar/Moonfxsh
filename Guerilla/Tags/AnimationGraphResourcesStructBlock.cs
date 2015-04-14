@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 52)]
-    public class AnimationGraphResourcesStructBlockBase
+    [LayoutAttribute(Size = 52, Alignment = 4)]
+    public class AnimationGraphResourcesStructBlockBase  : IGuerilla
     {
         [TagReference("jmad")]
         internal Moonfish.Tags.TagReference parentAnimationGraph;
@@ -29,115 +30,40 @@ namespace Moonfish.Guerilla.Tags
         internal AnimationPoolBlock[] animationsABCDCC;
         internal  AnimationGraphResourcesStructBlockBase(BinaryReader binaryReader)
         {
-            this.parentAnimationGraph = binaryReader.ReadTagReference();
-            this.inheritanceFlags = (InheritanceFlags)binaryReader.ReadByte();
-            this.privateFlags = (PrivateFlags)binaryReader.ReadByte();
-            this.animationCodecPack = binaryReader.ReadInt16();
-            this.skeletonNodesABCDCC = ReadAnimationGraphNodeBlockArray(binaryReader);
-            this.soundReferencesABCDCC = ReadAnimationGraphSoundReferenceBlockArray(binaryReader);
-            this.effectReferencesABCDCC = ReadAnimationGraphEffectReferenceBlockArray(binaryReader);
-            this.blendScreensABCDCC = ReadAnimationBlendScreenBlockArray(binaryReader);
-            this.animationsABCDCC = ReadAnimationPoolBlockArray(binaryReader);
+            parentAnimationGraph = binaryReader.ReadTagReference();
+            inheritanceFlags = (InheritanceFlags)binaryReader.ReadByte();
+            privateFlags = (PrivateFlags)binaryReader.ReadByte();
+            animationCodecPack = binaryReader.ReadInt16();
+            skeletonNodesABCDCC = Guerilla.ReadBlockArray<AnimationGraphNodeBlock>(binaryReader);
+            soundReferencesABCDCC = Guerilla.ReadBlockArray<AnimationGraphSoundReferenceBlock>(binaryReader);
+            effectReferencesABCDCC = Guerilla.ReadBlockArray<AnimationGraphEffectReferenceBlock>(binaryReader);
+            blendScreensABCDCC = Guerilla.ReadBlockArray<AnimationBlendScreenBlock>(binaryReader);
+            animationsABCDCC = Guerilla.ReadBlockArray<AnimationPoolBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(parentAnimationGraph);
+                binaryWriter.Write((Byte)inheritanceFlags);
+                binaryWriter.Write((Byte)privateFlags);
+                binaryWriter.Write(animationCodecPack);
+                nextAddress = Guerilla.WriteBlockArray<AnimationGraphNodeBlock>(binaryWriter, skeletonNodesABCDCC, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AnimationGraphSoundReferenceBlock>(binaryWriter, soundReferencesABCDCC, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AnimationGraphEffectReferenceBlock>(binaryWriter, effectReferencesABCDCC, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AnimationBlendScreenBlock>(binaryWriter, blendScreensABCDCC, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AnimationPoolBlock>(binaryWriter, animationsABCDCC, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual AnimationGraphNodeBlock[] ReadAnimationGraphNodeBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AnimationGraphNodeBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationGraphNodeBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AnimationGraphNodeBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual AnimationGraphSoundReferenceBlock[] ReadAnimationGraphSoundReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AnimationGraphSoundReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationGraphSoundReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AnimationGraphSoundReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual AnimationGraphEffectReferenceBlock[] ReadAnimationGraphEffectReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AnimationGraphEffectReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationGraphEffectReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AnimationGraphEffectReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual AnimationBlendScreenBlock[] ReadAnimationBlendScreenBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AnimationBlendScreenBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationBlendScreenBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AnimationBlendScreenBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual AnimationPoolBlock[] ReadAnimationPoolBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AnimationPoolBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationPoolBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AnimationPoolBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum InheritanceFlags : byte
-        
         {
             InheritRootTransScaleOnly = 1,
             InheritForUseOnPlayer = 2,
         };
         [FlagsAttribute]
         internal enum PrivateFlags : byte
-        
         {
             PreparedForCache = 1,
             Unused = 2,

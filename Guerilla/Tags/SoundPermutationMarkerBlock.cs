@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,31 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class SoundPermutationMarkerBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class SoundPermutationMarkerBlockBase  : IGuerilla
     {
         internal int markerId;
         internal Moonfish.Tags.StringID name;
         internal int sampleOffset;
         internal  SoundPermutationMarkerBlockBase(BinaryReader binaryReader)
         {
-            this.markerId = binaryReader.ReadInt32();
-            this.name = binaryReader.ReadStringID();
-            this.sampleOffset = binaryReader.ReadInt32();
+            markerId = binaryReader.ReadInt32();
+            name = binaryReader.ReadStringID();
+            sampleOffset = binaryReader.ReadInt32();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(markerId);
+                binaryWriter.Write(name);
+                binaryWriter.Write(sampleOffset);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

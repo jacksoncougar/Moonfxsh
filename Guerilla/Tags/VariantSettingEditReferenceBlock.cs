@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24)]
-    public class VariantSettingEditReferenceBlockBase
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class VariantSettingEditReferenceBlockBase  : IGuerilla
     {
         internal SettingCategory settingCategory;
         internal byte[] invalidName_;
@@ -23,57 +24,23 @@ namespace Moonfish.Guerilla.Tags
         internal NullBlock[] nullBlock;
         internal  VariantSettingEditReferenceBlockBase(BinaryReader binaryReader)
         {
-            this.settingCategory = (SettingCategory)binaryReader.ReadInt32();
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.options = ReadTextValuePairBlockArray(binaryReader);
-            this.nullBlock = ReadNullBlockArray(binaryReader);
+            settingCategory = (SettingCategory)binaryReader.ReadInt32();
+            invalidName_ = binaryReader.ReadBytes(4);
+            options = Guerilla.ReadBlockArray<TextValuePairBlock>(binaryReader);
+            nullBlock = Guerilla.ReadBlockArray<NullBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)settingCategory);
+                binaryWriter.Write(invalidName_, 0, 4);
+                nextAddress = Guerilla.WriteBlockArray<TextValuePairBlock>(binaryWriter, options, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<NullBlock>(binaryWriter, nullBlock, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual TextValuePairBlock[] ReadTextValuePairBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(TextValuePairBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TextValuePairBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new TextValuePairBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual NullBlock[] ReadNullBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(NullBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new NullBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new NullBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum SettingCategory : int
-        
         {
             MatchCtf = 0,
             MatchSlayer = 1,

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class ModelObjectDataBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class ModelObjectDataBlockBase  : IGuerilla
     {
         internal Type type;
         internal byte[] invalidName_;
@@ -23,27 +24,23 @@ namespace Moonfish.Guerilla.Tags
         internal float radius;
         internal  ModelObjectDataBlockBase(BinaryReader binaryReader)
         {
-            this.type = (Type)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.offset = binaryReader.ReadVector3();
-            this.radius = binaryReader.ReadSingle();
+            type = (Type)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            offset = binaryReader.ReadVector3();
+            radius = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(offset);
+                binaryWriter.Write(radius);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum Type : short
-        
         {
             NotSet = 0,
             UserDefined = 1,

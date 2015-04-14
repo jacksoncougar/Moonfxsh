@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 56)]
-    public class ScenarioCutsceneFlagBlockBase
+    [LayoutAttribute(Size = 56, Alignment = 4)]
+    public class ScenarioCutsceneFlagBlockBase  : IGuerilla
     {
         internal byte[] invalidName_;
         internal Moonfish.Tags.String32 name;
@@ -23,24 +24,21 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector2 facing;
         internal  ScenarioCutsceneFlagBlockBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.name = binaryReader.ReadString32();
-            this.position = binaryReader.ReadVector3();
-            this.facing = binaryReader.ReadVector2();
+            invalidName_ = binaryReader.ReadBytes(4);
+            name = binaryReader.ReadString32();
+            position = binaryReader.ReadVector3();
+            facing = binaryReader.ReadVector2();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(name);
+                binaryWriter.Write(position);
+                binaryWriter.Write(facing);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

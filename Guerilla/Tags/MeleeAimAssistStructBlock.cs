@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class MeleeAimAssistStructBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class MeleeAimAssistStructBlockBase  : IGuerilla
     {
         /// <summary>
         /// the maximum angle that magnetism works at full strength
@@ -30,25 +31,23 @@ namespace Moonfish.Guerilla.Tags
         internal float throttleMaximumAdjustmentAngleDegrees;
         internal  MeleeAimAssistStructBlockBase(BinaryReader binaryReader)
         {
-            this.magnetismAngleDegrees = binaryReader.ReadSingle();
-            this.magnetismRangeWorldUnits = binaryReader.ReadSingle();
-            this.throttleMagnitude = binaryReader.ReadSingle();
-            this.throttleMinimumDistance = binaryReader.ReadSingle();
-            this.throttleMaximumAdjustmentAngleDegrees = binaryReader.ReadSingle();
+            magnetismAngleDegrees = binaryReader.ReadSingle();
+            magnetismRangeWorldUnits = binaryReader.ReadSingle();
+            throttleMagnitude = binaryReader.ReadSingle();
+            throttleMinimumDistance = binaryReader.ReadSingle();
+            throttleMaximumAdjustmentAngleDegrees = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(magnetismAngleDegrees);
+                binaryWriter.Write(magnetismRangeWorldUnits);
+                binaryWriter.Write(throttleMagnitude);
+                binaryWriter.Write(throttleMinimumDistance);
+                binaryWriter.Write(throttleMaximumAdjustmentAngleDegrees);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

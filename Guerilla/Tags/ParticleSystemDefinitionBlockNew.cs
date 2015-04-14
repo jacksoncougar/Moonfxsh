@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 56)]
-    public class ParticleSystemDefinitionBlockNewBase
+    [LayoutAttribute(Size = 56, Alignment = 4)]
+    public class ParticleSystemDefinitionBlockNewBase  : IGuerilla
     {
         [TagReference("null")]
         internal Moonfish.Tags.TagReference particle;
@@ -50,60 +51,51 @@ namespace Moonfish.Guerilla.Tags
         internal ParticleSystemEmitterDefinitionBlock[] emitters;
         internal  ParticleSystemDefinitionBlockNewBase(BinaryReader binaryReader)
         {
-            this.particle = binaryReader.ReadTagReference();
-            this.location = binaryReader.ReadLongBlockIndex1();
-            this.coordinateSystem = (CoordinateSystem)binaryReader.ReadInt16();
-            this.environment = (Environment)binaryReader.ReadInt16();
-            this.disposition = (Disposition)binaryReader.ReadInt16();
-            this.cameraMode = (CameraMode)binaryReader.ReadInt16();
-            this.sortBias = binaryReader.ReadInt16();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.lODInDistance = binaryReader.ReadSingle();
-            this.lODFeatherInDelta = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.lODOutDistance = binaryReader.ReadSingle();
-            this.lODFeatherOutDelta = binaryReader.ReadSingle();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.emitters = ReadParticleSystemEmitterDefinitionBlockArray(binaryReader);
+            particle = binaryReader.ReadTagReference();
+            location = binaryReader.ReadLongBlockIndex1();
+            coordinateSystem = (CoordinateSystem)binaryReader.ReadInt16();
+            environment = (Environment)binaryReader.ReadInt16();
+            disposition = (Disposition)binaryReader.ReadInt16();
+            cameraMode = (CameraMode)binaryReader.ReadInt16();
+            sortBias = binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            lODInDistance = binaryReader.ReadSingle();
+            lODFeatherInDelta = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(4);
+            lODOutDistance = binaryReader.ReadSingle();
+            lODFeatherOutDelta = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            emitters = Guerilla.ReadBlockArray<ParticleSystemEmitterDefinitionBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(particle);
+                binaryWriter.Write(location);
+                binaryWriter.Write((Int16)coordinateSystem);
+                binaryWriter.Write((Int16)environment);
+                binaryWriter.Write((Int16)disposition);
+                binaryWriter.Write((Int16)cameraMode);
+                binaryWriter.Write(sortBias);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(lODInDistance);
+                binaryWriter.Write(lODFeatherInDelta);
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(lODOutDistance);
+                binaryWriter.Write(lODFeatherOutDelta);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                nextAddress = Guerilla.WriteBlockArray<ParticleSystemEmitterDefinitionBlock>(binaryWriter, emitters, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ParticleSystemEmitterDefinitionBlock[] ReadParticleSystemEmitterDefinitionBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ParticleSystemEmitterDefinitionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ParticleSystemEmitterDefinitionBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ParticleSystemEmitterDefinitionBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum CoordinateSystem : short
-        
         {
             World = 0,
             Local = 1,
             Parent = 2,
         };
         internal enum Environment : short
-        
         {
             AnyEnvironment = 0,
             AirOnly = 1,
@@ -111,14 +103,12 @@ namespace Moonfish.Guerilla.Tags
             SpaceOnly = 3,
         };
         internal enum Disposition : short
-        
         {
             EitherMode = 0,
             ViolentModeOnly = 1,
             NonviolentModeOnly = 2,
         };
         internal enum CameraMode : short
-        
         {
             IndependentOfCameraMode = 0,
             OnlyInFirstPerson = 1,
@@ -127,7 +117,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             Glow = 1,
             Cinematics = 2,

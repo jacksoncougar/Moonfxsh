@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 176)]
-    public class UnitSeatBlockBase
+    [LayoutAttribute(Size = 176, Alignment = 4)]
+    public class UnitSeatBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal Moonfish.Tags.StringID label;
@@ -69,70 +70,78 @@ namespace Moonfish.Guerilla.Tags
         internal int runtimeInvisibleSeatRegionIndex;
         internal  UnitSeatBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.label = binaryReader.ReadStringID();
-            this.markerName = binaryReader.ReadStringID();
-            this.entryMarkerSName = binaryReader.ReadStringID();
-            this.boardingGrenadeMarker = binaryReader.ReadStringID();
-            this.boardingGrenadeString = binaryReader.ReadStringID();
-            this.boardingMeleeString = binaryReader.ReadStringID();
-            this.pingScale = binaryReader.ReadSingle();
-            this.turnoverTimeSeconds = binaryReader.ReadSingle();
-            this.acceleration = new UnitSeatAccelerationStructBlock(binaryReader);
-            this.aIScariness = binaryReader.ReadSingle();
-            this.aiSeatType = (AiSeatType)binaryReader.ReadInt16();
-            this.boardingSeat = binaryReader.ReadShortBlockIndex1();
-            this.listenerInterpolationFactor = binaryReader.ReadSingle();
-            this.yawRateBoundsDegreesPerSecond = binaryReader.ReadRange();
-            this.pitchRateBoundsDegreesPerSecond = binaryReader.ReadRange();
-            this.minSpeedReference = binaryReader.ReadSingle();
-            this.maxSpeedReference = binaryReader.ReadSingle();
-            this.speedExponent = binaryReader.ReadSingle();
-            this.unitCamera = new UnitCameraStructBlock(binaryReader);
-            this.unitHudInterface = ReadUnitHudReferenceBlockArray(binaryReader);
-            this.enterSeatString = binaryReader.ReadStringID();
-            this.yawMinimum = binaryReader.ReadSingle();
-            this.yawMaximum = binaryReader.ReadSingle();
-            this.builtInGunner = binaryReader.ReadTagReference();
-            this.entryRadius = binaryReader.ReadSingle();
-            this.entryMarkerConeAngle = binaryReader.ReadSingle();
-            this.entryMarkerFacingAngle = binaryReader.ReadSingle();
-            this.maximumRelativeVelocity = binaryReader.ReadSingle();
-            this.invisibleSeatRegion = binaryReader.ReadStringID();
-            this.runtimeInvisibleSeatRegionIndex = binaryReader.ReadInt32();
+            flags = (Flags)binaryReader.ReadInt32();
+            label = binaryReader.ReadStringID();
+            markerName = binaryReader.ReadStringID();
+            entryMarkerSName = binaryReader.ReadStringID();
+            boardingGrenadeMarker = binaryReader.ReadStringID();
+            boardingGrenadeString = binaryReader.ReadStringID();
+            boardingMeleeString = binaryReader.ReadStringID();
+            pingScale = binaryReader.ReadSingle();
+            turnoverTimeSeconds = binaryReader.ReadSingle();
+            acceleration = new UnitSeatAccelerationStructBlock(binaryReader);
+            aIScariness = binaryReader.ReadSingle();
+            aiSeatType = (AiSeatType)binaryReader.ReadInt16();
+            boardingSeat = binaryReader.ReadShortBlockIndex1();
+            listenerInterpolationFactor = binaryReader.ReadSingle();
+            yawRateBoundsDegreesPerSecond = binaryReader.ReadRange();
+            pitchRateBoundsDegreesPerSecond = binaryReader.ReadRange();
+            minSpeedReference = binaryReader.ReadSingle();
+            maxSpeedReference = binaryReader.ReadSingle();
+            speedExponent = binaryReader.ReadSingle();
+            unitCamera = new UnitCameraStructBlock(binaryReader);
+            unitHudInterface = Guerilla.ReadBlockArray<UnitHudReferenceBlock>(binaryReader);
+            enterSeatString = binaryReader.ReadStringID();
+            yawMinimum = binaryReader.ReadSingle();
+            yawMaximum = binaryReader.ReadSingle();
+            builtInGunner = binaryReader.ReadTagReference();
+            entryRadius = binaryReader.ReadSingle();
+            entryMarkerConeAngle = binaryReader.ReadSingle();
+            entryMarkerFacingAngle = binaryReader.ReadSingle();
+            maximumRelativeVelocity = binaryReader.ReadSingle();
+            invisibleSeatRegion = binaryReader.ReadStringID();
+            runtimeInvisibleSeatRegionIndex = binaryReader.ReadInt32();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(label);
+                binaryWriter.Write(markerName);
+                binaryWriter.Write(entryMarkerSName);
+                binaryWriter.Write(boardingGrenadeMarker);
+                binaryWriter.Write(boardingGrenadeString);
+                binaryWriter.Write(boardingMeleeString);
+                binaryWriter.Write(pingScale);
+                binaryWriter.Write(turnoverTimeSeconds);
+                acceleration.Write(binaryWriter);
+                binaryWriter.Write(aIScariness);
+                binaryWriter.Write((Int16)aiSeatType);
+                binaryWriter.Write(boardingSeat);
+                binaryWriter.Write(listenerInterpolationFactor);
+                binaryWriter.Write(yawRateBoundsDegreesPerSecond);
+                binaryWriter.Write(pitchRateBoundsDegreesPerSecond);
+                binaryWriter.Write(minSpeedReference);
+                binaryWriter.Write(maxSpeedReference);
+                binaryWriter.Write(speedExponent);
+                unitCamera.Write(binaryWriter);
+                nextAddress = Guerilla.WriteBlockArray<UnitHudReferenceBlock>(binaryWriter, unitHudInterface, nextAddress);
+                binaryWriter.Write(enterSeatString);
+                binaryWriter.Write(yawMinimum);
+                binaryWriter.Write(yawMaximum);
+                binaryWriter.Write(builtInGunner);
+                binaryWriter.Write(entryRadius);
+                binaryWriter.Write(entryMarkerConeAngle);
+                binaryWriter.Write(entryMarkerFacingAngle);
+                binaryWriter.Write(maximumRelativeVelocity);
+                binaryWriter.Write(invisibleSeatRegion);
+                binaryWriter.Write(runtimeInvisibleSeatRegionIndex);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual UnitHudReferenceBlock[] ReadUnitHudReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UnitHudReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UnitHudReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UnitHudReferenceBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             Invisible = 1,
             Locked = 2,
@@ -156,7 +165,6 @@ namespace Moonfish.Guerilla.Tags
             InvisibleUnderMajorDamage = 524288,
         };
         internal enum AiSeatType : short
-        
         {
             NONE = 0,
             Passenger = 1,

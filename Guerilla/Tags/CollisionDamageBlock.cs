@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 72)]
-    public class CollisionDamageBlockBase
+    [LayoutAttribute(Size = 72, Alignment = 4)]
+    public class CollisionDamageBlockBase  : IGuerilla
     {
         [TagReference("jpt!")]
         internal Moonfish.Tags.TagReference collisionDamage;
@@ -54,30 +55,33 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  CollisionDamageBlockBase(BinaryReader binaryReader)
         {
-            this.collisionDamage = binaryReader.ReadTagReference();
-            this.minGameAccDefault = binaryReader.ReadSingle();
-            this.maxGameAccDefault = binaryReader.ReadSingle();
-            this.minGameScaleDefault = binaryReader.ReadSingle();
-            this.maxGameScaleDefault = binaryReader.ReadSingle();
-            this.minAbsAccDefault = binaryReader.ReadSingle();
-            this.maxAbsAccDefault = binaryReader.ReadSingle();
-            this.minAbsScaleDefault = binaryReader.ReadSingle();
-            this.maxAbsScaleDefault = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes(32);
+            collisionDamage = binaryReader.ReadTagReference();
+            minGameAccDefault = binaryReader.ReadSingle();
+            maxGameAccDefault = binaryReader.ReadSingle();
+            minGameScaleDefault = binaryReader.ReadSingle();
+            maxGameScaleDefault = binaryReader.ReadSingle();
+            minAbsAccDefault = binaryReader.ReadSingle();
+            maxAbsAccDefault = binaryReader.ReadSingle();
+            minAbsScaleDefault = binaryReader.ReadSingle();
+            maxAbsScaleDefault = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(32);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(collisionDamage);
+                binaryWriter.Write(minGameAccDefault);
+                binaryWriter.Write(maxGameAccDefault);
+                binaryWriter.Write(minGameScaleDefault);
+                binaryWriter.Write(maxGameScaleDefault);
+                binaryWriter.Write(minAbsAccDefault);
+                binaryWriter.Write(maxAbsAccDefault);
+                binaryWriter.Write(minAbsScaleDefault);
+                binaryWriter.Write(maxAbsScaleDefault);
+                binaryWriter.Write(invalidName_, 0, 32);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

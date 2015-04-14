@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 608)]
-    public class ErrorReportsBlockBase
+    [LayoutAttribute(Size = 608, Alignment = 4)]
+    public class ErrorReportsBlockBase  : IGuerilla
     {
         internal Type type;
         internal Flags flags;
@@ -38,132 +39,53 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  ErrorReportsBlockBase(BinaryReader binaryReader)
         {
-            this.type = (Type)binaryReader.ReadInt16();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.text = ReadData(binaryReader);
-            this.sourceFilename = binaryReader.ReadString32();
-            this.sourceLineNumber = binaryReader.ReadInt32();
-            this.vertices = ReadErrorReportVerticesBlockArray(binaryReader);
-            this.vectors = ReadErrorReportVectorsBlockArray(binaryReader);
-            this.lines = ReadErrorReportLinesBlockArray(binaryReader);
-            this.triangles = ReadErrorReportTrianglesBlockArray(binaryReader);
-            this.quads = ReadErrorReportQuadsBlockArray(binaryReader);
-            this.comments = ReadErrorReportCommentsBlockArray(binaryReader);
-            this.invalidName_ = binaryReader.ReadBytes(380);
-            this.reportKey = binaryReader.ReadInt32();
-            this.nodeIndex = binaryReader.ReadInt32();
-            this.boundsX = binaryReader.ReadRange();
-            this.boundsY = binaryReader.ReadRange();
-            this.boundsZ = binaryReader.ReadRange();
-            this.color = binaryReader.ReadVector4();
-            this.invalidName_0 = binaryReader.ReadBytes(84);
+            type = (Type)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            text = Guerilla.ReadData(binaryReader);
+            sourceFilename = binaryReader.ReadString32();
+            sourceLineNumber = binaryReader.ReadInt32();
+            vertices = Guerilla.ReadBlockArray<ErrorReportVerticesBlock>(binaryReader);
+            vectors = Guerilla.ReadBlockArray<ErrorReportVectorsBlock>(binaryReader);
+            lines = Guerilla.ReadBlockArray<ErrorReportLinesBlock>(binaryReader);
+            triangles = Guerilla.ReadBlockArray<ErrorReportTrianglesBlock>(binaryReader);
+            quads = Guerilla.ReadBlockArray<ErrorReportQuadsBlock>(binaryReader);
+            comments = Guerilla.ReadBlockArray<ErrorReportCommentsBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(380);
+            reportKey = binaryReader.ReadInt32();
+            nodeIndex = binaryReader.ReadInt32();
+            boundsX = binaryReader.ReadRange();
+            boundsY = binaryReader.ReadRange();
+            boundsZ = binaryReader.ReadRange();
+            color = binaryReader.ReadVector4();
+            invalidName_0 = binaryReader.ReadBytes(84);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write((Int16)flags);
+                nextAddress = Guerilla.WriteData(binaryWriter, text, nextAddress);
+                binaryWriter.Write(sourceFilename);
+                binaryWriter.Write(sourceLineNumber);
+                nextAddress = Guerilla.WriteBlockArray<ErrorReportVerticesBlock>(binaryWriter, vertices, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ErrorReportVectorsBlock>(binaryWriter, vectors, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ErrorReportLinesBlock>(binaryWriter, lines, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ErrorReportTrianglesBlock>(binaryWriter, triangles, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ErrorReportQuadsBlock>(binaryWriter, quads, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ErrorReportCommentsBlock>(binaryWriter, comments, nextAddress);
+                binaryWriter.Write(invalidName_, 0, 380);
+                binaryWriter.Write(reportKey);
+                binaryWriter.Write(nodeIndex);
+                binaryWriter.Write(boundsX);
+                binaryWriter.Write(boundsY);
+                binaryWriter.Write(boundsZ);
+                binaryWriter.Write(color);
+                binaryWriter.Write(invalidName_0, 0, 84);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ErrorReportVerticesBlock[] ReadErrorReportVerticesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ErrorReportVerticesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ErrorReportVerticesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ErrorReportVerticesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ErrorReportVectorsBlock[] ReadErrorReportVectorsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ErrorReportVectorsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ErrorReportVectorsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ErrorReportVectorsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ErrorReportLinesBlock[] ReadErrorReportLinesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ErrorReportLinesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ErrorReportLinesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ErrorReportLinesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ErrorReportTrianglesBlock[] ReadErrorReportTrianglesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ErrorReportTrianglesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ErrorReportTrianglesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ErrorReportTrianglesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ErrorReportQuadsBlock[] ReadErrorReportQuadsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ErrorReportQuadsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ErrorReportQuadsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ErrorReportQuadsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ErrorReportCommentsBlock[] ReadErrorReportCommentsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ErrorReportCommentsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ErrorReportCommentsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ErrorReportCommentsBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum Type : short
-        
         {
             Silent = 0,
             Comment = 1,
@@ -172,7 +94,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             Rendered = 1,
             TangentSpace = 2,

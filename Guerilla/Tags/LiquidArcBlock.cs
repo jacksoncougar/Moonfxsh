@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 236)]
-    public class LiquidArcBlockBase
+    [LayoutAttribute(Size = 236, Alignment = 4)]
+    public class LiquidArcBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal SpriteCount spriteCount;
@@ -52,70 +53,78 @@ namespace Moonfish.Guerilla.Tags
         internal ScalarFunctionStructBlock brightnessScale;
         internal  LiquidArcBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.spriteCount = (SpriteCount)binaryReader.ReadInt16();
-            this.naturalLengthWorldUnits = binaryReader.ReadSingle();
-            this.instances = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.instanceSpreadAngleDegrees = binaryReader.ReadSingle();
-            this.instanceRotationPeriodSeconds = binaryReader.ReadSingle();
-            this.invalidName_0 = binaryReader.ReadBytes(8);
-            this.materialEffects = binaryReader.ReadTagReference();
-            this.bitmap = binaryReader.ReadTagReference();
-            this.invalidName_1 = binaryReader.ReadBytes(8);
-            this.horizontalRange = new ScalarFunctionStructBlock(binaryReader);
-            this.verticalRange = new ScalarFunctionStructBlock(binaryReader);
-            this.verticalNegativeScale01 = binaryReader.ReadSingle();
-            this.roughness = new ScalarFunctionStructBlock(binaryReader);
-            this.invalidName_2 = binaryReader.ReadBytes(64);
-            this.octave1FrequencyCyclesSecond = binaryReader.ReadSingle();
-            this.octave2FrequencyCyclesSecond = binaryReader.ReadSingle();
-            this.octave3FrequencyCyclesSecond = binaryReader.ReadSingle();
-            this.octave4FrequencyCyclesSecond = binaryReader.ReadSingle();
-            this.octave5FrequencyCyclesSecond = binaryReader.ReadSingle();
-            this.octave6FrequencyCyclesSecond = binaryReader.ReadSingle();
-            this.octave7FrequencyCyclesSecond = binaryReader.ReadSingle();
-            this.octave8FrequencyCyclesSecond = binaryReader.ReadSingle();
-            this.octave9FrequencyCyclesSecond = binaryReader.ReadSingle();
-            this.invalidName_3 = binaryReader.ReadBytes(28);
-            this.octaveFlags = (OctaveFlags)binaryReader.ReadInt16();
-            this.invalidName_4 = binaryReader.ReadBytes(2);
-            this.cores = ReadLiquidCoreBlockArray(binaryReader);
-            this.rangeScale = new ScalarFunctionStructBlock(binaryReader);
-            this.brightnessScale = new ScalarFunctionStructBlock(binaryReader);
+            flags = (Flags)binaryReader.ReadInt16();
+            spriteCount = (SpriteCount)binaryReader.ReadInt16();
+            naturalLengthWorldUnits = binaryReader.ReadSingle();
+            instances = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            instanceSpreadAngleDegrees = binaryReader.ReadSingle();
+            instanceRotationPeriodSeconds = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(8);
+            materialEffects = binaryReader.ReadTagReference();
+            bitmap = binaryReader.ReadTagReference();
+            invalidName_1 = binaryReader.ReadBytes(8);
+            horizontalRange = new ScalarFunctionStructBlock(binaryReader);
+            verticalRange = new ScalarFunctionStructBlock(binaryReader);
+            verticalNegativeScale01 = binaryReader.ReadSingle();
+            roughness = new ScalarFunctionStructBlock(binaryReader);
+            invalidName_2 = binaryReader.ReadBytes(64);
+            octave1FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave2FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave3FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave4FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave5FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave6FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave7FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave8FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave9FrequencyCyclesSecond = binaryReader.ReadSingle();
+            invalidName_3 = binaryReader.ReadBytes(28);
+            octaveFlags = (OctaveFlags)binaryReader.ReadInt16();
+            invalidName_4 = binaryReader.ReadBytes(2);
+            cores = Guerilla.ReadBlockArray<LiquidCoreBlock>(binaryReader);
+            rangeScale = new ScalarFunctionStructBlock(binaryReader);
+            brightnessScale = new ScalarFunctionStructBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16)spriteCount);
+                binaryWriter.Write(naturalLengthWorldUnits);
+                binaryWriter.Write(instances);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(instanceSpreadAngleDegrees);
+                binaryWriter.Write(instanceRotationPeriodSeconds);
+                binaryWriter.Write(invalidName_0, 0, 8);
+                binaryWriter.Write(materialEffects);
+                binaryWriter.Write(bitmap);
+                binaryWriter.Write(invalidName_1, 0, 8);
+                horizontalRange.Write(binaryWriter);
+                verticalRange.Write(binaryWriter);
+                binaryWriter.Write(verticalNegativeScale01);
+                roughness.Write(binaryWriter);
+                binaryWriter.Write(invalidName_2, 0, 64);
+                binaryWriter.Write(octave1FrequencyCyclesSecond);
+                binaryWriter.Write(octave2FrequencyCyclesSecond);
+                binaryWriter.Write(octave3FrequencyCyclesSecond);
+                binaryWriter.Write(octave4FrequencyCyclesSecond);
+                binaryWriter.Write(octave5FrequencyCyclesSecond);
+                binaryWriter.Write(octave6FrequencyCyclesSecond);
+                binaryWriter.Write(octave7FrequencyCyclesSecond);
+                binaryWriter.Write(octave8FrequencyCyclesSecond);
+                binaryWriter.Write(octave9FrequencyCyclesSecond);
+                binaryWriter.Write(invalidName_3, 0, 28);
+                binaryWriter.Write((Int16)octaveFlags);
+                binaryWriter.Write(invalidName_4, 0, 2);
+                nextAddress = Guerilla.WriteBlockArray<LiquidCoreBlock>(binaryWriter, cores, nextAddress);
+                rangeScale.Write(binaryWriter);
+                brightnessScale.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual LiquidCoreBlock[] ReadLiquidCoreBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LiquidCoreBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LiquidCoreBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LiquidCoreBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             BasisMarkerRelative = 1,
             SpreadByExternalInput = 2,
@@ -123,7 +132,6 @@ namespace Moonfish.Guerilla.Tags
             NoPerspectiveMidpoints = 8,
         };
         internal enum SpriteCount : short
-        
         {
             InvalidName4Sprites = 0,
             InvalidName8Sprites = 1,
@@ -135,7 +143,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum OctaveFlags : short
-        
         {
             Octave1 = 1,
             Octave2 = 2,

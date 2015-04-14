@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 144)]
-    public class LightingVariablesBlockBase
+    [LayoutAttribute(Size = 144, Alignment = 4)]
+    public class LightingVariablesBlockBase  : IGuerilla
     {
         internal ObjectAffected objectAffected;
         internal float lightmapBrightnessOffset;
@@ -25,30 +26,28 @@ namespace Moonfish.Guerilla.Tags
         internal LightmapShadowsStructBlock lightmapShadows;
         internal  LightingVariablesBlockBase(BinaryReader binaryReader)
         {
-            this.objectAffected = (ObjectAffected)binaryReader.ReadInt32();
-            this.lightmapBrightnessOffset = binaryReader.ReadSingle();
-            this.primaryLight = new PrimaryLightStructBlock(binaryReader);
-            this.secondaryLight = new SecondaryLightStructBlock(binaryReader);
-            this.ambientLight = new AmbientLightStructBlock(binaryReader);
-            this.lightmapShadows = new LightmapShadowsStructBlock(binaryReader);
+            objectAffected = (ObjectAffected)binaryReader.ReadInt32();
+            lightmapBrightnessOffset = binaryReader.ReadSingle();
+            primaryLight = new PrimaryLightStructBlock(binaryReader);
+            secondaryLight = new SecondaryLightStructBlock(binaryReader);
+            ambientLight = new AmbientLightStructBlock(binaryReader);
+            lightmapShadows = new LightmapShadowsStructBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)objectAffected);
+                binaryWriter.Write(lightmapBrightnessOffset);
+                primaryLight.Write(binaryWriter);
+                secondaryLight.Write(binaryWriter);
+                ambientLight.Write(binaryWriter);
+                lightmapShadows.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum ObjectAffected : int
-        
         {
             All = 1,
             Biped = 2,

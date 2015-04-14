@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 40)]
-    public class TableViewListReferenceBlockBase
+    [LayoutAttribute(Size = 40, Alignment = 4)]
+    public class TableViewListReferenceBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal AnimationIndex animationIndex;
@@ -27,52 +28,36 @@ namespace Moonfish.Guerilla.Tags
         internal TableViewListRowReferenceBlock[] tableRows;
         internal  TableViewListReferenceBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            this.introAnimationDelayMilliseconds = binaryReader.ReadInt16();
-            this.customFont = (CustomFont)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.textColor = binaryReader.ReadVector4();
-            this.topLeft = binaryReader.ReadPoint();
-            this.tableRows = ReadTableViewListRowReferenceBlockArray(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
+            customFont = (CustomFont)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            textColor = binaryReader.ReadVector4();
+            topLeft = binaryReader.ReadPoint();
+            tableRows = Guerilla.ReadBlockArray<TableViewListRowReferenceBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int16)animationIndex);
+                binaryWriter.Write(introAnimationDelayMilliseconds);
+                binaryWriter.Write((Int16)customFont);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(textColor);
+                binaryWriter.Write(topLeft);
+                nextAddress = Guerilla.WriteBlockArray<TableViewListRowReferenceBlock>(binaryWriter, tableRows, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual TableViewListRowReferenceBlock[] ReadTableViewListRowReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(TableViewListRowReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TableViewListRowReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new TableViewListRowReferenceBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             Unused = 1,
         };
         internal enum AnimationIndex : short
-        
         {
             NONE = 0,
             InvalidName00 = 1,
@@ -141,7 +126,6 @@ namespace Moonfish.Guerilla.Tags
             InvalidName63 = 64,
         };
         internal enum CustomFont : short
-        
         {
             Terminal = 0,
             BodyText = 1,

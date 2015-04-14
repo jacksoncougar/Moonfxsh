@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 112)]
-    public class CharacterVitalityBlockBase
+    [LayoutAttribute(Size = 112, Alignment = 4)]
+    public class CharacterVitalityBlockBase  : IGuerilla
     {
         internal VitalityFlags vitalityFlags;
         /// <summary>
@@ -114,50 +115,68 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  CharacterVitalityBlockBase(BinaryReader binaryReader)
         {
-            this.vitalityFlags = (VitalityFlags)binaryReader.ReadInt32();
-            this.normalBodyVitality = binaryReader.ReadSingle();
-            this.normalShieldVitality = binaryReader.ReadSingle();
-            this.legendaryBodyVitality = binaryReader.ReadSingle();
-            this.legendaryShieldVitality = binaryReader.ReadSingle();
-            this.bodyRechargeFraction = binaryReader.ReadSingle();
-            this.softPingThresholdWithShields = binaryReader.ReadSingle();
-            this.softPingThresholdNoShields = binaryReader.ReadSingle();
-            this.softPingMinInterruptTime = binaryReader.ReadSingle();
-            this.hardPingThresholdWithShields = binaryReader.ReadSingle();
-            this.hardPingThresholdNoShields = binaryReader.ReadSingle();
-            this.hardPingMinInterruptTime = binaryReader.ReadSingle();
-            this.currentDamageDecayDelay = binaryReader.ReadSingle();
-            this.currentDamageDecayTime = binaryReader.ReadSingle();
-            this.recentDamageDecayDelay = binaryReader.ReadSingle();
-            this.recentDamageDecayTime = binaryReader.ReadSingle();
-            this.bodyRechargeDelayTime = binaryReader.ReadSingle();
-            this.bodyRechargeTime = binaryReader.ReadSingle();
-            this.shieldRechargeDelayTime = binaryReader.ReadSingle();
-            this.shieldRechargeTime = binaryReader.ReadSingle();
-            this.stunThreshold = binaryReader.ReadSingle();
-            this.stunTimeBoundsSeconds = binaryReader.ReadRange();
-            this.extendedShieldDamageThreshold = binaryReader.ReadSingle();
-            this.extendedBodyDamageThreshold = binaryReader.ReadSingle();
-            this.suicideRadius = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes(8);
+            vitalityFlags = (VitalityFlags)binaryReader.ReadInt32();
+            normalBodyVitality = binaryReader.ReadSingle();
+            normalShieldVitality = binaryReader.ReadSingle();
+            legendaryBodyVitality = binaryReader.ReadSingle();
+            legendaryShieldVitality = binaryReader.ReadSingle();
+            bodyRechargeFraction = binaryReader.ReadSingle();
+            softPingThresholdWithShields = binaryReader.ReadSingle();
+            softPingThresholdNoShields = binaryReader.ReadSingle();
+            softPingMinInterruptTime = binaryReader.ReadSingle();
+            hardPingThresholdWithShields = binaryReader.ReadSingle();
+            hardPingThresholdNoShields = binaryReader.ReadSingle();
+            hardPingMinInterruptTime = binaryReader.ReadSingle();
+            currentDamageDecayDelay = binaryReader.ReadSingle();
+            currentDamageDecayTime = binaryReader.ReadSingle();
+            recentDamageDecayDelay = binaryReader.ReadSingle();
+            recentDamageDecayTime = binaryReader.ReadSingle();
+            bodyRechargeDelayTime = binaryReader.ReadSingle();
+            bodyRechargeTime = binaryReader.ReadSingle();
+            shieldRechargeDelayTime = binaryReader.ReadSingle();
+            shieldRechargeTime = binaryReader.ReadSingle();
+            stunThreshold = binaryReader.ReadSingle();
+            stunTimeBoundsSeconds = binaryReader.ReadRange();
+            extendedShieldDamageThreshold = binaryReader.ReadSingle();
+            extendedBodyDamageThreshold = binaryReader.ReadSingle();
+            suicideRadius = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(8);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)vitalityFlags);
+                binaryWriter.Write(normalBodyVitality);
+                binaryWriter.Write(normalShieldVitality);
+                binaryWriter.Write(legendaryBodyVitality);
+                binaryWriter.Write(legendaryShieldVitality);
+                binaryWriter.Write(bodyRechargeFraction);
+                binaryWriter.Write(softPingThresholdWithShields);
+                binaryWriter.Write(softPingThresholdNoShields);
+                binaryWriter.Write(softPingMinInterruptTime);
+                binaryWriter.Write(hardPingThresholdWithShields);
+                binaryWriter.Write(hardPingThresholdNoShields);
+                binaryWriter.Write(hardPingMinInterruptTime);
+                binaryWriter.Write(currentDamageDecayDelay);
+                binaryWriter.Write(currentDamageDecayTime);
+                binaryWriter.Write(recentDamageDecayDelay);
+                binaryWriter.Write(recentDamageDecayTime);
+                binaryWriter.Write(bodyRechargeDelayTime);
+                binaryWriter.Write(bodyRechargeTime);
+                binaryWriter.Write(shieldRechargeDelayTime);
+                binaryWriter.Write(shieldRechargeTime);
+                binaryWriter.Write(stunThreshold);
+                binaryWriter.Write(stunTimeBoundsSeconds);
+                binaryWriter.Write(extendedShieldDamageThreshold);
+                binaryWriter.Write(extendedBodyDamageThreshold);
+                binaryWriter.Write(suicideRadius);
+                binaryWriter.Write(invalidName_, 0, 8);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum VitalityFlags : int
-        
         {
             Unused = 1,
         };

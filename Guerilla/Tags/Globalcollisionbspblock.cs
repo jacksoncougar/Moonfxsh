@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 64)]
-    public class GlobalCollisionBspBlockBase
+    [LayoutAttribute(Size = 64, Alignment = 4)]
+    public class GlobalCollisionBspBlockBase  : IGuerilla
     {
         internal Bsp3dNodesBlock[] bSP3DNodes;
         internal PlanesBlock[] planes;
@@ -27,148 +28,29 @@ namespace Moonfish.Guerilla.Tags
         internal VerticesBlock[] vertices;
         internal  GlobalCollisionBspBlockBase(BinaryReader binaryReader)
         {
-            this.bSP3DNodes = ReadBsp3dNodesBlockArray(binaryReader);
-            this.planes = ReadPlanesBlockArray(binaryReader);
-            this.leaves = ReadLeavesBlockArray(binaryReader);
-            this.bSP2DReferences = ReadBsp2dReferencesBlockArray(binaryReader);
-            this.bSP2DNodes = ReadBsp2dNodesBlockArray(binaryReader);
-            this.surfaces = ReadSurfacesBlockArray(binaryReader);
-            this.edges = ReadEdgesBlockArray(binaryReader);
-            this.vertices = ReadVerticesBlockArray(binaryReader);
+            bSP3DNodes = Guerilla.ReadBlockArray<Bsp3dNodesBlock>(binaryReader);
+            planes = Guerilla.ReadBlockArray<PlanesBlock>(binaryReader);
+            leaves = Guerilla.ReadBlockArray<LeavesBlock>(binaryReader);
+            bSP2DReferences = Guerilla.ReadBlockArray<Bsp2dReferencesBlock>(binaryReader);
+            bSP2DNodes = Guerilla.ReadBlockArray<Bsp2dNodesBlock>(binaryReader);
+            surfaces = Guerilla.ReadBlockArray<SurfacesBlock>(binaryReader);
+            edges = Guerilla.ReadBlockArray<EdgesBlock>(binaryReader);
+            vertices = Guerilla.ReadBlockArray<VerticesBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                nextAddress = Guerilla.WriteBlockArray<Bsp3dNodesBlock>(binaryWriter, bSP3DNodes, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PlanesBlock>(binaryWriter, planes, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<LeavesBlock>(binaryWriter, leaves, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<Bsp2dReferencesBlock>(binaryWriter, bSP2DReferences, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<Bsp2dNodesBlock>(binaryWriter, bSP2DNodes, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SurfacesBlock>(binaryWriter, surfaces, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<EdgesBlock>(binaryWriter, edges, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<VerticesBlock>(binaryWriter, vertices, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual Bsp3dNodesBlock[] ReadBsp3dNodesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(Bsp3dNodesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new Bsp3dNodesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new Bsp3dNodesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PlanesBlock[] ReadPlanesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PlanesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlanesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PlanesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual LeavesBlock[] ReadLeavesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LeavesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LeavesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LeavesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual Bsp2dReferencesBlock[] ReadBsp2dReferencesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(Bsp2dReferencesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new Bsp2dReferencesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new Bsp2dReferencesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual Bsp2dNodesBlock[] ReadBsp2dNodesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(Bsp2dNodesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new Bsp2dNodesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new Bsp2dNodesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SurfacesBlock[] ReadSurfacesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SurfacesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SurfacesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SurfacesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual EdgesBlock[] ReadEdgesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(EdgesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new EdgesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new EdgesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual VerticesBlock[] ReadVerticesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(VerticesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new VerticesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new VerticesBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

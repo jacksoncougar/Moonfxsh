@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass WiglClass = (TagClass)"wigl";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 452)]
-    public class UserInterfaceSharedGlobalsDefinitionBlockBase
+    [LayoutAttribute(Size = 452, Alignment = 4)]
+    public class UserInterfaceSharedGlobalsDefinitionBlockBase  : IGuerilla
     {
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
@@ -102,173 +111,135 @@ namespace Moonfish.Guerilla.Tags
         internal int musicFadeTimeMilliseconds;
         internal  UserInterfaceSharedGlobalsDefinitionBlockBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.invalidName_1 = binaryReader.ReadBytes(16);
-            this.invalidName_2 = binaryReader.ReadBytes(8);
-            this.invalidName_3 = binaryReader.ReadBytes(8);
-            this.invalidName_4 = binaryReader.ReadBytes(16);
-            this.invalidName_5 = binaryReader.ReadBytes(8);
-            this.invalidName_6 = binaryReader.ReadBytes(8);
-            this.overlayedScreenAlphaMod = binaryReader.ReadSingle();
-            this.incTextUpdatePeriodMilliseconds = binaryReader.ReadInt16();
-            this.incTextBlockCharacterASCIICode = binaryReader.ReadInt16();
-            this.calloutTextScale = binaryReader.ReadSingle();
-            this.progressBarColor = binaryReader.ReadVector4();
-            this.nearClipPlaneDistanceObjectsCloserThanThisAreNotDrawn = binaryReader.ReadSingle();
-            this.projectionPlaneDistanceDistanceAtWhichObjectsAreRenderedWhenZ0NormalSize = binaryReader.ReadSingle();
-            this.farClipPlaneDistanceObjectsFartherThanThisAreNotDrawn = binaryReader.ReadSingle();
-            this.overlayedInterfaceColor = binaryReader.ReadVector4();
-            this.invalidName_7 = binaryReader.ReadBytes(12);
-            this.errors = ReadUiErrorCategoryBlockArray(binaryReader);
-            this.soundTag = binaryReader.ReadTagReference();
-            this.soundTag0 = binaryReader.ReadTagReference();
-            this.soundTag1 = binaryReader.ReadTagReference();
-            this.soundTag2 = binaryReader.ReadTagReference();
-            this.soundTag3 = binaryReader.ReadTagReference();
-            this.soundTag4 = binaryReader.ReadTagReference();
-            this.soundTag5 = binaryReader.ReadTagReference();
-            this.soundTag6 = binaryReader.ReadTagReference();
-            this.soundTag7 = binaryReader.ReadTagReference();
-            this.soundTag8 = binaryReader.ReadTagReference();
-            this.soundTag9 = binaryReader.ReadTagReference();
-            this.invalidName_8 = binaryReader.ReadTagReference();
-            this.soundTag10 = binaryReader.ReadTagReference();
-            this.invalidName_9 = binaryReader.ReadTagReference();
-            this.invalidName_10 = binaryReader.ReadTagReference();
-            this.invalidName_11 = binaryReader.ReadTagReference();
-            this.globalBitmapsTag = binaryReader.ReadTagReference();
-            this.unicodeStringListTag = binaryReader.ReadTagReference();
-            this.screenAnimations = ReadAnimationReferenceBlockArray(binaryReader);
-            this.shapeGroups = ReadShapeGroupReferenceBlockArray(binaryReader);
-            this.animations = ReadPersistentBackgroundAnimationBlockArray(binaryReader);
-            this.listItemSkins = ReadListSkinReferenceBlockArray(binaryReader);
-            this.buttonKeyTypeStrings = binaryReader.ReadTagReference();
-            this.gameTypeStrings = binaryReader.ReadTagReference();
-            this.invalidName_12 = binaryReader.ReadTagReference();
-            this.skillMappings = ReadSkillToRankMappingBlockArray(binaryReader);
-            this.fullScreenHeaderTextFont = (FullScreenHeaderTextFont)binaryReader.ReadInt16();
-            this.largeDialogHeaderTextFont = (LargeDialogHeaderTextFont)binaryReader.ReadInt16();
-            this.halfDialogHeaderTextFont = (HalfDialogHeaderTextFont)binaryReader.ReadInt16();
-            this.qtrDialogHeaderTextFont = (QtrDialogHeaderTextFont)binaryReader.ReadInt16();
-            this.defaultTextColor = binaryReader.ReadVector4();
-            this.fullScreenHeaderTextBounds = binaryReader.ReadVector2();
-            this.fullScreenButtonKeyTextBounds = binaryReader.ReadVector2();
-            this.largeDialogHeaderTextBounds = binaryReader.ReadVector2();
-            this.largeDialogButtonKeyTextBounds = binaryReader.ReadVector2();
-            this.halfDialogHeaderTextBounds = binaryReader.ReadVector2();
-            this.halfDialogButtonKeyTextBounds = binaryReader.ReadVector2();
-            this.qtrDialogHeaderTextBounds = binaryReader.ReadVector2();
-            this.qtrDialogButtonKeyTextBounds = binaryReader.ReadVector2();
-            this.mainMenuMusic = binaryReader.ReadTagReference();
-            this.musicFadeTimeMilliseconds = binaryReader.ReadInt32();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(16);
+            invalidName_2 = binaryReader.ReadBytes(8);
+            invalidName_3 = binaryReader.ReadBytes(8);
+            invalidName_4 = binaryReader.ReadBytes(16);
+            invalidName_5 = binaryReader.ReadBytes(8);
+            invalidName_6 = binaryReader.ReadBytes(8);
+            overlayedScreenAlphaMod = binaryReader.ReadSingle();
+            incTextUpdatePeriodMilliseconds = binaryReader.ReadInt16();
+            incTextBlockCharacterASCIICode = binaryReader.ReadInt16();
+            calloutTextScale = binaryReader.ReadSingle();
+            progressBarColor = binaryReader.ReadVector4();
+            nearClipPlaneDistanceObjectsCloserThanThisAreNotDrawn = binaryReader.ReadSingle();
+            projectionPlaneDistanceDistanceAtWhichObjectsAreRenderedWhenZ0NormalSize = binaryReader.ReadSingle();
+            farClipPlaneDistanceObjectsFartherThanThisAreNotDrawn = binaryReader.ReadSingle();
+            overlayedInterfaceColor = binaryReader.ReadVector4();
+            invalidName_7 = binaryReader.ReadBytes(12);
+            errors = Guerilla.ReadBlockArray<UiErrorCategoryBlock>(binaryReader);
+            soundTag = binaryReader.ReadTagReference();
+            soundTag0 = binaryReader.ReadTagReference();
+            soundTag1 = binaryReader.ReadTagReference();
+            soundTag2 = binaryReader.ReadTagReference();
+            soundTag3 = binaryReader.ReadTagReference();
+            soundTag4 = binaryReader.ReadTagReference();
+            soundTag5 = binaryReader.ReadTagReference();
+            soundTag6 = binaryReader.ReadTagReference();
+            soundTag7 = binaryReader.ReadTagReference();
+            soundTag8 = binaryReader.ReadTagReference();
+            soundTag9 = binaryReader.ReadTagReference();
+            invalidName_8 = binaryReader.ReadTagReference();
+            soundTag10 = binaryReader.ReadTagReference();
+            invalidName_9 = binaryReader.ReadTagReference();
+            invalidName_10 = binaryReader.ReadTagReference();
+            invalidName_11 = binaryReader.ReadTagReference();
+            globalBitmapsTag = binaryReader.ReadTagReference();
+            unicodeStringListTag = binaryReader.ReadTagReference();
+            screenAnimations = Guerilla.ReadBlockArray<AnimationReferenceBlock>(binaryReader);
+            shapeGroups = Guerilla.ReadBlockArray<ShapeGroupReferenceBlock>(binaryReader);
+            animations = Guerilla.ReadBlockArray<PersistentBackgroundAnimationBlock>(binaryReader);
+            listItemSkins = Guerilla.ReadBlockArray<ListSkinReferenceBlock>(binaryReader);
+            buttonKeyTypeStrings = binaryReader.ReadTagReference();
+            gameTypeStrings = binaryReader.ReadTagReference();
+            invalidName_12 = binaryReader.ReadTagReference();
+            skillMappings = Guerilla.ReadBlockArray<SkillToRankMappingBlock>(binaryReader);
+            fullScreenHeaderTextFont = (FullScreenHeaderTextFont)binaryReader.ReadInt16();
+            largeDialogHeaderTextFont = (LargeDialogHeaderTextFont)binaryReader.ReadInt16();
+            halfDialogHeaderTextFont = (HalfDialogHeaderTextFont)binaryReader.ReadInt16();
+            qtrDialogHeaderTextFont = (QtrDialogHeaderTextFont)binaryReader.ReadInt16();
+            defaultTextColor = binaryReader.ReadVector4();
+            fullScreenHeaderTextBounds = binaryReader.ReadVector2();
+            fullScreenButtonKeyTextBounds = binaryReader.ReadVector2();
+            largeDialogHeaderTextBounds = binaryReader.ReadVector2();
+            largeDialogButtonKeyTextBounds = binaryReader.ReadVector2();
+            halfDialogHeaderTextBounds = binaryReader.ReadVector2();
+            halfDialogButtonKeyTextBounds = binaryReader.ReadVector2();
+            qtrDialogHeaderTextBounds = binaryReader.ReadVector2();
+            qtrDialogButtonKeyTextBounds = binaryReader.ReadVector2();
+            mainMenuMusic = binaryReader.ReadTagReference();
+            musicFadeTimeMilliseconds = binaryReader.ReadInt32();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(invalidName_1, 0, 16);
+                binaryWriter.Write(invalidName_2, 0, 8);
+                binaryWriter.Write(invalidName_3, 0, 8);
+                binaryWriter.Write(invalidName_4, 0, 16);
+                binaryWriter.Write(invalidName_5, 0, 8);
+                binaryWriter.Write(invalidName_6, 0, 8);
+                binaryWriter.Write(overlayedScreenAlphaMod);
+                binaryWriter.Write(incTextUpdatePeriodMilliseconds);
+                binaryWriter.Write(incTextBlockCharacterASCIICode);
+                binaryWriter.Write(calloutTextScale);
+                binaryWriter.Write(progressBarColor);
+                binaryWriter.Write(nearClipPlaneDistanceObjectsCloserThanThisAreNotDrawn);
+                binaryWriter.Write(projectionPlaneDistanceDistanceAtWhichObjectsAreRenderedWhenZ0NormalSize);
+                binaryWriter.Write(farClipPlaneDistanceObjectsFartherThanThisAreNotDrawn);
+                binaryWriter.Write(overlayedInterfaceColor);
+                binaryWriter.Write(invalidName_7, 0, 12);
+                nextAddress = Guerilla.WriteBlockArray<UiErrorCategoryBlock>(binaryWriter, errors, nextAddress);
+                binaryWriter.Write(soundTag);
+                binaryWriter.Write(soundTag0);
+                binaryWriter.Write(soundTag1);
+                binaryWriter.Write(soundTag2);
+                binaryWriter.Write(soundTag3);
+                binaryWriter.Write(soundTag4);
+                binaryWriter.Write(soundTag5);
+                binaryWriter.Write(soundTag6);
+                binaryWriter.Write(soundTag7);
+                binaryWriter.Write(soundTag8);
+                binaryWriter.Write(soundTag9);
+                binaryWriter.Write(invalidName_8);
+                binaryWriter.Write(soundTag10);
+                binaryWriter.Write(invalidName_9);
+                binaryWriter.Write(invalidName_10);
+                binaryWriter.Write(invalidName_11);
+                binaryWriter.Write(globalBitmapsTag);
+                binaryWriter.Write(unicodeStringListTag);
+                nextAddress = Guerilla.WriteBlockArray<AnimationReferenceBlock>(binaryWriter, screenAnimations, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShapeGroupReferenceBlock>(binaryWriter, shapeGroups, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PersistentBackgroundAnimationBlock>(binaryWriter, animations, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ListSkinReferenceBlock>(binaryWriter, listItemSkins, nextAddress);
+                binaryWriter.Write(buttonKeyTypeStrings);
+                binaryWriter.Write(gameTypeStrings);
+                binaryWriter.Write(invalidName_12);
+                nextAddress = Guerilla.WriteBlockArray<SkillToRankMappingBlock>(binaryWriter, skillMappings, nextAddress);
+                binaryWriter.Write((Int16)fullScreenHeaderTextFont);
+                binaryWriter.Write((Int16)largeDialogHeaderTextFont);
+                binaryWriter.Write((Int16)halfDialogHeaderTextFont);
+                binaryWriter.Write((Int16)qtrDialogHeaderTextFont);
+                binaryWriter.Write(defaultTextColor);
+                binaryWriter.Write(fullScreenHeaderTextBounds);
+                binaryWriter.Write(fullScreenButtonKeyTextBounds);
+                binaryWriter.Write(largeDialogHeaderTextBounds);
+                binaryWriter.Write(largeDialogButtonKeyTextBounds);
+                binaryWriter.Write(halfDialogHeaderTextBounds);
+                binaryWriter.Write(halfDialogButtonKeyTextBounds);
+                binaryWriter.Write(qtrDialogHeaderTextBounds);
+                binaryWriter.Write(qtrDialogButtonKeyTextBounds);
+                binaryWriter.Write(mainMenuMusic);
+                binaryWriter.Write(musicFadeTimeMilliseconds);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual UiErrorCategoryBlock[] ReadUiErrorCategoryBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UiErrorCategoryBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UiErrorCategoryBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UiErrorCategoryBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual AnimationReferenceBlock[] ReadAnimationReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AnimationReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AnimationReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ShapeGroupReferenceBlock[] ReadShapeGroupReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShapeGroupReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShapeGroupReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShapeGroupReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PersistentBackgroundAnimationBlock[] ReadPersistentBackgroundAnimationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PersistentBackgroundAnimationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PersistentBackgroundAnimationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PersistentBackgroundAnimationBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ListSkinReferenceBlock[] ReadListSkinReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ListSkinReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ListSkinReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ListSkinReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SkillToRankMappingBlock[] ReadSkillToRankMappingBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SkillToRankMappingBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SkillToRankMappingBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SkillToRankMappingBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum FullScreenHeaderTextFont : short
-        
         {
             Terminal = 0,
             BodyText = 1,
@@ -284,7 +255,6 @@ namespace Moonfish.Guerilla.Tags
             TextChatFont = 11,
         };
         internal enum LargeDialogHeaderTextFont : short
-        
         {
             Terminal = 0,
             BodyText = 1,
@@ -300,7 +270,6 @@ namespace Moonfish.Guerilla.Tags
             TextChatFont = 11,
         };
         internal enum HalfDialogHeaderTextFont : short
-        
         {
             Terminal = 0,
             BodyText = 1,
@@ -316,7 +285,6 @@ namespace Moonfish.Guerilla.Tags
             TextChatFont = 11,
         };
         internal enum QtrDialogHeaderTextFont : short
-        
         {
             Terminal = 0,
             BodyText = 1,

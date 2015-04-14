@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 152)]
-    public class MultiplayerInformationBlockBase
+    [LayoutAttribute(Size = 152, Alignment = 4)]
+    public class MultiplayerInformationBlockBase  : IGuerilla
     {
         [TagReference("item")]
         internal Moonfish.Tags.TagReference flag;
@@ -40,155 +41,43 @@ namespace Moonfish.Guerilla.Tags
         internal GameEngineKingEventBlock[] kingEvents;
         internal  MultiplayerInformationBlockBase(BinaryReader binaryReader)
         {
-            this.flag = binaryReader.ReadTagReference();
-            this.unit = binaryReader.ReadTagReference();
-            this.vehicles = ReadVehiclesBlockArray(binaryReader);
-            this.hillShader = binaryReader.ReadTagReference();
-            this.flagShader = binaryReader.ReadTagReference();
-            this.ball = binaryReader.ReadTagReference();
-            this.sounds = ReadSoundsBlockArray(binaryReader);
-            this.inGameText = binaryReader.ReadTagReference();
-            this.invalidName_ = binaryReader.ReadBytes(40);
-            this.generalEvents = ReadGameEngineGeneralEventBlockArray(binaryReader);
-            this.slayerEvents = ReadGameEngineSlayerEventBlockArray(binaryReader);
-            this.ctfEvents = ReadGameEngineCtfEventBlockArray(binaryReader);
-            this.oddballEvents = ReadGameEngineOddballEventBlockArray(binaryReader);
-            this.gNullBlock = ReadGNullBlockArray(binaryReader);
-            this.kingEvents = ReadGameEngineKingEventBlockArray(binaryReader);
+            flag = binaryReader.ReadTagReference();
+            unit = binaryReader.ReadTagReference();
+            vehicles = Guerilla.ReadBlockArray<VehiclesBlock>(binaryReader);
+            hillShader = binaryReader.ReadTagReference();
+            flagShader = binaryReader.ReadTagReference();
+            ball = binaryReader.ReadTagReference();
+            sounds = Guerilla.ReadBlockArray<SoundsBlock>(binaryReader);
+            inGameText = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(40);
+            generalEvents = Guerilla.ReadBlockArray<GameEngineGeneralEventBlock>(binaryReader);
+            slayerEvents = Guerilla.ReadBlockArray<GameEngineSlayerEventBlock>(binaryReader);
+            ctfEvents = Guerilla.ReadBlockArray<GameEngineCtfEventBlock>(binaryReader);
+            oddballEvents = Guerilla.ReadBlockArray<GameEngineOddballEventBlock>(binaryReader);
+            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            kingEvents = Guerilla.ReadBlockArray<GameEngineKingEventBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(flag);
+                binaryWriter.Write(unit);
+                nextAddress = Guerilla.WriteBlockArray<VehiclesBlock>(binaryWriter, vehicles, nextAddress);
+                binaryWriter.Write(hillShader);
+                binaryWriter.Write(flagShader);
+                binaryWriter.Write(ball);
+                nextAddress = Guerilla.WriteBlockArray<SoundsBlock>(binaryWriter, sounds, nextAddress);
+                binaryWriter.Write(inGameText);
+                binaryWriter.Write(invalidName_, 0, 40);
+                nextAddress = Guerilla.WriteBlockArray<GameEngineGeneralEventBlock>(binaryWriter, generalEvents, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GameEngineSlayerEventBlock>(binaryWriter, slayerEvents, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GameEngineCtfEventBlock>(binaryWriter, ctfEvents, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GameEngineOddballEventBlock>(binaryWriter, oddballEvents, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GameEngineKingEventBlock>(binaryWriter, kingEvents, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual VehiclesBlock[] ReadVehiclesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(VehiclesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new VehiclesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new VehiclesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SoundsBlock[] ReadSoundsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SoundsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SoundsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SoundsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GameEngineGeneralEventBlock[] ReadGameEngineGeneralEventBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GameEngineGeneralEventBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GameEngineGeneralEventBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GameEngineGeneralEventBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GameEngineSlayerEventBlock[] ReadGameEngineSlayerEventBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GameEngineSlayerEventBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GameEngineSlayerEventBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GameEngineSlayerEventBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GameEngineCtfEventBlock[] ReadGameEngineCtfEventBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GameEngineCtfEventBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GameEngineCtfEventBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GameEngineCtfEventBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GameEngineOddballEventBlock[] ReadGameEngineOddballEventBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GameEngineOddballEventBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GameEngineOddballEventBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GameEngineOddballEventBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GNullBlock[] ReadGNullBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GNullBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GNullBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GNullBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GameEngineKingEventBlock[] ReadGameEngineKingEventBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GameEngineKingEventBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GameEngineKingEventBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GameEngineKingEventBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

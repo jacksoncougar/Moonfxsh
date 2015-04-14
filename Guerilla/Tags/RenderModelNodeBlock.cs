@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 96)]
-    public class RenderModelNodeBlockBase
+    [LayoutAttribute(Size = 96, Alignment = 4)]
+    public class RenderModelNodeBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 parentNode;
@@ -32,33 +33,39 @@ namespace Moonfish.Guerilla.Tags
         internal float distanceFromParent;
         internal  RenderModelNodeBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.parentNode = binaryReader.ReadShortBlockIndex1();
-            this.firstChildNode = binaryReader.ReadShortBlockIndex1();
-            this.nextSiblingNode = binaryReader.ReadShortBlockIndex1();
-            this.importNodeIndex = binaryReader.ReadInt16();
-            this.defaultTranslation = binaryReader.ReadVector3();
-            this.defaultRotation = binaryReader.ReadQuaternion();
-            this.inverseForward = binaryReader.ReadVector3();
-            this.inverseLeft = binaryReader.ReadVector3();
-            this.inverseUp = binaryReader.ReadVector3();
-            this.inversePosition = binaryReader.ReadVector3();
-            this.inverseScale = binaryReader.ReadSingle();
-            this.distanceFromParent = binaryReader.ReadSingle();
+            name = binaryReader.ReadStringID();
+            parentNode = binaryReader.ReadShortBlockIndex1();
+            firstChildNode = binaryReader.ReadShortBlockIndex1();
+            nextSiblingNode = binaryReader.ReadShortBlockIndex1();
+            importNodeIndex = binaryReader.ReadInt16();
+            defaultTranslation = binaryReader.ReadVector3();
+            defaultRotation = binaryReader.ReadQuaternion();
+            inverseForward = binaryReader.ReadVector3();
+            inverseLeft = binaryReader.ReadVector3();
+            inverseUp = binaryReader.ReadVector3();
+            inversePosition = binaryReader.ReadVector3();
+            inverseScale = binaryReader.ReadSingle();
+            distanceFromParent = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write(parentNode);
+                binaryWriter.Write(firstChildNode);
+                binaryWriter.Write(nextSiblingNode);
+                binaryWriter.Write(importNodeIndex);
+                binaryWriter.Write(defaultTranslation);
+                binaryWriter.Write(defaultRotation);
+                binaryWriter.Write(inverseForward);
+                binaryWriter.Write(inverseLeft);
+                binaryWriter.Write(inverseUp);
+                binaryWriter.Write(inversePosition);
+                binaryWriter.Write(inverseScale);
+                binaryWriter.Write(distanceFromParent);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,46 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 24)]
-    public class PlatformSoundEffectTemplateBlockBase
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class PlatformSoundEffectTemplateBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID inputDspEffectName;
         internal byte[] invalidName_;
         internal PlatformSoundEffectTemplateComponentBlock[] components;
         internal  PlatformSoundEffectTemplateBlockBase(BinaryReader binaryReader)
         {
-            this.inputDspEffectName = binaryReader.ReadStringID();
-            this.invalidName_ = binaryReader.ReadBytes(12);
-            this.components = ReadPlatformSoundEffectTemplateComponentBlockArray(binaryReader);
+            inputDspEffectName = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(12);
+            components = Guerilla.ReadBlockArray<PlatformSoundEffectTemplateComponentBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(inputDspEffectName);
+                binaryWriter.Write(invalidName_, 0, 12);
+                nextAddress = Guerilla.WriteBlockArray<PlatformSoundEffectTemplateComponentBlock>(binaryWriter, components, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual PlatformSoundEffectTemplateComponentBlock[] ReadPlatformSoundEffectTemplateComponentBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PlatformSoundEffectTemplateComponentBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PlatformSoundEffectTemplateComponentBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PlatformSoundEffectTemplateComponentBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

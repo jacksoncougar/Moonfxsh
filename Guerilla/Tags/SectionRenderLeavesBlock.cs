@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,42 +15,21 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8)]
-    public class SectionRenderLeavesBlockBase
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class SectionRenderLeavesBlockBase  : IGuerilla
     {
         internal NodeRenderLeavesBlock[] nodeRenderLeaves;
         internal  SectionRenderLeavesBlockBase(BinaryReader binaryReader)
         {
-            this.nodeRenderLeaves = ReadNodeRenderLeavesBlockArray(binaryReader);
+            nodeRenderLeaves = Guerilla.ReadBlockArray<NodeRenderLeavesBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                nextAddress = Guerilla.WriteBlockArray<NodeRenderLeavesBlock>(binaryWriter, nodeRenderLeaves, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual NodeRenderLeavesBlock[] ReadNodeRenderLeavesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(NodeRenderLeavesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new NodeRenderLeavesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new NodeRenderLeavesBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class ShaderTextureStateFilterStateBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class ShaderTextureStateFilterStateBlockBase  : IGuerilla
     {
         internal MagFilter magFilter;
         internal MinFilter minFilter;
@@ -29,30 +30,29 @@ namespace Moonfish.Guerilla.Tags
         internal Anisotropy anisotropy;
         internal  ShaderTextureStateFilterStateBlockBase(BinaryReader binaryReader)
         {
-            this.magFilter = (MagFilter)binaryReader.ReadInt16();
-            this.minFilter = (MinFilter)binaryReader.ReadInt16();
-            this.mipFilter = (MipFilter)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.mipmapBias = binaryReader.ReadSingle();
-            this.maxMipmapIndex = binaryReader.ReadInt16();
-            this.anisotropy = (Anisotropy)binaryReader.ReadInt16();
+            magFilter = (MagFilter)binaryReader.ReadInt16();
+            minFilter = (MinFilter)binaryReader.ReadInt16();
+            mipFilter = (MipFilter)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            mipmapBias = binaryReader.ReadSingle();
+            maxMipmapIndex = binaryReader.ReadInt16();
+            anisotropy = (Anisotropy)binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)magFilter);
+                binaryWriter.Write((Int16)minFilter);
+                binaryWriter.Write((Int16)mipFilter);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(mipmapBias);
+                binaryWriter.Write(maxMipmapIndex);
+                binaryWriter.Write((Int16)anisotropy);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum MagFilter : short
-        
         {
             None = 0,
             PointSampled = 1,
@@ -62,7 +62,6 @@ namespace Moonfish.Guerilla.Tags
             GaussianCubic = 5,
         };
         internal enum MinFilter : short
-        
         {
             None = 0,
             PointSampled = 1,
@@ -72,7 +71,6 @@ namespace Moonfish.Guerilla.Tags
             GaussianCubic = 5,
         };
         internal enum MipFilter : short
-        
         {
             None = 0,
             PointSampled = 1,
@@ -82,7 +80,6 @@ namespace Moonfish.Guerilla.Tags
             GaussianCubic = 5,
         };
         internal enum Anisotropy : short
-        
         {
             NonAnisotropic = 0,
             InvalidName2Tap = 1,

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 60)]
-    public class BeamBlockBase
+    [LayoutAttribute(Size = 60, Alignment = 4)]
+    public class BeamBlockBase  : IGuerilla
     {
         [TagReference("shad")]
         internal Moonfish.Tags.TagReference shader;
@@ -29,29 +30,31 @@ namespace Moonfish.Guerilla.Tags
         internal ScalarFunctionStructBlock pitch;
         internal  BeamBlockBase(BinaryReader binaryReader)
         {
-            this.shader = binaryReader.ReadTagReference();
-            this.location = binaryReader.ReadShortBlockIndex1();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.color = new ColorFunctionStructBlock(binaryReader);
-            this.alpha = new ScalarFunctionStructBlock(binaryReader);
-            this.width = new ScalarFunctionStructBlock(binaryReader);
-            this.length = new ScalarFunctionStructBlock(binaryReader);
-            this.yaw = new ScalarFunctionStructBlock(binaryReader);
-            this.pitch = new ScalarFunctionStructBlock(binaryReader);
+            shader = binaryReader.ReadTagReference();
+            location = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
+            color = new ColorFunctionStructBlock(binaryReader);
+            alpha = new ScalarFunctionStructBlock(binaryReader);
+            width = new ScalarFunctionStructBlock(binaryReader);
+            length = new ScalarFunctionStructBlock(binaryReader);
+            yaw = new ScalarFunctionStructBlock(binaryReader);
+            pitch = new ScalarFunctionStructBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(shader);
+                binaryWriter.Write(location);
+                binaryWriter.Write(invalidName_, 0, 2);
+                color.Write(binaryWriter);
+                alpha.Write(binaryWriter);
+                width.Write(binaryWriter);
+                length.Write(binaryWriter);
+                yaw.Write(binaryWriter);
+                pitch.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

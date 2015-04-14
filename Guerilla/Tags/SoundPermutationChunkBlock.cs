@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,31 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class SoundPermutationChunkBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class SoundPermutationChunkBlockBase  : IGuerilla
     {
         internal int fileOffset;
         internal int invalidName_;
         internal int invalidName_0;
         internal  SoundPermutationChunkBlockBase(BinaryReader binaryReader)
         {
-            this.fileOffset = binaryReader.ReadInt32();
-            this.invalidName_ = binaryReader.ReadInt32();
-            this.invalidName_0 = binaryReader.ReadInt32();
+            fileOffset = binaryReader.ReadInt32();
+            invalidName_ = binaryReader.ReadInt32();
+            invalidName_0 = binaryReader.ReadInt32();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(fileOffset);
+                binaryWriter.Write(invalidName_);
+                binaryWriter.Write(invalidName_0);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

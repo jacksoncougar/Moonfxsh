@@ -59,13 +59,13 @@ namespace Moonfish.ResourceManagement
             return buffer;
         }
 
-        public new enum SeekOrigin
+        public enum SeekOrigin
         {
             Header,
             Data,
         }
 
-        public new long Seek( long offset, SeekOrigin loc )
+        public long Seek( long offset, SeekOrigin loc )
         {
             switch ( loc )
             {

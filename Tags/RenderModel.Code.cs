@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using Moonfish.Graphics;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -19,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         /// <param name="binaryReader"></param>
         /// <returns></returns>
-        internal override RenderModelSectionDataBlock[] ReadRenderModelSectionDataBlockArray(BinaryReader binaryReader)
+        internal RenderModelSectionDataBlock[] ReadRenderModelSectionDataBlockArray(BinaryReader binaryReader)
         {
             binaryReader.ReadBytes(8);
             using (binaryReader.BaseStream.Pin())
@@ -103,9 +104,9 @@ namespace Moonfish.Guerilla.Tags
 
     partial class GlobalGeometrySectionStructBlock
     {
-        internal override GlobalGeometrySectionVertexBufferBlock[] ReadGlobalGeometrySectionVertexBufferBlockArray(BinaryReader binaryReader)
+        internal GlobalGeometrySectionVertexBufferBlock[] ReadGlobalGeometrySectionVertexBufferBlockArray(BinaryReader binaryReader)
         {
-            var vertexBuffers = base.ReadGlobalGeometrySectionVertexBufferBlockArray(binaryReader);
+            var vertexBuffers = new GlobalGeometrySectionVertexBufferBlock[0];//base.ReadGlobalGeometrySectionVertexBufferBlockArray(binaryReader);
             using (binaryReader.BaseStream.Pin())
             {
                 if (binaryReader.BaseStream is ResourceStream)

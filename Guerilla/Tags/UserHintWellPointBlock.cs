@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32)]
-    public class UserHintWellPointBlockBase
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class UserHintWellPointBlockBase  : IGuerilla
     {
         internal Type type;
         internal byte[] invalidName_;
@@ -26,30 +27,29 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector2 normal;
         internal  UserHintWellPointBlockBase(BinaryReader binaryReader)
         {
-            this.type = (Type)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.point = binaryReader.ReadVector3();
-            this.referenceFrame = binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.sectorIndex = binaryReader.ReadInt32();
-            this.normal = binaryReader.ReadVector2();
+            type = (Type)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            point = binaryReader.ReadVector3();
+            referenceFrame = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            sectorIndex = binaryReader.ReadInt32();
+            normal = binaryReader.ReadVector2();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(point);
+                binaryWriter.Write(referenceFrame);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(sectorIndex);
+                binaryWriter.Write(normal);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum Type : short
-        
         {
             Jump = 0,
             Climb = 1,

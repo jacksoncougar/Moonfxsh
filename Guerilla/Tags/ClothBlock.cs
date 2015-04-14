@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass ClwdClass = (TagClass)"clwd";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 108)]
-    public class ClothBlockBase
+    [LayoutAttribute(Size = 108, Alignment = 4)]
+    public class ClothBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal Moonfish.Tags.StringID markerAttachmentName;
@@ -33,81 +42,40 @@ namespace Moonfish.Guerilla.Tags
         internal ClothLinksBlock[] links;
         internal  ClothBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.markerAttachmentName = binaryReader.ReadStringID();
-            this.shader = binaryReader.ReadTagReference();
-            this.gridXDimension = binaryReader.ReadInt16();
-            this.gridYDimension = binaryReader.ReadInt16();
-            this.gridSpacingX = binaryReader.ReadSingle();
-            this.gridSpacingY = binaryReader.ReadSingle();
-            this.properties = new ClothPropertiesBlock(binaryReader);
-            this.vertices = ReadClothVerticesBlockArray(binaryReader);
-            this.indices = ReadClothIndicesBlockArray(binaryReader);
-            this.stripIndices = ReadClothIndicesBlockArray(binaryReader);
-            this.links = ReadClothLinksBlockArray(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            markerAttachmentName = binaryReader.ReadStringID();
+            shader = binaryReader.ReadTagReference();
+            gridXDimension = binaryReader.ReadInt16();
+            gridYDimension = binaryReader.ReadInt16();
+            gridSpacingX = binaryReader.ReadSingle();
+            gridSpacingY = binaryReader.ReadSingle();
+            properties = new ClothPropertiesBlock(binaryReader);
+            vertices = Guerilla.ReadBlockArray<ClothVerticesBlock>(binaryReader);
+            indices = Guerilla.ReadBlockArray<ClothIndicesBlock>(binaryReader);
+            stripIndices = Guerilla.ReadBlockArray<ClothIndicesBlock>(binaryReader);
+            links = Guerilla.ReadBlockArray<ClothLinksBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(markerAttachmentName);
+                binaryWriter.Write(shader);
+                binaryWriter.Write(gridXDimension);
+                binaryWriter.Write(gridYDimension);
+                binaryWriter.Write(gridSpacingX);
+                binaryWriter.Write(gridSpacingY);
+                properties.Write(binaryWriter);
+                nextAddress = Guerilla.WriteBlockArray<ClothVerticesBlock>(binaryWriter, vertices, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ClothIndicesBlock>(binaryWriter, indices, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ClothIndicesBlock>(binaryWriter, stripIndices, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ClothLinksBlock>(binaryWriter, links, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ClothVerticesBlock[] ReadClothVerticesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ClothVerticesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ClothVerticesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ClothVerticesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ClothIndicesBlock[] ReadClothIndicesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ClothIndicesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ClothIndicesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ClothIndicesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ClothLinksBlock[] ReadClothLinksBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ClothLinksBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ClothLinksBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ClothLinksBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             DoesntUseWind = 1,
             UsesGridAttachTop = 2,

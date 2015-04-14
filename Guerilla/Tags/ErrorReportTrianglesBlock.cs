@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,96 +15,82 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 71)]
-    public class ErrorReportTrianglesBlockBase
+    [LayoutAttribute(Size = 71, Alignment = 4)]
+    public class ErrorReportTrianglesBlockBase  : IGuerilla
     {
         internal Points[] points;
         internal NodeWeights[] nodeWeights;
         internal  ErrorReportTrianglesBlockBase(BinaryReader binaryReader)
         {
-            this.points = new []{ new Points(binaryReader), new Points(binaryReader), new Points(binaryReader),  };
-            this.nodeWeights = new []{ new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader),  };
+            points = new []{ new Points(binaryReader), new Points(binaryReader), new Points(binaryReader),  };
+            nodeWeights = new []{ new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader),  };
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                points[0].Write(binaryWriter);
+                points[1].Write(binaryWriter);
+                points[2].Write(binaryWriter);
+                nodeWeights[0].Write(binaryWriter);
+                nodeWeights[1].Write(binaryWriter);
+                nodeWeights[2].Write(binaryWriter);
+                nodeWeights[3].Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
-        public class Points
+        public class Points  : IGuerilla
         {
             internal OpenTK.Vector3 position;
             internal NodeIndices[] nodeIndices;
             internal  Points(BinaryReader binaryReader)
             {
-                this.position = binaryReader.ReadVector3();
-                this.nodeIndices = new []{ new NodeIndices(binaryReader), new NodeIndices(binaryReader), new NodeIndices(binaryReader), new NodeIndices(binaryReader),  };
+                position = binaryReader.ReadVector3();
+                nodeIndices = new []{ new NodeIndices(binaryReader), new NodeIndices(binaryReader), new NodeIndices(binaryReader), new NodeIndices(binaryReader),  };
             }
-            internal  virtual byte[] ReadData(BinaryReader binaryReader)
+            public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
-                var blamPointer = binaryReader.ReadBlamPointer(1);
-                var data = new byte[blamPointer.elementCount];
-                if(blamPointer.elementCount > 0)
+                using(binaryWriter.BaseStream.Pin())
                 {
-                    using (binaryReader.BaseStream.Pin())
-                    {
-                        binaryReader.BaseStream.Position = blamPointer[0];
-                        data = binaryReader.ReadBytes(blamPointer.elementCount);
-                    }
+                    binaryWriter.Write(position);
+                    nodeIndices[0].Write(binaryWriter);
+                    nodeIndices[1].Write(binaryWriter);
+                    nodeIndices[2].Write(binaryWriter);
+                    nodeIndices[3].Write(binaryWriter);
+                    return nextAddress = (int)binaryWriter.BaseStream.Position;
                 }
-                return data;
             }
-            public class NodeIndices
+            public class NodeIndices  : IGuerilla
             {
                 internal byte nodeIndex;
                 internal  NodeIndices(BinaryReader binaryReader)
                 {
-                    this.nodeIndex = binaryReader.ReadByte();
+                    nodeIndex = binaryReader.ReadByte();
                 }
-                internal  virtual byte[] ReadData(BinaryReader binaryReader)
+                public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
                 {
-                    var blamPointer = binaryReader.ReadBlamPointer(1);
-                    var data = new byte[blamPointer.elementCount];
-                    if(blamPointer.elementCount > 0)
+                    using(binaryWriter.BaseStream.Pin())
                     {
-                        using (binaryReader.BaseStream.Pin())
-                        {
-                            binaryReader.BaseStream.Position = blamPointer[0];
-                            data = binaryReader.ReadBytes(blamPointer.elementCount);
-                        }
+                        binaryWriter.Write(nodeIndex);
+                        return nextAddress = (int)binaryWriter.BaseStream.Position;
                     }
-                    return data;
                 }
             };
         };
-        public class NodeWeights
+        public class NodeWeights  : IGuerilla
         {
             internal float nodeWeight;
             internal  NodeWeights(BinaryReader binaryReader)
             {
-                this.nodeWeight = binaryReader.ReadSingle();
+                nodeWeight = binaryReader.ReadSingle();
             }
-            internal  virtual byte[] ReadData(BinaryReader binaryReader)
+            public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
-                var blamPointer = binaryReader.ReadBlamPointer(1);
-                var data = new byte[blamPointer.elementCount];
-                if(blamPointer.elementCount > 0)
+                using(binaryWriter.BaseStream.Pin())
                 {
-                    using (binaryReader.BaseStream.Pin())
-                    {
-                        binaryReader.BaseStream.Position = blamPointer[0];
-                        data = binaryReader.ReadBytes(blamPointer.elementCount);
-                    }
+                    binaryWriter.Write(nodeWeight);
+                    return nextAddress = (int)binaryWriter.BaseStream.Position;
                 }
-                return data;
             }
         };
     };

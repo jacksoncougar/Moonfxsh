@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,46 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class MissionDialogueLinesBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class MissionDialogueLinesBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal MissionDialogueVariantsBlock[] variants;
         internal Moonfish.Tags.StringID defaultSoundEffect;
         internal  MissionDialogueLinesBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.variants = ReadMissionDialogueVariantsBlockArray(binaryReader);
-            this.defaultSoundEffect = binaryReader.ReadStringID();
+            name = binaryReader.ReadStringID();
+            variants = Guerilla.ReadBlockArray<MissionDialogueVariantsBlock>(binaryReader);
+            defaultSoundEffect = binaryReader.ReadStringID();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                nextAddress = Guerilla.WriteBlockArray<MissionDialogueVariantsBlock>(binaryWriter, variants, nextAddress);
+                binaryWriter.Write(defaultSoundEffect);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual MissionDialogueVariantsBlock[] ReadMissionDialogueVariantsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(MissionDialogueVariantsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new MissionDialogueVariantsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new MissionDialogueVariantsBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

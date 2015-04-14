@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,50 +15,30 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class RenderModelSectionGroupBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class RenderModelSectionGroupBlockBase  : IGuerilla
     {
         internal DetailLevels detailLevels;
         internal byte[] invalidName_;
         internal RenderModelCompoundNodeBlock[] compoundNodes;
         internal  RenderModelSectionGroupBlockBase(BinaryReader binaryReader)
         {
-            this.detailLevels = (DetailLevels)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.compoundNodes = ReadRenderModelCompoundNodeBlockArray(binaryReader);
+            detailLevels = (DetailLevels)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            compoundNodes = Guerilla.ReadBlockArray<RenderModelCompoundNodeBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)detailLevels);
+                binaryWriter.Write(invalidName_, 0, 2);
+                nextAddress = Guerilla.WriteBlockArray<RenderModelCompoundNodeBlock>(binaryWriter, compoundNodes, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual RenderModelCompoundNodeBlock[] ReadRenderModelCompoundNodeBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RenderModelCompoundNodeBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RenderModelCompoundNodeBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RenderModelCompoundNodeBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum DetailLevels : short
-        
         {
             L1SuperLow = 1,
             L2Low = 2,

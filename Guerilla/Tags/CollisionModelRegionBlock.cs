@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,44 +15,24 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class CollisionModelRegionBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class CollisionModelRegionBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal CollisionModelPermutationBlock[] permutations;
         internal  CollisionModelRegionBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.permutations = ReadCollisionModelPermutationBlockArray(binaryReader);
+            name = binaryReader.ReadStringID();
+            permutations = Guerilla.ReadBlockArray<CollisionModelPermutationBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                nextAddress = Guerilla.WriteBlockArray<CollisionModelPermutationBlock>(binaryWriter, permutations, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual CollisionModelPermutationBlock[] ReadCollisionModelPermutationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(CollisionModelPermutationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new CollisionModelPermutationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new CollisionModelPermutationBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,59 +15,24 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class StructurePortalDeviceMappingBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class StructurePortalDeviceMappingBlockBase  : IGuerilla
     {
         internal StructureDevicePortalAssociationBlock[] devicePortalAssociations;
         internal GamePortalToPortalMappingBlock[] gamePortalToPortalMap;
         internal  StructurePortalDeviceMappingBlockBase(BinaryReader binaryReader)
         {
-            this.devicePortalAssociations = ReadStructureDevicePortalAssociationBlockArray(binaryReader);
-            this.gamePortalToPortalMap = ReadGamePortalToPortalMappingBlockArray(binaryReader);
+            devicePortalAssociations = Guerilla.ReadBlockArray<StructureDevicePortalAssociationBlock>(binaryReader);
+            gamePortalToPortalMap = Guerilla.ReadBlockArray<GamePortalToPortalMappingBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                nextAddress = Guerilla.WriteBlockArray<StructureDevicePortalAssociationBlock>(binaryWriter, devicePortalAssociations, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GamePortalToPortalMappingBlock>(binaryWriter, gamePortalToPortalMap, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual StructureDevicePortalAssociationBlock[] ReadStructureDevicePortalAssociationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureDevicePortalAssociationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureDevicePortalAssociationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureDevicePortalAssociationBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GamePortalToPortalMappingBlock[] ReadGamePortalToPortalMappingBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GamePortalToPortalMappingBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GamePortalToPortalMappingBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GamePortalToPortalMappingBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

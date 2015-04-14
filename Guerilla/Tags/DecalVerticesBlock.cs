@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 31)]
-    public class DecalVerticesBlockBase
+    [LayoutAttribute(Size = 31, Alignment = 4)]
+    public class DecalVerticesBlockBase  : IGuerilla
     {
         internal OpenTK.Vector3 position;
         internal OpenTK.Vector2 texcoord0;
@@ -23,24 +24,21 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.RGBColor color;
         internal  DecalVerticesBlockBase(BinaryReader binaryReader)
         {
-            this.position = binaryReader.ReadVector3();
-            this.texcoord0 = binaryReader.ReadVector2();
-            this.texcoord1 = binaryReader.ReadVector2();
-            this.color = binaryReader.ReadRGBColor();
+            position = binaryReader.ReadVector3();
+            texcoord0 = binaryReader.ReadVector2();
+            texcoord1 = binaryReader.ReadVector2();
+            color = binaryReader.ReadRGBColor();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(position);
+                binaryWriter.Write(texcoord0);
+                binaryWriter.Write(texcoord1);
+                binaryWriter.Write(color);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

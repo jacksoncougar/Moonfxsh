@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,42 +15,21 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8)]
-    public class UserHintFlightBlockBase
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class UserHintFlightBlockBase  : IGuerilla
     {
         internal UserHintFlightPointBlock[] points;
         internal  UserHintFlightBlockBase(BinaryReader binaryReader)
         {
-            this.points = ReadUserHintFlightPointBlockArray(binaryReader);
+            points = Guerilla.ReadBlockArray<UserHintFlightPointBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteBlockArray<UserHintFlightPointBlock>(binaryWriter, points, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual UserHintFlightPointBlock[] ReadUserHintFlightPointBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UserHintFlightPointBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UserHintFlightPointBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UserHintFlightPointBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

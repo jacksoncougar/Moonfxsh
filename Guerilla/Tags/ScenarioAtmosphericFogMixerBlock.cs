@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class ScenarioAtmosphericFogMixerBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class ScenarioAtmosphericFogMixerBlockBase  : IGuerilla
     {
         internal byte[] invalidName_;
         internal Moonfish.Tags.StringID atmosphericFogSourceFromScenarioAtmosphericFogPalette;
@@ -24,25 +25,23 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal  ScenarioAtmosphericFogMixerBlockBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.atmosphericFogSourceFromScenarioAtmosphericFogPalette = binaryReader.ReadStringID();
-            this.interpolatorFromScenarioInterpolators = binaryReader.ReadStringID();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.invalidName_1 = binaryReader.ReadBytes(2);
+            invalidName_ = binaryReader.ReadBytes(4);
+            atmosphericFogSourceFromScenarioAtmosphericFogPalette = binaryReader.ReadStringID();
+            interpolatorFromScenarioInterpolators = binaryReader.ReadStringID();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(2);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(atmosphericFogSourceFromScenarioAtmosphericFogPalette);
+                binaryWriter.Write(interpolatorFromScenarioInterpolators);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(invalidName_1, 0, 2);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

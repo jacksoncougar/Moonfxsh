@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 80)]
-    public class ModelAnimationRuntimeDataStructBlockBase
+    [LayoutAttribute(Size = 80, Alignment = 4)]
+    public class ModelAnimationRuntimeDataStructBlockBase  : IGuerilla
     {
         internal InheritedAnimationBlock[] inheritenceListBBAAAA;
         internal WeaponClassLookupBlock[] weaponListBBAAAA;
@@ -23,54 +24,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal  ModelAnimationRuntimeDataStructBlockBase(BinaryReader binaryReader)
         {
-            this.inheritenceListBBAAAA = ReadInheritedAnimationBlockArray(binaryReader);
-            this.weaponListBBAAAA = ReadWeaponClassLookupBlockArray(binaryReader);
-            this.invalidName_ = binaryReader.ReadBytes(32);
-            this.invalidName_0 = binaryReader.ReadBytes(32);
+            inheritenceListBBAAAA = Guerilla.ReadBlockArray<InheritedAnimationBlock>(binaryReader);
+            weaponListBBAAAA = Guerilla.ReadBlockArray<WeaponClassLookupBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(32);
+            invalidName_0 = binaryReader.ReadBytes(32);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteBlockArray<InheritedAnimationBlock>(binaryWriter, inheritenceListBBAAAA, nextAddress);
+                Guerilla.WriteBlockArray<WeaponClassLookupBlock>(binaryWriter, weaponListBBAAAA, nextAddress);
+                binaryWriter.Write(invalidName_, 0, 32);
+                binaryWriter.Write(invalidName_0, 0, 32);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual InheritedAnimationBlock[] ReadInheritedAnimationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(InheritedAnimationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new InheritedAnimationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new InheritedAnimationBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual WeaponClassLookupBlock[] ReadWeaponClassLookupBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(WeaponClassLookupBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new WeaponClassLookupBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new WeaponClassLookupBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,31 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36)]
-    public class SquadGroupsBlockBase
+    [LayoutAttribute(Size = 36, Alignment = 4)]
+    public class SquadGroupsBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal Moonfish.Tags.ShortBlockIndex1 parent;
         internal Moonfish.Tags.ShortBlockIndex1 initialOrders;
         internal  SquadGroupsBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadString32();
-            this.parent = binaryReader.ReadShortBlockIndex1();
-            this.initialOrders = binaryReader.ReadShortBlockIndex1();
+            name = binaryReader.ReadString32();
+            parent = binaryReader.ReadShortBlockIndex1();
+            initialOrders = binaryReader.ReadShortBlockIndex1();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write(parent);
+                binaryWriter.Write(initialOrders);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

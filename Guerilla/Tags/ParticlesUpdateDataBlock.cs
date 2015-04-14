@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32)]
-    public class ParticlesUpdateDataBlockBase
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class ParticlesUpdateDataBlockBase  : IGuerilla
     {
         internal float velocityX;
         internal float velocityY;
@@ -25,26 +26,25 @@ namespace Moonfish.Guerilla.Tags
         internal float creationTimeStamp;
         internal  ParticlesUpdateDataBlockBase(BinaryReader binaryReader)
         {
-            this.velocityX = binaryReader.ReadSingle();
-            this.velocityY = binaryReader.ReadSingle();
-            this.velocityZ = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes(12);
-            this.mass = binaryReader.ReadSingle();
-            this.creationTimeStamp = binaryReader.ReadSingle();
+            velocityX = binaryReader.ReadSingle();
+            velocityY = binaryReader.ReadSingle();
+            velocityZ = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(12);
+            mass = binaryReader.ReadSingle();
+            creationTimeStamp = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(velocityX);
+                binaryWriter.Write(velocityY);
+                binaryWriter.Write(velocityZ);
+                binaryWriter.Write(invalidName_, 0, 12);
+                binaryWriter.Write(mass);
+                binaryWriter.Write(creationTimeStamp);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

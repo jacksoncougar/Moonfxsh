@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,35 +15,30 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 8)]
-    public class TriggerReferencesBase
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class TriggerReferencesBase  : IGuerilla
     {
         internal TriggerFlags triggerFlags;
         internal Moonfish.Tags.ShortBlockIndex1 trigger;
         internal byte[] invalidName_;
         internal  TriggerReferencesBase(BinaryReader binaryReader)
         {
-            this.triggerFlags = (TriggerFlags)binaryReader.ReadInt32();
-            this.trigger = binaryReader.ReadShortBlockIndex1();
-            this.invalidName_ = binaryReader.ReadBytes(2);
+            triggerFlags = (TriggerFlags)binaryReader.ReadInt32();
+            trigger = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)triggerFlags);
+                binaryWriter.Write(trigger);
+                binaryWriter.Write(invalidName_, 0, 2);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum TriggerFlags : int
-        
         {
             Not = 1,
         };

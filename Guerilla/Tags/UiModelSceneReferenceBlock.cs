@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 76)]
-    public class UiModelSceneReferenceBlockBase
+    [LayoutAttribute(Size = 76, Alignment = 4)]
+    public class UiModelSceneReferenceBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal AnimationIndex animationIndex;
@@ -33,73 +34,48 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID uNUSEDAmbientAnim;
         internal  UiModelSceneReferenceBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            this.introAnimationDelayMilliseconds = binaryReader.ReadInt16();
-            this.renderDepthBias = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.objects = ReadUiObjectReferenceBlockArray(binaryReader);
-            this.lights = ReadUiLightReferenceBlockArray(binaryReader);
-            this.animationScaleFactor = binaryReader.ReadVector3();
-            this.cameraPosition = binaryReader.ReadVector3();
-            this.fovDegress = binaryReader.ReadSingle();
-            this.uiViewport = binaryReader.ReadVector2();
-            this.uNUSEDIntroAnim = binaryReader.ReadStringID();
-            this.uNUSEDOutroAnim = binaryReader.ReadStringID();
-            this.uNUSEDAmbientAnim = binaryReader.ReadStringID();
+            flags = (Flags)binaryReader.ReadInt32();
+            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
+            renderDepthBias = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            objects = Guerilla.ReadBlockArray<UiObjectReferenceBlock>(binaryReader);
+            lights = Guerilla.ReadBlockArray<UiLightReferenceBlock>(binaryReader);
+            animationScaleFactor = binaryReader.ReadVector3();
+            cameraPosition = binaryReader.ReadVector3();
+            fovDegress = binaryReader.ReadSingle();
+            uiViewport = binaryReader.ReadVector2();
+            uNUSEDIntroAnim = binaryReader.ReadStringID();
+            uNUSEDOutroAnim = binaryReader.ReadStringID();
+            uNUSEDAmbientAnim = binaryReader.ReadStringID();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int16)animationIndex);
+                binaryWriter.Write(introAnimationDelayMilliseconds);
+                binaryWriter.Write(renderDepthBias);
+                binaryWriter.Write(invalidName_, 0, 2);
+                Guerilla.WriteBlockArray<UiObjectReferenceBlock>(binaryWriter, objects, nextAddress);
+                Guerilla.WriteBlockArray<UiLightReferenceBlock>(binaryWriter, lights, nextAddress);
+                binaryWriter.Write(animationScaleFactor);
+                binaryWriter.Write(cameraPosition);
+                binaryWriter.Write(fovDegress);
+                binaryWriter.Write(uiViewport);
+                binaryWriter.Write(uNUSEDIntroAnim);
+                binaryWriter.Write(uNUSEDOutroAnim);
+                binaryWriter.Write(uNUSEDAmbientAnim);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual UiObjectReferenceBlock[] ReadUiObjectReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UiObjectReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UiObjectReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UiObjectReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UiLightReferenceBlock[] ReadUiLightReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UiLightReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UiLightReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UiLightReferenceBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             Unused = 1,
         };
         internal enum AnimationIndex : short
-        
         {
             NONE = 0,
             InvalidName00 = 1,

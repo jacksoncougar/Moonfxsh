@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,31 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36)]
-    public class InertialMatrixBlockBase
+    [LayoutAttribute(Size = 36, Alignment = 4)]
+    public class InertialMatrixBlockBase  : IGuerilla
     {
         internal OpenTK.Vector3 yyZzXyZx;
         internal OpenTK.Vector3 xyZzXxYz;
         internal OpenTK.Vector3 zxYzXxYy;
         internal  InertialMatrixBlockBase(BinaryReader binaryReader)
         {
-            this.yyZzXyZx = binaryReader.ReadVector3();
-            this.xyZzXxYz = binaryReader.ReadVector3();
-            this.zxYzXxYy = binaryReader.ReadVector3();
+            yyZzXyZx = binaryReader.ReadVector3();
+            xyZzXxYz = binaryReader.ReadVector3();
+            zxYzXxYy = binaryReader.ReadVector3();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(yyZzXyZx);
+                binaryWriter.Write(xyZzXxYz);
+                binaryWriter.Write(zxYzXxYy);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

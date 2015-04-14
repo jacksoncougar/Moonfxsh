@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 152)]
-    public class LightVolumeVolumeBlockBase
+    [LayoutAttribute(Size = 152, Alignment = 4)]
+    public class LightVolumeVolumeBlockBase  : IGuerilla
     {
         internal Flags flags;
         [TagReference("bitm")]
@@ -39,73 +40,54 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal  LightVolumeVolumeBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.bitmap = binaryReader.ReadTagReference();
-            this.spriteCount4256 = binaryReader.ReadInt32();
-            this.offsetFunction = new ScalarFunctionStructBlock(binaryReader);
-            this.radiusFunction = new ScalarFunctionStructBlock(binaryReader);
-            this.brightnessFunction = new ScalarFunctionStructBlock(binaryReader);
-            this.colorFunction = new ColorFunctionStructBlock(binaryReader);
-            this.facingFunction = new ScalarFunctionStructBlock(binaryReader);
-            this.aspect = ReadLightVolumeAspectBlockArray(binaryReader);
-            this.radiusFracMin00039062510 = binaryReader.ReadSingle();
-            this.dEPRECATEDXStepExponent050875 = binaryReader.ReadSingle();
-            this.dEPRECATEDXBufferLength32512 = binaryReader.ReadInt32();
-            this.xBufferSpacing1256 = binaryReader.ReadInt32();
-            this.xBufferMinIterations1256 = binaryReader.ReadInt32();
-            this.xBufferMaxIterations1256 = binaryReader.ReadInt32();
-            this.xDeltaMaxError000101 = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.invalidName_0 = ReadLightVolumeRuntimeOffsetBlockArray(binaryReader);
-            this.invalidName_1 = binaryReader.ReadBytes(48);
+            flags = (Flags)binaryReader.ReadInt32();
+            bitmap = binaryReader.ReadTagReference();
+            spriteCount4256 = binaryReader.ReadInt32();
+            offsetFunction = new ScalarFunctionStructBlock(binaryReader);
+            radiusFunction = new ScalarFunctionStructBlock(binaryReader);
+            brightnessFunction = new ScalarFunctionStructBlock(binaryReader);
+            colorFunction = new ColorFunctionStructBlock(binaryReader);
+            facingFunction = new ScalarFunctionStructBlock(binaryReader);
+            aspect = Guerilla.ReadBlockArray<LightVolumeAspectBlock>(binaryReader);
+            radiusFracMin00039062510 = binaryReader.ReadSingle();
+            dEPRECATEDXStepExponent050875 = binaryReader.ReadSingle();
+            dEPRECATEDXBufferLength32512 = binaryReader.ReadInt32();
+            xBufferSpacing1256 = binaryReader.ReadInt32();
+            xBufferMinIterations1256 = binaryReader.ReadInt32();
+            xBufferMaxIterations1256 = binaryReader.ReadInt32();
+            xDeltaMaxError000101 = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(4);
+            invalidName_0 = Guerilla.ReadBlockArray<LightVolumeRuntimeOffsetBlock>(binaryReader);
+            invalidName_1 = binaryReader.ReadBytes(48);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(bitmap);
+                binaryWriter.Write(spriteCount4256);
+                offsetFunction.Write(binaryWriter);
+                radiusFunction.Write(binaryWriter);
+                brightnessFunction.Write(binaryWriter);
+                colorFunction.Write(binaryWriter);
+                facingFunction.Write(binaryWriter);
+                Guerilla.WriteBlockArray<LightVolumeAspectBlock>(binaryWriter, aspect, nextAddress);
+                binaryWriter.Write(radiusFracMin00039062510);
+                binaryWriter.Write(dEPRECATEDXStepExponent050875);
+                binaryWriter.Write(dEPRECATEDXBufferLength32512);
+                binaryWriter.Write(xBufferSpacing1256);
+                binaryWriter.Write(xBufferMinIterations1256);
+                binaryWriter.Write(xBufferMaxIterations1256);
+                binaryWriter.Write(xDeltaMaxError000101);
+                binaryWriter.Write(invalidName_, 0, 4);
+                Guerilla.WriteBlockArray<LightVolumeRuntimeOffsetBlock>(binaryWriter, invalidName_0, nextAddress);
+                binaryWriter.Write(invalidName_1, 0, 48);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual LightVolumeAspectBlock[] ReadLightVolumeAspectBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LightVolumeAspectBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightVolumeAspectBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LightVolumeAspectBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual LightVolumeRuntimeOffsetBlock[] ReadLightVolumeRuntimeOffsetBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LightVolumeRuntimeOffsetBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightVolumeRuntimeOffsetBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LightVolumeRuntimeOffsetBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             ForceLinearRadiusFunction = 1,
             ForceLinearOffset = 2,

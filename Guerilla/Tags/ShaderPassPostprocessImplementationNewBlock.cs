@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 306)]
-    public class ShaderPassPostprocessImplementationNewBlockBase
+    [LayoutAttribute(Size = 306, Alignment = 4)]
+    public class ShaderPassPostprocessImplementationNewBlockBase  : IGuerilla
     {
         internal TagBlockIndexStructBlock textures;
         internal TagBlockIndexStructBlock renderStates;
@@ -43,43 +44,59 @@ namespace Moonfish.Guerilla.Tags
         internal TagBlockIndexStructBlock textureStateInfo;
         internal  ShaderPassPostprocessImplementationNewBlockBase(BinaryReader binaryReader)
         {
-            this.textures = new TagBlockIndexStructBlock(binaryReader);
-            this.renderStates = new TagBlockIndexStructBlock(binaryReader);
-            this.textureStates = new TagBlockIndexStructBlock(binaryReader);
-            this.invalidName_ = binaryReader.ReadBytes(240);
-            this.psFragments = new TagBlockIndexStructBlock(binaryReader);
-            this.psPermutations = new TagBlockIndexStructBlock(binaryReader);
-            this.psCombiners = new TagBlockIndexStructBlock(binaryReader);
-            this.vertexShader = binaryReader.ReadTagReference();
-            this.invalidName_0 = binaryReader.ReadBytes(8);
-            this.invalidName_1 = binaryReader.ReadBytes(8);
-            this.invalidName_2 = binaryReader.ReadBytes(4);
-            this.invalidName_3 = binaryReader.ReadBytes(4);
-            this.defaultRenderStates = new TagBlockIndexStructBlock(binaryReader);
-            this.renderStateExterns = new TagBlockIndexStructBlock(binaryReader);
-            this.textureStateExterns = new TagBlockIndexStructBlock(binaryReader);
-            this.pixelConstantExterns = new TagBlockIndexStructBlock(binaryReader);
-            this.vertexConstantExterns = new TagBlockIndexStructBlock(binaryReader);
-            this.psConstants = new TagBlockIndexStructBlock(binaryReader);
-            this.vsConstants = new TagBlockIndexStructBlock(binaryReader);
-            this.pixelConstantInfo = new TagBlockIndexStructBlock(binaryReader);
-            this.vertexConstantInfo = new TagBlockIndexStructBlock(binaryReader);
-            this.renderStateInfo = new TagBlockIndexStructBlock(binaryReader);
-            this.textureStateInfo = new TagBlockIndexStructBlock(binaryReader);
+            textures = new TagBlockIndexStructBlock(binaryReader);
+            renderStates = new TagBlockIndexStructBlock(binaryReader);
+            textureStates = new TagBlockIndexStructBlock(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(240);
+            psFragments = new TagBlockIndexStructBlock(binaryReader);
+            psPermutations = new TagBlockIndexStructBlock(binaryReader);
+            psCombiners = new TagBlockIndexStructBlock(binaryReader);
+            vertexShader = binaryReader.ReadTagReference();
+            invalidName_0 = binaryReader.ReadBytes(8);
+            invalidName_1 = binaryReader.ReadBytes(8);
+            invalidName_2 = binaryReader.ReadBytes(4);
+            invalidName_3 = binaryReader.ReadBytes(4);
+            defaultRenderStates = new TagBlockIndexStructBlock(binaryReader);
+            renderStateExterns = new TagBlockIndexStructBlock(binaryReader);
+            textureStateExterns = new TagBlockIndexStructBlock(binaryReader);
+            pixelConstantExterns = new TagBlockIndexStructBlock(binaryReader);
+            vertexConstantExterns = new TagBlockIndexStructBlock(binaryReader);
+            psConstants = new TagBlockIndexStructBlock(binaryReader);
+            vsConstants = new TagBlockIndexStructBlock(binaryReader);
+            pixelConstantInfo = new TagBlockIndexStructBlock(binaryReader);
+            vertexConstantInfo = new TagBlockIndexStructBlock(binaryReader);
+            renderStateInfo = new TagBlockIndexStructBlock(binaryReader);
+            textureStateInfo = new TagBlockIndexStructBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                textures.Write(binaryWriter);
+                renderStates.Write(binaryWriter);
+                textureStates.Write(binaryWriter);
+                binaryWriter.Write(invalidName_, 0, 240);
+                psFragments.Write(binaryWriter);
+                psPermutations.Write(binaryWriter);
+                psCombiners.Write(binaryWriter);
+                binaryWriter.Write(vertexShader);
+                binaryWriter.Write(invalidName_0, 0, 8);
+                binaryWriter.Write(invalidName_1, 0, 8);
+                binaryWriter.Write(invalidName_2, 0, 4);
+                binaryWriter.Write(invalidName_3, 0, 4);
+                defaultRenderStates.Write(binaryWriter);
+                renderStateExterns.Write(binaryWriter);
+                textureStateExterns.Write(binaryWriter);
+                pixelConstantExterns.Write(binaryWriter);
+                vertexConstantExterns.Write(binaryWriter);
+                psConstants.Write(binaryWriter);
+                vsConstants.Write(binaryWriter);
+                pixelConstantInfo.Write(binaryWriter);
+                vertexConstantInfo.Write(binaryWriter);
+                renderStateInfo.Write(binaryWriter);
+                textureStateInfo.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

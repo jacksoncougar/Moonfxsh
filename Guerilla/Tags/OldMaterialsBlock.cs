@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36)]
-    public class OldMaterialsBlockBase
+    [LayoutAttribute(Size = 36, Alignment = 4)]
+    public class OldMaterialsBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID newMaterialName;
         internal Moonfish.Tags.StringID newGeneralMaterialName;
@@ -43,28 +44,29 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference meleeHitSound;
         internal  OldMaterialsBlockBase(BinaryReader binaryReader)
         {
-            this.newMaterialName = binaryReader.ReadStringID();
-            this.newGeneralMaterialName = binaryReader.ReadStringID();
-            this.groundFrictionScale = binaryReader.ReadSingle();
-            this.groundFrictionNormalK1Scale = binaryReader.ReadSingle();
-            this.groundFrictionNormalK0Scale = binaryReader.ReadSingle();
-            this.groundDepthScale = binaryReader.ReadSingle();
-            this.groundDampFractionScale = binaryReader.ReadSingle();
-            this.meleeHitSound = binaryReader.ReadTagReference();
+            newMaterialName = binaryReader.ReadStringID();
+            newGeneralMaterialName = binaryReader.ReadStringID();
+            groundFrictionScale = binaryReader.ReadSingle();
+            groundFrictionNormalK1Scale = binaryReader.ReadSingle();
+            groundFrictionNormalK0Scale = binaryReader.ReadSingle();
+            groundDepthScale = binaryReader.ReadSingle();
+            groundDampFractionScale = binaryReader.ReadSingle();
+            meleeHitSound = binaryReader.ReadTagReference();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(newMaterialName);
+                binaryWriter.Write(newGeneralMaterialName);
+                binaryWriter.Write(groundFrictionScale);
+                binaryWriter.Write(groundFrictionNormalK1Scale);
+                binaryWriter.Write(groundFrictionNormalK0Scale);
+                binaryWriter.Write(groundDepthScale);
+                binaryWriter.Write(groundDampFractionScale);
+                binaryWriter.Write(meleeHitSound);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

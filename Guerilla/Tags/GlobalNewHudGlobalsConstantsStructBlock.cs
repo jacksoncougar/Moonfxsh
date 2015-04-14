@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 96)]
-    public class GlobalNewHudGlobalsConstantsStructBlockBase
+    [LayoutAttribute(Size = 96, Alignment = 4)]
+    public class GlobalNewHudGlobalsConstantsStructBlockBase  : IGuerilla
     {
         [TagReference("null")]
         internal Moonfish.Tags.TagReference primaryMessageSound;
@@ -43,33 +44,39 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference eliteTrainingMiddle;
         internal  GlobalNewHudGlobalsConstantsStructBlockBase(BinaryReader binaryReader)
         {
-            this.primaryMessageSound = binaryReader.ReadTagReference();
-            this.secondaryMessageSound = binaryReader.ReadTagReference();
-            this.bootGrieferString = binaryReader.ReadStringID();
-            this.cannotBootGrieferString = binaryReader.ReadStringID();
-            this.trainingShader = binaryReader.ReadTagReference();
-            this.humanTrainingTopRight = binaryReader.ReadTagReference();
-            this.humanTrainingTopCenter = binaryReader.ReadTagReference();
-            this.humanTrainingTopLeft = binaryReader.ReadTagReference();
-            this.humanTrainingMiddle = binaryReader.ReadTagReference();
-            this.eliteTrainingTopRight = binaryReader.ReadTagReference();
-            this.eliteTrainingTopCenter = binaryReader.ReadTagReference();
-            this.eliteTrainingTopLeft = binaryReader.ReadTagReference();
-            this.eliteTrainingMiddle = binaryReader.ReadTagReference();
+            primaryMessageSound = binaryReader.ReadTagReference();
+            secondaryMessageSound = binaryReader.ReadTagReference();
+            bootGrieferString = binaryReader.ReadStringID();
+            cannotBootGrieferString = binaryReader.ReadStringID();
+            trainingShader = binaryReader.ReadTagReference();
+            humanTrainingTopRight = binaryReader.ReadTagReference();
+            humanTrainingTopCenter = binaryReader.ReadTagReference();
+            humanTrainingTopLeft = binaryReader.ReadTagReference();
+            humanTrainingMiddle = binaryReader.ReadTagReference();
+            eliteTrainingTopRight = binaryReader.ReadTagReference();
+            eliteTrainingTopCenter = binaryReader.ReadTagReference();
+            eliteTrainingTopLeft = binaryReader.ReadTagReference();
+            eliteTrainingMiddle = binaryReader.ReadTagReference();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(primaryMessageSound);
+                binaryWriter.Write(secondaryMessageSound);
+                binaryWriter.Write(bootGrieferString);
+                binaryWriter.Write(cannotBootGrieferString);
+                binaryWriter.Write(trainingShader);
+                binaryWriter.Write(humanTrainingTopRight);
+                binaryWriter.Write(humanTrainingTopCenter);
+                binaryWriter.Write(humanTrainingTopLeft);
+                binaryWriter.Write(humanTrainingMiddle);
+                binaryWriter.Write(eliteTrainingTopRight);
+                binaryWriter.Write(eliteTrainingTopCenter);
+                binaryWriter.Write(eliteTrainingTopLeft);
+                binaryWriter.Write(eliteTrainingMiddle);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

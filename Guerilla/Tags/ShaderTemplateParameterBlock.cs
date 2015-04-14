@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 52)]
-    public class ShaderTemplateParameterBlockBase
+    [LayoutAttribute(Size = 52, Alignment = 4)]
+    public class ShaderTemplateParameterBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal byte[] explanation;
@@ -32,35 +33,39 @@ namespace Moonfish.Guerilla.Tags
         internal float bitmapScale;
         internal  ShaderTemplateParameterBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.explanation = ReadData(binaryReader);
-            this.type = (Type)binaryReader.ReadInt16();
-            this.flags = (Flags)binaryReader.ReadInt16();
-            this.defaultBitmap = binaryReader.ReadTagReference();
-            this.defaultConstValue = binaryReader.ReadSingle();
-            this.defaultConstColor = binaryReader.ReadColorR8G8B8();
-            this.bitmapType = (BitmapType)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.bitmapAnimationFlags = (BitmapAnimationFlags)binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.bitmapScale = binaryReader.ReadSingle();
+            name = binaryReader.ReadStringID();
+            explanation = Guerilla.ReadData(binaryReader);
+            type = (Type)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            defaultBitmap = binaryReader.ReadTagReference();
+            defaultConstValue = binaryReader.ReadSingle();
+            defaultConstColor = binaryReader.ReadColorR8G8B8();
+            bitmapType = (BitmapType)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            bitmapAnimationFlags = (BitmapAnimationFlags)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            bitmapScale = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                Guerilla.WriteData(binaryWriter);
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(defaultBitmap);
+                binaryWriter.Write(defaultConstValue);
+                binaryWriter.Write(defaultConstColor);
+                binaryWriter.Write((Int16)bitmapType);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Int16)bitmapAnimationFlags);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(bitmapScale);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum Type : short
-        
         {
             Bitmap = 0,
             Value = 1,
@@ -69,13 +74,11 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : short
-        
         {
             Animated = 1,
             HideBitmapReference = 2,
         };
         internal enum BitmapType : short
-        
         {
             InvalidName2D = 0,
             InvalidName3D = 1,
@@ -83,7 +86,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum BitmapAnimationFlags : short
-        
         {
             ScaleUniform = 1,
             Scale = 2,

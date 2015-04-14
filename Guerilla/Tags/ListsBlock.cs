@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 56)]
-    public class ListsBlockBase
+    [LayoutAttribute(Size = 56, Alignment = 4)]
+    public class ListsBlockBase  : IGuerilla
     {
         internal byte[] invalidName_;
         internal short size;
@@ -27,56 +28,55 @@ namespace Moonfish.Guerilla.Tags
         internal ChildShapesStorage[] childShapesStorage;
         internal  ListsBlockBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.size = binaryReader.ReadInt16();
-            this.count = binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.invalidName_1 = binaryReader.ReadBytes(4);
-            this.childShapesSize = binaryReader.ReadInt32();
-            this.childShapesCapacity = binaryReader.ReadInt32();
-            this.childShapesStorage = new []{ new ChildShapesStorage(binaryReader), new ChildShapesStorage(binaryReader), new ChildShapesStorage(binaryReader), new ChildShapesStorage(binaryReader),  };
+            invalidName_ = binaryReader.ReadBytes(4);
+            size = binaryReader.ReadInt16();
+            count = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            invalidName_1 = binaryReader.ReadBytes(4);
+            childShapesSize = binaryReader.ReadInt32();
+            childShapesCapacity = binaryReader.ReadInt32();
+            childShapesStorage = new []{ new ChildShapesStorage(binaryReader), new ChildShapesStorage(binaryReader), new ChildShapesStorage(binaryReader), new ChildShapesStorage(binaryReader),  };
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(size);
+                binaryWriter.Write(count);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write(invalidName_1, 0, 4);
+                binaryWriter.Write(childShapesSize);
+                binaryWriter.Write(childShapesCapacity);
+                childShapesStorage[0].Write(binaryWriter);
+                childShapesStorage[1].Write(binaryWriter);
+                childShapesStorage[2].Write(binaryWriter);
+                childShapesStorage[3].Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
-        public class ChildShapesStorage
+        public class ChildShapesStorage  : IGuerilla
         {
             internal ShapeType shapeType;
             internal Moonfish.Tags.ShortBlockIndex2 shape;
             internal int collisionFilter;
             internal  ChildShapesStorage(BinaryReader binaryReader)
             {
-                this.shapeType = (ShapeType)binaryReader.ReadInt16();
-                this.shape = binaryReader.ReadShortBlockIndex2();
-                this.collisionFilter = binaryReader.ReadInt32();
+                shapeType = (ShapeType)binaryReader.ReadInt16();
+                shape = binaryReader.ReadShortBlockIndex2();
+                collisionFilter = binaryReader.ReadInt32();
             }
-            internal  virtual byte[] ReadData(BinaryReader binaryReader)
+            public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
-                var blamPointer = binaryReader.ReadBlamPointer(1);
-                var data = new byte[blamPointer.elementCount];
-                if(blamPointer.elementCount > 0)
+                using(binaryWriter.BaseStream.Pin())
                 {
-                    using (binaryReader.BaseStream.Pin())
-                    {
-                        binaryReader.BaseStream.Position = blamPointer[0];
-                        data = binaryReader.ReadBytes(blamPointer.elementCount);
-                    }
+                    binaryWriter.Write((Int16)shapeType);
+                    binaryWriter.Write(shape);
+                    binaryWriter.Write(collisionFilter);
+                    return nextAddress = (int)binaryWriter.BaseStream.Position;
                 }
-                return data;
             }
             internal enum ShapeType : short
-            
             {
                 Sphere = 0,
                 Pill = 1,

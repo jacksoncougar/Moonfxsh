@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass AiClass = (TagClass)"ai**";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 152)]
-    public class ScenarioAiResourceBlockBase
+    [LayoutAttribute(Size = 152, Alignment = 4)]
+    public class ScenarioAiResourceBlockBase  : IGuerilla
     {
         internal StylePaletteBlock[] stylePalette;
         internal SquadGroupsBlock[] squadGroups;
@@ -39,324 +48,51 @@ namespace Moonfish.Guerilla.Tags
         internal ScenarioTriggerVolumeBlock[] triggerVolumeReferences;
         internal  ScenarioAiResourceBlockBase(BinaryReader binaryReader)
         {
-            this.stylePalette = ReadStylePaletteBlockArray(binaryReader);
-            this.squadGroups = ReadSquadGroupsBlockArray(binaryReader);
-            this.squads = ReadSquadsBlockArray(binaryReader);
-            this.zones = ReadZoneBlockArray(binaryReader);
-            this.characterPalette = ReadCharacterPaletteBlockArray(binaryReader);
-            this.aIAnimationReferences = ReadAiAnimationReferenceBlockArray(binaryReader);
-            this.aIScriptReferences = ReadAiScriptReferenceBlockArray(binaryReader);
-            this.aIRecordingReferences = ReadAiRecordingReferenceBlockArray(binaryReader);
-            this.aIConversations = ReadAiConversationBlockArray(binaryReader);
-            this.scriptingData = ReadCsScriptDataBlockArray(binaryReader);
-            this.orders = ReadOrdersBlockArray(binaryReader);
-            this.triggers = ReadTriggersBlockArray(binaryReader);
-            this.bSPPreferences = ReadScenarioStructureBspReferenceBlockArray(binaryReader);
-            this.weaponReferences = ReadScenarioWeaponPaletteBlockArray(binaryReader);
-            this.vehicleReferences = ReadScenarioVehiclePaletteBlockArray(binaryReader);
-            this.vehicleDatumReferences = ReadScenarioVehicleBlockArray(binaryReader);
-            this.missionDialogueScenes = ReadAiSceneBlockArray(binaryReader);
-            this.flocks = ReadFlockDefinitionBlockArray(binaryReader);
-            this.triggerVolumeReferences = ReadScenarioTriggerVolumeBlockArray(binaryReader);
+            stylePalette = Guerilla.ReadBlockArray<StylePaletteBlock>(binaryReader);
+            squadGroups = Guerilla.ReadBlockArray<SquadGroupsBlock>(binaryReader);
+            squads = Guerilla.ReadBlockArray<SquadsBlock>(binaryReader);
+            zones = Guerilla.ReadBlockArray<ZoneBlock>(binaryReader);
+            characterPalette = Guerilla.ReadBlockArray<CharacterPaletteBlock>(binaryReader);
+            aIAnimationReferences = Guerilla.ReadBlockArray<AiAnimationReferenceBlock>(binaryReader);
+            aIScriptReferences = Guerilla.ReadBlockArray<AiScriptReferenceBlock>(binaryReader);
+            aIRecordingReferences = Guerilla.ReadBlockArray<AiRecordingReferenceBlock>(binaryReader);
+            aIConversations = Guerilla.ReadBlockArray<AiConversationBlock>(binaryReader);
+            scriptingData = Guerilla.ReadBlockArray<CsScriptDataBlock>(binaryReader);
+            orders = Guerilla.ReadBlockArray<OrdersBlock>(binaryReader);
+            triggers = Guerilla.ReadBlockArray<TriggersBlock>(binaryReader);
+            bSPPreferences = Guerilla.ReadBlockArray<ScenarioStructureBspReferenceBlock>(binaryReader);
+            weaponReferences = Guerilla.ReadBlockArray<ScenarioWeaponPaletteBlock>(binaryReader);
+            vehicleReferences = Guerilla.ReadBlockArray<ScenarioVehiclePaletteBlock>(binaryReader);
+            vehicleDatumReferences = Guerilla.ReadBlockArray<ScenarioVehicleBlock>(binaryReader);
+            missionDialogueScenes = Guerilla.ReadBlockArray<AiSceneBlock>(binaryReader);
+            flocks = Guerilla.ReadBlockArray<FlockDefinitionBlock>(binaryReader);
+            triggerVolumeReferences = Guerilla.ReadBlockArray<ScenarioTriggerVolumeBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteBlockArray<StylePaletteBlock>(binaryWriter, stylePalette, nextAddress);
+                Guerilla.WriteBlockArray<SquadGroupsBlock>(binaryWriter, squadGroups, nextAddress);
+                Guerilla.WriteBlockArray<SquadsBlock>(binaryWriter, squads, nextAddress);
+                Guerilla.WriteBlockArray<ZoneBlock>(binaryWriter, zones, nextAddress);
+                Guerilla.WriteBlockArray<CharacterPaletteBlock>(binaryWriter, characterPalette, nextAddress);
+                Guerilla.WriteBlockArray<AiAnimationReferenceBlock>(binaryWriter, aIAnimationReferences, nextAddress);
+                Guerilla.WriteBlockArray<AiScriptReferenceBlock>(binaryWriter, aIScriptReferences, nextAddress);
+                Guerilla.WriteBlockArray<AiRecordingReferenceBlock>(binaryWriter, aIRecordingReferences, nextAddress);
+                Guerilla.WriteBlockArray<AiConversationBlock>(binaryWriter, aIConversations, nextAddress);
+                Guerilla.WriteBlockArray<CsScriptDataBlock>(binaryWriter, scriptingData, nextAddress);
+                Guerilla.WriteBlockArray<OrdersBlock>(binaryWriter, orders, nextAddress);
+                Guerilla.WriteBlockArray<TriggersBlock>(binaryWriter, triggers, nextAddress);
+                Guerilla.WriteBlockArray<ScenarioStructureBspReferenceBlock>(binaryWriter, bSPPreferences, nextAddress);
+                Guerilla.WriteBlockArray<ScenarioWeaponPaletteBlock>(binaryWriter, weaponReferences, nextAddress);
+                Guerilla.WriteBlockArray<ScenarioVehiclePaletteBlock>(binaryWriter, vehicleReferences, nextAddress);
+                Guerilla.WriteBlockArray<ScenarioVehicleBlock>(binaryWriter, vehicleDatumReferences, nextAddress);
+                Guerilla.WriteBlockArray<AiSceneBlock>(binaryWriter, missionDialogueScenes, nextAddress);
+                Guerilla.WriteBlockArray<FlockDefinitionBlock>(binaryWriter, flocks, nextAddress);
+                Guerilla.WriteBlockArray<ScenarioTriggerVolumeBlock>(binaryWriter, triggerVolumeReferences, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual StylePaletteBlock[] ReadStylePaletteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StylePaletteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StylePaletteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StylePaletteBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SquadGroupsBlock[] ReadSquadGroupsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SquadGroupsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SquadGroupsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SquadGroupsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SquadsBlock[] ReadSquadsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SquadsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SquadsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SquadsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ZoneBlock[] ReadZoneBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ZoneBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ZoneBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ZoneBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual CharacterPaletteBlock[] ReadCharacterPaletteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(CharacterPaletteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new CharacterPaletteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new CharacterPaletteBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual AiAnimationReferenceBlock[] ReadAiAnimationReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AiAnimationReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AiAnimationReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AiAnimationReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual AiScriptReferenceBlock[] ReadAiScriptReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AiScriptReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AiScriptReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AiScriptReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual AiRecordingReferenceBlock[] ReadAiRecordingReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AiRecordingReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AiRecordingReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AiRecordingReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual AiConversationBlock[] ReadAiConversationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AiConversationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AiConversationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AiConversationBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual CsScriptDataBlock[] ReadCsScriptDataBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(CsScriptDataBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new CsScriptDataBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new CsScriptDataBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual OrdersBlock[] ReadOrdersBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(OrdersBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new OrdersBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new OrdersBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual TriggersBlock[] ReadTriggersBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(TriggersBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new TriggersBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new TriggersBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ScenarioStructureBspReferenceBlock[] ReadScenarioStructureBspReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioStructureBspReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioStructureBspReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioStructureBspReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ScenarioWeaponPaletteBlock[] ReadScenarioWeaponPaletteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioWeaponPaletteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioWeaponPaletteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioWeaponPaletteBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ScenarioVehiclePaletteBlock[] ReadScenarioVehiclePaletteBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioVehiclePaletteBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioVehiclePaletteBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioVehiclePaletteBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ScenarioVehicleBlock[] ReadScenarioVehicleBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioVehicleBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioVehicleBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioVehicleBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual AiSceneBlock[] ReadAiSceneBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AiSceneBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AiSceneBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AiSceneBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual FlockDefinitionBlock[] ReadFlockDefinitionBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(FlockDefinitionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new FlockDefinitionBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new FlockDefinitionBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ScenarioTriggerVolumeBlock[] ReadScenarioTriggerVolumeBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioTriggerVolumeBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioTriggerVolumeBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioTriggerVolumeBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

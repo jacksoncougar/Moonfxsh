@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,29 +15,24 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class RealVector4dBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class RealVector4dBlockBase  : IGuerilla
     {
         internal OpenTK.Vector3 vector3;
         internal float w;
         internal  RealVector4dBlockBase(BinaryReader binaryReader)
         {
-            this.vector3 = binaryReader.ReadVector3();
-            this.w = binaryReader.ReadSingle();
+            vector3 = binaryReader.ReadVector3();
+            w = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(vector3);
+                binaryWriter.Write(w);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

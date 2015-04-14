@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 76)]
-    public class DamageEffectPlayerResponseBlockBase
+    [LayoutAttribute(Size = 76, Alignment = 4)]
+    public class DamageEffectPlayerResponseBlockBase  : IGuerilla
     {
         internal ResponseType responseType;
         internal byte[] invalidName_;
@@ -24,28 +25,25 @@ namespace Moonfish.Guerilla.Tags
         internal DamageEffectSoundEffectDefinitionBlock soundEffect;
         internal  DamageEffectPlayerResponseBlockBase(BinaryReader binaryReader)
         {
-            this.responseType = (ResponseType)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.screenFlash = new ScreenFlashDefinitionStructBlock(binaryReader);
-            this.vibration = new VibrationDefinitionStructBlock(binaryReader);
-            this.soundEffect = new DamageEffectSoundEffectDefinitionBlock(binaryReader);
+            responseType = (ResponseType)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            screenFlash = new ScreenFlashDefinitionStructBlock(binaryReader);
+            vibration = new VibrationDefinitionStructBlock(binaryReader);
+            soundEffect = new DamageEffectSoundEffectDefinitionBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)responseType);
+                binaryWriter.Write(invalidName_, 0, 2);
+                screenFlash.Write(binaryWriter);
+                vibration.Write(binaryWriter);
+                soundEffect.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum ResponseType : short
-        
         {
             Shielded = 0,
             Unshielded = 1,

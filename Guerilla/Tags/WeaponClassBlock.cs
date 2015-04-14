@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,61 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class WeaponClassBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class WeaponClassBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID label;
         internal WeaponTypeBlock[] weaponTypeAABBCC;
         internal AnimationIkBlock[] weaponIkAABBCC;
         internal  WeaponClassBlockBase(BinaryReader binaryReader)
         {
-            this.label = binaryReader.ReadStringID();
-            this.weaponTypeAABBCC = ReadWeaponTypeBlockArray(binaryReader);
-            this.weaponIkAABBCC = ReadAnimationIkBlockArray(binaryReader);
+            label = binaryReader.ReadStringID();
+            weaponTypeAABBCC = Guerilla.ReadBlockArray<WeaponTypeBlock>(binaryReader);
+            weaponIkAABBCC = Guerilla.ReadBlockArray<AnimationIkBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(label);
+                Guerilla.WriteBlockArray<WeaponTypeBlock>(binaryWriter, weaponTypeAABBCC, nextAddress);
+                Guerilla.WriteBlockArray<AnimationIkBlock>(binaryWriter, weaponIkAABBCC, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual WeaponTypeBlock[] ReadWeaponTypeBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(WeaponTypeBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new WeaponTypeBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new WeaponTypeBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual AnimationIkBlock[] ReadAnimationIkBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AnimationIkBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationIkBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AnimationIkBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

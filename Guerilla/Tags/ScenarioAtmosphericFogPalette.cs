@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 244)]
-    public class ScenarioAtmosphericFogPaletteBase
+    [LayoutAttribute(Size = 244, Alignment = 4)]
+    public class ScenarioAtmosphericFogPaletteBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ColorR8G8B8 color;
@@ -75,70 +76,78 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_5;
         internal  ScenarioAtmosphericFogPaletteBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.color = binaryReader.ReadColorR8G8B8();
-            this.spreadDistanceWorldUnits = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.maximumDensity01 = binaryReader.ReadSingle();
-            this.startDistanceWorldUnits = binaryReader.ReadSingle();
-            this.opaqueDistanceWorldUnits = binaryReader.ReadSingle();
-            this.color0 = binaryReader.ReadColorR8G8B8();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.maximumDensity010 = binaryReader.ReadSingle();
-            this.startDistanceWorldUnits0 = binaryReader.ReadSingle();
-            this.opaqueDistanceWorldUnits0 = binaryReader.ReadSingle();
-            this.invalidName_1 = binaryReader.ReadBytes(4);
-            this.planarColor = binaryReader.ReadColorR8G8B8();
-            this.planarMaxDensity01 = binaryReader.ReadSingle();
-            this.planarOverrideAmount01 = binaryReader.ReadSingle();
-            this.planarMinDistanceBiasWorldUnits = binaryReader.ReadSingle();
-            this.invalidName_2 = binaryReader.ReadBytes(44);
-            this.patchyColor = binaryReader.ReadColorR8G8B8();
-            this.invalidName_3 = binaryReader.ReadBytes(12);
-            this.patchyDensity01 = binaryReader.ReadVector2();
-            this.patchyDistanceWorldUnits = binaryReader.ReadRange();
-            this.invalidName_4 = binaryReader.ReadBytes(32);
-            this.patchyFog = binaryReader.ReadTagReference();
-            this.mixers = ReadScenarioAtmosphericFogMixerBlockArray(binaryReader);
-            this.amount01 = binaryReader.ReadSingle();
-            this.threshold01 = binaryReader.ReadSingle();
-            this.brightness01 = binaryReader.ReadSingle();
-            this.gammaPower = binaryReader.ReadSingle();
-            this.cameraImmersionFlags = (CameraImmersionFlags)binaryReader.ReadInt16();
-            this.invalidName_5 = binaryReader.ReadBytes(2);
+            name = binaryReader.ReadStringID();
+            color = binaryReader.ReadColorR8G8B8();
+            spreadDistanceWorldUnits = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(4);
+            maximumDensity01 = binaryReader.ReadSingle();
+            startDistanceWorldUnits = binaryReader.ReadSingle();
+            opaqueDistanceWorldUnits = binaryReader.ReadSingle();
+            color0 = binaryReader.ReadColorR8G8B8();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            maximumDensity010 = binaryReader.ReadSingle();
+            startDistanceWorldUnits0 = binaryReader.ReadSingle();
+            opaqueDistanceWorldUnits0 = binaryReader.ReadSingle();
+            invalidName_1 = binaryReader.ReadBytes(4);
+            planarColor = binaryReader.ReadColorR8G8B8();
+            planarMaxDensity01 = binaryReader.ReadSingle();
+            planarOverrideAmount01 = binaryReader.ReadSingle();
+            planarMinDistanceBiasWorldUnits = binaryReader.ReadSingle();
+            invalidName_2 = binaryReader.ReadBytes(44);
+            patchyColor = binaryReader.ReadColorR8G8B8();
+            invalidName_3 = binaryReader.ReadBytes(12);
+            patchyDensity01 = binaryReader.ReadVector2();
+            patchyDistanceWorldUnits = binaryReader.ReadRange();
+            invalidName_4 = binaryReader.ReadBytes(32);
+            patchyFog = binaryReader.ReadTagReference();
+            mixers = Guerilla.ReadBlockArray<ScenarioAtmosphericFogMixerBlock>(binaryReader);
+            amount01 = binaryReader.ReadSingle();
+            threshold01 = binaryReader.ReadSingle();
+            brightness01 = binaryReader.ReadSingle();
+            gammaPower = binaryReader.ReadSingle();
+            cameraImmersionFlags = (CameraImmersionFlags)binaryReader.ReadInt16();
+            invalidName_5 = binaryReader.ReadBytes(2);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write(color);
+                binaryWriter.Write(spreadDistanceWorldUnits);
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(maximumDensity01);
+                binaryWriter.Write(startDistanceWorldUnits);
+                binaryWriter.Write(opaqueDistanceWorldUnits);
+                binaryWriter.Write(color0);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write(maximumDensity010);
+                binaryWriter.Write(startDistanceWorldUnits0);
+                binaryWriter.Write(opaqueDistanceWorldUnits0);
+                binaryWriter.Write(invalidName_1, 0, 4);
+                binaryWriter.Write(planarColor);
+                binaryWriter.Write(planarMaxDensity01);
+                binaryWriter.Write(planarOverrideAmount01);
+                binaryWriter.Write(planarMinDistanceBiasWorldUnits);
+                binaryWriter.Write(invalidName_2, 0, 44);
+                binaryWriter.Write(patchyColor);
+                binaryWriter.Write(invalidName_3, 0, 12);
+                binaryWriter.Write(patchyDensity01);
+                binaryWriter.Write(patchyDistanceWorldUnits);
+                binaryWriter.Write(invalidName_4, 0, 32);
+                binaryWriter.Write(patchyFog);
+                Guerilla.WriteBlockArray<ScenarioAtmosphericFogMixerBlock>(binaryWriter, mixers, nextAddress);
+                binaryWriter.Write(amount01);
+                binaryWriter.Write(threshold01);
+                binaryWriter.Write(brightness01);
+                binaryWriter.Write(gammaPower);
+                binaryWriter.Write((Int16)cameraImmersionFlags);
+                binaryWriter.Write(invalidName_5, 0, 2);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ScenarioAtmosphericFogMixerBlock[] ReadScenarioAtmosphericFogMixerBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ScenarioAtmosphericFogMixerBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ScenarioAtmosphericFogMixerBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ScenarioAtmosphericFogMixerBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum CameraImmersionFlags : short
-        
         {
             DisableAtmosphericFog = 1,
             DisableSecondaryFog = 2,

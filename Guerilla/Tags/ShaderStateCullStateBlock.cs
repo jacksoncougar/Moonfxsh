@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,39 +15,32 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 4)]
-    public class ShaderStateCullStateBlockBase
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class ShaderStateCullStateBlockBase  : IGuerilla
     {
         internal Mode mode;
         internal FrontFace frontFace;
         internal  ShaderStateCullStateBlockBase(BinaryReader binaryReader)
         {
-            this.mode = (Mode)binaryReader.ReadInt16();
-            this.frontFace = (FrontFace)binaryReader.ReadInt16();
+            mode = (Mode)binaryReader.ReadInt16();
+            frontFace = (FrontFace)binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)mode);
+                binaryWriter.Write((Int16)frontFace);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum Mode : short
-        
         {
             None = 0,
             CW = 1,
             CCW = 2,
         };
         internal enum FrontFace : short
-        
         {
             CW = 0,
             CCW = 1,

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 92)]
-    public class StructureInstancedGeometryRenderInfoStructBlockBase
+    [LayoutAttribute(Size = 92, Alignment = 4)]
+    public class StructureInstancedGeometryRenderInfoStructBlockBase  : IGuerilla
     {
         internal GlobalGeometrySectionInfoStructBlock sectionInfo;
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
@@ -23,54 +24,21 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalGeometrySectionStripIndexBlock[] indexReorderTable;
         internal  StructureInstancedGeometryRenderInfoStructBlockBase(BinaryReader binaryReader)
         {
-            this.sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
-            this.geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            this.renderData = ReadStructureBspClusterDataBlockNewArray(binaryReader);
-            this.indexReorderTable = ReadGlobalGeometrySectionStripIndexBlockArray(binaryReader);
+            sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            renderData = Guerilla.ReadBlockArray<StructureBspClusterDataBlockNew>(binaryReader);
+            indexReorderTable = Guerilla.ReadBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                sectionInfo.Write(binaryWriter);
+                geometryBlockInfo.Write(binaryWriter);
+                Guerilla.WriteBlockArray<StructureBspClusterDataBlockNew>(binaryWriter, renderData, nextAddress);
+                Guerilla.WriteBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryWriter, indexReorderTable, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual StructureBspClusterDataBlockNew[] ReadStructureBspClusterDataBlockNewArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(StructureBspClusterDataBlockNew));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new StructureBspClusterDataBlockNew[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new StructureBspClusterDataBlockNew(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual GlobalGeometrySectionStripIndexBlock[] ReadGlobalGeometrySectionStripIndexBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(GlobalGeometrySectionStripIndexBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new GlobalGeometrySectionStripIndexBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new GlobalGeometrySectionStripIndexBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

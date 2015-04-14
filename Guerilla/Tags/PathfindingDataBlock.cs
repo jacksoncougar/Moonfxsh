@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 116)]
-    public class PathfindingDataBlockBase
+    [LayoutAttribute(Size = 116, Alignment = 4)]
+    public class PathfindingDataBlockBase  : IGuerilla
     {
         internal SectorBlock[] sectors;
         internal SectorLinkBlock[] links;
@@ -31,182 +32,37 @@ namespace Moonfish.Guerilla.Tags
         internal UserHintBlock[] userPlacedHints;
         internal  PathfindingDataBlockBase(BinaryReader binaryReader)
         {
-            this.sectors = ReadSectorBlockArray(binaryReader);
-            this.links = ReadSectorLinkBlockArray(binaryReader);
-            this.refs = ReadRefBlockArray(binaryReader);
-            this.bsp2dNodes = ReadSectorBsp2dNodesBlockArray(binaryReader);
-            this.surfaceFlags = ReadSurfaceFlagsBlockArray(binaryReader);
-            this.vertices = ReadSectorVertexBlockArray(binaryReader);
-            this.objectRefs = ReadEnvironmentObjectRefsArray(binaryReader);
-            this.pathfindingHints = ReadPathfindingHintsBlockArray(binaryReader);
-            this.instancedGeometryRefs = ReadInstancedGeometryReferenceBlockArray(binaryReader);
-            this.structureChecksum = binaryReader.ReadInt32();
-            this.invalidName_ = binaryReader.ReadBytes(32);
-            this.userPlacedHints = ReadUserHintBlockArray(binaryReader);
+            sectors = Guerilla.ReadBlockArray<SectorBlock>(binaryReader);
+            links = Guerilla.ReadBlockArray<SectorLinkBlock>(binaryReader);
+            refs = Guerilla.ReadBlockArray<RefBlock>(binaryReader);
+            bsp2dNodes = Guerilla.ReadBlockArray<SectorBsp2dNodesBlock>(binaryReader);
+            surfaceFlags = Guerilla.ReadBlockArray<SurfaceFlagsBlock>(binaryReader);
+            vertices = Guerilla.ReadBlockArray<SectorVertexBlock>(binaryReader);
+            objectRefs = Guerilla.ReadBlockArray<EnvironmentObjectRefs>(binaryReader);
+            pathfindingHints = Guerilla.ReadBlockArray<PathfindingHintsBlock>(binaryReader);
+            instancedGeometryRefs = Guerilla.ReadBlockArray<InstancedGeometryReferenceBlock>(binaryReader);
+            structureChecksum = binaryReader.ReadInt32();
+            invalidName_ = binaryReader.ReadBytes(32);
+            userPlacedHints = Guerilla.ReadBlockArray<UserHintBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteBlockArray<SectorBlock>(binaryWriter, sectors, nextAddress);
+                Guerilla.WriteBlockArray<SectorLinkBlock>(binaryWriter, links, nextAddress);
+                Guerilla.WriteBlockArray<RefBlock>(binaryWriter, refs, nextAddress);
+                Guerilla.WriteBlockArray<SectorBsp2dNodesBlock>(binaryWriter, bsp2dNodes, nextAddress);
+                Guerilla.WriteBlockArray<SurfaceFlagsBlock>(binaryWriter, surfaceFlags, nextAddress);
+                Guerilla.WriteBlockArray<SectorVertexBlock>(binaryWriter, vertices, nextAddress);
+                Guerilla.WriteBlockArray<EnvironmentObjectRefs>(binaryWriter, objectRefs, nextAddress);
+                Guerilla.WriteBlockArray<PathfindingHintsBlock>(binaryWriter, pathfindingHints, nextAddress);
+                Guerilla.WriteBlockArray<InstancedGeometryReferenceBlock>(binaryWriter, instancedGeometryRefs, nextAddress);
+                binaryWriter.Write(structureChecksum);
+                binaryWriter.Write(invalidName_, 0, 32);
+                Guerilla.WriteBlockArray<UserHintBlock>(binaryWriter, userPlacedHints, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual SectorBlock[] ReadSectorBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SectorBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SectorBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SectorBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SectorLinkBlock[] ReadSectorLinkBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SectorLinkBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SectorLinkBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SectorLinkBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual RefBlock[] ReadRefBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(RefBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new RefBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new RefBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SectorBsp2dNodesBlock[] ReadSectorBsp2dNodesBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SectorBsp2dNodesBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SectorBsp2dNodesBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SectorBsp2dNodesBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SurfaceFlagsBlock[] ReadSurfaceFlagsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SurfaceFlagsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SurfaceFlagsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SurfaceFlagsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SectorVertexBlock[] ReadSectorVertexBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SectorVertexBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SectorVertexBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SectorVertexBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual EnvironmentObjectRefs[] ReadEnvironmentObjectRefsArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(EnvironmentObjectRefs));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new EnvironmentObjectRefs[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new EnvironmentObjectRefs(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual PathfindingHintsBlock[] ReadPathfindingHintsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(PathfindingHintsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new PathfindingHintsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new PathfindingHintsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual InstancedGeometryReferenceBlock[] ReadInstancedGeometryReferenceBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(InstancedGeometryReferenceBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new InstancedGeometryReferenceBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new InstancedGeometryReferenceBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual UserHintBlock[] ReadUserHintBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UserHintBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UserHintBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UserHintBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

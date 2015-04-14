@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 112)]
-    public class CollisionBspPhysicsBlockBase
+    [LayoutAttribute(Size = 112, Alignment = 16)]
+    public class CollisionBspPhysicsBlockBase  : IGuerilla
     {
         internal byte[] invalidName_;
         internal short size;
@@ -38,39 +39,51 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] padding;
         internal  CollisionBspPhysicsBlockBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.size = binaryReader.ReadInt16();
-            this.count = binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.invalidName_1 = binaryReader.ReadBytes(4);
-            this.invalidName_2 = binaryReader.ReadBytes(32);
-            this.invalidName_3 = binaryReader.ReadBytes(16);
-            this.invalidName_4 = binaryReader.ReadBytes(4);
-            this.size0 = binaryReader.ReadInt16();
-            this.count0 = binaryReader.ReadInt16();
-            this.invalidName_5 = binaryReader.ReadBytes(4);
-            this.invalidName_6 = binaryReader.ReadBytes(4);
-            this.invalidName_7 = binaryReader.ReadBytes(4);
-            this.size1 = binaryReader.ReadInt16();
-            this.count1 = binaryReader.ReadInt16();
-            this.invalidName_8 = binaryReader.ReadBytes(4);
-            this.invalidName_9 = binaryReader.ReadBytes(8);
-            this.moppCodeData = ReadData(binaryReader);
-            this.padding = binaryReader.ReadBytes(4);
+            invalidName_ = binaryReader.ReadBytes(4);
+            size = binaryReader.ReadInt16();
+            count = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            invalidName_1 = binaryReader.ReadBytes(4);
+            invalidName_2 = binaryReader.ReadBytes(32);
+            invalidName_3 = binaryReader.ReadBytes(16);
+            invalidName_4 = binaryReader.ReadBytes(4);
+            size0 = binaryReader.ReadInt16();
+            count0 = binaryReader.ReadInt16();
+            invalidName_5 = binaryReader.ReadBytes(4);
+            invalidName_6 = binaryReader.ReadBytes(4);
+            invalidName_7 = binaryReader.ReadBytes(4);
+            size1 = binaryReader.ReadInt16();
+            count1 = binaryReader.ReadInt16();
+            invalidName_8 = binaryReader.ReadBytes(4);
+            invalidName_9 = binaryReader.ReadBytes(8);
+            moppCodeData = Guerilla.ReadData(binaryReader);
+            padding = binaryReader.ReadBytes(4);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(size);
+                binaryWriter.Write(count);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write(invalidName_1, 0, 4);
+                binaryWriter.Write(invalidName_2, 0, 32);
+                binaryWriter.Write(invalidName_3, 0, 16);
+                binaryWriter.Write(invalidName_4, 0, 4);
+                binaryWriter.Write(size0);
+                binaryWriter.Write(count0);
+                binaryWriter.Write(invalidName_5, 0, 4);
+                binaryWriter.Write(invalidName_6, 0, 4);
+                binaryWriter.Write(invalidName_7, 0, 4);
+                binaryWriter.Write(size1);
+                binaryWriter.Write(count1);
+                binaryWriter.Write(invalidName_8, 0, 4);
+                binaryWriter.Write(invalidName_9, 0, 8);
+                Guerilla.WriteData(binaryWriter);
+                binaryWriter.Write(padding, 0, 4);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

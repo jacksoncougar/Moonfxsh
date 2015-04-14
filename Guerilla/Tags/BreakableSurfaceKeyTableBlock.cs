@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 32)]
-    public class BreakableSurfaceKeyTableBlockBase
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class BreakableSurfaceKeyTableBlockBase  : IGuerilla
     {
         internal short instancedGeometryIndex;
         internal short breakableSurfaceIndex;
@@ -28,29 +29,31 @@ namespace Moonfish.Guerilla.Tags
         internal float z1;
         internal  BreakableSurfaceKeyTableBlockBase(BinaryReader binaryReader)
         {
-            this.instancedGeometryIndex = binaryReader.ReadInt16();
-            this.breakableSurfaceIndex = binaryReader.ReadInt16();
-            this.seedSurfaceIndex = binaryReader.ReadInt32();
-            this.x0 = binaryReader.ReadSingle();
-            this.x1 = binaryReader.ReadSingle();
-            this.y0 = binaryReader.ReadSingle();
-            this.y1 = binaryReader.ReadSingle();
-            this.z0 = binaryReader.ReadSingle();
-            this.z1 = binaryReader.ReadSingle();
+            instancedGeometryIndex = binaryReader.ReadInt16();
+            breakableSurfaceIndex = binaryReader.ReadInt16();
+            seedSurfaceIndex = binaryReader.ReadInt32();
+            x0 = binaryReader.ReadSingle();
+            x1 = binaryReader.ReadSingle();
+            y0 = binaryReader.ReadSingle();
+            y1 = binaryReader.ReadSingle();
+            z0 = binaryReader.ReadSingle();
+            z1 = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(instancedGeometryIndex);
+                binaryWriter.Write(breakableSurfaceIndex);
+                binaryWriter.Write(seedSurfaceIndex);
+                binaryWriter.Write(x0);
+                binaryWriter.Write(x1);
+                binaryWriter.Write(y0);
+                binaryWriter.Write(y1);
+                binaryWriter.Write(z0);
+                binaryWriter.Write(z1);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

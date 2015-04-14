@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass SkyClass = (TagClass)"sky ";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 172)]
-    public class SkyBlockBase
+    [LayoutAttribute(Size = 172, Alignment = 4)]
+    public class SkyBlockBase  : IGuerilla
     {
         [TagReference("mode")]
         internal Moonfish.Tags.TagReference renderModel;
@@ -62,154 +71,66 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ColorR8G8B8 clearColor;
         internal  SkyBlockBase(BinaryReader binaryReader)
         {
-            this.renderModel = binaryReader.ReadTagReference();
-            this.animationGraph = binaryReader.ReadTagReference();
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.renderModelScale = binaryReader.ReadSingle();
-            this.movementScale = binaryReader.ReadSingle();
-            this.cubeMap = ReadSkyCubemapBlockArray(binaryReader);
-            this.indoorAmbientColor = binaryReader.ReadColorR8G8B8();
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.outdoorAmbientColor = binaryReader.ReadColorR8G8B8();
-            this.invalidName_0 = binaryReader.ReadBytes(4);
-            this.fogSpreadDistanceWorldUnits = binaryReader.ReadSingle();
-            this.atmosphericFog = ReadSkyAtmosphericFogBlockArray(binaryReader);
-            this.secondaryFog = ReadSkyAtmosphericFogBlockArray(binaryReader);
-            this.skyFog = ReadSkyFogBlockArray(binaryReader);
-            this.patchyFog = ReadSkyPatchyFogBlockArray(binaryReader);
-            this.amount01 = binaryReader.ReadSingle();
-            this.threshold01 = binaryReader.ReadSingle();
-            this.brightness01 = binaryReader.ReadSingle();
-            this.gammaPower = binaryReader.ReadSingle();
-            this.lights = ReadSkyLightBlockArray(binaryReader);
-            this.globalSkyRotation = binaryReader.ReadSingle();
-            this.shaderFunctions = ReadSkyShaderFunctionBlockArray(binaryReader);
-            this.animations = ReadSkyAnimationBlockArray(binaryReader);
-            this.invalidName_1 = binaryReader.ReadBytes(12);
-            this.clearColor = binaryReader.ReadColorR8G8B8();
+            renderModel = binaryReader.ReadTagReference();
+            animationGraph = binaryReader.ReadTagReference();
+            flags = (Flags)binaryReader.ReadInt32();
+            renderModelScale = binaryReader.ReadSingle();
+            movementScale = binaryReader.ReadSingle();
+            cubeMap = Guerilla.ReadBlockArray<SkyCubemapBlock>(binaryReader);
+            indoorAmbientColor = binaryReader.ReadColorR8G8B8();
+            invalidName_ = binaryReader.ReadBytes(4);
+            outdoorAmbientColor = binaryReader.ReadColorR8G8B8();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            fogSpreadDistanceWorldUnits = binaryReader.ReadSingle();
+            atmosphericFog = Guerilla.ReadBlockArray<SkyAtmosphericFogBlock>(binaryReader);
+            secondaryFog = Guerilla.ReadBlockArray<SkyAtmosphericFogBlock>(binaryReader);
+            skyFog = Guerilla.ReadBlockArray<SkyFogBlock>(binaryReader);
+            patchyFog = Guerilla.ReadBlockArray<SkyPatchyFogBlock>(binaryReader);
+            amount01 = binaryReader.ReadSingle();
+            threshold01 = binaryReader.ReadSingle();
+            brightness01 = binaryReader.ReadSingle();
+            gammaPower = binaryReader.ReadSingle();
+            lights = Guerilla.ReadBlockArray<SkyLightBlock>(binaryReader);
+            globalSkyRotation = binaryReader.ReadSingle();
+            shaderFunctions = Guerilla.ReadBlockArray<SkyShaderFunctionBlock>(binaryReader);
+            animations = Guerilla.ReadBlockArray<SkyAnimationBlock>(binaryReader);
+            invalidName_1 = binaryReader.ReadBytes(12);
+            clearColor = binaryReader.ReadColorR8G8B8();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(renderModel);
+                binaryWriter.Write(animationGraph);
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(renderModelScale);
+                binaryWriter.Write(movementScale);
+                Guerilla.WriteBlockArray<SkyCubemapBlock>(binaryWriter, cubeMap, nextAddress);
+                binaryWriter.Write(indoorAmbientColor);
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(outdoorAmbientColor);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write(fogSpreadDistanceWorldUnits);
+                Guerilla.WriteBlockArray<SkyAtmosphericFogBlock>(binaryWriter, atmosphericFog, nextAddress);
+                Guerilla.WriteBlockArray<SkyAtmosphericFogBlock>(binaryWriter, secondaryFog, nextAddress);
+                Guerilla.WriteBlockArray<SkyFogBlock>(binaryWriter, skyFog, nextAddress);
+                Guerilla.WriteBlockArray<SkyPatchyFogBlock>(binaryWriter, patchyFog, nextAddress);
+                binaryWriter.Write(amount01);
+                binaryWriter.Write(threshold01);
+                binaryWriter.Write(brightness01);
+                binaryWriter.Write(gammaPower);
+                Guerilla.WriteBlockArray<SkyLightBlock>(binaryWriter, lights, nextAddress);
+                binaryWriter.Write(globalSkyRotation);
+                Guerilla.WriteBlockArray<SkyShaderFunctionBlock>(binaryWriter, shaderFunctions, nextAddress);
+                Guerilla.WriteBlockArray<SkyAnimationBlock>(binaryWriter, animations, nextAddress);
+                binaryWriter.Write(invalidName_1, 0, 12);
+                binaryWriter.Write(clearColor);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual SkyCubemapBlock[] ReadSkyCubemapBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SkyCubemapBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SkyCubemapBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SkyCubemapBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SkyAtmosphericFogBlock[] ReadSkyAtmosphericFogBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SkyAtmosphericFogBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SkyAtmosphericFogBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SkyAtmosphericFogBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SkyFogBlock[] ReadSkyFogBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SkyFogBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SkyFogBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SkyFogBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SkyPatchyFogBlock[] ReadSkyPatchyFogBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SkyPatchyFogBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SkyPatchyFogBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SkyPatchyFogBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SkyLightBlock[] ReadSkyLightBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SkyLightBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SkyLightBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SkyLightBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SkyShaderFunctionBlock[] ReadSkyShaderFunctionBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SkyShaderFunctionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SkyShaderFunctionBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SkyShaderFunctionBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual SkyAnimationBlock[] ReadSkyAnimationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(SkyAnimationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new SkyAnimationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new SkyAnimationBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             FixedInWorldSpace = 1,
             Depreciated = 2,

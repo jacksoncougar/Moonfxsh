@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class EffectAccelerationsBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class EffectAccelerationsBlockBase  : IGuerilla
     {
         internal CreateIn createIn;
         internal CreateIn createIn0;
@@ -26,30 +27,29 @@ namespace Moonfish.Guerilla.Tags
         internal float outerConeAngleDegrees;
         internal  EffectAccelerationsBlockBase(BinaryReader binaryReader)
         {
-            this.createIn = (CreateIn)binaryReader.ReadInt16();
-            this.createIn0 = (CreateIn)binaryReader.ReadInt16();
-            this.location = binaryReader.ReadShortBlockIndex1();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.acceleration = binaryReader.ReadSingle();
-            this.innerConeAngleDegrees = binaryReader.ReadSingle();
-            this.outerConeAngleDegrees = binaryReader.ReadSingle();
+            createIn = (CreateIn)binaryReader.ReadInt16();
+            createIn0 = (CreateIn)binaryReader.ReadInt16();
+            location = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
+            acceleration = binaryReader.ReadSingle();
+            innerConeAngleDegrees = binaryReader.ReadSingle();
+            outerConeAngleDegrees = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int16)createIn);
+                binaryWriter.Write((Int16)createIn0);
+                binaryWriter.Write(location);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(acceleration);
+                binaryWriter.Write(innerConeAngleDegrees);
+                binaryWriter.Write(outerConeAngleDegrees);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum CreateIn : short
-        
         {
             AnyEnvironment = 0,
             AirOnly = 1,
@@ -57,7 +57,6 @@ namespace Moonfish.Guerilla.Tags
             SpaceOnly = 3,
         };
         internal enum CreateIn0 : short
-        
         {
             EitherMode = 0,
             ViolentModeOnly = 1,

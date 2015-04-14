@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 52)]
-    public class AiAnimationReferenceBlockBase
+    [LayoutAttribute(Size = 52, Alignment = 4)]
+    public class AiAnimationReferenceBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.String32 animationName;
         /// <summary>
@@ -26,23 +27,19 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal  AiAnimationReferenceBlockBase(BinaryReader binaryReader)
         {
-            this.animationName = binaryReader.ReadString32();
-            this.animationGraph = binaryReader.ReadTagReference();
-            this.invalidName_ = binaryReader.ReadBytes(12);
+            animationName = binaryReader.ReadString32();
+            animationGraph = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(12);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(animationName);
+                binaryWriter.Write(animationGraph);
+                binaryWriter.Write(invalidName_, 0, 12);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

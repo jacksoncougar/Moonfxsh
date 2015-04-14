@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 56)]
-    public class EffectEventBlockBase
+    [LayoutAttribute(Size = 56, Alignment = 4)]
+    public class EffectEventBlockBase  : IGuerilla
     {
         internal Flags flags;
         /// <summary>
@@ -36,92 +37,32 @@ namespace Moonfish.Guerilla.Tags
         internal ParticleSystemDefinitionBlockNew[] particleSystems;
         internal  EffectEventBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.skipFraction = binaryReader.ReadSingle();
-            this.delayBoundsSeconds = binaryReader.ReadRange();
-            this.durationBoundsSeconds = binaryReader.ReadRange();
-            this.parts = ReadEffectPartBlockArray(binaryReader);
-            this.beams = ReadBeamBlockArray(binaryReader);
-            this.accelerations = ReadEffectAccelerationsBlockArray(binaryReader);
-            this.particleSystems = ReadParticleSystemDefinitionBlockNewArray(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            skipFraction = binaryReader.ReadSingle();
+            delayBoundsSeconds = binaryReader.ReadRange();
+            durationBoundsSeconds = binaryReader.ReadRange();
+            parts = Guerilla.ReadBlockArray<EffectPartBlock>(binaryReader);
+            beams = Guerilla.ReadBlockArray<BeamBlock>(binaryReader);
+            accelerations = Guerilla.ReadBlockArray<EffectAccelerationsBlock>(binaryReader);
+            particleSystems = Guerilla.ReadBlockArray<ParticleSystemDefinitionBlockNew>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(skipFraction);
+                binaryWriter.Write(delayBoundsSeconds);
+                binaryWriter.Write(durationBoundsSeconds);
+                Guerilla.WriteBlockArray<EffectPartBlock>(binaryWriter, parts, nextAddress);
+                Guerilla.WriteBlockArray<BeamBlock>(binaryWriter, beams, nextAddress);
+                Guerilla.WriteBlockArray<EffectAccelerationsBlock>(binaryWriter, accelerations, nextAddress);
+                Guerilla.WriteBlockArray<ParticleSystemDefinitionBlockNew>(binaryWriter, particleSystems, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual EffectPartBlock[] ReadEffectPartBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(EffectPartBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new EffectPartBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new EffectPartBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual BeamBlock[] ReadBeamBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(BeamBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new BeamBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new BeamBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual EffectAccelerationsBlock[] ReadEffectAccelerationsBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(EffectAccelerationsBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new EffectAccelerationsBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new EffectAccelerationsBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual ParticleSystemDefinitionBlockNew[] ReadParticleSystemDefinitionBlockNewArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ParticleSystemDefinitionBlockNew));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ParticleSystemDefinitionBlockNew[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ParticleSystemDefinitionBlockNew(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             DisabledForDebugging = 1,
         };

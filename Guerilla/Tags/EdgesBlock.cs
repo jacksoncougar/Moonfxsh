@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class EdgesBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class EdgesBlockBase  : IGuerilla
     {
         internal short startVertex;
         internal short endVertex;
@@ -25,26 +26,25 @@ namespace Moonfish.Guerilla.Tags
         internal short rightSurface;
         internal  EdgesBlockBase(BinaryReader binaryReader)
         {
-            this.startVertex = binaryReader.ReadInt16();
-            this.endVertex = binaryReader.ReadInt16();
-            this.forwardEdge = binaryReader.ReadInt16();
-            this.reverseEdge = binaryReader.ReadInt16();
-            this.leftSurface = binaryReader.ReadInt16();
-            this.rightSurface = binaryReader.ReadInt16();
+            startVertex = binaryReader.ReadInt16();
+            endVertex = binaryReader.ReadInt16();
+            forwardEdge = binaryReader.ReadInt16();
+            reverseEdge = binaryReader.ReadInt16();
+            leftSurface = binaryReader.ReadInt16();
+            rightSurface = binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(startVertex);
+                binaryWriter.Write(endVertex);
+                binaryWriter.Write(forwardEdge);
+                binaryWriter.Write(reverseEdge);
+                binaryWriter.Write(leftSurface);
+                binaryWriter.Write(rightSurface);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

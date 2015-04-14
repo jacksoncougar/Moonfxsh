@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class AnimationTransitionBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class AnimationTransitionBlockBase  : IGuerilla
     {
         /// <summary>
         /// name of the mode & state of the source
@@ -25,38 +26,19 @@ namespace Moonfish.Guerilla.Tags
         internal AnimationTransitionDestinationBlock[] destinationsAABBCC;
         internal  AnimationTransitionBlockBase(BinaryReader binaryReader)
         {
-            this.fullName = binaryReader.ReadStringID();
-            this.stateInfo = new AnimationTransitionStateStructBlock(binaryReader);
-            this.destinationsAABBCC = ReadAnimationTransitionDestinationBlockArray(binaryReader);
+            fullName = binaryReader.ReadStringID();
+            stateInfo = new AnimationTransitionStateStructBlock(binaryReader);
+            destinationsAABBCC = Guerilla.ReadBlockArray<AnimationTransitionDestinationBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(fullName);
+                stateInfo.Write(binaryWriter);
+                Guerilla.WriteBlockArray<AnimationTransitionDestinationBlock>(binaryWriter, destinationsAABBCC, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual AnimationTransitionDestinationBlock[] ReadAnimationTransitionDestinationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AnimationTransitionDestinationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AnimationTransitionDestinationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AnimationTransitionDestinationBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

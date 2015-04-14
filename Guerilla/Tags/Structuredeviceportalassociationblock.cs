@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,31 +15,27 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 12)]
-    public class StructureDevicePortalAssociationBlockBase
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class StructureDevicePortalAssociationBlockBase  : IGuerilla
     {
         internal ScenarioObjectIdStructBlock deviceId;
         internal short firstGamePortalIndex;
         internal short gamePortalCount;
         internal  StructureDevicePortalAssociationBlockBase(BinaryReader binaryReader)
         {
-            this.deviceId = new ScenarioObjectIdStructBlock(binaryReader);
-            this.firstGamePortalIndex = binaryReader.ReadInt16();
-            this.gamePortalCount = binaryReader.ReadInt16();
+            deviceId = new ScenarioObjectIdStructBlock(binaryReader);
+            firstGamePortalIndex = binaryReader.ReadInt16();
+            gamePortalCount = binaryReader.ReadInt16();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                deviceId.Write(binaryWriter);
+                binaryWriter.Write(firstGamePortalIndex);
+                binaryWriter.Write(gamePortalCount);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

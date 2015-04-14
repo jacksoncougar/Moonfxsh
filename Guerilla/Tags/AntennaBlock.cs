@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass AntClass = (TagClass)"ant!";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 160)]
-    public class AntennaBlockBase
+    [LayoutAttribute(Size = 160, Alignment = 4)]
+    public class AntennaBlockBase  : IGuerilla
     {
         /// <summary>
         /// the marker name where the antenna should be attached
@@ -37,44 +46,31 @@ namespace Moonfish.Guerilla.Tags
         internal AntennaVertexBlock[] vertices;
         internal  AntennaBlockBase(BinaryReader binaryReader)
         {
-            this.attachmentMarkerName = binaryReader.ReadStringID();
-            this.bitmaps = binaryReader.ReadTagReference();
-            this.physics = binaryReader.ReadTagReference();
-            this.invalidName_ = binaryReader.ReadBytes(80);
-            this.springStrengthCoefficient = binaryReader.ReadSingle();
-            this.falloffPixels = binaryReader.ReadSingle();
-            this.cutoffPixels = binaryReader.ReadSingle();
-            this.invalidName_0 = binaryReader.ReadBytes(40);
-            this.vertices = ReadAntennaVertexBlockArray(binaryReader);
+            attachmentMarkerName = binaryReader.ReadStringID();
+            bitmaps = binaryReader.ReadTagReference();
+            physics = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(80);
+            springStrengthCoefficient = binaryReader.ReadSingle();
+            falloffPixels = binaryReader.ReadSingle();
+            cutoffPixels = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(40);
+            vertices = Guerilla.ReadBlockArray<AntennaVertexBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(attachmentMarkerName);
+                binaryWriter.Write(bitmaps);
+                binaryWriter.Write(physics);
+                binaryWriter.Write(invalidName_, 0, 80);
+                binaryWriter.Write(springStrengthCoefficient);
+                binaryWriter.Write(falloffPixels);
+                binaryWriter.Write(cutoffPixels);
+                binaryWriter.Write(invalidName_0, 0, 40);
+                Guerilla.WriteBlockArray<AntennaVertexBlock>(binaryWriter, vertices, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual AntennaVertexBlock[] ReadAntennaVertexBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(AntennaVertexBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new AntennaVertexBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new AntennaVertexBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

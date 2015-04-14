@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 128)]
-    public class PlayerControlBlockBase
+    [LayoutAttribute(Size = 128, Alignment = 4)]
+    public class PlayerControlBlockBase  : IGuerilla
     {
         /// <summary>
         /// how much the crosshair slows over enemies
@@ -103,62 +104,67 @@ namespace Moonfish.Guerilla.Tags
         internal float minimumActionHoldTimeSeconds;
         internal  PlayerControlBlockBase(BinaryReader binaryReader)
         {
-            this.magnetismFriction = binaryReader.ReadSingle();
-            this.magnetismAdhesion = binaryReader.ReadSingle();
-            this.inconsequentialTargetScale = binaryReader.ReadSingle();
-            this.invalidName_ = binaryReader.ReadBytes(12);
-            this.crosshairLocation = binaryReader.ReadVector2();
-            this.secondsToStart = binaryReader.ReadSingle();
-            this.secondsToFullSpeed = binaryReader.ReadSingle();
-            this.decayRate = binaryReader.ReadSingle();
-            this.fullSpeedMultiplier = binaryReader.ReadSingle();
-            this.peggedMagnitude = binaryReader.ReadSingle();
-            this.peggedAngularThreshold = binaryReader.ReadSingle();
-            this.invalidName_0 = binaryReader.ReadBytes(8);
-            this.lookDefaultPitchRateDegrees = binaryReader.ReadSingle();
-            this.lookDefaultYawRateDegrees = binaryReader.ReadSingle();
-            this.lookPegThreshold01 = binaryReader.ReadSingle();
-            this.lookYawAccelerationTimeSeconds = binaryReader.ReadSingle();
-            this.lookYawAccelerationScale = binaryReader.ReadSingle();
-            this.lookPitchAccelerationTimeSeconds = binaryReader.ReadSingle();
-            this.lookPitchAccelerationScale = binaryReader.ReadSingle();
-            this.lookAutolevellingScale = binaryReader.ReadSingle();
-            this.invalidName_1 = binaryReader.ReadBytes(8);
-            this.gravityScale = binaryReader.ReadSingle();
-            this.invalidName_2 = binaryReader.ReadBytes(2);
-            this.minimumAutolevellingTicks = binaryReader.ReadInt16();
-            this.minimumAngleForVehicleFlipping = binaryReader.ReadSingle();
-            this.lookFunction = ReadLookFunctionBlockArray(binaryReader);
-            this.minimumActionHoldTimeSeconds = binaryReader.ReadSingle();
+            magnetismFriction = binaryReader.ReadSingle();
+            magnetismAdhesion = binaryReader.ReadSingle();
+            inconsequentialTargetScale = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(12);
+            crosshairLocation = binaryReader.ReadVector2();
+            secondsToStart = binaryReader.ReadSingle();
+            secondsToFullSpeed = binaryReader.ReadSingle();
+            decayRate = binaryReader.ReadSingle();
+            fullSpeedMultiplier = binaryReader.ReadSingle();
+            peggedMagnitude = binaryReader.ReadSingle();
+            peggedAngularThreshold = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(8);
+            lookDefaultPitchRateDegrees = binaryReader.ReadSingle();
+            lookDefaultYawRateDegrees = binaryReader.ReadSingle();
+            lookPegThreshold01 = binaryReader.ReadSingle();
+            lookYawAccelerationTimeSeconds = binaryReader.ReadSingle();
+            lookYawAccelerationScale = binaryReader.ReadSingle();
+            lookPitchAccelerationTimeSeconds = binaryReader.ReadSingle();
+            lookPitchAccelerationScale = binaryReader.ReadSingle();
+            lookAutolevellingScale = binaryReader.ReadSingle();
+            invalidName_1 = binaryReader.ReadBytes(8);
+            gravityScale = binaryReader.ReadSingle();
+            invalidName_2 = binaryReader.ReadBytes(2);
+            minimumAutolevellingTicks = binaryReader.ReadInt16();
+            minimumAngleForVehicleFlipping = binaryReader.ReadSingle();
+            lookFunction = Guerilla.ReadBlockArray<LookFunctionBlock>(binaryReader);
+            minimumActionHoldTimeSeconds = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(magnetismFriction);
+                binaryWriter.Write(magnetismAdhesion);
+                binaryWriter.Write(inconsequentialTargetScale);
+                binaryWriter.Write(invalidName_, 0, 12);
+                binaryWriter.Write(crosshairLocation);
+                binaryWriter.Write(secondsToStart);
+                binaryWriter.Write(secondsToFullSpeed);
+                binaryWriter.Write(decayRate);
+                binaryWriter.Write(fullSpeedMultiplier);
+                binaryWriter.Write(peggedMagnitude);
+                binaryWriter.Write(peggedAngularThreshold);
+                binaryWriter.Write(invalidName_0, 0, 8);
+                binaryWriter.Write(lookDefaultPitchRateDegrees);
+                binaryWriter.Write(lookDefaultYawRateDegrees);
+                binaryWriter.Write(lookPegThreshold01);
+                binaryWriter.Write(lookYawAccelerationTimeSeconds);
+                binaryWriter.Write(lookYawAccelerationScale);
+                binaryWriter.Write(lookPitchAccelerationTimeSeconds);
+                binaryWriter.Write(lookPitchAccelerationScale);
+                binaryWriter.Write(lookAutolevellingScale);
+                binaryWriter.Write(invalidName_1, 0, 8);
+                binaryWriter.Write(gravityScale);
+                binaryWriter.Write(invalidName_2, 0, 2);
+                binaryWriter.Write(minimumAutolevellingTicks);
+                binaryWriter.Write(minimumAngleForVehicleFlipping);
+                Guerilla.WriteBlockArray<LookFunctionBlock>(binaryWriter, lookFunction, nextAddress);
+                binaryWriter.Write(minimumActionHoldTimeSeconds);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual LookFunctionBlock[] ReadLookFunctionBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LookFunctionBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LookFunctionBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LookFunctionBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

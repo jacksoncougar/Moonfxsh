@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class StaticSpawnZoneDataStructBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class StaticSpawnZoneDataStructBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal RelevantTeam relevantTeam;
@@ -23,28 +24,24 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal  StaticSpawnZoneDataStructBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.relevantTeam = (RelevantTeam)binaryReader.ReadInt32();
-            this.relevantGames = (RelevantGames)binaryReader.ReadInt32();
-            this.flags = (Flags)binaryReader.ReadInt32();
+            name = binaryReader.ReadStringID();
+            relevantTeam = (RelevantTeam)binaryReader.ReadInt32();
+            relevantGames = (RelevantGames)binaryReader.ReadInt32();
+            flags = (Flags)binaryReader.ReadInt32();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int32)relevantTeam);
+                binaryWriter.Write((Int32)relevantGames);
+                binaryWriter.Write((Int32)flags);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum RelevantTeam : int
-        
         {
             RedAlpha = 1,
             BlueBravo = 2,
@@ -58,7 +55,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum RelevantGames : int
-        
         {
             Slayer = 1,
             Oddball = 2,
@@ -71,7 +67,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             DisabledIfFlagHome = 1,
             DisabledIfFlagAway = 2,

@@ -110,7 +110,8 @@ namespace Moonfish.Tags
         public string ToTokenString( )
         {
             var value = ToString();
-            if ( value == "$#!+" ) return "shit";
+            if ( value == "$#!+" )
+                return "shit";
 
             var chars = value.Where(x => (char.IsLetterOrDigit(x))).ToArray();
             return new string(chars);

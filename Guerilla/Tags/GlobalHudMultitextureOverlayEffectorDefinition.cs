@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 220)]
-    public class GlobalHudMultitextureOverlayEffectorDefinitionBase
+    [LayoutAttribute(Size = 220, Alignment = 4)]
+    public class GlobalHudMultitextureOverlayEffectorDefinitionBase  : IGuerilla
     {
         internal byte[] invalidName_;
         internal DestinationType destinationType;
@@ -34,38 +35,45 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_3;
         internal  GlobalHudMultitextureOverlayEffectorDefinitionBase(BinaryReader binaryReader)
         {
-            this.invalidName_ = binaryReader.ReadBytes(64);
-            this.destinationType = (DestinationType)binaryReader.ReadInt16();
-            this.destination = (Destination)binaryReader.ReadInt16();
-            this.source = (Source)binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.inBoundsSourceUnits = binaryReader.ReadRange();
-            this.outBoundsPixels = binaryReader.ReadRange();
-            this.invalidName_1 = binaryReader.ReadBytes(64);
-            this.tintColorLowerBound = binaryReader.ReadColorR8G8B8();
-            this.tintColorUpperBound = binaryReader.ReadColorR8G8B8();
-            this.periodicFunction = (PeriodicFunction)binaryReader.ReadInt16();
-            this.invalidName_2 = binaryReader.ReadBytes(2);
-            this.functionPeriodSeconds = binaryReader.ReadSingle();
-            this.functionPhaseSeconds = binaryReader.ReadSingle();
-            this.invalidName_3 = binaryReader.ReadBytes(32);
+            invalidName_ = binaryReader.ReadBytes(64);
+            destinationType = (DestinationType)binaryReader.ReadInt16();
+            destination = (Destination)binaryReader.ReadInt16();
+            source = (Source)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            inBoundsSourceUnits = binaryReader.ReadRange();
+            outBoundsPixels = binaryReader.ReadRange();
+            invalidName_1 = binaryReader.ReadBytes(64);
+            tintColorLowerBound = binaryReader.ReadColorR8G8B8();
+            tintColorUpperBound = binaryReader.ReadColorR8G8B8();
+            periodicFunction = (PeriodicFunction)binaryReader.ReadInt16();
+            invalidName_2 = binaryReader.ReadBytes(2);
+            functionPeriodSeconds = binaryReader.ReadSingle();
+            functionPhaseSeconds = binaryReader.ReadSingle();
+            invalidName_3 = binaryReader.ReadBytes(32);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(invalidName_, 0, 64);
+                binaryWriter.Write((Int16)destinationType);
+                binaryWriter.Write((Int16)destination);
+                binaryWriter.Write((Int16)source);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(inBoundsSourceUnits);
+                binaryWriter.Write(outBoundsPixels);
+                binaryWriter.Write(invalidName_1, 0, 64);
+                binaryWriter.Write(tintColorLowerBound);
+                binaryWriter.Write(tintColorUpperBound);
+                binaryWriter.Write((Int16)periodicFunction);
+                binaryWriter.Write(invalidName_2, 0, 2);
+                binaryWriter.Write(functionPeriodSeconds);
+                binaryWriter.Write(functionPhaseSeconds);
+                binaryWriter.Write(invalidName_3, 0, 32);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum DestinationType : short
-        
         {
             Tint01 = 0,
             HorizontalOffset = 1,
@@ -73,7 +81,6 @@ namespace Moonfish.Guerilla.Tags
             Fade01 = 3,
         };
         internal enum Destination : short
-        
         {
             GeometryOffset = 0,
             PrimaryMap = 1,
@@ -81,7 +88,6 @@ namespace Moonfish.Guerilla.Tags
             TertiaryMap = 3,
         };
         internal enum Source : short
-        
         {
             PlayerPitch = 0,
             PlayerPitchTangent = 1,
@@ -93,7 +99,6 @@ namespace Moonfish.Guerilla.Tags
             WeaponZoomLevel = 7,
         };
         internal enum PeriodicFunction : short
-        
         {
             One = 0,
             Zero = 1,

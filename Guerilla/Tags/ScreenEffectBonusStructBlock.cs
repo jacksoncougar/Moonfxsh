@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 16)]
-    public class ScreenEffectBonusStructBlockBase
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class ScreenEffectBonusStructBlockBase  : IGuerilla
     {
         [TagReference("egor")]
         internal Moonfish.Tags.TagReference halfscreenScreenEffect;
@@ -23,22 +24,17 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference quarterscreenScreenEffect;
         internal  ScreenEffectBonusStructBlockBase(BinaryReader binaryReader)
         {
-            this.halfscreenScreenEffect = binaryReader.ReadTagReference();
-            this.quarterscreenScreenEffect = binaryReader.ReadTagReference();
+            halfscreenScreenEffect = binaryReader.ReadTagReference();
+            quarterscreenScreenEffect = binaryReader.ReadTagReference();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(halfscreenScreenEffect);
+                binaryWriter.Write(quarterscreenScreenEffect);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

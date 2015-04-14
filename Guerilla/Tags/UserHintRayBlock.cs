@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 28)]
-    public class UserHintRayBlockBase
+    [LayoutAttribute(Size = 28, Alignment = 4)]
+    public class UserHintRayBlockBase  : IGuerilla
     {
         internal OpenTK.Vector3 point;
         internal short referenceFrame;
@@ -23,24 +24,21 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 vector;
         internal  UserHintRayBlockBase(BinaryReader binaryReader)
         {
-            this.point = binaryReader.ReadVector3();
-            this.referenceFrame = binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.vector = binaryReader.ReadVector3();
+            point = binaryReader.ReadVector3();
+            referenceFrame = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            vector = binaryReader.ReadVector3();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(point);
+                binaryWriter.Write(referenceFrame);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(vector);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

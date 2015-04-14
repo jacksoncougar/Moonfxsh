@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 88)]
-    public class LoopingSoundTrackBlockBase
+    [LayoutAttribute(Size = 88, Alignment = 4)]
+    public class LoopingSoundTrackBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Flags flags;
@@ -42,40 +43,48 @@ namespace Moonfish.Guerilla.Tags
         internal float altFadeOutDurationSeconds;
         internal  LoopingSoundTrackBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.gainDB = binaryReader.ReadSingle();
-            this.fadeInDurationSeconds = binaryReader.ReadSingle();
-            this.fadeOutDurationSeconds = binaryReader.ReadSingle();
-            this._in = binaryReader.ReadTagReference();
-            this.loop = binaryReader.ReadTagReference();
-            this._out = binaryReader.ReadTagReference();
-            this.altLoop = binaryReader.ReadTagReference();
-            this.altOut = binaryReader.ReadTagReference();
-            this.outputEffect = (OutputEffect)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.altTransIn = binaryReader.ReadTagReference();
-            this.altTransOut = binaryReader.ReadTagReference();
-            this.altCrossfadeDurationSeconds = binaryReader.ReadSingle();
-            this.altFadeOutDurationSeconds = binaryReader.ReadSingle();
+            name = binaryReader.ReadStringID();
+            flags = (Flags)binaryReader.ReadInt32();
+            gainDB = binaryReader.ReadSingle();
+            fadeInDurationSeconds = binaryReader.ReadSingle();
+            fadeOutDurationSeconds = binaryReader.ReadSingle();
+            _in = binaryReader.ReadTagReference();
+            loop = binaryReader.ReadTagReference();
+            _out = binaryReader.ReadTagReference();
+            altLoop = binaryReader.ReadTagReference();
+            altOut = binaryReader.ReadTagReference();
+            outputEffect = (OutputEffect)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            altTransIn = binaryReader.ReadTagReference();
+            altTransOut = binaryReader.ReadTagReference();
+            altCrossfadeDurationSeconds = binaryReader.ReadSingle();
+            altFadeOutDurationSeconds = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(gainDB);
+                binaryWriter.Write(fadeInDurationSeconds);
+                binaryWriter.Write(fadeOutDurationSeconds);
+                binaryWriter.Write(_in);
+                binaryWriter.Write(loop);
+                binaryWriter.Write(_out);
+                binaryWriter.Write(altLoop);
+                binaryWriter.Write(altOut);
+                binaryWriter.Write((Int16)outputEffect);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(altTransIn);
+                binaryWriter.Write(altTransOut);
+                binaryWriter.Write(altCrossfadeDurationSeconds);
+                binaryWriter.Write(altFadeOutDurationSeconds);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             FadeInAtStartTheLoopSoundShouldFadeInWhileTheStartSoundIsPlaying = 1,
             FadeOutAtStopTheLoopSoundShouldFadeOutWhileTheStopSoundIsPlaying = 2,
@@ -84,7 +93,6 @@ namespace Moonfish.Guerilla.Tags
             FadeOutAtAltStop = 16,
         };
         internal enum OutputEffect : short
-        
         {
             None = 0,
             OutputFrontSpeakers = 1,

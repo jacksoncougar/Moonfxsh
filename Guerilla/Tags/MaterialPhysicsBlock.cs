@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass MpdtClass = (TagClass)"mpdt";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20)]
-    public class MaterialPhysicsBlockBase
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class MaterialPhysicsBlockBase  : IGuerilla
     {
         /// <summary>
         /// fraction of original velocity parallel to the ground after one tick
@@ -40,25 +49,23 @@ namespace Moonfish.Guerilla.Tags
         internal float groundDampFractionScale;
         internal  MaterialPhysicsBlockBase(BinaryReader binaryReader)
         {
-            this.groundFrictionScale = binaryReader.ReadSingle();
-            this.groundFrictionNormalK1Scale = binaryReader.ReadSingle();
-            this.groundFrictionNormalK0Scale = binaryReader.ReadSingle();
-            this.groundDepthScale = binaryReader.ReadSingle();
-            this.groundDampFractionScale = binaryReader.ReadSingle();
+            groundFrictionScale = binaryReader.ReadSingle();
+            groundFrictionNormalK1Scale = binaryReader.ReadSingle();
+            groundFrictionNormalK0Scale = binaryReader.ReadSingle();
+            groundDepthScale = binaryReader.ReadSingle();
+            groundDampFractionScale = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(groundFrictionScale);
+                binaryWriter.Write(groundFrictionNormalK1Scale);
+                binaryWriter.Write(groundFrictionNormalK0Scale);
+                binaryWriter.Write(groundDepthScale);
+                binaryWriter.Write(groundDampFractionScale);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 28)]
-    public class UnitCameraStructBlockBase
+    [LayoutAttribute(Size = 28, Alignment = 4)]
+    public class UnitCameraStructBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID cameraMarkerName;
         internal Moonfish.Tags.StringID cameraSubmergedMarkerName;
@@ -24,40 +25,23 @@ namespace Moonfish.Guerilla.Tags
         internal UnitCameraTrackBlock[] cameraTracks;
         internal  UnitCameraStructBlockBase(BinaryReader binaryReader)
         {
-            this.cameraMarkerName = binaryReader.ReadStringID();
-            this.cameraSubmergedMarkerName = binaryReader.ReadStringID();
-            this.pitchAutoLevel = binaryReader.ReadSingle();
-            this.pitchRange = binaryReader.ReadRange();
-            this.cameraTracks = ReadUnitCameraTrackBlockArray(binaryReader);
+            cameraMarkerName = binaryReader.ReadStringID();
+            cameraSubmergedMarkerName = binaryReader.ReadStringID();
+            pitchAutoLevel = binaryReader.ReadSingle();
+            pitchRange = binaryReader.ReadRange();
+            cameraTracks = Guerilla.ReadBlockArray<UnitCameraTrackBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(cameraMarkerName);
+                binaryWriter.Write(cameraSubmergedMarkerName);
+                binaryWriter.Write(pitchAutoLevel);
+                binaryWriter.Write(pitchRange);
+                Guerilla.WriteBlockArray<UnitCameraTrackBlock>(binaryWriter, cameraTracks, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual UnitCameraTrackBlock[] ReadUnitCameraTrackBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(UnitCameraTrackBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new UnitCameraTrackBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new UnitCameraTrackBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

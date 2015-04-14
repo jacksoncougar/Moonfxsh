@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 3172)]
-    public class GlobalUiMultiplayerLevelBlockBase
+    [LayoutAttribute(Size = 3172, Alignment = 4)]
+    public class GlobalUiMultiplayerLevelBlockBase  : IGuerilla
     {
         internal int mapID;
         [TagReference("bitm")]
@@ -44,48 +45,64 @@ namespace Moonfish.Guerilla.Tags
         internal byte maxTeamsStub15;
         internal  GlobalUiMultiplayerLevelBlockBase(BinaryReader binaryReader)
         {
-            this.mapID = binaryReader.ReadInt32();
-            this.bitmap = binaryReader.ReadTagReference();
-            this.invalidName_ = binaryReader.ReadBytes(576);
-            this.invalidName_0 = binaryReader.ReadBytes(2304);
-            this.path = binaryReader.ReadString256();
-            this.sortOrder = binaryReader.ReadInt32();
-            this.flags = (Flags)binaryReader.ReadByte();
-            this.invalidName_1 = binaryReader.ReadBytes(3);
-            this.maxTeamsNone = binaryReader.ReadByte();
-            this.maxTeamsCTF = binaryReader.ReadByte();
-            this.maxTeamsSlayer = binaryReader.ReadByte();
-            this.maxTeamsOddball = binaryReader.ReadByte();
-            this.maxTeamsKOTH = binaryReader.ReadByte();
-            this.maxTeamsRace = binaryReader.ReadByte();
-            this.maxTeamsHeadhunter = binaryReader.ReadByte();
-            this.maxTeamsJuggernaut = binaryReader.ReadByte();
-            this.maxTeamsTerritories = binaryReader.ReadByte();
-            this.maxTeamsAssault = binaryReader.ReadByte();
-            this.maxTeamsStub10 = binaryReader.ReadByte();
-            this.maxTeamsStub11 = binaryReader.ReadByte();
-            this.maxTeamsStub12 = binaryReader.ReadByte();
-            this.maxTeamsStub13 = binaryReader.ReadByte();
-            this.maxTeamsStub14 = binaryReader.ReadByte();
-            this.maxTeamsStub15 = binaryReader.ReadByte();
+            mapID = binaryReader.ReadInt32();
+            bitmap = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(576);
+            invalidName_0 = binaryReader.ReadBytes(2304);
+            path = binaryReader.ReadString256();
+            sortOrder = binaryReader.ReadInt32();
+            flags = (Flags)binaryReader.ReadByte();
+            invalidName_1 = binaryReader.ReadBytes(3);
+            maxTeamsNone = binaryReader.ReadByte();
+            maxTeamsCTF = binaryReader.ReadByte();
+            maxTeamsSlayer = binaryReader.ReadByte();
+            maxTeamsOddball = binaryReader.ReadByte();
+            maxTeamsKOTH = binaryReader.ReadByte();
+            maxTeamsRace = binaryReader.ReadByte();
+            maxTeamsHeadhunter = binaryReader.ReadByte();
+            maxTeamsJuggernaut = binaryReader.ReadByte();
+            maxTeamsTerritories = binaryReader.ReadByte();
+            maxTeamsAssault = binaryReader.ReadByte();
+            maxTeamsStub10 = binaryReader.ReadByte();
+            maxTeamsStub11 = binaryReader.ReadByte();
+            maxTeamsStub12 = binaryReader.ReadByte();
+            maxTeamsStub13 = binaryReader.ReadByte();
+            maxTeamsStub14 = binaryReader.ReadByte();
+            maxTeamsStub15 = binaryReader.ReadByte();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(mapID);
+                binaryWriter.Write(bitmap);
+                binaryWriter.Write(invalidName_, 0, 576);
+                binaryWriter.Write(invalidName_0, 0, 2304);
+                binaryWriter.Write(path);
+                binaryWriter.Write(sortOrder);
+                binaryWriter.Write((Byte)flags);
+                binaryWriter.Write(invalidName_1, 0, 3);
+                binaryWriter.Write(maxTeamsNone);
+                binaryWriter.Write(maxTeamsCTF);
+                binaryWriter.Write(maxTeamsSlayer);
+                binaryWriter.Write(maxTeamsOddball);
+                binaryWriter.Write(maxTeamsKOTH);
+                binaryWriter.Write(maxTeamsRace);
+                binaryWriter.Write(maxTeamsHeadhunter);
+                binaryWriter.Write(maxTeamsJuggernaut);
+                binaryWriter.Write(maxTeamsTerritories);
+                binaryWriter.Write(maxTeamsAssault);
+                binaryWriter.Write(maxTeamsStub10);
+                binaryWriter.Write(maxTeamsStub11);
+                binaryWriter.Write(maxTeamsStub12);
+                binaryWriter.Write(maxTeamsStub13);
+                binaryWriter.Write(maxTeamsStub14);
+                binaryWriter.Write(maxTeamsStub15);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : byte
-        
         {
             Unlockable = 1,
         };

@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 36)]
-    public class HudBlockReferenceBlockBase
+    [LayoutAttribute(Size = 36, Alignment = 4)]
+    public class HudBlockReferenceBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal AnimationIndex animationIndex;
@@ -29,38 +30,37 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector2 bounds;
         internal  HudBlockReferenceBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            this.introAnimationDelayMilliseconds = binaryReader.ReadInt16();
-            this.renderDepthBias = binaryReader.ReadInt16();
-            this.startingBitmapSequenceIndex = binaryReader.ReadInt16();
-            this.bitmap = binaryReader.ReadTagReference();
-            this.shader = binaryReader.ReadTagReference();
-            this.bounds = binaryReader.ReadVector2();
+            flags = (Flags)binaryReader.ReadInt32();
+            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
+            renderDepthBias = binaryReader.ReadInt16();
+            startingBitmapSequenceIndex = binaryReader.ReadInt16();
+            bitmap = binaryReader.ReadTagReference();
+            shader = binaryReader.ReadTagReference();
+            bounds = binaryReader.ReadVector2();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int16)animationIndex);
+                binaryWriter.Write(introAnimationDelayMilliseconds);
+                binaryWriter.Write(renderDepthBias);
+                binaryWriter.Write(startingBitmapSequenceIndex);
+                binaryWriter.Write(bitmap);
+                binaryWriter.Write(shader);
+                binaryWriter.Write(bounds);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             IgnoreForListSkinSize = 1,
             NeedsValidRank = 2,
         };
         internal enum AnimationIndex : short
-        
         {
             NONE = 0,
             InvalidName00 = 1,

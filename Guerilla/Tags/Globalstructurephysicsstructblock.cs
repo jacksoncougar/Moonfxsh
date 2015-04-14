@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 52)]
-    public class GlobalStructurePhysicsStructBlockBase
+    [LayoutAttribute(Size = 52, Alignment = 4)]
+    public class GlobalStructurePhysicsStructBlockBase  : IGuerilla
     {
         internal byte[] moppCode;
         internal byte[] invalidName_;
@@ -25,41 +26,25 @@ namespace Moonfish.Guerilla.Tags
         internal BreakableSurfaceKeyTableBlock[] breakableSurfaceKeyTable;
         internal  GlobalStructurePhysicsStructBlockBase(BinaryReader binaryReader)
         {
-            this.moppCode = ReadData(binaryReader);
-            this.invalidName_ = binaryReader.ReadBytes(4);
-            this.moppBoundsMin = binaryReader.ReadVector3();
-            this.moppBoundsMax = binaryReader.ReadVector3();
-            this.breakableSurfacesMoppCode = ReadData(binaryReader);
-            this.breakableSurfaceKeyTable = ReadBreakableSurfaceKeyTableBlockArray(binaryReader);
+            moppCode = Guerilla.ReadData(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(4);
+            moppBoundsMin = binaryReader.ReadVector3();
+            moppBoundsMax = binaryReader.ReadVector3();
+            breakableSurfacesMoppCode = Guerilla.ReadData(binaryReader);
+            breakableSurfaceKeyTable = Guerilla.ReadBlockArray<BreakableSurfaceKeyTableBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                Guerilla.WriteData(binaryWriter);
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(moppBoundsMin);
+                binaryWriter.Write(moppBoundsMax);
+                Guerilla.WriteData(binaryWriter);
+                Guerilla.WriteBlockArray<BreakableSurfaceKeyTableBlock>(binaryWriter, breakableSurfaceKeyTable, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual BreakableSurfaceKeyTableBlock[] ReadBreakableSurfaceKeyTableBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(BreakableSurfaceKeyTableBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new BreakableSurfaceKeyTableBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new BreakableSurfaceKeyTableBlock(binaryReader);
-                }
-            }
-            return array;
         }
     };
 }

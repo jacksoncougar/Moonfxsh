@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 64)]
-    public class WeaponTriggersBase
+    [LayoutAttribute(Size = 64, Alignment = 4)]
+    public class WeaponTriggersBase  : IGuerilla
     {
         internal Flags flags;
         internal Input input;
@@ -28,45 +29,44 @@ namespace Moonfish.Guerilla.Tags
         internal WeaponTriggerChargingStructBlock charging;
         internal  WeaponTriggersBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.input = (Input)binaryReader.ReadInt16();
-            this.behavior = (Behavior)binaryReader.ReadInt16();
-            this.primaryBarrel = binaryReader.ReadShortBlockIndex1();
-            this.secondaryBarrel = binaryReader.ReadShortBlockIndex1();
-            this.prediction = (Prediction)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.autofire = new WeaponTriggerAutofireStructBlock(binaryReader);
-            this.charging = new WeaponTriggerChargingStructBlock(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            input = (Input)binaryReader.ReadInt16();
+            behavior = (Behavior)binaryReader.ReadInt16();
+            primaryBarrel = binaryReader.ReadShortBlockIndex1();
+            secondaryBarrel = binaryReader.ReadShortBlockIndex1();
+            prediction = (Prediction)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            autofire = new WeaponTriggerAutofireStructBlock(binaryReader);
+            charging = new WeaponTriggerChargingStructBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int16)input);
+                binaryWriter.Write((Int16)behavior);
+                binaryWriter.Write(primaryBarrel);
+                binaryWriter.Write(secondaryBarrel);
+                binaryWriter.Write((Int16)prediction);
+                binaryWriter.Write(invalidName_, 0, 2);
+                autofire.Write(binaryWriter);
+                charging.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             AutofireSingleActionOnly = 1,
         };
         internal enum Input : short
-        
         {
             RightTrigger = 0,
             LeftTrigger = 1,
             MeleeAttack = 2,
         };
         internal enum Behavior : short
-        
         {
             Spew = 0,
             Latch = 1,
@@ -76,7 +76,6 @@ namespace Moonfish.Guerilla.Tags
             LatchRocketlauncher = 5,
         };
         internal enum Prediction : short
-        
         {
             None = 0,
             Spew = 1,

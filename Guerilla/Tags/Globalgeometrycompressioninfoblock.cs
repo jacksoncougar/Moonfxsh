@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 56)]
-    public class GlobalGeometryCompressionInfoBlockBase
+    [LayoutAttribute(Size = 56, Alignment = 4)]
+    public class GlobalGeometryCompressionInfoBlockBase  : IGuerilla
     {
         internal Moonfish.Model.Range positionBoundsX;
         internal Moonfish.Model.Range positionBoundsY;
@@ -26,27 +27,27 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range secondaryTexcoordBoundsY;
         internal  GlobalGeometryCompressionInfoBlockBase(BinaryReader binaryReader)
         {
-            this.positionBoundsX = binaryReader.ReadRange();
-            this.positionBoundsY = binaryReader.ReadRange();
-            this.positionBoundsZ = binaryReader.ReadRange();
-            this.texcoordBoundsX = binaryReader.ReadRange();
-            this.texcoordBoundsY = binaryReader.ReadRange();
-            this.secondaryTexcoordBoundsX = binaryReader.ReadRange();
-            this.secondaryTexcoordBoundsY = binaryReader.ReadRange();
+            positionBoundsX = binaryReader.ReadRange();
+            positionBoundsY = binaryReader.ReadRange();
+            positionBoundsZ = binaryReader.ReadRange();
+            texcoordBoundsX = binaryReader.ReadRange();
+            texcoordBoundsY = binaryReader.ReadRange();
+            secondaryTexcoordBoundsX = binaryReader.ReadRange();
+            secondaryTexcoordBoundsY = binaryReader.ReadRange();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(positionBoundsX);
+                binaryWriter.Write(positionBoundsY);
+                binaryWriter.Write(positionBoundsZ);
+                binaryWriter.Write(texcoordBoundsX);
+                binaryWriter.Write(texcoordBoundsY);
+                binaryWriter.Write(secondaryTexcoordBoundsX);
+                binaryWriter.Write(secondaryTexcoordBoundsY);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

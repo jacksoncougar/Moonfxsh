@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 72)]
-    public class PlatformSoundFilterBlockBase
+    [LayoutAttribute(Size = 72, Alignment = 4)]
+    public class PlatformSoundFilterBlockBase  : IGuerilla
     {
         internal FilterType filterType;
         internal int filterWidth07;
@@ -25,29 +26,27 @@ namespace Moonfish.Guerilla.Tags
         internal SoundPlaybackParameterDefinitionBlock rightFilterGain;
         internal  PlatformSoundFilterBlockBase(BinaryReader binaryReader)
         {
-            this.filterType = (FilterType)binaryReader.ReadInt32();
-            this.filterWidth07 = binaryReader.ReadInt32();
-            this.leftFilterFrequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            this.leftFilterGain = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            this.rightFilterFrequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            this.rightFilterGain = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            filterType = (FilterType)binaryReader.ReadInt32();
+            filterWidth07 = binaryReader.ReadInt32();
+            leftFilterFrequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            leftFilterGain = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            rightFilterFrequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            rightFilterGain = new SoundPlaybackParameterDefinitionBlock(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)filterType);
+                binaryWriter.Write(filterWidth07);
+                leftFilterFrequency.Write(binaryWriter);
+                leftFilterGain.Write(binaryWriter);
+                rightFilterFrequency.Write(binaryWriter);
+                rightFilterGain.Write(binaryWriter);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         internal enum FilterType : int
-        
         {
             ParametricEQ = 0,
             DLS2 = 1,

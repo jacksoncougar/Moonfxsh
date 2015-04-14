@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 40)]
-    public class GlobalShaderParameterBlockBase
+    [LayoutAttribute(Size = 40, Alignment = 4)]
+    public class GlobalShaderParameterBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Type type;
@@ -27,45 +28,29 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderAnimationPropertyBlock[] animationProperties;
         internal  GlobalShaderParameterBlockBase(BinaryReader binaryReader)
         {
-            this.name = binaryReader.ReadStringID();
-            this.type = (Type)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.bitmap = binaryReader.ReadTagReference();
-            this.constValue = binaryReader.ReadSingle();
-            this.constColor = binaryReader.ReadColorR8G8B8();
-            this.animationProperties = ReadShaderAnimationPropertyBlockArray(binaryReader);
+            name = binaryReader.ReadStringID();
+            type = (Type)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            bitmap = binaryReader.ReadTagReference();
+            constValue = binaryReader.ReadSingle();
+            constColor = binaryReader.ReadColorR8G8B8();
+            animationProperties = Guerilla.ReadBlockArray<ShaderAnimationPropertyBlock>(binaryReader);
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(bitmap);
+                binaryWriter.Write(constValue);
+                binaryWriter.Write(constColor);
+                Guerilla.WriteBlockArray<ShaderAnimationPropertyBlock>(binaryWriter, animationProperties, nextAddress);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual ShaderAnimationPropertyBlock[] ReadShaderAnimationPropertyBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(ShaderAnimationPropertyBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new ShaderAnimationPropertyBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new ShaderAnimationPropertyBlock(binaryReader);
-                }
-            }
-            return array;
         }
         internal enum Type : short
-        
         {
             Bitmap = 0,
             Value = 1,

@@ -1,9 +1,18 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass LighClass = (TagClass)"ligh";
+    };
+};
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -15,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 228)]
-    public class LightBlockBase
+    [LayoutAttribute(Size = 228, Alignment = 4)]
+    public class LightBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal Type type;
@@ -114,117 +123,112 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference shader;
         internal  LightBlockBase(BinaryReader binaryReader)
         {
-            this.flags = (Flags)binaryReader.ReadInt32();
-            this.type = (Type)binaryReader.ReadInt16();
-            this.invalidName_ = binaryReader.ReadBytes(2);
-            this.sizeModifer = binaryReader.ReadRange();
-            this.shadowQualityBias = binaryReader.ReadSingle();
-            this.shadowTapBias = (ShadowTapBiasTheLessTapsYouUseTheFasterTheLightButEdgesCanLookWorse)binaryReader.ReadInt16();
-            this.invalidName_0 = binaryReader.ReadBytes(2);
-            this.radiusWorldUnits = binaryReader.ReadSingle();
-            this.specularRadiusWorldUnits = binaryReader.ReadSingle();
-            this.nearWidthWorldUnits = binaryReader.ReadSingle();
-            this.heightStretch = binaryReader.ReadSingle();
-            this.fieldOfViewDegrees = binaryReader.ReadSingle();
-            this.falloffDistance = binaryReader.ReadSingle();
-            this.cutoffDistance = binaryReader.ReadSingle();
-            this.interpolationFlags = (InterpolationFlags)binaryReader.ReadInt32();
-            this.bloomBounds02 = binaryReader.ReadRange();
-            this.specularLowerBound = binaryReader.ReadColorR8G8B8();
-            this.specularUpperBound = binaryReader.ReadColorR8G8B8();
-            this.diffuseLowerBound = binaryReader.ReadColorR8G8B8();
-            this.diffuseUpperBound = binaryReader.ReadColorR8G8B8();
-            this.brightnessBounds02 = binaryReader.ReadRange();
-            this.gelMap = binaryReader.ReadTagReference();
-            this.specularMask = (SpecularMask)binaryReader.ReadInt16();
-            this.invalidName_1 = binaryReader.ReadBytes(2);
-            this.invalidName_2 = binaryReader.ReadBytes(4);
-            this.falloffFunction = (FalloffFunction)binaryReader.ReadInt16();
-            this.diffuseContrast = (DiffuseContrast)binaryReader.ReadInt16();
-            this.specularContrast = (SpecularContrast)binaryReader.ReadInt16();
-            this.falloffGeometry = (FalloffGeometry)binaryReader.ReadInt16();
-            this.lensFlare = binaryReader.ReadTagReference();
-            this.boundingRadiusWorldUnits = binaryReader.ReadSingle();
-            this.lightVolume = binaryReader.ReadTagReference();
-            this.defaultLightmapSetting = (DefaultLightmapSetting)binaryReader.ReadInt16();
-            this.invalidName_3 = binaryReader.ReadBytes(2);
-            this.lightmapHalfLife = binaryReader.ReadSingle();
-            this.lightmapLightScale = binaryReader.ReadSingle();
-            this.durationSeconds = binaryReader.ReadSingle();
-            this.invalidName_4 = binaryReader.ReadBytes(2);
-            this.falloffFunction0 = (FalloffFunctionTheScaleOfTheLightWillDiminishOverTimeAccordingToThisFunction)binaryReader.ReadInt16();
-            this.illuminationFade = (IlluminationFade)binaryReader.ReadInt16();
-            this.shadowFade = (ShadowFade)binaryReader.ReadInt16();
-            this.specularFade = (SpecularFade)binaryReader.ReadInt16();
-            this.invalidName_5 = binaryReader.ReadBytes(2);
-            this.flags0 = (Flags)binaryReader.ReadInt32();
-            this.brightnessAnimation = ReadLightBrightnessAnimationBlockArray(binaryReader);
-            this.colorAnimation = ReadLightColorAnimationBlockArray(binaryReader);
-            this.gelAnimation = ReadLightGelAnimationBlockArray(binaryReader);
-            this.shader = binaryReader.ReadTagReference();
+            flags = (Flags)binaryReader.ReadInt32();
+            type = (Type)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            sizeModifer = binaryReader.ReadRange();
+            shadowQualityBias = binaryReader.ReadSingle();
+            shadowTapBias = (ShadowTapBiasTheLessTapsYouUseTheFasterTheLightButEdgesCanLookWorse)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            radiusWorldUnits = binaryReader.ReadSingle();
+            specularRadiusWorldUnits = binaryReader.ReadSingle();
+            nearWidthWorldUnits = binaryReader.ReadSingle();
+            heightStretch = binaryReader.ReadSingle();
+            fieldOfViewDegrees = binaryReader.ReadSingle();
+            falloffDistance = binaryReader.ReadSingle();
+            cutoffDistance = binaryReader.ReadSingle();
+            interpolationFlags = (InterpolationFlags)binaryReader.ReadInt32();
+            bloomBounds02 = binaryReader.ReadRange();
+            specularLowerBound = binaryReader.ReadColorR8G8B8();
+            specularUpperBound = binaryReader.ReadColorR8G8B8();
+            diffuseLowerBound = binaryReader.ReadColorR8G8B8();
+            diffuseUpperBound = binaryReader.ReadColorR8G8B8();
+            brightnessBounds02 = binaryReader.ReadRange();
+            gelMap = binaryReader.ReadTagReference();
+            specularMask = (SpecularMask)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            invalidName_2 = binaryReader.ReadBytes(4);
+            falloffFunction = (FalloffFunction)binaryReader.ReadInt16();
+            diffuseContrast = (DiffuseContrast)binaryReader.ReadInt16();
+            specularContrast = (SpecularContrast)binaryReader.ReadInt16();
+            falloffGeometry = (FalloffGeometry)binaryReader.ReadInt16();
+            lensFlare = binaryReader.ReadTagReference();
+            boundingRadiusWorldUnits = binaryReader.ReadSingle();
+            lightVolume = binaryReader.ReadTagReference();
+            defaultLightmapSetting = (DefaultLightmapSetting)binaryReader.ReadInt16();
+            invalidName_3 = binaryReader.ReadBytes(2);
+            lightmapHalfLife = binaryReader.ReadSingle();
+            lightmapLightScale = binaryReader.ReadSingle();
+            durationSeconds = binaryReader.ReadSingle();
+            invalidName_4 = binaryReader.ReadBytes(2);
+            falloffFunction0 = (FalloffFunctionTheScaleOfTheLightWillDiminishOverTimeAccordingToThisFunction)binaryReader.ReadInt16();
+            illuminationFade = (IlluminationFade)binaryReader.ReadInt16();
+            shadowFade = (ShadowFade)binaryReader.ReadInt16();
+            specularFade = (SpecularFade)binaryReader.ReadInt16();
+            invalidName_5 = binaryReader.ReadBytes(2);
+            flags0 = (Flags)binaryReader.ReadInt32();
+            brightnessAnimation = Guerilla.ReadBlockArray<LightBrightnessAnimationBlock>(binaryReader);
+            colorAnimation = Guerilla.ReadBlockArray<LightColorAnimationBlock>(binaryReader);
+            gelAnimation = Guerilla.ReadBlockArray<LightGelAnimationBlock>(binaryReader);
+            shader = binaryReader.ReadTagReference();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(sizeModifer);
+                binaryWriter.Write(shadowQualityBias);
+                binaryWriter.Write((Int16)shadowTapBias);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(radiusWorldUnits);
+                binaryWriter.Write(specularRadiusWorldUnits);
+                binaryWriter.Write(nearWidthWorldUnits);
+                binaryWriter.Write(heightStretch);
+                binaryWriter.Write(fieldOfViewDegrees);
+                binaryWriter.Write(falloffDistance);
+                binaryWriter.Write(cutoffDistance);
+                binaryWriter.Write((Int32)interpolationFlags);
+                binaryWriter.Write(bloomBounds02);
+                binaryWriter.Write(specularLowerBound);
+                binaryWriter.Write(specularUpperBound);
+                binaryWriter.Write(diffuseLowerBound);
+                binaryWriter.Write(diffuseUpperBound);
+                binaryWriter.Write(brightnessBounds02);
+                binaryWriter.Write(gelMap);
+                binaryWriter.Write((Int16)specularMask);
+                binaryWriter.Write(invalidName_1, 0, 2);
+                binaryWriter.Write(invalidName_2, 0, 4);
+                binaryWriter.Write((Int16)falloffFunction);
+                binaryWriter.Write((Int16)diffuseContrast);
+                binaryWriter.Write((Int16)specularContrast);
+                binaryWriter.Write((Int16)falloffGeometry);
+                binaryWriter.Write(lensFlare);
+                binaryWriter.Write(boundingRadiusWorldUnits);
+                binaryWriter.Write(lightVolume);
+                binaryWriter.Write((Int16)defaultLightmapSetting);
+                binaryWriter.Write(invalidName_3, 0, 2);
+                binaryWriter.Write(lightmapHalfLife);
+                binaryWriter.Write(lightmapLightScale);
+                binaryWriter.Write(durationSeconds);
+                binaryWriter.Write(invalidName_4, 0, 2);
+                binaryWriter.Write((Int16)falloffFunction0);
+                binaryWriter.Write((Int16)illuminationFade);
+                binaryWriter.Write((Int16)shadowFade);
+                binaryWriter.Write((Int16)specularFade);
+                binaryWriter.Write(invalidName_5, 0, 2);
+                binaryWriter.Write((Int32)flags0);
+                Guerilla.WriteBlockArray<LightBrightnessAnimationBlock>(binaryWriter, brightnessAnimation, nextAddress);
+                Guerilla.WriteBlockArray<LightColorAnimationBlock>(binaryWriter, colorAnimation, nextAddress);
+                Guerilla.WriteBlockArray<LightGelAnimationBlock>(binaryWriter, gelAnimation, nextAddress);
+                binaryWriter.Write(shader);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
-        }
-        internal  virtual LightBrightnessAnimationBlock[] ReadLightBrightnessAnimationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LightBrightnessAnimationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightBrightnessAnimationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LightBrightnessAnimationBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual LightColorAnimationBlock[] ReadLightColorAnimationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LightColorAnimationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightColorAnimationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LightColorAnimationBlock(binaryReader);
-                }
-            }
-            return array;
-        }
-        internal  virtual LightGelAnimationBlock[] ReadLightGelAnimationBlockArray(BinaryReader binaryReader)
-        {
-            var elementSize = Deserializer.SizeOf(typeof(LightGelAnimationBlock));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new LightGelAnimationBlock[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (int i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = new LightGelAnimationBlock(binaryReader);
-                }
-            }
-            return array;
         }
         [FlagsAttribute]
         internal enum Flags : int
-        
         {
             NoIlluminationDontCastAnyPerPixelDynamicLight = 1,
             NoSpecularDontCastAnySpecularHighlights = 2,
@@ -251,7 +255,6 @@ namespace Moonfish.Guerilla.Tags
             OnlyOnParentBipeds = 4194304,
         };
         internal enum Type : short
-        
         {
             Sphere = 0,
             Orthogonal = 1,
@@ -259,7 +262,6 @@ namespace Moonfish.Guerilla.Tags
             Pyramid = 3,
         };
         internal enum ShadowTapBiasTheLessTapsYouUseTheFasterTheLightButEdgesCanLookWorse : short
-        
         {
             InvalidName3Tap = 0,
             UNUSED = 1,
@@ -267,13 +269,11 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum InterpolationFlags : int
-        
         {
             BlendInHsvBlendsColorsInHsvRatherThanRgbSpace = 1,
             MoreColorsBlendsColorsThroughMoreHuesGoesTheLongWayAroundTheColorWheel = 2,
         };
         internal enum SpecularMask : short
-        
         {
             Default = 0,
             NoneNoMask = 1,
@@ -281,7 +281,6 @@ namespace Moonfish.Guerilla.Tags
             GelColor = 3,
         };
         internal enum FalloffFunction : short
-        
         {
             Default = 0,
             Narrow = 1,
@@ -289,7 +288,6 @@ namespace Moonfish.Guerilla.Tags
             VeryBroad = 3,
         };
         internal enum DiffuseContrast : short
-        
         {
             DefaultLinear = 0,
             High = 1,
@@ -297,7 +295,6 @@ namespace Moonfish.Guerilla.Tags
             VeryLow = 3,
         };
         internal enum SpecularContrast : short
-        
         {
             DefaultOne = 0,
             HighLinear = 1,
@@ -305,21 +302,18 @@ namespace Moonfish.Guerilla.Tags
             VeryLow = 3,
         };
         internal enum FalloffGeometry : short
-        
         {
             Default = 0,
             Directional = 1,
             Spherical = 2,
         };
         internal enum DefaultLightmapSetting : short
-        
         {
             DynamicOnly = 0,
             DynamicWithLightmaps = 1,
             LightmapsOnly = 2,
         };
         internal enum FalloffFunctionTheScaleOfTheLightWillDiminishOverTimeAccordingToThisFunction : short
-        
         {
             Linear = 0,
             Late = 1,
@@ -331,7 +325,6 @@ namespace Moonfish.Guerilla.Tags
             One = 7,
         };
         internal enum IlluminationFade : short
-        
         {
             FadeVeryFar = 0,
             FadeFar = 1,
@@ -340,7 +333,6 @@ namespace Moonfish.Guerilla.Tags
             FadeVeryClose = 4,
         };
         internal enum ShadowFade : short
-        
         {
             FadeVeryFar = 0,
             FadeFar = 1,
@@ -349,7 +341,6 @@ namespace Moonfish.Guerilla.Tags
             FadeVeryClose = 4,
         };
         internal enum SpecularFade : short
-        
         {
             FadeVeryFar = 0,
             FadeFar = 1,
@@ -359,7 +350,6 @@ namespace Moonfish.Guerilla.Tags
         };
         [FlagsAttribute]
         internal enum Flags0 : int
-        
         {
             Synchronized = 1,
         };

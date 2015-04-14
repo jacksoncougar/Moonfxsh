@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 40)]
-    public class VehicleSuspensionBlockBase
+    [LayoutAttribute(Size = 40, Alignment = 4)]
+    public class VehicleSuspensionBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID label;
         internal AnimationIndexStructBlock animation;
@@ -29,30 +30,33 @@ namespace Moonfish.Guerilla.Tags
         internal float destroyedFullCompressionGroundDepth;
         internal  VehicleSuspensionBlockBase(BinaryReader binaryReader)
         {
-            this.label = binaryReader.ReadStringID();
-            this.animation = new AnimationIndexStructBlock(binaryReader);
-            this.markerName = binaryReader.ReadStringID();
-            this.massPointOffset = binaryReader.ReadSingle();
-            this.fullExtensionGroundDepth = binaryReader.ReadSingle();
-            this.fullCompressionGroundDepth = binaryReader.ReadSingle();
-            this.regionName = binaryReader.ReadStringID();
-            this.destroyedMassPointOffset = binaryReader.ReadSingle();
-            this.destroyedFullExtensionGroundDepth = binaryReader.ReadSingle();
-            this.destroyedFullCompressionGroundDepth = binaryReader.ReadSingle();
+            label = binaryReader.ReadStringID();
+            animation = new AnimationIndexStructBlock(binaryReader);
+            markerName = binaryReader.ReadStringID();
+            massPointOffset = binaryReader.ReadSingle();
+            fullExtensionGroundDepth = binaryReader.ReadSingle();
+            fullCompressionGroundDepth = binaryReader.ReadSingle();
+            regionName = binaryReader.ReadStringID();
+            destroyedMassPointOffset = binaryReader.ReadSingle();
+            destroyedFullExtensionGroundDepth = binaryReader.ReadSingle();
+            destroyedFullCompressionGroundDepth = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(label);
+                animation.Write(binaryWriter);
+                binaryWriter.Write(markerName);
+                binaryWriter.Write(massPointOffset);
+                binaryWriter.Write(fullExtensionGroundDepth);
+                binaryWriter.Write(fullCompressionGroundDepth);
+                binaryWriter.Write(regionName);
+                binaryWriter.Write(destroyedMassPointOffset);
+                binaryWriter.Write(destroyedFullExtensionGroundDepth);
+                binaryWriter.Write(destroyedFullCompressionGroundDepth);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

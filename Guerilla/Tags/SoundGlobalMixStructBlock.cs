@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,8 +15,8 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 48)]
-    public class SoundGlobalMixStructBlockBase
+    [LayoutAttribute(Size = 48, Alignment = 4)]
+    public class SoundGlobalMixStructBlockBase  : IGuerilla
     {
         internal float monoUnspatializedGainDB;
         internal float stereoTo3DGainDB;
@@ -31,32 +32,37 @@ namespace Moonfish.Guerilla.Tags
         internal float gameMusicFadeOutTimeSeconds;
         internal  SoundGlobalMixStructBlockBase(BinaryReader binaryReader)
         {
-            this.monoUnspatializedGainDB = binaryReader.ReadSingle();
-            this.stereoTo3DGainDB = binaryReader.ReadSingle();
-            this.rearSurroundToFrontStereoGainDB = binaryReader.ReadSingle();
-            this.frontSpeakerGainDB = binaryReader.ReadSingle();
-            this.centerSpeakerGainDB = binaryReader.ReadSingle();
-            this.frontSpeakerGainDB0 = binaryReader.ReadSingle();
-            this.centerSpeakerGainDB0 = binaryReader.ReadSingle();
-            this.stereoUnspatializedGainDB = binaryReader.ReadSingle();
-            this.soloPlayerFadeOutDelaySeconds = binaryReader.ReadSingle();
-            this.soloPlayerFadeOutTimeSeconds = binaryReader.ReadSingle();
-            this.soloPlayerFadeInTimeSeconds = binaryReader.ReadSingle();
-            this.gameMusicFadeOutTimeSeconds = binaryReader.ReadSingle();
+            monoUnspatializedGainDB = binaryReader.ReadSingle();
+            stereoTo3DGainDB = binaryReader.ReadSingle();
+            rearSurroundToFrontStereoGainDB = binaryReader.ReadSingle();
+            frontSpeakerGainDB = binaryReader.ReadSingle();
+            centerSpeakerGainDB = binaryReader.ReadSingle();
+            frontSpeakerGainDB0 = binaryReader.ReadSingle();
+            centerSpeakerGainDB0 = binaryReader.ReadSingle();
+            stereoUnspatializedGainDB = binaryReader.ReadSingle();
+            soloPlayerFadeOutDelaySeconds = binaryReader.ReadSingle();
+            soloPlayerFadeOutTimeSeconds = binaryReader.ReadSingle();
+            soloPlayerFadeInTimeSeconds = binaryReader.ReadSingle();
+            gameMusicFadeOutTimeSeconds = binaryReader.ReadSingle();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(monoUnspatializedGainDB);
+                binaryWriter.Write(stereoTo3DGainDB);
+                binaryWriter.Write(rearSurroundToFrontStereoGainDB);
+                binaryWriter.Write(frontSpeakerGainDB);
+                binaryWriter.Write(centerSpeakerGainDB);
+                binaryWriter.Write(frontSpeakerGainDB0);
+                binaryWriter.Write(centerSpeakerGainDB0);
+                binaryWriter.Write(stereoUnspatializedGainDB);
+                binaryWriter.Write(soloPlayerFadeOutDelaySeconds);
+                binaryWriter.Write(soloPlayerFadeOutTimeSeconds);
+                binaryWriter.Write(soloPlayerFadeInTimeSeconds);
+                binaryWriter.Write(gameMusicFadeOutTimeSeconds);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
     };
 }

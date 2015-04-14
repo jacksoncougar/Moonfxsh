@@ -1,3 +1,4 @@
+// ReSharper disable All
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -14,35 +15,30 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 4)]
-    public class EnvironmentObjectNodesBase
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class EnvironmentObjectNodesBase  : IGuerilla
     {
         internal short referenceFrameIndex;
         internal byte projectionAxis;
         internal ProjectionSign projectionSign;
         internal  EnvironmentObjectNodesBase(BinaryReader binaryReader)
         {
-            this.referenceFrameIndex = binaryReader.ReadInt16();
-            this.projectionAxis = binaryReader.ReadByte();
-            this.projectionSign = (ProjectionSign)binaryReader.ReadByte();
+            referenceFrameIndex = binaryReader.ReadInt16();
+            projectionAxis = binaryReader.ReadByte();
+            projectionSign = (ProjectionSign)binaryReader.ReadByte();
         }
-        internal  virtual byte[] ReadData(BinaryReader binaryReader)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            var blamPointer = binaryReader.ReadBlamPointer(1);
-            var data = new byte[blamPointer.elementCount];
-            if(blamPointer.elementCount > 0)
+            using(binaryWriter.BaseStream.Pin())
             {
-                using (binaryReader.BaseStream.Pin())
-                {
-                    binaryReader.BaseStream.Position = blamPointer[0];
-                    data = binaryReader.ReadBytes(blamPointer.elementCount);
-                }
+                binaryWriter.Write(referenceFrameIndex);
+                binaryWriter.Write(projectionAxis);
+                binaryWriter.Write((Byte)projectionSign);
+                return nextAddress = (int)binaryWriter.BaseStream.Position;
             }
-            return data;
         }
         [FlagsAttribute]
         internal enum ProjectionSign : byte
-        
         {
             ProjectionSign = 1,
         };

@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass LensClass = (TagClass)"lens";
+        public static readonly TagClass Lens = (TagClass)"lens";
     };
 };
 
@@ -119,7 +119,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<LensFlareScalarAnimationBlock>(binaryWriter, brightness, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<LensFlareColorAnimationBlock>(binaryWriter, color, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<LensFlareScalarAnimationBlock>(binaryWriter, rotation, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum OcclusionOffsetDirection : short

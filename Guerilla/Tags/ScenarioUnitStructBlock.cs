@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 binaryWriter.Write(bodyVitality01);
                 binaryWriter.Write((Int32)flags);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

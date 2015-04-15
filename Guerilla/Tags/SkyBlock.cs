@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass SkyClass = (TagClass)"sky ";
+        public static readonly TagClass Sky = (TagClass)"sky ";
     };
 };
 
@@ -126,7 +126,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<SkyAnimationBlock>(binaryWriter, animations, nextAddress);
                 binaryWriter.Write(invalidName_1, 0, 12);
                 binaryWriter.Write(clearColor);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

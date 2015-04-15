@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(defaultValue);
                 binaryWriter.Write(minimumValue);
                 binaryWriter.Write(maximumValue);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum ValueType : int

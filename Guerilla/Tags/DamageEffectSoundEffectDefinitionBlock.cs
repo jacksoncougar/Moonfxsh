@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(effectName);
                 binaryWriter.Write(durationSeconds);
                 effectScaleFunction.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

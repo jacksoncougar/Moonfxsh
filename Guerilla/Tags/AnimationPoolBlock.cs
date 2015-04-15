@@ -109,7 +109,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<AnimationSoundEventBlock>(binaryWriter, soundEventsABCDCC, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<AnimationEffectEventBlock>(binaryWriter, effectEventsABCDCC, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ObjectSpaceNodeDataBlock>(binaryWriter, objectSpaceParentNodesABCDCC, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Type : byte

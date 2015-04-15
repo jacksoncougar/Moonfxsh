@@ -80,7 +80,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(altTransOut);
                 binaryWriter.Write(altCrossfadeDurationSeconds);
                 binaryWriter.Write(altFadeOutDurationSeconds);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

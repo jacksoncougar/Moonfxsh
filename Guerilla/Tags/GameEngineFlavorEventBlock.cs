@@ -89,7 +89,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_4, 0, 4);
                 binaryWriter.Write(invalidName_5, 0, 16);
                 nextAddress = Guerilla.WriteBlockArray<SoundResponseDefinitionBlock>(binaryWriter, soundPermutations, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

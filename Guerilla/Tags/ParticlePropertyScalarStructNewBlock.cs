@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)outputModifier);
                 binaryWriter.Write((Int16)outputModifierInput);
                 mapping.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum InputVariable : short

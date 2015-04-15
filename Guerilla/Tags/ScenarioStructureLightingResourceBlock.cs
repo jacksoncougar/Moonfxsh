@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass SsltClass = (TagClass)"sslt";
+        public static readonly TagClass Sslt = (TagClass)"sslt";
     };
 };
 
@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryWriter, structureLighting, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

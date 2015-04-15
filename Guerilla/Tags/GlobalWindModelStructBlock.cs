@@ -91,7 +91,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(gravityConstant);
                 nextAddress = Guerilla.WriteBlockArray<GloalWindPrimitivesBlock>(binaryWriter, windPirmitives, nextAddress);
                 binaryWriter.Write(invalidName_8, 0, 4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

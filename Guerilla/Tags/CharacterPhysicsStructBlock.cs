@@ -76,7 +76,7 @@ namespace Moonfish.Guerilla.Tags
                 flyingPhysics.Write(binaryWriter);
                 deadPhysics.Write(binaryWriter);
                 sentinelPhysics.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

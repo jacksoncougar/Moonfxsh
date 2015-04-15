@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(name);
                 nextAddress = Guerilla.WriteBlockArray<CollisionModelBspBlock>(binaryWriter, bsps, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CollisionBspPhysicsBlock>(binaryWriter, bspPhysics, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

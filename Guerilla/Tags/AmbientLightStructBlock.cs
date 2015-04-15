@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(minLightmapSample);
                 binaryWriter.Write(maxLightmapSample);
                 function.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

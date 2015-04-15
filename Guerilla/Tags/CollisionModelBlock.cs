@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass CollClass = (TagClass)"coll";
+        public static readonly TagClass Coll = (TagClass)"coll";
     };
 };
 
@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<CollisionModelRegionBlock>(binaryWriter, regions, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CollisionModelPathfindingSphereBlock>(binaryWriter, pathfindingSpheres, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CollisionModelNodeBlock>(binaryWriter, nodes, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

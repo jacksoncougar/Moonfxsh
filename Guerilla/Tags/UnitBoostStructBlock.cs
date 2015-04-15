@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(boostPeakTime);
                 binaryWriter.Write(boostFallPower);
                 binaryWriter.Write(deadTime);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

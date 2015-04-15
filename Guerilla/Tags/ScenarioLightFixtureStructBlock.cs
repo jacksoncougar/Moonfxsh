@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(intensity);
                 binaryWriter.Write(falloffAngleDegrees);
                 binaryWriter.Write(cutoffAngleDegrees);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

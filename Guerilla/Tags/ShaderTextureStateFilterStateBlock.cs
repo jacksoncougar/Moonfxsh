@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(mipmapBias);
                 binaryWriter.Write(maxMipmapIndex);
                 binaryWriter.Write((Int16)anisotropy);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum MagFilter : short

@@ -60,7 +60,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_0, 0, 4);
                 binaryWriter.Write(killTriggerVolume);
                 binaryWriter.Write(invalidName_1, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         public class EMPTYSTRING  : IGuerilla
@@ -75,7 +75,7 @@ namespace Moonfish.Guerilla.Tags
                 using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(eMPTYSTRING);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    return nextAddress;
                 }
             }
         };

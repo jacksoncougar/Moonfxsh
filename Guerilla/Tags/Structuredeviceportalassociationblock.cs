@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 deviceId.Write(binaryWriter);
                 binaryWriter.Write(firstGamePortalIndex);
                 binaryWriter.Write(gamePortalCount);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

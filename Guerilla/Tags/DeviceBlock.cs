@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass DeviClass = (TagClass)"devi";
+        public static readonly TagClass Devi = (TagClass)"devi";
     };
 };
 
@@ -95,7 +95,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(delayTimeSeconds);
                 binaryWriter.Write(delayEffect);
                 binaryWriter.Write(automaticActivationRadiusWorldUnits);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

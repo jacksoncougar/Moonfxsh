@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)group);
                 binaryWriter.Write(invalidName_, 0, 2);
                 nextAddress = Guerilla.WriteBlockArray<AiSceneRoleVariantsBlock>(binaryWriter, roleVariants, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Group : short

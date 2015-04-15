@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
             using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)specialMovement1);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

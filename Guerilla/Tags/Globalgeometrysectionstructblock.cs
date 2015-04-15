@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryWriter, moppReorderTable, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GlobalGeometrySectionVertexBufferBlock>(binaryWriter, vertexBuffers, nextAddress);
                 binaryWriter.Write(invalidName_, 0, 4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

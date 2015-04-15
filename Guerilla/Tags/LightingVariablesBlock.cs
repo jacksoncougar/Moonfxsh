@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
                 secondaryLight.Write(binaryWriter);
                 ambientLight.Write(binaryWriter);
                 lightmapShadows.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

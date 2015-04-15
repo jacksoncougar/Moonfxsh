@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteData(binaryWriter, runtimePointData, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GlobalGeometryRigidPointGroupBlock>(binaryWriter, rigidPointGroups, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GlobalGeometryPointDataIndexBlock>(binaryWriter, vertexPointIndices, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

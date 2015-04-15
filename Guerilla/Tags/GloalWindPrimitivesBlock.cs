@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(strength);
                 binaryWriter.Write((Int16)windPrimitiveType);
                 binaryWriter.Write(invalidName_, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum WindPrimitiveType : short

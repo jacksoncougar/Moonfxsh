@@ -173,7 +173,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(randomOffsetScale01);
                 binaryWriter.Write(randomOffsetPeriodSeconds);
                 binaryWriter.Write(flockName);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

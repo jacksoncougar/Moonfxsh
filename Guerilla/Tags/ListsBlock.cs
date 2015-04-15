@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
                 childShapesStorage[1].Write(binaryWriter);
                 childShapesStorage[2].Write(binaryWriter);
                 childShapesStorage[3].Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         public class ChildShapesStorage  : IGuerilla
@@ -73,7 +73,7 @@ namespace Moonfish.Guerilla.Tags
                     binaryWriter.Write((Int16)shapeType);
                     binaryWriter.Write(shape);
                     binaryWriter.Write(collisionFilter);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    return nextAddress;
                 }
             }
             internal enum ShapeType : short

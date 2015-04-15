@@ -88,7 +88,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(noncombatIdleAimingSeconds);
                 binaryWriter.Write(combatIdleLookingSeconds);
                 binaryWriter.Write(combatIdleAimingSeconds);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

@@ -9,21 +9,24 @@ namespace Moonfish.Guerilla
 {
     public class Validator
     {
-        public string Validate( GuerillaTagGroup validateTag, IEnumerable<GuerillaTagGroup> tagPool )
+        public string Validate( GuerillaTagGroup validateTag, IEnumerable<GuerillaTagGroup> tagPool, string[] filenames )
         {
-            PointersList = new List<Tuple<BlamPointer, ElementArray>>();
-            StreamWriter stringWriter = File.CreateText( string.Format( @"C:\Users\stem\Documents\Plugins\analysis\{0}.txt", validateTag.Class.ToTokenString() ) );
-            WriteMessage = new Log( stringWriter.WriteLine );
+            PointersList = new List<Tuple<BlamPointer, ElementArray>>( );
+            StreamWriter stringWriter =
+                File.CreateText( string.Format( @"{1}\analysis\{0}.txt",
+                    validateTag.Class.ToTokenString( ), Local.MapsDirectory ) );
+
+            WriteMessage = ( stringWriter.WriteLine );
 
             int offset = 0;
-            ElementArray elementArray = null;
+            ElementArray elementArray;
             if ( validateTag.ParentClass != TagClass.Null )
             {
-                var guerillaTagGroups = tagPool as IList<GuerillaTagGroup> ?? tagPool.ToList();
-                var parentClass = guerillaTagGroups.Single(x => x.Class == validateTag.ParentClass);
+                var guerillaTagGroups = tagPool as IList<GuerillaTagGroup> ?? tagPool.ToList( );
+                var parentClass = guerillaTagGroups.Single( x => x.Class == validateTag.ParentClass );
                 if ( parentClass.ParentClass != TagClass.Null )
                 {
-                    var baseClass = guerillaTagGroups.Single(x => x.Class == parentClass.ParentClass);
+                    var baseClass = guerillaTagGroups.Single( x => x.Class == parentClass.ParentClass );
                     elementArray = ProcessTagBlockDefinition( baseClass.Definition, ref offset, true );
                     elementArray.Append( ProcessTagBlockDefinition( parentClass.Definition, ref offset, true ) );
                     elementArray.Append( ProcessTagBlockDefinition( validateTag.Definition, ref offset, true ) );
@@ -41,10 +44,7 @@ namespace Moonfish.Guerilla
 
             elementArray.Count = 1;
 
-            var mapFiles = Directory.GetFiles( @"C:\Users\stem\Documents\modding\singleplayer", "*.map", SearchOption.TopDirectoryOnly )
-                .Concat( Directory.GetFiles( @"C:\Users\stem\Documents\modding\multiplayer", "*.map", SearchOption.TopDirectoryOnly ) )
-                .Concat( Directory.GetFiles( @"C:\Users\stem\Documents\modding\resource", "*.map", SearchOption.TopDirectoryOnly ) );
-            foreach ( var file in mapFiles )
+            foreach ( var file in filenames )
             {
                 using ( var map = new MapStream( file ) )
                 {
@@ -54,47 +54,52 @@ namespace Moonfish.Guerilla
 
                     foreach ( var tag in map.Tags )
                     {
-                        if ( !( tag.Type == validateTag.Class ) ) continue;
-                        else
+                        if ( !( tag.Class == validateTag.Class ) ) continue;
+
+                        var metaTableMemory = new VirtualMappedAddress
                         {
-                            VirtualMappedAddress metaTableMemory = new VirtualMappedAddress() { Address = map.Tags[ 0 ].VirtualAddress, Length = map.TagCacheLength };
-                            isValidDelegate = metaTableMemory.Contains;
-                            VirtualMappedAddress virtualTagMemory = new VirtualMappedAddress() { Address = tag.VirtualAddress, Length = tag.Length };
-                            IsPointerOwnedByTagDelegate = virtualTagMemory.Contains;
-                            OnWriteMessage( string.Format( "Tag ({0})", tag.Path ) );
-                            map[ tag.Identifier ].Seek();
-                            offset = ( int )map.Position;
-                            elementArray.VirtualAddress = map[ tag.Identifier ].Meta.VirtualAddress;
-                            PointersList = new List<Tuple<BlamPointer, ElementArray>>();
-                            ValidateTagBlock( elementArray, elementArray.ToFixedArrayPointer(), binaryReader, ref offset );
-                            AnalyzePointers( PointersList );
-                            stringWriter.Flush();
-                        }
+                            Address = map.Tags[ 0 ].VirtualAddress,
+                            Length = map.TagCacheLength
+                        };
+                        isValidDelegate = metaTableMemory.Contains;
+                        var virtualTagMemory = new VirtualMappedAddress
+                        {
+                            Address = tag.VirtualAddress,
+                            Length = tag.Length
+                        };
+                        IsPointerOwnedByTagDelegate = virtualTagMemory.Contains;
+                        OnWriteMessage( string.Format( "Tag ({0})", tag.Path ) );
+
+                        offset = ( int ) map.Seek( tag );
+                        elementArray.VirtualAddress = map.GetTag( tag.Identifier ).VirtualAddress;
+                        PointersList = new List<Tuple<BlamPointer, ElementArray>>( );
+                        ValidateTagBlock( elementArray, elementArray.ToFixedArrayPointer( ), binaryReader, ref offset );
+                        AnalyzePointers( PointersList );
+                        stringWriter.Flush( );
                     }
-                    Console.WriteLine(@"Parsed ({0})", map.MapName);
-                    //OnWriteMessage(string.Format("End ({0})", map.MapName));
+                    Console.WriteLine( @"Parsed ({0})", map.MapName );
                 }
             }
-            stringWriter.Close();
+            stringWriter.Close( );
             return "";
         }
 
-        private void AnalyzePointers( List<Tuple<BlamPointer, ElementArray>> arrayPointerList )
+        private void AnalyzePointers(List<Tuple<BlamPointer, ElementArray>> arrayPointerList)
         {
             var size = arrayPointerList.First().Item1.PointedSize;
             int nextAddress = arrayPointerList.First().Item1.startAddress;
 
-            var arraySize = default( int );
-            var arrayStartAddress = default( int );
+            var arraySize = default(int);
+            var arrayStartAddress = default(int);
             var arrayEndAddress = nextAddress;
 
-            foreach ( var arrayPointer in arrayPointerList )
+            foreach (var arrayPointer in arrayPointerList)
             {
                 //if (arrayPointer.Item1.Address != arrayEndAddress)
                 //OnWriteMessage(string.Format("{1} Hole {0}", arrayPointer.Item1.Address - arrayEndAddress, arrayPointer.Item2.ToHierarchyString()));
                 arraySize = 0;
                 arrayStartAddress = arrayPointer.Item1.startAddress;
-                foreach ( var pointer in arrayPointer.Item1 )
+                foreach (var pointer in arrayPointer.Item1)
                 {
                     arraySize += arrayPointer.Item1.elementSize;
                 }
@@ -102,148 +107,152 @@ namespace Moonfish.Guerilla
             }
         }
 
-        public delegate void Log( string message );
+        public delegate void Log(string message);
         public Log WriteMessage;
 
-        public void OnWriteMessage( string message )
+        public void OnWriteMessage(string message)
         {
-            if ( WriteMessage != null ) WriteMessage( message );
+            if (WriteMessage != null) WriteMessage(message);
         }
 
         public Func<BlamPointer, bool> IsPointerOwnedByTagDelegate;
 
-        public bool OwnedByTag( BlamPointer pointer )
+        public bool OwnedByTag(BlamPointer pointer)
         {
-            if ( IsPointerOwnedByTagDelegate != null ) return IsPointerOwnedByTagDelegate( pointer );
-            else return false;
+            return IsPointerOwnedByTagDelegate != null && IsPointerOwnedByTagDelegate(pointer);
         }
 
         List<Tuple<BlamPointer, ElementArray>> PointersList;
         static int startOffset;
 
-        private void ValidateTagBlock( ElementArray info, BlamPointer pointer, BinaryReader reader, ref int address )
+        private void ValidateTagBlock(ElementArray info, BlamPointer pointer, BinaryReader reader, ref int address)
         {
 
-            using ( reader.BaseStream.Pin() )
+            using (reader.BaseStream.Pin())
             {
                 // If owned by tag and memory has not been allocated yet*
                 var allocated = from item in PointersList
-                                where item.Item1.Equals( pointer )
+                                where item.Item1.Equals(pointer)
                                 select item;
                 var partiallyAllocated = from item in PointersList
-                                         where item.Item1.Intersects( pointer )
+                                         where item.Item1.Intersects(pointer)
                                          select item;
-                if ( OwnedByTag( pointer ) )
+                if (OwnedByTag(pointer))
                 {
-                    if ( !allocated.Any() )
+                    var enumerable = allocated as IList<Tuple<BlamPointer, ElementArray>> ?? allocated.ToList( );
+                    if (!enumerable.Any())
                     {
-                        var alignedAddress = ( address - startOffset ) + Padding.GetCount( address - startOffset, info.Alignment );
-                        if ( pointer.startAddress - startOffset != alignedAddress )
+                        var alignedAddress = (address - startOffset) + Padding.GetCount(address - startOffset, info.Alignment);
+                        if (pointer.startAddress - startOffset != alignedAddress)
                         {
                             MapStream mapStream = reader.BaseStream as MapStream;
-                            if ( mapStream != null )
+                            if (mapStream != null)
                             {
-                                OnWriteMessage( string.Format( "{2}: Expected address \"{0}\"  - actually was \"{1}\"", address - startOffset, pointer.startAddress - startOffset, info.Name ) );
+                                OnWriteMessage(string.Format("{2}: Expected address \"{0}\"  - actually was \"{1}\"", address - startOffset, pointer.startAddress - startOffset, info.Name));
                             }
                         }
                         address = pointer.startAddress + pointer.PointedSize;
                     }
-                    if ( allocated.Any() ) { }
-                    else if ( partiallyAllocated.Any() )
+                    if (enumerable.Any()) { }
+                    else
                     {
-                        foreach ( var overlappingItem in partiallyAllocated )
+                        var overlappingItems = partiallyAllocated as IList<Tuple<BlamPointer, ElementArray>> ?? partiallyAllocated.ToList( );
+                        if (overlappingItems.Any())
                         {
-                            var overlap = pointer.startAddress - overlappingItem.Item1.startAddress - overlappingItem.Item1.PointedSize;
-                            OnWriteMessage( string.Format( "Overlap of ({0})[{3}] with ({1}) by ({2}) bytes", overlappingItem.Item2.ToHierarchyString(), info.ToHierarchyString(), overlap, overlappingItem.Item1.elementCount ) );
+                            foreach (var overlappingItem in overlappingItems)
+                            {
+                                var overlap = pointer.startAddress - overlappingItem.Item1.startAddress - overlappingItem.Item1.PointedSize;
+                                OnWriteMessage(string.Format("Overlap of ({0})[{3}] with ({1}) by ({2}) bytes", overlappingItem.Item2.ToHierarchyString(), info.ToHierarchyString(), overlap, overlappingItem.Item1.elementCount));
+                            }
                         }
                     }
                 }
-                else if ( !IsValid( pointer ) )
+                else if (!IsValid(pointer))
                 {
-                    OnWriteMessage( string.Format( "INVALID POINTER" ) );
+                    OnWriteMessage(string.Format("INVALID POINTER"));
                     return;
                 }
                 else
-                    OnWriteMessage( string.Format( "WILLLLLSOOON SHARE" ) );
+                    OnWriteMessage(string.Format("WILLLLLSOOON SHARE"));
 
-                PointersList.Add( new Tuple<BlamPointer, ElementArray>( pointer, info ) );
+                PointersList.Add(new Tuple<BlamPointer, ElementArray>(pointer, info));
 
-                foreach ( var elementAddress in pointer )
+                foreach (var elementAddress in pointer)
                 {
                     reader.BaseStream.Position = elementAddress;
-                    ValidateChildren( info, reader, ref address );
+                    ValidateChildren(info, reader, ref address);
                 }
             }
         }
 
         Func<BlamPointer, bool> isValidDelegate;
 
-        private bool IsValid( BlamPointer pointer )
+        private bool IsValid(BlamPointer pointer)
         {
-            if ( isValidDelegate != null ) return isValidDelegate( pointer );
+            if (isValidDelegate != null) return isValidDelegate(pointer);
             else return false;
         }
 
-        private void ValidateChildren( ElementArray elementArray, BinaryReader binaryReader, ref int nextAddress )
+        private void ValidateChildren(ElementArray elementArray, BinaryReader binaryReader, ref int nextAddress)
         {
-            var childrenArrayPointers = ( from child in elementArray.Children
-                                          select new
-                                          {
-                                              ElementArray = child,
-                                              ArrayPointer = new Func<BlamPointer>( ( ) =>
-                                              {
-                                                  using ( binaryReader.BaseStream.Pin() )
-                                                  {
-                                                      binaryReader.BaseStream.Seek( child.Address, SeekOrigin.Current );
-                                                      var arrayPointer = binaryReader.ReadBlamPointer( child.ElementSize );
-                                                      child.VirtualAddress = arrayPointer.startAddress;
-                                                      child.Count = arrayPointer.elementCount;
-                                                      return arrayPointer;
-                                                  }
-                                              } )()
-                                          } ).ToList();
-            foreach ( var child in childrenArrayPointers )
+            var childrenArrayPointers = (from child in elementArray.Children
+                                         select new
+                                         {
+                                             ElementArray = child,
+                                             ArrayPointer = new Func<BlamPointer>(() =>
+                                             {
+                                                 using (binaryReader.BaseStream.Pin())
+                                                 {
+                                                     binaryReader.BaseStream.Seek(child.Address, SeekOrigin.Current);
+                                                     var arrayPointer = binaryReader.ReadBlamPointer(child.ElementSize);
+                                                     child.VirtualAddress = arrayPointer.startAddress;
+                                                     child.Count = arrayPointer.elementCount;
+                                                     return arrayPointer;
+                                                 }
+                                             })()
+                                         }).ToList();
+            foreach (var child in childrenArrayPointers)
             {
-                if ( !ValidateBlamPointer( child.ArrayPointer, child.ElementArray, binaryReader.BaseStream as MapStream ) )
+                if (!ValidateBlamPointer(child.ArrayPointer, child.ElementArray, binaryReader.BaseStream as MapStream))
                     continue;
-                if ( !( child.ArrayPointer.elementCount == 0 && child.ArrayPointer.startAddress == 0 ) )
+                if (!(child.ArrayPointer.elementCount == 0 && child.ArrayPointer.startAddress == 0))
                 {
-                    ValidateTagBlock( child.ElementArray, child.ArrayPointer, binaryReader, ref nextAddress );
+                    ValidateTagBlock(child.ElementArray, child.ArrayPointer, binaryReader, ref nextAddress);
                 }
             }
         }
 
-        private bool ValidateBlamPointer( BlamPointer blamPointer, ElementArray info, MapStream stream )
+        private bool ValidateBlamPointer(BlamPointer blamPointer, ElementArray info, MapStream stream)
         {
             var stringWriter = new StringWriter();
-            if ( blamPointer.elementCount == 0 && blamPointer.startAddress == 0 ) return true;
-            if ( blamPointer.elementCount == 0 ^ blamPointer.startAddress == 0 )
-                stringWriter.WriteLine( string.Format( "-> null-value count({0}) address({1}) is invalid", blamPointer.elementCount, blamPointer.startAddress ) );
-            if ( blamPointer.elementCount < 0 )
-                stringWriter.WriteLine( string.Format( "-> count({0}) is invalid", blamPointer.elementCount ) );
-            if ( blamPointer.elementCount > info.MaxElementCount && info.MaxElementCount > 0 )
-                stringWriter.WriteLine( string.Format( "-> count({0}) > max-count({1})", blamPointer.elementCount, info.MaxElementCount ) );
-            if ( !stream.ContainsPointer( blamPointer ) )
-                stringWriter.WriteLine( string.Format( "-> address({0}) not contained in stream({1})", blamPointer.startAddress, stream.Name ) );
+            if (blamPointer.elementCount == 0 && blamPointer.startAddress == 0) return true;
+            if (blamPointer.elementCount == 0 ^ blamPointer.startAddress == 0)
+                stringWriter.WriteLine(string.Format("-> null-value count({0}) address({1}) is invalid", blamPointer.elementCount, blamPointer.startAddress));
+            if (blamPointer.elementCount < 0)
+                stringWriter.WriteLine(string.Format("-> count({0}) is invalid", blamPointer.elementCount));
+            if (blamPointer.elementCount > info.MaxElementCount && info.MaxElementCount > 0)
+                stringWriter.WriteLine(string.Format("-> count({0}) > max-count({1})", blamPointer.elementCount, info.MaxElementCount));
+            if (!stream.ContainsPointer(blamPointer))
+                stringWriter.WriteLine(string.Format("-> address({0}) not contained in stream({1})", blamPointer.startAddress, stream.Name));
 
             var errors = stringWriter.ToString();
-            if ( !string.IsNullOrWhiteSpace( errors ) )
+            if (!string.IsNullOrWhiteSpace(errors))
             {
-                OnWriteMessage( string.Format( "Pointer ({0})\n{1}", info.Name, errors ) );
+                OnWriteMessage(string.Format("Pointer ({0})\n{1}", info.Name, errors));
                 return false;
             }
             return true;
         }
 
-        private ElementArray ProcessTagBlockDefinition( TagBlockDefinition tagBlock, ref int offset, bool inline = false )
+        private ElementArray ProcessTagBlockDefinition(TagBlockDefinition tagBlock, ref int offset, bool inline = false)
         {
-            return ProcessTagBlockDefinition( null, tagBlock, ref offset, inline );
+            return ProcessTagBlockDefinition(null, tagBlock, ref offset, inline);
         }
 
-        private ElementArray ProcessTagBlockDefinition( ElementArray parent, TagBlockDefinition tagBlock, ref int offset, bool inline = false )
+        private ElementArray ProcessTagBlockDefinition(ElementArray parent, TagBlockDefinition tagBlock, ref int offset, bool inline = false)
         {
 
-            var size = Guerilla.CalculateSizeOfFieldSet( tagBlock.LatestFieldSet.Fields );
+            var size = Guerilla.CalculateSizeOfFieldSet(tagBlock.LatestFieldSet.Fields);
 
             var blockElementArray = new ElementArray()
             {
@@ -257,14 +266,14 @@ namespace Moonfish.Guerilla
 
             var i = 0;
             int blockOffset = inline ? offset : 0;
-            ProcessFields( tagBlock.LatestFieldSet.Fields, blockElementArray, ref i, ref blockOffset );
-            if ( inline ) offset = blockOffset;
+            ProcessFields(tagBlock.LatestFieldSet.Fields, blockElementArray, ref i, ref blockOffset);
+            if (inline) offset = blockOffset;
             return blockElementArray;
         }
 
-        private IEnumerable<ElementArray> ProcessTagStructDefinition( ElementArray parent, TagBlockDefinition definition, ref int offset )
+        private IEnumerable<ElementArray> ProcessTagStructDefinition(ElementArray parent, TagBlockDefinition definition, ref int offset)
         {
-            var size = Guerilla.CalculateSizeOfFieldSet( definition.LatestFieldSet.Fields );
+            var size = Guerilla.CalculateSizeOfFieldSet(definition.LatestFieldSet.Fields);
 
             var blockElementArray = new ElementArray()
             {
@@ -277,43 +286,43 @@ namespace Moonfish.Guerilla
             };
 
             var i = 0;
-            ProcessFields( definition.LatestFieldSet.Fields, blockElementArray, ref i, ref offset );
+            ProcessFields(definition.LatestFieldSet.Fields, blockElementArray, ref i, ref offset);
             return blockElementArray.Children;
         }
 
-        private void ProcessFields( IList<tag_field> fields, ElementArray elementArray, ref int i, ref int offset )
+        private void ProcessFields(IList<tag_field> fields, ElementArray elementArray, ref int i, ref int offset)
         {
-            for ( ; i < fields.Count; ++i )
+            for (; i < fields.Count; ++i)
             {
-                var field = fields[ i ];
+                var field = fields[i];
                 // Check the field type.
-                switch ( field.type )
+                switch (field.type)
                 {
                     case field_type._field_block:
                         {
-                            var childElementArray = ProcessTagBlockDefinition( elementArray, field.Definition, ref offset );
-                            elementArray.Children.Add( childElementArray );
+                            var childElementArray = ProcessTagBlockDefinition(elementArray, field.Definition, ref offset);
+                            elementArray.Children.Add(childElementArray);
                             break;
                         }
                     case field_type._field_struct:
                         {
-                            var struct_definition = ( tag_struct_definition )field.Definition;
+                            var struct_definition = (tag_struct_definition)field.Definition;
                             var structOffset = offset;
-                            var childElementArray = ProcessTagStructDefinition( elementArray, struct_definition.Definition, ref structOffset );
-                            elementArray.Children.AddRange( childElementArray );
+                            var childElementArray = ProcessTagStructDefinition(elementArray, struct_definition.Definition, ref structOffset);
+                            elementArray.Children.AddRange(childElementArray);
 
                             break;
                         }
                     case field_type._field_data:
                         {
-                            var data_definition = ( tag_data_definition )field.Definition;
+                            var data_definition = (tag_data_definition)field.Definition;
                             var childElementArray = new ElementArray() { ElementSize = 1, Name = data_definition.Name, Address = offset, Parent = elementArray, Alignment = data_definition.Alignment };
-                            elementArray.Children.Add( childElementArray );
+                            elementArray.Children.Add(childElementArray);
                             break;
                         }
                     case field_type._field_array_start:
                         {
-                            ProcessArrayFields( fields, elementArray, ref field, ref i, ref offset );
+                            ProcessArrayFields(fields, elementArray, ref field, ref i, ref offset);
                             break;
                         }
                     case field_type._field_array_end:
@@ -321,18 +330,18 @@ namespace Moonfish.Guerilla
                             return;
                         }
                 }
-                offset += Guerilla.CalculateSizeOfField( field );
+                offset += Guerilla.CalculateSizeOfField(field);
             }
         }
 
-        private void ProcessArrayFields( IList<tag_field> fields, ElementArray elementArray, ref tag_field field, ref int i, ref int offset )
+        private void ProcessArrayFields(IList<tag_field> fields, ElementArray elementArray, ref tag_field field, ref int i, ref int offset)
         {
             var name = field.Name;
             ++i;    //move past field_type._field_array_start
-            for ( int index = 0; index < field.definition; ++index )
+            for (int index = 0; index < field.definition; ++index)
             {
                 int startindex = i;
-                ProcessFields( fields, elementArray, ref startindex, ref offset );
+                ProcessFields(fields, elementArray, ref startindex, ref offset);
             }
             ++i;    // move past field_type._field_array_end
         }
@@ -349,41 +358,41 @@ namespace Moonfish.Guerilla
         public ElementArray Parent;
         public List<ElementArray> Children;
 
-        public void Append( ElementArray array )
+        public void Append(ElementArray array)
         {
-            Name = string.Format( "{0}:{1}", this.Name, array.Name );
+            Name = string.Format("{0}:{1}", this.Name, array.Name);
             ElementSize = ElementSize + array.ElementSize;
             Alignment = array.Alignment > this.Alignment ? array.Alignment : this.Alignment;
-            Children.AddRange( array.Children );
+            Children.AddRange(array.Children);
         }
 
-        public ElementArray( )
+        public ElementArray()
         {
-            Name = default( string );
-            ElementSize = default( int );
-            MaxElementCount = default( int );
-            Count = default( int );
+            Name = default(string);
+            ElementSize = default(int);
+            MaxElementCount = default(int);
+            Count = default(int);
             Address = -1;
             Alignment = 4;
             Children = new List<ElementArray>();
             Parent = null;
         }
 
-        public override string ToString( )
+        public override string ToString()
         {
             return Name;
         }
 
         public bool HasChildren { get { return Children.Count > 0 ? true : false; } }
 
-        public BlamPointer ToFixedArrayPointer( )
+        public BlamPointer ToFixedArrayPointer()
         {
-            return new BlamPointer( this.Count, this.VirtualAddress, this.ElementSize );
+            return new BlamPointer(this.Count, this.VirtualAddress, this.ElementSize);
         }
 
-        public string ToHierarchyString( )
+        public string ToHierarchyString()
         {
-            if ( Parent == null )
+            if (Parent == null)
                 return Name;
             else return Parent.ToHierarchyString() + " -> " + Name;
         }

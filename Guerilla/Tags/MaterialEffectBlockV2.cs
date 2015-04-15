@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<OldMaterialEffectMaterialBlock>(binaryWriter, oldMaterialsDONOTUSE, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<MaterialEffectMaterialBlock>(binaryWriter, sounds, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<MaterialEffectMaterialBlock>(binaryWriter, effects, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

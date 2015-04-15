@@ -73,7 +73,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<ShaderPostprocessColorPropertyBlock>(binaryWriter, colorProperties, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ShaderPostprocessValuePropertyBlock>(binaryWriter, valueProperties, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ShaderPostprocessLevelOfDetailBlock>(binaryWriter, oldLevelsOfDetail, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

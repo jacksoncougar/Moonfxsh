@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(atmosphericFogInfluence01);
                 binaryWriter.Write(secondaryFogInfluence01);
                 binaryWriter.Write(skyFogInfluence01);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
                 valueOverlays.Write(binaryWriter);
                 colorOverlays.Write(binaryWriter);
                 vertexShaderConstants.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

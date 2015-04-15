@@ -64,7 +64,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(brightness01);
                 binaryWriter.Write(modulationFactor01);
                 binaryWriter.Write(color);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

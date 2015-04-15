@@ -170,7 +170,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<DamageConstraintInfoBlock>(binaryWriter, damageConstraints, nextAddress);
                 binaryWriter.Write(overshieldFirstPersonShader);
                 binaryWriter.Write(overshieldShader);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

@@ -79,7 +79,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(firingDamage);
                 binaryWriter.Write(misfireDamage);
                 binaryWriter.Write(emptyDamage);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

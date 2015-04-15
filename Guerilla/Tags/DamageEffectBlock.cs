@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass JptClass = (TagClass)"jpt!";
+        public static readonly TagClass Jpt = (TagClass)"jpt!";
     };
 };
 
@@ -212,7 +212,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(outwardVelocityWorldUnitsPerSecond);
                 binaryWriter.Write(outwardRadiusWorldUnits);
                 binaryWriter.Write(outwardExponent);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

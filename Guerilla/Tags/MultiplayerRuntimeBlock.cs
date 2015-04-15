@@ -340,7 +340,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(scoreboardEmblemBitmap);
                 binaryWriter.Write(scoreboardDeadEmblemShader);
                 binaryWriter.Write(scoreboardDeadEmblemBitmap);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

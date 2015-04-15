@@ -71,7 +71,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<LightmapInstanceBucketReferenceBlock>(binaryWriter, instanceBucketRefs, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<LightmapSceneryObjectInfoBlock>(binaryWriter, sceneryObjectInfo, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<LightmapInstanceBucketReferenceBlock>(binaryWriter, sceneryObjectBucketRefs, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Type : short

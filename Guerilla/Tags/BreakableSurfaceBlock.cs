@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass BsdtClass = (TagClass)"bsdt";
+        public static readonly TagClass Bsdt = (TagClass)"bsdt";
     };
 };
 
@@ -51,7 +51,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(sound);
                 nextAddress = Guerilla.WriteBlockArray<ParticleSystemDefinitionBlockNew>(binaryWriter, particleEffects, nextAddress);
                 binaryWriter.Write(particleDensity);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

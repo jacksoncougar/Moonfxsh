@@ -32,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 binaryWriter.Write(weapon);
                 nextAddress = Guerilla.WriteBlockArray<CharacterFiringPatternBlock>(binaryWriter, firingPatterns, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

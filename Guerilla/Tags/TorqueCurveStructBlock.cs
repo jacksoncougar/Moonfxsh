@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(pastPeakTorqueExponent);
                 binaryWriter.Write(torqueAtMaxAngularVelocity);
                 binaryWriter.Write(torqueAt2XMaxAngularVelocity);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

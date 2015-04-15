@@ -69,7 +69,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_3RdHitMeleeResponse);
                 binaryWriter.Write(lungeMeleeDamage);
                 binaryWriter.Write(lungeMeleeResponse);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)functionControls);
                 binaryWriter.Write(function);
                 binaryWriter.Write(invalidName_0, 0, 4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum FunctionControls : short

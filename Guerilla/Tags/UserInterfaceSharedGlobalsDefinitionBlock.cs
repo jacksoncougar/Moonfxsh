@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass WiglClass = (TagClass)"wigl";
+        public static readonly TagClass Wigl = (TagClass)"wigl";
     };
 };
 
@@ -236,7 +236,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(qtrDialogButtonKeyTextBounds);
                 binaryWriter.Write(mainMenuMusic);
                 binaryWriter.Write(musicFadeTimeMilliseconds);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum FullScreenHeaderTextFont : short

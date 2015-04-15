@@ -86,7 +86,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(chamberingEffect);
                 binaryWriter.Write(chamberingDamageEffect);
                 nextAddress = Guerilla.WriteBlockArray<MagazineObjects>(binaryWriter, magazines, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

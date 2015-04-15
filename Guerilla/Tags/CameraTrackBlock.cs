@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass TrakClass = (TagClass)"trak";
+        public static readonly TagClass Trak = (TagClass)"trak";
     };
 };
 
@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 binaryWriter.Write((Int32)flags);
                 nextAddress = Guerilla.WriteBlockArray<CameraTrackControlPointBlock>(binaryWriter, controlPoints, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

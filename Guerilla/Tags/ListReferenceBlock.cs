@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)animationIndex);
                 binaryWriter.Write(introAnimationDelayMilliseconds);
                 nextAddress = Guerilla.WriteBlockArray<STextValuePairReferenceBlockUNUSED>(binaryWriter, uNUSED, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

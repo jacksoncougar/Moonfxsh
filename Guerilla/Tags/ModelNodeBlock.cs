@@ -61,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(defaultInverseLeft);
                 binaryWriter.Write(defaultInverseUp);
                 binaryWriter.Write(defaultInversePosition);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

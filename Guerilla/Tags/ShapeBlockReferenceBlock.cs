@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<PointBlockReferenceBlock>(binaryWriter, points, nextAddress);
                 binaryWriter.Write(renderDepthBias);
                 binaryWriter.Write(invalidName_, 0, 14);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

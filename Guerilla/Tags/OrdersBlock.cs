@@ -70,7 +70,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<SecondarySetTriggerBlock>(binaryWriter, secondarySetTrigger, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SpecialMovementBlock>(binaryWriter, specialMovement, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<OrderEndingBlock>(binaryWriter, orderEndings, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass StylClass = (TagClass)"styl";
+        public static readonly TagClass Styl = (TagClass)"styl";
     };
 };
 
@@ -109,7 +109,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int32)behaviors5);
                 nextAddress = Guerilla.WriteBlockArray<SpecialMovementBlock>(binaryWriter, specialMovement, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<BehaviorNamesBlock>(binaryWriter, behaviorList, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum CombatStatusDecayOptions : short

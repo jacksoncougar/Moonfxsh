@@ -50,7 +50,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(loopingEffect);
                 binaryWriter.Write(loopingEffectMarkerName);
                 binaryWriter.Write(initialProbability);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

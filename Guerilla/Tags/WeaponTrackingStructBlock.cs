@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 binaryWriter.Write((Int16)trackingType);
                 binaryWriter.Write(invalidName_, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum TrackingType : short

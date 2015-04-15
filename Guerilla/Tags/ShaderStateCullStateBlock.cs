@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 binaryWriter.Write((Int16)mode);
                 binaryWriter.Write((Int16)frontFace);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Mode : short

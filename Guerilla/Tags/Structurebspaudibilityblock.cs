@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<AiDeafeningEncodedPasBlock>(binaryWriter, aiDeafeningPas, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<EncodedClusterDistancesBlock>(binaryWriter, clusterDistances, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<OccluderToMachineDoorMapping>(binaryWriter, machineDoorMapping, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

@@ -143,7 +143,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(gammaPower);
                 binaryWriter.Write((Int16)cameraImmersionFlags);
                 binaryWriter.Write(invalidName_5, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(cluster);
                 binaryWriter.Write(surfaceReferenceCount);
                 binaryWriter.Write(firstSurfaceReferenceIndex);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

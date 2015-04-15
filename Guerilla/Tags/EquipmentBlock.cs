@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass EqipClass = (TagClass)"eqip";
+        public static readonly TagClass Eqip = (TagClass)"eqip";
     };
 };
 
@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)grenadeType);
                 binaryWriter.Write(powerupTimeSeconds);
                 binaryWriter.Write(pickupSound);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum PowerupType : short

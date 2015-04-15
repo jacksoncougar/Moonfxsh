@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(nodeMapOffsetOLD);
                 binaryWriter.Write(nodeMapSizeOLD);
                 nextAddress = Guerilla.WriteBlockArray<RenderModelPermutationBlock>(binaryWriter, permutations, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

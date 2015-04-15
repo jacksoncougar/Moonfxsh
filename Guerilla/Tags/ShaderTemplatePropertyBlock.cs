@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)property);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(parameterName);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Property : short

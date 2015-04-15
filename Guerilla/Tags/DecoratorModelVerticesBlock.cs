@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(tangent);
                 binaryWriter.Write(binormal);
                 binaryWriter.Write(texcoord);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

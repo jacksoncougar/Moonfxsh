@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 lowFrequencyVibration.Write(binaryWriter);
                 highFrequencyVibration.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

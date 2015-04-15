@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<ScenarioClusterPointsBlock>(binaryWriter, clusterCentroids, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioClusterWeatherPropertiesBlock>(binaryWriter, weatherProperties, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioClusterAtmosphericFogPropertiesBlock>(binaryWriter, atmosphericFogProperties, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

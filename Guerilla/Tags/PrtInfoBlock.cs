@@ -67,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<PrtRawPcaDataBlock>(binaryWriter, rawPcaData, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<PrtVertexBuffersBlock>(binaryWriter, vertexBuffers, nextAddress);
                 geometryBlockInfo.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

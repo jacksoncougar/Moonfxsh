@@ -35,7 +35,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 binaryWriter.Write(cubeMapReference);
                 binaryWriter.Write(powerScale);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(fullName);
                 stateInfo.Write(binaryWriter);
                 nextAddress = Guerilla.WriteBlockArray<AnimationTransitionDestinationBlock>(binaryWriter, destinationsAABBCC, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

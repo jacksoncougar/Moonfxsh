@@ -53,7 +53,7 @@ namespace Moonfish.Guerilla.Tags
                 length.Write(binaryWriter);
                 yaw.Write(binaryWriter);
                 pitch.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

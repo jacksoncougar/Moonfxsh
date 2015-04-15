@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass SilyClass = (TagClass)"sily";
+        public static readonly TagClass Sily = (TagClass)"sily";
     };
 };
 
@@ -56,7 +56,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(headerText);
                 binaryWriter.Write(descriptionText);
                 nextAddress = Guerilla.WriteBlockArray<TextValuePairReferenceBlock>(binaryWriter, textValuePairs, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Parameter : int

@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass HudgClass = (TagClass)"hudg";
+        public static readonly TagClass Hudg = (TagClass)"hudg";
     };
 };
 
@@ -350,7 +350,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(checkpointSound);
                 binaryWriter.Write(invalidName_14, 0, 96);
                 newGlobals.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Anchor : short

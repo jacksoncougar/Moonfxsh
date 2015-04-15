@@ -62,7 +62,7 @@ namespace Moonfish.Graphics
             BinaryReader binaryReader = new BinaryReader( Map );
             BinaryWriter binaryWriter = new BinaryWriter( Map );
 
-            Map[ selectedItem.Model.renderModel ].Seek();
+            Map.Seek( selectedItem.Model.renderModel.Ident );
             Map.Seek( 88, SeekOrigin.Current );
             var markerGroups = binaryReader.ReadBlamPointer( 12 );
             foreach ( var group in markerGroups )
@@ -121,7 +121,7 @@ namespace Moonfish.Graphics
             Map = new MapStream( fileName );
 
             listBox1.Items.Clear();
-            listBox1.Items.AddRange( Map.Where( x => x.Type.ToString() == "hlmt" ).Select( x => x ).ToArray() );
+            listBox1.Items.AddRange( Map.Where( x => x.Class.ToString() == "hlmt" ).Select( x => x ).ToArray() );
             listBox1.DisplayMember = "Path";
             listBox1.SelectedIndex = listBox1.Items.Count > 0 ? 0 : -1;
         }

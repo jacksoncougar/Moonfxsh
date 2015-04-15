@@ -83,7 +83,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_, 0, 4);
                 nextAddress = Guerilla.WriteBlockArray<LightVolumeRuntimeOffsetBlock>(binaryWriter, invalidName_0, nextAddress);
                 binaryWriter.Write(invalidName_1, 0, 48);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

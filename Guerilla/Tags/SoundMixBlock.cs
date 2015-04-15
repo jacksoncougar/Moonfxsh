@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass SnmxClass = (TagClass)"snmx";
+        public static readonly TagClass Snmx = (TagClass)"snmx";
     };
 };
 
@@ -67,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(frontSpeakerGainDB0);
                 binaryWriter.Write(rearSpeakerGainDB0);
                 globalMix.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

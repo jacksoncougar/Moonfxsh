@@ -64,7 +64,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(inversePosition);
                 binaryWriter.Write(inverseScale);
                 binaryWriter.Write(distanceFromParent);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

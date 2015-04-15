@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(bitmapCount);
                 binaryWriter.Write(invalidName_, 0, 16);
                 nextAddress = Guerilla.WriteBlockArray<BitmapGroupSpriteBlock>(binaryWriter, sprites, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

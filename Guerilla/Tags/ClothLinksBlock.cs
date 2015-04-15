@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(index2);
                 binaryWriter.Write(defaultDistance);
                 binaryWriter.Write(dampingMultiplier);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

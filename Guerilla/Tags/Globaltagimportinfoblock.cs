@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_0, 0, 4);
                 nextAddress = Guerilla.WriteBlockArray<TagImportFileBlock>(binaryWriter, files, nextAddress);
                 binaryWriter.Write(invalidName_1, 0, 128);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

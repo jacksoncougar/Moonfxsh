@@ -65,7 +65,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(lightmapTransparentColor);
                 binaryWriter.Write(lightmapTransparentAlpha);
                 binaryWriter.Write(lightmapFoliageScale);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

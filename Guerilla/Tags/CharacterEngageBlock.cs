@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(crouchDangerThreshold);
                 binaryWriter.Write(standDangerThreshold);
                 binaryWriter.Write(fightDangerMoveThreshold);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

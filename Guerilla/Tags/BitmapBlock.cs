@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass BitmClass = (TagClass)"bitm";
+        public static readonly TagClass Bitm = (TagClass)"bitm";
     };
 };
 
@@ -115,7 +115,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)forceFormat);
                 nextAddress = Guerilla.WriteBlockArray<BitmapGroupSequenceBlock>(binaryWriter, sequences, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<BitmapDataBlock>(binaryWriter, bitmaps, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Type : short

@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)pathFindingSectorFlags);
                 binaryWriter.Write(hintIndex);
                 binaryWriter.Write(firstLinkDoNotSetManually);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

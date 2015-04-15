@@ -68,7 +68,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(renderDepthBias);
                 binaryWriter.Write(mouseRegionTopOffset);
                 binaryWriter.Write((Int32)buttonFlags);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

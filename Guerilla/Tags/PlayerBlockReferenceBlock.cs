@@ -53,7 +53,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(columnCount);
                 binaryWriter.Write(rowHeight);
                 binaryWriter.Write(columnWidth);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum TableOrder : byte

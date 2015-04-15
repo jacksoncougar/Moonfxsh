@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass WeapClass = (TagClass)"weap";
+        public static readonly TagClass Weap = (TagClass)"weap";
     };
 };
 
@@ -308,7 +308,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(agedWeapon);
                 binaryWriter.Write(firstPersonWeaponOffset);
                 binaryWriter.Write(firstPersonScopeSize);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

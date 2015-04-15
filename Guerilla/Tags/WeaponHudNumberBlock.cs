@@ -115,7 +115,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)weaponSpecificFlags);
                 binaryWriter.Write(invalidName_7, 0, 2);
                 binaryWriter.Write(invalidName_8, 0, 36);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum StateAttachedTo : short

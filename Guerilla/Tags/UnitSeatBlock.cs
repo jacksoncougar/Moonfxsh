@@ -137,7 +137,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(maximumRelativeVelocity);
                 binaryWriter.Write(invisibleSeatRegion);
                 binaryWriter.Write(runtimeInvisibleSeatRegionIndex);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)combinationRule);
                 binaryWriter.Write(invalidName_, 0, 2);
                 nextAddress = Guerilla.WriteBlockArray<OrderCompletionCondition>(binaryWriter, conditions, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

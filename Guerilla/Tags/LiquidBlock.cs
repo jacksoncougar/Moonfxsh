@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass TdtlClass = (TagClass)"tdtl";
+        public static readonly TagClass Tdtl = (TagClass)"tdtl";
     };
 };
 
@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(cutoffDistanceFromCameraWorldUnits);
                 binaryWriter.Write(invalidName_1, 0, 32);
                 nextAddress = Guerilla.WriteBlockArray<LiquidArcBlock>(binaryWriter, arcs, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Type : short

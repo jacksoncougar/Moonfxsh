@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<AnimationTransitionBlock>(binaryWriter, transitionsAABBCC, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<PrecacheListBlock>(binaryWriter, highPrecacheCCCCC, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<PrecacheListBlock>(binaryWriter, lowPrecacheCCCCC, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

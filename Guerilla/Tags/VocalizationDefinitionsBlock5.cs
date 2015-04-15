@@ -139,7 +139,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(sampleLine);
                 nextAddress = Guerilla.WriteBlockArray<ResponseBlock>(binaryWriter, reponses, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Priority : short

@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass LifiClass = (TagClass)"lifi";
+        public static readonly TagClass Lifi = (TagClass)"lifi";
     };
 };
 
@@ -35,7 +35,7 @@ namespace Moonfish.Guerilla.Tags
         {
             using(binaryWriter.BaseStream.Pin())
             {
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

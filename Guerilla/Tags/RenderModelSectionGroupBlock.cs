@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)detailLevels);
                 binaryWriter.Write(invalidName_, 0, 2);
                 nextAddress = Guerilla.WriteBlockArray<RenderModelCompoundNodeBlock>(binaryWriter, compoundNodes, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

@@ -85,7 +85,7 @@ namespace Moonfish.Guerilla.Tags
                 multispheres[1].Write(binaryWriter);
                 multispheres[2].Write(binaryWriter);
                 multispheres[3].Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]
@@ -112,7 +112,7 @@ namespace Moonfish.Guerilla.Tags
                     binaryWriter.Write((Int16)shapeType);
                     binaryWriter.Write(shape);
                     binaryWriter.Write(collisionFilter);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    return nextAddress;
                 }
             }
             internal enum ShapeType : short
@@ -169,7 +169,7 @@ namespace Moonfish.Guerilla.Tags
                     fourVectorsStorage[5].Write(binaryWriter);
                     fourVectorsStorage[6].Write(binaryWriter);
                     fourVectorsStorage[7].Write(binaryWriter);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    return nextAddress;
                 }
             }
             public class FourVectorsStorage  : IGuerilla
@@ -187,7 +187,7 @@ namespace Moonfish.Guerilla.Tags
                     {
                         binaryWriter.Write(sphere);
                         binaryWriter.Write(invalidName_, 0, 4);
-                        return nextAddress = (int)binaryWriter.BaseStream.Position;
+                        return nextAddress;
                     }
                 }
             };

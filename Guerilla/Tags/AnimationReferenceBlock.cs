@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)ambientAnimationLoopingStyle);
                 binaryWriter.Write(invalidName_, 0, 2);
                 nextAddress = Guerilla.WriteBlockArray<ScreenAnimationKeyframeReferenceBlock>(binaryWriter, keyframes1, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

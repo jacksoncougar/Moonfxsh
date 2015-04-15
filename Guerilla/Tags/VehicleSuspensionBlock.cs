@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(destroyedMassPointOffset);
                 binaryWriter.Write(destroyedFullExtensionGroundDepth);
                 binaryWriter.Write(destroyedFullCompressionGroundDepth);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass DcsClass = (TagClass)"dc*s";
+        public static readonly TagClass Dcs = (TagClass)"dc*s";
     };
 };
 
@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 nextAddress = Guerilla.WriteBlockArray<DecoratorPlacementDefinitionBlock>(binaryWriter, decorator, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioDecoratorSetPaletteEntryBlock>(binaryWriter, decoratorPalette, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

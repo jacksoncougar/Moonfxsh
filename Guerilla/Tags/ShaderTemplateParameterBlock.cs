@@ -62,7 +62,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)bitmapAnimationFlags);
                 binaryWriter.Write(invalidName_0, 0, 2);
                 binaryWriter.Write(bitmapScale);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Type : short

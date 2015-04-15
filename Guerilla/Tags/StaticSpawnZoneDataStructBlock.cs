@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int32)relevantTeam);
                 binaryWriter.Write((Int32)relevantGames);
                 binaryWriter.Write((Int32)flags);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

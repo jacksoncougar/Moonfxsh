@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 layers.Write(binaryWriter);
                 binaryWriter.Write(availableLayers);
                 binaryWriter.Write(projectedHeightPercentage);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

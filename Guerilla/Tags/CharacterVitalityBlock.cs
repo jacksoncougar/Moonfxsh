@@ -172,7 +172,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(extendedBodyDamageThreshold);
                 binaryWriter.Write(suicideRadius);
                 binaryWriter.Write(invalidName_, 0, 8);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

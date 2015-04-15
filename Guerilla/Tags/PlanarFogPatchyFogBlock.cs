@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(distanceWorldUnits);
                 binaryWriter.Write(minDepthFraction01);
                 binaryWriter.Write(patchyFog);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

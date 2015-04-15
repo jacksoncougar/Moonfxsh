@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass WeatClass = (TagClass)"weat";
+        public static readonly TagClass Weat = (TagClass)"weat";
     };
 };
 
@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<GlobalWeatherBackgroundPlateBlock>(binaryWriter, backgroundPlates, nextAddress);
                 windModel.Write(binaryWriter);
                 binaryWriter.Write(fadeRadius);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<SurfacesBlock>(binaryWriter, surfaces, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<EdgesBlock>(binaryWriter, edges, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<VerticesBlock>(binaryWriter, vertices, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

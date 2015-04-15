@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(lastSector);
                 nextAddress = Guerilla.WriteBlockArray<EnvironmentObjectBspRefs>(binaryWriter, bsps, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<EnvironmentObjectNodes>(binaryWriter, nodes, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

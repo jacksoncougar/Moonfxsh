@@ -69,7 +69,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(spewTimeSeconds);
                 binaryWriter.Write(chargingEffect);
                 binaryWriter.Write(chargingDamageEffect);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum OverchargedAction : short

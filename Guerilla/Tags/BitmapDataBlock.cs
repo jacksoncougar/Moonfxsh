@@ -94,7 +94,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(lOD2TextureDataLength);
                 binaryWriter.Write(lOD3TextureDataLength);
                 binaryWriter.Write(invalidName_0, 0, 52);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

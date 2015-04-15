@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<PlatformSoundPitchLfoBlock>(binaryWriter, pitchLfo, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<PlatformSoundFilterLfoBlock>(binaryWriter, filterLfo, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SoundEffectPlaybackBlock>(binaryWriter, soundEffect, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

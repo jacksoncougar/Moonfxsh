@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<ScenarioResourceReferenceBlock>(binaryWriter, references, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioHsSourceReferenceBlock>(binaryWriter, scriptSource, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioAiResourceReferenceBlock>(binaryWriter, aIResources, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

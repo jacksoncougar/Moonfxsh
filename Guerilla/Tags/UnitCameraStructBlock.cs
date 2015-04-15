@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(pitchAutoLevel);
                 binaryWriter.Write(pitchRange);
                 nextAddress = Guerilla.WriteBlockArray<UnitCameraTrackBlock>(binaryWriter, cameraTracks, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

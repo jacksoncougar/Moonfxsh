@@ -62,7 +62,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(yawBoundsDegrees);
                 binaryWriter.Write(pitchBoundsDegrees);
                 binaryWriter.Write(distanceBoundsWorldUnits);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

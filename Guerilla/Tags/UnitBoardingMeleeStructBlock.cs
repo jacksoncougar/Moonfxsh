@@ -45,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(landingMeleeDamage);
                 binaryWriter.Write(flurryMeleeDamage);
                 binaryWriter.Write(obstacleSmashDamage);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

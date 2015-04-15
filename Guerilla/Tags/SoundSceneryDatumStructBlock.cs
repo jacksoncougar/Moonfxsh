@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(overrideDistanceBounds);
                 binaryWriter.Write(overrideConeAngleBounds);
                 binaryWriter.Write(overrideOuterConeGainDB);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum VolumeType : int

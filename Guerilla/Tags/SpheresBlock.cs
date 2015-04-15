@@ -109,7 +109,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_7, 0, 4);
                 binaryWriter.Write(translation);
                 binaryWriter.Write(invalidName_8, 0, 4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

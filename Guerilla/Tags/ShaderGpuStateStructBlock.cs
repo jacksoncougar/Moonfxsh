@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<TextureBlock>(binaryWriter, textures, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<VertexShaderConstantBlock>(binaryWriter, vnConstants, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<VertexShaderConstantBlock>(binaryWriter, cnConstants, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

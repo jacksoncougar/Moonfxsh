@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(boundingRadius);
                 binaryWriter.Write((Int32)flags);
                 nextAddress = Guerilla.WriteBlockArray<StructureBspClusterPortalVertexBlock>(binaryWriter, vertices, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

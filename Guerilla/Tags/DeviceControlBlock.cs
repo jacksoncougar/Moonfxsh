@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass CtrlClass = (TagClass)"ctrl";
+        public static readonly TagClass Ctrl = (TagClass)"ctrl";
     };
 };
 
@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(on);
                 binaryWriter.Write(off);
                 binaryWriter.Write(deny);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Type : short

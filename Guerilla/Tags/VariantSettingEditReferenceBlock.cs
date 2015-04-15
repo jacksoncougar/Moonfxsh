@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_, 0, 4);
                 nextAddress = Guerilla.WriteBlockArray<TextValuePairBlock>(binaryWriter, options, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<NullBlock>(binaryWriter, nullBlock, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum SettingCategory : int

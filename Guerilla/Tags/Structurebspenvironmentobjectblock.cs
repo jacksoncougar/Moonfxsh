@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(uniqueID);
                 binaryWriter.Write(exportedObjectType);
                 binaryWriter.Write(scenarioObjectName);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

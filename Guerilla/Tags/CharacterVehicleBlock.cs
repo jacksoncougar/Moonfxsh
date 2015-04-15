@@ -267,7 +267,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(turtlingTimeoutSeconds);
                 binaryWriter.Write((Int16)obstacleIgnoreSize);
                 binaryWriter.Write(invalidName_, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

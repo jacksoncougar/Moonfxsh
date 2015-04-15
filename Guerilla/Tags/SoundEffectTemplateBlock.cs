@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass FxClass = (TagClass)"<fx>";
+        public static readonly TagClass Fx = (TagClass)"<fx>";
     };
 };
 
@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(inputEffectName);
                 nextAddress = Guerilla.WriteBlockArray<SoundEffectTemplateAdditionalSoundInputBlock>(binaryWriter, additionalSoundInputs, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<PlatformSoundEffectTemplateCollectionBlock>(binaryWriter, platformSoundEffectTemplateCollectionBlock, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

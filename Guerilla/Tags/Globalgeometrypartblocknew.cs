@@ -72,7 +72,7 @@ namespace Moonfish.Guerilla.Tags
                 nodeWeights[2].Write(binaryWriter);
                 binaryWriter.Write(lodMipmapMagicNumber);
                 binaryWriter.Write(invalidName_, 0, 24);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Type : short
@@ -105,7 +105,7 @@ namespace Moonfish.Guerilla.Tags
                 using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(nodeIndex);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    return nextAddress;
                 }
             }
         };
@@ -121,7 +121,7 @@ namespace Moonfish.Guerilla.Tags
                 using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(nodeWeight);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    return nextAddress;
                 }
             }
         };

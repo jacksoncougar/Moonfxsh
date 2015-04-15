@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(textColor);
                 binaryWriter.Write(topLeft);
                 nextAddress = Guerilla.WriteBlockArray<TableViewListRowReferenceBlock>(binaryWriter, tableRows, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

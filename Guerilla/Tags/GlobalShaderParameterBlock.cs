@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(constValue);
                 binaryWriter.Write(constColor);
                 nextAddress = Guerilla.WriteBlockArray<ShaderAnimationPropertyBlock>(binaryWriter, animationProperties, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Type : short

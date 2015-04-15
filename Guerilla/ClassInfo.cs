@@ -385,7 +385,7 @@ return array;",
                 }
             }
 
-            bodyBuilder.AppendLine(string.Format("return {0} = (int){1}.BaseStream.Position;", writeMethod.Arguments[1].Name, writeMethod.Arguments[0].Name));
+            bodyBuilder.AppendLine(string.Format("return {0};", writeMethod.Arguments[1].Name));
             bodyBuilder.AppendLine("}".Tab(ref tab));
             writeMethod.Body = bodyBuilder.ToString().Trim();
             Methods.Add(writeMethod);

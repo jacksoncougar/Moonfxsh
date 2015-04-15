@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass PhysClass = (TagClass)"phys";
+        public static readonly TagClass Phys = (TagClass)"phys";
     };
 };
 
@@ -109,7 +109,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<InertialMatrixBlock>(binaryWriter, inertialMatrixAndInverse, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<PoweredMassPointBlock>(binaryWriter, poweredMassPoints, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<MassPointBlock>(binaryWriter, massPoints, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

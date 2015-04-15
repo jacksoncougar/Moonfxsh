@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 nodeWeights[3].Write(binaryWriter);
                 binaryWriter.Write(color);
                 binaryWriter.Write(screenSize);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         public class NodeIndices  : IGuerilla
@@ -61,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
                 using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(nodeIndex);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    return nextAddress;
                 }
             }
         };
@@ -77,7 +77,7 @@ namespace Moonfish.Guerilla.Tags
                 using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(nodeWeight);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    return nextAddress;
                 }
             }
         };

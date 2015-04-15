@@ -80,7 +80,7 @@ namespace Moonfish.Guerilla.Tags
                 fourVectorsStorage[5].Write(binaryWriter);
                 fourVectorsStorage[6].Write(binaryWriter);
                 fourVectorsStorage[7].Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]
@@ -103,7 +103,7 @@ namespace Moonfish.Guerilla.Tags
                 {
                     binaryWriter.Write(sphere);
                     binaryWriter.Write(invalidName_, 0, 4);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    return nextAddress;
                 }
             }
         };

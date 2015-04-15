@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 binaryWriter.Write(firstPersonModel);
                 binaryWriter.Write(firstPersonAnimations);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(originBSPIndex);
                 binaryWriter.Write((Byte)type);
                 binaryWriter.Write((Byte)source);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Type : byte

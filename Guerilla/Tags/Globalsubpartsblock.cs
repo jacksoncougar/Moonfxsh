@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(indicesLength);
                 binaryWriter.Write(visibilityBoundsIndex);
                 binaryWriter.Write(partIndex);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

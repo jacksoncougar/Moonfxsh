@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(minCertaintyRadius);
                 binaryWriter.Write(dEPRECATED);
                 binaryWriter.Write(minSuppressingTime);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

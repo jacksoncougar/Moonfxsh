@@ -103,7 +103,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<StructureBspClusterInstancedGeometryIndexBlock>(binaryWriter, instancedGeometryIndices, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryWriter, indexReorderTable, nextAddress);
                 nextAddress = Guerilla.WriteData(binaryWriter, collisionMoppCode, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

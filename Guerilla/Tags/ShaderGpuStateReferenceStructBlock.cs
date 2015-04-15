@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 textures.Write(binaryWriter);
                 vnConstants.Write(binaryWriter);
                 cnConstants.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

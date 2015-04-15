@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
                 brightnessTime.Write(binaryWriter);
                 brightnessFacing.Write(binaryWriter);
                 alongAxisScale.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

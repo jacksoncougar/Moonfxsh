@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(label);
                 nextAddress = Guerilla.WriteBlockArray<WeaponClassBlock>(binaryWriter, weaponClassAABBCC, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<AnimationIkBlock>(binaryWriter, modeIkAABBCC, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

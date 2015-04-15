@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<NewHudSoundBlock>(binaryWriter, hudSounds, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<PlayerTrainingEntryDataBlock>(binaryWriter, playerTrainingData, nextAddress);
                 constants.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

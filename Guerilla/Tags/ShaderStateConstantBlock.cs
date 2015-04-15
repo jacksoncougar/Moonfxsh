@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(sourceParameter);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write((Int16)constant);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Constant : short

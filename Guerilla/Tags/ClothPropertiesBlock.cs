@@ -67,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(windFlappinessScale);
                 binaryWriter.Write(longestRod);
                 binaryWriter.Write(invalidName_, 0, 24);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum IntegrationType : short

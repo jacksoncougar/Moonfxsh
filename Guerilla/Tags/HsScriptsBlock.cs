@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)scriptType);
                 binaryWriter.Write((Int16)returnType);
                 binaryWriter.Write(rootExpressionIndex);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum ScriptType : short

@@ -106,7 +106,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(subjectAiTypeName);
                 binaryWriter.Write(invalidName_3, 0, 8);
                 binaryWriter.Write((Int32)conditions);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum DialogueType : short

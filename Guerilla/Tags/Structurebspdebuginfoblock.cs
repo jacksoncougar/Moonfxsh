@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<StructureBspClusterDebugInfoBlock>(binaryWriter, clusters, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<StructureBspFogPlaneDebugInfoBlock>(binaryWriter, fogPlanes, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<StructureBspFogZoneDebugInfoBlock>(binaryWriter, fogZones, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

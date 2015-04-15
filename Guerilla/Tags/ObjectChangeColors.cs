@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 nextAddress = Guerilla.WriteBlockArray<ObjectChangeColorInitialPermutation>(binaryWriter, initialPermutations, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ObjectChangeColorFunction>(binaryWriter, functions, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

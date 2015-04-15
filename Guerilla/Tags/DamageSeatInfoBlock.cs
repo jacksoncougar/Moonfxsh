@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(damageTransferFallOffRadius);
                 binaryWriter.Write(maximumTransferDamageScale);
                 binaryWriter.Write(minimumTransferDamageScale);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

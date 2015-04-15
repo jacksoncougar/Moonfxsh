@@ -115,7 +115,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(antiVehicleGrenadeChance01);
                 binaryWriter.Write(grenadeCount);
                 binaryWriter.Write(dontDropGrenadesChance01);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

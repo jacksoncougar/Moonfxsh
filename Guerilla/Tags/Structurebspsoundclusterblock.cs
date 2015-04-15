@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_0, 0, 2);
                 nextAddress = Guerilla.WriteBlockArray<StructureSoundClusterPortalDesignators>(binaryWriter, enclosingPortalDesignators, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<StructureSoundClusterInteriorClusterIndices>(binaryWriter, interiorClusterIndices, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

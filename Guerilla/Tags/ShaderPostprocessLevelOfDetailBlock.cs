@@ -67,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<ShaderPostprocessColorOverlayBlock>(binaryWriter, colorOverlays, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ShaderPostprocessVertexShaderConstantBlock>(binaryWriter, vertexShaderConstants, nextAddress);
                 gPUState.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

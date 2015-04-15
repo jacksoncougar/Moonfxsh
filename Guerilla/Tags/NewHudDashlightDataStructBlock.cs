@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(lowClipCutoff);
                 binaryWriter.Write(lowAmmoCutoff);
                 binaryWriter.Write(ageCutoff);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

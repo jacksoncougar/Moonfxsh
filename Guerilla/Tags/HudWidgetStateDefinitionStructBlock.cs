@@ -61,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(clipCutoff);
                 binaryWriter.Write(totalCutoff);
                 binaryWriter.Write(invalidName_, 0, 1);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

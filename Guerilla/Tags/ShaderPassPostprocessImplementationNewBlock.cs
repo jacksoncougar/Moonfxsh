@@ -95,7 +95,7 @@ namespace Moonfish.Guerilla.Tags
                 vertexConstantInfo.Write(binaryWriter);
                 renderStateInfo.Write(binaryWriter);
                 textureStateInfo.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

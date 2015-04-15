@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(reverseEdge);
                 binaryWriter.Write(leftSurface);
                 binaryWriter.Write(rightSurface);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

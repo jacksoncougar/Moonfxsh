@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass VrtxClass = (TagClass)"vrtx";
+        public static readonly TagClass Vrtx = (TagClass)"vrtx";
     };
 };
 
@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_, 0, 2);
                 nextAddress = Guerilla.WriteBlockArray<VertexShaderClassificationBlock>(binaryWriter, geometryClassifications, nextAddress);
                 binaryWriter.Write(outputSwizzles);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Platform : short

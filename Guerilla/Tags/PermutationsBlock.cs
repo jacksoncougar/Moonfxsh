@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 binaryWriter.Write(name);
                 nextAddress = Guerilla.WriteBlockArray<RigidBodyIndicesBlock>(binaryWriter, rigidBodies, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

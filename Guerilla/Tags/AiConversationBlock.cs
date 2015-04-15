@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<AiConversationParticipantBlock>(binaryWriter, participants, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<AiConversationLineBlock>(binaryWriter, lines, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

@@ -70,7 +70,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(itemCollection5);
                 binaryWriter.Write(itemCollection6);
                 binaryWriter.Write(invalidName_0, 0, 48);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

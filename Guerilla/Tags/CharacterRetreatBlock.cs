@@ -119,7 +119,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(zigZagPeriodSeconds);
                 binaryWriter.Write(retreatGrenadeChance);
                 binaryWriter.Write(backupWeapon);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

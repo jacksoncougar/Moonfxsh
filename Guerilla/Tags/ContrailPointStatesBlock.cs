@@ -65,7 +65,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(colorLowerBound);
                 binaryWriter.Write(colorUpperBound);
                 binaryWriter.Write((Int32)scaleFlags);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

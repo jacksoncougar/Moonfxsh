@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass ShitClass = (TagClass)"$#!+";
+        public static readonly TagClass Shit = (TagClass)"$#!+";
     };
 };
 
@@ -73,7 +73,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(customPlaybackIndex);
                 binaryWriter.Write(extraInfoIndex);
                 binaryWriter.Write(maximumPlayTimeMs);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

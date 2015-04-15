@@ -109,7 +109,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_4, 0, 184);
                 nextAddress = Guerilla.WriteBlockArray<GlobalHudMultitextureOverlayEffectorDefinition>(binaryWriter, effectors, nextAddress);
                 binaryWriter.Write(invalidName_5, 0, 128);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum FramebufferBlendFunc : short

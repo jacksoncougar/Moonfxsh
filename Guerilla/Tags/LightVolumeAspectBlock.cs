@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(parallelScale);
                 binaryWriter.Write(parallelThresholdAngleDegrees);
                 binaryWriter.Write(parallelExponent);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

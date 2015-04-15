@@ -76,7 +76,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_1, 0, 2);
                 binaryWriter.Write(invalidName_2, 0, 64);
                 nextAddress = Guerilla.WriteBlockArray<RasterizerScreenEffectConvolutionBlock>(binaryWriter, convolution, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Stage0Mode : short

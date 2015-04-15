@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(frontLeafIndex);
                 nextAddress = Guerilla.WriteBlockArray<LeafConnectionVertexBlock>(binaryWriter, vertices, nextAddress);
                 binaryWriter.Write(area);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

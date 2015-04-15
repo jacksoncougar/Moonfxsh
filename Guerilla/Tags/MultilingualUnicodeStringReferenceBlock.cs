@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(koreanOffset);
                 binaryWriter.Write(chineseOffset);
                 binaryWriter.Write(portugueseOffset);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

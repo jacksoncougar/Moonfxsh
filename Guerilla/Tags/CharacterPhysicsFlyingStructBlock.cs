@@ -85,7 +85,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(angularVelocityMaximumDegreesPerSecond);
                 binaryWriter.Write(angularAccelerationMaximumDegreesPerSecondSquared);
                 binaryWriter.Write(crouchVelocityModifier01);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

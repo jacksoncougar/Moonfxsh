@@ -257,7 +257,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_2, 0, 8);
                 binaryWriter.Write(invalidName_3, 0, 24);
                 nextAddress = Guerilla.WriteBlockArray<BarrelFiringEffectBlock>(binaryWriter, firingEffects, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

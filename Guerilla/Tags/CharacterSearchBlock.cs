@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int32)searchFlags);
                 binaryWriter.Write(searchTime);
                 binaryWriter.Write(uncoverDistanceBounds);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

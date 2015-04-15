@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_0, 0, 2);
                 binaryWriter.Write(globalMaterialName);
                 binaryWriter.Write(invalidName_1, 0, 4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum MaterialType : short

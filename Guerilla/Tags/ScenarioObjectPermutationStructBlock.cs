@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(secondaryColor);
                 binaryWriter.Write(tertiaryColor);
                 binaryWriter.Write(quaternaryColor);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

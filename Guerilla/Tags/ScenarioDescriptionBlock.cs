@@ -42,7 +42,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(displayedMapName);
                 binaryWriter.Write(scenarioTagDirectoryPath);
                 binaryWriter.Write(invalidName_, 0, 4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

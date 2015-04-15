@@ -67,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(uNUSEDIntroAnim);
                 binaryWriter.Write(uNUSEDOutroAnim);
                 binaryWriter.Write(uNUSEDAmbientAnim);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

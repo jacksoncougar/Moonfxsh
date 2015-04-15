@@ -68,7 +68,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(radiusModifierBounds);
                 binaryWriter.Write((Int32)aScalesValues);
                 binaryWriter.Write((Int32)bScalesValues);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum CreateIn : short

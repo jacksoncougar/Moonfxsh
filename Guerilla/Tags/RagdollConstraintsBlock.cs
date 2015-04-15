@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(minPlane);
                 binaryWriter.Write(maxPlane);
                 binaryWriter.Write(maxFricitonTorque);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

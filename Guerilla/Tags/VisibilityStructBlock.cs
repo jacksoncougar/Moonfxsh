@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteData(binaryWriter, visibilityClusters, nextAddress);
                 nextAddress = Guerilla.WriteData(binaryWriter, clusterRemapTable, nextAddress);
                 nextAddress = Guerilla.WriteData(binaryWriter, visibilityVolumes, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

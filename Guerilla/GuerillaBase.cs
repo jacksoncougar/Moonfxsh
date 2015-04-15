@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -43,31 +44,68 @@ namespace Moonfish.Guerilla
 
         #endregion
 
+        private delegate IList<MoonfishTagField> ProcessFieldsDelegate( IList<MoonfishTagField> fields );
+
         public readonly static IntPtr H2LangLib;
         public static List<GuerillaTagGroup> h2Tags;
-        public readonly static Dictionary<string, Action<BinaryReader, IList<tag_field>>> PostprocessFunctions;
+        public static Dictionary<string, Action<BinaryReader, IList<tag_field>>> PostprocessFunctions;
+
+        private static Dictionary<string, ProcessFieldsDelegate> PreProcessFieldsFunctions;
 
         static Guerilla( )
         {
             h2Tags = new List<GuerillaTagGroup>();
-            H2LangLib = LoadLibrary( H2LanguageLibrary );
-            PostprocessFunctions = new Dictionary<string, Action<BinaryReader, IList<tag_field>>>();
-            var methods = ( from method in Assembly.GetExecutingAssembly().GetTypes().SelectMany(
-                                x => x.GetMethods( BindingFlags.NonPublic | BindingFlags.Static ) )
-                            where method.IsDefined( typeof( GuerillaPreProcessMethodAttribute ), false )
-                            select method ).ToArray();
+            H2LangLib = LoadLibrary(H2LanguageLibrary);
+            LoadPostProcessFunctionsObsolete();
+            LoadPostProcessFunctions();
+        }
+
+        private static void LoadPostProcessFunctions()
+        {
+            PreProcessFieldsFunctions = new Dictionary<string, ProcessFieldsDelegate>();
+            var methods = (from method in Assembly.GetExecutingAssembly().GetTypes().SelectMany(
+               x => x.GetMethods(BindingFlags.NonPublic | BindingFlags.Static))
+                           where method.IsDefined(typeof(GuerillaPreProcessFieldsMethodAttribute), false)
+                           select method).ToArray();
+            foreach (var method in methods)
+            {
+                var attributes = method.GetCustomAttributes(typeof(GuerillaPreProcessFieldsMethodAttribute), false);
+
+                foreach (GuerillaPreProcessFieldsMethodAttribute attribute in attributes)
+                {
+                    PreProcessFieldsFunctions[ attribute.BlockName ] =
+                        ( ProcessFieldsDelegate )
+                            Delegate.CreateDelegate( typeof ( ProcessFieldsDelegate ), ( method ) );
+                }
+            }
+        }
+
+        private static void LoadPostProcessFunctionsObsolete( )
+        {
+            PostprocessFunctions = new Dictionary<string, Action<BinaryReader, IList<tag_field>>>( );
+            var methods = ( from method in Assembly.GetExecutingAssembly( ).GetTypes( ).SelectMany(
+                x => x.GetMethods( BindingFlags.NonPublic | BindingFlags.Static ) )
+                where method.IsDefined( typeof ( GuerillaPreProcessMethodAttribute ), false )
+                select method ).ToArray( );
             foreach ( var method in methods )
             {
-                var attributes = method.GetCustomAttributes( typeof( GuerillaPreProcessMethodAttribute ), false );
+                var attributes = method.GetCustomAttributes( typeof ( GuerillaPreProcessMethodAttribute ), false );
 
                 foreach ( GuerillaPreProcessMethodAttribute attribute in attributes )
                 {
-                    PostprocessFunctions[ attribute.BlockName ] = ( Action<BinaryReader, IList<tag_field>> )Delegate.CreateDelegate( typeof( Action<BinaryReader, IList<tag_field>> ), ( method ) );
+                    PostprocessFunctions[ attribute.BlockName ] =
+                        ( Action<BinaryReader, IList<tag_field>> )
+                            Delegate.CreateDelegate( typeof ( Action<BinaryReader, IList<tag_field>> ), ( method ) );
                 }
             }
         }
 
         protected Guerilla( string guerillaExecutablePath )
+        {
+            LoadGuerillaExecutable( guerillaExecutablePath );
+        }
+
+        public static void LoadGuerillaExecutable( string guerillaExecutablePath )
         {
             // Open the guerilla executable.
             using ( var reader = new BinaryReader( new VirtualMemoryStream( guerillaExecutablePath, BaseAddress ) ) )
@@ -81,7 +119,7 @@ namespace Moonfish.Guerilla
                     reader.BaseStream.Position = TagLayoutTableAddress + ( i * 4 );
 
                     // Read the tag layout pointer.
-                    var layoutAddress = reader.ReadInt32();
+                    var layoutAddress = reader.ReadInt32( );
 
                     // Go to the tag layout and read it.
                     reader.BaseStream.Position = layoutAddress;

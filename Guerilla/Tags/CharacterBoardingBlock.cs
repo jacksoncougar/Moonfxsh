@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(maxDistanceWus);
                 binaryWriter.Write(abortDistanceWus);
                 binaryWriter.Write(maxSpeedWuS);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

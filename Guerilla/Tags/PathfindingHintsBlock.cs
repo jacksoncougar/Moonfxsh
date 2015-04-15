@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(hintData5);
                 binaryWriter.Write(hintData6);
                 binaryWriter.Write(hintData7);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum HintType : short

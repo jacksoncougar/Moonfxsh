@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)flags);
                 nextAddress = Guerilla.WriteBlockArray<RenderModelSectionDataBlock>(binaryWriter, sectionData, nextAddress);
                 geometryBlockInfo.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum GlobalGeometryClassificationEnumDefinition : short

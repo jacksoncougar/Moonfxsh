@@ -61,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(deviationAngleDegrees);
                 binaryWriter.Write(invalidName_, 0, 4);
                 binaryWriter.Write(invalidName_0, 0, 12);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

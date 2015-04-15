@@ -64,7 +64,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(indexStartOffset);
                 binaryWriter.Write(indexCount);
                 binaryWriter.Write(compressedBoundingCenter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum DecoratorType : byte

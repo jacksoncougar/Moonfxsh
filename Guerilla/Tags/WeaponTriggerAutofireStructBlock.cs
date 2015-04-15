@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(autofireThrow);
                 binaryWriter.Write((Int16)secondaryAction);
                 binaryWriter.Write((Int16)primaryAction);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum SecondaryAction : short

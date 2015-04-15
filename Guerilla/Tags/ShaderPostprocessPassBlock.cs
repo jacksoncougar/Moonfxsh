@@ -32,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 binaryWriter.Write(shaderPass);
                 implementations.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

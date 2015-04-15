@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<ModelVariantPermutationBlock>(binaryWriter, permutations, nextAddress);
                 binaryWriter.Write((Int16)sortOrder);
                 binaryWriter.Write(invalidName_1, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum SortOrderNegativeValuesMeanCloserToTheCamera : short

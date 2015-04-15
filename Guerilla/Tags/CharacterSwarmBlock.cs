@@ -76,7 +76,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(offsetPeriodS);
                 binaryWriter.Write(perlinIdleMovementThreshold01);
                 binaryWriter.Write(perlinCombatMovementThreshold01);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

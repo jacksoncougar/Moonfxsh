@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(stripIndex);
                 binaryWriter.Write(lightmapTriangleIndex);
                 binaryWriter.Write(bspNodeIndex);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

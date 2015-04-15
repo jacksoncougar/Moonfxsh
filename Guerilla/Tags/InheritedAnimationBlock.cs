@@ -41,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<InheritedAnimationNodeMapFlagBlock>(binaryWriter, nodeMapFlags, nextAddress);
                 binaryWriter.Write(rootZOffset);
                 binaryWriter.Write(inheritanceFlags);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

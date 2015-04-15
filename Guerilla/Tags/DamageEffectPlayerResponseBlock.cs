@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 screenFlash.Write(binaryWriter);
                 vibration.Write(binaryWriter);
                 soundEffect.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum ResponseType : short

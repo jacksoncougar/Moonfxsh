@@ -95,7 +95,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(fogNear);
                 binaryWriter.Write(fogFar);
                 binaryWriter.Write(dynamicHeightBias);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

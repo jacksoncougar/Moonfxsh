@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(upTimeSeconds);
                 binaryWriter.Write(fadeOutTimeSeconds);
                 binaryWriter.Write(padding, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Justification : short

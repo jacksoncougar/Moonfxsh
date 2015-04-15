@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass ScnrClass = (TagClass)"scnr";
+        public static readonly TagClass Scnr = (TagClass)"scnr";
     };
 };
 
@@ -407,7 +407,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<HsReferencesBlock>(binaryWriter, sharedReferences, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioScreenEffectReferenceBlock>(binaryWriter, screenEffectReferences, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioSimulationDefinitionTableBlock>(binaryWriter, simulationDefinitionTable, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Type : short
@@ -442,7 +442,7 @@ namespace Moonfish.Guerilla.Tags
                 using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(eMPTYSTRING);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    return nextAddress;
                 }
             }
         };

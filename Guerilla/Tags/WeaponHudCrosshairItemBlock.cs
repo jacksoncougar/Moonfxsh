@@ -88,7 +88,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(sequenceIndex);
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(invalidName_2, 0, 32);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

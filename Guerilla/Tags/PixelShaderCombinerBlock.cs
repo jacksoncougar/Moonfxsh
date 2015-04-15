@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(alphaBRegisterPtrIndex);
                 binaryWriter.Write(alphaCRegisterPtrIndex);
                 binaryWriter.Write(alphaDRegisterPtrIndex);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

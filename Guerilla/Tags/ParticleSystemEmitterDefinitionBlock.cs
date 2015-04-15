@@ -71,7 +71,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(translationalOffset);
                 binaryWriter.Write(relativeDirection);
                 binaryWriter.Write(invalidName_, 0, 8);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum EmissionShape : int

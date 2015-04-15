@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 geometryBlockInfo.Write(binaryWriter);
                 nextAddress = Guerilla.WriteBlockArray<StructureBspClusterDataBlockNew>(binaryWriter, renderData, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryWriter, indexReorderTable, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

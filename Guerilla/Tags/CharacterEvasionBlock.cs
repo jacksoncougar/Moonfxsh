@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(evasionChance);
                 binaryWriter.Write(evasionProximityThreshold);
                 binaryWriter.Write(diveRetreatChance);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

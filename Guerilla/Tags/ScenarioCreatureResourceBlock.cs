@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass ReaClass = (TagClass)"*rea";
+        public static readonly TagClass Rea = (TagClass)"*rea";
     };
 };
 
@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<ScenarioCreatureBlock>(binaryWriter, objects, nextAddress);
                 binaryWriter.Write(nextObjectIDSalt);
                 nextAddress = Guerilla.WriteBlockArray<GScenarioEditorFolderBlock>(binaryWriter, editorFolders, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

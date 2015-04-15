@@ -111,7 +111,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(planeEquationsSize);
                 binaryWriter.Write(planeEquationsCapacity);
                 binaryWriter.Write(invalidName_6, 0, 4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]
@@ -146,7 +146,7 @@ namespace Moonfish.Guerilla.Tags
                     binaryWriter.Write(invalidName_0, 0, 4);
                     binaryWriter.Write(fourVectorsZ);
                     binaryWriter.Write(invalidName_1, 0, 4);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    return nextAddress;
                 }
             }
         };

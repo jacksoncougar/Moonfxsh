@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass VehiClass = (TagClass)"vehi";
+        public static readonly TagClass Vehi = (TagClass)"vehi";
     };
 };
 
@@ -204,7 +204,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(specialEffect);
                 binaryWriter.Write(unusedEffect);
                 havokVehiclePhysics.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

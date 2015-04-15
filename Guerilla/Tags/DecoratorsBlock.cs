@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass DECPClass = (TagClass)"DECP";
+        public static readonly TagClass DECP = (TagClass)"DECP";
     };
 };
 
@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<DecoratorGroupBlock>(binaryWriter, groups, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<DecoratorCellCollectionBlock>(binaryWriter, cells, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<DecoratorProjectedDecalBlock>(binaryWriter, decals, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

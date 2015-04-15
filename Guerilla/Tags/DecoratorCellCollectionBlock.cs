@@ -44,7 +44,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(cacheBlockIndex);
                 binaryWriter.Write(groupCount);
                 binaryWriter.Write(groupStartIndex);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         public class ChildIndices  : IGuerilla
@@ -59,7 +59,7 @@ namespace Moonfish.Guerilla.Tags
                 using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(childIndex);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    return nextAddress;
                 }
             }
         };

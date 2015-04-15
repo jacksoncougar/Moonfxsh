@@ -110,7 +110,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<GlobalHudMultitextureOverlayDefinition>(binaryWriter, multitexOverlay, nextAddress);
                 binaryWriter.Write(invalidName_6, 0, 4);
                 binaryWriter.Write(invalidName_7, 0, 40);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum StateAttachedTo : short

@@ -90,7 +90,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(skipFraction);
                 binaryWriter.Write(destroyedChildObjectMarkerName);
                 binaryWriter.Write(totalDamageThreshold);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum ResponseType : short

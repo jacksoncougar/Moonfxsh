@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
             using(binaryWriter.BaseStream.Pin())
             {
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

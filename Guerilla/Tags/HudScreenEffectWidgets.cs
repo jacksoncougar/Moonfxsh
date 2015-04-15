@@ -72,7 +72,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(fullscreenOffset);
                 binaryWriter.Write(halfscreenOffset);
                 binaryWriter.Write(quarterscreenOffset);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Anchor : short

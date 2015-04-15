@@ -53,7 +53,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<AnimationGraphEffectReferenceBlock>(binaryWriter, effectReferencesABCDCC, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<AnimationBlendScreenBlock>(binaryWriter, blendScreensABCDCC, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<AnimationPoolBlock>(binaryWriter, animationsABCDCC, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

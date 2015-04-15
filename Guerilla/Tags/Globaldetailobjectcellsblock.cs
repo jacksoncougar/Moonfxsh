@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_4);
                 binaryWriter.Write(invalidName_5);
                 binaryWriter.Write(invalidName_6, 0, 12);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

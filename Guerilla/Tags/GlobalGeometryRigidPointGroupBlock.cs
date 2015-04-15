@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(rigidNodeIndex);
                 binaryWriter.Write(nodesPoint);
                 binaryWriter.Write(pointCount);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

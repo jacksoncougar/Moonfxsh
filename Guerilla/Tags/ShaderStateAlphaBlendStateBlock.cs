@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(blendColor);
                 binaryWriter.Write((Int16)logicOpFlags);
                 binaryWriter.Write(invalidName_0, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum BlendFunction : short

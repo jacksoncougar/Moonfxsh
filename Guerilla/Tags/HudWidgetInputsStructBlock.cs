@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Byte)input2);
                 binaryWriter.Write((Byte)input3);
                 binaryWriter.Write((Byte)input4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Input1 : byte

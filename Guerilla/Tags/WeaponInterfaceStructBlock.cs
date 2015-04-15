@@ -35,7 +35,7 @@ namespace Moonfish.Guerilla.Tags
                 sharedInterface.Write(binaryWriter);
                 nextAddress = Guerilla.WriteBlockArray<WeaponFirstPersonInterfaceBlock>(binaryWriter, firstPerson, nextAddress);
                 binaryWriter.Write(newHudInterface);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

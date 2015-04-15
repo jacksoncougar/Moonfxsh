@@ -38,7 +38,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(animationName);
                 binaryWriter.Write(animationGraph);
                 binaryWriter.Write(invalidName_, 0, 12);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

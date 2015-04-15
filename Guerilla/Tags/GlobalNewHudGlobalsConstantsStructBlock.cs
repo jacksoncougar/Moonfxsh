@@ -75,7 +75,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(eliteTrainingTopCenter);
                 binaryWriter.Write(eliteTrainingTopLeft);
                 binaryWriter.Write(eliteTrainingMiddle);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

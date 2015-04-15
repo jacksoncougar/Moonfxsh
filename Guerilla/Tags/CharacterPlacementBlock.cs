@@ -64,7 +64,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(manyUpgradeChanceNormal);
                 binaryWriter.Write(manyUpgradeChanceHeroic);
                 binaryWriter.Write(manyUpgradeChanceLegendary);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

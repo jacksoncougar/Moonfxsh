@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass ScenClass = (TagClass)"scen";
+        public static readonly TagClass Scen = (TagClass)"scen";
     };
 };
 
@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write((Int16)lightmappingPolicy);
                 binaryWriter.Write(invalidName_, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum PathfindingPolicy : short

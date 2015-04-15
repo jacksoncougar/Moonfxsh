@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass FogClass = (TagClass)"fog ";
+        public static readonly TagClass Fog = (TagClass)"fog ";
     };
 };
 
@@ -113,7 +113,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(backgroundSoundGain);
                 binaryWriter.Write(enterSound);
                 binaryWriter.Write(exitSound);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 nextAddress = Guerilla.WriteBlockArray<PlatformSoundEffectTemplateBlock>(binaryWriter, platformEffectTemplates, nextAddress);
                 binaryWriter.Write(inputDspEffectName);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

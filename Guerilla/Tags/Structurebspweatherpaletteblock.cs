@@ -57,7 +57,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(windMagnitude);
                 binaryWriter.Write(invalidName_2, 0, 4);
                 binaryWriter.Write(windScaleFunction);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

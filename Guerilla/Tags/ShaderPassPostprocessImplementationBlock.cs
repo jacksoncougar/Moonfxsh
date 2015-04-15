@@ -89,7 +89,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<PixelShaderConstantBlock>(binaryWriter, pixelShaderConstants, nextAddress);
                 binaryWriter.Write(invalidName_5, 0, 4);
                 binaryWriter.Write(invalidName_6, 0, 4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_0);
                 binaryWriter.Write(invalidName_1, 0, 2);
                 binaryWriter.Write((Int32)flags);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum RuleType : short

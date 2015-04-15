@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(moppBoundsMax);
                 nextAddress = Guerilla.WriteData(binaryWriter, breakableSurfacesMoppCode, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<BreakableSurfaceKeyTableBlock>(binaryWriter, breakableSurfaceKeyTable, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

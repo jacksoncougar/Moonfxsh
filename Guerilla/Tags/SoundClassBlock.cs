@@ -118,7 +118,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(transmissionMultiplier);
                 binaryWriter.Write(obstructionMaxBend);
                 binaryWriter.Write(occlusionMaxBend);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

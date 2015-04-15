@@ -73,7 +73,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(eMPTYSTRING0);
                 binaryWriter.Write((Int16)campaignPlayerType);
                 binaryWriter.Write(invalidName_, 0, 6);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum TeamDesignator : short

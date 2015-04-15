@@ -61,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(fieldOfViewDegrees);
                 binaryWriter.Write(falloffDistanceWorldUnits);
                 binaryWriter.Write(cutoffDistanceWorldUnitsFromFarPlane);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Type : short

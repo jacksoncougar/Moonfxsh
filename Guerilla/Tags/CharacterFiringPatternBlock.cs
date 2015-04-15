@@ -103,7 +103,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(projectileErrorDegrees);
                 binaryWriter.Write(burstAngularVelocityDegreesPerSecond);
                 binaryWriter.Write(maximumErrorAngleDegrees);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

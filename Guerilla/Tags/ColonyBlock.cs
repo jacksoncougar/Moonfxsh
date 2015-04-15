@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass ColnClass = (TagClass)"coln";
+        public static readonly TagClass Coln = (TagClass)"coln";
     };
 };
 
@@ -60,7 +60,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(debugColor);
                 binaryWriter.Write(baseMap);
                 binaryWriter.Write(detailMap);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

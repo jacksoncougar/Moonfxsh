@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass UnicClass = (TagClass)"unic";
+        public static readonly TagClass Unic = (TagClass)"unic";
     };
 };
 
@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<MultilingualUnicodeStringReferenceBlock>(binaryWriter, stringReferences, nextAddress);
                 nextAddress = Guerilla.WriteData(binaryWriter, stringDataUtf8, nextAddress);
                 binaryWriter.Write(invalidName_, 0, 36);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

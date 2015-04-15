@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
                 defaultFunction.Write(binaryWriter);
                 binaryWriter.Write(minimumScalarValue);
                 binaryWriter.Write(maximumScalarValue);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Type : short

@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(boundingSphereCenter);
                 binaryWriter.Write(boundingSphereRadius);
                 nextAddress = Guerilla.WriteBlockArray<StructureBspWeatherPolyhedronPlaneBlock>(binaryWriter, planes, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

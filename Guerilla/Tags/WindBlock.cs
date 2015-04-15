@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass WindClass = (TagClass)"wind";
+        public static readonly TagClass Wind = (TagClass)"wind";
     };
 };
 
@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(localVariationRate);
                 binaryWriter.Write(damping);
                 binaryWriter.Write(invalidName_, 0, 36);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

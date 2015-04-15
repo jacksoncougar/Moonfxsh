@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Byte)flags);
                 binaryWriter.Write(bSP2DReferenceCount);
                 binaryWriter.Write(firstBSP2DReference);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

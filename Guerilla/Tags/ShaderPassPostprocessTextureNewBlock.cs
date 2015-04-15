@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(bitmapExternIndex);
                 binaryWriter.Write(textureStageIndex);
                 binaryWriter.Write(flags);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

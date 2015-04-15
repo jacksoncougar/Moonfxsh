@@ -35,7 +35,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(parentMarker);
                 binaryWriter.Write(childMarker);
                 binaryWriter.Write(childObject);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

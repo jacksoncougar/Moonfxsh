@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)backFillMode);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(lineWidth);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

@@ -61,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)jumpHeight);
                 binaryWriter.Write((Int32)movementHints);
                 binaryWriter.Write(throttleScale);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

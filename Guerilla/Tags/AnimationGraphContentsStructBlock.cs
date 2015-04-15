@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<AnimationModeBlock>(binaryWriter, modesAABBCC, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<VehicleSuspensionBlock>(binaryWriter, vehicleSuspensionCCAABB, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ObjectAnimationBlock>(binaryWriter, objectOverlaysCCAABB, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

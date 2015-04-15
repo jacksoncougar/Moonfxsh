@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 hudWidgetEffectFunctionStruct1.Write(binaryWriter);
                 hudWidgetEffectFunctionStruct2.Write(binaryWriter);
                 hudWidgetEffectFunctionStruct3.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

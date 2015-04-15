@@ -50,7 +50,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(crosshairBitmap);
                 nextAddress = Guerilla.WriteBlockArray<WeaponHudCrosshairItemBlock>(binaryWriter, crosshairOverlays, nextAddress);
                 binaryWriter.Write(invalidName_2, 0, 40);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum CrosshairType : short

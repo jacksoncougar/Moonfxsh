@@ -82,7 +82,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(softwarePlaneCount);
                 binaryWriter.Write(totalSubpartCont);
                 binaryWriter.Write((Int16)sectionLightingFlags);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum GeometryClassification : short

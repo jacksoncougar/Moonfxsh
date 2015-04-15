@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass HlmtClass = (TagClass)"hlmt";
+        public static readonly TagClass Hlmt = (TagClass)"hlmt";
     };
 };
 
@@ -212,7 +212,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<GlobalScenarioLoadParametersBlock>(binaryWriter, scenarioLoadParameters, nextAddress);
                 binaryWriter.Write(hologramShader);
                 binaryWriter.Write(hologramControlFunction);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum ShadowFadeDistance : short
@@ -248,7 +248,7 @@ namespace Moonfish.Guerilla.Tags
                 using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(invalidName_);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    return nextAddress;
                 }
             }
         };
@@ -264,7 +264,7 @@ namespace Moonfish.Guerilla.Tags
                 using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(invalidName_);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    return nextAddress;
                 }
             }
         };

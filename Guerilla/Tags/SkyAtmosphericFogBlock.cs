@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(maximumDensity01);
                 binaryWriter.Write(startDistanceWorldUnits);
                 binaryWriter.Write(opaqueDistanceWorldUnits);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

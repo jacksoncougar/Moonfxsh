@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_, 0, 4);
                 nextAddress = Guerilla.WriteData(binaryWriter, compiledShader, nextAddress);
                 nextAddress = Guerilla.WriteData(binaryWriter, code, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

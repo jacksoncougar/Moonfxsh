@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(flags);
                 binaryWriter.Write(bucketIndex);
                 nextAddress = Guerilla.WriteBlockArray<LightmapInstanceBucketSectionOffsetBlock>(binaryWriter, sectionOffsets, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

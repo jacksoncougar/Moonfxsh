@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(accelerationRangeWorldUnitsPerSecondSquared);
                 binaryWriter.Write(accelActionScaleActionsFail01);
                 binaryWriter.Write(accelAttachScaleDetachUnit01);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

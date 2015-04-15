@@ -83,7 +83,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(meleeLeapBallistic);
                 binaryWriter.Write(meleeDelayTimerSeconds);
                 binaryWriter.Write(berserkWeapon);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

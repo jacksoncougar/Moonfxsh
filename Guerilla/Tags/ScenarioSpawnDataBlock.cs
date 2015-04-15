@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<DynamicSpawnZoneOverloadBlock>(binaryWriter, dynamicSpawnOverloads, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<StaticSpawnZoneBlock>(binaryWriter, staticRespawnZones, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<StaticSpawnZoneBlock>(binaryWriter, staticInitialSpawnZones, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

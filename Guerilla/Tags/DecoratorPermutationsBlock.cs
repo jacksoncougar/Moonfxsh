@@ -64,7 +64,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(baseMapTintPercentage);
                 binaryWriter.Write(lightmapTintPercentage);
                 binaryWriter.Write(windScale);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

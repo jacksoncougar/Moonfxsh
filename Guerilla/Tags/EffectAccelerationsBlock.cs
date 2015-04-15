@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(acceleration);
                 binaryWriter.Write(innerConeAngleDegrees);
                 binaryWriter.Write(outerConeAngleDegrees);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum CreateIn : short

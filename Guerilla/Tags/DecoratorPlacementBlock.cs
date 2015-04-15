@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(lightmapColor);
                 binaryWriter.Write(compressedLightDirection);
                 binaryWriter.Write(compressedLight2Direction);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

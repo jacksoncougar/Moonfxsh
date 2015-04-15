@@ -61,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(soloPlayerFadeOutTimeSeconds);
                 binaryWriter.Write(soloPlayerFadeInTimeSeconds);
                 binaryWriter.Write(gameMusicFadeOutTimeSeconds);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

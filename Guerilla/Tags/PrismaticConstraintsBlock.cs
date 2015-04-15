@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(minLimit);
                 binaryWriter.Write(maxLimit);
                 binaryWriter.Write(maxFrictionForce);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 nextAddress = Guerilla.WriteBlockArray<MapLeafFaceBlock>(binaryWriter, faces, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<MapLeafConnectionIndexBlock>(binaryWriter, connectionIndices, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

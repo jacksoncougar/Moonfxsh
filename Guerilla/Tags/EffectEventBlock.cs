@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<BeamBlock>(binaryWriter, beams, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<EffectAccelerationsBlock>(binaryWriter, accelerations, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ParticleSystemDefinitionBlockNew>(binaryWriter, particleSystems, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

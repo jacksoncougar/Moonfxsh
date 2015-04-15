@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(dspEffect);
                 lowFrequencySound.Write(binaryWriter);
                 binaryWriter.Write(timePeriodSeconds);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

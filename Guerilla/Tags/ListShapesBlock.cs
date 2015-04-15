@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)shapeType);
                 binaryWriter.Write(shape);
                 binaryWriter.Write(collisionFilter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum ShapeType : short

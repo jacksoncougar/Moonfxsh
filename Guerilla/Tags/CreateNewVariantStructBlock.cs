@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<GDefaultVariantSettingsBlock>(binaryWriter, settings, nextAddress);
                 binaryWriter.Write(invalidName_1);
                 binaryWriter.Write(invalidName_2, 0, 3);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum InvalidName : int

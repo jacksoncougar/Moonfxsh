@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass SbspClass = (TagClass)"sbsp";
+        public static readonly TagClass Sbsp = (TagClass)"sbsp";
     };
 };
 
@@ -212,7 +212,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<StructureBspAudibilityBlock>(binaryWriter, audibility, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<StructureBspFakeLightprobesBlock>(binaryWriter, objectFakeLightprobes, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<DecoratorPlacementDefinitionBlock>(binaryWriter, decorators0, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

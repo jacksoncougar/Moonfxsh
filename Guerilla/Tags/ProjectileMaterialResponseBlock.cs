@@ -106,7 +106,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(maximumDistance);
                 binaryWriter.Write(parallelFriction);
                 binaryWriter.Write(perpendicularFriction);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

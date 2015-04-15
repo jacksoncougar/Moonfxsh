@@ -79,7 +79,7 @@ namespace Moonfish.Graphics
                 Scene.ObjectManager.Add( Map[ "hlmt", "masterchief" ].Meta.Identifier, scenarioObject );
             }
 
-            var shaderTags = Map.Tags.Where( x => x.Type.ToString() == "shad" ).ToArray();
+            var shaderTags = Map.Tags.Where( x => x.Class.ToString() == "shad" ).ToArray();
             listBox1.Items.AddRange( shaderTags );
             listBox1.DisplayMember = "Path";
 

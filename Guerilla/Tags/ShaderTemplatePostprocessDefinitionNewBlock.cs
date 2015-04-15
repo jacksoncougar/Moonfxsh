@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<ShaderTemplatePostprocessPassNewBlock>(binaryWriter, passes, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ShaderTemplatePostprocessImplementationNewBlock>(binaryWriter, implementations, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ShaderTemplatePostprocessRemappingNewBlock>(binaryWriter, remappings, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

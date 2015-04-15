@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 binaryWriter.Write(halfscreenScreenEffect);
                 binaryWriter.Write(quarterscreenScreenEffect);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

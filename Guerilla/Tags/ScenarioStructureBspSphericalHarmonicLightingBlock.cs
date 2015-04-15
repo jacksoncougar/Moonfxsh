@@ -32,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 binaryWriter.Write(bSP);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioSphericalHarmonicLightingPoint>(binaryWriter, lightingPoints, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

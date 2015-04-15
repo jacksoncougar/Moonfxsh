@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 binaryWriter.Write(lookCommentTimeS);
                 binaryWriter.Write(lookLongCommentTimeS);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

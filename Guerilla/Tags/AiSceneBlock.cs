@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int32)flags);
                 nextAddress = Guerilla.WriteBlockArray<AiSceneTriggerBlock>(binaryWriter, triggerConditions, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<AiSceneRoleBlock>(binaryWriter, roles, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

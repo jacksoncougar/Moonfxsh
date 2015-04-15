@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<PhysicsModelConstraintEdgeConstraintBlock>(binaryWriter, constraints, nextAddress);
                 binaryWriter.Write(nodeAMaterial);
                 binaryWriter.Write(nodeBMaterial);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

@@ -100,7 +100,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<AntiGravityPointDefinitionBlock>(binaryWriter, antiGravityPoints, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<FrictionPointDefinitionBlock>(binaryWriter, frictionPoints, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<VehiclePhantomShapeBlock>(binaryWriter, shapePhantomShape, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

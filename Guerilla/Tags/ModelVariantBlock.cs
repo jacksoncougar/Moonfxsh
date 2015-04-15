@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_0, 0, 8);
                 binaryWriter.Write(dialogueSoundEffect);
                 binaryWriter.Write(dialogue);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

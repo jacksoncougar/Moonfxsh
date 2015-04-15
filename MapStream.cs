@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using Moonfish.Guerilla;
 using Moonfish.Tags;
 
 namespace Moonfish
@@ -154,7 +155,7 @@ namespace Moonfish
             {
                 Tags[i] = new Tag()
                 {
-                    Type = binaryReader.ReadTagClass(),
+                    Class = binaryReader.ReadTagClass(),
                     Identifier = binaryReader.ReadInt32(),
                     VirtualAddress = binaryReader.ReadInt32(),
                     Length = binaryReader.ReadInt32()
@@ -262,6 +263,7 @@ namespace Moonfish
 
         Tag _currentTag = new Tag();
 
+        [Obsolete]
         public IMap this[TagReference tagReference]
         {
             get
@@ -270,20 +272,28 @@ namespace Moonfish
             }
         }
 
+        [Obsolete]
         public IMap this[string @class, string path]
         {
             get
             {
-                if (_currentTag.Type == (TagClass)@class && _currentTag.Path.Contains(path))
+                if (_currentTag.Class == (TagClass)@class && _currentTag.Path.Contains(path))
                     return this;
                 else _currentTag = (from tag in Tags
-                                    where tag.Type == (TagClass)@class
+                                    where tag.Class == (TagClass)@class
                                     where tag.Path.Contains(path)
                                     select tag).First();
                 return this;
             }
         }
 
+        [Obsolete]
+        public IMap this[TagClass @class, string path]
+        {
+            get { return this[ @class.ToString( ), path ]; }
+        }
+
+        [Obsolete]
         public IMap this[TagIdent ident]
         {
             get
@@ -295,30 +305,56 @@ namespace Moonfish
 
         }
 
-        void IMap.Seek()
-        {
-            Seek(_currentTag.VirtualAddress, SeekOrigin.Begin);
-        }
-
+        [Obsolete]
         dynamic IMap.Deserialize()
         {
-            var tagQuery = (from tag in deserializedTags
-                            where tag.Key == _currentTag.Identifier
-                            select tag).FirstOrDefault();
-            if (tagQuery.Value != null) return tagQuery.Value;
+            return Deserialize( _currentTag );
+        }
 
-            (this as IMap).Seek();
+        public dynamic Deserialize( Tag tag )
+        {
+            dynamic deserializedTag;
+            if ( deserializedTags.TryGetValue( tag.Identifier, out deserializedTag ) )
+                return deserializedTag;
 
-            var typeQuery = (from types in Assembly.GetExecutingAssembly().GetTypes()
-                             where types.HasAttribute(typeof(TagClassAttribute))
-                             where types.Attribute<TagClassAttribute>().TagClass == (this as IMap).Meta.Type
-                             select types).FirstOrDefault();
+            Seek( tag );
 
-            var ident = (this as IMap).Meta.Identifier;
+            var typeQuery = ( 
+                from types in Assembly.GetExecutingAssembly( ).GetTypes( )
+                where types.HasAttribute( typeof ( TagClassAttribute ) )
+                where types.Attribute<TagClassAttribute>( ).TagClass == tag.Class
+                select types 
+                ).FirstOrDefault( );
 
-            deserializedTags[ident] = Deserializer.Deserialize(this, typeQuery);
-            hashTags[ident] = CalculateTaghash(ident);
-            return deserializedTags[ident];
+            if ( typeQuery == null ) return null;
+
+            deserializedTags[tag.Identifier] = this.Deserialize( typeQuery );
+            hashTags[tag.Identifier] = CalculateTaghash(tag.Identifier);
+
+            return deserializedTags[tag.Identifier];
+        }
+
+        public long Seek(Tag tag)
+        {
+            return Seek(tag.VirtualAddress, SeekOrigin.Begin);
+        }
+
+        public long Seek(TagIdent tagident)
+        {
+            return Seek(Tags[tagident.Index]);
+        }
+
+        public Tag GetTag( TagIdent ident )
+        {
+            return Tags[ ident.Index ];
+        }
+
+        public IEnumerable<Tag> Select( TagClass tagClass, string path )
+        {
+           return ( from tag in Tags
+                where tag.Class == tagClass
+                where tag.Path.Contains( path )
+                select tag ); 
         }
 
         public void Remove(TagIdent ident)
@@ -346,14 +382,14 @@ namespace Moonfish
             get { return _currentTag; }
             set { }
         }
-
+        
         public override long Position
         {
             get
             {
                 var value = (int)base.Position;
                 if (TryConvertOffsetToPointer(ref value)) return value;
-                else return base.Position;
+                return base.Position;
             }
             set
             {
@@ -363,7 +399,8 @@ namespace Moonfish
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            return base.Seek(CheckOffset(offset), origin);
+            base.Seek(CheckOffset(offset), origin);
+            return Position;
         }
 
         private long CheckOffset(long value)
@@ -562,6 +599,7 @@ namespace Moonfish
             if (previousAddressIsContained) return true;
             else return false;
         }
+
         public bool Contains(long address, bool isVirtualAddress = true)
         {
             var virtualOffset = isVirtualAddress ? 0 : Magic;
@@ -570,6 +608,7 @@ namespace Moonfish
             var endAddress = beginAddress + Length;
             return fileAddress >= beginAddress && fileAddress < endAddress;
         }
+
         public bool GetOffset(ref int address, bool addressIsVirtualAddress = true, bool returnVirtualAddress = false)
         {
             if (addressIsVirtualAddress)
@@ -599,13 +638,11 @@ namespace Moonfish
         Tag Meta { get; set; }
 
         byte[] TagData { get; }
-
-        void Seek();
     }
 
     public class Tag
     {
-        public TagClass Type;
+        public TagClass Class;
         public string Path { get; set; }
         public TagIdent Identifier;
         public int VirtualAddress;

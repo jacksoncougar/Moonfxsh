@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)registerBank);
                 binaryWriter.Write(registerIndex);
                 binaryWriter.Write((Int16)componentMask);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum ScaleByTextureStage : short

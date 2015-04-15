@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(naturalPitchCents);
                 binaryWriter.Write(bendBoundsCents);
                 binaryWriter.Write(maxGainPitchBoundsCents);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

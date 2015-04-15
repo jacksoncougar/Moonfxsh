@@ -99,8 +99,8 @@ namespace Moonfish.Guerilla
         {
             _definitionsDictionary.Clear();
 
-            var info = (ClassInfo)BeginProcessTagBlockDefinition(tag.Definition, tag.definitionAddress,
-                tag.Class.ToString(), "");
+            var info = BeginProcessTagBlockDefinition( tag.Definition, tag.definitionAddress,
+                tag.Class.ToString( ), "" );
 
             using (var stream = new FileStream(Path.Combine(folder, info.Value.Name + ".cs"), FileMode.Create,
                 FileAccess.Write, FileShare.ReadWrite))
@@ -218,7 +218,7 @@ namespace Moonfish.Guerilla
                     var tagClass = ( TagClass ) @class ;
                     var titleCase = CultureInfo.CurrentCulture.TextInfo.ToTitleCase( tagClass.ToTokenString(  ) );
                     streamWriter.WriteLine(
-                        string.Format( @"public static readonly {0} {1}Class = ({0})""{2}"";", typeof ( TagClass ).Name,
+                        string.Format( @"public static readonly {0} {1} = ({0})""{2}"";", typeof ( TagClass ).Name,
                             titleCase, @class ).Tab( ref tabCount ) );
                     streamWriter.WriteLine( "};".Tab( ref tabCount ) );
                     streamWriter.WriteLine( "};".Tab( ref tabCount ) );

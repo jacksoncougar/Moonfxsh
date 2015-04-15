@@ -120,7 +120,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<LiquidCoreBlock>(binaryWriter, cores, nextAddress);
                 rangeScale.Write(binaryWriter);
                 brightnessScale.Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

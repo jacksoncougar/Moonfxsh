@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(gearRatio);
                 binaryWriter.Write(minTimeToDownshift);
                 binaryWriter.Write(engineDownShiftScale);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

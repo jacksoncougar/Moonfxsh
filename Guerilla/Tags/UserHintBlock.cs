@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<UserHintClimbBlock>(binaryWriter, climbHints, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<UserHintWellBlock>(binaryWriter, wellHints, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<UserHintFlightBlock>(binaryWriter, flightHints, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

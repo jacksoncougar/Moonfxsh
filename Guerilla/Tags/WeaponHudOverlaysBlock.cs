@@ -50,7 +50,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(overlayBitmap);
                 nextAddress = Guerilla.WriteBlockArray<WeaponHudOverlayBlock>(binaryWriter, overlays, nextAddress);
                 binaryWriter.Write(invalidName_2, 0, 40);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum StateAttachedTo : short

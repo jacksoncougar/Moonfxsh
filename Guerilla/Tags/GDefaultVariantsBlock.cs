@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<GDefaultVariantSettingsBlock>(binaryWriter, settings, nextAddress);
                 binaryWriter.Write(descriptionIndex);
                 binaryWriter.Write(invalidName_, 0, 3);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum VariantType : int

@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 nextAddress = Guerilla.WriteBlockArray<StructureDevicePortalAssociationBlock>(binaryWriter, devicePortalAssociations, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GamePortalToPortalMappingBlock>(binaryWriter, gamePortalToPortalMap, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

@@ -86,7 +86,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(halfscreenOffset);
                 binaryWriter.Write(quarterscreenOffset);
                 nextAddress = Guerilla.WriteBlockArray<HudWidgetEffectBlock>(binaryWriter, effect, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Anchor : short

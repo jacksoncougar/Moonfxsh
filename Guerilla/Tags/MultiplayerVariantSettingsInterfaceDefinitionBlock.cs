@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass GoofClass = (TagClass)"goof";
+        public static readonly TagClass Goof = (TagClass)"goof";
     };
 };
 
@@ -92,7 +92,7 @@ namespace Moonfish.Guerilla.Tags
                 unusedCreateNewVariants[4].Write(binaryWriter);
                 unusedCreateNewVariants[5].Write(binaryWriter);
                 unusedCreateNewVariants[6].Write(binaryWriter);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         public class UnusedCreateNewVariants  : IGuerilla
@@ -107,7 +107,7 @@ namespace Moonfish.Guerilla.Tags
                 using(binaryWriter.BaseStream.Pin())
                 {
                     createNewVariantStruct.Write(binaryWriter);
-                    return nextAddress = (int)binaryWriter.BaseStream.Position;
+                    return nextAddress;
                 }
             }
         };

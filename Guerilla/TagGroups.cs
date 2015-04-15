@@ -223,6 +223,7 @@ namespace Moonfish.Guerilla
 
         public void Read(BinaryReader reader)
         {
+
             // Read all the fields from the stream.
             option_count = reader.ReadInt32();
             options_address = reader.ReadInt32();
@@ -368,9 +369,9 @@ namespace Moonfish.Guerilla
                 {
                     LatestFieldSet = FieldSets[ 0 ];
                 }
-                else if ( name == "animation_pool_block" )
+                if (name == "sound_promotion_parameters_struct_block")
                 {
-                    LatestFieldSet = FieldSets[ 4 ];
+                    LatestFieldSet = FieldSets[0];
                 }
                 else
                 {

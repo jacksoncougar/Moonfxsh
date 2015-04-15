@@ -201,7 +201,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(legendaryAccuracyTime);
                 nextAddress = Guerilla.WriteBlockArray<CharacterFiringPatternBlock>(binaryWriter, firingPatterns, nextAddress);
                 binaryWriter.Write(weaponMeleeDamage);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

@@ -100,7 +100,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(guardPerceptionTimeSeconds);
                 binaryWriter.Write(nonCombatPerceptionTimeSeconds);
                 binaryWriter.Write(firstAckSurpriseDistanceWorldUnits);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

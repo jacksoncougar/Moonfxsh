@@ -10,7 +10,7 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass MachClass = (TagClass)"mach";
+        public static readonly TagClass Mach = (TagClass)"mach";
     };
 };
 
@@ -61,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(elevatorNode);
                 binaryWriter.Write((Int16)pathfindingPolicy);
                 binaryWriter.Write(invalidName_, 0, 2);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum Type : short

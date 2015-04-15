@@ -67,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<ShaderTextureStateKillStateBlock>(binaryWriter, killState, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ShaderTextureStateMiscStateBlock>(binaryWriter, miscState, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ShaderTextureStateConstantBlock>(binaryWriter, constants, nextAddress);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum SourceExtern : short

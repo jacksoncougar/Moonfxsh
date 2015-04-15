@@ -70,7 +70,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(functionPeriodSeconds);
                 binaryWriter.Write(functionPhaseSeconds);
                 binaryWriter.Write(invalidName_3, 0, 32);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum DestinationType : short

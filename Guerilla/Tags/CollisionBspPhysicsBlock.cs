@@ -82,7 +82,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_9, 0, 8);
                 nextAddress = Guerilla.WriteData(binaryWriter, moppCodeData, nextAddress);
                 binaryWriter.Write(padding, 0, 4);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
     };

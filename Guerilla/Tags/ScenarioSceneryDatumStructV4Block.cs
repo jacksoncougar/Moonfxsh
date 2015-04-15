@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<PathfindingObjectIndexListBlock>(binaryWriter, pathfindingReferences, nextAddress);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write((Int16)validMultiplayerGames);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum PathfindingPolicy : short

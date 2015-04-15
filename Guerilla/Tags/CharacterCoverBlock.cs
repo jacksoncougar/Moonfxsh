@@ -106,7 +106,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(proximityMeleeDistance);
                 binaryWriter.Write(unreachableEnemyDangerThreshold);
                 binaryWriter.Write(scaryTargetThreshold);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         [FlagsAttribute]

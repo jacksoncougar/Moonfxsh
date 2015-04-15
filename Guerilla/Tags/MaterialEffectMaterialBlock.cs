@@ -45,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write((Byte)sweetenerMode);
                 binaryWriter.Write(invalidName_0, 0, 1);
-                return nextAddress = (int)binaryWriter.BaseStream.Position;
+                return nextAddress;
             }
         }
         internal enum SweetenerMode : byte

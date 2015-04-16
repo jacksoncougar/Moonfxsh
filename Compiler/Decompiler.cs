@@ -10,7 +10,7 @@ namespace Moonfish.Compiler
     {
         public void Decompile(MapStream cache)
         {
-            foreach (var tag in cache.Tags)
+            foreach (var tag in cache.Tags) 
             {
                 var tagObject = cache[ tag.Identifier ].Deserialize();
             }

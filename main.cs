@@ -46,7 +46,8 @@ namespace Moonfish
             Guerilla.Guerilla.LoadGuerillaExecutable( Local.GuerillaPath );
             foreach ( var tag in Guerilla.Guerilla.h2Tags.Where( x=>x.Class == TagClass.Matg ) )
             {
-                validator.Validate( tag, Guerilla.Guerilla.h2Tags, files );
+                validator.Validate( new MoonfishTagGroup( tag ),
+                    Guerilla.Guerilla.h2Tags.Select( x => new MoonfishTagGroup( x ) ), files );
             }
 
             return;

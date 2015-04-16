@@ -136,7 +136,7 @@ namespace Moonfish.Guerilla
            return CalculateSizeOfFieldSet(Fields);
         }
 
-        private static int CalculateSizeOfField(MoonfishTagField field)
+        public static int CalculateSizeOfField(MoonfishTagField field)
         {
             switch (field.Type)
             {
@@ -206,15 +206,15 @@ namespace Moonfish.Guerilla
 
     public class MoonfishTagDataDefinition
     {
-        private string _name;
-        private int _alignment;
-        private int _maximumSize;
+        public string Name { get; private set; }
+        public int Alignment { get; private set; }
+        public int MaximumSize { get; private set; }
 
         public MoonfishTagDataDefinition( tag_data_definition definition )
         {
-            _name = definition.Name;
-            _alignment = definition.Alignment;
-            _maximumSize = definition.maximumSize;
+            Name = definition.Name;
+            Alignment = definition.Alignment;
+            MaximumSize = definition.maximumSize;
         }
     }
 

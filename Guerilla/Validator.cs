@@ -9,7 +9,7 @@ namespace Moonfish.Guerilla
 {
     public class Validator
     {
-        public string Validate( GuerillaTagGroup validateTag, IEnumerable<GuerillaTagGroup> tagPool, string[] filenames )
+        public string Validate(MoonfishTagGroup validateTag, IEnumerable<MoonfishTagGroup> tagPool, string[] filenames)
         {
             PointersList = new List<Tuple<BlamPointer, ElementArray>>( );
             StreamWriter stringWriter =
@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla
             ElementArray elementArray;
             if ( validateTag.ParentClass != TagClass.Null )
             {
-                var guerillaTagGroups = tagPool as IList<GuerillaTagGroup> ?? tagPool.ToList( );
+                var guerillaTagGroups = tagPool as IList<MoonfishTagGroup> ?? tagPool.ToList();
                 var parentClass = guerillaTagGroups.Single( x => x.Class == validateTag.ParentClass );
                 if ( parentClass.ParentClass != TagClass.Null )
                 {
@@ -244,15 +244,15 @@ namespace Moonfish.Guerilla
             return true;
         }
 
-        private ElementArray ProcessTagBlockDefinition(TagBlockDefinition tagBlock, ref int offset, bool inline = false)
+        private ElementArray ProcessTagBlockDefinition(MoonfishTagDefinition tagBlock, ref int offset, bool inline = false)
         {
             return ProcessTagBlockDefinition(null, tagBlock, ref offset, inline);
         }
 
-        private ElementArray ProcessTagBlockDefinition(ElementArray parent, TagBlockDefinition tagBlock, ref int offset, bool inline = false)
+        private ElementArray ProcessTagBlockDefinition(ElementArray parent, MoonfishTagDefinition tagBlock, ref int offset, bool inline = false)
         {
 
-            var size = Guerilla.CalculateSizeOfFieldSet(tagBlock.LatestFieldSet.Fields);
+            var size = tagBlock.CalculateSizeOfFieldSet( );
 
             var blockElementArray = new ElementArray()
             {
@@ -260,20 +260,20 @@ namespace Moonfish.Guerilla
                 ElementSize = size,
                 Address = offset,
                 Parent = parent,
-                MaxElementCount = tagBlock.maximum_element_count,
-                Alignment = tagBlock.LatestFieldSet.Alignment,
+                MaxElementCount = tagBlock.MaximumElementCount,
+                Alignment = tagBlock.Alignment,
             };
 
             var i = 0;
             int blockOffset = inline ? offset : 0;
-            ProcessFields(tagBlock.LatestFieldSet.Fields, blockElementArray, ref i, ref blockOffset);
+            ProcessFields(tagBlock.Fields, blockElementArray, ref i, ref blockOffset);
             if (inline) offset = blockOffset;
             return blockElementArray;
         }
 
-        private IEnumerable<ElementArray> ProcessTagStructDefinition(ElementArray parent, TagBlockDefinition definition, ref int offset)
+        private IEnumerable<ElementArray> ProcessTagStructDefinition(ElementArray parent, MoonfishTagDefinition definition, ref int offset)
         {
-            var size = Guerilla.CalculateSizeOfFieldSet(definition.LatestFieldSet.Fields);
+            var size = definition.CalculateSizeOfFieldSet();
 
             var blockElementArray = new ElementArray()
             {
@@ -281,64 +281,64 @@ namespace Moonfish.Guerilla
                 ElementSize = size,
                 Address = offset,
                 Parent = parent,
-                MaxElementCount = definition.maximum_element_count,
-                Alignment = definition.LatestFieldSet.Alignment,
+                MaxElementCount = definition.MaximumElementCount,
+                Alignment = definition.Alignment,
             };
 
             var i = 0;
-            ProcessFields(definition.LatestFieldSet.Fields, blockElementArray, ref i, ref offset);
+            ProcessFields(definition.Fields, blockElementArray, ref i, ref offset);
             return blockElementArray.Children;
         }
 
-        private void ProcessFields(IList<tag_field> fields, ElementArray elementArray, ref int i, ref int offset)
+        private void ProcessFields(IList<MoonfishTagField> fields, ElementArray elementArray, ref int i, ref int offset)
         {
             for (; i < fields.Count; ++i)
             {
                 var field = fields[i];
                 // Check the field type.
-                switch (field.type)
+                switch (field.Type)
                 {
-                    case field_type._field_block:
+                    case MoonfishFieldType.FieldBlock:
                         {
                             var childElementArray = ProcessTagBlockDefinition(elementArray, field.Definition, ref offset);
                             elementArray.Children.Add(childElementArray);
                             break;
                         }
-                    case field_type._field_struct:
+                    case MoonfishFieldType.FieldStruct:
                         {
-                            var struct_definition = (tag_struct_definition)field.Definition;
+                            var struct_definition = (MoonfishTagStruct)field.Definition;
                             var structOffset = offset;
                             var childElementArray = ProcessTagStructDefinition(elementArray, struct_definition.Definition, ref structOffset);
                             elementArray.Children.AddRange(childElementArray);
 
                             break;
                         }
-                    case field_type._field_data:
+                    case MoonfishFieldType.FieldData:
                         {
-                            var data_definition = (tag_data_definition)field.Definition;
+                            var data_definition = (MoonfishTagDataDefinition)field.Definition;
                             var childElementArray = new ElementArray() { ElementSize = 1, Name = data_definition.Name, Address = offset, Parent = elementArray, Alignment = data_definition.Alignment };
                             elementArray.Children.Add(childElementArray);
                             break;
                         }
-                    case field_type._field_array_start:
+                    case MoonfishFieldType.FieldArrayStart:
                         {
-                            ProcessArrayFields(fields, elementArray, ref field, ref i, ref offset);
+                            ProcessArrayFields(fields, elementArray, field, ref i, ref offset);
                             break;
                         }
-                    case field_type._field_array_end:
+                    case MoonfishFieldType.FieldArrayEnd:
                         {
                             return;
                         }
                 }
-                offset += Guerilla.CalculateSizeOfField(field);
+                offset +=  MoonfishTagDefinition.CalculateSizeOfField(field);
             }
         }
 
-        private void ProcessArrayFields(IList<tag_field> fields, ElementArray elementArray, ref tag_field field, ref int i, ref int offset)
+        private void ProcessArrayFields(IList<MoonfishTagField> fields, ElementArray elementArray, MoonfishTagField field, ref int i, ref int offset)
         {
             var name = field.Name;
             ++i;    //move past field_type._field_array_start
-            for (int index = 0; index < field.definition; ++index)
+            for (int index = 0; index < field.Count; ++index)
             {
                 int startindex = i;
                 ProcessFields(fields, elementArray, ref startindex, ref offset);

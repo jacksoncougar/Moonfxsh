@@ -27,19 +27,19 @@ namespace Moonfish
             //Validator v = new Validator();
             //return;
 
-            Guerilla.Guerilla.LoadGuerillaExecutable(Local.GuerillaPath);
-            var matg = Guerilla.Guerilla.h2Tags.Single( x => x.Class == TagClass.Matg );
-            var test = new MoonfishTagGroup( matg );
+            //Guerilla.Guerilla.LoadGuerillaExecutable(Local.GuerillaPath);
+            //var matg = Guerilla.Guerilla.h2Tags.Single( x => x.Class == TagClass.Matg );
+            //var test = new MoonfishTagGroup( matg );
 
-            Test.MakeNewDefinition( );
+            //Test.MakeNewDefinition( );
 
-            GuerillaCs guerilla = new GuerillaCs(Local.GuerillaPath);
-            foreach (var tag in Guerilla.Guerilla.h2Tags.Where(x => x.Class == TagClass.Matg))
-            {
-                guerilla.DumpTagLayout(new MoonfishTagGroup( tag ) ,
-                    @"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Debug");
-                Application.DoEvents();
-            }
+            //GuerillaCs guerilla = new GuerillaCs(Local.GuerillaPath);
+            //foreach (var tag in Guerilla.Guerilla.h2Tags.Where(x => x.Class == TagClass.Matg))
+            //{
+            //    guerilla.DumpTagLayout(new MoonfishTagGroup( tag ) ,
+            //        @"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags");
+            //    Application.DoEvents();
+            //}
             var files = Directory.GetFiles( Local.MapsDirectory, "*.map", SearchOption.TopDirectoryOnly );
 
             var validator = new Validator( );

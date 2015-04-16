@@ -197,6 +197,11 @@ namespace Moonfish.Guerilla
         {
             Class = definition.Class;
         }
+
+        public MoonfishTagReferenceDefinition( TagClass tagClass )
+        {
+            Class = tagClass;
+        }
     }
 
     public class MoonfishTagDataDefinition
@@ -242,7 +247,6 @@ namespace Moonfish.Guerilla
         {
             Definition = definition;
         }
-
         public void AssignDefinition(MoonfishTagReferenceDefinition definition)
         {
             Definition = definition;

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Preprocess
 {
@@ -18,9 +19,11 @@ namespace Moonfish.Guerilla.Preprocess
         protected static IList<MoonfishTagField> GuerillaPreProcessMethod(IList<MoonfishTagField> fields)
         {
             var field = new MoonfishTagField( MoonfishFieldType.FieldBlock, "Sounds" );
-            field.AssignDefinition( new MoonfishTagDefinition( "Sound References", new List<MoonfishTagField>
+            var soundTagReferenceField = new MoonfishTagField( MoonfishFieldType.FieldTagReference, "Sound*" );
+            soundTagReferenceField.AssignDefinition( new MoonfishTagReferenceDefinition( TagClass.Snd ) );
+            field.AssignDefinition( new MoonfishTagDefinition( "Moonfish Sound References Block", new List<MoonfishTagField>
             {
-                new MoonfishTagField( MoonfishFieldType.FieldTagReference, "Sound*" )
+                soundTagReferenceField
             } ) );
             fields[ 8 ] = field;
             return fields;

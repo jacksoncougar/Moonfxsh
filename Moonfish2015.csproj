@@ -883,6 +883,7 @@
     <Compile Include="Guerilla\Tags\ModelVariantStateBlock.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Guerilla\Tags\MoonfishSoundReferencesBlock.cs" />
     <Compile Include="Guerilla\Tags\MoppsBlock.cs" />
     <Compile Include="Guerilla\Tags\MouseCursorBitmapReferenceBlock.cs" />
     <Compile Include="Guerilla\Tags\MouseCursorDefinitionBlock.cs" />

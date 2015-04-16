@@ -35,7 +35,7 @@ namespace Moonfish.Guerilla.Tags
         internal AiGlobalsBlock[] aiGlobals;
         internal GameGlobalsDamageBlock[] damageTable;
         internal GNullBlock[] gNullBlock;
-        internal SoundBlock[] sounds;
+        internal MoonfishSoundReferencesBlock[] sounds;
         internal CameraBlock[] camera;
         internal PlayerControlBlock[] playerControl;
         internal DifficultyBlock[] difficulty;
@@ -69,7 +69,7 @@ namespace Moonfish.Guerilla.Tags
             aiGlobals = Guerilla.ReadBlockArray<AiGlobalsBlock>(binaryReader);
             damageTable = Guerilla.ReadBlockArray<GameGlobalsDamageBlock>(binaryReader);
             gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            sounds = Guerilla.ReadBlockArray<SoundBlock>(binaryReader);
+            sounds = Guerilla.ReadBlockArray<MoonfishSoundReferencesBlock>(binaryReader);
             camera = Guerilla.ReadBlockArray<CameraBlock>(binaryReader);
             playerControl = Guerilla.ReadBlockArray<PlayerControlBlock>(binaryReader);
             difficulty = Guerilla.ReadBlockArray<DifficultyBlock>(binaryReader);
@@ -104,7 +104,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<AiGlobalsBlock>(binaryWriter, aiGlobals, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GameGlobalsDamageBlock>(binaryWriter, damageTable, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SoundBlock>(binaryWriter, sounds, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MoonfishSoundReferencesBlock>(binaryWriter, sounds, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CameraBlock>(binaryWriter, camera, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<PlayerControlBlock>(binaryWriter, playerControl, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<DifficultyBlock>(binaryWriter, difficulty, nextAddress);

@@ -343,7 +343,7 @@ namespace Moonfish.Guerilla
                                 Attributes =
                             {
                                 new AttributeInfo(typeof (TagReference), null,
-                                    "\"" + "TEST" + "\"")
+                                    "\"" + field.Definition.Class + "\"")
                             },
                                 AccessModifiers = AccessModifiers.Internal,
                                 Value = field.Name,

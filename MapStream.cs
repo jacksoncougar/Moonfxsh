@@ -584,20 +584,19 @@ namespace Moonfish
         {
             return Contains(address, true);
         }
+
         public bool Contains(BlamPointer pointer)
         {
-            var previousAddressIsContained = true;
+            var failed = false;
             foreach (var address in pointer)
             {
-                if (Contains(address, true) ^ previousAddressIsContained)
-                {
-                    previousAddressIsContained = false;
-                    break;
-                }
-                else previousAddressIsContained = true;
+                failed |= !Contains(address);
+                if ( failed ) break;
             }
-            if (previousAddressIsContained) return true;
-            else return false;
+
+            failed |= !Contains(pointer.EndAddress - 1);
+
+            return !failed;
         }
 
         public bool Contains(long address, bool isVirtualAddress = true)

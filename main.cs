@@ -32,24 +32,20 @@ namespace Moonfish
             //var test = new MoonfishTagGroup( matg );
 
             //Test.MakeNewDefinition( );
-            var tagClass = TagClass.Scnr;
-            GuerillaCs guerilla = new GuerillaCs(Local.GuerillaPath);
-            foreach (var tag in Guerilla.Guerilla.h2Tags.Where(x => x.Class ==tagClass))
+            var validator = new Validator();
+            var guerilla = new GuerillaCs(Local.GuerillaPath);
+            var files = Directory.GetFiles(Local.MapsDirectory, "*.map", SearchOption.TopDirectoryOnly);
+            foreach (var tag in Guerilla.Guerilla.h2Tags.Where( x=>x.Class == TagClass.DECR ))
             {
-                guerilla.DumpTagLayout(new MoonfishTagGroup(tag),
-                    @"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags");
+                if ( !validator.Validate( new MoonfishTagGroup( tag ),
+                    Guerilla.Guerilla.h2Tags.Select( x => new MoonfishTagGroup( x ) ), files ) )
+                {
+                    guerilla.DumpTagLayout(new MoonfishTagGroup(tag),
+                        @"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags");
+                }
+                else Console.WriteLine("{0} failed", tag.Class);
                 Application.DoEvents();
             }
-            var files = Directory.GetFiles( Local.MapsDirectory, "*.map", SearchOption.TopDirectoryOnly );
-
-            var validator = new Validator( );
-            Guerilla.Guerilla.LoadGuerillaExecutable( Local.GuerillaPath );
-            foreach (var tag in Guerilla.Guerilla.h2Tags.Where(x => x.Class == tagClass))
-            {
-                validator.Validate( new MoonfishTagGroup( tag ),
-                    Guerilla.Guerilla.h2Tags.Select( x => new MoonfishTagGroup( x ) ), files );
-            }
-
             return;
 
             MapStream map = new MapStream(@"C:\Users\seed\Documents\Halo 2 Modding\headlong.map");

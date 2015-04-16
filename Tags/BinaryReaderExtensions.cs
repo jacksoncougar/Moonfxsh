@@ -89,6 +89,7 @@ namespace Moonfish.Tags
             binaryWriter.Write(value.Red);
             binaryWriter.Write(value.Green);
             binaryWriter.Write(value.Blue);
+            binaryWriter.Write(0);
         }
 
         public static void Write(this BinaryWriter binaryWriter, TagReference value)
@@ -210,10 +211,19 @@ namespace Moonfish.Tags
         {
             return new StringID(binaryReader.ReadInt32());
         }
-        public static RGBColor ReadRGBColor(this BinaryReader binaryReader)
+
+        public static RGBColor ReadRGBColor( this BinaryReader binaryReader )
         {
-            return new RGBColor() { Red = binaryReader.ReadByte(), Green = binaryReader.ReadByte(), Blue = binaryReader.ReadByte() };
+            var color = new RGBColor( )
+            {
+                Red = binaryReader.ReadByte( ),
+                Green = binaryReader.ReadByte( ),
+                Blue = binaryReader.ReadByte( )
+            };
+            binaryReader.ReadByte( );
+            return color;
         }
+
         public static TagReference ReadTagReference(this BinaryReader binaryReader)
         {
             return new TagReference(binaryReader.ReadTagClass(), binaryReader.ReadTagIdent());

@@ -167,6 +167,7 @@
     <Compile Include="Guerilla\MoonfishFieldType.cs" />
     <Compile Include="Guerilla\ParameterInfo.cs" />
     <Compile Include="Guerilla\Preprocess\Bitmap.cs" />
+    <Compile Include="Guerilla\Preprocess\GlobalGeometryBlockInfoStructBlock.cs" />
     <Compile Include="Guerilla\Preprocess\matg.cs" />
     <Compile Include="Guerilla\Preprocess\ModelVariantRegionBlockBase.cs" />
     <Compile Include="Guerilla\Preprocess\ScenarioBlock.cs" />

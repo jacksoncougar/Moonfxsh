@@ -20,9 +20,9 @@ namespace Moonfish.Guerilla
         {
             error = false;
             _pointersList = new List<Tuple<BlamPointer, ElementArray>>( );
-            var stringWriter =
-                File.CreateText( string.Format( @"{1}\analysis\{0}.txt",
-                    validateTag.Class.ToTokenString( ), Local.MapsDirectory ) );
+            var filename = string.Format( @"{1}\analysis\{0}.txt",
+                validateTag.Class.ToTokenString( ), Local.MapsDirectory );
+            var stringWriter = File.CreateText( filename );
 
             _writeMessage = ( stringWriter.WriteLine );
 
@@ -68,6 +68,8 @@ namespace Moonfish.Guerilla
                 }
             }
             stringWriter.Close( );
+
+            if (!error) File.Delete(filename);
 
             return error;
         }
@@ -341,8 +343,7 @@ namespace Moonfish.Guerilla
                 }
                 else
                 {
-                    error = true;
-                    OnWriteMessage(string.Format("WILLLLLSOOON SHARE"));
+                    OnWriteMessage(string.Format("EXTERNAL SHARE"));
                 }
 
                 _pointersList.Add( new Tuple<BlamPointer, ElementArray>( pointer, info ) );

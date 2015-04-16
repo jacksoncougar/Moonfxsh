@@ -6,8 +6,17 @@ using OpenTK;
 using System;
 using System.IO;
 
+namespace Moonfish.Tags
+{
+    public partial struct TagClass
+    {
+        public static readonly TagClass Hsc = (TagClass)"hsc*";
+    };
+};
+
 namespace Moonfish.Guerilla.Tags
 {
+    [TagClassAttribute("hsc*")]
     public  partial class HsSourceFilesBlock : HsSourceFilesBlockBase
     {
         public  HsSourceFilesBlock(BinaryReader binaryReader): base(binaryReader)

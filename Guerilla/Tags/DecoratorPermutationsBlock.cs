@@ -15,7 +15,7 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 38, Alignment = 4)]
+    [LayoutAttribute(Size = 40, Alignment = 4)]
     public class DecoratorPermutationsBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;

@@ -193,7 +193,7 @@ namespace Moonfish.Tags
     }
 
     [GuerillaType( MoonfishFieldType.FieldRgbColor )]
-    [StructLayout( LayoutKind.Sequential, Size = 3 )]
+    [StructLayout( LayoutKind.Sequential, Size = 4 )]
     public struct RGBColor
     {
         public byte Red;

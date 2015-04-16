@@ -24,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 112, Alignment = 4)]
+    [LayoutAttribute(Size = 108, Alignment = 4)]
     public class DecoratorSetBlockBase  : IGuerilla
     {
         internal DecoratorShaderReferenceBlock[] shaders;
@@ -43,7 +43,6 @@ namespace Moonfish.Guerilla.Tags
         internal CachedDataBlock[] cachedData;
         internal GlobalGeometryBlockInfoStructBlock geometrySectionInfo;
         internal byte[] invalidName_;
-        internal byte[] invalidName_0;
         internal  DecoratorSetBlockBase(BinaryReader binaryReader)
         {
             shaders = Guerilla.ReadBlockArray<DecoratorShaderReferenceBlock>(binaryReader);
@@ -56,7 +55,6 @@ namespace Moonfish.Guerilla.Tags
             cachedData = Guerilla.ReadBlockArray<CachedDataBlock>(binaryReader);
             geometrySectionInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
             invalidName_ = binaryReader.ReadBytes(16);
-            invalidName_0 = binaryReader.ReadBytes(4);
         }
         public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
@@ -72,7 +70,6 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<CachedDataBlock>(binaryWriter, cachedData, nextAddress);
                 geometrySectionInfo.Write(binaryWriter);
                 binaryWriter.Write(invalidName_, 0, 16);
-                binaryWriter.Write(invalidName_0, 0, 4);
                 return nextAddress;
             }
         }

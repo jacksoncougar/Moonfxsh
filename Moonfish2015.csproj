@@ -174,6 +174,7 @@
     <Compile Include="Guerilla\Preprocess\ShaderPassPostprocessImplementationNewBlock.cs" />
     <Compile Include="Guerilla\Preprocess\ShaderPostprocessBitmapNewBlockBase.cs" />
     <Compile Include="Guerilla\Preprocess\TagBlockIndexStructBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\ugh.cs" />
     <Compile Include="Guerilla\StaticReflection.cs" />
     <Compile Include="Guerilla\TagGroups.cs" />
     <Compile Include="Guerilla\Tags\ActorStartingLocationsBlock.cs">
@@ -1707,6 +1708,8 @@
     <Compile Include="Guerilla\Tags\SoundPlaybackParameterDefinitionBlock.cs" />
     <Compile Include="Guerilla\Tags\SoundPlaybackParametersStructBlock.cs" />
     <Compile Include="Guerilla\Tags\SoundPromotionParametersStructBlock.cs" />
+    <Compile Include="Guerilla\Tags\SoundPromotionRuleBlock.cs" />
+    <Compile Include="Guerilla\Tags\SoundPromotionRuntimeTimerBlock.cs" />
     <Compile Include="Guerilla\Tags\SoundReferencesBlock.cs" />
     <Compile Include="Guerilla\Tags\SoundResponseDefinitionBlock.cs" />
     <Compile Include="Guerilla\Tags\SoundResponseExtraSoundsStructBlock.cs" />

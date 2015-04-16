@@ -32,19 +32,19 @@ namespace Moonfish
             //var test = new MoonfishTagGroup( matg );
 
             //Test.MakeNewDefinition( );
-
-            //GuerillaCs guerilla = new GuerillaCs(Local.GuerillaPath);
-            //foreach (var tag in Guerilla.Guerilla.h2Tags.Where(x => x.Class == TagClass.Matg))
-            //{
-            //    guerilla.DumpTagLayout(new MoonfishTagGroup( tag ) ,
-            //        @"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags");
-            //    Application.DoEvents();
-            //}
+            var tagClass = TagClass.Scnr;
+            GuerillaCs guerilla = new GuerillaCs(Local.GuerillaPath);
+            foreach (var tag in Guerilla.Guerilla.h2Tags.Where(x => x.Class ==tagClass))
+            {
+                guerilla.DumpTagLayout(new MoonfishTagGroup(tag),
+                    @"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags");
+                Application.DoEvents();
+            }
             var files = Directory.GetFiles( Local.MapsDirectory, "*.map", SearchOption.TopDirectoryOnly );
 
             var validator = new Validator( );
             Guerilla.Guerilla.LoadGuerillaExecutable( Local.GuerillaPath );
-            foreach ( var tag in Guerilla.Guerilla.h2Tags.Where( x=>x.Class == TagClass.Matg ) )
+            foreach (var tag in Guerilla.Guerilla.h2Tags.Where(x => x.Class == tagClass))
             {
                 validator.Validate( new MoonfishTagGroup( tag ),
                     Guerilla.Guerilla.h2Tags.Select( x => new MoonfishTagGroup( x ) ), files );

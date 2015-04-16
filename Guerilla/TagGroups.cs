@@ -369,7 +369,7 @@ namespace Moonfish.Guerilla
                 {
                     LatestFieldSet = FieldSets[ 0 ];
                 }
-                if (name == "sound_promotion_parameters_struct_block")
+                if (name == "sound_gestalt_promotions_block")
                 {
                     LatestFieldSet = FieldSets[0];
                 }

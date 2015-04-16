@@ -15,7 +15,7 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
+    [LayoutAttribute(Size = 28, Alignment = 4)]
     public class SoundGestaltPromotionsBlockBase  : IGuerilla
     {
         internal SoundPromotionParametersStructBlock soundPromotionParametersStruct;

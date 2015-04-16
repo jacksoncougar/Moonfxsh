@@ -497,7 +497,7 @@ namespace Moonfish.Guerilla
                                 Value = field.Name,
                                 AccessModifiers = AccessModifiers.Internal,
                                 FieldTypeName = @class.ClassDefinitions.Last().Value,
-                                ArraySize = field.Definition,
+                                ArraySize = field.Count,
                                 IsArray = true
                             };
 

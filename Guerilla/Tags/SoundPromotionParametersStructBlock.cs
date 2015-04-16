@@ -15,32 +15,25 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
+    [LayoutAttribute(Size = 28, Alignment = 4)]
     public class SoundPromotionParametersStructBlockBase  : IGuerilla
     {
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference promotionSound;
-        /// <summary>
-        /// when there are this many instances of the sound, promote to the new sound.
-        /// </summary>
-        internal short promotionCount;
+        internal SoundPromotionRuleBlock[] promotionRules;
+        internal SoundPromotionRuntimeTimerBlock[] soundPromotionRuntimeTimerBlock;
         internal byte[] invalidName_;
-        internal byte[] invalidName_0;
         internal  SoundPromotionParametersStructBlockBase(BinaryReader binaryReader)
         {
-            promotionSound = binaryReader.ReadTagReference();
-            promotionCount = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(8);
+            promotionRules = Guerilla.ReadBlockArray<SoundPromotionRuleBlock>(binaryReader);
+            soundPromotionRuntimeTimerBlock = Guerilla.ReadBlockArray<SoundPromotionRuntimeTimerBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(12);
         }
         public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write(promotionSound);
-                binaryWriter.Write(promotionCount);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(invalidName_0, 0, 8);
+                nextAddress = Guerilla.WriteBlockArray<SoundPromotionRuleBlock>(binaryWriter, promotionRules, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundPromotionRuntimeTimerBlock>(binaryWriter, soundPromotionRuntimeTimerBlock, nextAddress);
+                binaryWriter.Write(invalidName_, 0, 12);
                 return nextAddress;
             }
         }

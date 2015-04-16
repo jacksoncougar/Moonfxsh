@@ -365,9 +365,13 @@ namespace Moonfish.Guerilla
                     FieldSets.Add( fieldSet );
                     address += tag_field_set.Size;
                 }
-                if ( name == "sound_promotion_parameters_struct_block" )
+                if (name == "sound_promotion_parameters_struct_block")
                 {
-                    LatestFieldSet = FieldSets[ 0 ];
+                    LatestFieldSet = FieldSets[0];
+                }
+                if (name == "animation_pool_block")
+                {
+                    LatestFieldSet = FieldSets[0];
                 }
                 if (name == "sound_gestalt_promotions_block")
                 {

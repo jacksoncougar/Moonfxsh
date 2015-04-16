@@ -169,6 +169,7 @@
     <Compile Include="Guerilla\Preprocess\Bitmap.cs" />
     <Compile Include="Guerilla\Preprocess\GlobalGeometryBlockInfoStructBlock.cs" />
     <Compile Include="Guerilla\Preprocess\matg.cs" />
+    <Compile Include="Guerilla\Preprocess\ModelAnimationGraphBlockBase.cs" />
     <Compile Include="Guerilla\Preprocess\ModelVariantRegionBlockBase.cs" />
     <Compile Include="Guerilla\Preprocess\ScenarioBlock.cs" />
     <Compile Include="Guerilla\Preprocess\ScenarioCutsceneTitleBlock.cs" />
@@ -886,6 +887,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Guerilla\Tags\MoonfishSoundReferencesBlock.cs" />
+    <Compile Include="Guerilla\Tags\MoonfishXboxAnimationRawBlock.cs" />
+    <Compile Include="Guerilla\Tags\MoonfishXboxAnimationUnknownBlock.cs" />
     <Compile Include="Guerilla\Tags\MoppsBlock.cs" />
     <Compile Include="Guerilla\Tags\MouseCursorBitmapReferenceBlock.cs" />
     <Compile Include="Guerilla\Tags\MouseCursorDefinitionBlock.cs" />

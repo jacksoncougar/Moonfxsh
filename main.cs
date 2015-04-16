@@ -35,10 +35,10 @@ namespace Moonfish
             var validator = new Validator();
             var guerilla = new GuerillaCs(Local.GuerillaPath);
             var files = Directory.GetFiles(Local.MapsDirectory, "*.map", SearchOption.TopDirectoryOnly);
-            foreach (var tag in Guerilla.Guerilla.h2Tags.Where( x=>x.Class == TagClass.DECR ))
+            foreach (var tag in Guerilla.Guerilla.h2Tags.Where( x=>x.Class == TagClass.Jmad ))
             {
                 if ( !validator.Validate( new MoonfishTagGroup( tag ),
-                    Guerilla.Guerilla.h2Tags.Select( x => new MoonfishTagGroup( x ) ), files ) )
+                    Guerilla.Guerilla.h2Tags.Select( x => new MoonfishTagGroup( x ) ), files ) || true)
                 {
                     guerilla.DumpTagLayout(new MoonfishTagGroup(tag),
                         @"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags");

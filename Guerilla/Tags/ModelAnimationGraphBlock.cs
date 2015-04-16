@@ -24,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 172, Alignment = 4)]
+    [LayoutAttribute(Size = 188, Alignment = 4)]
     public class ModelAnimationGraphBlockBase  : IGuerilla
     {
         internal AnimationGraphResourcesStructBlock resources;
@@ -32,6 +32,8 @@ namespace Moonfish.Guerilla.Tags
         internal ModelAnimationRuntimeDataStructBlock runTimeData;
         internal byte[] lastImportResults;
         internal AdditionalNodeDataBlock[] additionalNodeData;
+        internal MoonfishXboxAnimationRawBlock[] xboxUnknownAnimationBlock;
+        internal MoonfishXboxAnimationUnknownBlock[] xboxUnknownAnimationBlock0;
         internal  ModelAnimationGraphBlockBase(BinaryReader binaryReader)
         {
             resources = new AnimationGraphResourcesStructBlock(binaryReader);
@@ -39,6 +41,8 @@ namespace Moonfish.Guerilla.Tags
             runTimeData = new ModelAnimationRuntimeDataStructBlock(binaryReader);
             lastImportResults = Guerilla.ReadData(binaryReader);
             additionalNodeData = Guerilla.ReadBlockArray<AdditionalNodeDataBlock>(binaryReader);
+            xboxUnknownAnimationBlock = Guerilla.ReadBlockArray<MoonfishXboxAnimationRawBlock>(binaryReader);
+            xboxUnknownAnimationBlock0 = Guerilla.ReadBlockArray<MoonfishXboxAnimationUnknownBlock>(binaryReader);
         }
         public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
@@ -49,6 +53,8 @@ namespace Moonfish.Guerilla.Tags
                 runTimeData.Write(binaryWriter);
                 nextAddress = Guerilla.WriteData(binaryWriter, lastImportResults, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<AdditionalNodeDataBlock>(binaryWriter, additionalNodeData, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MoonfishXboxAnimationRawBlock>(binaryWriter, xboxUnknownAnimationBlock, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MoonfishXboxAnimationUnknownBlock>(binaryWriter, xboxUnknownAnimationBlock0, nextAddress);
                 return nextAddress;
             }
         }

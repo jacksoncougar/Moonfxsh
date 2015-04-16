@@ -199,6 +199,7 @@ namespace Moonfish.Tags
         public byte Red;
         public byte Green;
         public byte Blue;
+        private byte pad;
     }
 
     [GuerillaType( MoonfishFieldType.FieldArgbColor )]

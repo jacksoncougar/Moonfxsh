@@ -15,7 +15,7 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 103, Alignment = 4)]
+    [LayoutAttribute(Size = 104, Alignment = 4)]
     public class HudWaypointArrowBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.String32 name;

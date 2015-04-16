@@ -8,7 +8,7 @@ using Moonfish.Guerilla;
 
 namespace Moonfish.Tags
 {
-    [GuerillaType( field_type._field_tag )]
+    [GuerillaType( MoonfishFieldType.FieldTag )]
     [StructLayout( LayoutKind.Sequential, Size = 4 )]
     public partial struct TagClass : IEquatable<TagClass>, IEquatable<string>
     {

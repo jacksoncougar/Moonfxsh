@@ -3,8 +3,8 @@ using Moonfish.Tags;
 
 namespace Moonfish.Model
 {
-    [GuerillaType( field_type._field_real_bounds )]
-    [GuerillaType( field_type._field_angle_bounds )]
+    [GuerillaType( MoonfishFieldType.FieldRealBounds )]
+    [GuerillaType( MoonfishFieldType.FieldAngleBounds )]
     public struct Range
     {
         public readonly float Min;

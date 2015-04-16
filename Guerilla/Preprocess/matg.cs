@@ -17,7 +17,14 @@ namespace Moonfish.Guerilla.Preprocess
         [GuerillaPreProcessFieldsMethod(BlockName = "globals_block")]
         protected static IList<MoonfishTagField> GuerillaPreProcessMethod(IList<MoonfishTagField> fields)
         {
-            return null;
+            var field = new MoonfishTagField( MoonfishFieldType.FieldBlock, "Sounds" );
+            field.AssignDefinition( new MoonfishTagDefinition( "Sound References", new List<MoonfishTagField>
+            {
+                new MoonfishTagField( MoonfishFieldType.FieldTagReference, "Sound*" )
+            } ) );
+            fields[ 8 ] = field;
+            return fields;
         }
     }
 }
+

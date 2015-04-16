@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.CSharp;
 using Moonfish.Tags;
 using OpenTK.Audio;
+using OpenTK.Graphics;
 
 namespace Moonfish.Guerilla
 {
@@ -23,73 +24,80 @@ namespace Moonfish.Guerilla
 
     public class MoonfishTagGroup
     {
-        private string _name;
-        private TagClass _tagClass;
-        private TagClass _parentTagClass;
-        private MoonfishTagDefinition _definition;
+        public string Name { get; private set; }
+        public TagClass Class { get; private set; }
+        public TagClass ParentClass { get; private set; }
+        public MoonfishTagDefinition Definition { get; private set; }
 
         public MoonfishTagGroup(GuerillaTagGroup guerillaTag)
         {
-            _name = guerillaTag.Name;
-            _tagClass = guerillaTag.Class;
-            _parentTagClass = guerillaTag.ParentClass;
-            _definition = new MoonfishTagDefinition(guerillaTag.Definition);
+            Name = guerillaTag.Name;
+            Class = guerillaTag.Class;
+            ParentClass = guerillaTag.ParentClass;
+            Definition = new MoonfishTagDefinition(guerillaTag.Definition);
         }
     }
 
     public class MoonfishTagStruct
     {
-        private string _name;
-        private TagClass _tagClass;
-        private MoonfishTagDefinition _definition;
+        public string Name { get; private set; }
+        public TagClass Class { get; private set; }
+        public MoonfishTagDefinition Definition { get; private set; }
 
         public MoonfishTagStruct( tag_struct_definition definition )
         {
-            _name = definition.Name;
-            _tagClass = definition.Class;
-            _definition = new MoonfishTagDefinition( (TagBlockDefinition)definition.Definition );
+            Name = definition.Name;
+            Class = definition.Class;
+            Definition = new MoonfishTagDefinition( (TagBlockDefinition)definition.Definition );
         }
     }
 
     public class MoonfishTagDefinition
     {
-        private string _name;
-        private List<MoonfishTagField> _fields;
-        private int _maximumElementCount;
-        private string _displayName;
+        public string Name { get; private set; }
+        public int Alignment { get; private set; }
+        public List<MoonfishTagField> Fields { get; private set; }
+        public int MaximumElementCount { get; private set; }
+        public string DisplayName { get; private set; }
 
-        private const int MaximumElementCount = short.MaxValue;
+        private const int DefaultMaximumElementCount = short.MaxValue;
 
         private MoonfishTagDefinition()
         {
-            _fields = new List<MoonfishTagField>( 0 );
-            _maximumElementCount = MaximumElementCount;
+            Alignment = 4;
+            Fields = new List<MoonfishTagField>( 0 );
+            MaximumElementCount = DefaultMaximumElementCount;
         }
 
-        public MoonfishTagDefinition( string displayName, List<MoonfishTagField> fieldList ) : this( )
+        public MoonfishTagDefinition( string displayName, List<MoonfishTagField> fieldList ) 
+            : this( )
         {
-            _displayName = displayName;
+            DisplayName = displayName;
             using ( var cSharpCode = new CSharpCodeProvider( ) )
             {
                 var token = displayName;
                 token = new string(token.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
                 token = cSharpCode.CreateValidIdentifier(token);
-                _name = token;
+                Name = token;
             }
-            _fields = fieldList;
+            Fields = fieldList;
         }
 
-        public MoonfishTagDefinition( TagBlockDefinition definition )
+        public MoonfishTagDefinition( TagBlockDefinition definition ) 
+            : this()
         {
-            _name = definition.Name;
-            _displayName = definition.DisplayName;
-            _maximumElementCount = definition.maximum_element_count;
+            Name = definition.Name;
+            DisplayName = definition.DisplayName;
+            MaximumElementCount = definition.maximum_element_count;
+            Alignment = definition.LatestFieldSet.Alignment;
 
             var definitionFields = definition.LatestFieldSet.Fields;
-            _fields = new List<MoonfishTagField>( definitionFields.Count );
+            Fields = new List<MoonfishTagField>( definitionFields.Count );
             foreach ( var field in definitionFields )
             {
                 var moonfishField = new MoonfishTagField( ( MoonfishFieldType ) field.type, field.Name );
+
+                moonfishField.AssignCount( field.definition );
 
                 if ( field.Definition is TagBlockDefinition )
                 {
@@ -111,21 +119,83 @@ namespace Moonfish.Guerilla
                     var fieldDefinition = ( tag_data_definition ) field.Definition;
                     moonfishField.AssignDefinition( new MoonfishTagDataDefinition( fieldDefinition ) );
                 }
+                if ( field.Definition is tag_reference_definition )
+                {
+                    var fieldDefinition = ( tag_reference_definition ) field.Definition;
+                    moonfishField.AssignDefinition( new MoonfishTagReferenceDefinition( fieldDefinition ) );
+                }
 
-                _fields.Add( moonfishField );
+                Fields.Add( moonfishField );
             }
-            _fields = new List<MoonfishTagField>( Guerilla.PostProcess( _name, _fields ) );
+            Fields = new List<MoonfishTagField>( Guerilla.PostProcess( Name, Fields ) );
 
+        }
+
+        public int CalculateSizeOfFieldSet()
+        {
+           return CalculateSizeOfFieldSet(Fields);
+        }
+
+        private static int CalculateSizeOfField(MoonfishTagField field)
+        {
+            switch (field.Type)
+            {
+                case MoonfishFieldType.FieldStruct:
+                    {
+                        var struct_definition = (MoonfishTagStruct)field.Definition;
+                        var blockDefinition = struct_definition.Definition;
+
+                        return CalculateSizeOfFieldSet(blockDefinition.Fields);
+                    }
+                case MoonfishFieldType.FieldSkip:
+                case MoonfishFieldType.FieldPad:
+                    return field.Count;
+                default:
+                    return field.Type.GetFieldSize();
+            }
+        }
+
+        private static int CalculateSizeOfFieldSet( IReadOnlyList<MoonfishTagField> fields )
+        {
+            var totalFieldSetSize = 0;
+            for (var i = 0; i < fields.Count; ++i)
+            {
+                var field = fields[i];
+                var fieldSize = CalculateSizeOfField(field);
+                if (field.Type == MoonfishFieldType.FieldArrayStart)
+                {
+                    var arrayCount = field.Count;
+                    var elementSize = 0;
+                    do
+                    {
+                        field = fields[++i];
+                        elementSize += CalculateSizeOfField(field);
+                    } while (field.Type != MoonfishFieldType.FieldArrayEnd);
+                    fieldSize += elementSize * arrayCount;
+                }
+                totalFieldSetSize += fieldSize;
+            }
+            return totalFieldSetSize;
         }
     }
 
     public class MoonfishTagEnumDefinition
     {
-        private List<string> _names;
+        public List<string> Names { get; private set; }
 
         public MoonfishTagEnumDefinition( enum_definition definition )
         {
-            _names = definition.Options;
+            Names = definition.Options;
+        }
+    }
+
+    public class MoonfishTagReferenceDefinition
+    {
+        public TagClass Class { get; private set; }
+
+        public MoonfishTagReferenceDefinition(tag_reference_definition definition)
+        {
+            Class = definition.Class;
         }
     }
 
@@ -145,31 +215,43 @@ namespace Moonfish.Guerilla
 
     public class MoonfishTagField
     {
-        private MoonfishFieldType _type;
-        private string _name;
-        private object _definition;
+        public MoonfishFieldType Type { get; private set; }
+        public string Name { get; private set; }
+        public dynamic Definition { get; private set; }
+
+        public int Count { get; private set; }
+
+        public void AssignCount( int count )
+        {
+            Count = count;
+        }
 
         public void AssignDefinition(MoonfishTagEnumDefinition definition)
         {
-            _definition = definition;
+            Definition = definition;
         }
         public void AssignDefinition(MoonfishTagDataDefinition definition)
         {
-            _definition = definition;
+            Definition = definition;
         }
         public void AssignDefinition(MoonfishTagStruct definition)
         {
-            _definition = definition;
+            Definition = definition;
         }
         public void AssignDefinition(MoonfishTagDefinition definition)
         {
-            _definition = definition;
+            Definition = definition;
+        }
+
+        public void AssignDefinition(MoonfishTagReferenceDefinition definition)
+        {
+            Definition = definition;
         }
 
         public MoonfishTagField(MoonfishFieldType fieldType, string fieldName)
         {
-            _type = fieldType;
-            _name = fieldName;
+            Type = fieldType;
+            Name = fieldName;
         }
     }
 

@@ -32,14 +32,13 @@ namespace Moonfish
             var test = new MoonfishTagGroup( matg );
 
             Test.MakeNewDefinition( );
-            return;
 
             GuerillaCs guerilla = new GuerillaCs(Local.GuerillaPath);
-            foreach ( var tag in Guerilla.Guerilla.h2Tags.Where( x => x.Class == TagClass.Matg ) )
+            foreach (var tag in Guerilla.Guerilla.h2Tags.Where(x => x.Class == TagClass.Matg))
             {
-                guerilla.DumpTagLayout( tag,
-                    @"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Debug" );
-                Application.DoEvents( );
+                guerilla.DumpTagLayout(new MoonfishTagGroup( tag ) ,
+                    @"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Debug");
+                Application.DoEvents();
             }
             var files = Directory.GetFiles( Local.MapsDirectory, "*.map", SearchOption.TopDirectoryOnly );
 

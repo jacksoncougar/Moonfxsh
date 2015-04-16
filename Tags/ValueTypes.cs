@@ -12,16 +12,16 @@ namespace Moonfish.Tags
     [AttributeUsage( AttributeTargets.All, AllowMultiple = true )]
     class GuerillaTypeAttribute : Attribute
     {
-        field_type fieldType;
-        public field_type FieldType { get { return fieldType; } }
+        MoonfishFieldType fieldType;
+        public MoonfishFieldType FieldType { get { return fieldType; } }
 
-        public GuerillaTypeAttribute( field_type fieldType )
+        public GuerillaTypeAttribute(MoonfishFieldType fieldType)
         {
             this.fieldType = fieldType;
         }
     }
 
-    [GuerillaType( field_type._field_vertex_buffer )]
+    [GuerillaType(MoonfishFieldType.FieldVertexBuffer)]
     [StructLayout( LayoutKind.Sequential, Size = 32 )]
     public struct VertexBuffer
     {
@@ -29,8 +29,8 @@ namespace Moonfish.Tags
         public byte[] Data;
     }
 
-    [GuerillaType( field_type._field_string_id )]
-    [GuerillaType( field_type._field_old_string_id )]
+    [GuerillaType( MoonfishFieldType.FieldStringId )]
+    [GuerillaType( MoonfishFieldType.FieldOldStringId )]
     [StructLayout( LayoutKind.Explicit, Size = 4 )]
     public struct StringID
     {
@@ -76,7 +76,7 @@ namespace Moonfish.Tags
 
 
     [StructLayout( LayoutKind.Sequential, Size = 4 )]
-    [GuerillaType( field_type._field_moonfish_ident )]
+    [GuerillaType( MoonfishFieldType.FieldMoonfishIdent)]
     public struct TagIdent : IEquatable<TagIdent>
     {
         const short SaltConstant = -7820;
@@ -146,7 +146,7 @@ namespace Moonfish.Tags
         }
     }
 
-    [GuerillaType( field_type._field_tag_reference )]
+    [GuerillaType( MoonfishFieldType.FieldTagReference )]
     [StructLayout( LayoutKind.Sequential, Size = 8 )]
     public struct TagReference
     {
@@ -176,7 +176,7 @@ namespace Moonfish.Tags
     }
 
 
-    [GuerillaType( field_type._field_real_rgb_color )]
+    [GuerillaType( MoonfishFieldType.FieldRealRgbColor )]
     [StructLayout( LayoutKind.Sequential, Size = 12 )]
     public struct ColorR8G8B8
     {
@@ -192,7 +192,7 @@ namespace Moonfish.Tags
         }
     }
 
-    [GuerillaType( field_type._field_rgb_color )]
+    [GuerillaType( MoonfishFieldType.FieldRgbColor )]
     [StructLayout( LayoutKind.Sequential, Size = 3 )]
     public struct RGBColor
     {
@@ -201,7 +201,7 @@ namespace Moonfish.Tags
         public byte Blue;
     }
 
-    [GuerillaType( field_type._field_argb_color )]
+    [GuerillaType( MoonfishFieldType.FieldArgbColor )]
     [StructLayout( LayoutKind.Sequential, Size = 4 )]
     public struct ColourA1R1G1B1
     {
@@ -216,7 +216,7 @@ namespace Moonfish.Tags
         }
     }
 
-    [GuerillaType( field_type._field_string )]
+    [GuerillaType( MoonfishFieldType.FieldString )]
     [StructLayout( LayoutKind.Sequential, Size = 32 )]
     public struct String32
     {
@@ -231,7 +231,7 @@ namespace Moonfish.Tags
         }
     }
 
-    [GuerillaType( field_type._field_long_string )]
+    [GuerillaType( MoonfishFieldType.FieldLongString )]
     [StructLayout( LayoutKind.Sequential, Size = 256 )]
     public struct String256
     {
@@ -245,7 +245,7 @@ namespace Moonfish.Tags
         }
     }
 
-    [GuerillaType( field_type._field_byte_block_flags )]
+    [GuerillaType( MoonfishFieldType.FieldByteBlockFlags )]
     [StructLayout( LayoutKind.Sequential, Size = 1 )]
     public struct BlockFlags8
     {
@@ -257,7 +257,7 @@ namespace Moonfish.Tags
         }
     }
 
-    [GuerillaType( field_type._field_word_block_flags )]
+    [GuerillaType( MoonfishFieldType.FieldWordBlockFlags)]
     [StructLayout( LayoutKind.Sequential, Size = 2 )]
     public struct BlockFlags16
     {
@@ -269,7 +269,7 @@ namespace Moonfish.Tags
         }
     }
 
-    [GuerillaType( field_type._field_long_block_flags )]
+    [GuerillaType( MoonfishFieldType.FieldLongBlockFlags )]
     [StructLayout( LayoutKind.Sequential, Size = 4 )]
     public struct BlockFlags32
     {
@@ -281,7 +281,7 @@ namespace Moonfish.Tags
         }
     }
 
-    [GuerillaType( field_type._field_char_block_index1 )]
+    [GuerillaType( MoonfishFieldType.FieldCharBlockIndex1 )]
     [StructLayout( LayoutKind.Sequential, Size = 1 )]
     public struct ByteBlockIndex1
     {
@@ -304,7 +304,7 @@ namespace Moonfish.Tags
 
     }
 
-    [GuerillaType( field_type._field_short_block_index1 )]
+    [GuerillaType( MoonfishFieldType.FieldShortBlockIndex1 )]
     [StructLayout( LayoutKind.Sequential, Size = 2 )]
     public struct ShortBlockIndex1
     {
@@ -327,7 +327,7 @@ namespace Moonfish.Tags
 
     }
 
-    [GuerillaType( field_type._field_long_block_index1 )]
+    [GuerillaType( MoonfishFieldType.FieldLongBlockIndex1)]
     [StructLayout( LayoutKind.Sequential, Size = 4 )]
     public struct LongBlockIndex1
     {
@@ -350,7 +350,7 @@ namespace Moonfish.Tags
 
     }
 
-    [GuerillaType( field_type._field_char_block_index2 )]
+    [GuerillaType( MoonfishFieldType.FieldCharBlockIndex2 )]
     [StructLayout( LayoutKind.Sequential, Size = 1 )]
     public struct ByteBlockIndex2
     {
@@ -373,7 +373,7 @@ namespace Moonfish.Tags
 
     }
 
-    [GuerillaType( field_type._field_short_block_index2 )]
+    [GuerillaType( MoonfishFieldType.FieldShortBlockIndex2 )]
     [StructLayout( LayoutKind.Sequential, Size = 2 )]
     public struct ShortBlockIndex2
     {
@@ -396,7 +396,7 @@ namespace Moonfish.Tags
 
     }
 
-    [GuerillaType( field_type._field_long_block_index2 )]
+    [GuerillaType( MoonfishFieldType.FieldLongBlockIndex2 )]
     [StructLayout( LayoutKind.Sequential, Size = 4 )]
     public struct LongBlockIndex2
     {
@@ -421,7 +421,7 @@ namespace Moonfish.Tags
 
 
 
-    [GuerillaType( field_type._field_point_2d )]
+    [GuerillaType( MoonfishFieldType.FieldPoint_2D )]
     [StructLayout( LayoutKind.Sequential, Size = 4 )]
 
     public struct Point : IWriteable

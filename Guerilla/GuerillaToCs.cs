@@ -15,7 +15,7 @@ namespace Moonfish.Guerilla
     public class GuerillaCs : Guerilla
     {
         private readonly Dictionary<string, ClassInfo> _definitionsDictionary = new Dictionary<string, ClassInfo>();
-        private readonly Dictionary<field_type, Type> _valueTypeDictionary;
+        private readonly Dictionary<MoonfishFieldType, Type> _valueTypeDictionary;
 
         static GuerillaCs()
         {
@@ -32,7 +32,7 @@ namespace Moonfish.Guerilla
                         where type.GetCustomAttributes(typeof(GuerillaTypeAttribute), false).Any()
                         select type;
             var valueTypes = query.ToArray();
-            _valueTypeDictionary = new Dictionary<field_type, Type>(valueTypes.Count());
+            _valueTypeDictionary = new Dictionary<MoonfishFieldType, Type>(valueTypes.Count());
             foreach (var type in valueTypes)
             {
                 var guerillaTypeAttributes =
@@ -42,34 +42,34 @@ namespace Moonfish.Guerilla
                     _valueTypeDictionary.Add(guerillaType.FieldType, type);
                 }
             }
-            _valueTypeDictionary.Add(field_type._field_angle, typeof(float));
-            _valueTypeDictionary.Add(field_type._field_real_euler_angles_3d, typeof(Vector3));
-            _valueTypeDictionary.Add(field_type._field_char_integer, typeof(byte));
-            _valueTypeDictionary.Add(field_type._field_short_integer, typeof(short));
-            _valueTypeDictionary.Add(field_type._field_short_bounds, typeof(int));
-            _valueTypeDictionary.Add(field_type._field_long_integer, typeof(int));
-            _valueTypeDictionary.Add(field_type._field_real, typeof(float));
-            _valueTypeDictionary.Add(field_type._field_real_fraction, typeof(float));
-            _valueTypeDictionary.Add(field_type._field_real_fraction_bounds, typeof(Vector2));
-            _valueTypeDictionary.Add(field_type._field_real_vector_3d, typeof(Vector3));
-            _valueTypeDictionary.Add(field_type._field_real_vector_2d, typeof(Vector2));
-            _valueTypeDictionary.Add(field_type._field_real_point_2d, typeof(Vector2));
-            _valueTypeDictionary.Add(field_type._field_real_point_3d, typeof(Vector3));
-            _valueTypeDictionary.Add(field_type._field_real_euler_angles_2d, typeof(Vector2));
-            _valueTypeDictionary.Add(field_type._field_real_plane_2d, typeof(Vector3));
-            _valueTypeDictionary.Add(field_type._field_real_plane_3d, typeof(Vector4));
-            _valueTypeDictionary.Add(field_type._field_real_quaternion, typeof(Quaternion));
-            _valueTypeDictionary.Add(field_type._field_real_argb_color, typeof(Vector4));
-            _valueTypeDictionary.Add(field_type._field_rectangle_2d, typeof(Vector2));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldAngle, typeof(float));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldRealEulerAngles_3D, typeof(Vector3));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldCharInteger, typeof(byte));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldShortInteger, typeof(short));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldShortBounds, typeof(int));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldLongInteger, typeof(int));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldReal, typeof(float));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldRealFraction, typeof(float));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldRealFractionBounds, typeof(Vector2));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldRealPoint_2D, typeof(Vector2));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldRealVector_3D, typeof(Vector3));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldRealVector_2D, typeof(Vector2));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldRealPoint_3D, typeof(Vector3));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldRealEulerAngles_2D, typeof(Vector2));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldRealPlane_2D, typeof(Vector3));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldRealPlane_3D, typeof(Vector4));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldRealQuaternion, typeof(Quaternion));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldRealArgbColor, typeof(Vector4));
+            _valueTypeDictionary.Add(MoonfishFieldType.FieldRectangle_2D, typeof(Vector2));
         }
 
         private static List<string> Namespaces { get; set; }
 
-        public ClassInfo BeginProcessTagBlockDefinition(TagBlockDefinition block, int address, string groupTag = "",
+        private ClassInfo BeginProcessTagBlockDefinition(MoonfishTagDefinition block,
             string className = "")
         {
-            var size = CalculateSizeOfFieldSet(block.LatestFieldSet.Fields);
-            var alignment = block.LatestFieldSet.Alignment;
+            var size = block.CalculateSizeOfFieldSet( );
+            var alignment = block.Alignment;
 
 #if DEBUG
             System.Diagnostics.Debug.Assert(alignment > 0 && alignment % 2 == 0);
@@ -90,17 +90,16 @@ namespace Moonfish.Guerilla
 
 
 
-            ProcessFields(block.LatestFieldSet.Fields, @class);
+            ProcessFields(block.Fields, @class);
             @class.Format();
             return @class;
         }
 
-        public void DumpTagLayout(GuerillaTagGroup tag, string folder)
+        public void DumpTagLayout(MoonfishTagGroup tag, string folder)
         {
             _definitionsDictionary.Clear();
 
-            var info = BeginProcessTagBlockDefinition( tag.Definition, tag.definitionAddress,
-                tag.Class.ToString( ), "" );
+            var info = BeginProcessTagBlockDefinition( tag.Definition );
 
             using (var stream = new FileStream(Path.Combine(folder, info.Value.Name + ".cs"), FileMode.Create,
                 FileAccess.Write, FileShare.ReadWrite))
@@ -134,7 +133,7 @@ namespace Moonfish.Guerilla
             }
         }
 
-        public static string FormatTypeReference(Type type)
+        private static string FormatTypeReference(Type type)
         {
             using (var provider = new CSharpCodeProvider())
             {
@@ -181,12 +180,6 @@ namespace Moonfish.Guerilla
         protected override string FormatAttributeString(string attributeString)
         {
             return string.Format("[{0}]", attributeString);
-        }
-
-        protected override string FormatTypeString(ref tag_field field)
-        {
-            var csType = _valueTypeDictionary[field.type];
-            return FormatTypeReference(csType);
         }
 
         private void GenerateOutputForClass(ClassInfo classInfo, StreamWriter streamWriter, bool subClass = false,
@@ -310,7 +303,7 @@ namespace Moonfish.Guerilla
             return !invalidNames.Any(value.Equals);
         }
 
-        private ClassInfo ProcessArrayFields(List<tag_field> fields)
+        private ClassInfo ProcessArrayFields(List<MoonfishTagField> fields)
         {
             var arrayClass = new ClassInfo
             {
@@ -336,30 +329,30 @@ namespace Moonfish.Guerilla
             return ValidateFieldName(fieldName);
         }
 
-        private void ProcessFields(List<tag_field> fields, ClassInfo @class)
+        private void ProcessFields(List<MoonfishTagField> fields, ClassInfo @class)
         {
             foreach (var field in fields)
             {
                 FieldInfo fieldInfo;
-                switch (field.type)
+                switch (field.Type)
                 {
-                    case field_type._field_tag_reference:
+                    case MoonfishFieldType.FieldTagReference:
                         {
                             fieldInfo = new FieldInfo
                             {
                                 Attributes =
                             {
                                 new AttributeInfo(typeof (TagReference), null,
-                                    "\"" + field.Definition.Class.ToString() + "\"")
+                                    "\"" + "TEST" + "\"")
                             },
                                 AccessModifiers = AccessModifiers.Internal,
                                 Value = field.Name,
-                                FieldTypeName = _valueTypeDictionary[field.type].FullName
+                                FieldTypeName = _valueTypeDictionary[field.Type].FullName
                             };
                             @class.Fields.Add(fieldInfo);
                             break;
                         }
-                    case field_type._field_block:
+                    case MoonfishFieldType.FieldBlock:
                         {
                             fieldInfo = new FieldInfo
                             {
@@ -370,7 +363,7 @@ namespace Moonfish.Guerilla
                             if (!_definitionsDictionary.ContainsKey(field.Definition.Name))
                             {
                                 _definitionsDictionary[field.Definition.Name] =
-                                    BeginProcessTagBlockDefinition(field.Definition, field.definition);
+                                    BeginProcessTagBlockDefinition(field.Definition);
                             }
 
                             fieldInfo.FieldTypeName = _definitionsDictionary[field.Definition.Name].Value.Name;
@@ -378,7 +371,7 @@ namespace Moonfish.Guerilla
                             @class.Fields.Add(fieldInfo);
                             break;
                         }
-                    case field_type._field_struct:
+                    case MoonfishFieldType.FieldStruct:
                         {
                             fieldInfo = new FieldInfo
                             {
@@ -389,18 +382,17 @@ namespace Moonfish.Guerilla
                                 AccessModifiers = AccessModifiers.Internal
                             };
 
-                            if (!_definitionsDictionary.ContainsKey(field.Definition.name))
+                            if (!_definitionsDictionary.ContainsKey(field.Definition.Name))
                             {
-                                _definitionsDictionary[field.Definition.name] =
-                                    BeginProcessTagBlockDefinition(field.Definition.Definition,
-                                        field.Definition.block_definition_address);
+                                _definitionsDictionary[field.Definition.Name] =
+                                    BeginProcessTagBlockDefinition(field.Definition.Definition);
                             }
 
                             fieldInfo.FieldTypeName = _definitionsDictionary[field.Definition.Name].Value.Name;
                             @class.Fields.Add(fieldInfo);
                             break;
                         }
-                    case field_type._field_data:
+                    case MoonfishFieldType.FieldData:
                         {
                             fieldInfo = new FieldInfo
                             {
@@ -412,7 +404,7 @@ namespace Moonfish.Guerilla
                             @class.Fields.Add(fieldInfo);
                             break;
                         }
-                    case field_type._field_explanation:
+                    case MoonfishFieldType.FieldExplanation:
                         {
                             //// Check if there is sub-text for this explaination.
                             //string subtext = "";
@@ -423,41 +415,41 @@ namespace Moonfish.Guerilla
                             //writer.WriteLine("//FIELD_EXPLAINATION(\"{0}\", \"{1}\"),", field.Name, subtext.Replace("\n", "<lb>"));
                             break;
                         }
-                    case field_type._field_byte_flags:
-                    case field_type._field_long_flags:
-                    case field_type._field_word_flags:
-                    case field_type._field_char_enum:
-                    case field_type._field_enum:
-                    case field_type._field_long_enum:
+                    case MoonfishFieldType.FieldByteFlags:
+                    case MoonfishFieldType.FieldLongFlags:
+                    case MoonfishFieldType.FieldWordFlags:
+                    case MoonfishFieldType.FieldCharEnum:
+                    case MoonfishFieldType.FieldEnum:
+                    case MoonfishFieldType.FieldLongEnum:
                         {
                             var enumInfo = new EnumInfo
                             {
                                 Value = ToTypeName(field.Name),
                                 AccessModifiers = AccessModifiers.Internal
                             };
-                            var enumDefinition = (enum_definition)field.Definition;
-                            enumInfo.ValueNames.AddRange(enumDefinition.Options.Select(x => (GuerillaName)x));
-                            switch (field.type)
+                            var enumDefinition = (MoonfishTagEnumDefinition)field.Definition;
+                            enumInfo.ValueNames.AddRange(enumDefinition.Names.Select(x => (GuerillaName)x));
+                            switch (field.Type)
                             {
-                                case field_type._field_byte_flags:
+                                case MoonfishFieldType.FieldByteFlags:
                                     enumInfo.BaseType = EnumInfo.Type.Byte;
                                     enumInfo.Attributes.Add(new AttributeInfo(typeof(FlagsAttribute)));
                                     break;
-                                case field_type._field_word_flags:
+                                case MoonfishFieldType.FieldWordFlags:
                                     enumInfo.BaseType = EnumInfo.Type.Short;
                                     enumInfo.Attributes.Add(new AttributeInfo(typeof(FlagsAttribute)));
                                     break;
-                                case field_type._field_long_flags:
+                                case MoonfishFieldType.FieldLongFlags:
                                     enumInfo.BaseType = EnumInfo.Type.Int;
                                     enumInfo.Attributes.Add(new AttributeInfo(typeof(FlagsAttribute)));
                                     break;
-                                case field_type._field_char_enum:
+                                case MoonfishFieldType.FieldCharEnum:
                                     enumInfo.BaseType = EnumInfo.Type.Byte;
                                     break;
-                                case field_type._field_enum:
+                                case MoonfishFieldType.FieldEnum:
                                     enumInfo.BaseType = EnumInfo.Type.Short;
                                     break;
-                                case field_type._field_long_enum:
+                                case MoonfishFieldType.FieldLongEnum:
                                     enumInfo.BaseType = EnumInfo.Type.Int;
                                     break;
                             }
@@ -472,31 +464,31 @@ namespace Moonfish.Guerilla
                             @class.Fields.Add(fieldInfo);
                             break;
                         }
-                    case field_type._field_byte_block_flags:
-                    case field_type._field_word_block_flags:
-                    case field_type._field_long_block_flags:
-                    case field_type._field_char_block_index1:
-                    case field_type._field_short_block_index1:
-                    case field_type._field_long_block_index1:
-                    case field_type._field_char_block_index2:
-                    case field_type._field_short_block_index2:
-                    case field_type._field_long_block_index2:
+                    case MoonfishFieldType.FieldByteBlockFlags:
+                    case MoonfishFieldType.FieldWordBlockFlags:
+                    case MoonfishFieldType.FieldLongBlockFlags:
+                    case MoonfishFieldType.FieldCharBlockIndex1:
+                    case MoonfishFieldType.FieldShortBlockIndex1:
+                    case MoonfishFieldType.FieldLongBlockIndex1:
+                    case MoonfishFieldType.FieldCharBlockIndex2:
+                    case MoonfishFieldType.FieldShortBlockIndex2:
+                    case MoonfishFieldType.FieldLongBlockIndex2:
                         {
                             fieldInfo = new FieldInfo
                             {
                                 Value = field.Name,
                                 AccessModifiers = AccessModifiers.Internal,
-                                FieldTypeName = _valueTypeDictionary[field.type].FullName
+                                FieldTypeName = _valueTypeDictionary[field.Type].FullName
                             };
                             @class.Fields.Add(fieldInfo);
                             break;
                         }
-                    case field_type._field_array_start:
+                    case MoonfishFieldType.FieldArrayStart:
                         {
                             var startIndex = fields.IndexOf(field);
                             var endIndex = fields.FindIndex(
                                 startIndex,
-                                x => x.type == field_type._field_array_end) + 1;
+                                x => x.Type == MoonfishFieldType.FieldArrayEnd) + 1;
                             var arrayFieldSubSet = fields.GetRange(startIndex, endIndex - startIndex);
                             @class.ClassDefinitions.Add(ProcessArrayFields(arrayFieldSubSet));
 
@@ -514,39 +506,39 @@ namespace Moonfish.Guerilla
                             ProcessFields(remainingFields, @class);
                             return;
                         }
-                    case field_type._field_array_end:
+                    case MoonfishFieldType.FieldArrayEnd:
                         {
                             return;
                         }
-                    case field_type._field_pad:
+                    case MoonfishFieldType.FieldPad:
                         {
                             fieldInfo = new FieldInfo
                             {
                                 Value = field.Name,
                                 AccessModifiers = AccessModifiers.Internal,
                                 FieldTypeName = typeof(Byte).FullName,
-                                ArraySize = field.definition,
+                                ArraySize = field.Count,
                                 IsArray = true
                             };
                             @class.Fields.Add(fieldInfo);
                             break;
                         }
-                    case field_type._field_skip:
+                    case MoonfishFieldType.FieldSkip:
                         {
                             fieldInfo = new FieldInfo
                             {
                                 Value = field.Name,
                                 AccessModifiers = AccessModifiers.Internal,
                                 FieldTypeName = typeof(Byte).FullName,
-                                ArraySize = field.definition,
+                                ArraySize = field.Count,
                                 IsArray = true
                             };
                             @class.Fields.Add(fieldInfo);
                             break;
                         }
-                    case field_type._field_useless_pad:
-                    case field_type._field_terminator:
-                    case field_type._field_custom:
+                    case MoonfishFieldType.FieldUselessPad:
+                    case MoonfishFieldType.FieldTerminator:
+                    case MoonfishFieldType.FieldCustom:
                         {
                             break;
                         }
@@ -556,7 +548,7 @@ namespace Moonfish.Guerilla
                             {
                                 Value = field.Name,
                                 AccessModifiers = AccessModifiers.Internal,
-                                FieldTypeName = _valueTypeDictionary[field.type].AssemblyQualifiedName
+                                FieldTypeName = _valueTypeDictionary[field.Type].AssemblyQualifiedName
                             };
                             @class.Fields.Add(fieldInfo);
                             break;

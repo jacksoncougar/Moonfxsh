@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,46 +11,48 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Nhdt = (TagClass)"nhdt";
+        public static readonly TagClass Nhdt = ( TagClass ) "nhdt";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("nhdt")]
-    public  partial class NewHudDefinitionBlock : NewHudDefinitionBlockBase
+    [TagClassAttribute( "nhdt" )]
+    public partial class NewHudDefinitionBlock : NewHudDefinitionBlockBase
     {
-        public  NewHudDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
+        public NewHudDefinitionBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 40, Alignment = 4)]
-    public class NewHudDefinitionBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 40, Alignment = 4 )]
+    public class NewHudDefinitionBlockBase : IGuerilla
     {
-        [TagReference("nhdt")]
-        internal Moonfish.Tags.TagReference dONOTUSE;
+        [TagReference( "nhdt" )] internal Moonfish.Tags.TagReference dONOTUSE;
         internal HudBitmapWidgets[] bitmapWidgets;
         internal HudTextWidgets[] textWidgets;
         internal NewHudDashlightDataStructBlock dashlightData;
         internal HudScreenEffectWidgets[] screenEffectWidgets;
-        internal  NewHudDefinitionBlockBase(BinaryReader binaryReader)
+
+        internal NewHudDefinitionBlockBase( BinaryReader binaryReader )
         {
-            dONOTUSE = binaryReader.ReadTagReference();
-            bitmapWidgets = Guerilla.ReadBlockArray<HudBitmapWidgets>(binaryReader);
-            textWidgets = Guerilla.ReadBlockArray<HudTextWidgets>(binaryReader);
-            dashlightData = new NewHudDashlightDataStructBlock(binaryReader);
-            screenEffectWidgets = Guerilla.ReadBlockArray<HudScreenEffectWidgets>(binaryReader);
+            dONOTUSE = binaryReader.ReadTagReference( );
+            bitmapWidgets = Guerilla.ReadBlockArray<HudBitmapWidgets>( binaryReader );
+            textWidgets = Guerilla.ReadBlockArray<HudTextWidgets>( binaryReader );
+            dashlightData = new NewHudDashlightDataStructBlock( binaryReader );
+            screenEffectWidgets = Guerilla.ReadBlockArray<HudScreenEffectWidgets>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(dONOTUSE);
-                nextAddress = Guerilla.WriteBlockArray<HudBitmapWidgets>(binaryWriter, bitmapWidgets, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<HudTextWidgets>(binaryWriter, textWidgets, nextAddress);
-                dashlightData.Write(binaryWriter);
-                nextAddress = Guerilla.WriteBlockArray<HudScreenEffectWidgets>(binaryWriter, screenEffectWidgets, nextAddress);
+                binaryWriter.Write( dONOTUSE );
+                nextAddress = Guerilla.WriteBlockArray<HudBitmapWidgets>( binaryWriter, bitmapWidgets, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<HudTextWidgets>( binaryWriter, textWidgets, nextAddress );
+                dashlightData.Write( binaryWriter );
+                nextAddress = Guerilla.WriteBlockArray<HudScreenEffectWidgets>( binaryWriter, screenEffectWidgets,
+                    nextAddress );
                 return nextAddress;
             }
         }

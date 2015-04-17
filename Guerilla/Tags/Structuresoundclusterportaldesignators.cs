@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class StructureSoundClusterPortalDesignators : StructureSoundClusterPortalDesignatorsBase
+    public partial class StructureSoundClusterPortalDesignators : StructureSoundClusterPortalDesignatorsBase
     {
-        public  StructureSoundClusterPortalDesignators(BinaryReader binaryReader): base(binaryReader)
+        public StructureSoundClusterPortalDesignators( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 2, Alignment = 4)]
-    public class StructureSoundClusterPortalDesignatorsBase  : IGuerilla
+
+    [LayoutAttribute( Size = 2, Alignment = 4 )]
+    public class StructureSoundClusterPortalDesignatorsBase : IGuerilla
     {
         internal short portalDesignator;
-        internal  StructureSoundClusterPortalDesignatorsBase(BinaryReader binaryReader)
+
+        internal StructureSoundClusterPortalDesignatorsBase( BinaryReader binaryReader )
         {
-            portalDesignator = binaryReader.ReadInt16();
+            portalDesignator = binaryReader.ReadInt16( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(portalDesignator);
+                binaryWriter.Write( portalDesignator );
                 return nextAddress;
             }
         }

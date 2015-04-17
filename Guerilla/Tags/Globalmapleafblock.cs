@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,29 +9,32 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class GlobalMapLeafBlock : GlobalMapLeafBlockBase
+    public partial class GlobalMapLeafBlock : GlobalMapLeafBlockBase
     {
-        public  GlobalMapLeafBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalMapLeafBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class GlobalMapLeafBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 16, Alignment = 4 )]
+    public class GlobalMapLeafBlockBase : IGuerilla
     {
         internal MapLeafFaceBlock[] faces;
         internal MapLeafConnectionIndexBlock[] connectionIndices;
-        internal  GlobalMapLeafBlockBase(BinaryReader binaryReader)
+
+        internal GlobalMapLeafBlockBase( BinaryReader binaryReader )
         {
-            faces = Guerilla.ReadBlockArray<MapLeafFaceBlock>(binaryReader);
-            connectionIndices = Guerilla.ReadBlockArray<MapLeafConnectionIndexBlock>(binaryReader);
+            faces = Guerilla.ReadBlockArray<MapLeafFaceBlock>( binaryReader );
+            connectionIndices = Guerilla.ReadBlockArray<MapLeafConnectionIndexBlock>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                nextAddress = Guerilla.WriteBlockArray<MapLeafFaceBlock>(binaryWriter, faces, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<MapLeafConnectionIndexBlock>(binaryWriter, connectionIndices, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MapLeafFaceBlock>( binaryWriter, faces, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<MapLeafConnectionIndexBlock>( binaryWriter, connectionIndices,
+                    nextAddress );
                 return nextAddress;
             }
         }

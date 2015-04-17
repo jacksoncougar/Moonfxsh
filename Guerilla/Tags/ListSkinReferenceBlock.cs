@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,27 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ListSkinReferenceBlock : ListSkinReferenceBlockBase
+    public partial class ListSkinReferenceBlock : ListSkinReferenceBlockBase
     {
-        public  ListSkinReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public ListSkinReferenceBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ListSkinReferenceBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class ListSkinReferenceBlockBase : IGuerilla
     {
-        [TagReference("skin")]
-        internal Moonfish.Tags.TagReference listItemSkins;
-        internal  ListSkinReferenceBlockBase(BinaryReader binaryReader)
+        [TagReference( "skin" )] internal Moonfish.Tags.TagReference listItemSkins;
+
+        internal ListSkinReferenceBlockBase( BinaryReader binaryReader )
         {
-            listItemSkins = binaryReader.ReadTagReference();
+            listItemSkins = binaryReader.ReadTagReference( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(listItemSkins);
+                binaryWriter.Write( listItemSkins );
                 return nextAddress;
             }
         }

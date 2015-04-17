@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,35 +9,38 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ListShapesBlock : ListShapesBlockBase
+    public partial class ListShapesBlock : ListShapesBlockBase
     {
-        public  ListShapesBlock(BinaryReader binaryReader): base(binaryReader)
+        public ListShapesBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ListShapesBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class ListShapesBlockBase : IGuerilla
     {
         internal ShapeType shapeType;
         internal Moonfish.Tags.ShortBlockIndex2 shape;
         internal int collisionFilter;
-        internal  ListShapesBlockBase(BinaryReader binaryReader)
+
+        internal ListShapesBlockBase( BinaryReader binaryReader )
         {
-            shapeType = (ShapeType)binaryReader.ReadInt16();
-            shape = binaryReader.ReadShortBlockIndex2();
-            collisionFilter = binaryReader.ReadInt32();
+            shapeType = ( ShapeType ) binaryReader.ReadInt16( );
+            shape = binaryReader.ReadShortBlockIndex2( );
+            collisionFilter = binaryReader.ReadInt32( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int16)shapeType);
-                binaryWriter.Write(shape);
-                binaryWriter.Write(collisionFilter);
+                binaryWriter.Write( ( Int16 ) shapeType );
+                binaryWriter.Write( shape );
+                binaryWriter.Write( collisionFilter );
                 return nextAddress;
             }
         }
+
         internal enum ShapeType : short
         {
             Sphere = 0,

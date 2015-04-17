@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,15 +9,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ObjectChangeColorFunction : ObjectChangeColorFunctionBase
+    public partial class ObjectChangeColorFunction : ObjectChangeColorFunctionBase
     {
-        public  ObjectChangeColorFunction(BinaryReader binaryReader): base(binaryReader)
+        public ObjectChangeColorFunction( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 40, Alignment = 4)]
-    public class ObjectChangeColorFunctionBase  : IGuerilla
+
+    [LayoutAttribute( Size = 40, Alignment = 4 )]
+    public class ObjectChangeColorFunctionBase : IGuerilla
     {
         internal byte[] invalidName_;
         internal ScaleFlags scaleFlags;
@@ -24,28 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ColorR8G8B8 colorUpperBound;
         internal Moonfish.Tags.StringID darkenBy;
         internal Moonfish.Tags.StringID scaleBy;
-        internal  ObjectChangeColorFunctionBase(BinaryReader binaryReader)
+
+        internal ObjectChangeColorFunctionBase( BinaryReader binaryReader )
         {
-            invalidName_ = binaryReader.ReadBytes(4);
-            scaleFlags = (ScaleFlags)binaryReader.ReadInt32();
-            colorLowerBound = binaryReader.ReadColorR8G8B8();
-            colorUpperBound = binaryReader.ReadColorR8G8B8();
-            darkenBy = binaryReader.ReadStringID();
-            scaleBy = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes( 4 );
+            scaleFlags = ( ScaleFlags ) binaryReader.ReadInt32( );
+            colorLowerBound = binaryReader.ReadColorR8G8B8( );
+            colorUpperBound = binaryReader.ReadColorR8G8B8( );
+            darkenBy = binaryReader.ReadStringID( );
+            scaleBy = binaryReader.ReadStringID( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write((Int32)scaleFlags);
-                binaryWriter.Write(colorLowerBound);
-                binaryWriter.Write(colorUpperBound);
-                binaryWriter.Write(darkenBy);
-                binaryWriter.Write(scaleBy);
+                binaryWriter.Write( invalidName_, 0, 4 );
+                binaryWriter.Write( ( Int32 ) scaleFlags );
+                binaryWriter.Write( colorLowerBound );
+                binaryWriter.Write( colorUpperBound );
+                binaryWriter.Write( darkenBy );
+                binaryWriter.Write( scaleBy );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum ScaleFlags : int
         {

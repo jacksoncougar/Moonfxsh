@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ShaderPostprocessColorPropertyBlock : ShaderPostprocessColorPropertyBlockBase
+    public partial class ShaderPostprocessColorPropertyBlock : ShaderPostprocessColorPropertyBlockBase
     {
-        public  ShaderPostprocessColorPropertyBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderPostprocessColorPropertyBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class ShaderPostprocessColorPropertyBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 12, Alignment = 4 )]
+    public class ShaderPostprocessColorPropertyBlockBase : IGuerilla
     {
         internal Moonfish.Tags.ColorR8G8B8 color;
-        internal  ShaderPostprocessColorPropertyBlockBase(BinaryReader binaryReader)
+
+        internal ShaderPostprocessColorPropertyBlockBase( BinaryReader binaryReader )
         {
-            color = binaryReader.ReadColorR8G8B8();
+            color = binaryReader.ReadColorR8G8B8( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(color);
+                binaryWriter.Write( color );
                 return nextAddress;
             }
         }

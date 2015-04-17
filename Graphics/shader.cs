@@ -7,14 +7,17 @@ namespace Moonfish.Graphics
 {
     public class Shader
     {
-        int shader_id;
+        private int shader_id;
 
-        public int ID { get { return shader_id; } }
+        public int ID
+        {
+            get { return shader_id; }
+        }
 
         public Shader( string filename, ShaderType shader_type )
         {
             shader_id = GL.CreateShader( shader_type );
-            var wd = Directory.GetCurrentDirectory();
+            var wd = Directory.GetCurrentDirectory( );
 
             string shader_source = File.ReadAllText( filename );
             GL.ShaderSource( shader_id, shader_source );
@@ -29,7 +32,5 @@ namespace Moonfish.Graphics
                 MessageBox.Show( String.Format( "Compiler failure in {0} shader:\n{1}\n", shader_type, shader_log ) );
             }
         }
-
-
     }
 }

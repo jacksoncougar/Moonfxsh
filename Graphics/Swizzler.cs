@@ -7,19 +7,21 @@ namespace Moonfish.Graphics
         public static byte[] Swizzle( byte[] pixelData, int pixelSizeInBytes, int pixelWidth, int pixelHeight,
             int pixelDepth = 1, int pixelDataOffset = 0, bool deswizzle = true )
         {
-            byte[] pixelDataCopy = new byte[ pixelData.Length ];
+            byte[] pixelDataCopy = new byte[pixelData.Length];
 
             MaskSet masks = new MaskSet( pixelWidth, pixelHeight, pixelDepth );
-            var s = masks.ToString();
+            var s = masks.ToString( );
             for ( int u = 0; u < pixelWidth * pixelHeight * pixelDepth; ++u )
             {
                 var x = u % pixelWidth;
                 var y = u / pixelWidth;
 
-                var sourceAddress = deswizzle ? masks.Swizzle( x, y, pixelDepth ) * pixelSizeInBytes
+                var sourceAddress = deswizzle
+                    ? masks.Swizzle( x, y, pixelDepth ) * pixelSizeInBytes
                     : u * pixelSizeInBytes;
 
-                var destinationAddress = deswizzle ? u * pixelSizeInBytes
+                var destinationAddress = deswizzle
+                    ? u * pixelSizeInBytes
                     : masks.Swizzle( x, y, pixelDepth ) * pixelSizeInBytes;
 
                 for ( int i = pixelDataOffset; i < pixelSizeInBytes + pixelDataOffset; ++i )
@@ -39,11 +41,13 @@ namespace Moonfish.Graphics
 
             private MaskSet( )
             {
-                WidthMask = 0; HeightMask = 0; DepthMask = 0;
+                WidthMask = 0;
+                HeightMask = 0;
+                DepthMask = 0;
             }
 
             public MaskSet( int width, int height, int depth )
-                : this()
+                : this( )
             {
                 for ( int bit = 1, index = 1; bit < width || bit < height || bit < depth; bit <<= 1 )
                 {
@@ -51,7 +55,9 @@ namespace Moonfish.Graphics
                     HeightMask |= bit < height ? ( index <<= 1 ) : 0;
                     DepthMask |= bit < depth ? ( index <<= 1 ) : 0;
                 }
-                WidthMask >>= 1; HeightMask >>= 1; DepthMask >>= 1;
+                WidthMask >>= 1;
+                HeightMask >>= 1;
+                DepthMask >>= 1;
             }
 
             public int Swizzle( int x, int y, int z )
@@ -77,7 +83,7 @@ namespace Moonfish.Graphics
             public override string ToString( )
             {
                 int mask = WidthMask ^ HeightMask ^ DepthMask;
-                char[] bitValues = new char[ 32 ];
+                char[] bitValues = new char[32];
                 Array.ForEach( bitValues, i => bitValues[ i ] = '0' );
 
                 for ( int bit = 1, index = 0; bit < mask; bit <<= 1, ++index )

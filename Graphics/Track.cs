@@ -29,6 +29,7 @@ namespace Moonfish.Graphics
     {
         public float Delta { get; set; }
         public Range ZoomRange { get; set; }
+
         public ZoomTrack( Track track )
             : base( track )
         {
@@ -52,21 +53,23 @@ namespace Moonfish.Graphics
 
     public class OrbitTrack : Track
     {
-        float azimuth = 0;
-        float polar = 0;
+        private float azimuth = 0;
+        private float polar = 0;
 
         public OrbitTrack( Track track )
             : base( track )
         {
         }
+
         public override void Update( params float[] input )
         {
             if ( input.Length >= 2 ) ArcRotate( input[ 0 ], input[ 1 ] );
         }
+
         public void ArcRotate( float polarIncrement, float azimuthIncrement )
         {
             azimuth += OpenTK.MathHelper.DegreesToRadians( azimuthIncrement );
-            polar += OpenTK.MathHelper.DegreesToRadians(polarIncrement);
+            polar += OpenTK.MathHelper.DegreesToRadians( polarIncrement );
 
             var worldMatrix = this.WorldMatrix;
             var upVector = worldMatrix.Row1.Xyz;
@@ -74,6 +77,7 @@ namespace Moonfish.Graphics
             Rotation = Quaternion.FromAxisAngle( Vector3.UnitZ, polar );
             Rotation *= Quaternion.FromAxisAngle( Vector3.UnitX, azimuth );
         }
+
         public override Matrix4 WorldMatrix
         {
             get
@@ -113,10 +117,7 @@ namespace Moonfish.Graphics
 
         public override Matrix4 WorldMatrix
         {
-            get
-            {
-                return ( Parent == null ? Matrix4.Identity : Parent.WorldMatrix ) * base.WorldMatrix;
-            }
+            get { return ( Parent == null ? Matrix4.Identity : Parent.WorldMatrix ) * base.WorldMatrix; }
         }
 
         public Track( )
@@ -141,6 +142,5 @@ namespace Moonfish.Graphics
         {
             return;
         }
-
     }
 }

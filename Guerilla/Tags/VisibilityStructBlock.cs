@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,15 +9,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class VisibilityStructBlock : VisibilityStructBlockBase
+    public partial class VisibilityStructBlock : VisibilityStructBlockBase
     {
-        public  VisibilityStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public VisibilityStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 40, Alignment = 4)]
-    public class VisibilityStructBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 40, Alignment = 4 )]
+    public class VisibilityStructBlockBase : IGuerilla
     {
         internal short projectionCount;
         internal short clusterCount;
@@ -26,29 +27,31 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] visibilityClusters;
         internal byte[] clusterRemapTable;
         internal byte[] visibilityVolumes;
-        internal  VisibilityStructBlockBase(BinaryReader binaryReader)
+
+        internal VisibilityStructBlockBase( BinaryReader binaryReader )
         {
-            projectionCount = binaryReader.ReadInt16();
-            clusterCount = binaryReader.ReadInt16();
-            volumeCount = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            projections = Guerilla.ReadData(binaryReader);
-            visibilityClusters = Guerilla.ReadData(binaryReader);
-            clusterRemapTable = Guerilla.ReadData(binaryReader);
-            visibilityVolumes = Guerilla.ReadData(binaryReader);
+            projectionCount = binaryReader.ReadInt16( );
+            clusterCount = binaryReader.ReadInt16( );
+            volumeCount = binaryReader.ReadInt16( );
+            invalidName_ = binaryReader.ReadBytes( 2 );
+            projections = Guerilla.ReadData( binaryReader );
+            visibilityClusters = Guerilla.ReadData( binaryReader );
+            clusterRemapTable = Guerilla.ReadData( binaryReader );
+            visibilityVolumes = Guerilla.ReadData( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(projectionCount);
-                binaryWriter.Write(clusterCount);
-                binaryWriter.Write(volumeCount);
-                binaryWriter.Write(invalidName_, 0, 2);
-                nextAddress = Guerilla.WriteData(binaryWriter, projections, nextAddress);
-                nextAddress = Guerilla.WriteData(binaryWriter, visibilityClusters, nextAddress);
-                nextAddress = Guerilla.WriteData(binaryWriter, clusterRemapTable, nextAddress);
-                nextAddress = Guerilla.WriteData(binaryWriter, visibilityVolumes, nextAddress);
+                binaryWriter.Write( projectionCount );
+                binaryWriter.Write( clusterCount );
+                binaryWriter.Write( volumeCount );
+                binaryWriter.Write( invalidName_, 0, 2 );
+                nextAddress = Guerilla.WriteData( binaryWriter, projections, nextAddress );
+                nextAddress = Guerilla.WriteData( binaryWriter, visibilityClusters, nextAddress );
+                nextAddress = Guerilla.WriteData( binaryWriter, clusterRemapTable, nextAddress );
+                nextAddress = Guerilla.WriteData( binaryWriter, visibilityVolumes, nextAddress );
                 return nextAddress;
             }
         }

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,29 +9,31 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class UnitPosturesBlock : UnitPosturesBlockBase
+    public partial class UnitPosturesBlock : UnitPosturesBlockBase
     {
-        public  UnitPosturesBlock(BinaryReader binaryReader): base(binaryReader)
+        public UnitPosturesBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class UnitPosturesBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 16, Alignment = 4 )]
+    public class UnitPosturesBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal OpenTK.Vector3 pillOffset;
-        internal  UnitPosturesBlockBase(BinaryReader binaryReader)
+
+        internal UnitPosturesBlockBase( BinaryReader binaryReader )
         {
-            name = binaryReader.ReadStringID();
-            pillOffset = binaryReader.ReadVector3();
+            name = binaryReader.ReadStringID( );
+            pillOffset = binaryReader.ReadVector3( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(pillOffset);
+                binaryWriter.Write( name );
+                binaryWriter.Write( pillOffset );
                 return nextAddress;
             }
         }

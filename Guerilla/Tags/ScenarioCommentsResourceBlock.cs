@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,33 +11,35 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Cmnt = (TagClass)"/**/";
+        public static readonly TagClass Cmnt = ( TagClass ) "/**/";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("/**/")]
-    public  partial class ScenarioCommentsResourceBlock : ScenarioCommentsResourceBlockBase
+    [TagClassAttribute( "/**/" )]
+    public partial class ScenarioCommentsResourceBlock : ScenarioCommentsResourceBlockBase
     {
-        public  ScenarioCommentsResourceBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioCommentsResourceBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ScenarioCommentsResourceBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class ScenarioCommentsResourceBlockBase : IGuerilla
     {
         internal EditorCommentBlock[] comments;
-        internal  ScenarioCommentsResourceBlockBase(BinaryReader binaryReader)
+
+        internal ScenarioCommentsResourceBlockBase( BinaryReader binaryReader )
         {
-            comments = Guerilla.ReadBlockArray<EditorCommentBlock>(binaryReader);
+            comments = Guerilla.ReadBlockArray<EditorCommentBlock>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                nextAddress = Guerilla.WriteBlockArray<EditorCommentBlock>(binaryWriter, comments, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<EditorCommentBlock>( binaryWriter, comments, nextAddress );
                 return nextAddress;
             }
         }

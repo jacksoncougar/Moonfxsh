@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,29 +9,32 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ShaderPostprocessAnimatedParameterReferenceNewBlock : ShaderPostprocessAnimatedParameterReferenceNewBlockBase
+    public partial class ShaderPostprocessAnimatedParameterReferenceNewBlock :
+        ShaderPostprocessAnimatedParameterReferenceNewBlockBase
     {
-        public  ShaderPostprocessAnimatedParameterReferenceNewBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderPostprocessAnimatedParameterReferenceNewBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class ShaderPostprocessAnimatedParameterReferenceNewBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 4, Alignment = 4 )]
+    public class ShaderPostprocessAnimatedParameterReferenceNewBlockBase : IGuerilla
     {
         internal byte[] invalidName_;
         internal byte parameterIndex;
-        internal  ShaderPostprocessAnimatedParameterReferenceNewBlockBase(BinaryReader binaryReader)
+
+        internal ShaderPostprocessAnimatedParameterReferenceNewBlockBase( BinaryReader binaryReader )
         {
-            invalidName_ = binaryReader.ReadBytes(3);
-            parameterIndex = binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes( 3 );
+            parameterIndex = binaryReader.ReadByte( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(invalidName_, 0, 3);
-                binaryWriter.Write(parameterIndex);
+                binaryWriter.Write( invalidName_, 0, 3 );
+                binaryWriter.Write( parameterIndex );
                 return nextAddress;
             }
         }

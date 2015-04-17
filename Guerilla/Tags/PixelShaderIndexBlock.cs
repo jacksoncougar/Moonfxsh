@@ -9,24 +9,26 @@ namespace Moonfish.Guerilla.Tags
         public PixelShaderIndexBlock( BinaryReader binaryReader )
             : base( binaryReader )
         {
-
         }
     };
+
     [LayoutAttribute( Size = 1 )]
     public class PixelShaderIndexBlockBase
     {
         internal byte pixelShaderIndex;
+
         internal PixelShaderIndexBlockBase( BinaryReader binaryReader )
         {
-            this.pixelShaderIndex = binaryReader.ReadByte();
+            this.pixelShaderIndex = binaryReader.ReadByte( );
         }
+
         internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
             var blamPointer = binaryReader.ReadBlamPointer( 1 );
-            var data = new byte[ blamPointer.elementCount ];
+            var data = new byte[blamPointer.elementCount];
             if ( blamPointer.elementCount > 0 )
             {
-                using ( binaryReader.BaseStream.Pin() )
+                using ( binaryReader.BaseStream.Pin( ) )
                 {
                     binaryReader.BaseStream.Position = blamPointer[ 0 ];
                     data = binaryReader.ReadBytes( blamPointer.elementCount );

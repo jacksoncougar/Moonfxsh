@@ -10,18 +10,22 @@ using System.Text;
 namespace Moonfish.Tags
 {
     [AttributeUsage( AttributeTargets.All, AllowMultiple = true )]
-    class GuerillaTypeAttribute : Attribute
+    internal class GuerillaTypeAttribute : Attribute
     {
-        MoonfishFieldType fieldType;
-        public MoonfishFieldType FieldType { get { return fieldType; } }
+        private MoonfishFieldType fieldType;
 
-        public GuerillaTypeAttribute(MoonfishFieldType fieldType)
+        public MoonfishFieldType FieldType
+        {
+            get { return fieldType; }
+        }
+
+        public GuerillaTypeAttribute( MoonfishFieldType fieldType )
         {
             this.fieldType = fieldType;
         }
     }
 
-    [GuerillaType(MoonfishFieldType.FieldVertexBuffer)]
+    [GuerillaType( MoonfishFieldType.FieldVertexBuffer )]
     [StructLayout( LayoutKind.Sequential, Size = 32 )]
     public struct VertexBuffer
     {
@@ -34,38 +38,45 @@ namespace Moonfish.Tags
     [StructLayout( LayoutKind.Explicit, Size = 4 )]
     public struct StringID
     {
-        [FieldOffset( 0 )]
-        public readonly sbyte Length;
-        [FieldOffset( 2 )]
-        public readonly short Index;
+        [FieldOffset( 0 )] public readonly sbyte Length;
+        [FieldOffset( 2 )] public readonly short Index;
 
         public StringID( int interleavedValue )
         {
-            Length = ( sbyte )( interleavedValue >> 24 );
-            Index = ( short )( interleavedValue & 0x0000FFFF );
+            Length = ( sbyte ) ( interleavedValue >> 24 );
+            Index = ( short ) ( interleavedValue & 0x0000FFFF );
         }
+
         public StringID( short index, sbyte length )
         {
             Index = index;
             Length = length;
         }
+
         public static explicit operator int( StringID stringId )
         {
-            return ( stringId.Length << 24 ) | byte.MinValue | ( ushort )stringId.Index;
+            return ( stringId.Length << 24 ) | byte.MinValue | ( ushort ) stringId.Index;
         }
+
         public static explicit operator StringID( int i )
         {
             return new StringID( i );
         }
+
         public static bool operator ==( StringID first, StringID second )
         {
             return first.Index == second.Index && first.Length == second.Length;
         }
+
         public static bool operator !=( StringID first, StringID second )
         {
             return !( first == second );
         }
-        public static StringID Zero { get { return new StringID( 0, 0 ); } }
+
+        public static StringID Zero
+        {
+            get { return new StringID( 0, 0 ); }
+        }
 
         public override string ToString( )
         {
@@ -76,15 +87,18 @@ namespace Moonfish.Tags
 
 
     [StructLayout( LayoutKind.Sequential, Size = 4 )]
-    [GuerillaType( MoonfishFieldType.FieldMoonfishIdent)]
+    [GuerillaType( MoonfishFieldType.FieldMoonfishIdent )]
     public struct TagIdent : IEquatable<TagIdent>
     {
-        const short SaltConstant = -7820;
+        private const short SaltConstant = -7820;
 
         public readonly short Index;
         public readonly short Salt;
 
-        public short SaltedIndex { get { return ( short )( Salt - SaltConstant ); } }
+        public short SaltedIndex
+        {
+            get { return ( short ) ( Salt - SaltConstant ); }
+        }
 
         public static bool IsNull( TagIdent value )
         {
@@ -92,9 +106,10 @@ namespace Moonfish.Tags
         }
 
         public TagIdent( short index )
-            : this( index, ( short )( SaltConstant + index ) )
+            : this( index, ( short ) ( SaltConstant + index ) )
         {
         }
+
         public TagIdent( short index, short salt )
         {
             this.Index = index;
@@ -103,12 +118,12 @@ namespace Moonfish.Tags
 
         public static implicit operator int( TagIdent item )
         {
-            return ( item.Salt << 16 ) | ( ushort )item.Index;
+            return ( item.Salt << 16 ) | ( ushort ) item.Index;
         }
 
         public static implicit operator TagIdent( int i )
         {
-            return new TagIdent( ( short )( i & 0x0000FFFF ), ( short )( ( i & 0xFFFF0000 ) >> 16 ) );
+            return new TagIdent( ( short ) ( i & 0x0000FFFF ), ( short ) ( ( i & 0xFFFF0000 ) >> 16 ) );
         }
 
         public static bool operator ==( TagIdent object1, TagIdent object2 )
@@ -116,14 +131,14 @@ namespace Moonfish.Tags
             return object1.Equals( object2 );
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals( object obj )
         {
             var other = obj as TagIdent?;
-            if (other == null) return false;
-            return Equals(other.Value);
+            if ( other == null ) return false;
+            return Equals( other.Value );
         }
 
-        public override int GetHashCode()
+        public override int GetHashCode( )
         {
             return SaltedIndex;
         }
@@ -135,7 +150,7 @@ namespace Moonfish.Tags
 
         public override string ToString( )
         {
-            return String.Format( @"{0}:{1} - {2}", Index, Convert.ToString( Salt, 16 ).ToUpper(), Halo2.Paths[ Index ] );
+            return String.Format( @"{0}:{1} - {2}", Index, Convert.ToString( Salt, 16 ).ToUpper( ), Halo2.Paths[ Index ] );
         }
 
         public const int NullIdentifier = -1;
@@ -165,9 +180,9 @@ namespace Moonfish.Tags
         }
     }
 
-    class TagReferenceAttribute : TagFieldAttribute
+    internal class TagReferenceAttribute : TagFieldAttribute
     {
-        TagClass referenceClass;
+        private TagClass referenceClass;
 
         public TagReferenceAttribute( string tagClassString )
         {
@@ -213,7 +228,10 @@ namespace Moonfish.Tags
 
         public ColourA1R1G1B1( byte a, byte r, byte g, byte b )
         {
-            Alpha = a; Red = r; Green = g; Blue = b;
+            Alpha = a;
+            Red = r;
+            Green = g;
+            Blue = b;
         }
     }
 
@@ -221,14 +239,13 @@ namespace Moonfish.Tags
     [StructLayout( LayoutKind.Sequential, Size = 32 )]
     public struct String32
     {
-        [MarshalAs( UnmanagedType.ByValArray, SizeConst = 32 )]
-        public char[] value;
+        [MarshalAs( UnmanagedType.ByValArray, SizeConst = 32 )] public char[] value;
 
         public String32( string stringValue )
         {
-            value = new char[ 32 ];
+            value = new char[32];
             var length = stringValue.Length > 32 ? 32 : stringValue.Length;
-            Array.Copy( stringValue.ToArray<char>(), value, length );
+            Array.Copy( stringValue.ToArray<char>( ), value, length );
         }
     }
 
@@ -236,13 +253,13 @@ namespace Moonfish.Tags
     [StructLayout( LayoutKind.Sequential, Size = 256 )]
     public struct String256
     {
-        [MarshalAs( UnmanagedType.ByValArray, SizeConst = 256 )]
-        public char[] value;
+        [MarshalAs( UnmanagedType.ByValArray, SizeConst = 256 )] public char[] value;
+
         public String256( string stringValue )
         {
-            value = new char[ 256 ];
+            value = new char[256];
             var length = stringValue.Length > 256 ? 256 : stringValue.Length;
-            Array.Copy( stringValue.ToArray<char>(), value, length );
+            Array.Copy( stringValue.ToArray<char>( ), value, length );
         }
     }
 
@@ -258,7 +275,7 @@ namespace Moonfish.Tags
         }
     }
 
-    [GuerillaType( MoonfishFieldType.FieldWordBlockFlags)]
+    [GuerillaType( MoonfishFieldType.FieldWordBlockFlags )]
     [StructLayout( LayoutKind.Sequential, Size = 2 )]
     public struct BlockFlags16
     {
@@ -286,7 +303,7 @@ namespace Moonfish.Tags
     [StructLayout( LayoutKind.Sequential, Size = 1 )]
     public struct ByteBlockIndex1
     {
-        byte index;
+        private byte index;
 
         public static explicit operator short( ByteBlockIndex1 shortBlockIndex )
         {
@@ -295,44 +312,42 @@ namespace Moonfish.Tags
 
         public static explicit operator ByteBlockIndex1( byte value )
         {
-            return new ByteBlockIndex1 { index = value };
+            return new ByteBlockIndex1 {index = value};
         }
 
         public override string ToString( )
         {
-            return index.ToString();
+            return index.ToString( );
         }
-
     }
 
     [GuerillaType( MoonfishFieldType.FieldShortBlockIndex1 )]
     [StructLayout( LayoutKind.Sequential, Size = 2 )]
     public struct ShortBlockIndex1
     {
-        short index;
+        private short index;
 
         public static implicit operator short( ShortBlockIndex1 shortBlockIndex )
         {
             return shortBlockIndex.index;
         }
 
-        public static implicit operator ShortBlockIndex1(short value)
+        public static implicit operator ShortBlockIndex1( short value )
         {
-            return new ShortBlockIndex1 { index = value };
+            return new ShortBlockIndex1 {index = value};
         }
 
         public override string ToString( )
         {
-            return index.ToString();
+            return index.ToString( );
         }
-
     }
 
-    [GuerillaType( MoonfishFieldType.FieldLongBlockIndex1)]
+    [GuerillaType( MoonfishFieldType.FieldLongBlockIndex1 )]
     [StructLayout( LayoutKind.Sequential, Size = 4 )]
     public struct LongBlockIndex1
     {
-        int index;
+        private int index;
 
         public static explicit operator int( LongBlockIndex1 blockIndex )
         {
@@ -341,21 +356,20 @@ namespace Moonfish.Tags
 
         public static explicit operator LongBlockIndex1( int value )
         {
-            return new LongBlockIndex1 { index = value };
+            return new LongBlockIndex1 {index = value};
         }
 
         public override string ToString( )
         {
-            return index.ToString();
+            return index.ToString( );
         }
-
     }
 
     [GuerillaType( MoonfishFieldType.FieldCharBlockIndex2 )]
     [StructLayout( LayoutKind.Sequential, Size = 1 )]
     public struct ByteBlockIndex2
     {
-        byte index;
+        private byte index;
 
         public static explicit operator short( ByteBlockIndex2 blockIndex )
         {
@@ -364,21 +378,20 @@ namespace Moonfish.Tags
 
         public static explicit operator ByteBlockIndex2( byte value )
         {
-            return new ByteBlockIndex2 { index = value };
+            return new ByteBlockIndex2 {index = value};
         }
 
         public override string ToString( )
         {
-            return index.ToString();
+            return index.ToString( );
         }
-
     }
 
     [GuerillaType( MoonfishFieldType.FieldShortBlockIndex2 )]
     [StructLayout( LayoutKind.Sequential, Size = 2 )]
     public struct ShortBlockIndex2
     {
-        short index;
+        private short index;
 
         public static explicit operator short( ShortBlockIndex2 blockIndex )
         {
@@ -387,21 +400,20 @@ namespace Moonfish.Tags
 
         public static explicit operator ShortBlockIndex2( short value )
         {
-            return new ShortBlockIndex2 { index = value };
+            return new ShortBlockIndex2 {index = value};
         }
 
         public override string ToString( )
         {
-            return index.ToString();
+            return index.ToString( );
         }
-
     }
 
     [GuerillaType( MoonfishFieldType.FieldLongBlockIndex2 )]
     [StructLayout( LayoutKind.Sequential, Size = 4 )]
     public struct LongBlockIndex2
     {
-        int index;
+        private int index;
 
         public static explicit operator int( LongBlockIndex2 blockIndex )
         {
@@ -410,37 +422,33 @@ namespace Moonfish.Tags
 
         public static explicit operator LongBlockIndex2( int value )
         {
-            return new LongBlockIndex2 { index = value };
+            return new LongBlockIndex2 {index = value};
         }
 
         public override string ToString( )
         {
-            return index.ToString();
+            return index.ToString( );
         }
-
     }
-
 
 
     [GuerillaType( MoonfishFieldType.FieldPoint_2D )]
     [StructLayout( LayoutKind.Sequential, Size = 4 )]
-
     public struct Point : IWriteable
     {
-        short X { get; set; }
-        short Y { get; set; }
+        private short X { get; set; }
+        private short Y { get; set; }
 
         public Point( short x, short y )
-            : this()
+            : this( )
         {
             X = x;
             Y = y;
         }
 
         public Point( BinaryReader binaryReader )
-            : this( binaryReader.ReadInt16(), binaryReader.ReadInt16() )
+            : this( binaryReader.ReadInt16( ), binaryReader.ReadInt16( ) )
         {
-
         }
 
         void IWriteable.Write( BinaryWriter binaryWriter )
@@ -449,6 +457,4 @@ namespace Moonfish.Tags
             binaryWriter.Write( this.Y );
         }
     }
-
-
 }

@@ -17,7 +17,7 @@ namespace Moonfish
                 start = start.Parent;
             }
 
-            foreach ( GridItem item in start.EnumerateAllItems() )
+            foreach ( GridItem item in start.EnumerateAllItems( ) )
             {
                 yield return item;
             }
@@ -31,7 +31,7 @@ namespace Moonfish
             yield return item;
             foreach ( GridItem child in item.GridItems )
             {
-                foreach ( GridItem gc in child.EnumerateAllItems() )
+                foreach ( GridItem gc in child.EnumerateAllItems( ) )
                 {
                     yield return gc;
                 }

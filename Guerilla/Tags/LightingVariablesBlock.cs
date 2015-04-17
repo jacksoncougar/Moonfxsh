@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,15 +9,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class LightingVariablesBlock : LightingVariablesBlockBase
+    public partial class LightingVariablesBlock : LightingVariablesBlockBase
     {
-        public  LightingVariablesBlock(BinaryReader binaryReader): base(binaryReader)
+        public LightingVariablesBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 144, Alignment = 4)]
-    public class LightingVariablesBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 144, Alignment = 4 )]
+    public class LightingVariablesBlockBase : IGuerilla
     {
         internal ObjectAffected objectAffected;
         internal float lightmapBrightnessOffset;
@@ -24,28 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal SecondaryLightStructBlock secondaryLight;
         internal AmbientLightStructBlock ambientLight;
         internal LightmapShadowsStructBlock lightmapShadows;
-        internal  LightingVariablesBlockBase(BinaryReader binaryReader)
+
+        internal LightingVariablesBlockBase( BinaryReader binaryReader )
         {
-            objectAffected = (ObjectAffected)binaryReader.ReadInt32();
-            lightmapBrightnessOffset = binaryReader.ReadSingle();
-            primaryLight = new PrimaryLightStructBlock(binaryReader);
-            secondaryLight = new SecondaryLightStructBlock(binaryReader);
-            ambientLight = new AmbientLightStructBlock(binaryReader);
-            lightmapShadows = new LightmapShadowsStructBlock(binaryReader);
+            objectAffected = ( ObjectAffected ) binaryReader.ReadInt32( );
+            lightmapBrightnessOffset = binaryReader.ReadSingle( );
+            primaryLight = new PrimaryLightStructBlock( binaryReader );
+            secondaryLight = new SecondaryLightStructBlock( binaryReader );
+            ambientLight = new AmbientLightStructBlock( binaryReader );
+            lightmapShadows = new LightmapShadowsStructBlock( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int32)objectAffected);
-                binaryWriter.Write(lightmapBrightnessOffset);
-                primaryLight.Write(binaryWriter);
-                secondaryLight.Write(binaryWriter);
-                ambientLight.Write(binaryWriter);
-                lightmapShadows.Write(binaryWriter);
+                binaryWriter.Write( ( Int32 ) objectAffected );
+                binaryWriter.Write( lightmapBrightnessOffset );
+                primaryLight.Write( binaryWriter );
+                secondaryLight.Write( binaryWriter );
+                ambientLight.Write( binaryWriter );
+                lightmapShadows.Write( binaryWriter );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum ObjectAffected : int
         {

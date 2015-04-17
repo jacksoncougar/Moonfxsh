@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class DamageRegionBlock : DamageRegionBlockBase
+    public partial class DamageRegionBlock : DamageRegionBlockBase
     {
-        public  DamageRegionBlock(BinaryReader binaryReader): base(binaryReader)
+        public DamageRegionBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class DamageRegionBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 4, Alignment = 4 )]
+    public class DamageRegionBlockBase : IGuerilla
     {
         internal AnimationIndexStructBlock animation;
-        internal  DamageRegionBlockBase(BinaryReader binaryReader)
+
+        internal DamageRegionBlockBase( BinaryReader binaryReader )
         {
-            animation = new AnimationIndexStructBlock(binaryReader);
+            animation = new AnimationIndexStructBlock( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                animation.Write(binaryWriter);
+                animation.Write( binaryWriter );
                 return nextAddress;
             }
         }

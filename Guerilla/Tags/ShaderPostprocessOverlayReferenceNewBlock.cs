@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,29 +9,31 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ShaderPostprocessOverlayReferenceNewBlock : ShaderPostprocessOverlayReferenceNewBlockBase
+    public partial class ShaderPostprocessOverlayReferenceNewBlock : ShaderPostprocessOverlayReferenceNewBlockBase
     {
-        public  ShaderPostprocessOverlayReferenceNewBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderPostprocessOverlayReferenceNewBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class ShaderPostprocessOverlayReferenceNewBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 4, Alignment = 4 )]
+    public class ShaderPostprocessOverlayReferenceNewBlockBase : IGuerilla
     {
         internal short overlayIndex;
         internal short transformIndex;
-        internal  ShaderPostprocessOverlayReferenceNewBlockBase(BinaryReader binaryReader)
+
+        internal ShaderPostprocessOverlayReferenceNewBlockBase( BinaryReader binaryReader )
         {
-            overlayIndex = binaryReader.ReadInt16();
-            transformIndex = binaryReader.ReadInt16();
+            overlayIndex = binaryReader.ReadInt16( );
+            transformIndex = binaryReader.ReadInt16( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(overlayIndex);
-                binaryWriter.Write(transformIndex);
+                binaryWriter.Write( overlayIndex );
+                binaryWriter.Write( transformIndex );
                 return nextAddress;
             }
         }

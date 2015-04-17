@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ShaderPostprocessAnimatedParameterNewBlock : ShaderPostprocessAnimatedParameterNewBlockBase
+    public partial class ShaderPostprocessAnimatedParameterNewBlock : ShaderPostprocessAnimatedParameterNewBlockBase
     {
-        public  ShaderPostprocessAnimatedParameterNewBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderPostprocessAnimatedParameterNewBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 2, Alignment = 4)]
-    public class ShaderPostprocessAnimatedParameterNewBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 2, Alignment = 4 )]
+    public class ShaderPostprocessAnimatedParameterNewBlockBase : IGuerilla
     {
         internal TagBlockIndexStructBlock overlayReferences;
-        internal  ShaderPostprocessAnimatedParameterNewBlockBase(BinaryReader binaryReader)
+
+        internal ShaderPostprocessAnimatedParameterNewBlockBase( BinaryReader binaryReader )
         {
-            overlayReferences = new TagBlockIndexStructBlock(binaryReader);
+            overlayReferences = new TagBlockIndexStructBlock( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                overlayReferences.Write(binaryWriter);
+                overlayReferences.Write( binaryWriter );
                 return nextAddress;
             }
         }

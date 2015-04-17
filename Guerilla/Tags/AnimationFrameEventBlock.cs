@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,32 +9,35 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class AnimationFrameEventBlock : AnimationFrameEventBlockBase
+    public partial class AnimationFrameEventBlock : AnimationFrameEventBlockBase
     {
-        public  AnimationFrameEventBlock(BinaryReader binaryReader): base(binaryReader)
+        public AnimationFrameEventBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class AnimationFrameEventBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 4, Alignment = 4 )]
+    public class AnimationFrameEventBlockBase : IGuerilla
     {
         internal Type type;
         internal short frame;
-        internal  AnimationFrameEventBlockBase(BinaryReader binaryReader)
+
+        internal AnimationFrameEventBlockBase( BinaryReader binaryReader )
         {
-            type = (Type)binaryReader.ReadInt16();
-            frame = binaryReader.ReadInt16();
+            type = ( Type ) binaryReader.ReadInt16( );
+            frame = binaryReader.ReadInt16( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write(frame);
+                binaryWriter.Write( ( Int16 ) type );
+                binaryWriter.Write( frame );
                 return nextAddress;
             }
         }
+
         internal enum Type : short
         {
             PrimaryKeyframe = 0,

@@ -69,7 +69,7 @@ namespace Moonfish.Guerilla
             }
             stringWriter.Close( );
 
-            if (!error) File.Delete(filename);
+            if ( !error ) File.Delete( filename );
 
             return error;
         }
@@ -343,7 +343,7 @@ namespace Moonfish.Guerilla
                 }
                 else
                 {
-                    OnWriteMessage(string.Format("EXTERNAL SHARE"));
+                    OnWriteMessage( string.Format( "EXTERNAL SHARE" ) );
                 }
 
                 _pointersList.Add( new Tuple<BlamPointer, ElementArray>( pointer, info ) );

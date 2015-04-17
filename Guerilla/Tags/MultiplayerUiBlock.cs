@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,37 +9,38 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class MultiplayerUiBlock : MultiplayerUiBlockBase
+    public partial class MultiplayerUiBlock : MultiplayerUiBlockBase
     {
-        public  MultiplayerUiBlock(BinaryReader binaryReader): base(binaryReader)
+        public MultiplayerUiBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 32, Alignment = 4)]
-    public class MultiplayerUiBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 32, Alignment = 4 )]
+    public class MultiplayerUiBlockBase : IGuerilla
     {
-        [TagReference("unic")]
-        internal Moonfish.Tags.TagReference randomPlayerNames;
+        [TagReference( "unic" )] internal Moonfish.Tags.TagReference randomPlayerNames;
         internal MultiplayerColorBlock[] obsoleteProfileColors;
         internal MultiplayerColorBlock[] teamColors;
-        [TagReference("unic")]
-        internal Moonfish.Tags.TagReference teamNames;
-        internal  MultiplayerUiBlockBase(BinaryReader binaryReader)
+        [TagReference( "unic" )] internal Moonfish.Tags.TagReference teamNames;
+
+        internal MultiplayerUiBlockBase( BinaryReader binaryReader )
         {
-            randomPlayerNames = binaryReader.ReadTagReference();
-            obsoleteProfileColors = Guerilla.ReadBlockArray<MultiplayerColorBlock>(binaryReader);
-            teamColors = Guerilla.ReadBlockArray<MultiplayerColorBlock>(binaryReader);
-            teamNames = binaryReader.ReadTagReference();
+            randomPlayerNames = binaryReader.ReadTagReference( );
+            obsoleteProfileColors = Guerilla.ReadBlockArray<MultiplayerColorBlock>( binaryReader );
+            teamColors = Guerilla.ReadBlockArray<MultiplayerColorBlock>( binaryReader );
+            teamNames = binaryReader.ReadTagReference( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(randomPlayerNames);
-                nextAddress = Guerilla.WriteBlockArray<MultiplayerColorBlock>(binaryWriter, obsoleteProfileColors, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<MultiplayerColorBlock>(binaryWriter, teamColors, nextAddress);
-                binaryWriter.Write(teamNames);
+                binaryWriter.Write( randomPlayerNames );
+                nextAddress = Guerilla.WriteBlockArray<MultiplayerColorBlock>( binaryWriter, obsoleteProfileColors,
+                    nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<MultiplayerColorBlock>( binaryWriter, teamColors, nextAddress );
+                binaryWriter.Write( teamNames );
                 return nextAddress;
             }
         }

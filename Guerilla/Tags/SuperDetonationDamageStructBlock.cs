@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,27 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SuperDetonationDamageStructBlock : SuperDetonationDamageStructBlockBase
+    public partial class SuperDetonationDamageStructBlock : SuperDetonationDamageStructBlockBase
     {
-        public  SuperDetonationDamageStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public SuperDetonationDamageStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class SuperDetonationDamageStructBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class SuperDetonationDamageStructBlockBase : IGuerilla
     {
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference superDetonationDamage;
-        internal  SuperDetonationDamageStructBlockBase(BinaryReader binaryReader)
+        [TagReference( "jpt!" )] internal Moonfish.Tags.TagReference superDetonationDamage;
+
+        internal SuperDetonationDamageStructBlockBase( BinaryReader binaryReader )
         {
-            superDetonationDamage = binaryReader.ReadTagReference();
+            superDetonationDamage = binaryReader.ReadTagReference( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(superDetonationDamage);
+                binaryWriter.Write( superDetonationDamage );
                 return nextAddress;
             }
         }

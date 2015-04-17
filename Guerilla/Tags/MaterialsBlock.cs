@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,15 +9,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class MaterialsBlock : MaterialsBlockBase
+    public partial class MaterialsBlock : MaterialsBlockBase
     {
-        public  MaterialsBlock(BinaryReader binaryReader): base(binaryReader)
+        public MaterialsBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 180, Alignment = 4)]
-    public class MaterialsBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 180, Alignment = 4 )]
+    public class MaterialsBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.StringID parentName;
@@ -27,55 +28,56 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID generalArmor;
         internal Moonfish.Tags.StringID specificArmor;
         internal MaterialPhysicsPropertiesStructBlock physicsProperties;
-        [TagReference("mpdt")]
-        internal Moonfish.Tags.TagReference oldMaterialPhysics;
-        [TagReference("bsdt")]
-        internal Moonfish.Tags.TagReference breakableSurface;
+        [TagReference( "mpdt" )] internal Moonfish.Tags.TagReference oldMaterialPhysics;
+        [TagReference( "bsdt" )] internal Moonfish.Tags.TagReference breakableSurface;
         internal MaterialsSweetenersStructBlock sweeteners;
-        [TagReference("foot")]
-        internal Moonfish.Tags.TagReference materialEffects;
-        internal  MaterialsBlockBase(BinaryReader binaryReader)
+        [TagReference( "foot" )] internal Moonfish.Tags.TagReference materialEffects;
+
+        internal MaterialsBlockBase( BinaryReader binaryReader )
         {
-            name = binaryReader.ReadStringID();
-            parentName = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(2);
-            flags = (Flags)binaryReader.ReadInt16();
-            oldMaterialType = (OldMaterialType)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            generalArmor = binaryReader.ReadStringID();
-            specificArmor = binaryReader.ReadStringID();
-            physicsProperties = new MaterialPhysicsPropertiesStructBlock(binaryReader);
-            oldMaterialPhysics = binaryReader.ReadTagReference();
-            breakableSurface = binaryReader.ReadTagReference();
-            sweeteners = new MaterialsSweetenersStructBlock(binaryReader);
-            materialEffects = binaryReader.ReadTagReference();
+            name = binaryReader.ReadStringID( );
+            parentName = binaryReader.ReadStringID( );
+            invalidName_ = binaryReader.ReadBytes( 2 );
+            flags = ( Flags ) binaryReader.ReadInt16( );
+            oldMaterialType = ( OldMaterialType ) binaryReader.ReadInt16( );
+            invalidName_0 = binaryReader.ReadBytes( 2 );
+            generalArmor = binaryReader.ReadStringID( );
+            specificArmor = binaryReader.ReadStringID( );
+            physicsProperties = new MaterialPhysicsPropertiesStructBlock( binaryReader );
+            oldMaterialPhysics = binaryReader.ReadTagReference( );
+            breakableSurface = binaryReader.ReadTagReference( );
+            sweeteners = new MaterialsSweetenersStructBlock( binaryReader );
+            materialEffects = binaryReader.ReadTagReference( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(parentName);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Int16)oldMaterialType);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write(generalArmor);
-                binaryWriter.Write(specificArmor);
-                physicsProperties.Write(binaryWriter);
-                binaryWriter.Write(oldMaterialPhysics);
-                binaryWriter.Write(breakableSurface);
-                sweeteners.Write(binaryWriter);
-                binaryWriter.Write(materialEffects);
+                binaryWriter.Write( name );
+                binaryWriter.Write( parentName );
+                binaryWriter.Write( invalidName_, 0, 2 );
+                binaryWriter.Write( ( Int16 ) flags );
+                binaryWriter.Write( ( Int16 ) oldMaterialType );
+                binaryWriter.Write( invalidName_0, 0, 2 );
+                binaryWriter.Write( generalArmor );
+                binaryWriter.Write( specificArmor );
+                physicsProperties.Write( binaryWriter );
+                binaryWriter.Write( oldMaterialPhysics );
+                binaryWriter.Write( breakableSurface );
+                sweeteners.Write( binaryWriter );
+                binaryWriter.Write( materialEffects );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {
             Flammable = 1,
             Biomass = 2,
         };
+
         internal enum OldMaterialType : short
         {
             Dirt = 0,

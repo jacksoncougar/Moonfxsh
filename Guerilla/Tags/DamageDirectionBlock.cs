@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class DamageDirectionBlock : DamageDirectionBlockBase
+    public partial class DamageDirectionBlock : DamageDirectionBlockBase
     {
-        public  DamageDirectionBlock(BinaryReader binaryReader): base(binaryReader)
+        public DamageDirectionBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class DamageDirectionBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class DamageDirectionBlockBase : IGuerilla
     {
         internal DamageRegionBlock[] regionsAABBCC;
-        internal  DamageDirectionBlockBase(BinaryReader binaryReader)
+
+        internal DamageDirectionBlockBase( BinaryReader binaryReader )
         {
-            regionsAABBCC = Guerilla.ReadBlockArray<DamageRegionBlock>(binaryReader);
+            regionsAABBCC = Guerilla.ReadBlockArray<DamageRegionBlock>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                nextAddress = Guerilla.WriteBlockArray<DamageRegionBlock>(binaryWriter, regionsAABBCC, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<DamageRegionBlock>( binaryWriter, regionsAABBCC, nextAddress );
                 return nextAddress;
             }
         }

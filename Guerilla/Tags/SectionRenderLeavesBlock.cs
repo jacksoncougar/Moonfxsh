@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,29 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SectionRenderLeavesBlock : SectionRenderLeavesBlockBase
+    public partial class SectionRenderLeavesBlock : SectionRenderLeavesBlockBase
     {
-        public  SectionRenderLeavesBlock(BinaryReader binaryReader): base(binaryReader)
+        public SectionRenderLeavesBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class SectionRenderLeavesBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class SectionRenderLeavesBlockBase : IGuerilla
     {
         internal NodeRenderLeavesBlock[] nodeRenderLeaves;
-        internal  SectionRenderLeavesBlockBase(BinaryReader binaryReader)
+
+        internal SectionRenderLeavesBlockBase( BinaryReader binaryReader )
         {
-            nodeRenderLeaves = Guerilla.ReadBlockArray<NodeRenderLeavesBlock>(binaryReader);
+            nodeRenderLeaves = Guerilla.ReadBlockArray<NodeRenderLeavesBlock>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                nextAddress = Guerilla.WriteBlockArray<NodeRenderLeavesBlock>(binaryWriter, nodeRenderLeaves, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<NodeRenderLeavesBlock>( binaryWriter, nodeRenderLeaves,
+                    nextAddress );
                 return nextAddress;
             }
         }

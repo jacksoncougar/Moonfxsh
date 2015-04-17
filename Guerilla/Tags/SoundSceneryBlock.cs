@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,33 +11,35 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Ssce = (TagClass)"ssce";
+        public static readonly TagClass Ssce = ( TagClass ) "ssce";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("ssce")]
-    public  partial class SoundSceneryBlock : SoundSceneryBlockBase
+    [TagClassAttribute( "ssce" )]
+    public partial class SoundSceneryBlock : SoundSceneryBlockBase
     {
-        public  SoundSceneryBlock(BinaryReader binaryReader): base(binaryReader)
+        public SoundSceneryBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
+
+    [LayoutAttribute( Size = 16, Alignment = 4 )]
     public class SoundSceneryBlockBase : ObjectBlock
     {
         internal byte[] invalidName_;
-        internal  SoundSceneryBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal SoundSceneryBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
-            invalidName_ = binaryReader.ReadBytes(16);
+            invalidName_ = binaryReader.ReadBytes( 16 );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(invalidName_, 0, 16);
+                binaryWriter.Write( invalidName_, 0, 16 );
                 return nextAddress;
             }
         }

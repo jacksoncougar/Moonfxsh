@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class GlobalGeometryPointDataIndexBlock : GlobalGeometryPointDataIndexBlockBase
+    public partial class GlobalGeometryPointDataIndexBlock : GlobalGeometryPointDataIndexBlockBase
     {
-        public  GlobalGeometryPointDataIndexBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalGeometryPointDataIndexBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 2, Alignment = 4)]
-    public class GlobalGeometryPointDataIndexBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 2, Alignment = 4 )]
+    public class GlobalGeometryPointDataIndexBlockBase : IGuerilla
     {
         internal short index;
-        internal  GlobalGeometryPointDataIndexBlockBase(BinaryReader binaryReader)
+
+        internal GlobalGeometryPointDataIndexBlockBase( BinaryReader binaryReader )
         {
-            index = binaryReader.ReadInt16();
+            index = binaryReader.ReadInt16( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(index);
+                binaryWriter.Write( index );
                 return nextAddress;
             }
         }

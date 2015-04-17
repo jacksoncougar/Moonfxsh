@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,29 +9,31 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class UnitLipsyncScalesStructBlock : UnitLipsyncScalesStructBlockBase
+    public partial class UnitLipsyncScalesStructBlock : UnitLipsyncScalesStructBlockBase
     {
-        public  UnitLipsyncScalesStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public UnitLipsyncScalesStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class UnitLipsyncScalesStructBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class UnitLipsyncScalesStructBlockBase : IGuerilla
     {
         internal float attackWeight;
         internal float decayWeight;
-        internal  UnitLipsyncScalesStructBlockBase(BinaryReader binaryReader)
+
+        internal UnitLipsyncScalesStructBlockBase( BinaryReader binaryReader )
         {
-            attackWeight = binaryReader.ReadSingle();
-            decayWeight = binaryReader.ReadSingle();
+            attackWeight = binaryReader.ReadSingle( );
+            decayWeight = binaryReader.ReadSingle( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(attackWeight);
-                binaryWriter.Write(decayWeight);
+                binaryWriter.Write( attackWeight );
+                binaryWriter.Write( decayWeight );
                 return nextAddress;
             }
         }

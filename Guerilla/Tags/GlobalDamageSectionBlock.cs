@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,22 +9,24 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class GlobalDamageSectionBlock : GlobalDamageSectionBlockBase
+    public partial class GlobalDamageSectionBlock : GlobalDamageSectionBlockBase
     {
-        public  GlobalDamageSectionBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalDamageSectionBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 56, Alignment = 4)]
-    public class GlobalDamageSectionBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 56, Alignment = 4 )]
+    public class GlobalDamageSectionBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Flags flags;
+
         /// <summary>
         /// percentage of total object vitality
         /// </summary>
         internal float vitalityPercentage01;
+
         internal InstantaneousDamageRepsonseBlock[] instantResponses;
         internal GNullBlock[] gNullBlock;
         internal GNullBlock[] gNullBlock0;
@@ -32,38 +35,42 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal Moonfish.Tags.StringID resurrectionRestoredRegionName;
         internal byte[] invalidName_0;
-        internal  GlobalDamageSectionBlockBase(BinaryReader binaryReader)
+
+        internal GlobalDamageSectionBlockBase( BinaryReader binaryReader )
         {
-            name = binaryReader.ReadStringID();
-            flags = (Flags)binaryReader.ReadInt32();
-            vitalityPercentage01 = binaryReader.ReadSingle();
-            instantResponses = Guerilla.ReadBlockArray<InstantaneousDamageRepsonseBlock>(binaryReader);
-            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            gNullBlock0 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            stunTimeSeconds = binaryReader.ReadSingle();
-            rechargeTimeSeconds = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(4);
-            resurrectionRestoredRegionName = binaryReader.ReadStringID();
-            invalidName_0 = binaryReader.ReadBytes(4);
+            name = binaryReader.ReadStringID( );
+            flags = ( Flags ) binaryReader.ReadInt32( );
+            vitalityPercentage01 = binaryReader.ReadSingle( );
+            instantResponses = Guerilla.ReadBlockArray<InstantaneousDamageRepsonseBlock>( binaryReader );
+            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>( binaryReader );
+            gNullBlock0 = Guerilla.ReadBlockArray<GNullBlock>( binaryReader );
+            stunTimeSeconds = binaryReader.ReadSingle( );
+            rechargeTimeSeconds = binaryReader.ReadSingle( );
+            invalidName_ = binaryReader.ReadBytes( 4 );
+            resurrectionRestoredRegionName = binaryReader.ReadStringID( );
+            invalidName_0 = binaryReader.ReadBytes( 4 );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(vitalityPercentage01);
-                nextAddress = Guerilla.WriteBlockArray<InstantaneousDamageRepsonseBlock>(binaryWriter, instantResponses, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock0, nextAddress);
-                binaryWriter.Write(stunTimeSeconds);
-                binaryWriter.Write(rechargeTimeSeconds);
-                binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write(resurrectionRestoredRegionName);
-                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write( name );
+                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write( vitalityPercentage01 );
+                nextAddress = Guerilla.WriteBlockArray<InstantaneousDamageRepsonseBlock>( binaryWriter, instantResponses,
+                    nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<GNullBlock>( binaryWriter, gNullBlock, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<GNullBlock>( binaryWriter, gNullBlock0, nextAddress );
+                binaryWriter.Write( stunTimeSeconds );
+                binaryWriter.Write( rechargeTimeSeconds );
+                binaryWriter.Write( invalidName_, 0, 4 );
+                binaryWriter.Write( resurrectionRestoredRegionName );
+                binaryWriter.Write( invalidName_0, 0, 4 );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

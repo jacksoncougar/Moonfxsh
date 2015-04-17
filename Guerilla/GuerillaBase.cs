@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla
         #region Imports
 
         [DllImport( "kernel32" )]
-        public extern static IntPtr LoadLibrary( string librayName );
+        public static extern IntPtr LoadLibrary( string librayName );
 
         [DllImport( "user32.dll", CharSet = CharSet.Auto )]
         public static extern int LoadString( IntPtr hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax );
@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla
 
         private delegate IList<MoonfishTagField> ProcessFieldsDelegate( IList<MoonfishTagField> fields );
 
-        public readonly static IntPtr H2LangLib;
+        public static readonly IntPtr H2LangLib;
         public static List<GuerillaTagGroup> h2Tags;
         public static Dictionary<string, Action<BinaryReader, IList<tag_field>>> PostprocessFunctions;
 
@@ -54,24 +54,24 @@ namespace Moonfish.Guerilla
 
         static Guerilla( )
         {
-            h2Tags = new List<GuerillaTagGroup>();
-            H2LangLib = LoadLibrary(H2LanguageLibrary);
-            LoadPostProcessFunctionsObsolete();
-            LoadPostProcessFunctions();
+            h2Tags = new List<GuerillaTagGroup>( );
+            H2LangLib = LoadLibrary( H2LanguageLibrary );
+            LoadPostProcessFunctionsObsolete( );
+            LoadPostProcessFunctions( );
         }
 
-        private static void LoadPostProcessFunctions()
+        private static void LoadPostProcessFunctions( )
         {
-            PreProcessFieldsFunctions = new Dictionary<string, ProcessFieldsDelegate>();
-            var methods = (from method in Assembly.GetExecutingAssembly().GetTypes().SelectMany(
-               x => x.GetMethods(BindingFlags.NonPublic | BindingFlags.Static))
-                           where method.IsDefined(typeof(GuerillaPreProcessFieldsMethodAttribute), false)
-                           select method).ToArray();
-            foreach (var method in methods)
+            PreProcessFieldsFunctions = new Dictionary<string, ProcessFieldsDelegate>( );
+            var methods = ( from method in Assembly.GetExecutingAssembly( ).GetTypes( ).SelectMany(
+                x => x.GetMethods( BindingFlags.NonPublic | BindingFlags.Static ) )
+                where method.IsDefined( typeof ( GuerillaPreProcessFieldsMethodAttribute ), false )
+                select method ).ToArray( );
+            foreach ( var method in methods )
             {
-                var attributes = method.GetCustomAttributes(typeof(GuerillaPreProcessFieldsMethodAttribute), false);
+                var attributes = method.GetCustomAttributes( typeof ( GuerillaPreProcessFieldsMethodAttribute ), false );
 
-                foreach (GuerillaPreProcessFieldsMethodAttribute attribute in attributes)
+                foreach ( GuerillaPreProcessFieldsMethodAttribute attribute in attributes )
                 {
                     PreProcessFieldsFunctions[ attribute.BlockName ] =
                         ( ProcessFieldsDelegate )
@@ -162,12 +162,12 @@ namespace Moonfish.Guerilla
             switch ( field.type )
             {
                 case field_type._field_struct:
-                    {
-                        var struct_definition = ( tag_struct_definition )field.Definition;
-                        TagBlockDefinition blockDefinition = struct_definition.Definition;
+                {
+                    var struct_definition = ( tag_struct_definition ) field.Definition;
+                    TagBlockDefinition blockDefinition = struct_definition.Definition;
 
-                        return CalculateSizeOfFieldSet( blockDefinition.LatestFieldSet.Fields );
-                    }
+                    return CalculateSizeOfFieldSet( blockDefinition.LatestFieldSet.Fields );
+                }
                 case field_type._field_skip:
                 case field_type._field_pad:
                     return field.definition;
@@ -180,7 +180,8 @@ namespace Moonfish.Guerilla
         {
             switch ( type )
             {
-                #region Standard Types
+                    #region Standard Types
+
                 case field_type._field_char_integer:
                 case field_type._field_char_enum:
                 case field_type._field_byte_flags:
@@ -202,7 +203,9 @@ namespace Moonfish.Guerilla
                 case field_type._field_long_block_index1:
                 case field_type._field_long_block_index2:
                     return 4;
-                #endregion
+
+                    #endregion
+
                 case field_type._field_string:
                     return 32;
                 case field_type._field_long_string:
@@ -212,13 +215,14 @@ namespace Moonfish.Guerilla
                     return 4;
 
                 case field_type._field_point_2d:
-                    {
-                        return 4;
-                    }
+                {
+                    return 4;
+                }
                 case field_type._field_rectangle_2d:
                     return 8;
 
-                #region Real, Vector, Point, Angle Types
+                    #region Real, Vector, Point, Angle Types
+
                 case field_type._field_real:
                 case field_type._field_angle:
                 case field_type._field_real_fraction:
@@ -237,9 +241,11 @@ namespace Moonfish.Guerilla
                     return 12;
                 case field_type._field_real_plane_3d:
                     return 16;
-                #endregion
 
-                #region Colour Types
+                    #endregion
+
+                    #region Colour Types
+
                 case field_type._field_rgb_color:
                     return 3;
                 case field_type._field_argb_color:
@@ -250,16 +256,19 @@ namespace Moonfish.Guerilla
                 case field_type._field_real_argb_color:
                 case field_type._field_real_ahsv_color:
                     return 16;
-                #endregion
 
-                #region Bounds
+                    #endregion
+
+                    #region Bounds
+
                 case field_type._field_short_bounds:
                     return 4;
                 case field_type._field_angle_bounds:
                 case field_type._field_real_bounds:
                 case field_type._field_real_fraction_bounds:
                     return 8;
-                #endregion
+
+                    #endregion
 
                 case field_type._field_tag:
                     return 4;
@@ -272,7 +281,7 @@ namespace Moonfish.Guerilla
                     return 32;
 
                 case field_type._field_moonfish_ident:
-                    return Marshal.SizeOf( typeof( Moonfish.Tags.TagIdent ) );
+                    return Marshal.SizeOf( typeof ( Moonfish.Tags.TagIdent ) );
 
                 //case field_type._field_pad:
                 //case field_type._field_skip:
@@ -286,12 +295,12 @@ namespace Moonfish.Guerilla
                 case field_type._field_custom:
                     return 0;
             }
-            throw new Exception();
+            throw new Exception( );
         }
 
         protected static string ValidateFieldName( string fieldName )
         {
-            using ( var provider = new CSharpCodeProvider() )
+            using ( var provider = new CSharpCodeProvider( ) )
             {
                 if ( !provider.IsValidIdentifier( fieldName ) )
                 {
@@ -322,27 +331,27 @@ namespace Moonfish.Guerilla
 
         protected virtual string FormatTypeString( ref tag_field field )
         {
-            return field.type.ToString();
+            return field.type.ToString( );
         }
 
         protected static string ToTypeName( string value )
         {
             var textInfo = new CultureInfo( "en-US", false ).TextInfo;
-            var indices = new List<int>();
+            var indices = new List<int>( );
             for ( var i = 0; i < value.Length; ++i )
             {
                 if ( Char.IsUpper( value[ i ] ) ) indices.Add( i );
             }
-            value.Where( x => Char.IsUpper( x ) ).Select( x => value.IndexOf( x ) ).ToList();
+            value.Where( x => Char.IsUpper( x ) ).Select( x => value.IndexOf( x ) ).ToList( );
             var typeName = new StringBuilder( value.Replace( '_', ' ' ) );
             typeName = typeName.Replace( '-', ' ' );
-            typeName = new StringBuilder( textInfo.ToTitleCase( typeName.ToString() ) );
+            typeName = new StringBuilder( textInfo.ToTitleCase( typeName.ToString( ) ) );
             var r = new Regex( "[^a-zA-Z0-9 -]" );
-            typeName = new StringBuilder( r.Replace( typeName.ToString(), " " ) );
+            typeName = new StringBuilder( r.Replace( typeName.ToString( ), " " ) );
             indices.ForEach( x => typeName[ x ] = Char.ToUpperInvariant( typeName[ x ] ) );
             typeName = typeName.Replace( " ", "" );
-            typeName = new StringBuilder( ValidateFieldName( typeName.ToString() ) );
-            return typeName.ToString();
+            typeName = new StringBuilder( ValidateFieldName( typeName.ToString( ) ) );
+            return typeName.ToString( );
         }
 
         public static string ToMemberName( string value )
@@ -351,7 +360,7 @@ namespace Moonfish.Guerilla
             var memberName = new StringBuilder( ToTypeName( value ) );
             var firstChar = char.ToLower( memberName[ 0 ] );
             memberName[ 0 ] = firstChar;
-            return memberName.ToString();
+            return memberName.ToString( );
         }
 
         public static string ReadString( BinaryReader reader, int address )
@@ -363,17 +372,17 @@ namespace Moonfish.Guerilla
             {
                 // The string is stored in the h2 language library.
                 var sb = new StringBuilder( 0x1000 );
-                LoadString( H2LangLib, ( uint )address, sb, sb.Capacity );
-                str = sb.ToString();
+                LoadString( H2LangLib, ( uint ) address, sb, sb.Capacity );
+                str = sb.ToString( );
             }
-            else if ( address > BaseAddress && ( address - BaseAddress ) < ( int )reader.BaseStream.Length )
+            else if ( address > BaseAddress && ( address - BaseAddress ) < ( int ) reader.BaseStream.Length )
             {
                 // Seek to the string address.
                 reader.BaseStream.Position = address - BaseAddress;
 
                 // Read the string from the executable.
                 char b;
-                while ( ( b = reader.ReadChar() ) != '\0' )
+                while ( ( b = reader.ReadChar( ) ) != '\0' )
                     str += b;
             }
 

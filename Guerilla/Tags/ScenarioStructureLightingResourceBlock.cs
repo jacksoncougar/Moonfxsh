@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,33 +11,37 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Sslt = (TagClass)"sslt";
+        public static readonly TagClass Sslt = ( TagClass ) "sslt";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("sslt")]
-    public  partial class ScenarioStructureLightingResourceBlock : ScenarioStructureLightingResourceBlockBase
+    [TagClassAttribute( "sslt" )]
+    public partial class ScenarioStructureLightingResourceBlock : ScenarioStructureLightingResourceBlockBase
     {
-        public  ScenarioStructureLightingResourceBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioStructureLightingResourceBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ScenarioStructureLightingResourceBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class ScenarioStructureLightingResourceBlockBase : IGuerilla
     {
         internal ScenarioStructureBspSphericalHarmonicLightingBlock[] structureLighting;
-        internal  ScenarioStructureLightingResourceBlockBase(BinaryReader binaryReader)
+
+        internal ScenarioStructureLightingResourceBlockBase( BinaryReader binaryReader )
         {
-            structureLighting = Guerilla.ReadBlockArray<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryReader);
+            structureLighting =
+                Guerilla.ReadBlockArray<ScenarioStructureBspSphericalHarmonicLightingBlock>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                nextAddress = Guerilla.WriteBlockArray<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryWriter, structureLighting, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioStructureBspSphericalHarmonicLightingBlock>(
+                    binaryWriter, structureLighting, nextAddress );
                 return nextAddress;
             }
         }

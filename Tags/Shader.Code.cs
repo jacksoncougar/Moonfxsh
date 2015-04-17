@@ -1,5 +1,4 @@
-﻿
-namespace Moonfish.Guerilla.Tags
+﻿namespace Moonfish.Guerilla.Tags
 {
     partial class ShaderBlock
     {

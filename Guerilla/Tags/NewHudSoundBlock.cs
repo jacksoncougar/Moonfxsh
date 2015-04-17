@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,40 +9,41 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class NewHudSoundBlock : NewHudSoundBlockBase
+    public partial class NewHudSoundBlock : NewHudSoundBlockBase
     {
-        public  NewHudSoundBlock(BinaryReader binaryReader): base(binaryReader)
+        public NewHudSoundBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class NewHudSoundBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 24, Alignment = 4 )]
+    public class NewHudSoundBlockBase : IGuerilla
     {
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference chiefSound;
+        [TagReference( "null" )] internal Moonfish.Tags.TagReference chiefSound;
         internal LatchedTo latchedTo;
         internal float scale;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference dervishSound;
-        internal  NewHudSoundBlockBase(BinaryReader binaryReader)
+        [TagReference( "null" )] internal Moonfish.Tags.TagReference dervishSound;
+
+        internal NewHudSoundBlockBase( BinaryReader binaryReader )
         {
-            chiefSound = binaryReader.ReadTagReference();
-            latchedTo = (LatchedTo)binaryReader.ReadInt32();
-            scale = binaryReader.ReadSingle();
-            dervishSound = binaryReader.ReadTagReference();
+            chiefSound = binaryReader.ReadTagReference( );
+            latchedTo = ( LatchedTo ) binaryReader.ReadInt32( );
+            scale = binaryReader.ReadSingle( );
+            dervishSound = binaryReader.ReadTagReference( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(chiefSound);
-                binaryWriter.Write((Int32)latchedTo);
-                binaryWriter.Write(scale);
-                binaryWriter.Write(dervishSound);
+                binaryWriter.Write( chiefSound );
+                binaryWriter.Write( ( Int32 ) latchedTo );
+                binaryWriter.Write( scale );
+                binaryWriter.Write( dervishSound );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum LatchedTo : int
         {

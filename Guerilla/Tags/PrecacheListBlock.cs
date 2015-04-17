@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class PrecacheListBlock : PrecacheListBlockBase
+    public partial class PrecacheListBlock : PrecacheListBlockBase
     {
-        public  PrecacheListBlock(BinaryReader binaryReader): base(binaryReader)
+        public PrecacheListBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class PrecacheListBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 4, Alignment = 4 )]
+    public class PrecacheListBlockBase : IGuerilla
     {
         internal int cacheBlockIndex;
-        internal  PrecacheListBlockBase(BinaryReader binaryReader)
+
+        internal PrecacheListBlockBase( BinaryReader binaryReader )
         {
-            cacheBlockIndex = binaryReader.ReadInt32();
+            cacheBlockIndex = binaryReader.ReadInt32( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(cacheBlockIndex);
+                binaryWriter.Write( cacheBlockIndex );
                 return nextAddress;
             }
         }

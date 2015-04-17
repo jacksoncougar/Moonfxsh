@@ -21,6 +21,9 @@ namespace Moonfish.Model
             return string.Format( "{{{0}:{1}}}", Min, Max );
         }
 
-        public float Length { get { return Max - Min; } }
+        public float Length
+        {
+            get { return Max - Min; }
+        }
     }
 }

@@ -16,14 +16,14 @@ namespace Moonfish.Graphics
         public Dictionary<string, dynamic> Uniforms { get; private set; }
         public Dictionary<EnableCap, bool> RenderStates { get; private set; }
 
-        public void SetupGLRenderState()
+        public void SetupGLRenderState( )
         {
-            if (ChangeState != null) ChangeState();
+            if ( ChangeState != null ) ChangeState( );
         }
 
-        public void CleanupGLRenderState()
+        public void CleanupGLRenderState( )
         {
-            if (RevertState != null) RevertState();
+            if ( RevertState != null ) RevertState( );
         }
 
         public Action ChangeState { private get; set; }

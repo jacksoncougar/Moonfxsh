@@ -9,35 +9,34 @@ namespace Moonfish.Graphics
 {
     public class LevelManager
     {
-        Program shaded, system;
+        private Program shaded, system;
 
         public ScenarioStructureBspBlock Level { get; private set; }
         public List<RenderObject> ClusterObjects { get; private set; }
         public List<RenderObject> InstancedGeometryObjects { get; private set; }
 
-        public LevelManager(params Program[] programs)
+        public LevelManager( params Program[] programs )
         {
-            shaded = programs.Length > 0 ? programs[0] : null;
-            system = programs.Length > 1 ? programs[1] : null;
+            shaded = programs.Length > 0 ? programs[ 0 ] : null;
+            system = programs.Length > 1 ? programs[ 1 ] : null;
         }
 
-        public void LoadScenarioStructure(ScenarioStructureBspBlock levelBlock)
+        public void LoadScenarioStructure( ScenarioStructureBspBlock levelBlock )
         {
             this.Level = levelBlock;
-            ClusterObjects = new List<RenderObject>();
-            InstancedGeometryObjects = new List<RenderObject>();
-            foreach (var cluster in this.Level.clusters)
+            ClusterObjects = new List<RenderObject>( );
+            InstancedGeometryObjects = new List<RenderObject>( );
+            foreach ( var cluster in this.Level.clusters )
             {
-                ClusterObjects.Add(new RenderObject(cluster));
-
+                ClusterObjects.Add( new RenderObject( cluster ) );
             }
-            foreach (var item in this.Level.instancedGeometriesDefinitions)
+            foreach ( var item in this.Level.instancedGeometriesDefinitions )
             {
-                InstancedGeometryObjects.Add(new RenderObject(item));
+                InstancedGeometryObjects.Add( new RenderObject( item ) );
             }
         }
 
-        public void RenderLevel()
+        public void RenderLevel( )
         {
             //if (Level == null) return;
 
@@ -59,169 +58,177 @@ namespace Moonfish.Graphics
 
     public class MeshManager
     {
-        CollisionManager Collision { get; set; }
+        private CollisionManager Collision { get; set; }
 
-        ScenarioBlock scenario;
-        readonly Dictionary<TagIdent, List<ScenarioObject>> objectInstances;
+        private ScenarioBlock scenario;
+        private readonly Dictionary<TagIdent, List<ScenarioObject>> objectInstances;
 
-        public IEnumerable<ScenarioObject> this[TagIdent ident]
+        public IEnumerable<ScenarioObject> this[ TagIdent ident ]
         {
             get
             {
                 List<ScenarioObject> instances;
-                if (objectInstances.TryGetValue(ident, out instances))
+                if ( objectInstances.TryGetValue( ident, out instances ) )
                     return instances;
-                return Enumerable.Empty<ScenarioObject>();
+                return Enumerable.Empty<ScenarioObject>( );
             }
         }
 
-        internal void Add(TagIdent ident, ScenarioObject @object)
+        internal void Add( TagIdent ident, ScenarioObject @object )
         {
             List<ScenarioObject> instanceList;
-            if (!objectInstances.TryGetValue(ident, out instanceList))
+            if ( !objectInstances.TryGetValue( ident, out instanceList ) )
             {
-                instanceList = objectInstances[ident] = new List<ScenarioObject>();
+                instanceList = objectInstances[ ident ] = new List<ScenarioObject>( );
             }
-            instanceList.Add(@object);
+            instanceList.Add( @object );
         }
 
-        public MeshManager()
+        public MeshManager( )
         {
-            objectInstances = new Dictionary<TagIdent, List<ScenarioObject>>();
+            objectInstances = new Dictionary<TagIdent, List<ScenarioObject>>( );
         }
 
-        public void LoadCollision(CollisionManager collision)
+        public void LoadCollision( CollisionManager collision )
         {
             this.Collision = collision;
-            foreach (var item in objectInstances.SelectMany(x => x.Value))
+            foreach ( var item in objectInstances.SelectMany( x => x.Value ) )
             {
-                Collision.World.AddCollisionObject(item.CollisionObject);
+                Collision.World.AddCollisionObject( item.CollisionObject );
             }
         }
 
-        public void LoadScenario(MapStream map)
+        public void LoadScenario( MapStream map )
         {
-            this.scenario = map["scnr", ""].Deserialize();
+            this.scenario = map[ "scnr", "" ].Deserialize( );
 
             LoadInstances(
-                scenario.scenery.Select(x => (IH2ObjectInstance)x).ToList(),
-                scenario.sceneryPalette.Select(x => (IH2ObjectPalette)x).ToList());
+                scenario.scenery.Select( x => ( IH2ObjectInstance ) x ).ToList( ),
+                scenario.sceneryPalette.Select( x => ( IH2ObjectPalette ) x ).ToList( ) );
             LoadInstances(
-                scenario.crates.Select(x => (IH2ObjectInstance)x).ToList(),
-                scenario.cratesPalette.Select(x => (IH2ObjectPalette)x).ToList());
+                scenario.crates.Select( x => ( IH2ObjectInstance ) x ).ToList( ),
+                scenario.cratesPalette.Select( x => ( IH2ObjectPalette ) x ).ToList( ) );
             LoadInstances(
-                scenario.weapons.Select(x => (IH2ObjectInstance)x).ToList(),
-                scenario.weaponPalette.Select(x => (IH2ObjectPalette)x).ToList());
+                scenario.weapons.Select( x => ( IH2ObjectInstance ) x ).ToList( ),
+                scenario.weaponPalette.Select( x => ( IH2ObjectPalette ) x ).ToList( ) );
             LoadNetgameEquipment(
-                scenario.netgameEquipment.Select(x => x).ToList());
+                scenario.netgameEquipment.Select( x => x ).ToList( ) );
 
-            Log.Info(GL.GetError().ToString());
+            Log.Info( GL.GetError( ).ToString( ) );
         }
 
-        private void LoadNetgameEquipment(List<ScenarioNetgameEquipmentBlock> list)
+        private void LoadNetgameEquipment( List<ScenarioNetgameEquipmentBlock> list )
         {
-            foreach (var item in list.Where(x => !TagIdent.IsNull(x.itemVehicleCollection.Ident)
-                && (x.itemVehicleCollection.Class.ToString() == "vehc" || x.itemVehicleCollection.Class.ToString() == "itmc")))
+            foreach ( var item in list.Where( x => !TagIdent.IsNull( x.itemVehicleCollection.Ident )
+                                                   &&
+                                                   ( x.itemVehicleCollection.Class.ToString( ) == "vehc" ||
+                                                     x.itemVehicleCollection.Class.ToString( ) == "itmc" ) ) )
             {
                 try
                 {
-                    Add(item.itemVehicleCollection.Ident, new ScenarioObject(Halo2.GetReferenceObject<ModelBlock>(
-                    Halo2.GetReferenceObject<ObjectBlock>(
-                    item.itemVehicleCollection.Class.ToString() == "itmc" ?
-                    Halo2.GetReferenceObject<ItemCollectionBlock>(item.itemVehicleCollection).itemPermutations.First().item
-                    : Halo2.GetReferenceObject<VehicleCollectionBlock>(item.itemVehicleCollection).vehiclePermutations.First().vehicle).model))
+                    Add( item.itemVehicleCollection.Ident, new ScenarioObject( Halo2.GetReferenceObject<ModelBlock>(
+                        Halo2.GetReferenceObject<ObjectBlock>(
+                            item.itemVehicleCollection.Class.ToString( ) == "itmc"
+                                ? Halo2.GetReferenceObject<ItemCollectionBlock>( item.itemVehicleCollection )
+                                    .itemPermutations.First( )
+                                    .item
+                                : Halo2.GetReferenceObject<VehicleCollectionBlock>( item.itemVehicleCollection )
+                                    .vehiclePermutations.First( )
+                                    .vehicle ).model ) )
                     {
                         WorldMatrix = item.WorldMatrix
                     }
                         );
                 }
-                catch (NullReferenceException)
+                catch ( NullReferenceException )
                 {
                 }
             }
         }
 
-        private void LoadInstances(List<IH2ObjectInstance> instances, List<IH2ObjectPalette> objectPalette)
+        private void LoadInstances( List<IH2ObjectInstance> instances, List<IH2ObjectPalette> objectPalette )
         {
-            var join = (from instance in instances
-                        join palette in objectPalette on (int)instance.PaletteIndex equals objectPalette.IndexOf(palette) into gj
-                        from items in gj.DefaultIfEmpty()
-                        select new { instance, Object = items.ObjectReference }).ToArray();
+            var join = ( from instance in instances
+                join palette in objectPalette on ( int ) instance.PaletteIndex equals objectPalette.IndexOf( palette )
+                    into gj
+                from items in gj.DefaultIfEmpty( )
+                select new {instance, Object = items.ObjectReference} ).ToArray( );
 
-            foreach (var item in join)
+            foreach ( var item in join )
             {
-                Add(item.Object.Ident, new ScenarioObject(
-                    Halo2.GetReferenceObject<ModelBlock>(Halo2.GetReferenceObject<ObjectBlock>(item.Object).model))
+                Add( item.Object.Ident, new ScenarioObject(
+                    Halo2.GetReferenceObject<ModelBlock>( Halo2.GetReferenceObject<ObjectBlock>( item.Object ).model ) )
                 {
                     WorldMatrix = item.instance.WorldMatrix
                 }
-                );
+                    );
             }
         }
 
-        public void Draw(ProgramManager programManager)
+        public void Draw( ProgramManager programManager )
         {
-            foreach (var batch in objectInstances.SelectMany(x => x.Value).SelectMany(x => x.Batches))
+            foreach ( var batch in objectInstances.SelectMany( x => x.Value ).SelectMany( x => x.Batches ) )
             {
-                Draw(programManager, batch);
+                Draw( programManager, batch );
             }
         }
 
-        public void Draw(ProgramManager programManager, RenderBatch batch)
+        public void Draw( ProgramManager programManager, RenderBatch batch )
         {
-            if (batch.BatchObject == null) return;
-            var program = programManager.GetProgram(batch.Shader);
-            if (program == null) return;
+            if ( batch.BatchObject == null ) return;
+            var program = programManager.GetProgram( batch.Shader );
+            if ( program == null ) return;
 
-            var usingProgram = program.Use();
+            var usingProgram = program.Use( );
 
-            GL.BindVertexArray(batch.BatchObject.VertexArrayObjectIdent);
-            foreach (var attribute in batch.Attributes.Select(x => new {Name = x.Key, x.Value}))
+            GL.BindVertexArray( batch.BatchObject.VertexArrayObjectIdent );
+            foreach ( var attribute in batch.Attributes.Select( x => new {Name = x.Key, x.Value} ) )
             {
-                var attributeLocation = program.GetAttributeLocation(attribute.Name);
-                Program.SetAttribute(attributeLocation, attribute.Value);
+                var attributeLocation = program.GetAttributeLocation( attribute.Name );
+                Program.SetAttribute( attributeLocation, attribute.Value );
             }
-            foreach (var uniform in batch.Uniforms.Select(x => new {Name = x.Key, x.Value}))
+            foreach ( var uniform in batch.Uniforms.Select( x => new {Name = x.Key, x.Value} ) )
             {
-                var uniformLocation = program.GetUniformLocation(uniform.Name);
-                program.SetUniform(uniformLocation, uniform.Value);
+                var uniformLocation = program.GetUniformLocation( uniform.Name );
+                program.SetUniform( uniformLocation, uniform.Value );
             }
             var openGLStates =
-                batch.RenderStates.Select(x => new {Capability = x.Key, Enabled = x.Value}).Select(state => state.Enabled
-                    ? OpenGL.Enable(state.Capability)
-                    : OpenGL.Disable(state.Capability)).ToList();
+                batch.RenderStates.Select( x => new {Capability = x.Key, Enabled = x.Value} )
+                    .Select( state => state.Enabled
+                        ? OpenGL.Enable( state.Capability )
+                        : OpenGL.Disable( state.Capability ) ).ToList( );
 
-            batch.SetupGLRenderState();
-            GL.DrawElements(batch.PrimitiveType, batch.ElementLength, batch.DrawElementsType, batch.ElementStartIndex);
-            batch.CleanupGLRenderState();
+            batch.SetupGLRenderState( );
+            GL.DrawElements( batch.PrimitiveType, batch.ElementLength, batch.DrawElementsType, batch.ElementStartIndex );
+            batch.CleanupGLRenderState( );
 
             // Cleanup states
-            foreach (var state in openGLStates) state.Dispose();
-            usingProgram.Dispose();
+            foreach ( var state in openGLStates ) state.Dispose( );
+            usingProgram.Dispose( );
         }
 
-        public void Draw(TagIdent item)
+        public void Draw( TagIdent item )
         {
-            if (objectInstances.ContainsKey(item))
+            if ( objectInstances.ContainsKey( item ) )
             {
                 //IRenderable @object = objects[item] as IRenderable;
                 //@object.Render( new[] { program, systemProgram } );
             }
             else
             {
-                var data = Halo2.GetReferenceObject(item);
+                var data = Halo2.GetReferenceObject( item );
                 //objects[item] = new ScenarioObject( (ModelBlock)data );
             }
         }
 
-        internal void Remove(TagIdent item)
+        internal void Remove( TagIdent item )
         {
-            this.objectInstances.Remove(item);
+            this.objectInstances.Remove( item );
         }
 
-        internal void Clear()
+        internal void Clear( )
         {
-            this.objectInstances.Clear();
+            this.objectInstances.Clear( );
         }
     }
 }

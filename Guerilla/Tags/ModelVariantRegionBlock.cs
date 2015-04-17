@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,50 +9,56 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ModelVariantRegionBlock : ModelVariantRegionBlockBase
+    public partial class ModelVariantRegionBlock : ModelVariantRegionBlockBase
     {
-        public  ModelVariantRegionBlock(BinaryReader binaryReader): base(binaryReader)
+        public ModelVariantRegionBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class ModelVariantRegionBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 20, Alignment = 4 )]
+    public class ModelVariantRegionBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID regionNameMustMatchRegionNameInRenderModel;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
         internal Moonfish.Tags.ShortBlockIndex1 parentVariant;
         internal ModelVariantPermutationBlock[] permutations;
+
         /// <summary>
         /// negative values mean closer to the camera
         /// </summary>
         internal SortOrderNegativeValuesMeanCloserToTheCamera sortOrder;
+
         internal byte[] invalidName_1;
-        internal  ModelVariantRegionBlockBase(BinaryReader binaryReader)
+
+        internal ModelVariantRegionBlockBase( BinaryReader binaryReader )
         {
-            regionNameMustMatchRegionNameInRenderModel = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(1);
-            invalidName_0 = binaryReader.ReadBytes(1);
-            parentVariant = binaryReader.ReadShortBlockIndex1();
-            permutations = Guerilla.ReadBlockArray<ModelVariantPermutationBlock>(binaryReader);
-            sortOrder = (SortOrderNegativeValuesMeanCloserToTheCamera)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
+            regionNameMustMatchRegionNameInRenderModel = binaryReader.ReadStringID( );
+            invalidName_ = binaryReader.ReadBytes( 1 );
+            invalidName_0 = binaryReader.ReadBytes( 1 );
+            parentVariant = binaryReader.ReadShortBlockIndex1( );
+            permutations = Guerilla.ReadBlockArray<ModelVariantPermutationBlock>( binaryReader );
+            sortOrder = ( SortOrderNegativeValuesMeanCloserToTheCamera ) binaryReader.ReadInt16( );
+            invalidName_1 = binaryReader.ReadBytes( 2 );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(regionNameMustMatchRegionNameInRenderModel);
-                binaryWriter.Write(invalidName_, 0, 1);
-                binaryWriter.Write(invalidName_0, 0, 1);
-                binaryWriter.Write(parentVariant);
-                nextAddress = Guerilla.WriteBlockArray<ModelVariantPermutationBlock>(binaryWriter, permutations, nextAddress);
-                binaryWriter.Write((Int16)sortOrder);
-                binaryWriter.Write(invalidName_1, 0, 2);
+                binaryWriter.Write( regionNameMustMatchRegionNameInRenderModel );
+                binaryWriter.Write( invalidName_, 0, 1 );
+                binaryWriter.Write( invalidName_0, 0, 1 );
+                binaryWriter.Write( parentVariant );
+                nextAddress = Guerilla.WriteBlockArray<ModelVariantPermutationBlock>( binaryWriter, permutations,
+                    nextAddress );
+                binaryWriter.Write( ( Int16 ) sortOrder );
+                binaryWriter.Write( invalidName_1, 0, 2 );
                 return nextAddress;
             }
         }
+
         internal enum SortOrderNegativeValuesMeanCloserToTheCamera : short
         {
             NoSorting = 0,

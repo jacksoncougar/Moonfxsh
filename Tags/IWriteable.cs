@@ -2,7 +2,7 @@
 
 namespace Moonfish.Tags
 {
-    interface IWriteable
+    internal interface IWriteable
     {
         void Write( BinaryWriter binaryWriter );
     }

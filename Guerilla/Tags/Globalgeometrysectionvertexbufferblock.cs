@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class GlobalGeometrySectionVertexBufferBlock : GlobalGeometrySectionVertexBufferBlockBase
+    public partial class GlobalGeometrySectionVertexBufferBlock : GlobalGeometrySectionVertexBufferBlockBase
     {
-        public  GlobalGeometrySectionVertexBufferBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalGeometrySectionVertexBufferBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 32, Alignment = 4)]
-    public class GlobalGeometrySectionVertexBufferBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 32, Alignment = 4 )]
+    public class GlobalGeometrySectionVertexBufferBlockBase : IGuerilla
     {
         internal Moonfish.Tags.VertexBuffer vertexBuffer;
-        internal  GlobalGeometrySectionVertexBufferBlockBase(BinaryReader binaryReader)
+
+        internal GlobalGeometrySectionVertexBufferBlockBase( BinaryReader binaryReader )
         {
-            vertexBuffer = binaryReader.ReadVertexBuffer();
+            vertexBuffer = binaryReader.ReadVertexBuffer( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(vertexBuffer);
+                binaryWriter.Write( vertexBuffer );
                 return nextAddress;
             }
         }

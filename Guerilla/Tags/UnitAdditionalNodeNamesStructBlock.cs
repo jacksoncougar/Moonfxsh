@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,29 +9,31 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class UnitAdditionalNodeNamesStructBlock : UnitAdditionalNodeNamesStructBlockBase
+    public partial class UnitAdditionalNodeNamesStructBlock : UnitAdditionalNodeNamesStructBlockBase
     {
-        public  UnitAdditionalNodeNamesStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public UnitAdditionalNodeNamesStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class UnitAdditionalNodeNamesStructBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 4, Alignment = 4 )]
+    public class UnitAdditionalNodeNamesStructBlockBase : IGuerilla
     {
         /// <summary>
         /// if found, use this gun marker
         /// </summary>
         internal Moonfish.Tags.StringID preferredGunNode;
-        internal  UnitAdditionalNodeNamesStructBlockBase(BinaryReader binaryReader)
+
+        internal UnitAdditionalNodeNamesStructBlockBase( BinaryReader binaryReader )
         {
-            preferredGunNode = binaryReader.ReadStringID();
+            preferredGunNode = binaryReader.ReadStringID( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(preferredGunNode);
+                binaryWriter.Write( preferredGunNode );
                 return nextAddress;
             }
         }

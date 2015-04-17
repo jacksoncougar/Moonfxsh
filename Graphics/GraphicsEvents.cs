@@ -34,8 +34,8 @@ namespace Moonfish.Graphics
     {
         public readonly Camera Camera;
 
-        public SceneMouseMoveEventArgs(Camera camera, MouseEventArgs e)
-            : base(e.Button, e.Clicks, e.X, e.Y, e.Delta)
+        public SceneMouseMoveEventArgs( Camera camera, MouseEventArgs e )
+            : base( e.Button, e.Clicks, e.X, e.Y, e.Delta )
         {
             Camera = camera;
         }
@@ -60,7 +60,7 @@ namespace Moonfish.Graphics
             // Project the mouse coordinates into world-space at the far z-plane
             var distantWorldPoint = Maths.Project( camera.ViewMatrix, camera.ProjectionMatrix,
                 new Vector3( mouseViewportCoordinates.X, mouseViewportCoordinates.Y, 1f ),
-                ( Rectangle )camera.Viewport ).Xyz;
+                ( Rectangle ) camera.Viewport ).Xyz;
 
             // Produce a ray originating at the camera and pointing towards the distant world point^
             Camera = camera;
@@ -72,7 +72,7 @@ namespace Moonfish.Graphics
         }
     }
 
-    public delegate void SelectedObjectChangedEventHandler( object seneder, SelectEventArgs e);
+    public delegate void SelectedObjectChangedEventHandler( object seneder, SelectEventArgs e );
 
     public delegate void MouseMoveEventHandler( object sender, SceneMouseEventArgs e );
 

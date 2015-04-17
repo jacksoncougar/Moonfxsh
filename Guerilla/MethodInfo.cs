@@ -7,24 +7,25 @@ namespace Moonfish.Guerilla
 {
     public static class StringExtensions
     {
-        public static string Tab(this string value, ref int tabCount, int tabSize = 4)
+        public static string Tab( this string value, ref int tabCount, int tabSize = 4 )
         {
-            var openingBraceCount = value.Trim().Count(x => x == '{');
-            var closingBraceCount = value.Trim().Count(x => x == '}');
+            var openingBraceCount = value.Trim( ).Count( x => x == '{' );
+            var closingBraceCount = value.Trim( ).Count( x => x == '}' );
             var netTab = openingBraceCount - closingBraceCount;
             tabCount = netTab < 0 ? tabCount + netTab : tabCount;
-            var tab = new string(' ', tabCount * tabSize);
+            var tab = new string( ' ', tabCount * tabSize );
             tabCount = netTab > 0 ? tabCount + netTab : tabCount;
-            return tab + value.Trim();
+            return tab + value.Trim( );
         }
     }
+
     public static class StringBuilderExtensions
     {
-        public static void AppendSummary(this StringBuilder stringBuilder, string value)
+        public static void AppendSummary( this StringBuilder stringBuilder, string value )
         {
-            stringBuilder.AppendLine("/// <summary>");
-            stringBuilder.AppendLine(string.Format("/// {0}", value));
-            stringBuilder.AppendLine("/// </summary>");
+            stringBuilder.AppendLine( "/// <summary>" );
+            stringBuilder.AppendLine( string.Format( "/// {0}", value ) );
+            stringBuilder.AppendLine( "/// </summary>" );
         }
     }
 
@@ -43,15 +44,17 @@ namespace Moonfish.Guerilla
 
     public static class AccessModifiersExtensions
     {
-        public static string ToString(this AccessModifiers items)
+        public static string ToString( this AccessModifiers items )
         {
-            if ((items & AccessModifiers.Any) == 0) return "";
-            var value = new StringBuilder();
-            var values = items.ToString().Split(',').ToList();
-            values.TakeWhile(x => x != values.Last()).ToList().ForEach(x => value.Append(string.Format("{0} ", x.ToLower())));
-            value.Append(string.Format("{0}", values.LastOrDefault() == null ? "" : values.Last().ToLower()));
+            if ( ( items & AccessModifiers.Any ) == 0 ) return "";
+            var value = new StringBuilder( );
+            var values = items.ToString( ).Split( ',' ).ToList( );
+            values.TakeWhile( x => x != values.Last( ) )
+                .ToList( )
+                .ForEach( x => value.Append( string.Format( "{0} ", x.ToLower( ) ) ) );
+            value.Append( string.Format( "{0}", values.LastOrDefault( ) == null ? "" : values.Last( ).ToLower( ) ) );
 
-            return value.ToString().Trim();
+            return value.ToString( ).Trim( );
         }
     }
 
@@ -59,44 +62,51 @@ namespace Moonfish.Guerilla
     {
         public string Name
         {
-            get { return GuerillaCs.SplitNameDescription(Value)[0]; }
+            get { return GuerillaCs.SplitNameDescription( Value )[ 0 ]; }
             set
             {
-                if (HasName)
-                    Value = Value.Replace(GuerillaCs.SplitNameDescription(Value)[0], value);
+                if ( HasName )
+                    Value = Value.Replace( GuerillaCs.SplitNameDescription( Value )[ 0 ], value );
                 else
-                    Value = Value.Insert(0, value);
+                    Value = Value.Insert( 0, value );
             }
         }
+
         public string Description
         {
-            get { return GuerillaCs.SplitNameDescription(Value)[1]; }
+            get { return GuerillaCs.SplitNameDescription( Value )[ 1 ]; }
             set
             {
-                if (HasDescription)
-                    Value = Value.Replace(GuerillaCs.SplitNameDescription(Value)[1], value);
+                if ( HasDescription )
+                    Value = Value.Replace( GuerillaCs.SplitNameDescription( Value )[ 1 ], value );
                 else
-                    Value = Value.Insert(Name.Length, "#" + value);
+                    Value = Value.Insert( Name.Length, "#" + value );
             }
         }
 
-        public bool HasName { get { return !string.IsNullOrEmpty(Name); } }
+        public bool HasName
+        {
+            get { return !string.IsNullOrEmpty( Name ); }
+        }
 
-        public bool HasDescription { get { return !string.IsNullOrEmpty(Description); } }
+        public bool HasDescription
+        {
+            get { return !string.IsNullOrEmpty( Description ); }
+        }
 
-        string Value;
+        private string Value;
 
-        public GuerillaName(string value)
+        public GuerillaName( string value )
         {
             Value = value;
         }
 
-        public static implicit operator GuerillaName(string value)
+        public static implicit operator GuerillaName( string value )
         {
-            return new GuerillaName(value);
+            return new GuerillaName( value );
         }
 
-        public static implicit operator string(GuerillaName guerillaName)
+        public static implicit operator string( GuerillaName guerillaName )
         {
             return guerillaName.Value;
         }
@@ -117,42 +127,43 @@ namespace Moonfish.Guerilla
             Int,
         }
 
-        public EnumInfo()
+        public EnumInfo( )
         {
-            Attributes = new List<AttributeInfo>();
-            ValueNames = new List<GuerillaName>();
+            Attributes = new List<AttributeInfo>( );
+            ValueNames = new List<GuerillaName>( );
         }
 
-        public void Format()
+        public void Format( )
         {
-            var tokenDictionary = new ClassInfo.TokenDictionary();
-            for (int i = 0; i < ValueNames.Count; i++)
+            var tokenDictionary = new ClassInfo.TokenDictionary( );
+            for ( int i = 0; i < ValueNames.Count; i++ )
             {
-                ValueNames[i] = tokenDictionary.GenerateValidToken(GuerillaCs.ToTypeName(ValueNames[i]));
+                ValueNames[ i ] = tokenDictionary.GenerateValidToken( GuerillaCs.ToTypeName( ValueNames[ i ] ) );
             }
         }
 
-        public override string ToString()
+        public override string ToString( )
         {
             var stringBuilder = new StringBuilder( );
-            foreach (var attribute in Attributes)
+            foreach ( var attribute in Attributes )
             {
-                stringBuilder.AppendLine(attribute.ToString());
+                stringBuilder.AppendLine( attribute.ToString( ) );
             }
-            stringBuilder.AppendLine(string.Format("{0} enum {1} : {2}",
-                AccessModifiersExtensions.ToString(AccessModifiers), Value.Name, BaseType.ToString().ToLowerInvariant()).Trim());
-            stringBuilder.AppendLine("{");
+            stringBuilder.AppendLine( string.Format( "{0} enum {1} : {2}",
+                AccessModifiersExtensions.ToString( AccessModifiers ), Value.Name,
+                BaseType.ToString( ).ToLowerInvariant( ) ).Trim( ) );
+            stringBuilder.AppendLine( "{" );
 
-            var isFlags = Attributes.Any(x => x.AttributeType == typeof(FlagsAttribute));
+            var isFlags = Attributes.Any( x => x.AttributeType == typeof ( FlagsAttribute ) );
             var value = isFlags ? 1 : 0;
-            foreach (var item in ValueNames)
+            foreach ( var item in ValueNames )
             {
-                if (item.HasDescription) stringBuilder.AppendSummary(item.Description);
-                stringBuilder.AppendLine(string.Format("{0} = {1},", GuerillaCs.ToTypeName(item.Name), value));
+                if ( item.HasDescription ) stringBuilder.AppendSummary( item.Description );
+                stringBuilder.AppendLine( string.Format( "{0} = {1},", GuerillaCs.ToTypeName( item.Name ), value ) );
                 value = isFlags ? value << 1 : ++value;
             }
-            stringBuilder.AppendLine("};");
-            return stringBuilder.ToString().Trim();
+            stringBuilder.AppendLine( "};" );
+            return stringBuilder.ToString( ).Trim( );
         }
     }
 
@@ -180,25 +191,30 @@ namespace Moonfish.Guerilla
         public List<Tuple<string, string>> NamedParameters { get; set; }
         public List<string> Parameters { get; set; }
 
-        public override string ToString()
+        public override string ToString( )
         {
-            using (var code = new Microsoft.CSharp.CSharpCodeProvider())
+            using ( var code = new Microsoft.CSharp.CSharpCodeProvider( ) )
             {
                 var hasParameters = NamedParameters.Count > 0 || Parameters.Count > 0;
-                var parametersString = new StringBuilder();
-                if (hasParameters && Parameters.Count > 0)
+                var parametersString = new StringBuilder( );
+                if ( hasParameters && Parameters.Count > 0 )
                 {
-                    Parameters.TakeWhile(x => Parameters.Last() != x).ToList().ForEach(x => parametersString.Append(string.Format("{0}, ", x)));
-                    parametersString.Append(Parameters.Last());
+                    Parameters.TakeWhile( x => Parameters.Last( ) != x )
+                        .ToList( )
+                        .ForEach( x => parametersString.Append( string.Format( "{0}, ", x ) ) );
+                    parametersString.Append( Parameters.Last( ) );
                 }
-                if (hasParameters && NamedParameters.Count > 0)
+                if ( hasParameters && NamedParameters.Count > 0 )
                 {
-                    NamedParameters.TakeWhile(x => NamedParameters.Last() != x).ToList().ForEach(x => parametersString.Append(string.Format("{0} = {1}, ", x.Item1, x.Item2)));
-                    parametersString.Append(string.Format("{0} = {1}", NamedParameters.Last().Item1, NamedParameters.Last().Item2));
+                    NamedParameters.TakeWhile( x => NamedParameters.Last( ) != x )
+                        .ToList( )
+                        .ForEach( x => parametersString.Append( string.Format( "{0} = {1}, ", x.Item1, x.Item2 ) ) );
+                    parametersString.Append( string.Format( "{0} = {1}", NamedParameters.Last( ).Item1,
+                        NamedParameters.Last( ).Item2 ) );
                 }
 
-                var retval = string.Format("[{0}{1}]", AttributeType.Name,
-                    hasParameters ? string.Format("({0})", parametersString) : "");
+                var retval = string.Format( "[{0}{1}]", AttributeType.Name,
+                    hasParameters ? string.Format( "({0})", parametersString ) : "" );
                 return retval;
             }
         }
@@ -206,10 +222,11 @@ namespace Moonfish.Guerilla
 
     public class FieldInfo
     {
-        public FieldInfo()
+        public FieldInfo( )
         {
-            Attributes = new List<AttributeInfo>();
+            Attributes = new List<AttributeInfo>( );
         }
+
         public List<AttributeInfo> Attributes { get; set; }
         public AccessModifiers AccessModifiers { get; set; }
         public string FieldTypeName { get; set; }
@@ -217,32 +234,33 @@ namespace Moonfish.Guerilla
         public bool IsArray { get; set; }
         public int ArraySize { get; set; }
 
-        public override string ToString()
+        public override string ToString( )
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder( );
             // write Summary
-            if (Value.HasDescription) stringBuilder.AppendSummary(Value.Description);
+            if ( Value.HasDescription ) stringBuilder.AppendSummary( Value.Description );
             // write Attributes
-            foreach (var attribute in Attributes)
-                stringBuilder.AppendLine(attribute.ToString());
+            foreach ( var attribute in Attributes )
+                stringBuilder.AppendLine( attribute.ToString( ) );
 
-            var typeString = GetTypeOutput();
+            var typeString = GetTypeOutput( );
 
             // write Field
-            stringBuilder.AppendLine(string.Format("{0} {1}{2} {3};", AccessModifiersExtensions.ToString(AccessModifiers),
-                typeString, IsArray ? "[]" : "", Value.Name));
+            stringBuilder.AppendLine( string.Format( "{0} {1}{2} {3};",
+                AccessModifiersExtensions.ToString( AccessModifiers ),
+                typeString, IsArray ? "[]" : "", Value.Name ) );
 
-            return stringBuilder.ToString().Trim();
+            return stringBuilder.ToString( ).Trim( );
         }
 
-        private string GetTypeOutput()
+        private string GetTypeOutput( )
         {
-            var type = Type.GetType(FieldTypeName);
-            if (type != null)
+            var type = Type.GetType( FieldTypeName );
+            if ( type != null )
             {
-                using (var code = new Microsoft.CSharp.CSharpCodeProvider())
+                using ( var code = new Microsoft.CSharp.CSharpCodeProvider( ) )
                 {
-                    return code.GetTypeOutput(new System.CodeDom.CodeTypeReference(type.FullName));
+                    return code.GetTypeOutput( new System.CodeDom.CodeTypeReference( type.FullName ) );
                 }
             }
             else return FieldTypeName;
@@ -251,10 +269,11 @@ namespace Moonfish.Guerilla
 
     public class MethodInfo
     {
-        public MethodInfo()
+        public MethodInfo( )
         {
-            Arguments = new List<ParameterInfo>();
+            Arguments = new List<ParameterInfo>( );
         }
+
         public AccessModifiers AccessModifiers { get; set; }
         public string ClassName { get; set; }
         public List<ParameterInfo> Arguments { get; set; }
@@ -262,84 +281,89 @@ namespace Moonfish.Guerilla
         public string Returns { get; set; }
         public bool Wrapper { get; set; }
 
-        public string GetMethodCallSignature(params ParameterInfo[] parameters)
+        public string GetMethodCallSignature( params ParameterInfo[] parameters )
         {
-            return GetMethodCallSignatureFormat("", GetArguments(parameters));
+            return GetMethodCallSignatureFormat( "", GetArguments( parameters ) );
         }
 
-        public string GetMethodSignature()
+        public string GetMethodSignature( )
         {
-            return GetMethodSignatureFormat("");
+            return GetMethodSignatureFormat( "" );
         }
 
-        public string GetMethodSignatureFormat(string methodName)
+        public string GetMethodSignatureFormat( string methodName )
         {
-            return GetMethodCallSignatureFormat(methodName, GetSignature(Arguments));
+            return GetMethodCallSignatureFormat( methodName, GetSignature( Arguments ) );
         }
 
-        public string GetMethodCallSignatureFormat(string methodName, StringBuilder argumentString)
+        public string GetMethodCallSignatureFormat( string methodName, StringBuilder argumentString )
         {
-            return string.Format("{0}{1}", String.Format(ClassName, methodName), string.Format("({0})", argumentString));
+            return string.Format( "{0}{1}", String.Format( ClassName, methodName ),
+                string.Format( "({0})", argumentString ) );
         }
 
-        private static StringBuilder GetSignature(IList<ParameterInfo> arguments)
+        private static StringBuilder GetSignature( IList<ParameterInfo> arguments )
         {
-            var argumentStringBuilder = new StringBuilder();
-            if (arguments.Any())
+            var argumentStringBuilder = new StringBuilder( );
+            if ( arguments.Any( ) )
             {
-                arguments.TakeWhile(x => x != arguments.Last())
-                    .ToList()
+                arguments.TakeWhile( x => x != arguments.Last( ) )
+                    .ToList( )
                     .ForEach(
                         x =>
-                            argumentStringBuilder.AppendFormat("{0} {1}, ", x.ParameterType, x.Name));
-                var arg = arguments.Last();
-                argumentStringBuilder.Append(string.Format("{0} {1} {2}", arg.Modifier.GetSignatureModifier(), arg.ParameterType.Name, arg.Name).TrimStart());
+                            argumentStringBuilder.AppendFormat( "{0} {1}, ", x.ParameterType, x.Name ) );
+                var arg = arguments.Last( );
+                argumentStringBuilder.Append(
+                    string.Format( "{0} {1} {2}", arg.Modifier.GetSignatureModifier( ), arg.ParameterType.Name, arg.Name )
+                        .TrimStart( ) );
             }
             return argumentStringBuilder;
         }
 
-        private static StringBuilder GetArguments(IList<ParameterInfo> arguments)
+        private static StringBuilder GetArguments( IList<ParameterInfo> arguments )
         {
-            var argumentStringBuilder = new StringBuilder();
-            if (arguments.Any())
+            var argumentStringBuilder = new StringBuilder( );
+            if ( arguments.Any( ) )
             {
-                arguments.TakeWhile(x => x != arguments.Last()).ToList().ForEach(x => argumentStringBuilder.AppendFormat("{0}, ", x.Name));
-                var arg = arguments.Last();
-                argumentStringBuilder.AppendFormat("{0}", arg.Name);
+                arguments.TakeWhile( x => x != arguments.Last( ) )
+                    .ToList( )
+                    .ForEach( x => argumentStringBuilder.AppendFormat( "{0}, ", x.Name ) );
+                var arg = arguments.Last( );
+                argumentStringBuilder.AppendFormat( "{0}", arg.Name );
             }
             return argumentStringBuilder;
         }
 
-        public MethodInfo MakeFromTemplate(params string[] args)
+        public MethodInfo MakeFromTemplate( params string[] args )
         {
-            return new MethodInfo()
+            return new MethodInfo( )
             {
                 Arguments = Arguments,
                 AccessModifiers = AccessModifiers,
-                ClassName = string.Format(ClassName, args),
-                Body = string.Format(Body, args),
-                Returns = string.Format(Returns, args),
+                ClassName = string.Format( ClassName, args ),
+                Body = string.Format( Body, args ),
+                Returns = string.Format( Returns, args ),
             };
         }
 
-        public override string ToString()
+        public override string ToString( )
         {
-            var methodStringBuilder = new StringBuilder();
-            var modifiersString = AccessModifiersExtensions.ToString(AccessModifiers);
-            methodStringBuilder.AppendFormat("{0} {1} {2}", modifiersString, Returns, GetMethodSignature());
-            if (Wrapper)
+            var methodStringBuilder = new StringBuilder( );
+            var modifiersString = AccessModifiersExtensions.ToString( AccessModifiers );
+            methodStringBuilder.AppendFormat( "{0} {1} {2}", modifiersString, Returns, GetMethodSignature( ) );
+            if ( Wrapper )
             {
-                methodStringBuilder.AppendFormat(": base({0})", GetArguments(Arguments));
+                methodStringBuilder.AppendFormat( ": base({0})", GetArguments( Arguments ) );
             }
-            methodStringBuilder.AppendLine();
-            methodStringBuilder.AppendLine("{");
-            methodStringBuilder.Append(Body);
-            methodStringBuilder.AppendLine();
-            methodStringBuilder.AppendLine("}");
-            return methodStringBuilder.ToString().Trim();
+            methodStringBuilder.AppendLine( );
+            methodStringBuilder.AppendLine( "{" );
+            methodStringBuilder.Append( Body );
+            methodStringBuilder.AppendLine( );
+            methodStringBuilder.AppendLine( "}" );
+            return methodStringBuilder.ToString( ).Trim( );
         }
 
-        internal MethodInfo MakeWrapper(string className)
+        internal MethodInfo MakeWrapper( string className )
         {
             return new MethodInfo
             {

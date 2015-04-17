@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,29 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ScenarioNetgameEquipmentOrientationStructBlock : ScenarioNetgameEquipmentOrientationStructBlockBase
+    public partial class ScenarioNetgameEquipmentOrientationStructBlock :
+        ScenarioNetgameEquipmentOrientationStructBlockBase
     {
-        public  ScenarioNetgameEquipmentOrientationStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioNetgameEquipmentOrientationStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class ScenarioNetgameEquipmentOrientationStructBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 12, Alignment = 4 )]
+    public class ScenarioNetgameEquipmentOrientationStructBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 orientation;
-        internal  ScenarioNetgameEquipmentOrientationStructBlockBase(BinaryReader binaryReader)
+
+        internal ScenarioNetgameEquipmentOrientationStructBlockBase( BinaryReader binaryReader )
         {
-            orientation = binaryReader.ReadVector3();
+            orientation = binaryReader.ReadVector3( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(orientation);
+                binaryWriter.Write( orientation );
                 return nextAddress;
             }
         }

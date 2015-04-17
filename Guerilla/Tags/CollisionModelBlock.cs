@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,22 +11,22 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Coll = (TagClass)"coll";
+        public static readonly TagClass Coll = ( TagClass ) "coll";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("coll")]
-    public  partial class CollisionModelBlock : CollisionModelBlockBase
+    [TagClassAttribute( "coll" )]
+    public partial class CollisionModelBlock : CollisionModelBlockBase
     {
-        public  CollisionModelBlock(BinaryReader binaryReader): base(binaryReader)
+        public CollisionModelBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 52, Alignment = 4)]
-    public class CollisionModelBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 52, Alignment = 4 )]
+    public class CollisionModelBlockBase : IGuerilla
     {
         internal GlobalTagImportInfoBlock[] importInfo;
         internal GlobalErrorReportCategoriesBlock[] errors;
@@ -34,30 +35,36 @@ namespace Moonfish.Guerilla.Tags
         internal CollisionModelRegionBlock[] regions;
         internal CollisionModelPathfindingSphereBlock[] pathfindingSpheres;
         internal CollisionModelNodeBlock[] nodes;
-        internal  CollisionModelBlockBase(BinaryReader binaryReader)
+
+        internal CollisionModelBlockBase( BinaryReader binaryReader )
         {
-            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>(binaryReader);
-            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
-            flags = (Flags)binaryReader.ReadInt32();
-            materials = Guerilla.ReadBlockArray<CollisionModelMaterialBlock>(binaryReader);
-            regions = Guerilla.ReadBlockArray<CollisionModelRegionBlock>(binaryReader);
-            pathfindingSpheres = Guerilla.ReadBlockArray<CollisionModelPathfindingSphereBlock>(binaryReader);
-            nodes = Guerilla.ReadBlockArray<CollisionModelNodeBlock>(binaryReader);
+            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>( binaryReader );
+            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>( binaryReader );
+            flags = ( Flags ) binaryReader.ReadInt32( );
+            materials = Guerilla.ReadBlockArray<CollisionModelMaterialBlock>( binaryReader );
+            regions = Guerilla.ReadBlockArray<CollisionModelRegionBlock>( binaryReader );
+            pathfindingSpheres = Guerilla.ReadBlockArray<CollisionModelPathfindingSphereBlock>( binaryReader );
+            nodes = Guerilla.ReadBlockArray<CollisionModelNodeBlock>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                nextAddress = Guerilla.WriteBlockArray<GlobalTagImportInfoBlock>(binaryWriter, importInfo, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GlobalErrorReportCategoriesBlock>(binaryWriter, errors, nextAddress);
-                binaryWriter.Write((Int32)flags);
-                nextAddress = Guerilla.WriteBlockArray<CollisionModelMaterialBlock>(binaryWriter, materials, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CollisionModelRegionBlock>(binaryWriter, regions, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CollisionModelPathfindingSphereBlock>(binaryWriter, pathfindingSpheres, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CollisionModelNodeBlock>(binaryWriter, nodes, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GlobalTagImportInfoBlock>( binaryWriter, importInfo, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<GlobalErrorReportCategoriesBlock>( binaryWriter, errors,
+                    nextAddress );
+                binaryWriter.Write( ( Int32 ) flags );
+                nextAddress = Guerilla.WriteBlockArray<CollisionModelMaterialBlock>( binaryWriter, materials,
+                    nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<CollisionModelRegionBlock>( binaryWriter, regions, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<CollisionModelPathfindingSphereBlock>( binaryWriter,
+                    pathfindingSpheres, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<CollisionModelNodeBlock>( binaryWriter, nodes, nextAddress );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

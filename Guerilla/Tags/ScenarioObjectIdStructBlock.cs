@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,38 +9,41 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ScenarioObjectIdStructBlock : ScenarioObjectIdStructBlockBase
+    public partial class ScenarioObjectIdStructBlock : ScenarioObjectIdStructBlockBase
     {
-        public  ScenarioObjectIdStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioObjectIdStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ScenarioObjectIdStructBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class ScenarioObjectIdStructBlockBase : IGuerilla
     {
         internal int uniqueID;
         internal Moonfish.Tags.ShortBlockIndex1 originBSPIndex;
         internal Type type;
         internal Source source;
-        internal  ScenarioObjectIdStructBlockBase(BinaryReader binaryReader)
+
+        internal ScenarioObjectIdStructBlockBase( BinaryReader binaryReader )
         {
-            uniqueID = binaryReader.ReadInt32();
-            originBSPIndex = binaryReader.ReadShortBlockIndex1();
-            type = (Type)binaryReader.ReadByte();
-            source = (Source)binaryReader.ReadByte();
+            uniqueID = binaryReader.ReadInt32( );
+            originBSPIndex = binaryReader.ReadShortBlockIndex1( );
+            type = ( Type ) binaryReader.ReadByte( );
+            source = ( Source ) binaryReader.ReadByte( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(uniqueID);
-                binaryWriter.Write(originBSPIndex);
-                binaryWriter.Write((Byte)type);
-                binaryWriter.Write((Byte)source);
+                binaryWriter.Write( uniqueID );
+                binaryWriter.Write( originBSPIndex );
+                binaryWriter.Write( ( Byte ) type );
+                binaryWriter.Write( ( Byte ) source );
                 return nextAddress;
             }
         }
+
         internal enum Type : byte
         {
             Biped = 0,
@@ -56,6 +60,7 @@ namespace Moonfish.Guerilla.Tags
             Crate = 11,
             Creature = 12,
         };
+
         internal enum Source : byte
         {
             Structure = 0,

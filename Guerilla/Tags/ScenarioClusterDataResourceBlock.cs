@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,45 +11,51 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Clu = (TagClass)"clu*";
+        public static readonly TagClass Clu = ( TagClass ) "clu*";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("clu*")]
-    public  partial class ScenarioClusterDataResourceBlock : ScenarioClusterDataResourceBlockBase
+    [TagClassAttribute( "clu*" )]
+    public partial class ScenarioClusterDataResourceBlock : ScenarioClusterDataResourceBlockBase
     {
-        public  ScenarioClusterDataResourceBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioClusterDataResourceBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 40, Alignment = 4)]
-    public class ScenarioClusterDataResourceBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 40, Alignment = 4 )]
+    public class ScenarioClusterDataResourceBlockBase : IGuerilla
     {
         internal ScenarioClusterDataBlock[] clusterData;
         internal StructureBspBackgroundSoundPaletteBlock[] backgroundSoundPalette;
         internal StructureBspSoundEnvironmentPaletteBlock[] soundEnvironmentPalette;
         internal StructureBspWeatherPaletteBlock[] weatherPalette;
         internal ScenarioAtmosphericFogPalette[] atmosphericFogPalette;
-        internal  ScenarioClusterDataResourceBlockBase(BinaryReader binaryReader)
+
+        internal ScenarioClusterDataResourceBlockBase( BinaryReader binaryReader )
         {
-            clusterData = Guerilla.ReadBlockArray<ScenarioClusterDataBlock>(binaryReader);
-            backgroundSoundPalette = Guerilla.ReadBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryReader);
-            soundEnvironmentPalette = Guerilla.ReadBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryReader);
-            weatherPalette = Guerilla.ReadBlockArray<StructureBspWeatherPaletteBlock>(binaryReader);
-            atmosphericFogPalette = Guerilla.ReadBlockArray<ScenarioAtmosphericFogPalette>(binaryReader);
+            clusterData = Guerilla.ReadBlockArray<ScenarioClusterDataBlock>( binaryReader );
+            backgroundSoundPalette = Guerilla.ReadBlockArray<StructureBspBackgroundSoundPaletteBlock>( binaryReader );
+            soundEnvironmentPalette = Guerilla.ReadBlockArray<StructureBspSoundEnvironmentPaletteBlock>( binaryReader );
+            weatherPalette = Guerilla.ReadBlockArray<StructureBspWeatherPaletteBlock>( binaryReader );
+            atmosphericFogPalette = Guerilla.ReadBlockArray<ScenarioAtmosphericFogPalette>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                nextAddress = Guerilla.WriteBlockArray<ScenarioClusterDataBlock>(binaryWriter, clusterData, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryWriter, backgroundSoundPalette, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryWriter, soundEnvironmentPalette, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<StructureBspWeatherPaletteBlock>(binaryWriter, weatherPalette, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioAtmosphericFogPalette>(binaryWriter, atmosphericFogPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioClusterDataBlock>( binaryWriter, clusterData, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<StructureBspBackgroundSoundPaletteBlock>( binaryWriter,
+                    backgroundSoundPalette, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<StructureBspSoundEnvironmentPaletteBlock>( binaryWriter,
+                    soundEnvironmentPalette, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<StructureBspWeatherPaletteBlock>( binaryWriter, weatherPalette,
+                    nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<ScenarioAtmosphericFogPalette>( binaryWriter,
+                    atmosphericFogPalette, nextAddress );
                 return nextAddress;
             }
         }

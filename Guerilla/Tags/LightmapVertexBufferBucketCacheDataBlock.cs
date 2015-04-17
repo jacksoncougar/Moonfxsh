@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,29 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class LightmapVertexBufferBucketCacheDataBlock : LightmapVertexBufferBucketCacheDataBlockBase
+    public partial class LightmapVertexBufferBucketCacheDataBlock : LightmapVertexBufferBucketCacheDataBlockBase
     {
-        public  LightmapVertexBufferBucketCacheDataBlock(BinaryReader binaryReader): base(binaryReader)
+        public LightmapVertexBufferBucketCacheDataBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class LightmapVertexBufferBucketCacheDataBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class LightmapVertexBufferBucketCacheDataBlockBase : IGuerilla
     {
         internal GlobalGeometrySectionVertexBufferBlock[] vertexBuffers;
-        internal  LightmapVertexBufferBucketCacheDataBlockBase(BinaryReader binaryReader)
+
+        internal LightmapVertexBufferBucketCacheDataBlockBase( BinaryReader binaryReader )
         {
-            vertexBuffers = Guerilla.ReadBlockArray<GlobalGeometrySectionVertexBufferBlock>(binaryReader);
+            vertexBuffers = Guerilla.ReadBlockArray<GlobalGeometrySectionVertexBufferBlock>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                nextAddress = Guerilla.WriteBlockArray<GlobalGeometrySectionVertexBufferBlock>(binaryWriter, vertexBuffers, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GlobalGeometrySectionVertexBufferBlock>( binaryWriter,
+                    vertexBuffers, nextAddress );
                 return nextAddress;
             }
         }

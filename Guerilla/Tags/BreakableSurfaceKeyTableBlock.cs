@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,15 +9,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class BreakableSurfaceKeyTableBlock : BreakableSurfaceKeyTableBlockBase
+    public partial class BreakableSurfaceKeyTableBlock : BreakableSurfaceKeyTableBlockBase
     {
-        public  BreakableSurfaceKeyTableBlock(BinaryReader binaryReader): base(binaryReader)
+        public BreakableSurfaceKeyTableBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 32, Alignment = 4)]
-    public class BreakableSurfaceKeyTableBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 32, Alignment = 4 )]
+    public class BreakableSurfaceKeyTableBlockBase : IGuerilla
     {
         internal short instancedGeometryIndex;
         internal short breakableSurfaceIndex;
@@ -27,31 +28,33 @@ namespace Moonfish.Guerilla.Tags
         internal float y1;
         internal float z0;
         internal float z1;
-        internal  BreakableSurfaceKeyTableBlockBase(BinaryReader binaryReader)
+
+        internal BreakableSurfaceKeyTableBlockBase( BinaryReader binaryReader )
         {
-            instancedGeometryIndex = binaryReader.ReadInt16();
-            breakableSurfaceIndex = binaryReader.ReadInt16();
-            seedSurfaceIndex = binaryReader.ReadInt32();
-            x0 = binaryReader.ReadSingle();
-            x1 = binaryReader.ReadSingle();
-            y0 = binaryReader.ReadSingle();
-            y1 = binaryReader.ReadSingle();
-            z0 = binaryReader.ReadSingle();
-            z1 = binaryReader.ReadSingle();
+            instancedGeometryIndex = binaryReader.ReadInt16( );
+            breakableSurfaceIndex = binaryReader.ReadInt16( );
+            seedSurfaceIndex = binaryReader.ReadInt32( );
+            x0 = binaryReader.ReadSingle( );
+            x1 = binaryReader.ReadSingle( );
+            y0 = binaryReader.ReadSingle( );
+            y1 = binaryReader.ReadSingle( );
+            z0 = binaryReader.ReadSingle( );
+            z1 = binaryReader.ReadSingle( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(instancedGeometryIndex);
-                binaryWriter.Write(breakableSurfaceIndex);
-                binaryWriter.Write(seedSurfaceIndex);
-                binaryWriter.Write(x0);
-                binaryWriter.Write(x1);
-                binaryWriter.Write(y0);
-                binaryWriter.Write(y1);
-                binaryWriter.Write(z0);
-                binaryWriter.Write(z1);
+                binaryWriter.Write( instancedGeometryIndex );
+                binaryWriter.Write( breakableSurfaceIndex );
+                binaryWriter.Write( seedSurfaceIndex );
+                binaryWriter.Write( x0 );
+                binaryWriter.Write( x1 );
+                binaryWriter.Write( y0 );
+                binaryWriter.Write( y1 );
+                binaryWriter.Write( z0 );
+                binaryWriter.Write( z1 );
                 return nextAddress;
             }
         }

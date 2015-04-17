@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Preprocess
 {
-    class ScenarioBlock
+    internal class ScenarioBlock
     {
         [GuerillaPreProcessMethod( BlockName = "scenario_block" )]
         protected static void GuerillaPreProcessMethod( BinaryReader binaryReader, IList<tag_field> fields )

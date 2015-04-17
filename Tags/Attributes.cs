@@ -15,18 +15,23 @@ namespace Moonfish.Tags
     public class TagClassAttribute : System.Attribute
     {
         public TagClass TagClass { get; set; }
+
         public TagClassAttribute( string tagClass )
         {
-            TagClass = ( TagClass )tagClass;
+            TagClass = ( TagClass ) tagClass;
         }
     }
 
     [AttributeUsage( AttributeTargets.Field )]
     public class TagBlockFieldAttribute : TagFieldAttribute
     {
-        public TagBlockFieldAttribute( int fieldOffset ) : base( fieldOffset ) { }
+        public TagBlockFieldAttribute( int fieldOffset ) : base( fieldOffset )
+        {
+        }
 
-        public TagBlockFieldAttribute( ) { }
+        public TagBlockFieldAttribute( )
+        {
+        }
     }
 
     [AttributeUsage( AttributeTargets.Field )]
@@ -39,14 +44,19 @@ namespace Moonfish.Tags
     {
         public bool usesCustomFunction = false;
         public int offset;
-        public bool UsesFieldOffset { get { return offset != -1; } }
 
-        public TagFieldAttribute( ) : this( -1 ) { }
+        public bool UsesFieldOffset
+        {
+            get { return offset != -1; }
+        }
+
+        public TagFieldAttribute( ) : this( -1 )
+        {
+        }
+
         public TagFieldAttribute( int fieldOffset )
         {
             offset = fieldOffset;
         }
     }
-
-
 }

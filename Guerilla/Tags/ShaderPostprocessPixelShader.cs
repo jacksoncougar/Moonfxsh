@@ -9,9 +9,9 @@ namespace Moonfish.Guerilla.Tags
         public ShaderPostprocessPixelShader( BinaryReader binaryReader )
             : base( binaryReader )
         {
-
         }
     };
+
     [LayoutAttribute( Size = 44 )]
     public class ShaderPostprocessPixelShaderBase
     {
@@ -22,23 +22,25 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] compiledShader;
         internal byte[] compiledShader0;
         internal byte[] compiledShader1;
+
         internal ShaderPostprocessPixelShaderBase( BinaryReader binaryReader )
         {
-            this.pixelShaderHandleRuntime = binaryReader.ReadInt32();
-            this.pixelShaderHandleRuntime0 = binaryReader.ReadInt32();
-            this.pixelShaderHandleRuntime1 = binaryReader.ReadInt32();
+            this.pixelShaderHandleRuntime = binaryReader.ReadInt32( );
+            this.pixelShaderHandleRuntime0 = binaryReader.ReadInt32( );
+            this.pixelShaderHandleRuntime1 = binaryReader.ReadInt32( );
             this.constantRegisterDefaults = ReadShaderPostprocessPixelShaderConstantDefaultsArray( binaryReader );
             this.compiledShader = ReadData( binaryReader );
             this.compiledShader0 = ReadData( binaryReader );
             this.compiledShader1 = ReadData( binaryReader );
         }
+
         internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
             var blamPointer = binaryReader.ReadBlamPointer( 1 );
-            var data = new byte[ blamPointer.elementCount ];
+            var data = new byte[blamPointer.elementCount];
             if ( blamPointer.elementCount > 0 )
             {
-                using ( binaryReader.BaseStream.Pin() )
+                using ( binaryReader.BaseStream.Pin( ) )
                 {
                     binaryReader.BaseStream.Position = blamPointer[ 0 ];
                     data = binaryReader.ReadBytes( blamPointer.elementCount );
@@ -46,12 +48,14 @@ namespace Moonfish.Guerilla.Tags
             }
             return data;
         }
-        internal virtual ShaderPostprocessPixelShaderConstantDefaults[] ReadShaderPostprocessPixelShaderConstantDefaultsArray( BinaryReader binaryReader )
+
+        internal virtual ShaderPostprocessPixelShaderConstantDefaults[]
+            ReadShaderPostprocessPixelShaderConstantDefaultsArray( BinaryReader binaryReader )
         {
-            var elementSize = Deserializer.SizeOf( typeof( ShaderPostprocessPixelShaderConstantDefaults ) );
+            var elementSize = Deserializer.SizeOf( typeof ( ShaderPostprocessPixelShaderConstantDefaults ) );
             var blamPointer = binaryReader.ReadBlamPointer( elementSize );
-            var array = new ShaderPostprocessPixelShaderConstantDefaults[ blamPointer.elementCount ];
-            using ( binaryReader.BaseStream.Pin() )
+            var array = new ShaderPostprocessPixelShaderConstantDefaults[blamPointer.elementCount];
+            using ( binaryReader.BaseStream.Pin( ) )
             {
                 for ( int i = 0; i < blamPointer.elementCount; ++i )
                 {

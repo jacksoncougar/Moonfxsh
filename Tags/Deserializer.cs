@@ -14,443 +14,446 @@ namespace Moonfish.Tags
 {
     internal static class Deserializer
     {
-        public delegate void PreprocessFieldDelegate(BinaryReader sourceReader, FieldInfo field);
+        public delegate void PreprocessFieldDelegate( BinaryReader sourceReader, FieldInfo field );
 
-        public delegate void ProcessTagBlockArrayDelegate(BinaryReader sourceReader, object item, FieldInfo field);
+        public delegate void ProcessTagBlockArrayDelegate( BinaryReader sourceReader, object item, FieldInfo field );
 
-        static Deserializer()
+        static Deserializer( )
         {
-            ExtensionMethodDictionary = new Dictionary<Type, Tuple<MethodInfo, bool>>();
-            ExecutingAssembly = Assembly.GetExecutingAssembly();
-            CacheBinaryReaderMethods();
+            ExtensionMethodDictionary = new Dictionary<Type, Tuple<MethodInfo, bool>>( );
+            ExecutingAssembly = Assembly.GetExecutingAssembly( );
+            CacheBinaryReaderMethods( );
         }
 
-        public static dynamic Deserialize(this MapStream source, Type type)
+        public static dynamic Deserialize( this MapStream source, Type type )
         {
-            var sourceReader = new BinaryReader(source);
+            var sourceReader = new BinaryReader( source );
             Source = source;
-            PostProcessQueue = new List<Tuple<FieldInfo, object, MethodInvoker>>();
+            PostProcessQueue = new List<Tuple<FieldInfo, object, MethodInvoker>>( );
 
-            var constructor = (from constructors in type.GetConstructors(BindingFlags.Public | BindingFlags.Instance)
-                               where constructors.HasParameterSignature(new[] { typeof(BinaryReader) })
-                               select constructors).FirstOrDefault();
+            var constructor = ( from constructors in type.GetConstructors( BindingFlags.Public | BindingFlags.Instance )
+                where constructors.HasParameterSignature( new[] {typeof ( BinaryReader )} )
+                select constructors ).FirstOrDefault( );
 
             // create the tag using a constructor and exit
-            if (constructor != null)
+            if ( constructor != null )
             {
-                return constructor.Invoke(new[] { sourceReader });
+                return constructor.Invoke( new[] {sourceReader} );
             }
 
-            System.Diagnostics.Debug.WriteLine("Enetering Deserialise() fallback! {0}", type);
-            MessageBox.Show(string.Format("Enetering Deserialise() fallback! {0}", type));
+            System.Diagnostics.Debug.WriteLine( "Enetering Deserialise() fallback! {0}", type );
+            MessageBox.Show( string.Format( "Enetering Deserialise() fallback! {0}", type ) );
 
-            var returnValue = Deserialize(sourceReader, type);
-            for (var i = 0; i < PostProcessQueue.Count; ++i)
+            var returnValue = Deserialize( sourceReader, type );
+            for ( var i = 0; i < PostProcessQueue.Count; ++i )
             {
-                var field = PostProcessQueue[i].Item1;
-                var item = PostProcessQueue[i].Item2;
-                var methodInfo = PostProcessQueue[i].Item3;
+                var field = PostProcessQueue[ i ].Item1;
+                var item = PostProcessQueue[ i ].Item2;
+                var methodInfo = PostProcessQueue[ i ].Item3;
 
-                methodInfo(item, sourceReader, item, field);
+                methodInfo( item, sourceReader, item, field );
             }
             return returnValue;
         }
 
         [Obsolete]
-        public static dynamic Deserialize(this BinaryReader binaryReader, Type type)
+        public static dynamic Deserialize( this BinaryReader binaryReader, Type type )
         {
-            var @object = type.CreateInstance();
+            var @object = type.CreateInstance( );
 
             var fields = type.Fields(
                 Flags.Public |
                 Flags.NonPublic |
-                Flags.Instance);
+                Flags.Instance );
 
             List<FieldDelegateInformation> fieldMethods;
 
-            ProcessFieldTypes(fields, out fieldMethods);
+            ProcessFieldTypes( fields, out fieldMethods );
 
-            InvokeFields(binaryReader, @object, fields, fieldMethods);
+            InvokeFields( binaryReader, @object, fields, fieldMethods );
 
             return @object;
         }
 
         [Obsolete]
-        public static int SizeOf(Type elementType)
+        public static int SizeOf( Type elementType )
         {
             var elementSize = 0;
-            var layoutAttribute = elementType.Attribute(typeof(LayoutAttribute)) as LayoutAttribute;
-            elementSize = layoutAttribute != null ? layoutAttribute.Size : Marshal.SizeOf(elementType);
+            var layoutAttribute = elementType.Attribute( typeof ( LayoutAttribute ) ) as LayoutAttribute;
+            elementSize = layoutAttribute != null ? layoutAttribute.Size : Marshal.SizeOf( elementType );
             return elementSize;
         }
 
         [Obsolete]
-        internal static int OffsetOf(Type type, string p)
+        internal static int OffsetOf( Type type, string p )
         {
-            var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            var fields = type.GetFields( BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance );
             var fieldOffset = 0;
 
-            foreach (var field in fields)
+            foreach ( var field in fields )
             {
-                if (field.Name == p) return fieldOffset;
+                if ( field.Name == p ) return fieldOffset;
 
-                fieldOffset += SizeOf(field);
+                fieldOffset += SizeOf( field );
             }
 
-            throw new Exception(string.Format("Field \'{0}\' not found in Type \'{1}\'", p, type));
+            throw new Exception( string.Format( "Field \'{0}\' not found in Type \'{1}\'", p, type ) );
         }
 
-        private static void CacheBinaryReaderMethods()
+        private static void CacheBinaryReaderMethods( )
         {
-            var types = ExecutingAssembly.GetTypes();
+            var types = ExecutingAssembly.GetTypes( );
             // get BinaryReader extension methods from the executing assembly 
-            var extensionMethods = (from type in types
-                                    where type.IsSealed && !type.IsGenericType && !type.IsNested
-                                    from method in type.GetMethods(BindingFlags.Static
-                                                                   | BindingFlags.Public | BindingFlags.NonPublic)
-                                    where method.IsDefined(typeof(ExtensionAttribute), false)
-                                    where method.GetParameters()[0].ParameterType == typeof(BinaryReader)
-                                    select new { method, type = method.ReturnType }).ToList();
+            var extensionMethods = ( from type in types
+                where type.IsSealed && !type.IsGenericType && !type.IsNested
+                from method in type.GetMethods( BindingFlags.Static
+                                                | BindingFlags.Public | BindingFlags.NonPublic )
+                where method.IsDefined( typeof ( ExtensionAttribute ), false )
+                where method.GetParameters( )[ 0 ].ParameterType == typeof ( BinaryReader )
+                select new {method, type = method.ReturnType} ).ToList( );
 
             // trim this down further to one of each return type
-            extensionMethods = (from method in extensionMethods
-                                group method by method.type
-                                    into g
-                                    select g.First()).ToList();
+            extensionMethods = ( from method in extensionMethods
+                group method by method.type
+                into g
+                select g.First( ) ).ToList( );
 
-            using (var provider = new CSharpCodeProvider())
+            using ( var provider = new CSharpCodeProvider( ) )
             {
-                var binaryReaderMethods = (from method in typeof(BinaryReader).GetMethods()
-                                           where method.ReturnType != typeof(void)
-                                           select new { method, type = method.ReturnType }).ToList().Where(x =>
+                var binaryReaderMethods = ( from method in typeof ( BinaryReader ).GetMethods( )
+                    where method.ReturnType != typeof ( void )
+                    select new {method, type = method.ReturnType} ).ToList( ).Where( x =>
                     {
-                        var typeString = provider.CreateValidIdentifier((x.type).ToString());
-                        typeString = typeString.Split('.').Last();
-                        return x.method.Name.ToLower().Contains(typeString.ToLower());
-                    }).ToList();
+                        var typeString = provider.CreateValidIdentifier( ( x.type ).ToString( ) );
+                        typeString = typeString.Split( '.' ).Last( );
+                        return x.method.Name.ToLower( ).Contains( typeString.ToLower( ) );
+                    } ).ToList( );
 
 
-                binaryReaderMethods = (from method in binaryReaderMethods
-                                       group method by method.type
-                                           into g
-                                           select g.First()).ToList();
+                binaryReaderMethods = ( from method in binaryReaderMethods
+                    group method by method.type
+                    into g
+                    select g.First( ) ).ToList( );
 
-                var totalMethods = binaryReaderMethods.Union(extensionMethods).ToList();
-                ReadTypeMethods = new Dictionary<Type, MethodInvoker>(totalMethods.Count());
-                foreach (var item in totalMethods)
+                var totalMethods = binaryReaderMethods.Union( extensionMethods ).ToList( );
+                ReadTypeMethods = new Dictionary<Type, MethodInvoker>( totalMethods.Count( ) );
+                foreach ( var item in totalMethods )
                 {
-                    ReadTypeMethods[item.type] = item.method.DelegateForCallMethod();
+                    ReadTypeMethods[ item.type ] = item.method.DelegateForCallMethod( );
                 }
             }
         }
 
         [Obsolete]
-        private static void DefaultProcessTagBlockArray(BinaryReader sourceReader, object item, FieldInfo field)
+        private static void DefaultProcessTagBlockArray( BinaryReader sourceReader, object item, FieldInfo field )
         {
-            var elementType = field.FieldType.GetElementType();
-            var elementSize = SizeOf(elementType);
+            var elementType = field.FieldType.GetElementType( );
+            var elementSize = SizeOf( elementType );
 
-            var count = sourceReader.ReadInt32();
-            var address = sourceReader.ReadInt32();
+            var count = sourceReader.ReadInt32( );
+            var address = sourceReader.ReadInt32( );
 
             sourceReader.BaseStream.Position = address;
 
-            var array = DeserializeArray(sourceReader, elementType, elementSize, count);
-            field.Set(item, array);
+            var array = DeserializeArray( sourceReader, elementType, elementSize, count );
+            field.Set( item, array );
         }
 
         [Obsolete]
-        private static void Deserialize(this BinaryReader sourceReader, object item, FieldInfo field)
+        private static void Deserialize( this BinaryReader sourceReader, object item, FieldInfo field )
         {
-            field.SetValue(item, Deserialize(sourceReader, field.FieldType));
+            field.SetValue( item, Deserialize( sourceReader, field.FieldType ) );
         }
 
         [Obsolete]
-        private static object DeserializeArray(BinaryReader sourceReader, Type elementType, int elementSize,
-            int elementCount)
+        private static object DeserializeArray( BinaryReader sourceReader, Type elementType, int elementSize,
+            int elementCount )
         {
             var arrayDataAddress = sourceReader.BaseStream.Position;
 
             var fields = elementType.Fields(
                 Flags.Public |
                 Flags.NonPublic |
-                Flags.Instance);
+                Flags.Instance );
 
 
             List<FieldDelegateInformation> fieldMethods;
 
 
-            var item = elementType.CreateInstance();
-            ProcessFieldTypes(fields, out fieldMethods);
+            var item = elementType.CreateInstance( );
+            ProcessFieldTypes( fields, out fieldMethods );
 
 
-            var array = elementType.MakeArrayType().CreateInstance(elementCount);
+            var array = elementType.MakeArrayType( ).CreateInstance( elementCount );
 
-            for (var i = 0; i < elementCount; ++i)
+            for ( var i = 0; i < elementCount; ++i )
             {
-                var element = elementType.CreateInstance();
+                var element = elementType.CreateInstance( );
                 sourceReader.BaseStream.Position = arrayDataAddress + i * elementSize;
-                InvokeFields(sourceReader, element, fields, fieldMethods);
-                array.SetElement(i, element);
+                InvokeFields( sourceReader, element, fields, fieldMethods );
+                array.SetElement( i, element );
             }
             return array;
         }
 
         [Obsolete]
-        private static void DeserializeTag(this BinaryReader sourceReader, object item, FieldInfo field)
+        private static void DeserializeTag( this BinaryReader sourceReader, object item, FieldInfo field )
         {
-            var reference = sourceReader.ReadTagReference();
-            Source.Position = Source[reference.Ident].Meta.VirtualAddress;
+            var reference = sourceReader.ReadTagReference( );
+            Source.Position = Source[ reference.Ident ].Meta.VirtualAddress;
 
-            field.SetValue(item, Deserialize(sourceReader, Halo2.GetTypeOf(reference.Class)));
+            field.SetValue( item, Deserialize( sourceReader, Halo2.GetTypeOf( reference.Class ) ) );
         }
 
         [Obsolete]
-        private static void InvokeFields(BinaryReader binaryReader, object item, IList<FieldInfo> fields,
-            List<FieldDelegateInformation> fieldsMethodInfo)
+        private static void InvokeFields( BinaryReader binaryReader, object item, IList<FieldInfo> fields,
+            List<FieldDelegateInformation> fieldsMethodInfo )
         {
             var fieldSetDataAddress = binaryReader.BaseStream.Position;
-            for (var i = 0; i < fields.Count; ++i)
+            for ( var i = 0; i < fields.Count; ++i )
             {
-                var field = fields[i];
-                var fieldMethodInfo = fieldsMethodInfo[i];
+                var field = fields[ i ];
+                var fieldMethodInfo = fieldsMethodInfo[ i ];
 
                 binaryReader.BaseStream.Position = fieldSetDataAddress + fieldMethodInfo.StreamOffset;
-                var fieldDeletegate = (ProcessFieldInfo)fieldMethodInfo.MethodDelegate;
-                fieldDeletegate(binaryReader, item, field);
+                var fieldDeletegate = ( ProcessFieldInfo ) fieldMethodInfo.MethodDelegate;
+                fieldDeletegate( binaryReader, item, field );
             }
         }
 
         [Obsolete]
-        private static void PostProcessField(BinaryReader binaryReader, object item, FieldInfo field)
+        private static void PostProcessField( BinaryReader binaryReader, object item, FieldInfo field )
         {
             var customReadFieldMethod =
-                (from method in
-                     item.GetType()
-                         .GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static |
-                                     BindingFlags.Public)
-                 where
-                     method.HasParameterSignature(new[] { typeof(BinaryReader), typeof(Object), typeof(FieldInfo) })
-                 select method).FirstOrDefault();
+                ( from method in
+                    item.GetType( )
+                        .GetMethods( BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static |
+                                     BindingFlags.Public )
+                    where
+                        method.HasParameterSignature( new[]
+                        {typeof ( BinaryReader ), typeof ( Object ), typeof ( FieldInfo )} )
+                    select method ).FirstOrDefault( );
 
-            PostProcessQueue.Add(new Tuple<FieldInfo, object, MethodInvoker>(field, item,
-                customReadFieldMethod.DelegateForCallMethod()));
+            PostProcessQueue.Add( new Tuple<FieldInfo, object, MethodInvoker>( field, item,
+                customReadFieldMethod.DelegateForCallMethod( ) ) );
         }
 
         [Obsolete]
-        private static void ProcessFieldTypes(IList<FieldInfo> fields,
-            out List<FieldDelegateInformation> fieldMethodInfo)
+        private static void ProcessFieldTypes( IList<FieldInfo> fields,
+            out List<FieldDelegateInformation> fieldMethodInfo )
         {
-            fieldMethodInfo = new List<FieldDelegateInformation>(fields.Count);
+            fieldMethodInfo = new List<FieldDelegateInformation>( fields.Count );
             var fieldOffset = 0;
-            foreach (var field in fields)
+            foreach ( var field in fields )
             {
-                var tagFieldAttribute = field.Attributes<TagFieldAttribute>().FirstOrDefault();
+                var tagFieldAttribute = field.Attributes<TagFieldAttribute>( ).FirstOrDefault( );
 
-                if (tagFieldAttribute != null)
+                if ( tagFieldAttribute != null )
                 {
-                    if (tagFieldAttribute.UsesFieldOffset)
+                    if ( tagFieldAttribute.UsesFieldOffset )
                     {
                         fieldOffset = tagFieldAttribute.offset;
                     }
-                    if (tagFieldAttribute.usesCustomFunction)
+                    if ( tagFieldAttribute.usesCustomFunction )
                     {
-                        fieldMethodInfo.Add(new FieldDelegateInformation(field, new ProcessFieldInfo(PostProcessField),
-                            fieldOffset));
-                        fieldOffset += SizeOf(field);
+                        fieldMethodInfo.Add( new FieldDelegateInformation( field,
+                            new ProcessFieldInfo( PostProcessField ),
+                            fieldOffset ) );
+                        fieldOffset += SizeOf( field );
                         continue;
                     }
                 }
-                if (field.FieldType.IsArray)
+                if ( field.FieldType.IsArray )
                 {
-                    var elementType = field.FieldType.GetElementType();
+                    var elementType = field.FieldType.GetElementType( );
                     var elementSize = 0;
                     try
                     {
-                        elementSize = SizeOf(elementType);
+                        elementSize = SizeOf( elementType );
                     }
-                    catch (ArgumentException)
+                    catch ( ArgumentException )
                     {
-                        var layoutAttribute = elementType.Attribute(typeof(LayoutAttribute)) as LayoutAttribute;
-                        if (layoutAttribute != null)
+                        var layoutAttribute = elementType.Attribute( typeof ( LayoutAttribute ) ) as LayoutAttribute;
+                        if ( layoutAttribute != null )
                             elementSize = layoutAttribute.Size;
                     }
 
-                    if (field.IsDefined(typeof(TagBlockFieldAttribute), false))
+                    if ( field.IsDefined( typeof ( TagBlockFieldAttribute ), false ) )
                     {
-                        fieldMethodInfo.Add(new FieldDelegateInformation(field,
-                            new ProcessFieldInfo(ProcessTagBlockArray), fieldOffset));
+                        fieldMethodInfo.Add( new FieldDelegateInformation( field,
+                            new ProcessFieldInfo( ProcessTagBlockArray ), fieldOffset ) );
                     }
-                    else if (field.IsDefined(typeof(MarshalAsAttribute), false))
+                    else if ( field.IsDefined( typeof ( MarshalAsAttribute ), false ) )
                     {
-                        var marhsalAsAttribute = field.Attribute(typeof(MarshalAsAttribute)) as MarshalAsAttribute;
-                        if (marhsalAsAttribute.Value == UnmanagedType.ByValArray)
+                        var marhsalAsAttribute = field.Attribute( typeof ( MarshalAsAttribute ) ) as MarshalAsAttribute;
+                        if ( marhsalAsAttribute.Value == UnmanagedType.ByValArray )
                         {
                             var count = marhsalAsAttribute.SizeConst;
 
                             var basicTypes = new List<Type>
                             {
-                                typeof (sbyte),
-                                typeof (byte),
-                                typeof (short),
-                                typeof (ushort),
-                                typeof (int),
-                                typeof (uint),
-                                typeof (float)
+                                typeof ( sbyte ),
+                                typeof ( byte ),
+                                typeof ( short ),
+                                typeof ( ushort ),
+                                typeof ( int ),
+                                typeof ( uint ),
+                                typeof ( float )
                             };
-                            if (basicTypes.Any(x => x == elementType))
+                            if ( basicTypes.Any( x => x == elementType ) )
                             {
-                                fieldMethodInfo.Add(new FieldDelegateInformation(field,
-                                    new ProcessFieldInfo(ReadFixedArrayField), fieldOffset));
+                                fieldMethodInfo.Add( new FieldDelegateInformation( field,
+                                    new ProcessFieldInfo( ReadFixedArrayField ), fieldOffset ) );
                             }
                             else
                             {
-                                var deserializeMethod = typeof(Deserializer).Method("ProcessFixedStructArray",
-                                    new[] { typeof(BinaryReader), typeof(Object), typeof(FieldInfo) },
-                                    Flags.Static | Flags.NonPublic | Flags.Public);
-                                fieldMethodInfo.Add(new FieldDelegateInformation(field,
-                                    Delegate.CreateDelegate(typeof(ProcessFieldInfo), deserializeMethod), fieldOffset));
+                                var deserializeMethod = typeof ( Deserializer ).Method( "ProcessFixedStructArray",
+                                    new[] {typeof ( BinaryReader ), typeof ( Object ), typeof ( FieldInfo )},
+                                    Flags.Static | Flags.NonPublic | Flags.Public );
+                                fieldMethodInfo.Add( new FieldDelegateInformation( field,
+                                    Delegate.CreateDelegate( typeof ( ProcessFieldInfo ), deserializeMethod ),
+                                    fieldOffset ) );
                             }
                         }
-                        else throw new MarshalDirectiveException();
+                        else throw new MarshalDirectiveException( );
                     }
                 }
-                else if (field.IsDefined(typeof(TagReferenceAttribute), false) &&
-                         field.FieldType != typeof(TagReference))
+                else if ( field.IsDefined( typeof ( TagReferenceAttribute ), false ) &&
+                          field.FieldType != typeof ( TagReference ) )
                 {
-                    var deserializeMethod = typeof(Deserializer).Method("DeserializeTag",
-                        new[] { typeof(BinaryReader), typeof(Object), typeof(FieldInfo) },
-                        Flags.Static | Flags.NonPublic | Flags.Public);
-                    fieldMethodInfo.Add(new FieldDelegateInformation(field,
-                        Delegate.CreateDelegate(typeof(ProcessFieldInfo), deserializeMethod), fieldOffset));
+                    var deserializeMethod = typeof ( Deserializer ).Method( "DeserializeTag",
+                        new[] {typeof ( BinaryReader ), typeof ( Object ), typeof ( FieldInfo )},
+                        Flags.Static | Flags.NonPublic | Flags.Public );
+                    fieldMethodInfo.Add( new FieldDelegateInformation( field,
+                        Delegate.CreateDelegate( typeof ( ProcessFieldInfo ), deserializeMethod ), fieldOffset ) );
                 }
-                else if (field.IsDefined(typeof(TagStructFieldAttribute), false))
+                else if ( field.IsDefined( typeof ( TagStructFieldAttribute ), false ) )
                 {
-                    var deserializeMethod = typeof(Deserializer).Method("Deserialize",
-                        new[] { typeof(BinaryReader), typeof(Object), typeof(FieldInfo) },
-                        Flags.Static | Flags.NonPublic | Flags.Public);
-                    fieldMethodInfo.Add(new FieldDelegateInformation(field,
-                        Delegate.CreateDelegate(typeof(ProcessFieldInfo), deserializeMethod), fieldOffset));
+                    var deserializeMethod = typeof ( Deserializer ).Method( "Deserialize",
+                        new[] {typeof ( BinaryReader ), typeof ( Object ), typeof ( FieldInfo )},
+                        Flags.Static | Flags.NonPublic | Flags.Public );
+                    fieldMethodInfo.Add( new FieldDelegateInformation( field,
+                        Delegate.CreateDelegate( typeof ( ProcessFieldInfo ), deserializeMethod ), fieldOffset ) );
                 }
-                else if (field.FieldType.IsEnum)
+                else if ( field.FieldType.IsEnum )
                 {
-                    var readEnumMethod = typeof(Deserializer).Method("ReadEnum",
-                        Flags.Static | Flags.NonPublic | Flags.Public);
-                    fieldMethodInfo.Add(new FieldDelegateInformation(field,
-                        Delegate.CreateDelegate(typeof(ProcessFieldInfo), readEnumMethod), fieldOffset));
+                    var readEnumMethod = typeof ( Deserializer ).Method( "ReadEnum",
+                        Flags.Static | Flags.NonPublic | Flags.Public );
+                    fieldMethodInfo.Add( new FieldDelegateInformation( field,
+                        Delegate.CreateDelegate( typeof ( ProcessFieldInfo ), readEnumMethod ), fieldOffset ) );
                 }
                 else
                 {
-                    var readFieldMethod = typeof(Deserializer).Method("ReadField",
-                        new[] { typeof(BinaryReader), typeof(Object), typeof(FieldInfo) },
-                        Flags.Static | Flags.NonPublic | Flags.Public);
-                    fieldMethodInfo.Add(new FieldDelegateInformation(field,
-                        Delegate.CreateDelegate(typeof(ProcessFieldInfo), readFieldMethod), fieldOffset));
+                    var readFieldMethod = typeof ( Deserializer ).Method( "ReadField",
+                        new[] {typeof ( BinaryReader ), typeof ( Object ), typeof ( FieldInfo )},
+                        Flags.Static | Flags.NonPublic | Flags.Public );
+                    fieldMethodInfo.Add( new FieldDelegateInformation( field,
+                        Delegate.CreateDelegate( typeof ( ProcessFieldInfo ), readFieldMethod ), fieldOffset ) );
                 }
-                fieldOffset += SizeOf(field);
+                fieldOffset += SizeOf( field );
             }
         }
 
         [Obsolete]
-        private static void ProcessFixedStructArray(BinaryReader sourceReader, object item, FieldInfo field)
+        private static void ProcessFixedStructArray( BinaryReader sourceReader, object item, FieldInfo field )
         {
-            var elementType = field.FieldType.GetElementType();
-            var elementSize = SizeOf(elementType);
+            var elementType = field.FieldType.GetElementType( );
+            var elementSize = SizeOf( elementType );
 
-            var marhsalAsAttribute = field.Attribute<MarshalAsAttribute>();
+            var marhsalAsAttribute = field.Attribute<MarshalAsAttribute>( );
             var count = marhsalAsAttribute.SizeConst;
 
-            var array = DeserializeArray(sourceReader, elementType, elementSize, count);
-            field.Set(item, array);
+            var array = DeserializeArray( sourceReader, elementType, elementSize, count );
+            field.Set( item, array );
         }
 
         [Obsolete]
-        private static void ReadEnum(BinaryReader binaryReader, object item, FieldInfo field)
+        private static void ReadEnum( BinaryReader binaryReader, object item, FieldInfo field )
         {
-            var enumType = Enum.GetUnderlyingType(field.FieldType);
-            if (enumType == typeof(byte))
+            var enumType = Enum.GetUnderlyingType( field.FieldType );
+            if ( enumType == typeof ( byte ) )
             {
-                var enumValue = Enum.ToObject(field.FieldType, binaryReader.ReadByte());
-                field.SetValue(item, enumValue);
+                var enumValue = Enum.ToObject( field.FieldType, binaryReader.ReadByte( ) );
+                field.SetValue( item, enumValue );
             }
-            else if (enumType == typeof(short))
+            else if ( enumType == typeof ( short ) )
             {
-                var enumValue = Enum.ToObject(field.FieldType, binaryReader.ReadInt16());
-                field.SetValue(item, enumValue);
+                var enumValue = Enum.ToObject( field.FieldType, binaryReader.ReadInt16( ) );
+                field.SetValue( item, enumValue );
             }
-            else if (enumType == typeof(int))
+            else if ( enumType == typeof ( int ) )
             {
-                var enumValue = Enum.ToObject(field.FieldType, binaryReader.ReadInt32());
-                field.SetValue(item, enumValue);
+                var enumValue = Enum.ToObject( field.FieldType, binaryReader.ReadInt32( ) );
+                field.SetValue( item, enumValue );
             }
-            else throw new InvalidDataException();
+            else throw new InvalidDataException( );
         }
 
         [Obsolete]
-        private static void ReadField(BinaryReader binaryReader, object item, FieldInfo field)
+        private static void ReadField( BinaryReader binaryReader, object item, FieldInfo field )
         {
-            field.SetValue(item, ReadField(binaryReader, field.FieldType));
+            field.SetValue( item, ReadField( binaryReader, field.FieldType ) );
         }
 
         [Obsolete]
-        private static object ReadField(BinaryReader binaryReader, Type type)
+        private static object ReadField( BinaryReader binaryReader, Type type )
         {
-            var methodInfo = ReadTypeMethods[type];
-            return methodInfo(binaryReader, binaryReader);
+            var methodInfo = ReadTypeMethods[ type ];
+            return methodInfo( binaryReader, binaryReader );
         }
 
         [Obsolete]
-        private static void ReadFixedArrayField(BinaryReader binaryReader, object item, FieldInfo field)
+        private static void ReadFixedArrayField( BinaryReader binaryReader, object item, FieldInfo field )
         {
-            var marhsalAsAttribute = field.Attribute<MarshalAsAttribute>();
-            var elementType = field.FieldType.GetElementType();
-            if (marhsalAsAttribute.Value == UnmanagedType.ByValArray)
+            var marhsalAsAttribute = field.Attribute<MarshalAsAttribute>( );
+            var elementType = field.FieldType.GetElementType( );
+            if ( marhsalAsAttribute.Value == UnmanagedType.ByValArray )
             {
                 var count = marhsalAsAttribute.SizeConst;
-                var array = Array.CreateInstance(elementType, count);
-                if (elementType == typeof(byte))
+                var array = Array.CreateInstance( elementType, count );
+                if ( elementType == typeof ( byte ) )
                 {
-                    array = binaryReader.ReadBytes(count);
+                    array = binaryReader.ReadBytes( count );
                 }
                 else
                 {
-                    for (var i = 0; i < count; ++i)
+                    for ( var i = 0; i < count; ++i )
                     {
-                        var element = ReadField(binaryReader, elementType);
-                        array.SetElement(i, element);
+                        var element = ReadField( binaryReader, elementType );
+                        array.SetElement( i, element );
                     }
                 }
-                field.Set(item, array);
+                field.Set( item, array );
             }
         }
 
         [Obsolete]
-        private static int SizeOf(FieldInfo field)
+        private static int SizeOf( FieldInfo field )
         {
-            if (field.IsDefined(typeof(TagBlockFieldAttribute), false))
+            if ( field.IsDefined( typeof ( TagBlockFieldAttribute ), false ) )
             {
                 return 8;
             }
-            if (field.IsDefined(typeof(TagReferenceAttribute), false))
+            if ( field.IsDefined( typeof ( TagReferenceAttribute ), false ) )
             {
                 return 8;
             }
-            if (field.IsDefined(typeof(MarshalAsAttribute), false))
+            if ( field.IsDefined( typeof ( MarshalAsAttribute ), false ) )
             {
                 var marshalAsAttribute =
-                    field.GetCustomAttributes(typeof(MarshalAsAttribute), false)[0] as MarshalAsAttribute;
-                if (marshalAsAttribute.Value == UnmanagedType.ByValArray)
+                    field.GetCustomAttributes( typeof ( MarshalAsAttribute ), false )[ 0 ] as MarshalAsAttribute;
+                if ( marshalAsAttribute.Value == UnmanagedType.ByValArray )
                 {
-                    var elementSize = SizeOf(field.FieldType.GetElementType());
+                    var elementSize = SizeOf( field.FieldType.GetElementType( ) );
                     var count = marshalAsAttribute.SizeConst;
                     return elementSize * count;
                 }
             }
-            if (field.FieldType.IsEnum) return SizeOf(Enum.GetUnderlyingType(field.FieldType));
-            return SizeOf(field.FieldType);
+            if ( field.FieldType.IsEnum ) return SizeOf( Enum.GetUnderlyingType( field.FieldType ) );
+            return SizeOf( field.FieldType );
         }
 
-        private delegate void ProcessFieldInfo(BinaryReader binaryReader, Object item, FieldInfo field);
+        private delegate void ProcessFieldInfo( BinaryReader binaryReader, Object item, FieldInfo field );
 
         [Obsolete]
         private struct FieldDelegateInformation
@@ -460,16 +463,16 @@ namespace Moonfish.Tags
             public readonly object[] Parameters;
             public readonly int StreamOffset;
 
-            public FieldDelegateInformation(FieldInfo callee, Delegate methodDelegate, int streamOffset)
+            public FieldDelegateInformation( FieldInfo callee, Delegate methodDelegate, int streamOffset )
             {
                 Callee = callee;
                 MethodDelegate = methodDelegate;
                 StreamOffset = streamOffset;
-                Parameters = new object[] { };
+                Parameters = new object[] {};
             }
 
-            public FieldDelegateInformation(FieldInfo callee, Delegate methodDelegate, int streamOffset,
-                params object[] parameters)
+            public FieldDelegateInformation( FieldInfo callee, Delegate methodDelegate, int streamOffset,
+                params object[] parameters )
             {
                 Callee = callee;
                 MethodDelegate = methodDelegate;
@@ -483,7 +486,6 @@ namespace Moonfish.Tags
         private static Dictionary<Type, MethodInvoker> ReadTypeMethods;
         private static readonly Assembly ExecutingAssembly;
         private static MapStream Source;
-        [Obsolete]
-        public static ProcessTagBlockArrayDelegate ProcessTagBlockArray = DefaultProcessTagBlockArray;
+        [Obsolete] public static ProcessTagBlockArrayDelegate ProcessTagBlockArray = DefaultProcessTagBlockArray;
     }
 }

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,32 +9,37 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class BitmapDataBlock : BitmapDataBlockBase
+    public partial class BitmapDataBlock : BitmapDataBlockBase
     {
-        public  BitmapDataBlock(BinaryReader binaryReader): base(binaryReader)
+        public BitmapDataBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 116, Alignment = 4)]
-    public class BitmapDataBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 116, Alignment = 4 )]
+    public class BitmapDataBlockBase : IGuerilla
     {
         internal Moonfish.Tags.TagClass signature;
         internal short widthPixels;
         internal short heightPixels;
+
         /// <summary>
         /// Depth is 1 for 2D textures and cube maps.
         /// </summary>
         internal byte depthPixels;
+
         internal MoreFlags moreFlags;
+
         /// <summary>
         /// Determines bitmap "geometry."
         /// </summary>
         internal TypeDeterminesBitmapGeometry type;
+
         /// <summary>
         /// Determines how pixels are represented internally.
         /// </summary>
         internal FormatDeterminesHowPixelsAreRepresentedInternally format;
+
         internal Flags flags;
         internal Moonfish.Tags.Point registrationPoint;
         internal short mipmapCount;
@@ -47,56 +53,59 @@ namespace Moonfish.Guerilla.Tags
         internal int lOD2TextureDataLength;
         internal int lOD3TextureDataLength;
         internal byte[] invalidName_0;
-        internal  BitmapDataBlockBase(BinaryReader binaryReader)
+
+        internal BitmapDataBlockBase( BinaryReader binaryReader )
         {
-            signature = binaryReader.ReadTagClass();
-            widthPixels = binaryReader.ReadInt16();
-            heightPixels = binaryReader.ReadInt16();
-            depthPixels = binaryReader.ReadByte();
-            moreFlags = (MoreFlags)binaryReader.ReadByte();
-            type = (TypeDeterminesBitmapGeometry)binaryReader.ReadInt16();
-            format = (FormatDeterminesHowPixelsAreRepresentedInternally)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            registrationPoint = binaryReader.ReadPoint();
-            mipmapCount = binaryReader.ReadInt16();
-            lowDetailMipmapCount = binaryReader.ReadInt16();
-            pixelsOffset = binaryReader.ReadInt32();
-            lOD1TextureDataOffset = binaryReader.ReadInt32();
-            lOD2TextureDataOffset = binaryReader.ReadInt32();
-            lOD3TextureDataOffset = binaryReader.ReadInt32();
-            invalidName_ = binaryReader.ReadBytes(12);
-            lOD1TextureDataLength = binaryReader.ReadInt32();
-            lOD2TextureDataLength = binaryReader.ReadInt32();
-            lOD3TextureDataLength = binaryReader.ReadInt32();
-            invalidName_0 = binaryReader.ReadBytes(52);
+            signature = binaryReader.ReadTagClass( );
+            widthPixels = binaryReader.ReadInt16( );
+            heightPixels = binaryReader.ReadInt16( );
+            depthPixels = binaryReader.ReadByte( );
+            moreFlags = ( MoreFlags ) binaryReader.ReadByte( );
+            type = ( TypeDeterminesBitmapGeometry ) binaryReader.ReadInt16( );
+            format = ( FormatDeterminesHowPixelsAreRepresentedInternally ) binaryReader.ReadInt16( );
+            flags = ( Flags ) binaryReader.ReadInt16( );
+            registrationPoint = binaryReader.ReadPoint( );
+            mipmapCount = binaryReader.ReadInt16( );
+            lowDetailMipmapCount = binaryReader.ReadInt16( );
+            pixelsOffset = binaryReader.ReadInt32( );
+            lOD1TextureDataOffset = binaryReader.ReadInt32( );
+            lOD2TextureDataOffset = binaryReader.ReadInt32( );
+            lOD3TextureDataOffset = binaryReader.ReadInt32( );
+            invalidName_ = binaryReader.ReadBytes( 12 );
+            lOD1TextureDataLength = binaryReader.ReadInt32( );
+            lOD2TextureDataLength = binaryReader.ReadInt32( );
+            lOD3TextureDataLength = binaryReader.ReadInt32( );
+            invalidName_0 = binaryReader.ReadBytes( 52 );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(signature);
-                binaryWriter.Write(widthPixels);
-                binaryWriter.Write(heightPixels);
-                binaryWriter.Write(depthPixels);
-                binaryWriter.Write((Byte)moreFlags);
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write((Int16)format);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(registrationPoint);
-                binaryWriter.Write(mipmapCount);
-                binaryWriter.Write(lowDetailMipmapCount);
-                binaryWriter.Write(pixelsOffset);
-                binaryWriter.Write(lOD1TextureDataOffset);
-                binaryWriter.Write(lOD2TextureDataOffset);
-                binaryWriter.Write(lOD3TextureDataOffset);
-                binaryWriter.Write(invalidName_, 0, 12);
-                binaryWriter.Write(lOD1TextureDataLength);
-                binaryWriter.Write(lOD2TextureDataLength);
-                binaryWriter.Write(lOD3TextureDataLength);
-                binaryWriter.Write(invalidName_0, 0, 52);
+                binaryWriter.Write( signature );
+                binaryWriter.Write( widthPixels );
+                binaryWriter.Write( heightPixels );
+                binaryWriter.Write( depthPixels );
+                binaryWriter.Write( ( Byte ) moreFlags );
+                binaryWriter.Write( ( Int16 ) type );
+                binaryWriter.Write( ( Int16 ) format );
+                binaryWriter.Write( ( Int16 ) flags );
+                binaryWriter.Write( registrationPoint );
+                binaryWriter.Write( mipmapCount );
+                binaryWriter.Write( lowDetailMipmapCount );
+                binaryWriter.Write( pixelsOffset );
+                binaryWriter.Write( lOD1TextureDataOffset );
+                binaryWriter.Write( lOD2TextureDataOffset );
+                binaryWriter.Write( lOD3TextureDataOffset );
+                binaryWriter.Write( invalidName_, 0, 12 );
+                binaryWriter.Write( lOD1TextureDataLength );
+                binaryWriter.Write( lOD2TextureDataLength );
+                binaryWriter.Write( lOD3TextureDataLength );
+                binaryWriter.Write( invalidName_0, 0, 52 );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum MoreFlags : byte
         {
@@ -104,12 +113,14 @@ namespace Moonfish.Guerilla.Tags
             BitmapCreateAttempted = 2,
             InvalidName = 4,
         };
+
         internal enum TypeDeterminesBitmapGeometry : short
         {
             Texture2D = 0,
             Texture3D = 1,
             Cubemap = 2,
         };
+
         internal enum FormatDeterminesHowPixelsAreRepresentedInternally : short
         {
             A8 = 0,
@@ -137,6 +148,7 @@ namespace Moonfish.Guerilla.Tags
             V8u8 = 22,
             G8b8 = 23,
         };
+
         [FlagsAttribute]
         internal enum Flags : short
         {

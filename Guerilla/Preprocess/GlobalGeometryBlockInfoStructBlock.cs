@@ -7,12 +7,12 @@ using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Preprocess
 {
-    class GlobalGeometryBlockInfoStructBlock
+    internal class GlobalGeometryBlockInfoStructBlock
     {
-        [GuerillaPreProcessFieldsMethod(BlockName = "decorator_set_block")]
-        protected static IList<MoonfishTagField> GuerillaPreProcessMethod(IList<MoonfishTagField> fields)
+        [GuerillaPreProcessFieldsMethod( BlockName = "decorator_set_block" )]
+        protected static IList<MoonfishTagField> GuerillaPreProcessMethod( IList<MoonfishTagField> fields )
         {
-            fields.RemoveAt(fields.Count - 2);
+            fields.RemoveAt( fields.Count - 2 );
             return fields;
         }
     }

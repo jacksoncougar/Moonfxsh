@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,38 +9,41 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class OldUnusedStrucurePhysicsBlock : OldUnusedStrucurePhysicsBlockBase
+    public partial class OldUnusedStrucurePhysicsBlock : OldUnusedStrucurePhysicsBlockBase
     {
-        public  OldUnusedStrucurePhysicsBlock(BinaryReader binaryReader): base(binaryReader)
+        public OldUnusedStrucurePhysicsBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 44, Alignment = 4)]
-    public class OldUnusedStrucurePhysicsBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 44, Alignment = 4 )]
+    public class OldUnusedStrucurePhysicsBlockBase : IGuerilla
     {
         internal byte[] moppCode;
         internal OldUnusedObjectIdentifiersBlock[] evironmentObjectIdentifiers;
         internal byte[] invalidName_;
         internal OpenTK.Vector3 moppBoundsMin;
         internal OpenTK.Vector3 moppBoundsMax;
-        internal  OldUnusedStrucurePhysicsBlockBase(BinaryReader binaryReader)
+
+        internal OldUnusedStrucurePhysicsBlockBase( BinaryReader binaryReader )
         {
-            moppCode = Guerilla.ReadData(binaryReader);
-            evironmentObjectIdentifiers = Guerilla.ReadBlockArray<OldUnusedObjectIdentifiersBlock>(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(4);
-            moppBoundsMin = binaryReader.ReadVector3();
-            moppBoundsMax = binaryReader.ReadVector3();
+            moppCode = Guerilla.ReadData( binaryReader );
+            evironmentObjectIdentifiers = Guerilla.ReadBlockArray<OldUnusedObjectIdentifiersBlock>( binaryReader );
+            invalidName_ = binaryReader.ReadBytes( 4 );
+            moppBoundsMin = binaryReader.ReadVector3( );
+            moppBoundsMax = binaryReader.ReadVector3( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                nextAddress = Guerilla.WriteData(binaryWriter, moppCode, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<OldUnusedObjectIdentifiersBlock>(binaryWriter, evironmentObjectIdentifiers, nextAddress);
-                binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write(moppBoundsMin);
-                binaryWriter.Write(moppBoundsMax);
+                nextAddress = Guerilla.WriteData( binaryWriter, moppCode, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<OldUnusedObjectIdentifiersBlock>( binaryWriter,
+                    evironmentObjectIdentifiers, nextAddress );
+                binaryWriter.Write( invalidName_, 0, 4 );
+                binaryWriter.Write( moppBoundsMin );
+                binaryWriter.Write( moppBoundsMax );
                 return nextAddress;
             }
         }

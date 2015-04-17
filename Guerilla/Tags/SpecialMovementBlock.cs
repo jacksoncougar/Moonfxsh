@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,29 +9,32 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SpecialMovementBlock : SpecialMovementBlockBase
+    public partial class SpecialMovementBlock : SpecialMovementBlockBase
     {
-        public  SpecialMovementBlock(BinaryReader binaryReader): base(binaryReader)
+        public SpecialMovementBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class SpecialMovementBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 4, Alignment = 4 )]
+    public class SpecialMovementBlockBase : IGuerilla
     {
         internal SpecialMovement1 specialMovement1;
-        internal  SpecialMovementBlockBase(BinaryReader binaryReader)
+
+        internal SpecialMovementBlockBase( BinaryReader binaryReader )
         {
-            specialMovement1 = (SpecialMovement1)binaryReader.ReadInt32();
+            specialMovement1 = ( SpecialMovement1 ) binaryReader.ReadInt32( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int32)specialMovement1);
+                binaryWriter.Write( ( Int32 ) specialMovement1 );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum SpecialMovement1 : int
         {

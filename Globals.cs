@@ -17,10 +17,13 @@ namespace Moonfish
     {
         public static MapType CheckMapType( string filename )
         {
-            using ( BinaryReader reader = new BinaryReader( new FileStream( filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 2048, FileOptions.SequentialScan | FileOptions.Asynchronous ) ) )
+            using (
+                BinaryReader reader =
+                    new BinaryReader( new FileStream( filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite,
+                        2048, FileOptions.SequentialScan | FileOptions.Asynchronous ) ) )
             {
                 reader.BaseStream.Seek( 320, SeekOrigin.Begin );
-                return ( MapType )reader.ReadInt32();
+                return ( MapType ) reader.ReadInt32( );
             }
         }
 
@@ -33,6 +36,7 @@ namespace Moonfish
         {
             get { return tagGroups; }
         }
+
         /// <summary>
         /// A list of all standard strings in Halo 2
         /// </summary>
@@ -49,8 +53,9 @@ namespace Moonfish
             if ( mapStream == null ) return null;
             if ( reload )
                 mapStream.Remove( identifier );
-            return mapStream[ identifier ].Deserialize();
+            return mapStream[ identifier ].Deserialize( );
         }
+
         public static dynamic GetReferenceObject( TagReference reference )
         {
             if ( mapStream == null ) return null;
@@ -58,10 +63,13 @@ namespace Moonfish
 
             try
             {
-                var @object = mapStream[ reference.Ident ].Deserialize();
+                var @object = mapStream[ reference.Ident ].Deserialize( );
                 return @object;
             }
-            catch { return null; }
+            catch
+            {
+                return null;
+            }
         }
 
         public static T GetReferenceObject<T>( TagReference reference ) where T : class
@@ -69,7 +77,7 @@ namespace Moonfish
             if ( mapStream == null ) return null;
             if ( reference.Ident == TagIdent.NullIdentifier ) return null;
 
-            return mapStream[ reference.Ident ].Deserialize();
+            return mapStream[ reference.Ident ].Deserialize( );
         }
 
 
@@ -77,44 +85,46 @@ namespace Moonfish
         {
             Stream resourceStream = mapStream;
             if ( blockInfo.ResourceLocation != ResourceSource.Local
-                && !TryGettingResourceStream( blockInfo.blockOffset, out resourceStream ) )
+                 && !TryGettingResourceStream( blockInfo.blockOffset, out resourceStream ) )
                 return null;
             resourceStream.Position = blockInfo.ResourceOffset + 8;
-            var buffer = new byte[ blockInfo.blockSize - 8 ];
+            var buffer = new byte[blockInfo.blockSize - 8];
             resourceStream.Read( buffer, 0, blockInfo.blockSize - 8 );
-            return new ResourceStream( buffer, blockInfo ) { };
+            return new ResourceStream( buffer, blockInfo ) {};
         }
 
-        static MapStream mapStream;
-        static MapStream resourceShared;
-        static MapStream resourceSinglePlayer;
-        static MapStream resourceMainMenu;
-        static TagGroupLookup tagGroups = new TagGroupLookup();
-        static GlobalStrings strings = new GlobalStrings();
-        static Dictionary<TagClass, Type> definedTagGroupsDictionary;
+        private static MapStream mapStream;
+        private static MapStream resourceShared;
+        private static MapStream resourceSinglePlayer;
+        private static MapStream resourceMainMenu;
+        private static TagGroupLookup tagGroups = new TagGroupLookup( );
+        private static GlobalStrings strings = new GlobalStrings( );
+        private static Dictionary<TagClass, Type> definedTagGroupsDictionary;
 
         static Halo2( )
         {
-            Paths = new GlobalPaths();
+            Paths = new GlobalPaths( );
             definedTagGroupsDictionary = new Dictionary<TagClass, Type>( 3 );
-            var assembly = typeof( Moonfish.Tag ).Assembly;
+            var assembly = typeof ( Moonfish.Tag ).Assembly;
             if ( assembly == null ) throw new ArgumentNullException( "assembly" );
             Type[] types;
             try
             {
-                types = assembly.GetTypes();
+                types = assembly.GetTypes( );
             }
             catch ( ReflectionTypeLoadException e )
             {
-                types = e.Types.Where( t => t != null ).ToArray();
+                types = e.Types.Where( t => t != null ).ToArray( );
             }
             foreach ( var type in types )
             {
                 //if (!type.IsNested)
                 {
-                    if ( type.IsDefined( typeof( Tags.TagClassAttribute ), false ) )
+                    if ( type.IsDefined( typeof ( Tags.TagClassAttribute ), false ) )
                     {
-                        TagClass class_of_tag = ( type.GetCustomAttributes( typeof( Tags.TagClassAttribute ), false )[ 0 ] as Tags.TagClassAttribute ).TagClass;
+                        TagClass class_of_tag =
+                            ( type.GetCustomAttributes( typeof ( Tags.TagClassAttribute ), false )[ 0 ] as
+                                Tags.TagClassAttribute ).TagClass;
                         definedTagGroupsDictionary.Add( class_of_tag, type );
                     }
                 }
@@ -163,7 +173,7 @@ namespace Moonfish
 
         internal static bool TryGettingResourceStream( int resourceAddress, out System.IO.Stream resourceStream )
         {
-            var resourceSource = ( ResourceSource )( ( resourceAddress & 0xC0000000 ) >> 30 );
+            var resourceSource = ( ResourceSource ) ( ( resourceAddress & 0xC0000000 ) >> 30 );
             switch ( resourceSource )
             {
                 case ResourceSource.Shared:
@@ -175,7 +185,8 @@ namespace Moonfish
                 case ResourceSource.MainMenu:
                     resourceStream = Halo2.resourceMainMenu;
                     break;
-                default: resourceStream = null;
+                default:
+                    resourceStream = null;
                     return false;
             }
             var hasResource = resourceStream == null ? false : true;
@@ -194,6 +205,7 @@ namespace Moonfish
     public static class Log
     {
         public delegate void LogMessageHandler( string message );
+
         public static LogMessageHandler OnLog;
 
         internal static void Error( string message )
@@ -206,7 +218,7 @@ namespace Moonfish
             LogMessage( "Warning", message );
         }
 
-        static void LogMessage( string token, string message )
+        private static void LogMessage( string token, string message )
         {
             if ( OnLog != null )
                 OnLog( string.Format( "{0}: {1}", token, message ) );
@@ -220,22 +232,27 @@ namespace Moonfish
 
     public static class StaticBenchmark
     {
-        static Stopwatch Timer = new Stopwatch();
-        static string result;
+        private static Stopwatch Timer = new Stopwatch( );
+        private static string result;
 
         public static void Begin( )
         {
-            Timer.Start();
+            Timer.Start( );
         }
+
         public static void End( )
         {
-            Timer.Stop();
-            result = Timer.ElapsedMilliseconds.ToString() + " Milliseconds";
-            Timer.Reset();
+            Timer.Stop( );
+            result = Timer.ElapsedMilliseconds.ToString( ) + " Milliseconds";
+            Timer.Reset( );
         }
-        public static string Result { get { return result; } }
 
-        public static new string ToString( )
+        public static string Result
+        {
+            get { return result; }
+        }
+
+        public new static string ToString( )
         {
             return Result;
         }
@@ -248,45 +265,136 @@ namespace Moonfish
             get { return classes[ index ]; }
         }
 
-        static readonly List<string> classes = new List<string>() {
-                                    #region Class Strings
-"$#!+",
-"*cen","*eap","*ehi","*igh","*ipd","*qip","*rea","*sce",
-"/**/",
-"<fx>",
-"BooM",
-"DECP","DECR",
-"MGS2",
-"PRTM",
-"adlg",
-"ai**","ant!",
-"bipd","bitm","bloc","bsdt",
-"char","cin*","clu*","clwd","coll","coln","colo","cont","crea","ctrl",
-"dc*s","dec*","deca","devi","devo","dgr*","dobc",
-"effe","egor","eqip",
-"fog ","foot","fpch",
-"garb","gldf","goof","grhi",
-"hlmt","hmt ","hsc*","hud#","hudg",
-"item","itmc",
-"jmad","jpt!",
-"lens","lifi","ligh","lsnd","ltmp",
-"mach","matg","mdlg","metr","mode","mpdt","mply","mulg",
-"nhdt",
-"obje",
-"phmo","phys","pmov","pphy","proj","prt3",
-"sbsp","scen","scnr","sfx+","shad","sily","skin","sky ","slit","sncl","snd!","snde","snmx","spas","spk!","ssce","sslt","stem","styl",
-"tdtl","trak","trg*",
-"udlg","ugh!","unhi","unic","unit",
-"vehc","vehi","vrtx",
-"weap","weat","wgit","wgtz","whip","wigl","wind","wphi",
-#endregion
-                                  };
+        private static readonly List<string> classes = new List<string>( )
+        {
+            #region Class Strings
+            "$#!+",
+            "*cen",
+            "*eap",
+            "*ehi",
+            "*igh",
+            "*ipd",
+            "*qip",
+            "*rea",
+            "*sce",
+            "/**/",
+            "<fx>",
+            "BooM",
+            "DECP",
+            "DECR",
+            "MGS2",
+            "PRTM",
+            "adlg",
+            "ai**",
+            "ant!",
+            "bipd",
+            "bitm",
+            "bloc",
+            "bsdt",
+            "char",
+            "cin*",
+            "clu*",
+            "clwd",
+            "coll",
+            "coln",
+            "colo",
+            "cont",
+            "crea",
+            "ctrl",
+            "dc*s",
+            "dec*",
+            "deca",
+            "devi",
+            "devo",
+            "dgr*",
+            "dobc",
+            "effe",
+            "egor",
+            "eqip",
+            "fog ",
+            "foot",
+            "fpch",
+            "garb",
+            "gldf",
+            "goof",
+            "grhi",
+            "hlmt",
+            "hmt ",
+            "hsc*",
+            "hud#",
+            "hudg",
+            "item",
+            "itmc",
+            "jmad",
+            "jpt!",
+            "lens",
+            "lifi",
+            "ligh",
+            "lsnd",
+            "ltmp",
+            "mach",
+            "matg",
+            "mdlg",
+            "metr",
+            "mode",
+            "mpdt",
+            "mply",
+            "mulg",
+            "nhdt",
+            "obje",
+            "phmo",
+            "phys",
+            "pmov",
+            "pphy",
+            "proj",
+            "prt3",
+            "sbsp",
+            "scen",
+            "scnr",
+            "sfx+",
+            "shad",
+            "sily",
+            "skin",
+            "sky ",
+            "slit",
+            "sncl",
+            "snd!",
+            "snde",
+            "snmx",
+            "spas",
+            "spk!",
+            "ssce",
+            "sslt",
+            "stem",
+            "styl",
+            "tdtl",
+            "trak",
+            "trg*",
+            "udlg",
+            "ugh!",
+            "unhi",
+            "unic",
+            "unit",
+            "vehc",
+            "vehi",
+            "vrtx",
+            "weap",
+            "weat",
+            "wgit",
+            "wgtz",
+            "whip",
+            "wigl",
+            "wind",
+            "wphi",
+
+            #endregion
+        };
 
         #region IEnumerable Members
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator( )
         {
-            return classes.GetEnumerator();
+            return classes.GetEnumerator( );
         }
 
         #endregion
@@ -295,7 +403,7 @@ namespace Moonfish
 
         IEnumerator<string> IEnumerable<string>.GetEnumerator( )
         {
-            return classes.GetEnumerator();
+            return classes.GetEnumerator( );
         }
 
         #endregion

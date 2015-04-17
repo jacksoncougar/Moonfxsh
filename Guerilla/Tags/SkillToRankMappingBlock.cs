@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SkillToRankMappingBlock : SkillToRankMappingBlockBase
+    public partial class SkillToRankMappingBlock : SkillToRankMappingBlockBase
     {
-        public  SkillToRankMappingBlock(BinaryReader binaryReader): base(binaryReader)
+        public SkillToRankMappingBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class SkillToRankMappingBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 4, Alignment = 4 )]
+    public class SkillToRankMappingBlockBase : IGuerilla
     {
         internal int skillBounds;
-        internal  SkillToRankMappingBlockBase(BinaryReader binaryReader)
+
+        internal SkillToRankMappingBlockBase( BinaryReader binaryReader )
         {
-            skillBounds = binaryReader.ReadInt32();
+            skillBounds = binaryReader.ReadInt32( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(skillBounds);
+                binaryWriter.Write( skillBounds );
                 return nextAddress;
             }
         }

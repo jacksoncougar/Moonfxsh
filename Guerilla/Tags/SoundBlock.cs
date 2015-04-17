@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,22 +11,22 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Snd = (TagClass)"snd!";
+        public static readonly TagClass Snd = ( TagClass ) "snd!";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("snd!")]
-    public  partial class SoundBlock : SoundBlockBase
+    [TagClassAttribute( "snd!" )]
+    public partial class SoundBlock : SoundBlockBase
     {
-        public  SoundBlock(BinaryReader binaryReader): base(binaryReader)
+        public SoundBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 144, Alignment = 4)]
-    public class SoundBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 144, Alignment = 4 )]
+    public class SoundBlockBase : IGuerilla
     {
         internal Flags flags;
         internal Class _class;
@@ -39,52 +40,59 @@ namespace Moonfish.Guerilla.Tags
         internal Compression compression;
         internal SoundPromotionParametersStructBlock promotion;
         internal byte[] invalidName_1;
+
         /// <summary>
         /// pitch ranges allow multiple samples to represent the same sound at different pitches
         /// </summary>
         internal SoundPitchRangeBlock[] pitchRanges;
+
         internal SoundPlatformSoundPlaybackBlock[] platformParameters;
         internal SoundExtraInfoBlock[] soundExtraInfoBlock;
-        internal  SoundBlockBase(BinaryReader binaryReader)
+
+        internal SoundBlockBase( BinaryReader binaryReader )
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            _class = (Class)binaryReader.ReadByte();
-            sampleRate = (SampleRate)binaryReader.ReadByte();
-            invalidName_ = (InvalidName)binaryReader.ReadByte();
-            importType = (ImportType)binaryReader.ReadByte();
-            playback = new SoundPlaybackParametersStructBlock(binaryReader);
-            scale = new SoundScaleModifiersStructBlock(binaryReader);
-            invalidName_0 = binaryReader.ReadBytes(2);
-            encoding = (Encoding)binaryReader.ReadByte();
-            compression = (Compression)binaryReader.ReadByte();
-            promotion = new SoundPromotionParametersStructBlock(binaryReader);
-            invalidName_1 = binaryReader.ReadBytes(12);
-            pitchRanges = Guerilla.ReadBlockArray<SoundPitchRangeBlock>(binaryReader);
-            platformParameters = Guerilla.ReadBlockArray<SoundPlatformSoundPlaybackBlock>(binaryReader);
-            soundExtraInfoBlock = Guerilla.ReadBlockArray<SoundExtraInfoBlock>(binaryReader);
+            flags = ( Flags ) binaryReader.ReadInt32( );
+            _class = ( Class ) binaryReader.ReadByte( );
+            sampleRate = ( SampleRate ) binaryReader.ReadByte( );
+            invalidName_ = ( InvalidName ) binaryReader.ReadByte( );
+            importType = ( ImportType ) binaryReader.ReadByte( );
+            playback = new SoundPlaybackParametersStructBlock( binaryReader );
+            scale = new SoundScaleModifiersStructBlock( binaryReader );
+            invalidName_0 = binaryReader.ReadBytes( 2 );
+            encoding = ( Encoding ) binaryReader.ReadByte( );
+            compression = ( Compression ) binaryReader.ReadByte( );
+            promotion = new SoundPromotionParametersStructBlock( binaryReader );
+            invalidName_1 = binaryReader.ReadBytes( 12 );
+            pitchRanges = Guerilla.ReadBlockArray<SoundPitchRangeBlock>( binaryReader );
+            platformParameters = Guerilla.ReadBlockArray<SoundPlatformSoundPlaybackBlock>( binaryReader );
+            soundExtraInfoBlock = Guerilla.ReadBlockArray<SoundExtraInfoBlock>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Byte)_class);
-                binaryWriter.Write((Byte)sampleRate);
-                binaryWriter.Write((Byte)invalidName_);
-                binaryWriter.Write((Byte)importType);
-                playback.Write(binaryWriter);
-                scale.Write(binaryWriter);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write((Byte)encoding);
-                binaryWriter.Write((Byte)compression);
-                promotion.Write(binaryWriter);
-                binaryWriter.Write(invalidName_1, 0, 12);
-                nextAddress = Guerilla.WriteBlockArray<SoundPitchRangeBlock>(binaryWriter, pitchRanges, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SoundPlatformSoundPlaybackBlock>(binaryWriter, platformParameters, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SoundExtraInfoBlock>(binaryWriter, soundExtraInfoBlock, nextAddress);
+                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write( ( Byte ) _class );
+                binaryWriter.Write( ( Byte ) sampleRate );
+                binaryWriter.Write( ( Byte ) invalidName_ );
+                binaryWriter.Write( ( Byte ) importType );
+                playback.Write( binaryWriter );
+                scale.Write( binaryWriter );
+                binaryWriter.Write( invalidName_0, 0, 2 );
+                binaryWriter.Write( ( Byte ) encoding );
+                binaryWriter.Write( ( Byte ) compression );
+                promotion.Write( binaryWriter );
+                binaryWriter.Write( invalidName_1, 0, 12 );
+                nextAddress = Guerilla.WriteBlockArray<SoundPitchRangeBlock>( binaryWriter, pitchRanges, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<SoundPlatformSoundPlaybackBlock>( binaryWriter,
+                    platformParameters, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<SoundExtraInfoBlock>( binaryWriter, soundExtraInfoBlock,
+                    nextAddress );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -99,6 +107,7 @@ namespace Moonfish.Guerilla.Tags
             DontUseSoundClassSpeakerFlag = 256,
             DontUseLipsyncData = 512,
         };
+
         internal enum Class : byte
         {
             ProjectileImpact = 0,
@@ -156,12 +165,14 @@ namespace Moonfish.Guerilla.Tags
             Test = 52,
             MultilingualTest = 53,
         };
+
         internal enum SampleRate : byte
         {
             InvalidName22KHz = 0,
             InvalidName44KHz = 1,
             InvalidName32KHz = 2,
         };
+
         internal enum InvalidName : byte
         {
             None = 0,
@@ -169,6 +180,7 @@ namespace Moonfish.Guerilla.Tags
             OutputRearSpeakers = 2,
             OutputCenterSpeakers = 3,
         };
+
         internal enum ImportType : byte
         {
             Unknown = 0,
@@ -176,12 +188,14 @@ namespace Moonfish.Guerilla.Tags
             SingleLayer = 2,
             MultiLayer = 3,
         };
+
         internal enum Encoding : byte
         {
             Mono = 0,
             Stereo = 1,
             Codec = 2,
         };
+
         internal enum Compression : byte
         {
             NoneBigEndian = 0,

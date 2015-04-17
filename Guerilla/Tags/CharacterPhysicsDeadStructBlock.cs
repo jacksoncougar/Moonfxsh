@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,23 +9,23 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class CharacterPhysicsDeadStructBlock : CharacterPhysicsDeadStructBlockBase
+    public partial class CharacterPhysicsDeadStructBlock : CharacterPhysicsDeadStructBlockBase
     {
-        public  CharacterPhysicsDeadStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public CharacterPhysicsDeadStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 0, Alignment = 4)]
-    public class CharacterPhysicsDeadStructBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 0, Alignment = 4 )]
+    public class CharacterPhysicsDeadStructBlockBase : IGuerilla
     {
-        internal  CharacterPhysicsDeadStructBlockBase(BinaryReader binaryReader)
+        internal CharacterPhysicsDeadStructBlockBase( BinaryReader binaryReader )
         {
-            
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
                 return nextAddress;
             }

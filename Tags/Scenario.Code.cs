@@ -10,16 +10,19 @@ namespace Moonfish.Guerilla.Tags
     {
         TagReference ObjectReference { get; }
     }
+
     public interface IH2ObjectInstance
     {
         /// <summary>
         /// index of ScenarioObjectNamesBlock element containing the scriptable name for this object instance
         /// </summary>
         ShortBlockIndex1 NameIndex { get; }
+
         /// <summary>
         /// index of Scenario*PalleteBlock element which contains the object of this instance
         /// </summary>
         ShortBlockIndex1 PaletteIndex { get; }
+
         /// <summary>
         /// contains instance data (orientation, spawning flags, uniqueID, etc...)
         /// </summary>
@@ -28,6 +31,7 @@ namespace Moonfish.Guerilla.Tags
 
         Matrix4 WorldMatrix { get; }
     }
+
     public partial class ScenarioSceneryPaletteBlock : IH2ObjectPalette
     {
         TagReference IH2ObjectPalette.ObjectReference
@@ -35,6 +39,7 @@ namespace Moonfish.Guerilla.Tags
             get { return this.name; }
         }
     }
+
     public partial class ScenarioWeaponPaletteBlock : IH2ObjectPalette
     {
         TagReference IH2ObjectPalette.ObjectReference
@@ -42,6 +47,7 @@ namespace Moonfish.Guerilla.Tags
             get { return this.name; }
         }
     }
+
     public partial class ScenarioVehiclePaletteBlock : IH2ObjectPalette
     {
         TagReference IH2ObjectPalette.ObjectReference
@@ -49,6 +55,7 @@ namespace Moonfish.Guerilla.Tags
             get { return this.name; }
         }
     }
+
     public partial class ScenarioEquipmentPaletteBlock : IH2ObjectPalette
     {
         TagReference IH2ObjectPalette.ObjectReference
@@ -56,6 +63,7 @@ namespace Moonfish.Guerilla.Tags
             get { return this.name; }
         }
     }
+
     public partial class ScenarioCratePaletteBlock : IH2ObjectPalette
     {
         TagReference IH2ObjectPalette.ObjectReference
@@ -67,6 +75,7 @@ namespace Moonfish.Guerilla.Tags
     public partial class ScenarioSceneryBlock : IH2ObjectInstance
     {
         #region Guerilla Preprocess Functions
+
         [GuerillaPreProcessMethod( BlockName = "scenario_scenery_block" )]
         [GuerillaPreProcessMethod( BlockName = "scenario_biped_block" )]
         [GuerillaPreProcessMethod( BlockName = "scenario_vehicle_block" )]
@@ -75,12 +84,12 @@ namespace Moonfish.Guerilla.Tags
         protected static void GuerillaPreProcessMethod( BinaryReader binaryReader, IList<tag_field> fields )
         {
             var index = ( from field in fields
-                          where field.Name == "Object Data"
-                          select fields.IndexOf( field ) ).Single();
-            fields.Insert( ++index, new tag_field() { type = field_type._field_pad, Name = "indexer", definition = 4 } );
+                where field.Name == "Object Data"
+                select fields.IndexOf( field ) ).Single( );
+            fields.Insert( ++index, new tag_field( ) {type = field_type._field_pad, Name = "indexer", definition = 4} );
         }
-        #endregion
 
+        #endregion
 
         ShortBlockIndex1 IH2ObjectInstance.NameIndex
         {
@@ -107,10 +116,12 @@ namespace Moonfish.Guerilla.Tags
                 var rotationYMatrix = Matrix4.CreateRotationY( -this.objectData.rotation.Y );
                 var rotationZMatrix = Matrix4.CreateRotationZ( this.objectData.rotation.X );
                 var scaleMatrix = Matrix4.CreateScale( this.objectData.scale == 0 ? 1 : this.objectData.scale );
-                return worldMatrix *= rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
+                return
+                    worldMatrix *= rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
             }
         }
     }
+
     public partial class ScenarioWeaponBlock : IH2ObjectInstance
     {
         ShortBlockIndex1 IH2ObjectInstance.NameIndex
@@ -138,10 +149,12 @@ namespace Moonfish.Guerilla.Tags
                 var rotationYMatrix = Matrix4.CreateRotationY( -this.objectData.rotation.Y );
                 var rotationZMatrix = Matrix4.CreateRotationZ( this.objectData.rotation.X );
                 var scaleMatrix = Matrix4.CreateScale( this.objectData.scale == 0 ? 1 : this.objectData.scale );
-                return worldMatrix *= rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
+                return
+                    worldMatrix *= rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
             }
         }
     }
+
     public partial class ScenarioVehicleBlock : IH2ObjectInstance
     {
         ShortBlockIndex1 IH2ObjectInstance.NameIndex
@@ -169,10 +182,12 @@ namespace Moonfish.Guerilla.Tags
                 var rotationYMatrix = Matrix4.CreateRotationY( -this.objectData.rotation.Y );
                 var rotationZMatrix = Matrix4.CreateRotationZ( this.objectData.rotation.X );
                 var scaleMatrix = Matrix4.CreateScale( this.objectData.scale == 0 ? 1 : this.objectData.scale );
-                return worldMatrix *= rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
+                return
+                    worldMatrix *= rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
             }
         }
     }
+
     public partial class ScenarioEquipmentBlock : IH2ObjectInstance
     {
         ShortBlockIndex1 IH2ObjectInstance.NameIndex
@@ -200,10 +215,12 @@ namespace Moonfish.Guerilla.Tags
                 var rotationYMatrix = Matrix4.CreateRotationY( -this.objectData.rotation.Y );
                 var rotationZMatrix = Matrix4.CreateRotationZ( this.objectData.rotation.X );
                 var scaleMatrix = Matrix4.CreateScale( this.objectData.scale == 0 ? 1 : this.objectData.scale );
-                return worldMatrix *= rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
+                return
+                    worldMatrix *= rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
             }
         }
     }
+
     public partial class ScenarioCrateBlock : IH2ObjectInstance
     {
         ShortBlockIndex1 IH2ObjectInstance.NameIndex
@@ -231,7 +248,8 @@ namespace Moonfish.Guerilla.Tags
                 var rotationYMatrix = Matrix4.CreateRotationY( -this.objectData.rotation.Y );
                 var rotationZMatrix = Matrix4.CreateRotationZ( this.objectData.rotation.X );
                 var scaleMatrix = Matrix4.CreateScale( this.objectData.scale == 0 ? 1 : this.objectData.scale );
-                return worldMatrix *= rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
+                return
+                    worldMatrix *= rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
             }
         }
     };

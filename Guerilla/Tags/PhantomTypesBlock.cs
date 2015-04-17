@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,37 +9,43 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class PhantomTypesBlock : PhantomTypesBlockBase
+    public partial class PhantomTypesBlock : PhantomTypesBlockBase
     {
-        public  PhantomTypesBlock(BinaryReader binaryReader): base(binaryReader)
+        public PhantomTypesBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 104, Alignment = 4)]
-    public class PhantomTypesBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 104, Alignment = 4 )]
+    public class PhantomTypesBlockBase : IGuerilla
     {
         internal Flags flags;
         internal MinimumSize minimumSize;
         internal MaximumSize maximumSize;
         internal byte[] invalidName_;
+
         /// <summary>
         /// you don't need this if you're just generating effects.  If empty it defaults to the up of the object
         /// </summary>
         internal Moonfish.Tags.StringID markerName;
+
         /// <summary>
         /// you don't need this if you're just generating effects.  If empty it defaults to "marker name"
         /// </summary>
         internal Moonfish.Tags.StringID alignmentMarkerName;
+
         internal byte[] invalidName_0;
+
         /// <summary>
         /// 0 if you don't want this to behave like spring.  1 is a good starting point if you do.
         /// </summary>
         internal float hookesLawE;
+
         /// <summary>
         /// radius from linear motion origin in which acceleration is dead.
         /// </summary>
         internal float linearDeadRadius;
+
         internal float centerAcc;
         internal float centerMaxVel;
         internal float axisAcc;
@@ -46,63 +53,68 @@ namespace Moonfish.Guerilla.Tags
         internal float directionAcc;
         internal float directionMaxVel;
         internal byte[] invalidName_1;
+
         /// <summary>
         /// 0 if you don't want this to behave like spring.  1 is a good starting point if you do.
         /// </summary>
         internal float alignmentHookesLawE;
+
         internal float alignmentAcc;
         internal float alignmentMaxVel;
         internal byte[] invalidName_2;
-        internal  PhantomTypesBlockBase(BinaryReader binaryReader)
+
+        internal PhantomTypesBlockBase( BinaryReader binaryReader )
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            minimumSize = (MinimumSize)binaryReader.ReadByte();
-            maximumSize = (MaximumSize)binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(2);
-            markerName = binaryReader.ReadStringID();
-            alignmentMarkerName = binaryReader.ReadStringID();
-            invalidName_0 = binaryReader.ReadBytes(8);
-            hookesLawE = binaryReader.ReadSingle();
-            linearDeadRadius = binaryReader.ReadSingle();
-            centerAcc = binaryReader.ReadSingle();
-            centerMaxVel = binaryReader.ReadSingle();
-            axisAcc = binaryReader.ReadSingle();
-            axisMaxVel = binaryReader.ReadSingle();
-            directionAcc = binaryReader.ReadSingle();
-            directionMaxVel = binaryReader.ReadSingle();
-            invalidName_1 = binaryReader.ReadBytes(28);
-            alignmentHookesLawE = binaryReader.ReadSingle();
-            alignmentAcc = binaryReader.ReadSingle();
-            alignmentMaxVel = binaryReader.ReadSingle();
-            invalidName_2 = binaryReader.ReadBytes(8);
+            flags = ( Flags ) binaryReader.ReadInt32( );
+            minimumSize = ( MinimumSize ) binaryReader.ReadByte( );
+            maximumSize = ( MaximumSize ) binaryReader.ReadByte( );
+            invalidName_ = binaryReader.ReadBytes( 2 );
+            markerName = binaryReader.ReadStringID( );
+            alignmentMarkerName = binaryReader.ReadStringID( );
+            invalidName_0 = binaryReader.ReadBytes( 8 );
+            hookesLawE = binaryReader.ReadSingle( );
+            linearDeadRadius = binaryReader.ReadSingle( );
+            centerAcc = binaryReader.ReadSingle( );
+            centerMaxVel = binaryReader.ReadSingle( );
+            axisAcc = binaryReader.ReadSingle( );
+            axisMaxVel = binaryReader.ReadSingle( );
+            directionAcc = binaryReader.ReadSingle( );
+            directionMaxVel = binaryReader.ReadSingle( );
+            invalidName_1 = binaryReader.ReadBytes( 28 );
+            alignmentHookesLawE = binaryReader.ReadSingle( );
+            alignmentAcc = binaryReader.ReadSingle( );
+            alignmentMaxVel = binaryReader.ReadSingle( );
+            invalidName_2 = binaryReader.ReadBytes( 8 );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Byte)minimumSize);
-                binaryWriter.Write((Byte)maximumSize);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(markerName);
-                binaryWriter.Write(alignmentMarkerName);
-                binaryWriter.Write(invalidName_0, 0, 8);
-                binaryWriter.Write(hookesLawE);
-                binaryWriter.Write(linearDeadRadius);
-                binaryWriter.Write(centerAcc);
-                binaryWriter.Write(centerMaxVel);
-                binaryWriter.Write(axisAcc);
-                binaryWriter.Write(axisMaxVel);
-                binaryWriter.Write(directionAcc);
-                binaryWriter.Write(directionMaxVel);
-                binaryWriter.Write(invalidName_1, 0, 28);
-                binaryWriter.Write(alignmentHookesLawE);
-                binaryWriter.Write(alignmentAcc);
-                binaryWriter.Write(alignmentMaxVel);
-                binaryWriter.Write(invalidName_2, 0, 8);
+                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write( ( Byte ) minimumSize );
+                binaryWriter.Write( ( Byte ) maximumSize );
+                binaryWriter.Write( invalidName_, 0, 2 );
+                binaryWriter.Write( markerName );
+                binaryWriter.Write( alignmentMarkerName );
+                binaryWriter.Write( invalidName_0, 0, 8 );
+                binaryWriter.Write( hookesLawE );
+                binaryWriter.Write( linearDeadRadius );
+                binaryWriter.Write( centerAcc );
+                binaryWriter.Write( centerMaxVel );
+                binaryWriter.Write( axisAcc );
+                binaryWriter.Write( axisMaxVel );
+                binaryWriter.Write( directionAcc );
+                binaryWriter.Write( directionMaxVel );
+                binaryWriter.Write( invalidName_1, 0, 28 );
+                binaryWriter.Write( alignmentHookesLawE );
+                binaryWriter.Write( alignmentAcc );
+                binaryWriter.Write( alignmentMaxVel );
+                binaryWriter.Write( invalidName_2, 0, 8 );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -135,6 +147,7 @@ namespace Moonfish.Guerilla.Tags
             DisableAngularDamping = 67108864,
             IgnoresDeadBipeds = 134217728,
         };
+
         internal enum MinimumSize : byte
         {
             Default = 0,
@@ -145,6 +158,7 @@ namespace Moonfish.Guerilla.Tags
             Huge = 5,
             ExtraHuge = 6,
         };
+
         internal enum MaximumSize : byte
         {
             Default = 0,

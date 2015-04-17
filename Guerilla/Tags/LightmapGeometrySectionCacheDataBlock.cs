@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class LightmapGeometrySectionCacheDataBlock : LightmapGeometrySectionCacheDataBlockBase
+    public partial class LightmapGeometrySectionCacheDataBlock : LightmapGeometrySectionCacheDataBlockBase
     {
-        public  LightmapGeometrySectionCacheDataBlock(BinaryReader binaryReader): base(binaryReader)
+        public LightmapGeometrySectionCacheDataBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 68, Alignment = 4)]
-    public class LightmapGeometrySectionCacheDataBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 68, Alignment = 4 )]
+    public class LightmapGeometrySectionCacheDataBlockBase : IGuerilla
     {
         internal GlobalGeometrySectionStructBlock geometry;
-        internal  LightmapGeometrySectionCacheDataBlockBase(BinaryReader binaryReader)
+
+        internal LightmapGeometrySectionCacheDataBlockBase( BinaryReader binaryReader )
         {
-            geometry = new GlobalGeometrySectionStructBlock(binaryReader);
+            geometry = new GlobalGeometrySectionStructBlock( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                geometry.Write(binaryWriter);
+                geometry.Write( binaryWriter );
                 return nextAddress;
             }
         }

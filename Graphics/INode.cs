@@ -3,7 +3,6 @@ using OpenTK;
 
 namespace Moonfish.Graphics
 {
-
     public interface IWorldMatrix
     {
         Matrix4 WorldMatrix { get; set; }
@@ -17,7 +16,7 @@ namespace Moonfish.Graphics
 
     public static class NodeExtensions
     {
-        public static Matrix4 GetWorldMatrix(this INode node)
+        public static Matrix4 GetWorldMatrix( this INode node )
         {
             return node == null ? Matrix4.Identity : node.WorldMatrix;
         }

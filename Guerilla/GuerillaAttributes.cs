@@ -8,7 +8,7 @@ namespace Moonfish.Guerilla
         public string BlockName;
     }
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    [AttributeUsage( AttributeTargets.Method, AllowMultiple = true )]
     public class GuerillaPreProcessFieldsMethodAttribute : Attribute
     {
         public string BlockName;

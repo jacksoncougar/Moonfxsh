@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Moonfish.Graphics
 {
-    static class Colours
+    internal static class Colours
     {
         public static Color Blue = Color.FromArgb( 18, 56, 166 );
         public static Color Green = Color.FromArgb( 90, 157, 1 );
@@ -11,8 +11,9 @@ namespace Moonfish.Graphics
         public static Color Selection = Color.FromArgb( 222, 204, 2 );
         public static Color ClearColour = Color.FromArgb( 33, 33, 33 );
 
-        static float seed = new Random().Next( 0, 255 ) / 255;
-        const float GoldenAngleConjugate = 0.618033988749895f;
+        private static float seed = new Random( ).Next( 0, 255 ) / 255;
+        private const float GoldenAngleConjugate = 0.618033988749895f;
+
         public static Color LinearRandomDiffuseColor
         {
             get
@@ -22,6 +23,7 @@ namespace Moonfish.Graphics
                 return ColorFromHSV( seed * 60f + 150, 0, 1 );
             }
         }
+
         public static Color ColorFromHSV( double hue, double saturation, double value )
         {
             int hi = Convert.ToInt32( Math.Floor( hue / 60 ) ) % 6;

@@ -8,16 +8,15 @@ using OpenTK.Graphics;
 
 namespace Moonfish.Guerilla
 {
-
     public static class Test
     {
         public static MoonfishTagDefinition MakeNewDefinition( )
         {
             var fields = new List<MoonfishTagField>
             {
-                new MoonfishTagField(MoonfishFieldType.FieldTagReference, "Sound")
+                new MoonfishTagField( MoonfishFieldType.FieldTagReference, "Sound" )
             };
-            MoonfishTagDefinition definition = new MoonfishTagDefinition("Sounds (Obsolete)", fields);
+            MoonfishTagDefinition definition = new MoonfishTagDefinition( "Sounds (Obsolete)", fields );
             return definition;
         }
     }
@@ -29,12 +28,12 @@ namespace Moonfish.Guerilla
         public TagClass ParentClass { get; private set; }
         public MoonfishTagDefinition Definition { get; private set; }
 
-        public MoonfishTagGroup(GuerillaTagGroup guerillaTag)
+        public MoonfishTagGroup( GuerillaTagGroup guerillaTag )
         {
             Name = guerillaTag.Name;
             Class = guerillaTag.Class;
             ParentClass = guerillaTag.ParentClass;
-            Definition = new MoonfishTagDefinition(guerillaTag.Definition);
+            Definition = new MoonfishTagDefinition( guerillaTag.Definition );
         }
     }
 
@@ -48,7 +47,7 @@ namespace Moonfish.Guerilla
         {
             Name = definition.Name;
             Class = definition.Class;
-            Definition = new MoonfishTagDefinition( (TagBlockDefinition)definition.Definition );
+            Definition = new MoonfishTagDefinition( ( TagBlockDefinition ) definition.Definition );
         }
     }
 
@@ -62,29 +61,29 @@ namespace Moonfish.Guerilla
 
         private const int DefaultMaximumElementCount = short.MaxValue;
 
-        private MoonfishTagDefinition()
+        private MoonfishTagDefinition( )
         {
             Alignment = 4;
             Fields = new List<MoonfishTagField>( 0 );
             MaximumElementCount = DefaultMaximumElementCount;
         }
 
-        public MoonfishTagDefinition( string displayName, List<MoonfishTagField> fieldList ) 
+        public MoonfishTagDefinition( string displayName, List<MoonfishTagField> fieldList )
             : this( )
         {
             DisplayName = displayName;
             using ( var cSharpCode = new CSharpCodeProvider( ) )
             {
                 var token = displayName;
-                token = new string(token.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
-                token = cSharpCode.CreateValidIdentifier(token);
+                token = new string( token.ToCharArray( ).Where( char.IsLetterOrDigit ).ToArray( ) );
+                token = cSharpCode.CreateValidIdentifier( token );
                 Name = token;
             }
             Fields = fieldList;
         }
 
-        public MoonfishTagDefinition( TagBlockDefinition definition ) 
-            : this()
+        public MoonfishTagDefinition( TagBlockDefinition definition )
+            : this( )
         {
             Name = definition.Name;
             DisplayName = definition.DisplayName;
@@ -128,49 +127,48 @@ namespace Moonfish.Guerilla
                 Fields.Add( moonfishField );
             }
             Fields = new List<MoonfishTagField>( Guerilla.PostProcess( Name, Fields ) );
-
         }
 
-        public int CalculateSizeOfFieldSet()
+        public int CalculateSizeOfFieldSet( )
         {
-           return CalculateSizeOfFieldSet(Fields);
+            return CalculateSizeOfFieldSet( Fields );
         }
 
-        public static int CalculateSizeOfField(MoonfishTagField field)
+        public static int CalculateSizeOfField( MoonfishTagField field )
         {
-            switch (field.Type)
+            switch ( field.Type )
             {
                 case MoonfishFieldType.FieldStruct:
-                    {
-                        var struct_definition = (MoonfishTagStruct)field.Definition;
-                        var blockDefinition = struct_definition.Definition;
+                {
+                    var struct_definition = ( MoonfishTagStruct ) field.Definition;
+                    var blockDefinition = struct_definition.Definition;
 
-                        return CalculateSizeOfFieldSet(blockDefinition.Fields);
-                    }
+                    return CalculateSizeOfFieldSet( blockDefinition.Fields );
+                }
                 case MoonfishFieldType.FieldSkip:
                 case MoonfishFieldType.FieldPad:
                     return field.Count;
                 default:
-                    return field.Type.GetFieldSize();
+                    return field.Type.GetFieldSize( );
             }
         }
 
         private static int CalculateSizeOfFieldSet( IReadOnlyList<MoonfishTagField> fields )
         {
             var totalFieldSetSize = 0;
-            for (var i = 0; i < fields.Count; ++i)
+            for ( var i = 0; i < fields.Count; ++i )
             {
-                var field = fields[i];
-                var fieldSize = CalculateSizeOfField(field);
-                if (field.Type == MoonfishFieldType.FieldArrayStart)
+                var field = fields[ i ];
+                var fieldSize = CalculateSizeOfField( field );
+                if ( field.Type == MoonfishFieldType.FieldArrayStart )
                 {
                     var arrayCount = field.Count;
                     var elementSize = 0;
                     do
                     {
-                        field = fields[++i];
-                        elementSize += CalculateSizeOfField(field);
-                    } while (field.Type != MoonfishFieldType.FieldArrayEnd);
+                        field = fields[ ++i ];
+                        elementSize += CalculateSizeOfField( field );
+                    } while ( field.Type != MoonfishFieldType.FieldArrayEnd );
                     fieldSize += elementSize * arrayCount;
                 }
                 totalFieldSetSize += fieldSize;
@@ -193,7 +191,7 @@ namespace Moonfish.Guerilla
     {
         public TagClass Class { get; private set; }
 
-        public MoonfishTagReferenceDefinition(tag_reference_definition definition)
+        public MoonfishTagReferenceDefinition( tag_reference_definition definition )
         {
             Class = definition.Class;
         }
@@ -231,34 +229,37 @@ namespace Moonfish.Guerilla
             Count = count;
         }
 
-        public void AssignDefinition(MoonfishTagEnumDefinition definition)
-        {
-            Definition = definition;
-        }
-        public void AssignDefinition(MoonfishTagDataDefinition definition)
-        {
-            Definition = definition;
-        }
-        public void AssignDefinition(MoonfishTagStruct definition)
-        {
-            Definition = definition;
-        }
-        public void AssignDefinition(MoonfishTagDefinition definition)
-        {
-            Definition = definition;
-        }
-        public void AssignDefinition(MoonfishTagReferenceDefinition definition)
+        public void AssignDefinition( MoonfishTagEnumDefinition definition )
         {
             Definition = definition;
         }
 
-        public MoonfishTagField(MoonfishFieldType fieldType, string fieldName)
+        public void AssignDefinition( MoonfishTagDataDefinition definition )
+        {
+            Definition = definition;
+        }
+
+        public void AssignDefinition( MoonfishTagStruct definition )
+        {
+            Definition = definition;
+        }
+
+        public void AssignDefinition( MoonfishTagDefinition definition )
+        {
+            Definition = definition;
+        }
+
+        public void AssignDefinition( MoonfishTagReferenceDefinition definition )
+        {
+            Definition = definition;
+        }
+
+        public MoonfishTagField( MoonfishFieldType fieldType, string fieldName )
         {
             Type = fieldType;
             Name = fieldName;
         }
     }
-
 
 
     public class GuerillaTagGroup : IReadDefinition
@@ -277,14 +278,14 @@ namespace Moonfish.Guerilla
         public int savePostprocessProc;
         public short version;
 
-        public GuerillaTagGroup(BinaryReader reader)
+        public GuerillaTagGroup( BinaryReader reader )
         {
-            Read(reader);
+            Read( reader );
         }
 
         public TagClass Class
         {
-            get { return new TagClass(groupTag); }
+            get { return new TagClass( groupTag ); }
         }
 
         public string DefaultPath { get; set; }
@@ -293,49 +294,49 @@ namespace Moonfish.Guerilla
 
         public TagClass ParentClass
         {
-            get { return new TagClass(parentGroupTag); }
+            get { return new TagClass( parentGroupTag ); }
         }
 
-        private void Read(BinaryReader reader)
+        private void Read( BinaryReader reader )
         {
             var stream = reader.BaseStream;
 
-            nameAddress = reader.ReadInt32();
-            flags = reader.ReadInt32();
-            groupTag = reader.ReadInt32();
-            parentGroupTag = reader.ReadInt32();
-            version = reader.ReadInt16();
-            initialized = reader.ReadByte();
+            nameAddress = reader.ReadInt32( );
+            flags = reader.ReadInt32( );
+            groupTag = reader.ReadInt32( );
+            parentGroupTag = reader.ReadInt32( );
+            version = reader.ReadInt16( );
+            initialized = reader.ReadByte( );
 
-            stream.Seek(1, SeekOrigin.Current);
+            stream.Seek( 1, SeekOrigin.Current );
 
-            postprocessProc = reader.ReadInt32();
-            savePostprocessProc = reader.ReadInt32();
-            postprocessForSyncProc = reader.ReadInt32();
+            postprocessProc = reader.ReadInt32( );
+            savePostprocessProc = reader.ReadInt32( );
+            postprocessForSyncProc = reader.ReadInt32( );
 
-            stream.Seek(4, SeekOrigin.Current);
+            stream.Seek( 4, SeekOrigin.Current );
 
-            definitionAddress = reader.ReadInt32();
+            definitionAddress = reader.ReadInt32( );
             childGroupTags = new int[16];
-            for (var i = 0; i < 16; i++)
-                childGroupTags[i] = reader.ReadInt32();
-            childsCount = reader.ReadInt16();
+            for ( var i = 0; i < 16; i++ )
+                childGroupTags[ i ] = reader.ReadInt32( );
+            childsCount = reader.ReadInt16( );
 
-            stream.Seek(2, SeekOrigin.Current);
+            stream.Seek( 2, SeekOrigin.Current );
 
-            defaultTagPathAddress = reader.ReadInt32();
+            defaultTagPathAddress = reader.ReadInt32( );
 
 
-            Name = Guerilla.ReadString(reader, nameAddress);
+            Name = Guerilla.ReadString( reader, nameAddress );
 
-            DefaultPath = Guerilla.ReadString(reader, defaultTagPathAddress);
-            stream.Seek(definitionAddress, SeekOrigin.Begin);
-            Definition = reader.ReadFieldDefinition<TagBlockDefinition>();
+            DefaultPath = Guerilla.ReadString( reader, defaultTagPathAddress );
+            stream.Seek( definitionAddress, SeekOrigin.Begin );
+            Definition = reader.ReadFieldDefinition<TagBlockDefinition>( );
         }
 
-        void IReadDefinition.Read(BinaryReader reader)
+        void IReadDefinition.Read( BinaryReader reader )
         {
-            Read(reader);
+            Read( reader );
         }
     }
 }

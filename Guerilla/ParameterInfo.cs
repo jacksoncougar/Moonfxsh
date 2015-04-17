@@ -7,15 +7,15 @@ namespace Moonfish.Guerilla
 {
     public static class ParameterModifierExtensions
     {
-        public static string GetSignatureModifier(this ParameterModifier modifier)
+        public static string GetSignatureModifier( this ParameterModifier modifier )
         {
-            switch (modifier)
+            switch ( modifier )
             {
-                    case ParameterModifier.None:
+                case ParameterModifier.None:
                     return "";
-                    case ParameterModifier.Out:
+                case ParameterModifier.Out:
                     return "out";
-                    case ParameterModifier.Ref:
+                case ParameterModifier.Ref:
                     return "ref";
                 default:
                     return "";
@@ -30,15 +30,15 @@ namespace Moonfish.Guerilla
 
         public ParameterModifier Modifier { get; set; }
 
-        public ParameterInfo(Type parameterType)
+        public ParameterInfo( Type parameterType )
         {
             Modifier = ParameterModifier.None;
             ParameterType = parameterType;
             var type = parameterType.Name;
-            Name = Guerilla.ToMemberName(type);
+            Name = Guerilla.ToMemberName( type );
         }
 
-        public ParameterInfo(Type parameterType, string argumentName)
+        public ParameterInfo( Type parameterType, string argumentName )
         {
             Modifier = ParameterModifier.None;
             ParameterType = parameterType;
@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla
         }
     }
 
-    public enum  ParameterModifier 
+    public enum ParameterModifier
     {
         None,
         Out,

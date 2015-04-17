@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,27 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class HsReferencesBlock : HsReferencesBlockBase
+    public partial class HsReferencesBlock : HsReferencesBlockBase
     {
-        public  HsReferencesBlock(BinaryReader binaryReader): base(binaryReader)
+        public HsReferencesBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class HsReferencesBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class HsReferencesBlockBase : IGuerilla
     {
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference reference;
-        internal  HsReferencesBlockBase(BinaryReader binaryReader)
+        [TagReference( "null" )] internal Moonfish.Tags.TagReference reference;
+
+        internal HsReferencesBlockBase( BinaryReader binaryReader )
         {
-            reference = binaryReader.ReadTagReference();
+            reference = binaryReader.ReadTagReference( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(reference);
+                binaryWriter.Write( reference );
                 return nextAddress;
             }
         }

@@ -7,7 +7,9 @@ using Moonfish.Guerilla.Tags;
 
 namespace Moonfish.Tags
 {
+
     #region Halo 2 Xbox => Vista Remapping
+
     partial class StructureBinarySeperationPlane
     {
         [GuerillaPreProcessMethod( BlockName = "scenario_structure_bsp_block" )]
@@ -19,6 +21,7 @@ namespace Moonfish.Tags
             //fields.Insert( 3, new tag_field( ) { type = field_type._field_tag, Name = "SBSP class" } );
         }
     }
+
     public partial class CollisionBSPPhysicsBlock
     {
         [GuerillaPreProcessMethod( BlockName = "collision_bsp_physics_block" )]
@@ -26,9 +29,11 @@ namespace Moonfish.Tags
         {
             var field = fields.Last( x => x.type != field_type._field_terminator );
             fields.Remove( field );
-            fields.Insert( fields.IndexOf( fields.Last() ), new tag_field() { type = field_type._field_pad, Name = "padding", definition = 4 } );
+            fields.Insert( fields.IndexOf( fields.Last( ) ),
+                new tag_field( ) {type = field_type._field_pad, Name = "padding", definition = 4} );
         }
     }
+
     public partial class DecoratorCacheBlockBlock
     {
         [GuerillaPreProcessMethod( BlockName = "decorator_cache_block_block" )]
@@ -40,7 +45,9 @@ namespace Moonfish.Tags
             fields.Remove( field );
         }
     }
+
     #endregion
+
     partial class ScenarioStructureBSP : ScenarioStructureBspBlock
     {
         public ScenarioStructureBSP( BinaryReader binaryReader )
@@ -57,19 +64,25 @@ namespace Moonfish.Guerilla.Tags
         internal StructureBspClusterDataBlockNew[] ReadStructureBspClusterDataBlockNewArray( BinaryReader binaryReader )
         {
             binaryReader.ReadBytes( 8 );
-            using ( binaryReader.BaseStream.Pin() )
+            using ( binaryReader.BaseStream.Pin( ) )
             {
                 ResourceStream source = Halo2.GetResourceBlock( this.geometryBlockInfo );
                 BinaryReader reader = new BinaryReader( source );
-                return new[] { new StructureBspClusterDataBlockNew( reader ) };
+                return new[] {new StructureBspClusterDataBlockNew( reader )};
             }
         }
     }
 
     public partial class GlobalGeometryBlockInfoStructBlock
     {
-        public int ResourceOffset { get { return ( int )( base.blockOffset & ~0xC0000000 ); } }
+        public int ResourceOffset
+        {
+            get { return ( int ) ( base.blockOffset & ~0xC0000000 ); }
+        }
 
-        public Halo2.ResourceSource ResourceLocation { get { return ( Halo2.ResourceSource )( ( base.blockOffset & 0xC0000000 ) >> 30 ); } }
+        public Halo2.ResourceSource ResourceLocation
+        {
+            get { return ( Halo2.ResourceSource ) ( ( base.blockOffset & 0xC0000000 ) >> 30 ); }
+        }
     };
 }

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,27 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class CheatPowerupsBlock : CheatPowerupsBlockBase
+    public partial class CheatPowerupsBlock : CheatPowerupsBlockBase
     {
-        public  CheatPowerupsBlock(BinaryReader binaryReader): base(binaryReader)
+        public CheatPowerupsBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class CheatPowerupsBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class CheatPowerupsBlockBase : IGuerilla
     {
-        [TagReference("eqip")]
-        internal Moonfish.Tags.TagReference powerup;
-        internal  CheatPowerupsBlockBase(BinaryReader binaryReader)
+        [TagReference( "eqip" )] internal Moonfish.Tags.TagReference powerup;
+
+        internal CheatPowerupsBlockBase( BinaryReader binaryReader )
         {
-            powerup = binaryReader.ReadTagReference();
+            powerup = binaryReader.ReadTagReference( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(powerup);
+                binaryWriter.Write( powerup );
                 return nextAddress;
             }
         }

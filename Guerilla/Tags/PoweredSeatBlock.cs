@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,29 +9,31 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class PoweredSeatBlock : PoweredSeatBlockBase
+    public partial class PoweredSeatBlock : PoweredSeatBlockBase
     {
-        public  PoweredSeatBlock(BinaryReader binaryReader): base(binaryReader)
+        public PoweredSeatBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class PoweredSeatBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class PoweredSeatBlockBase : IGuerilla
     {
         internal float driverPowerupTimeSeconds;
         internal float driverPowerdownTimeSeconds;
-        internal  PoweredSeatBlockBase(BinaryReader binaryReader)
+
+        internal PoweredSeatBlockBase( BinaryReader binaryReader )
         {
-            driverPowerupTimeSeconds = binaryReader.ReadSingle();
-            driverPowerdownTimeSeconds = binaryReader.ReadSingle();
+            driverPowerupTimeSeconds = binaryReader.ReadSingle( );
+            driverPowerdownTimeSeconds = binaryReader.ReadSingle( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(driverPowerupTimeSeconds);
-                binaryWriter.Write(driverPowerdownTimeSeconds);
+                binaryWriter.Write( driverPowerupTimeSeconds );
+                binaryWriter.Write( driverPowerdownTimeSeconds );
                 return nextAddress;
             }
         }

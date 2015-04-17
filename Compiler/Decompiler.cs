@@ -8,11 +8,11 @@ namespace Moonfish.Compiler
 {
     public class Decompiler
     {
-        public void Decompile(MapStream cache)
+        public void Decompile( MapStream cache )
         {
-            foreach (var tag in cache.Tags) 
+            foreach ( var tag in cache.Tags )
             {
-                var tagObject = cache[ tag.Identifier ].Deserialize();
+                var tagObject = cache[ tag.Identifier ].Deserialize( );
             }
         }
     }

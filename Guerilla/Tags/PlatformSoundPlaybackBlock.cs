@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,29 +9,31 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class PlatformSoundPlaybackBlock : PlatformSoundPlaybackBlockBase
+    public partial class PlatformSoundPlaybackBlock : PlatformSoundPlaybackBlockBase
     {
-        public  PlatformSoundPlaybackBlock(BinaryReader binaryReader): base(binaryReader)
+        public PlatformSoundPlaybackBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 56, Alignment = 4)]
-    public class PlatformSoundPlaybackBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 56, Alignment = 4 )]
+    public class PlatformSoundPlaybackBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal PlatformSoundPlaybackStructBlock playback;
-        internal  PlatformSoundPlaybackBlockBase(BinaryReader binaryReader)
+
+        internal PlatformSoundPlaybackBlockBase( BinaryReader binaryReader )
         {
-            name = binaryReader.ReadStringID();
-            playback = new PlatformSoundPlaybackStructBlock(binaryReader);
+            name = binaryReader.ReadStringID( );
+            playback = new PlatformSoundPlaybackStructBlock( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(name);
-                playback.Write(binaryWriter);
+                binaryWriter.Write( name );
+                playback.Write( binaryWriter );
                 return nextAddress;
             }
         }

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class PlatformSoundEffectConstantBlock : PlatformSoundEffectConstantBlockBase
+    public partial class PlatformSoundEffectConstantBlock : PlatformSoundEffectConstantBlockBase
     {
-        public  PlatformSoundEffectConstantBlock(BinaryReader binaryReader): base(binaryReader)
+        public PlatformSoundEffectConstantBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class PlatformSoundEffectConstantBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 4, Alignment = 4 )]
+    public class PlatformSoundEffectConstantBlockBase : IGuerilla
     {
         internal float constantValue;
-        internal  PlatformSoundEffectConstantBlockBase(BinaryReader binaryReader)
+
+        internal PlatformSoundEffectConstantBlockBase( BinaryReader binaryReader )
         {
-            constantValue = binaryReader.ReadSingle();
+            constantValue = binaryReader.ReadSingle( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(constantValue);
+                binaryWriter.Write( constantValue );
                 return nextAddress;
             }
         }

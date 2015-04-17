@@ -6,7 +6,8 @@ namespace Moonfish.Graphics.Input
     public class ScenarioCollisionObject : CollisionObject
     {
         public ScenarioObject ParentObject { get; set; }
-        public void OnWorldMatrixChanged(object sender, MatrixChangedEventArgs e)
+
+        public void OnWorldMatrixChanged( object sender, MatrixChangedEventArgs e )
         {
             this.WorldTransform = e.Matrix;
         }
@@ -19,24 +20,24 @@ namespace Moonfish.Graphics.Input
         public event EventHandler<SceneMouseEventArgs> OnMouseUp;
         public event EventHandler<SceneMouseEventArgs> OnMouseClick;
 
-        public void MouseDown(object sender, SceneMouseEventArgs e)
+        public void MouseDown( object sender, SceneMouseEventArgs e )
         {
-            if (OnMouseDown != null) OnMouseDown(sender, e);
+            if ( OnMouseDown != null ) OnMouseDown( sender, e );
         }
 
-        public void MouseMove(object sender, SceneMouseMoveEventArgs e)
+        public void MouseMove( object sender, SceneMouseMoveEventArgs e )
         {
-            if (OnMouseMove != null) OnMouseMove(sender, e);
+            if ( OnMouseMove != null ) OnMouseMove( sender, e );
         }
 
-        public void MouseUp(object sender, SceneMouseEventArgs e)
+        public void MouseUp( object sender, SceneMouseEventArgs e )
         {
-            if (OnMouseUp != null) OnMouseUp(sender, e);
+            if ( OnMouseUp != null ) OnMouseUp( sender, e );
         }
 
-        public void MouseClick(object sender, SceneMouseEventArgs e)
+        public void MouseClick( object sender, SceneMouseEventArgs e )
         {
-            if (OnMouseClick != null) OnMouseClick(sender, e);
+            if ( OnMouseClick != null ) OnMouseClick( sender, e );
         }
     }
 }

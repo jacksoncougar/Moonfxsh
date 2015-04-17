@@ -7,19 +7,19 @@ namespace Moonfish.Graphics
     {
         protected List<Mesh> SectionBuffers;
 
-        public RenderObject()
+        public RenderObject( )
         {
-            SectionBuffers = new List<Mesh>();
+            SectionBuffers = new List<Mesh>( );
         }
 
-        public RenderObject(StructureBspClusterBlockBase item)
+        public RenderObject( StructureBspClusterBlockBase item )
         {
-            SectionBuffers = new List<Mesh>(new[] { new Mesh(item.clusterData[0].section, null) });
+            SectionBuffers = new List<Mesh>( new[] {new Mesh( item.clusterData[ 0 ].section, null )} );
         }
 
-        public RenderObject(StructureBspInstancedGeometryDefinitionBlockBase item)
+        public RenderObject( StructureBspInstancedGeometryDefinitionBlockBase item )
         {
-            SectionBuffers = new List<Mesh>(new[] { new Mesh(item.renderInfo.renderData[0].section, null) });
+            SectionBuffers = new List<Mesh>( new[] {new Mesh( item.renderInfo.renderData[ 0 ].section, null )} );
         }
     }
 }

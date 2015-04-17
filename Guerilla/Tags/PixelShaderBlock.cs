@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,36 +11,38 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Pixl = (TagClass)"pixl";
+        public static readonly TagClass Pixl = ( TagClass ) "pixl";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("pixl")]
-    public  partial class PixelShaderBlock : PixelShaderBlockBase
+    [TagClassAttribute( "pixl" )]
+    public partial class PixelShaderBlock : PixelShaderBlockBase
     {
-        public  PixelShaderBlock(BinaryReader binaryReader): base(binaryReader)
+        public PixelShaderBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class PixelShaderBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 12, Alignment = 4 )]
+    public class PixelShaderBlockBase : IGuerilla
     {
         internal byte[] invalidName_;
         internal byte[] compiledShader;
-        internal  PixelShaderBlockBase(BinaryReader binaryReader)
+
+        internal PixelShaderBlockBase( BinaryReader binaryReader )
         {
-            invalidName_ = binaryReader.ReadBytes(4);
-            compiledShader = Guerilla.ReadData(binaryReader);
+            invalidName_ = binaryReader.ReadBytes( 4 );
+            compiledShader = Guerilla.ReadData( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(invalidName_, 0, 4);
-                nextAddress = Guerilla.WriteData(binaryWriter, compiledShader, nextAddress);
+                binaryWriter.Write( invalidName_, 0, 4 );
+                nextAddress = Guerilla.WriteData( binaryWriter, compiledShader, nextAddress );
                 return nextAddress;
             }
         }

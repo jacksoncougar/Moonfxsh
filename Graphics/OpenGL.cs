@@ -6,7 +6,7 @@ namespace Moonfish.Graphics
 {
     public static class OpenGL
     {
-        static Program activeProgram { get; set; }
+        private static Program activeProgram { get; set; }
 
         /// <summary>
         /// Enables the OpenGL capability for the lifespan of this object then disables the capability again
@@ -30,8 +30,8 @@ namespace Moonfish.Graphics
 
         public class Handle : IDisposable
         {
-            EnableCap state;
-            bool stateWasEnabled;
+            private EnableCap state;
+            private bool stateWasEnabled;
 
             public Handle( EnableCap state, bool enable = true )
             {
@@ -45,6 +45,7 @@ namespace Moonfish.Graphics
                 this.state = state;
                 this.stateWasEnabled = stateIsEnabled;
             }
+
             void IDisposable.Dispose( )
             {
                 // return state to previous setting
@@ -55,9 +56,9 @@ namespace Moonfish.Graphics
 
         internal static void ReportError( )
         {
-            var error = GL.GetError();
+            var error = GL.GetError( );
             if ( error != ErrorCode.NoError )
-                throw new GraphicsException( error.ToString() );
+                throw new GraphicsException( error.ToString( ) );
         }
     }
 }

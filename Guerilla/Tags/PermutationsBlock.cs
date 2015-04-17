@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,29 +9,31 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class PermutationsBlock : PermutationsBlockBase
+    public partial class PermutationsBlock : PermutationsBlockBase
     {
-        public  PermutationsBlock(BinaryReader binaryReader): base(binaryReader)
+        public PermutationsBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class PermutationsBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 12, Alignment = 4 )]
+    public class PermutationsBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal RigidBodyIndicesBlock[] rigidBodies;
-        internal  PermutationsBlockBase(BinaryReader binaryReader)
+
+        internal PermutationsBlockBase( BinaryReader binaryReader )
         {
-            name = binaryReader.ReadStringID();
-            rigidBodies = Guerilla.ReadBlockArray<RigidBodyIndicesBlock>(binaryReader);
+            name = binaryReader.ReadStringID( );
+            rigidBodies = Guerilla.ReadBlockArray<RigidBodyIndicesBlock>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(name);
-                nextAddress = Guerilla.WriteBlockArray<RigidBodyIndicesBlock>(binaryWriter, rigidBodies, nextAddress);
+                binaryWriter.Write( name );
+                nextAddress = Guerilla.WriteBlockArray<RigidBodyIndicesBlock>( binaryWriter, rigidBodies, nextAddress );
                 return nextAddress;
             }
         }

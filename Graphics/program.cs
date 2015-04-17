@@ -10,224 +10,231 @@ namespace Moonfish.Graphics
     {
         public string Name { get; private set; }
 
-        readonly Dictionary<string, int> _uniforms;
-        readonly Dictionary<string, int> _attributes;
+        private readonly Dictionary<string, int> _uniforms;
+        private readonly Dictionary<string, int> _attributes;
 
         public int Ident { get; private set; }
 
-        public Program(string name)
+        public Program( string name )
         {
             Name = name;
 
-            _attributes = new Dictionary<string, int>();
-            _uniforms = new Dictionary<string, int>();
+            _attributes = new Dictionary<string, int>( );
+            _uniforms = new Dictionary<string, int>( );
 
-            Ident = GL.CreateProgram();
+            Ident = GL.CreateProgram( );
         }
 
-        public void Link(List<Shader> shaderList)
+        public void Link( List<Shader> shaderList )
         {
-            foreach (Shader shader in shaderList)
+            foreach ( Shader shader in shaderList )
             {
-                GL.AttachShader(Ident, shader.ID);
+                GL.AttachShader( Ident, shader.ID );
             }
 
-            GL.LinkProgram(Ident);
+            GL.LinkProgram( Ident );
 
             int status;
-            GL.GetProgram(Ident, GetProgramParameterName.LinkStatus, out status);
-            if (status == 0)
+            GL.GetProgram( Ident, GetProgramParameterName.LinkStatus, out status );
+            if ( status == 0 )
             {
-                string program_log = GL.GetProgramInfoLog(Ident);
-                MessageBox.Show(String.Format("Linker failure: {0}\n", program_log));
+                string program_log = GL.GetProgramInfoLog( Ident );
+                MessageBox.Show( String.Format( "Linker failure: {0}\n", program_log ) );
             }
-            GL.ValidateProgram(Ident);
+            GL.ValidateProgram( Ident );
             int valid;
-            GL.GetProgram(Ident, GetProgramParameterName.ValidateStatus, out valid);
-            if (valid == 0)
+            GL.GetProgram( Ident, GetProgramParameterName.ValidateStatus, out valid );
+            if ( valid == 0 )
             {
-                string program_log = GL.GetProgramInfoLog(Ident);
-                MessageBox.Show(String.Format("Validation failure {0}", program_log));
+                string program_log = GL.GetProgramInfoLog( Ident );
+                MessageBox.Show( String.Format( "Validation failure {0}", program_log ) );
             }
 
-            foreach (Shader shader in shaderList)
+            foreach ( Shader shader in shaderList )
             {
-                GL.DetachShader(Ident, shader.ID);
+                GL.DetachShader( Ident, shader.ID );
             }
         }
 
-        public int GetAttributeLocation(string name)
+        public int GetAttributeLocation( string name )
         {
             int location;
-            if (!_attributes.TryGetValue(name, out location))
+            if ( !_attributes.TryGetValue( name, out location ) )
             {
-                _attributes[name] = location = GL.GetAttribLocation(Ident, name);
+                _attributes[ name ] = location = GL.GetAttribLocation( Ident, name );
 #if DEBUG
-                OpenGL.ReportError();
+                OpenGL.ReportError( );
 #endif
             }
             return location;
         }
 
-        public static void SetAttribute(int location, Vector4 value)
+        public static void SetAttribute( int location, Vector4 value )
         {
-            GL.VertexAttrib4(location + 0, value);
+            GL.VertexAttrib4( location + 0, value );
 #if DEBUG
-            OpenGL.ReportError();
-#endif
-        }
-        public static void SetAttribute(int location, float[] values)
-        {
-            GL.VertexAttrib4(location + 0, values);
-#if DEBUG
-            OpenGL.ReportError();
-#endif
-        }
-        public static void SetAttribute(int location, Matrix4 value)
-        {
-            GL.VertexAttrib4(location + 0, value.Row0);
-            GL.VertexAttrib4(location + 1, value.Row1);
-            GL.VertexAttrib4(location + 2, value.Row2);
-            GL.VertexAttrib4(location + 3, value.Row3);
-#if DEBUG
-            OpenGL.ReportError();
+            OpenGL.ReportError( );
 #endif
         }
 
-        public int GetUniformLocation(string name)
+        public static void SetAttribute( int location, float[] values )
+        {
+            GL.VertexAttrib4( location + 0, values );
+#if DEBUG
+            OpenGL.ReportError( );
+#endif
+        }
+
+        public static void SetAttribute( int location, Matrix4 value )
+        {
+            GL.VertexAttrib4( location + 0, value.Row0 );
+            GL.VertexAttrib4( location + 1, value.Row1 );
+            GL.VertexAttrib4( location + 2, value.Row2 );
+            GL.VertexAttrib4( location + 3, value.Row3 );
+#if DEBUG
+            OpenGL.ReportError( );
+#endif
+        }
+
+        public int GetUniformLocation( string name )
         {
             int location;
-            if (!_uniforms.TryGetValue(name, out location))
+            if ( !_uniforms.TryGetValue( name, out location ) )
             {
-                location = _uniforms[name] = GL.GetUniformLocation(Ident, name);
+                location = _uniforms[ name ] = GL.GetUniformLocation( Ident, name );
 #if DEBUG
-                OpenGL.ReportError();
+                OpenGL.ReportError( );
 #endif
             }
             return location;
         }
 
-        public int[] GetUniformIndices(string[] names)
+        public int[] GetUniformIndices( string[] names )
         {
             var indices = new int[names.Length];
-            GL.GetUniformIndices(Ident, names.Length, names, indices);
+            GL.GetUniformIndices( Ident, names.Length, names, indices );
 #if DEBUG
-            OpenGL.ReportError();
+            OpenGL.ReportError( );
 #endif
             return indices;
         }
 
-        public int[] GetUniformOffsets(int[] indices)
+        public int[] GetUniformOffsets( int[] indices )
         {
             int[] offsets = new int[indices.Length];
-            GL.GetActiveUniforms(Ident, indices.Length, indices, ActiveUniformParameter.UniformOffset, offsets);
+            GL.GetActiveUniforms( Ident, indices.Length, indices, ActiveUniformParameter.UniformOffset, offsets );
 #if DEBUG
-            OpenGL.ReportError();
+            OpenGL.ReportError( );
 #endif
             return offsets;
         }
 
-        public void SetUniform(int location, Matrix4 value)
+        public void SetUniform( int location, Matrix4 value )
         {
-            GL.UniformMatrix4(location, false, ref value);
+            GL.UniformMatrix4( location, false, ref value );
 #if DEBUG
-            OpenGL.ReportError();
-#endif
-        }
-        public void SetUniform(int location, ref Matrix4 value)
-        {
-            GL.UniformMatrix4(location, false, ref value);
-#if DEBUG
-            OpenGL.ReportError();
+            OpenGL.ReportError( );
 #endif
         }
 
-        public void SetUniform(int location, Matrix3 value)
+        public void SetUniform( int location, ref Matrix4 value )
         {
-            GL.UniformMatrix3(location, false, ref value);
+            GL.UniformMatrix4( location, false, ref value );
 #if DEBUG
-            OpenGL.ReportError();
-#endif
-        }
-        public void SetUniform(int location, ref Matrix3 value)
-        {
-            GL.UniformMatrix3(location, false, ref value);
-#if DEBUG
-            OpenGL.ReportError();
+            OpenGL.ReportError( );
 #endif
         }
 
-        public void SetUniform(int location, Vector3 value)
+        public void SetUniform( int location, Matrix3 value )
         {
-            GL.Uniform3(location, ref value);
+            GL.UniformMatrix3( location, false, ref value );
 #if DEBUG
-            OpenGL.ReportError();
-#endif
-        }
-        public void SetUniform(int location, ref Vector3 value)
-        {
-            GL.Uniform3(location, ref value);
-#if DEBUG
-            OpenGL.ReportError();
+            OpenGL.ReportError( );
 #endif
         }
 
-        public void SetUniform(int location, Vector4 value)
+        public void SetUniform( int location, ref Matrix3 value )
         {
-            GL.Uniform4(location, ref value);
+            GL.UniformMatrix3( location, false, ref value );
 #if DEBUG
-            OpenGL.ReportError();
-#endif
-        }
-        public void SetUniform(int location, ref Vector4 value)
-        {
-            GL.Uniform4(location, ref value);
-#if DEBUG
-            OpenGL.ReportError();
+            OpenGL.ReportError( );
 #endif
         }
 
-        public void SetUniform(int location, float value)
+        public void SetUniform( int location, Vector3 value )
         {
-            GL.Uniform1(location, value);
+            GL.Uniform3( location, ref value );
 #if DEBUG
-            OpenGL.ReportError();
+            OpenGL.ReportError( );
 #endif
         }
-        public void SetUniform(int location, int value)
+
+        public void SetUniform( int location, ref Vector3 value )
         {
-            GL.Uniform1(location, value);
+            GL.Uniform3( location, ref value );
 #if DEBUG
-            OpenGL.ReportError();
+            OpenGL.ReportError( );
+#endif
+        }
+
+        public void SetUniform( int location, Vector4 value )
+        {
+            GL.Uniform4( location, ref value );
+#if DEBUG
+            OpenGL.ReportError( );
+#endif
+        }
+
+        public void SetUniform( int location, ref Vector4 value )
+        {
+            GL.Uniform4( location, ref value );
+#if DEBUG
+            OpenGL.ReportError( );
+#endif
+        }
+
+        public void SetUniform( int location, float value )
+        {
+            GL.Uniform1( location, value );
+#if DEBUG
+            OpenGL.ReportError( );
+#endif
+        }
+
+        public void SetUniform( int location, int value )
+        {
+            GL.Uniform1( location, value );
+#if DEBUG
+            OpenGL.ReportError( );
 #endif
         }
 
 
-        public IDisposable Use()
+        public IDisposable Use( )
         {
-            GL.UseProgram(Ident);
-            return new Handle(0);
+            GL.UseProgram( Ident );
+            return new Handle( 0 );
         }
 
         private class Handle : IDisposable
         {
-            readonly int _previousProgramId;
+            private readonly int _previousProgramId;
 
-            public Handle(int prev)
+            public Handle( int prev )
             {
                 _previousProgramId = prev;
             }
 
-            public void Dispose()
+            public void Dispose( )
             {
-                GL.UseProgram(_previousProgramId);
+                GL.UseProgram( _previousProgramId );
             }
         }
 
-        public void Dispose()
+        public void Dispose( )
         {
-            GL.DeleteProgram(Ident);
-            GL.UseProgram(0);
+            GL.DeleteProgram( Ident );
+            GL.UseProgram( 0 );
         }
     }
 

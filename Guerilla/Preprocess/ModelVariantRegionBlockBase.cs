@@ -1,26 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace Moonfish.Guerilla.Remapping
+namespace Moonfish.Guerilla.Preprocess
 {
     partial class ModelVariantRegionBlockBase
     {
         [GuerillaPreProcessMethod( BlockName = "model_variant_region_block" )]
         protected static void GuerillaPreProcessMethod( BinaryReader binaryReader, IList<tag_field> fields )
         {
-            ( ( enum_definition )fields[ 5 ].Definition ).Options = new List<string>( new[]{ 
-            "no sorting",
-            "minus5#Closest",
-            "minus4",
-            "minus3",
-            "minus2",
-            "minus1",
-            "no bias#Same as model",
-            "plus1",
-            "plus2",
-            "plus3",
-            "plus4",
-            "plus5#Farthest",
+            ( ( enum_definition ) fields[ 5 ].Definition ).Options = new List<string>( new[]
+            {
+                "no sorting",
+                "minus5#Closest",
+                "minus4",
+                "minus3",
+                "minus2",
+                "minus1",
+                "no bias#Same as model",
+                "plus1",
+                "plus2",
+                "plus3",
+                "plus4",
+                "plus5#Farthest",
             } );
         }
     }

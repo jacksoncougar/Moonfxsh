@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class LightBrightnessAnimationBlock : LightBrightnessAnimationBlockBase
+    public partial class LightBrightnessAnimationBlock : LightBrightnessAnimationBlockBase
     {
-        public  LightBrightnessAnimationBlock(BinaryReader binaryReader): base(binaryReader)
+        public LightBrightnessAnimationBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class LightBrightnessAnimationBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class LightBrightnessAnimationBlockBase : IGuerilla
     {
         internal MappingFunctionBlock function;
-        internal  LightBrightnessAnimationBlockBase(BinaryReader binaryReader)
+
+        internal LightBrightnessAnimationBlockBase( BinaryReader binaryReader )
         {
-            function = new MappingFunctionBlock(binaryReader);
+            function = new MappingFunctionBlock( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                function.Write(binaryWriter);
+                function.Write( binaryWriter );
                 return nextAddress;
             }
         }

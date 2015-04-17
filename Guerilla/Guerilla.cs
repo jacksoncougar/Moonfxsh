@@ -97,10 +97,11 @@ namespace Moonfish.Guerilla
             return blamPointer.EndAddress;
         }
 
-        public static IList<MoonfishTagField> PostProcess(string name, IList<MoonfishTagField> fields)
+        public static IList<MoonfishTagField> PostProcess( string name, IList<MoonfishTagField> fields )
         {
-            var preProcess = PreProcessFieldsFunctions.Where( x => x.Key == name ).Select( x => x.Value ).FirstOrDefault( );
-            return preProcess != null ? preProcess(fields) : fields;
+            var preProcess =
+                PreProcessFieldsFunctions.Where( x => x.Key == name ).Select( x => x.Value ).FirstOrDefault( );
+            return preProcess != null ? preProcess( fields ) : fields;
         }
     }
 }

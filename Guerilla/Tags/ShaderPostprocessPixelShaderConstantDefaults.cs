@@ -9,24 +9,26 @@ namespace Moonfish.Guerilla.Tags
         public ShaderPostprocessPixelShaderConstantDefaults( BinaryReader binaryReader )
             : base( binaryReader )
         {
-
         }
     };
+
     [LayoutAttribute( Size = 4 )]
     public class ShaderPostprocessPixelShaderConstantDefaultsBase
     {
         internal int defaults;
+
         internal ShaderPostprocessPixelShaderConstantDefaultsBase( BinaryReader binaryReader )
         {
-            this.defaults = binaryReader.ReadInt32();
+            this.defaults = binaryReader.ReadInt32( );
         }
+
         internal virtual byte[] ReadData( BinaryReader binaryReader )
         {
             var blamPointer = binaryReader.ReadBlamPointer( 1 );
-            var data = new byte[ blamPointer.elementCount ];
+            var data = new byte[blamPointer.elementCount];
             if ( blamPointer.elementCount > 0 )
             {
-                using ( binaryReader.BaseStream.Pin() )
+                using ( binaryReader.BaseStream.Pin( ) )
                 {
                     binaryReader.BaseStream.Position = blamPointer[ 0 ];
                     data = binaryReader.ReadBytes( blamPointer.elementCount );

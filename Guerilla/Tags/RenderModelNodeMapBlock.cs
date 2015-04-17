@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,28 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class RenderModelNodeMapBlock : RenderModelNodeMapBlockBase
+    public partial class RenderModelNodeMapBlock : RenderModelNodeMapBlockBase
     {
-        public  RenderModelNodeMapBlock(BinaryReader binaryReader): base(binaryReader)
+        public RenderModelNodeMapBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 1, Alignment = 4)]
-    public class RenderModelNodeMapBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 1, Alignment = 4 )]
+    public class RenderModelNodeMapBlockBase : IGuerilla
     {
         internal byte nodeIndex;
-        internal  RenderModelNodeMapBlockBase(BinaryReader binaryReader)
+
+        internal RenderModelNodeMapBlockBase( BinaryReader binaryReader )
         {
-            nodeIndex = binaryReader.ReadByte();
+            nodeIndex = binaryReader.ReadByte( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(nodeIndex);
+                binaryWriter.Write( nodeIndex );
                 return nextAddress;
             }
         }

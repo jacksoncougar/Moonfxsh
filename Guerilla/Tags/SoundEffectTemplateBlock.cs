@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,42 +11,48 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Fx = (TagClass)"<fx>";
+        public static readonly TagClass Fx = ( TagClass ) "<fx>";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("<fx>")]
-    public  partial class SoundEffectTemplateBlock : SoundEffectTemplateBlockBase
+    [TagClassAttribute( "<fx>" )]
+    public partial class SoundEffectTemplateBlock : SoundEffectTemplateBlockBase
     {
-        public  SoundEffectTemplateBlock(BinaryReader binaryReader): base(binaryReader)
+        public SoundEffectTemplateBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 28, Alignment = 4)]
-    public class SoundEffectTemplateBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 28, Alignment = 4 )]
+    public class SoundEffectTemplateBlockBase : IGuerilla
     {
         internal SoundEffectTemplatesBlock[] templateCollection;
         internal Moonfish.Tags.StringID inputEffectName;
         internal SoundEffectTemplateAdditionalSoundInputBlock[] additionalSoundInputs;
         internal PlatformSoundEffectTemplateCollectionBlock[] platformSoundEffectTemplateCollectionBlock;
-        internal  SoundEffectTemplateBlockBase(BinaryReader binaryReader)
+
+        internal SoundEffectTemplateBlockBase( BinaryReader binaryReader )
         {
-            templateCollection = Guerilla.ReadBlockArray<SoundEffectTemplatesBlock>(binaryReader);
-            inputEffectName = binaryReader.ReadStringID();
-            additionalSoundInputs = Guerilla.ReadBlockArray<SoundEffectTemplateAdditionalSoundInputBlock>(binaryReader);
-            platformSoundEffectTemplateCollectionBlock = Guerilla.ReadBlockArray<PlatformSoundEffectTemplateCollectionBlock>(binaryReader);
+            templateCollection = Guerilla.ReadBlockArray<SoundEffectTemplatesBlock>( binaryReader );
+            inputEffectName = binaryReader.ReadStringID( );
+            additionalSoundInputs = Guerilla.ReadBlockArray<SoundEffectTemplateAdditionalSoundInputBlock>( binaryReader );
+            platformSoundEffectTemplateCollectionBlock =
+                Guerilla.ReadBlockArray<PlatformSoundEffectTemplateCollectionBlock>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                nextAddress = Guerilla.WriteBlockArray<SoundEffectTemplatesBlock>(binaryWriter, templateCollection, nextAddress);
-                binaryWriter.Write(inputEffectName);
-                nextAddress = Guerilla.WriteBlockArray<SoundEffectTemplateAdditionalSoundInputBlock>(binaryWriter, additionalSoundInputs, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PlatformSoundEffectTemplateCollectionBlock>(binaryWriter, platformSoundEffectTemplateCollectionBlock, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundEffectTemplatesBlock>( binaryWriter, templateCollection,
+                    nextAddress );
+                binaryWriter.Write( inputEffectName );
+                nextAddress = Guerilla.WriteBlockArray<SoundEffectTemplateAdditionalSoundInputBlock>( binaryWriter,
+                    additionalSoundInputs, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<PlatformSoundEffectTemplateCollectionBlock>( binaryWriter,
+                    platformSoundEffectTemplateCollectionBlock, nextAddress );
                 return nextAddress;
             }
         }

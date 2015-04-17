@@ -12,6 +12,9 @@ namespace Moonfish.Guerilla.Tags
 
     public partial class ModelVariantObjectBlock
     {
-        public object ChildObject { get { return Halo2.GetReferenceObject( this.childObject ); } }
+        public object ChildObject
+        {
+            get { return Halo2.GetReferenceObject( this.childObject ); }
+        }
     }
 }

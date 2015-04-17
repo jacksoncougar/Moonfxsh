@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,29 +9,31 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class RegionsBlock : RegionsBlockBase
+    public partial class RegionsBlock : RegionsBlockBase
     {
-        public  RegionsBlock(BinaryReader binaryReader): base(binaryReader)
+        public RegionsBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class RegionsBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 12, Alignment = 4 )]
+    public class RegionsBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal PermutationsBlock[] permutations;
-        internal  RegionsBlockBase(BinaryReader binaryReader)
+
+        internal RegionsBlockBase( BinaryReader binaryReader )
         {
-            name = binaryReader.ReadStringID();
-            permutations = Guerilla.ReadBlockArray<PermutationsBlock>(binaryReader);
+            name = binaryReader.ReadStringID( );
+            permutations = Guerilla.ReadBlockArray<PermutationsBlock>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(name);
-                nextAddress = Guerilla.WriteBlockArray<PermutationsBlock>(binaryWriter, permutations, nextAddress);
+                binaryWriter.Write( name );
+                nextAddress = Guerilla.WriteBlockArray<PermutationsBlock>( binaryWriter, permutations, nextAddress );
                 return nextAddress;
             }
         }

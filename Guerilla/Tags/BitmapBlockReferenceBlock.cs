@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,15 +9,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class BitmapBlockReferenceBlock : BitmapBlockReferenceBlockBase
+    public partial class BitmapBlockReferenceBlock : BitmapBlockReferenceBlockBase
     {
-        public  BitmapBlockReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public BitmapBlockReferenceBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 56, Alignment = 4)]
-    public class BitmapBlockReferenceBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 56, Alignment = 4 )]
+    public class BitmapBlockReferenceBlockBase : IGuerilla
     {
         internal Flags flags;
         internal AnimationIndex animationIndex;
@@ -26,54 +27,56 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.Point topLeft;
         internal float horizTextureWrapsSecond;
         internal float vertTextureWrapsSecond;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference bitmapTag;
+        [TagReference( "bitm" )] internal Moonfish.Tags.TagReference bitmapTag;
         internal short renderDepthBias;
         internal byte[] invalidName_;
         internal float spriteAnimationSpeedFps;
         internal Moonfish.Tags.Point progressBottomLeft;
         internal Moonfish.Tags.StringID stringIdentifier;
         internal OpenTK.Vector2 progressScale;
-        internal  BitmapBlockReferenceBlockBase(BinaryReader binaryReader)
+
+        internal BitmapBlockReferenceBlockBase( BinaryReader binaryReader )
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
-            bitmapBlendMethod = (BitmapBlendMethod)binaryReader.ReadInt16();
-            initialSpriteFrame = binaryReader.ReadInt16();
-            topLeft = binaryReader.ReadPoint();
-            horizTextureWrapsSecond = binaryReader.ReadSingle();
-            vertTextureWrapsSecond = binaryReader.ReadSingle();
-            bitmapTag = binaryReader.ReadTagReference();
-            renderDepthBias = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            spriteAnimationSpeedFps = binaryReader.ReadSingle();
-            progressBottomLeft = binaryReader.ReadPoint();
-            stringIdentifier = binaryReader.ReadStringID();
-            progressScale = binaryReader.ReadVector2();
+            flags = ( Flags ) binaryReader.ReadInt32( );
+            animationIndex = ( AnimationIndex ) binaryReader.ReadInt16( );
+            introAnimationDelayMilliseconds = binaryReader.ReadInt16( );
+            bitmapBlendMethod = ( BitmapBlendMethod ) binaryReader.ReadInt16( );
+            initialSpriteFrame = binaryReader.ReadInt16( );
+            topLeft = binaryReader.ReadPoint( );
+            horizTextureWrapsSecond = binaryReader.ReadSingle( );
+            vertTextureWrapsSecond = binaryReader.ReadSingle( );
+            bitmapTag = binaryReader.ReadTagReference( );
+            renderDepthBias = binaryReader.ReadInt16( );
+            invalidName_ = binaryReader.ReadBytes( 2 );
+            spriteAnimationSpeedFps = binaryReader.ReadSingle( );
+            progressBottomLeft = binaryReader.ReadPoint( );
+            stringIdentifier = binaryReader.ReadStringID( );
+            progressScale = binaryReader.ReadVector2( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)animationIndex);
-                binaryWriter.Write(introAnimationDelayMilliseconds);
-                binaryWriter.Write((Int16)bitmapBlendMethod);
-                binaryWriter.Write(initialSpriteFrame);
-                binaryWriter.Write(topLeft);
-                binaryWriter.Write(horizTextureWrapsSecond);
-                binaryWriter.Write(vertTextureWrapsSecond);
-                binaryWriter.Write(bitmapTag);
-                binaryWriter.Write(renderDepthBias);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(spriteAnimationSpeedFps);
-                binaryWriter.Write(progressBottomLeft);
-                binaryWriter.Write(stringIdentifier);
-                binaryWriter.Write(progressScale);
+                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write( ( Int16 ) animationIndex );
+                binaryWriter.Write( introAnimationDelayMilliseconds );
+                binaryWriter.Write( ( Int16 ) bitmapBlendMethod );
+                binaryWriter.Write( initialSpriteFrame );
+                binaryWriter.Write( topLeft );
+                binaryWriter.Write( horizTextureWrapsSecond );
+                binaryWriter.Write( vertTextureWrapsSecond );
+                binaryWriter.Write( bitmapTag );
+                binaryWriter.Write( renderDepthBias );
+                binaryWriter.Write( invalidName_, 0, 2 );
+                binaryWriter.Write( spriteAnimationSpeedFps );
+                binaryWriter.Write( progressBottomLeft );
+                binaryWriter.Write( stringIdentifier );
+                binaryWriter.Write( progressScale );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -81,6 +84,7 @@ namespace Moonfish.Guerilla.Tags
             SwapOnRelativeListPosition = 2,
             RenderAsProgressBar = 4,
         };
+
         internal enum AnimationIndex : short
         {
             NONE = 0,
@@ -149,6 +153,7 @@ namespace Moonfish.Guerilla.Tags
             InvalidName62 = 63,
             InvalidName63 = 64,
         };
+
         internal enum BitmapBlendMethod : short
         {
             Standard = 0,

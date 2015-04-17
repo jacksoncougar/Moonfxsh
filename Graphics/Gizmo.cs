@@ -12,12 +12,13 @@ namespace Moonfish.Graphics
 {
     public partial class Gizmo : Form
     {
-        DynamicScene Scene { get; set; }
-        MapStream Map { get; set; }
-        TagIdent SelectedTag { get; set; }
+        private DynamicScene Scene { get; set; }
+        private MapStream Map { get; set; }
+        private TagIdent SelectedTag { get; set; }
 
         #region Peek Message Native
-        [StructLayout(LayoutKind.Sequential)]
+
+        [StructLayout( LayoutKind.Sequential )]
         public struct NativeMessage
         {
             public IntPtr Handle;
@@ -28,25 +29,27 @@ namespace Moonfish.Graphics
             public Point Location;
         }
 
-        [DllImport("user32.dll")]
-        public static extern int PeekMessage(out NativeMessage message, IntPtr window, uint filterMin, uint filterMax, uint remove);
+        [DllImport( "user32.dll" )]
+        public static extern int PeekMessage( out NativeMessage message, IntPtr window, uint filterMin, uint filterMax,
+            uint remove );
+
         #endregion
 
-        static bool IsApplicationIdle()
+        private static bool IsApplicationIdle( )
         {
             NativeMessage result;
-            return PeekMessage(out result, IntPtr.Zero, (uint)0, (uint)0, (uint)0) == 0;
+            return PeekMessage( out result, IntPtr.Zero, ( uint ) 0, ( uint ) 0, ( uint ) 0 ) == 0;
         }
 
-        public Gizmo()
+        public Gizmo( )
         {
-            InitializeComponent();
+            InitializeComponent( );
             glControl1.Load += glControl1_Load;
         }
 
-        void glControl1_Load(object sender, EventArgs e)
+        private void glControl1_Load( object sender, EventArgs e )
         {
-            Scene = new DynamicScene();
+            Scene = new DynamicScene( );
             Application.Idle += HandleApplicationIdle;
             Scene.OnFrameReady += Scene_OnFrameReady;
 
@@ -61,74 +64,75 @@ namespace Moonfish.Graphics
             glControl1.MouseUp += Scene.OnMouseUp;
             glControl1.MouseClick += Scene.OnMouseClick;
 
-            Open(@"C:\Users\seed\Documents\Halo 2 Modding\headlong.map");
+            Open( @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map" );
 
-            var @object = (ModelBlock)Map["hlmt", "banshee"].Deserialize();
-            var scenarioObject = new ScenarioObject(@object);
-            Scene.ObjectManager.Add(Map["hlmt", "warthog"].Meta.Identifier, scenarioObject);
-            Scene.ProgramManager.LoadMaterials(@object.RenderModel.materials.Select(x => x.shader.Ident), Map);
-            Scene.CollisionManager.LoadScenarioObjectCollision(Scene.ObjectManager[Map["hlmt", "warthog"].Meta.Identifier].First());
+            var @object = ( ModelBlock ) Map[ "hlmt", "banshee" ].Deserialize( );
+            var scenarioObject = new ScenarioObject( @object );
+            Scene.ObjectManager.Add( Map[ "hlmt", "warthog" ].Meta.Identifier, scenarioObject );
+            Scene.ProgramManager.LoadMaterials( @object.RenderModel.materials.Select( x => x.shader.Ident ), Map );
+            Scene.CollisionManager.LoadScenarioObjectCollision(
+                Scene.ObjectManager[ Map[ "hlmt", "warthog" ].Meta.Identifier ].First( ) );
 
-            propertyGrid1.SelectedObject = scenarioObject.Nodes[0];
+            propertyGrid1.SelectedObject = scenarioObject.Nodes[ 0 ];
 
             //  firing this method is meant to load the view-projection matrix values into 
             //  the shader uniforms, and initalizes the camera
-            glControl1_Resize(this, new EventArgs());
+            glControl1_Resize( this, new EventArgs( ) );
         }
 
-        private void Open(string fileName)
+        private void Open( string fileName )
         {
-            var directory = Path.GetDirectoryName(fileName);
+            var directory = Path.GetDirectoryName( fileName );
 
-            if (directory != null)
-                LoadResourceMaps(directory);
+            if ( directory != null )
+                LoadResourceMaps( directory );
 
-            Map = new MapStream(fileName);
+            Map = new MapStream( fileName );
         }
 
-        private static void LoadResourceMaps(string directory)
+        private static void LoadResourceMaps( string directory )
         {
-            var maps = Directory.GetFiles(directory, "*.map", SearchOption.TopDirectoryOnly);
+            var maps = Directory.GetFiles( directory, "*.map", SearchOption.TopDirectoryOnly );
             var resourceMaps = maps.GroupBy(
                 Halo2.CheckMapType
-                ).Where(x => x.Key == MapType.MainMenu
-                             || x.Key == MapType.Shared
-                             || x.Key == MapType.SinglePlayerShared)
-                .Select(g => g.First()).ToList();
-            resourceMaps.ForEach(x => Halo2.LoadResource(new MapStream(x)));
+                ).Where( x => x.Key == MapType.MainMenu
+                              || x.Key == MapType.Shared
+                              || x.Key == MapType.SinglePlayerShared )
+                .Select( g => g.First( ) ).ToList( );
+            resourceMaps.ForEach( x => Halo2.LoadResource( new MapStream( x ) ) );
         }
 
-        void glControl1_Resize(object sender, EventArgs e)
+        private void glControl1_Resize( object sender, EventArgs e )
         {
-            ChangeViewport(glControl1.Width, glControl1.Height);
-            glControl1.Invalidate();
+            ChangeViewport( glControl1.Width, glControl1.Height );
+            glControl1.Invalidate( );
         }
 
-        private void ChangeViewport(int width, int height)
+        private void ChangeViewport( int width, int height )
         {
-            Scene.Camera.Viewport.Size = new Size(width, height);
+            Scene.Camera.Viewport.Size = new Size( width, height );
         }
 
-        void Scene_OnFrameReady(object sender, EventArgs e)
+        private void Scene_OnFrameReady( object sender, EventArgs e )
         {
-            glControl1.SwapBuffers();
+            glControl1.SwapBuffers( );
         }
 
-        private void HandleApplicationIdle(object sender, EventArgs e)
+        private void HandleApplicationIdle( object sender, EventArgs e )
         {
-            while (IsApplicationIdle())
+            while ( IsApplicationIdle( ) )
             {
-                UpdateState();
-                Scene.Update();
-                Scene.RenderFrame();
-                propertyGrid1.Refresh();
+                UpdateState( );
+                Scene.Update( );
+                Scene.RenderFrame( );
+                propertyGrid1.Refresh( );
             }
         }
 
-        private void UpdateState()
+        private void UpdateState( )
         {
-            lblRenderTime.Text = string.Format(lblRenderTime.Tag.ToString(),
-                TimeSpan.FromTicks((long) Scene.Performance.FrameTime).TotalMilliseconds);
+            lblRenderTime.Text = string.Format( lblRenderTime.Tag.ToString( ),
+                TimeSpan.FromTicks( ( long ) Scene.Performance.FrameTime ).TotalMilliseconds );
         }
     }
 }

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,29 +9,31 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class DialogueDataBlock : DialogueDataBlockBase
+    public partial class DialogueDataBlock : DialogueDataBlockBase
     {
-        public  DialogueDataBlock(BinaryReader binaryReader): base(binaryReader)
+        public DialogueDataBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class DialogueDataBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 4, Alignment = 4 )]
+    public class DialogueDataBlockBase : IGuerilla
     {
         internal short startIndexPostprocess;
         internal short lengthPostprocess;
-        internal  DialogueDataBlockBase(BinaryReader binaryReader)
+
+        internal DialogueDataBlockBase( BinaryReader binaryReader )
         {
-            startIndexPostprocess = binaryReader.ReadInt16();
-            lengthPostprocess = binaryReader.ReadInt16();
+            startIndexPostprocess = binaryReader.ReadInt16( );
+            lengthPostprocess = binaryReader.ReadInt16( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(startIndexPostprocess);
-                binaryWriter.Write(lengthPostprocess);
+                binaryWriter.Write( startIndexPostprocess );
+                binaryWriter.Write( lengthPostprocess );
                 return nextAddress;
             }
         }

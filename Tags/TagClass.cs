@@ -94,7 +94,7 @@ namespace Moonfish.Tags
         public override string ToString( )
         {
             if ( a == 0xFF && b == 0xFF && c == 0xFF && d == 0xFF ) return "null";
-            return Encoding.UTF8.GetString( new [] {d, c, b, a} );
+            return Encoding.UTF8.GetString( new[] {d, c, b, a} );
         }
 
         bool IEquatable<TagClass>.Equals( TagClass other )
@@ -109,7 +109,7 @@ namespace Moonfish.Tags
 
         public string ToTokenString( )
         {
-            var value = ToString();
+            var value = ToString( );
             switch ( value )
             {
                 case "$#!+":
@@ -118,8 +118,8 @@ namespace Moonfish.Tags
                     return "cmnt";
             }
 
-            var chars = value.Where(x => (char.IsLetterOrDigit(x))).ToArray();
-            return new string(chars);
+            var chars = value.Where( x => ( char.IsLetterOrDigit( x ) ) ).ToArray( );
+            return new string( chars );
         }
 
         public static readonly TagClass Null = new TagClass( 0xFF, 0xFF, 0xFF, 0xFF );

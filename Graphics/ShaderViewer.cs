@@ -11,10 +11,11 @@ namespace Moonfish.Graphics
 {
     public partial class ShaderViewer : Form
     {
-        Scene Scene { get; set; }
-        MapStream Map { get; set; }
+        private Scene Scene { get; set; }
+        private MapStream Map { get; set; }
 
         #region Peek Message Native
+
         [StructLayout( LayoutKind.Sequential )]
         public struct NativeMessage
         {
@@ -27,24 +28,26 @@ namespace Moonfish.Graphics
         }
 
         [DllImport( "user32.dll" )]
-        public static extern int PeekMessage( out NativeMessage message, IntPtr window, uint filterMin, uint filterMax, uint remove );
+        public static extern int PeekMessage( out NativeMessage message, IntPtr window, uint filterMin, uint filterMax,
+            uint remove );
+
         #endregion
 
-        bool IsApplicationIdle( )
+        private bool IsApplicationIdle( )
         {
             NativeMessage result;
-            return PeekMessage( out result, IntPtr.Zero, ( uint )0, ( uint )0, ( uint )0 ) == 0;
+            return PeekMessage( out result, IntPtr.Zero, ( uint ) 0, ( uint ) 0, ( uint ) 0 ) == 0;
         }
 
         public ShaderViewer( )
         {
-            InitializeComponent();
+            InitializeComponent( );
             glControl1.Load += glControl1_Load;
         }
 
-        void glControl1_Load( object sender, EventArgs e )
+        private void glControl1_Load( object sender, EventArgs e )
         {
-            Scene = new Scene();
+            Scene = new Scene( );
             Application.Idle += HandleApplicationIdle;
             Scene.OnFrameReady += Scene_OnFrameReady;
 
@@ -58,28 +61,28 @@ namespace Moonfish.Graphics
             var directory = Path.GetDirectoryName( fileName );
             var maps = Directory.GetFiles( directory, "*.map", SearchOption.TopDirectoryOnly );
             var resourceMaps = maps.GroupBy(
-                x =>
-                {
-                    return Halo2.CheckMapType( x );
-                }
-            ).Where( x => x.Key == MapType.MainMenu
-                || x.Key == MapType.Shared
-                || x.Key == MapType.SinglePlayerShared )
-                .Select( g => g.First() ).ToList();
+                x => { return Halo2.CheckMapType( x ); }
+                ).Where( x => x.Key == MapType.MainMenu
+                              || x.Key == MapType.Shared
+                              || x.Key == MapType.SinglePlayerShared )
+                .Select( g => g.First( ) ).ToList( );
             resourceMaps.ForEach( x => Halo2.LoadResource( new MapStream( x ) ) );
             Map = new MapStream( fileName );
 
-            var model = ( ModelBlock )( Map[ "hlmt", "masterchief" ].Deserialize() );
+            var model = ( ModelBlock ) ( Map[ "hlmt", "masterchief" ].Deserialize( ) );
             int width = 1, height = 1;
             for ( int i = 0; i < width * height; ++i )
             {
                 float x = 0.4f * ( i % width );
                 float y = 0.4f * ( i / width );
-                var scenarioObject = new ScenarioObject( model ) { WorldMatrix = Matrix4.CreateTranslation( new Vector3( x, y, 0 ) ) };
+                var scenarioObject = new ScenarioObject( model )
+                {
+                    WorldMatrix = Matrix4.CreateTranslation( new Vector3( x, y, 0 ) )
+                };
                 Scene.ObjectManager.Add( Map[ "hlmt", "masterchief" ].Meta.Identifier, scenarioObject );
             }
 
-            var shaderTags = Map.Tags.Where( x => x.Class.ToString() == "shad" ).ToArray();
+            var shaderTags = Map.Tags.Where( x => x.Class.ToString( ) == "shad" ).ToArray( );
             listBox1.Items.AddRange( shaderTags );
             listBox1.DisplayMember = "Path";
 
@@ -87,10 +90,10 @@ namespace Moonfish.Graphics
 
             //  firing this method is meant to load the view-projection matrix values into 
             //  the shader uniforms, and initalizes the camera
-            glControl1_Resize( this, new EventArgs() );
+            glControl1_Resize( this, new EventArgs( ) );
         }
 
-        void glControl1_Resize( object sender, EventArgs e )
+        private void glControl1_Resize( object sender, EventArgs e )
         {
             ChangeViewport( glControl1.Width, glControl1.Height );
         }
@@ -100,18 +103,19 @@ namespace Moonfish.Graphics
             Scene.Camera.Viewport.Size = new Size( width, height );
         }
 
-        void Scene_OnFrameReady( object sender, EventArgs e )
+        private void Scene_OnFrameReady( object sender, EventArgs e )
         {
-            this.Text = string.Format( "{0:###0.00}ms", TimeSpan.FromTicks( ( long )Scene.Performance.FrameTime ).TotalMilliseconds );
-            glControl1.SwapBuffers();
+            this.Text = string.Format( "{0:###0.00}ms",
+                TimeSpan.FromTicks( ( long ) Scene.Performance.FrameTime ).TotalMilliseconds );
+            glControl1.SwapBuffers( );
         }
 
         private void HandleApplicationIdle( object sender, EventArgs e )
         {
-            while ( IsApplicationIdle() )
+            while ( IsApplicationIdle( ) )
             {
-                Scene.Update();
-                Scene.RenderFrame();
+                Scene.Update( );
+                Scene.RenderFrame( );
             }
         }
 
@@ -122,14 +126,14 @@ namespace Moonfish.Graphics
             LoadShader( selectedShaderTag );
         }
 
-        MaterialShader material;
+        private MaterialShader material;
 
         private void LoadShader( Tag selectedShaderTag )
         {
-            var shader = Map[ selectedShaderTag.Identifier ].Deserialize() as ShaderBlock;
+            var shader = Map[ selectedShaderTag.Identifier ].Deserialize( ) as ShaderBlock;
 
             material = new MaterialShader( shader, Map );
-            listBox2.Items.Clear();
+            listBox2.Items.Clear( );
             listBox2.Items.AddRange( material.shaderPassPaths );
             listBox2.SelectedIndex = 0;
         }

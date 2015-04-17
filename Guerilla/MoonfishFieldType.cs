@@ -5,11 +5,12 @@ namespace Moonfish.Guerilla
 {
     public static class MoonfishFieldTypeExtensions
     {
-        public static int GetFieldSize(this MoonfishFieldType type)
+        public static int GetFieldSize( this MoonfishFieldType type )
         {
-            switch (type)
+            switch ( type )
             {
-                #region Standard Types
+                    #region Standard Types
+
                 case MoonfishFieldType.FieldCharInteger:
                 case MoonfishFieldType.FieldCharEnum:
                 case MoonfishFieldType.FieldByteFlags:
@@ -31,7 +32,9 @@ namespace Moonfish.Guerilla
                 case MoonfishFieldType.FieldLongBlockIndex1:
                 case MoonfishFieldType.FieldLongBlockIndex2:
                     return 4;
-                #endregion
+
+                    #endregion
+
                 case MoonfishFieldType.FieldString:
                     return 32;
                 case MoonfishFieldType.FieldLongString:
@@ -41,12 +44,13 @@ namespace Moonfish.Guerilla
                     return 4;
 
                 case MoonfishFieldType.FieldPoint_2D:
-                        return 4;
+                    return 4;
 
                 case MoonfishFieldType.FieldRectangle_2D:
                     return 8;
 
-                #region Real, Vector, Point, Angle Types
+                    #region Real, Vector, Point, Angle Types
+
                 case MoonfishFieldType.FieldReal:
                 case MoonfishFieldType.FieldAngle:
                 case MoonfishFieldType.FieldRealFraction:
@@ -65,9 +69,11 @@ namespace Moonfish.Guerilla
                     return 12;
                 case MoonfishFieldType.FieldRealPlane_3D:
                     return 16;
-                #endregion
 
-                #region Colour Types
+                    #endregion
+
+                    #region Colour Types
+
                 case MoonfishFieldType.FieldRgbColor:
                 case MoonfishFieldType.FieldArgbColor:
                     return 4;
@@ -77,16 +83,19 @@ namespace Moonfish.Guerilla
                 case MoonfishFieldType.FieldRealArgbColor:
                 case MoonfishFieldType.FieldRealAhsvColor:
                     return 16;
-                #endregion
 
-                #region Bounds
+                    #endregion
+
+                    #region Bounds
+
                 case MoonfishFieldType.FieldShortBounds:
                     return 4;
                 case MoonfishFieldType.FieldAngleBounds:
                 case MoonfishFieldType.FieldRealBounds:
                 case MoonfishFieldType.FieldRealFractionBounds:
                     return 8;
-                #endregion
+
+                    #endregion
 
                 case MoonfishFieldType.FieldTag:
                     return 4;
@@ -99,7 +108,7 @@ namespace Moonfish.Guerilla
                     return 32;
 
                 case MoonfishFieldType.FieldMoonfishIdent:
-                    return Marshal.SizeOf(typeof(Moonfish.Tags.TagIdent));
+                    return Marshal.SizeOf( typeof ( Moonfish.Tags.TagIdent ) );
 
                 case MoonfishFieldType.FieldUselessPad:
                 case MoonfishFieldType.FieldArrayStart:
@@ -109,7 +118,7 @@ namespace Moonfish.Guerilla
                 case MoonfishFieldType.FieldCustom:
                     return 0;
             }
-            throw new Exception();
+            throw new Exception( );
         }
     }
 

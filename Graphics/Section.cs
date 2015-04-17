@@ -1,5 +1,3 @@
-﻿
-namespace Moonfish
+﻿namespace Moonfish
 {
-
 }

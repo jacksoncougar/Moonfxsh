@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,38 +9,40 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class LightVolumeAspectBlock : LightVolumeAspectBlockBase
+    public partial class LightVolumeAspectBlock : LightVolumeAspectBlockBase
     {
-        public  LightVolumeAspectBlock(BinaryReader binaryReader): base(binaryReader)
+        public LightVolumeAspectBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 28, Alignment = 4)]
-    public class LightVolumeAspectBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 28, Alignment = 4 )]
+    public class LightVolumeAspectBlockBase : IGuerilla
     {
         internal ScalarFunctionStructBlock alongAxis;
         internal ScalarFunctionStructBlock awayFromAxis;
         internal float parallelScale;
         internal float parallelThresholdAngleDegrees;
         internal float parallelExponent;
-        internal  LightVolumeAspectBlockBase(BinaryReader binaryReader)
+
+        internal LightVolumeAspectBlockBase( BinaryReader binaryReader )
         {
-            alongAxis = new ScalarFunctionStructBlock(binaryReader);
-            awayFromAxis = new ScalarFunctionStructBlock(binaryReader);
-            parallelScale = binaryReader.ReadSingle();
-            parallelThresholdAngleDegrees = binaryReader.ReadSingle();
-            parallelExponent = binaryReader.ReadSingle();
+            alongAxis = new ScalarFunctionStructBlock( binaryReader );
+            awayFromAxis = new ScalarFunctionStructBlock( binaryReader );
+            parallelScale = binaryReader.ReadSingle( );
+            parallelThresholdAngleDegrees = binaryReader.ReadSingle( );
+            parallelExponent = binaryReader.ReadSingle( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                alongAxis.Write(binaryWriter);
-                awayFromAxis.Write(binaryWriter);
-                binaryWriter.Write(parallelScale);
-                binaryWriter.Write(parallelThresholdAngleDegrees);
-                binaryWriter.Write(parallelExponent);
+                alongAxis.Write( binaryWriter );
+                awayFromAxis.Write( binaryWriter );
+                binaryWriter.Write( parallelScale );
+                binaryWriter.Write( parallelThresholdAngleDegrees );
+                binaryWriter.Write( parallelExponent );
                 return nextAddress;
             }
         }

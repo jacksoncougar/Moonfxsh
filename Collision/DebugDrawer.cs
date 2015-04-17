@@ -7,20 +7,20 @@ using System.Collections.Generic;
 
 namespace Moonfish.Collision
 {
-
     public class Line : IRenderable, IDisposable
     {
-        int vao, arrayBuffer;
+        private int vao, arrayBuffer;
 
         public Line( Vector3 start, Vector3 end )
         {
-            vao = GL.GenVertexArray();
-            arrayBuffer = GL.GenBuffer();
+            vao = GL.GenVertexArray( );
+            arrayBuffer = GL.GenBuffer( );
 
             GL.BindVertexArray( vao );
             GL.BindBuffer( BufferTarget.ArrayBuffer, arrayBuffer );
-            var data = new[] { start, end };
-            GL.BufferData( BufferTarget.ArrayBuffer, ( IntPtr )( Vector3.SizeInBytes * 2 ), data, BufferUsageHint.StaticDraw );
+            var data = new[] {start, end};
+            GL.BufferData( BufferTarget.ArrayBuffer, ( IntPtr ) ( Vector3.SizeInBytes * 2 ), data,
+                BufferUsageHint.StaticDraw );
 
             GL.VertexAttribPointer( 0, 3, VertexAttribPointerType.Float, false, 0, IntPtr.Zero );
             GL.EnableVertexAttribArray( 0 );
@@ -34,7 +34,7 @@ namespace Moonfish.Collision
 
         public void Render( IEnumerable<Program> shaderPasses, IList<IH2ObjectInstance> instances )
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException( );
         }
 
         public void Dispose( )
@@ -47,16 +47,17 @@ namespace Moonfish.Collision
 
     public class Point : IRenderable, IDisposable
     {
-        int vao, arrayBuffer;
+        private int vao, arrayBuffer;
 
         public Point( Vector3 position )
         {
-            vao = GL.GenVertexArray();
-            arrayBuffer = GL.GenBuffer();
+            vao = GL.GenVertexArray( );
+            arrayBuffer = GL.GenBuffer( );
 
             GL.BindVertexArray( vao );
             GL.BindBuffer( BufferTarget.ArrayBuffer, arrayBuffer );
-            GL.BufferData( BufferTarget.ArrayBuffer, ( IntPtr )Vector3.SizeInBytes, ref position, BufferUsageHint.StreamDraw );
+            GL.BufferData( BufferTarget.ArrayBuffer, ( IntPtr ) Vector3.SizeInBytes, ref position,
+                BufferUsageHint.StreamDraw );
 
             GL.VertexAttribPointer( 0, 3, VertexAttribPointerType.Float, false, 0, IntPtr.Zero );
             GL.EnableVertexAttribArray( 0 );
@@ -70,7 +71,7 @@ namespace Moonfish.Collision
 
         public void Render( IEnumerable<Program> shaderPasses, IList<IH2ObjectInstance> instances )
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException( );
         }
 
         public void Dispose( )
@@ -79,5 +80,4 @@ namespace Moonfish.Collision
             GL.DeleteBuffer( arrayBuffer );
         }
     }
-
 }

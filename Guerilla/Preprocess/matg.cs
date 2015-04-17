@@ -8,26 +8,26 @@ using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Preprocess
 {
-    class matg
+    internal class matg
     {
-        [GuerillaPreProcessMethod(BlockName = "globals_block")]
-        protected static void GuerillaPreProcessMethod(BinaryReader binaryReader, IList<tag_field> fields)
+        [GuerillaPreProcessMethod( BlockName = "globals_block" )]
+        protected static void GuerillaPreProcessMethod( BinaryReader binaryReader, IList<tag_field> fields )
         {
-
         }
-        [GuerillaPreProcessFieldsMethod(BlockName = "globals_block")]
-        protected static IList<MoonfishTagField> GuerillaPreProcessMethod(IList<MoonfishTagField> fields)
+
+        [GuerillaPreProcessFieldsMethod( BlockName = "globals_block" )]
+        protected static IList<MoonfishTagField> GuerillaPreProcessMethod( IList<MoonfishTagField> fields )
         {
             var field = new MoonfishTagField( MoonfishFieldType.FieldBlock, "Sounds" );
             var soundTagReferenceField = new MoonfishTagField( MoonfishFieldType.FieldTagReference, "Sound*" );
             soundTagReferenceField.AssignDefinition( new MoonfishTagReferenceDefinition( TagClass.Snd ) );
-            field.AssignDefinition( new MoonfishTagDefinition( "Moonfish Sound References Block", new List<MoonfishTagField>
-            {
-                soundTagReferenceField
-            } ) );
+            field.AssignDefinition( new MoonfishTagDefinition( "Moonfish Sound References Block",
+                new List<MoonfishTagField>
+                {
+                    soundTagReferenceField
+                } ) );
             fields[ 8 ] = field;
             return fields;
         }
     }
 }
-

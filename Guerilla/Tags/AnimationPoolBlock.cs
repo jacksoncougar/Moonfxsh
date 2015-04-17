@@ -15,7 +15,7 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 96, Alignment = 4)]
+    [LayoutAttribute(Size = 108, Alignment = 4)]
     public class AnimationPoolBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
@@ -33,12 +33,15 @@ namespace Moonfish.Guerilla.Tags
         internal DesiredCompression desiredCompression;
         internal CurrentCompression currentCompression;
         internal float weight;
+        internal int parentGraphIndex;
+        internal int parentGraphBlockIndex;
+        internal int parentGraphBlockOffset;
+        internal short parentGraphStartingPointIndex;
         internal short loopFrameIndex;
-        internal Moonfish.Tags.ShortBlockIndex1 invalidName_;
-        internal Moonfish.Tags.ShortBlockIndex1 invalidName_0;
-        internal byte[] invalidName_1;
-        internal byte[] invalidName_2;
-        internal PackedDataSizesStructBlock packedDataSizesStruct;
+        internal Moonfish.Tags.ShortBlockIndex1 parentAnimation;
+        internal Moonfish.Tags.ShortBlockIndex1 nextAnimation;
+        internal byte[] animationData;
+        internal PackedDataSizesStructBlock dataSizes;
         internal AnimationFrameEventBlock[] frameEventsABCDCC;
         internal AnimationSoundEventBlock[] soundEventsABCDCC;
         internal AnimationEffectEventBlock[] effectEventsABCDCC;
@@ -60,12 +63,15 @@ namespace Moonfish.Guerilla.Tags
             desiredCompression = (DesiredCompression)binaryReader.ReadByte();
             currentCompression = (CurrentCompression)binaryReader.ReadByte();
             weight = binaryReader.ReadSingle();
+            parentGraphIndex = binaryReader.ReadInt32();
+            parentGraphBlockIndex = binaryReader.ReadInt32();
+            parentGraphBlockOffset = binaryReader.ReadInt32();
+            parentGraphStartingPointIndex = binaryReader.ReadInt16();
             loopFrameIndex = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadShortBlockIndex1();
-            invalidName_0 = binaryReader.ReadShortBlockIndex1();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            invalidName_2 = Guerilla.ReadData(binaryReader);
-            packedDataSizesStruct = new PackedDataSizesStructBlock(binaryReader);
+            parentAnimation = binaryReader.ReadShortBlockIndex1();
+            nextAnimation = binaryReader.ReadShortBlockIndex1();
+            animationData = Guerilla.ReadData(binaryReader);
+            dataSizes = new PackedDataSizesStructBlock(binaryReader);
             frameEventsABCDCC = Guerilla.ReadBlockArray<AnimationFrameEventBlock>(binaryReader);
             soundEventsABCDCC = Guerilla.ReadBlockArray<AnimationSoundEventBlock>(binaryReader);
             effectEventsABCDCC = Guerilla.ReadBlockArray<AnimationEffectEventBlock>(binaryReader);
@@ -90,12 +96,15 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Byte)desiredCompression);
                 binaryWriter.Write((Byte)currentCompression);
                 binaryWriter.Write(weight);
+                binaryWriter.Write(parentGraphIndex);
+                binaryWriter.Write(parentGraphBlockIndex);
+                binaryWriter.Write(parentGraphBlockOffset);
+                binaryWriter.Write(parentGraphStartingPointIndex);
                 binaryWriter.Write(loopFrameIndex);
-                binaryWriter.Write(invalidName_);
-                binaryWriter.Write(invalidName_0);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                nextAddress = Guerilla.WriteData(binaryWriter, invalidName_2, nextAddress);
-                packedDataSizesStruct.Write(binaryWriter);
+                binaryWriter.Write(parentAnimation);
+                binaryWriter.Write(nextAnimation);
+                nextAddress = Guerilla.WriteData(binaryWriter, animationData, nextAddress);
+                dataSizes.Write(binaryWriter);
                 nextAddress = Guerilla.WriteBlockArray<AnimationFrameEventBlock>(binaryWriter, frameEventsABCDCC, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<AnimationSoundEventBlock>(binaryWriter, soundEventsABCDCC, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<AnimationEffectEventBlock>(binaryWriter, effectEventsABCDCC, nextAddress);

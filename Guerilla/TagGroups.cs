@@ -365,23 +365,22 @@ namespace Moonfish.Guerilla
                     FieldSets.Add( fieldSet );
                     address += tag_field_set.Size;
                 }
-                if (name == "sound_promotion_parameters_struct_block")
+                switch ( name )
                 {
-                    LatestFieldSet = FieldSets[0];
-                }
-                if (name == "animation_pool_block")
-                {
-                    LatestFieldSet = FieldSets[0];
-                }
-                if (name == "sound_gestalt_promotions_block")
-                {
-                    LatestFieldSet = FieldSets[0];
-                }
-                else
-                {
-                    reader.BaseStream.Seek( field_set_latest_address, SeekOrigin.Begin );
-                    var latestFieldSet = new tag_field_set( reader, Guerilla.PostprocessFunctions.Where( x => x.Key == definitionName ).Select( x => x.Value ).FirstOrDefault() );
-                    LatestFieldSet = latestFieldSet;
+                    case "sound_promotion_parameters_struct_block":
+                        LatestFieldSet = FieldSets[0];
+                        break;
+                    case "animation_pool_block":
+                        LatestFieldSet = FieldSets[4];
+                        break;
+                    case "sound_gestalt_promotions_block":
+                        LatestFieldSet = FieldSets[0];
+                        break;
+                    default:
+                        reader.BaseStream.Seek( field_set_latest_address, SeekOrigin.Begin );
+                        var latestFieldSet = new tag_field_set( reader, Guerilla.PostprocessFunctions.Where( x => x.Key == definitionName ).Select( x => x.Value ).FirstOrDefault() );
+                        LatestFieldSet = latestFieldSet;
+                        break;
                 }
             }
         }

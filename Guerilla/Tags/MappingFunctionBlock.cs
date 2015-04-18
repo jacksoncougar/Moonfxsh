@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,28 +8,26 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class MappingFunctionBlock : MappingFunctionBlockBase
+    public  partial class MappingFunctionBlock : MappingFunctionBlockBase
     {
-        public MappingFunctionBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  MappingFunctionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class MappingFunctionBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class MappingFunctionBlockBase  : IGuerilla
     {
         internal ByteBlock[] data;
-
-        internal MappingFunctionBlockBase( BinaryReader binaryReader )
+        internal  MappingFunctionBlockBase(BinaryReader binaryReader)
         {
-            data = Guerilla.ReadBlockArray<ByteBlock>( binaryReader );
+            data = Guerilla.ReadBlockArray<ByteBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                nextAddress = Guerilla.WriteBlockArray<ByteBlock>( binaryWriter, data, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<ByteBlock>(binaryWriter, data, nextAddress);
                 return nextAddress;
             }
         }

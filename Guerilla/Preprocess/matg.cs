@@ -26,6 +26,7 @@ namespace Moonfish.Guerilla.Preprocess
                 {
                     soundTagReferenceField
                 } ) );
+            var t = fields[ 8 ].Definition.CalculateSizeOfFieldSet( );
             fields[ 8 ] = field;
             return fields;
         }

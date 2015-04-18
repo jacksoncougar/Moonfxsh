@@ -24,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 112, Alignment = 4)]
+    [LayoutAttribute(Size = 104, Alignment = 4)]
     public class UserInterfaceScreenWidgetDefinitionBlockBase  : IGuerilla
     {
         internal Flags flags;
@@ -45,8 +45,6 @@ namespace Moonfish.Guerilla.Tags
         internal float accumulateZoomScaleY;
         internal float refractionScaleX;
         internal float refractionScaleY;
-        [TagReference("mcsr")]
-        internal Moonfish.Tags.TagReference mouseCursorDefinition;
         internal  UserInterfaceScreenWidgetDefinitionBlockBase(BinaryReader binaryReader)
         {
             flags = (Flags)binaryReader.ReadInt32();
@@ -66,7 +64,6 @@ namespace Moonfish.Guerilla.Tags
             accumulateZoomScaleY = binaryReader.ReadSingle();
             refractionScaleX = binaryReader.ReadSingle();
             refractionScaleY = binaryReader.ReadSingle();
-            mouseCursorDefinition = binaryReader.ReadTagReference();
         }
         public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
@@ -89,7 +86,6 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(accumulateZoomScaleY);
                 binaryWriter.Write(refractionScaleX);
                 binaryWriter.Write(refractionScaleY);
-                binaryWriter.Write(mouseCursorDefinition);
                 return nextAddress;
             }
         }

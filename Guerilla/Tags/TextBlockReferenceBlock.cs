@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,15 +8,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class TextBlockReferenceBlock : TextBlockReferenceBlockBase
+    public  partial class TextBlockReferenceBlock : TextBlockReferenceBlockBase
     {
-        public TextBlockReferenceBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  TextBlockReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 44, Alignment = 4 )]
-    public class TextBlockReferenceBlockBase : IGuerilla
+    [LayoutAttribute(Size = 44, Alignment = 4)]
+    public class TextBlockReferenceBlockBase  : IGuerilla
     {
         internal TextFlags textFlags;
         internal AnimationIndex animationIndex;
@@ -29,39 +28,36 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID stringId;
         internal short renderDepthBias;
         internal byte[] invalidName_0;
-
-        internal TextBlockReferenceBlockBase( BinaryReader binaryReader )
+        internal  TextBlockReferenceBlockBase(BinaryReader binaryReader)
         {
-            textFlags = ( TextFlags ) binaryReader.ReadInt32( );
-            animationIndex = ( AnimationIndex ) binaryReader.ReadInt16( );
-            introAnimationDelayMilliseconds = binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            customFont = ( CustomFont ) binaryReader.ReadInt16( );
-            textColor = binaryReader.ReadVector4( );
-            textBounds = binaryReader.ReadVector2( );
-            stringId = binaryReader.ReadStringID( );
-            renderDepthBias = binaryReader.ReadInt16( );
-            invalidName_0 = binaryReader.ReadBytes( 2 );
+            textFlags = (TextFlags)binaryReader.ReadInt32();
+            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            customFont = (CustomFont)binaryReader.ReadInt16();
+            textColor = binaryReader.ReadVector4();
+            textBounds = binaryReader.ReadVector2();
+            stringId = binaryReader.ReadStringID();
+            renderDepthBias = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int32 ) textFlags );
-                binaryWriter.Write( ( Int16 ) animationIndex );
-                binaryWriter.Write( introAnimationDelayMilliseconds );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( ( Int16 ) customFont );
-                binaryWriter.Write( textColor );
-                binaryWriter.Write( textBounds );
-                binaryWriter.Write( stringId );
-                binaryWriter.Write( renderDepthBias );
-                binaryWriter.Write( invalidName_0, 0, 2 );
+                binaryWriter.Write((Int32)textFlags);
+                binaryWriter.Write((Int16)animationIndex);
+                binaryWriter.Write(introAnimationDelayMilliseconds);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Int16)customFont);
+                binaryWriter.Write(textColor);
+                binaryWriter.Write(textBounds);
+                binaryWriter.Write(stringId);
+                binaryWriter.Write(renderDepthBias);
+                binaryWriter.Write(invalidName_0, 0, 2);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum TextFlags : int
         {
@@ -71,7 +67,6 @@ namespace Moonfish.Guerilla.Tags
             CalloutText = 8,
             Small31CharBuffer = 16,
         };
-
         internal enum AnimationIndex : short
         {
             NONE = 0,
@@ -140,7 +135,6 @@ namespace Moonfish.Guerilla.Tags
             InvalidName62 = 63,
             InvalidName63 = 64,
         };
-
         internal enum CustomFont : short
         {
             Terminal = 0,

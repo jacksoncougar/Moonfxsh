@@ -175,8 +175,10 @@
     <Compile Include="Guerilla\Preprocess\ScenarioCutsceneTitleBlock.cs" />
     <Compile Include="Guerilla\Preprocess\ShaderPassPostprocessImplementationNewBlock.cs" />
     <Compile Include="Guerilla\Preprocess\ShaderPostprocessBitmapNewBlockBase.cs" />
+    <Compile Include="Guerilla\Preprocess\SoundBlock.cs" />
     <Compile Include="Guerilla\Preprocess\TagBlockIndexStructBlock.cs" />
     <Compile Include="Guerilla\Preprocess\ugh.cs" />
+    <Compile Include="Guerilla\Preprocess\UserInterfaceScreenWidgetDefinitionBlock.cs" />
     <Compile Include="Guerilla\StaticReflection.cs" />
     <Compile Include="Guerilla\TagGroups.cs" />
     <Compile Include="Guerilla\Tags\ActorStartingLocationsBlock.cs">

@@ -373,18 +373,17 @@ namespace Moonfish.Guerilla
                 field_set_latest_address = 0x906178;
 
                 FieldSets = new List<tag_field_set>( 1 );
-                var fieldSet = new tag_field_set( );
+                var fieldSet = new tag_field_set
+                {
+                    version = {fields_address = 0x906178, index = 0, upgrade_proc = 0, size_of = -1},
+                    size = 172,
+                    alignment_bit = 0,
+                    parent_version_index = -1,
+                    fields_address = 0x906178,
+                    size_string_address = 0x00795330,
+                    size_string = "sizeof(sound_definition)"
+                };
 
-                fieldSet.version.fields_address = 0x906178;
-                fieldSet.version.index = 0;
-                fieldSet.version.upgrade_proc = 0;
-                fieldSet.version.size_of = -1;
-                fieldSet.size = 172;
-                fieldSet.alignment_bit = 0;
-                fieldSet.parent_version_index = -1;
-                fieldSet.fields_address = 0x906178;
-                fieldSet.size_string_address = 0x00795330;
-                fieldSet.size_string = "sizeof(sound_definition)";
 
                 var definitionName = name;
                 fieldSet.ReadFields( reader,
@@ -416,6 +415,9 @@ namespace Moonfish.Guerilla
                         break;
                     case "sound_gestalt_promotions_block":
                         LatestFieldSet = FieldSets[ 0 ];
+                        break;
+                    case "sound_block":
+                        LatestFieldSet = FieldSets[0];
                         break;
                     default:
                         reader.BaseStream.Seek( field_set_latest_address, SeekOrigin.Begin );

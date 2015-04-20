@@ -24,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
             
         }
     };
-    [LayoutAttribute(Size = 92, Alignment = 4)]
+    [LayoutAttribute(Size = 84, Alignment = 4)]
     public class ShaderBlockBase  : IGuerilla
     {
         [TagReference("stem")]
@@ -45,7 +45,6 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal float lightmapSpecularBrightness;
         internal float lightmapAmbientBias11;
-        internal LongBlock[] postprocessProperties;
         internal float addedDepthBiasOffset;
         internal float addedDepthBiasSlopeScale;
         internal  ShaderBlockBase(BinaryReader binaryReader)
@@ -66,7 +65,6 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(2);
             lightmapSpecularBrightness = binaryReader.ReadSingle();
             lightmapAmbientBias11 = binaryReader.ReadSingle();
-            postprocessProperties = Guerilla.ReadBlockArray<LongBlock>(binaryReader);
             addedDepthBiasOffset = binaryReader.ReadSingle();
             addedDepthBiasSlopeScale = binaryReader.ReadSingle();
         }
@@ -90,7 +88,6 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_1, 0, 2);
                 binaryWriter.Write(lightmapSpecularBrightness);
                 binaryWriter.Write(lightmapAmbientBias11);
-                nextAddress = Guerilla.WriteBlockArray<LongBlock>(binaryWriter, postprocessProperties, nextAddress);
                 binaryWriter.Write(addedDepthBiasOffset);
                 binaryWriter.Write(addedDepthBiasSlopeScale);
                 return nextAddress;

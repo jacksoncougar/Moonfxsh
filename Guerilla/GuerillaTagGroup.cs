@@ -68,7 +68,7 @@ namespace Moonfish.Guerilla
             MaximumElementCount = DefaultMaximumElementCount;
         }
 
-        public MoonfishTagDefinition( string displayName, List<MoonfishTagField> fieldList )
+        public MoonfishTagDefinition( string displayName, IEnumerable<MoonfishTagField> fieldList )
             : this( )
         {
             DisplayName = displayName;
@@ -79,7 +79,7 @@ namespace Moonfish.Guerilla
                 token = cSharpCode.CreateValidIdentifier( token );
                 Name = token;
             }
-            Fields = fieldList;
+            Fields = new List<MoonfishTagField>(fieldList);
         }
 
         public MoonfishTagDefinition( TagBlockDefinition definition )
@@ -207,8 +207,15 @@ namespace Moonfish.Guerilla
         public string Name { get; private set; }
         public int Alignment { get; private set; }
         public int MaximumSize { get; private set; }
+        public int DataElementSize { get; set; }
+
+        private MoonfishTagDataDefinition( )
+        {
+            DataElementSize = 1;
+        }
 
         public MoonfishTagDataDefinition( tag_data_definition definition )
+            : this( )
         {
             Name = definition.Name;
             Alignment = definition.Alignment;
@@ -258,6 +265,13 @@ namespace Moonfish.Guerilla
         {
             Type = fieldType;
             Name = fieldName;
+        }
+
+        public MoonfishTagField(MoonfishFieldType fieldType, string fieldName, int count)
+        {
+            Type = fieldType;
+            Name = fieldName;
+            AssignCount( count );
         }
     }
 

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,29 +9,33 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class StructurePortalDeviceMappingBlock : StructurePortalDeviceMappingBlockBase
+    public partial class StructurePortalDeviceMappingBlock : StructurePortalDeviceMappingBlockBase
     {
-        public  StructurePortalDeviceMappingBlock(BinaryReader binaryReader): base(binaryReader)
+        public StructurePortalDeviceMappingBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class StructurePortalDeviceMappingBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 16, Alignment = 4 )]
+    public class StructurePortalDeviceMappingBlockBase : IGuerilla
     {
         internal StructureDevicePortalAssociationBlock[] devicePortalAssociations;
         internal GamePortalToPortalMappingBlock[] gamePortalToPortalMap;
-        internal  StructurePortalDeviceMappingBlockBase(BinaryReader binaryReader)
+
+        internal StructurePortalDeviceMappingBlockBase( BinaryReader binaryReader )
         {
-            devicePortalAssociations = Guerilla.ReadBlockArray<StructureDevicePortalAssociationBlock>(binaryReader);
-            gamePortalToPortalMap = Guerilla.ReadBlockArray<GamePortalToPortalMappingBlock>(binaryReader);
+            devicePortalAssociations = Guerilla.ReadBlockArray<StructureDevicePortalAssociationBlock>( binaryReader );
+            gamePortalToPortalMap = Guerilla.ReadBlockArray<GamePortalToPortalMappingBlock>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                nextAddress = Guerilla.WriteBlockArray<StructureDevicePortalAssociationBlock>(binaryWriter, devicePortalAssociations, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GamePortalToPortalMappingBlock>(binaryWriter, gamePortalToPortalMap, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureDevicePortalAssociationBlock>( binaryWriter,
+                    devicePortalAssociations, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<GamePortalToPortalMappingBlock>( binaryWriter,
+                    gamePortalToPortalMap, nextAddress );
                 return nextAddress;
             }
         }

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,15 +9,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class GlobalGeometryBlockInfoStructBlock : GlobalGeometryBlockInfoStructBlockBase
+    public partial class GlobalGeometryBlockInfoStructBlock : GlobalGeometryBlockInfoStructBlockBase
     {
-        public  GlobalGeometryBlockInfoStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalGeometryBlockInfoStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 36, Alignment = 4)]
-    public class GlobalGeometryBlockInfoStructBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 36, Alignment = 4 )]
+    public class GlobalGeometryBlockInfoStructBlockBase : IGuerilla
     {
         internal int blockOffset;
         internal int blockSize;
@@ -27,31 +28,34 @@ namespace Moonfish.Guerilla.Tags
         internal short ownerTagSectionOffset;
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
-        internal  GlobalGeometryBlockInfoStructBlockBase(BinaryReader binaryReader)
+
+        internal GlobalGeometryBlockInfoStructBlockBase( BinaryReader binaryReader )
         {
-            blockOffset = binaryReader.ReadInt32();
-            blockSize = binaryReader.ReadInt32();
-            sectionDataSize = binaryReader.ReadInt32();
-            resourceDataSize = binaryReader.ReadInt32();
-            resources = Guerilla.ReadBlockArray<GlobalGeometryBlockResourceBlock>(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(4);
-            ownerTagSectionOffset = binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            invalidName_1 = binaryReader.ReadBytes(4);
+            blockOffset = binaryReader.ReadInt32( );
+            blockSize = binaryReader.ReadInt32( );
+            sectionDataSize = binaryReader.ReadInt32( );
+            resourceDataSize = binaryReader.ReadInt32( );
+            resources = Guerilla.ReadBlockArray<GlobalGeometryBlockResourceBlock>( binaryReader );
+            invalidName_ = binaryReader.ReadBytes( 4 );
+            ownerTagSectionOffset = binaryReader.ReadInt16( );
+            invalidName_0 = binaryReader.ReadBytes( 2 );
+            invalidName_1 = binaryReader.ReadBytes( 4 );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(blockOffset);
-                binaryWriter.Write(blockSize);
-                binaryWriter.Write(sectionDataSize);
-                binaryWriter.Write(resourceDataSize);
-                nextAddress = Guerilla.WriteBlockArray<GlobalGeometryBlockResourceBlock>(binaryWriter, resources, nextAddress);
-                binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write(ownerTagSectionOffset);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write(invalidName_1, 0, 4);
+                binaryWriter.Write( blockOffset );
+                binaryWriter.Write( blockSize );
+                binaryWriter.Write( sectionDataSize );
+                binaryWriter.Write( resourceDataSize );
+                nextAddress = Guerilla.WriteBlockArray<GlobalGeometryBlockResourceBlock>( binaryWriter, resources,
+                    nextAddress );
+                binaryWriter.Write( invalidName_, 0, 4 );
+                binaryWriter.Write( ownerTagSectionOffset );
+                binaryWriter.Write( invalidName_0, 0, 2 );
+                binaryWriter.Write( invalidName_1, 0, 4 );
                 return nextAddress;
             }
         }

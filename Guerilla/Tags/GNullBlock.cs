@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,23 +9,23 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class GNullBlock : GNullBlockBase
+    public partial class GNullBlock : GNullBlockBase
     {
-        public  GNullBlock(BinaryReader binaryReader): base(binaryReader)
+        public GNullBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 0, Alignment = 4)]
-    public class GNullBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 0, Alignment = 4 )]
+    public class GNullBlockBase : IGuerilla
     {
-        internal  GNullBlockBase(BinaryReader binaryReader)
+        internal GNullBlockBase( BinaryReader binaryReader )
         {
-            
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
                 return nextAddress;
             }

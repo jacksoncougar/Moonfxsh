@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,33 +11,35 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Snd = (TagClass)"snd!";
+        public static readonly TagClass Snd = ( TagClass ) "snd!";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("snd!")]
-    public  partial class SoundBlock : SoundBlockBase
+    [TagClassAttribute( "snd!" )]
+    public partial class SoundBlock : SoundBlockBase
     {
-        public  SoundBlock(BinaryReader binaryReader): base(binaryReader)
+        public SoundBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class SoundBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 20, Alignment = 4 )]
+    public class SoundBlockBase : IGuerilla
     {
         internal byte[] soundFields;
-        internal  SoundBlockBase(BinaryReader binaryReader)
+
+        internal SoundBlockBase( BinaryReader binaryReader )
         {
-            soundFields = binaryReader.ReadBytes(20);
+            soundFields = binaryReader.ReadBytes( 20 );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(soundFields, 0, 20);
+                binaryWriter.Write( soundFields, 0, 20 );
                 return nextAddress;
             }
         }

@@ -75,6 +75,7 @@ namespace Moonfish.Guerilla
                     #region Colour Types
 
                 case MoonfishFieldType.FieldRgbColor:
+                    return 3;
                 case MoonfishFieldType.FieldArgbColor:
                     return 4;
                 case MoonfishFieldType.FieldRealRgbColor:

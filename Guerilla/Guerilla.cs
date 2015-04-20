@@ -40,15 +40,31 @@ namespace Moonfish.Guerilla
             return array;
         }
 
-        public static byte[] ReadData( BinaryReader binaryReader )
+        public static byte[] ReadData(BinaryReader binaryReader)
         {
-            var blamPointer = binaryReader.ReadBlamPointer( 1 );
+            var blamPointer = binaryReader.ReadBlamPointer(sizeof(byte));
             var data = new byte[blamPointer.elementCount];
-            if ( blamPointer.elementCount <= 0 ) return data;
-            using ( binaryReader.BaseStream.Pin( ) )
+            if (blamPointer.elementCount <= 0) return data;
+            using (binaryReader.BaseStream.Pin())
             {
-                binaryReader.BaseStream.Position = blamPointer[ 0 ];
-                data = binaryReader.ReadBytes( blamPointer.elementCount );
+                binaryReader.BaseStream.Position = blamPointer[0];
+                data = binaryReader.ReadBytes(blamPointer.elementCount);
+            }
+            return data;
+        }
+
+        public static short[] ReadShortData(BinaryReader binaryReader)
+        {
+            var blamPointer = binaryReader.ReadBlamPointer(sizeof(short));
+            var data = new short[blamPointer.elementCount];
+            if (blamPointer.elementCount <= 0) return data;
+            using (binaryReader.BaseStream.Pin())
+            {
+                for(int i = 0; i < blamPointer.elementCount; ++i)
+                {
+                    binaryReader.BaseStream.Position = blamPointer[i];
+                    data[ i ] = binaryReader.ReadInt16( );
+                }
             }
             return data;
         }
@@ -85,14 +101,29 @@ namespace Moonfish.Guerilla
             return nextAddress;
         }
 
-        public static int WriteData( BinaryWriter binaryWriter, byte[] data, int nextAddress )
+        public static int WriteData(BinaryWriter binaryWriter, byte[] data, int nextAddress)
         {
-            var blamPointer = new BlamPointer( data.Length, nextAddress, sizeof ( byte ) );
-            if ( blamPointer.elementCount <= 0 ) return nextAddress;
-            using ( binaryWriter.BaseStream.Pin( ) )
+            var blamPointer = new BlamPointer(data.Length, nextAddress, sizeof(byte));
+            if (blamPointer.elementCount <= 0) return nextAddress;
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.BaseStream.Position = blamPointer[ 0 ];
-                binaryWriter.Write( data );
+                binaryWriter.BaseStream.Position = blamPointer[0];
+                binaryWriter.Write(data);
+            }
+            return blamPointer.EndAddress;
+        }
+
+        public static int WriteData(BinaryWriter binaryWriter, short[] data, int nextAddress)
+        {
+            var blamPointer = new BlamPointer(data.Length, nextAddress, sizeof(byte));
+            if (blamPointer.elementCount <= 0) return nextAddress;
+            using (binaryWriter.BaseStream.Pin())
+            {
+                binaryWriter.BaseStream.Position = blamPointer[0];
+                foreach ( var nibble in data )
+                {
+                    binaryWriter.Write(nibble);
+                }
             }
             return blamPointer.EndAddress;
         }

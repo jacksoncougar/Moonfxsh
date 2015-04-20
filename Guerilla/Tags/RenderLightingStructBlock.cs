@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,15 +9,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class RenderLightingStructBlock : RenderLightingStructBlockBase
+    public partial class RenderLightingStructBlock : RenderLightingStructBlockBase
     {
-        public  RenderLightingStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public RenderLightingStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 84, Alignment = 4)]
-    public class RenderLightingStructBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 84, Alignment = 4 )]
+    public class RenderLightingStructBlockBase : IGuerilla
     {
         internal Moonfish.Tags.ColorR8G8B8 ambient;
         internal OpenTK.Vector3 shadowDirection;
@@ -28,33 +29,35 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 secondaryDirection;
         internal short shIndex;
         internal byte[] invalidName_;
-        internal  RenderLightingStructBlockBase(BinaryReader binaryReader)
+
+        internal RenderLightingStructBlockBase( BinaryReader binaryReader )
         {
-            ambient = binaryReader.ReadColorR8G8B8();
-            shadowDirection = binaryReader.ReadVector3();
-            lightingAccuracy = binaryReader.ReadSingle();
-            shadowOpacity = binaryReader.ReadSingle();
-            primaryDirectionColor = binaryReader.ReadColorR8G8B8();
-            primaryDirection = binaryReader.ReadVector3();
-            secondaryDirectionColor = binaryReader.ReadColorR8G8B8();
-            secondaryDirection = binaryReader.ReadVector3();
-            shIndex = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
+            ambient = binaryReader.ReadColorR8G8B8( );
+            shadowDirection = binaryReader.ReadVector3( );
+            lightingAccuracy = binaryReader.ReadSingle( );
+            shadowOpacity = binaryReader.ReadSingle( );
+            primaryDirectionColor = binaryReader.ReadColorR8G8B8( );
+            primaryDirection = binaryReader.ReadVector3( );
+            secondaryDirectionColor = binaryReader.ReadColorR8G8B8( );
+            secondaryDirection = binaryReader.ReadVector3( );
+            shIndex = binaryReader.ReadInt16( );
+            invalidName_ = binaryReader.ReadBytes( 2 );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(ambient);
-                binaryWriter.Write(shadowDirection);
-                binaryWriter.Write(lightingAccuracy);
-                binaryWriter.Write(shadowOpacity);
-                binaryWriter.Write(primaryDirectionColor);
-                binaryWriter.Write(primaryDirection);
-                binaryWriter.Write(secondaryDirectionColor);
-                binaryWriter.Write(secondaryDirection);
-                binaryWriter.Write(shIndex);
-                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write( ambient );
+                binaryWriter.Write( shadowDirection );
+                binaryWriter.Write( lightingAccuracy );
+                binaryWriter.Write( shadowOpacity );
+                binaryWriter.Write( primaryDirectionColor );
+                binaryWriter.Write( primaryDirection );
+                binaryWriter.Write( secondaryDirectionColor );
+                binaryWriter.Write( secondaryDirection );
+                binaryWriter.Write( shIndex );
+                binaryWriter.Write( invalidName_, 0, 2 );
                 return nextAddress;
             }
         }

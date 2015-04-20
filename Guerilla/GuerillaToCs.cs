@@ -400,7 +400,7 @@ namespace Moonfish.Guerilla
                         {
                             Value = field.Name,
                             AccessModifiers = AccessModifiers.Internal,
-                            FieldTypeName = typeof ( Byte ).FullName,
+                            FieldTypeName = (( MoonfishTagDataDefinition ) field.Definition).DataElementSize == 1? typeof ( Byte ).FullName : typeof(short).FullName,
                             IsArray = true
                         };
                         @class.Fields.Add( fieldInfo );

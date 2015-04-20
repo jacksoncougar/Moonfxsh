@@ -142,7 +142,7 @@ namespace Moonfish.Guerilla.Tags
             BinaryReader binaryReader )
         {
             var vertexBuffers = new GlobalGeometrySectionVertexBufferBlock[0];
-                //base.ReadGlobalGeometrySectionVertexBufferBlockArray(binaryReader);
+            //base.ReadGlobalGeometrySectionVertexBufferBlockArray(binaryReader);
             using ( binaryReader.BaseStream.Pin( ) )
             {
                 if ( binaryReader.BaseStream is ResourceStream )

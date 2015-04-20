@@ -40,8 +40,8 @@ namespace Moonfish.Guerilla
 
         private int PointerToOffset( int value )
         {
-            if ( map.GetOffset( ref value, true, false ) ) return value;
-
+            if ( map.ContainsVirtualOffset( value ) )
+                return map.GetOffset( value );
             throw new InvalidOperationException( );
         }
     }

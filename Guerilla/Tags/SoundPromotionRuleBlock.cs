@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute( Size = 16, Alignment = 4 )]
     public class SoundPromotionRuleBlockBase : IGuerilla
     {
-        internal Moonfish.Tags.ShortBlockIndex1 pitchRange;
+        internal Moonfish.Tags.ShortBlockIndex1 pitchRanges;
         internal short maximumPlayingCount;
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
 
         internal SoundPromotionRuleBlockBase( BinaryReader binaryReader )
         {
-            pitchRange = binaryReader.ReadShortBlockIndex1( );
+            pitchRanges = binaryReader.ReadShortBlockIndex1( );
             maximumPlayingCount = binaryReader.ReadInt16( );
             suppressionTimeSeconds = binaryReader.ReadSingle( );
             invalidName_ = binaryReader.ReadBytes( 8 );
@@ -41,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write( pitchRange );
+                binaryWriter.Write( pitchRanges );
                 binaryWriter.Write( maximumPlayingCount );
                 binaryWriter.Write( suppressionTimeSeconds );
                 binaryWriter.Write( invalidName_, 0, 8 );

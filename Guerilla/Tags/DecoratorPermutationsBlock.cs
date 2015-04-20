@@ -28,7 +28,9 @@ namespace Moonfish.Guerilla.Tags
         internal byte distributionWeight;
         internal Moonfish.Model.Range scale;
         internal Moonfish.Tags.RGBColor tint1;
+        internal byte[] invalidName_0;
         internal Moonfish.Tags.RGBColor tint2;
+        internal byte[] invalidName_1;
         internal float baseMapTintPercentage;
         internal float lightmapTintPercentage;
         internal float windScale;
@@ -44,7 +46,9 @@ namespace Moonfish.Guerilla.Tags
             distributionWeight = binaryReader.ReadByte( );
             scale = binaryReader.ReadRange( );
             tint1 = binaryReader.ReadRGBColor( );
+            invalidName_0 = binaryReader.ReadBytes( 1 );
             tint2 = binaryReader.ReadRGBColor( );
+            invalidName_1 = binaryReader.ReadBytes( 1 );
             baseMapTintPercentage = binaryReader.ReadSingle( );
             lightmapTintPercentage = binaryReader.ReadSingle( );
             windScale = binaryReader.ReadSingle( );
@@ -63,7 +67,9 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write( distributionWeight );
                 binaryWriter.Write( scale );
                 binaryWriter.Write( tint1 );
+                binaryWriter.Write( invalidName_0, 0, 1 );
                 binaryWriter.Write( tint2 );
+                binaryWriter.Write( invalidName_1, 0, 1 );
                 binaryWriter.Write( baseMapTintPercentage );
                 binaryWriter.Write( lightmapTintPercentage );
                 binaryWriter.Write( windScale );

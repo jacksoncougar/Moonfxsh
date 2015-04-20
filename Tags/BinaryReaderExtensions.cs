@@ -91,7 +91,6 @@ namespace Moonfish.Tags
             binaryWriter.Write( value.Red );
             binaryWriter.Write( value.Green );
             binaryWriter.Write( value.Blue );
-            binaryWriter.Write( 0 );
         }
 
         public static void Write( this BinaryWriter binaryWriter, TagReference value )
@@ -225,7 +224,6 @@ namespace Moonfish.Tags
                 Green = binaryReader.ReadByte( ),
                 Blue = binaryReader.ReadByte( )
             };
-            binaryReader.ReadByte( );
             return color;
         }
 

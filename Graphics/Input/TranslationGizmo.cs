@@ -201,7 +201,7 @@ namespace Moonfish.Graphics.Input
             var angle = atanTransform - atanPosition;
 
             var transform = Quaternion.FromAxisAngle( normal, ( float ) translationProjectionLength ).Normalized( );
-                // (positionVector, translationVector);
+            // (positionVector, translationVector);
 
             FromQuaternion = Matrix4.CreateFromQuaternion( transform );
 

@@ -35,7 +35,7 @@ namespace Moonfish
             var validator = new Validator( );
             var guerilla = new GuerillaCs( Local.GuerillaPath );
             var files = Directory.GetFiles( Local.MapsDirectory, "*.map", SearchOption.TopDirectoryOnly );
-            foreach ( var tag in Guerilla.Guerilla.h2Tags.Where( x => x.Class == TagClass.Snd ) )
+            foreach ( var tag in Guerilla.Guerilla.h2Tags )
             {
                 if ( !validator.Validate( new MoonfishTagGroup( tag ),
                     Guerilla.Guerilla.h2Tags.Select( x => new MoonfishTagGroup( x ) ), files ) || true )

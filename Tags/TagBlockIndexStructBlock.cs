@@ -4,12 +4,12 @@
     {
         public byte Length
         {
-            get { return ( byte ) ( this.length >> 1 ); }
+            get { return ( byte ) ( blockIndexData & 0xFF00 >> 16 ); }
         }
 
         public byte Index
         {
-            get { return this.index; }
+            get { return ( byte ) ( blockIndexData & 0xFF ); }
         }
     }
 }

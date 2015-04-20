@@ -1,6 +1,7 @@
 ﻿using Fasterflect;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -55,7 +56,18 @@ namespace Moonfish
         public readonly int IndexVirtualAddress;
         public readonly int TagCacheLength;
 
-        public readonly VirtualMappedAddress[] MemoryBlocks;
+        public readonly VirtualMappedAddress DefaultMemoryBlock;
+
+        public readonly Dictionary<TagIdent, int> StructureMemoryBlockBindings;
+        public readonly List<VirtualMappedAddress> StructureMemoryBlocks;
+
+        private VirtualMappedAddress ActiveStructureMemoryAllocation { get; set; }
+
+        public void ActiveAllocation( StructureCache activeAllocation )
+        {
+            var index = ( int ) activeAllocation;
+            ActiveStructureMemoryAllocation = StructureMemoryBlocks[ index ];
+        }
 
         private Dictionary<TagIdent, dynamic> deserializedTags;
         private Dictionary<TagIdent, string> hashTags;
@@ -63,7 +75,6 @@ namespace Moonfish
         public MapStream( string filename )
             : base( filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite, 1024 )
         {
-            MemoryBlocks = new VirtualMappedAddress[2];
             //HEADER
             var binaryReader = new BinaryReader( this, Encoding.UTF8 );
 
@@ -173,7 +184,7 @@ namespace Moonfish
             // Calculate File-pointer magic
             SecondaryMagic = Tags[ 0 ].VirtualAddress - ( indexAddress + indexLength );
 
-            MemoryBlocks[ 1 ] = new VirtualMappedAddress( )
+            DefaultMemoryBlock = new VirtualMappedAddress
             {
                 Address = Tags[ 0 ].VirtualAddress,
                 Length = TagCacheLength,
@@ -188,19 +199,16 @@ namespace Moonfish
                 base.Seek( Tags[ ScenarioID.Index ].VirtualAddress - SecondaryMagic + 528, SeekOrigin.Begin );
                 var count = binaryReader.ReadInt32( );
                 var address = binaryReader.ReadInt32( );
+
+                Debug = new StructureReference[count];
+                StructureMemoryBlockBindings = new Dictionary<TagIdent, int>( count * 2 );
+                StructureMemoryBlocks = new List<VirtualMappedAddress>( count );
                 for ( var i = 0; i < count; ++i )
                 {
                     base.Seek( address - SecondaryMagic + i * 68, SeekOrigin.Begin );
                     var structureBlockOffset = binaryReader.ReadInt32( );
                     var structureBlockLength = binaryReader.ReadInt32( );
                     var structureBlockAddress = binaryReader.ReadInt32( );
-                    if ( i == 0 )
-                    {
-                        PrimaryMagic = structureBlockAddress - structureBlockOffset;
-                        MemoryBlocks[ 0 ].Address = structureBlockAddress;
-                        MemoryBlocks[ 0 ].Magic = PrimaryMagic;
-                        MemoryBlocks[ 0 ].Length = structureBlockLength;
-                    }
                     base.Seek( 8, SeekOrigin.Current );
                     var sbspIdentifier = binaryReader.ReadTagIdent( );
                     base.Seek( 4, SeekOrigin.Current );
@@ -208,7 +216,7 @@ namespace Moonfish
 
                     base.Seek( structureBlockOffset, SeekOrigin.Begin );
 
-                    // is this the total block length or minus the 16?
+
                     var blockLength = binaryReader.ReadInt32( );
                     var sbspVirtualAddress = binaryReader.ReadInt32( );
                     var ltmpVirtualAddress = binaryReader.ReadInt32( );
@@ -216,20 +224,33 @@ namespace Moonfish
 
                     var hasLightmapData = !TagIdent.IsNull( ltmpIdentifier );
 
-
                     var sbspLength = hasLightmapData ? ltmpVirtualAddress - sbspVirtualAddress : blockLength;
+
                     var ltmpLength = blockLength - sbspLength;
+
+                    var block = new VirtualMappedAddress
+                    {
+                        Address = structureBlockAddress,
+                        Length = structureBlockLength,
+                        Magic = structureBlockAddress - structureBlockOffset
+                    };
 
 
                     Tags[ sbspIdentifier.Index ].VirtualAddress = sbspVirtualAddress;
                     Tags[ sbspIdentifier.Index ].Length = sbspLength;
 
+                    StructureMemoryBlocks.Add( block );
+                    var index = StructureMemoryBlocks.Count - 1;
+                    StructureMemoryBlockBindings[ sbspIdentifier ] = index;
+
                     if ( hasLightmapData )
                     {
                         Tags[ ltmpIdentifier.Index ].VirtualAddress = ltmpVirtualAddress;
                         Tags[ ltmpIdentifier.Index ].Length = ltmpLength;
+                        StructureMemoryBlockBindings[ ltmpIdentifier ] = index;
                     }
                 }
+                ActiveAllocation( StructureCache.VirtualStructureCache0 );
 
                 ////UNICODE
                 //this.Seek(Tags[GlobalsID.Index].VirtualAddress - SecondaryMagic + 400, SeekOrigin.Begin);
@@ -262,6 +283,19 @@ namespace Moonfish
             deserializedTags = new Dictionary<TagIdent, dynamic>( Tags.Length );
             hashTags = new Dictionary<TagIdent, string>( Tags.Length );
             Halo2.ActiveMap( this );
+        }
+
+
+        public readonly StructureReference[] Debug;
+
+        public struct StructureReference
+        {
+            public int SBSPOffset;
+            public int SBSPVirtualOffset;
+            public int LTMPOffset;
+            public int LTMPVirtualOffset;
+            public int LTMPLength;
+            public int SBSPLength { get; set; }
         }
 
         private Tag _currentTag = new Tag( );
@@ -383,6 +417,11 @@ namespace Moonfish
             set { }
         }
 
+        public long GetFilePosition( )
+        {
+            return base.Position;
+        }
+
         public override long Position
         {
             get
@@ -394,64 +433,73 @@ namespace Moonfish
             set { base.Position = CheckOffset( value ); }
         }
 
+        public enum StructureCache
+        {
+            VirtualStructureCache0,
+            VirtualStructureCache1,
+            VirtualStructureCache2,
+            VirtualStructureCache3,
+            VirtualStructureCache4,
+            VirtualStructureCache5,
+            VirtualStructureCache6,
+            VirtualStructureCache7,
+        }
+
         public override long Seek( long offset, SeekOrigin origin )
         {
-            base.Seek( CheckOffset( offset ), origin );
+            offset = CheckOffset( offset );
+            base.Seek( offset, origin );
             return Position;
         }
 
         private long CheckOffset( long value )
         {
+            // if 'value' is a Pointer
             if ( value < 0 || value > Length )
             {
-                return PointerToOffset( ( int ) value );
+                return VirtualAddressToFileOffset( ( int ) value );
             }
-            else return value;
+            return value;
         }
 
         public bool TryConvertOffsetToPointer( ref int value )
         {
-            foreach ( var block in MemoryBlocks )
+            if ( DefaultMemoryBlock.ContainsFileOffset( value ) )
             {
-                if ( block.GetOffset( ref value, false, true ) )
-                    return true;
+                value = DefaultMemoryBlock.GetOffset( value, false, true );
+                return true;
+            }
+            if ( ActiveStructureMemoryAllocation.ContainsFileOffset( value ) )
+            {
+                value = ActiveStructureMemoryAllocation.GetOffset( value, false, true );
+                return true;
             }
             return false;
         }
 
         public bool ContainsPointer( BlamPointer blamPointer )
         {
-            foreach ( var block in MemoryBlocks )
-            {
-                var previousAddressIsContained = true;
-                foreach ( var address in blamPointer )
-                {
-                    if ( block.Contains( address ) ^ previousAddressIsContained )
-                    {
-                        previousAddressIsContained = false;
-                        break;
-                    }
-                    else previousAddressIsContained = true;
-                }
-                if ( previousAddressIsContained ) return true;
-            }
-            return false;
+            return DefaultMemoryBlock.Contains( blamPointer ) || ActiveStructureMemoryAllocation.Contains( blamPointer );
         }
 
         public int ConvertOffsetToPointer( int value )
         {
-            foreach ( var block in MemoryBlocks )
-            {
-                if ( block.GetOffset( ref value, false, true ) ) return value;
-            }
+            //foreach ( var block in MemoryBlocks )
+            //{
+            //    if ( block.GetOffset( ref value, false, true ) ) return value;
+            //}
             return value;
         }
 
-        private int PointerToOffset( int value )
+        private int VirtualAddressToFileOffset( int value )
         {
-            foreach ( var block in MemoryBlocks )
+            if ( DefaultMemoryBlock.ContainsVirtualOffset( value ) )
             {
-                if ( block.GetOffset( ref value ) ) return value;
+                return DefaultMemoryBlock.GetOffset( value );
+            }
+            if ( ActiveStructureMemoryAllocation.ContainsVirtualOffset( value ) )
+            {
+                return ActiveStructureMemoryAllocation.GetOffset( value );
             }
             throw new InvalidOperationException( );
         }
@@ -576,14 +624,15 @@ namespace Moonfish
         /// <param name="address">Address Value</param>
         /// <param name="isVirtualAddress">If true Address Value is a virtual address else Address Value is file address</param>
         /// <returns>true if address points to this map</returns>
-        private bool ContainsFileOffset( long address )
+        public bool ContainsFileOffset( long address )
         {
             return Contains( address, false );
         }
 
-        private bool ContainsVirtualOffset( long address )
+        [Pure]
+        public bool ContainsVirtualOffset( long address )
         {
-            return Contains( address, true );
+            return Contains( address );
         }
 
         public bool Contains( BlamPointer pointer )
@@ -600,7 +649,8 @@ namespace Moonfish
             return !failed;
         }
 
-        public bool Contains( long address, bool isVirtualAddress = true )
+        [Pure]
+        private bool Contains( long address, bool isVirtualAddress = true )
         {
             var virtualOffset = isVirtualAddress ? 0 : Magic;
             var fileAddress = ( int ) address + virtualOffset;
@@ -609,19 +659,18 @@ namespace Moonfish
             return fileAddress >= beginAddress && fileAddress < endAddress;
         }
 
-        public bool GetOffset( ref int address, bool addressIsVirtualAddress = true, bool returnVirtualAddress = false )
+        [Pure]
+        public int GetOffset( int address, bool addressIsVirtualAddress = true, bool returnVirtualAddress = false )
         {
             if ( addressIsVirtualAddress )
             {
-                if ( !ContainsVirtualOffset( address ) ) return false;
                 address = returnVirtualAddress ? address : address - Magic;
             }
             else
             {
-                if ( !ContainsFileOffset( address ) ) return false;
                 address = returnVirtualAddress ? address + Magic : address;
             }
-            return true;
+            return address;
         }
     }
 

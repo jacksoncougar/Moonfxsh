@@ -44,7 +44,7 @@ namespace Moonfish.Guerilla
                         if ( !( tag.Class == validateTag.Class ) ) continue;
 
                         var metaTableMemory = map.DefaultMemoryBlock;
-                        if (tag.Class == TagClass.Sbsp || tag.Class == TagClass.Ltmp)
+                        if ( tag.Class == TagClass.Sbsp || tag.Class == TagClass.Ltmp )
                         {
                             metaTableMemory =
                                 map.StructureMemoryBlocks[ map.StructureMemoryBlockBindings[ tag.Identifier ] ];
@@ -52,8 +52,9 @@ namespace Moonfish.Guerilla
                                                   map.StructureMemoryBlockBindings[ tag.Identifier ] );
                         }
 
-                        if (tag.Identifier.Index == 8219)
-                        { //135010976
+                        if ( tag.Identifier.Index == 8219 )
+                        {
+                            //135010976
                         }
                         _isValidDelegate = metaTableMemory.Contains;
                         var virtualTagMemory = new VirtualMappedAddress
@@ -65,7 +66,7 @@ namespace Moonfish.Guerilla
                         OnWriteMessage( string.Format( "Tag ({0})", tag.Path ) );
 
                         offset = ( int ) map.Seek( tag );
-                        
+
 
                         elementArray.virtualAddress = map.GetTag( tag.Identifier ).VirtualAddress;
                         _pointersList = new List<Tuple<BlamPointer, ElementArray>>( );
@@ -168,7 +169,7 @@ namespace Moonfish.Guerilla
                         var data_definition = ( MoonfishTagDataDefinition ) field.Definition;
                         var childElementArray = new ElementArray
                         {
-                            elementSize = ((MoonfishTagDataDefinition)field.Definition).DataElementSize,
+                            elementSize = ( ( MoonfishTagDataDefinition ) field.Definition ).DataElementSize,
                             name = data_definition.Name,
                             address = offset,
                             parent = elementArray,
@@ -319,7 +320,7 @@ namespace Moonfish.Guerilla
                             {
                                 error = true;
                                 OnWriteMessage( string.Format( "{2}: Expected address \"{0}\"  - actually was \"{1}\"",
-                                    alignedAddress, pointer.startAddress, info.name));
+                                    alignedAddress, pointer.startAddress, info.name ) );
                             }
                         }
                         address = pointer.startAddress + pointer.PointedSize;
@@ -339,10 +340,13 @@ namespace Moonfish.Guerilla
                                 var overlap = pointer.startAddress - overlappingItem.Item1.startAddress -
                                               overlappingItem.Item1.PointedSize;
 
-                                OnWriteMessage(string.Format("Overlap of ({0})\n{3} elements sized '{5}' at '{4}'\nwith ({1})\n{6} elements sized '{8}' at '{7}'\nby ({2}) bytes",
-                                    overlappingItem.Item2.ToHierarchyString( ), info.ToHierarchyString( ), overlap,
-                                    overlappingItem.Item1.elementCount, overlappingItem.Item1.startAddress, overlappingItem.Item1.elementSize,
-                                    pointer.elementCount, pointer.startAddress, pointer.elementSize));
+                                OnWriteMessage(
+                                    string.Format(
+                                        "Overlap of ({0})\n{3} elements sized '{5}' at '{4}'\nwith ({1})\n{6} elements sized '{8}' at '{7}'\nby ({2}) bytes",
+                                        overlappingItem.Item2.ToHierarchyString( ), info.ToHierarchyString( ), overlap,
+                                        overlappingItem.Item1.elementCount, overlappingItem.Item1.startAddress,
+                                        overlappingItem.Item1.elementSize,
+                                        pointer.elementCount, pointer.startAddress, pointer.elementSize ) );
                             }
                         }
                     }

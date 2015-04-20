@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Moonfish.Guerilla.Preprocess
 {
-    class ShaderBlock
+    internal class ShaderBlock
     {
-        [GuerillaPreProcessFieldsMethod(BlockName = "shader_block")]
-        protected static IList<MoonfishTagField> GuerillaPreProcessMethod(IList<MoonfishTagField> fields)
+        [GuerillaPreProcessFieldsMethod( BlockName = "shader_block" )]
+        protected static IList<MoonfishTagField> GuerillaPreProcessMethod( IList<MoonfishTagField> fields )
         {
             var postProcessBlockField = fields[ 17 ];
             fields.Remove( postProcessBlockField );

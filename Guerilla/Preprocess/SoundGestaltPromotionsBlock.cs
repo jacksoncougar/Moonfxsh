@@ -19,7 +19,8 @@ namespace Moonfish.Guerilla.Preprocess
                 {
                     new MoonfishTagField( MoonfishFieldType.FieldShortBlockIndex1, "Pitch Ranges" ),
                     new MoonfishTagField( MoonfishFieldType.FieldShortInteger, "Maximum Playing Count" ),
-                    new MoonfishTagField( MoonfishFieldType.FieldReal, "Suppression Time Seconds#time from when first permutation plays to when another sound from an equal or lower promotion can play" ),
+                    new MoonfishTagField( MoonfishFieldType.FieldReal,
+                        "Suppression Time Seconds#time from when first permutation plays to when another sound from an equal or lower promotion can play" ),
                     new MoonfishTagField( MoonfishFieldType.FieldPad, "", 8 ),
                     new MoonfishTagField( MoonfishFieldType.FieldTerminator, "" )
                 } ) );

@@ -79,7 +79,7 @@ namespace Moonfish.Guerilla
                 token = cSharpCode.CreateValidIdentifier( token );
                 Name = token;
             }
-            Fields = new List<MoonfishTagField>(fieldList);
+            Fields = new List<MoonfishTagField>( fieldList );
         }
 
         public MoonfishTagDefinition( TagBlockDefinition definition )
@@ -267,7 +267,7 @@ namespace Moonfish.Guerilla
             Name = fieldName;
         }
 
-        public MoonfishTagField(MoonfishFieldType fieldType, string fieldName, int count)
+        public MoonfishTagField( MoonfishFieldType fieldType, string fieldName, int count )
         {
             Type = fieldType;
             Name = fieldName;

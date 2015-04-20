@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Moonfish.Guerilla.Preprocess
 {
-    class HudWaypointArrowBlock
+    internal class HudWaypointArrowBlock
     {
-        [GuerillaPreProcessFieldsMethod(BlockName = "hud_waypoint_arrow_block")]
-        protected static IList<MoonfishTagField> GuerillaPreProcessMethod(IList<MoonfishTagField> fields)
+        [GuerillaPreProcessFieldsMethod( BlockName = "hud_waypoint_arrow_block" )]
+        protected static IList<MoonfishTagField> GuerillaPreProcessMethod( IList<MoonfishTagField> fields )
         {
             if ( fields[ 2 ].Type == MoonfishFieldType.FieldRgbColor )
                 fields.Insert( 3, new MoonfishTagField( MoonfishFieldType.FieldPad, "", 1 ) );

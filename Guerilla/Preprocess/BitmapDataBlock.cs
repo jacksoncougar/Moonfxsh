@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Moonfish.Guerilla.Preprocess
 {
-    class BitmapDataBlock
+    internal class BitmapDataBlock
     {
         [GuerillaPreProcessMethod( BlockName = "bitmap_data_block" )]
         protected static void GuerillaPreProcessMethod( BinaryReader binaryReader, IList<tag_field> fields )

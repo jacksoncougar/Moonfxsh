@@ -153,16 +153,14 @@ namespace Moonfish.Guerilla
                     // variable byte array (data)
                     else if ( Type.GetType( item.FieldTypeName ) == typeof ( byte ) )
                     {
-                        
                         stringBuilder.AppendLine( string.Format( "{0} = Guerilla.ReadData(binaryReader);",
                             item.Value.Name ) );
                     }
                     // variable short array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof(short))
+                    else if ( Type.GetType( item.FieldTypeName ) == typeof ( short ) )
                     {
-
-                        stringBuilder.AppendLine(string.Format("{0} = Guerilla.ReadShortData(binaryReader);",
-                            item.Value.Name));
+                        stringBuilder.AppendLine( string.Format( "{0} = Guerilla.ReadShortData(binaryReader);",
+                            item.Value.Name ) );
                     }
                     // inline array
                     else if ( item.ArraySize > 0 )
@@ -353,16 +351,16 @@ return array;",
                             item.Value.Name, item.ArraySize ) );
                     }
                     // variable byte array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof(byte))
+                    else if ( Type.GetType( item.FieldTypeName ) == typeof ( byte ) )
                     {
-                        bodyBuilder.AppendLine(string.Format("{1} = Guerilla.WriteData({0}, {2}, {1});",
-                            binaryWriter.Name, addressParam.Name, item.Value.Name));
+                        bodyBuilder.AppendLine( string.Format( "{1} = Guerilla.WriteData({0}, {2}, {1});",
+                            binaryWriter.Name, addressParam.Name, item.Value.Name ) );
                     }
                     // variable short array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof(short))
+                    else if ( Type.GetType( item.FieldTypeName ) == typeof ( short ) )
                     {
-                        bodyBuilder.AppendLine(string.Format("{1} = Guerilla.WriteData({0}, {2}, {1});",
-                            binaryWriter.Name, addressParam.Name, item.Value.Name));
+                        bodyBuilder.AppendLine( string.Format( "{1} = Guerilla.WriteData({0}, {2}, {1});",
+                            binaryWriter.Name, addressParam.Name, item.Value.Name ) );
                     }
                     // inline array
                     else if ( item.ArraySize > 0 )

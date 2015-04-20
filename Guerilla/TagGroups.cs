@@ -107,6 +107,9 @@ namespace Moonfish.Guerilla
         {
             // Read all the fields from the stream.
             type = ( field_type ) reader.ReadInt16( );
+            if ( type == field_type._field_rgb_color )
+            {
+            }
             padding = reader.ReadInt16( );
             name_address = reader.ReadInt32( );
             definition = reader.ReadInt32( );
@@ -407,6 +410,12 @@ namespace Moonfish.Guerilla
                 }
                 switch ( name )
                 {
+                    case "hud_globals_block":
+                        LatestFieldSet = FieldSets[ 0 ];
+                        break;
+                    case "global_new_hud_globals_struct_block":
+                        LatestFieldSet = FieldSets[ 0 ];
+                        break;
                     case "sound_promotion_parameters_struct_block":
                         LatestFieldSet = FieldSets[ 0 ];
                         break;
@@ -417,7 +426,14 @@ namespace Moonfish.Guerilla
                         LatestFieldSet = FieldSets[ 0 ];
                         break;
                     case "sound_block":
-                        LatestFieldSet = FieldSets[0];
+                        LatestFieldSet = FieldSets[ 0 ];
+                        break;
+                    case "tag_block_index_struct_block":
+                        LatestFieldSet = FieldSets[ 0 ];
+                        break;
+                    case "vertex_shader_classification_block":
+                        LatestFieldSet = FieldSets[ 0 ];
+                        break;
                         break;
                     default:
                         reader.BaseStream.Seek( field_set_latest_address, SeekOrigin.Begin );

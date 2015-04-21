@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Moonfish.Guerilla;
+using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 
 namespace Moonfish.Compiler
@@ -28,6 +29,7 @@ namespace Moonfish.Compiler
                     BinaryWriter binaryWriter = new BinaryWriter( stream );
                     var tagObject = cache.Deserialize( tag ) as IGuerilla;
                     tagObject.Write( binaryWriter );
+                    IResourceBlock = 
 
                 }
             }

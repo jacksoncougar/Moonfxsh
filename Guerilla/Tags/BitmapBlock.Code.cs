@@ -9,5 +9,14 @@
                 bitmapDataBlock.LoadRawResources(  );
             }
         }
+
+
+        byte[] IResourceBlock.GetRawResourceBytes()
+        {
+            foreach (var bitmapDataBlock in bitmaps)
+            {
+                bitmapDataBlock.LoadRawResources();
+            }
+        }
     }
 }

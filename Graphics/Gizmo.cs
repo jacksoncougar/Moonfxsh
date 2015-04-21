@@ -13,7 +13,7 @@ namespace Moonfish.Graphics
     public partial class Gizmo : Form
     {
         private DynamicScene Scene { get; set; }
-        private MapStream Map { get; set; }
+        private CacheStream Map { get; set; }
         private TagIdent SelectedTag { get; set; }
 
         #region Peek Message Native
@@ -87,7 +87,7 @@ namespace Moonfish.Graphics
             if ( directory != null )
                 LoadResourceMaps( directory );
 
-            Map = new MapStream( fileName );
+            Map = new CacheStream( fileName );
         }
 
         private static void LoadResourceMaps( string directory )
@@ -99,7 +99,7 @@ namespace Moonfish.Graphics
                               || x.Key == MapType.Shared
                               || x.Key == MapType.SinglePlayerShared )
                 .Select( g => g.First( ) ).ToList( );
-            resourceMaps.ForEach( x => Halo2.LoadResource( new MapStream( x ) ) );
+            resourceMaps.ForEach( x => Halo2.LoadResource( new CacheStream( x ) ) );
         }
 
         private void glControl1_Resize( object sender, EventArgs e )

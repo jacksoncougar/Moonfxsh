@@ -36,7 +36,7 @@ namespace Moonfish.Graphics
             LoadScreenShader( );
         }
 
-        public void LoadMaterials( IEnumerable<TagIdent> shaders, MapStream map )
+        public void LoadMaterials( IEnumerable<TagIdent> shaders, CacheStream map )
         {
             Materials.ToList( ).ForEach( x => x.Value.Dispose( ) );
             Materials.Clear( );

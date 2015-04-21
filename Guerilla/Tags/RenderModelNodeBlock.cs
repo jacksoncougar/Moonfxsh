@@ -1,74 +1,80 @@
-// ReSharper disable All
-
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
-using Moonfish.Tags;
+using System.ComponentModel;
+using BulletSharp;
+using Moonfish.Graphics;
 using OpenTK;
-using System;
-using System.IO;
+
+// ReSharper disable once CheckNamespace
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class RenderModelNodeBlock : RenderModelNodeBlockBase
+    [TypeConverter( typeof ( MarkerGroupConverter ) )]
+    public partial class RenderModelNodeBlock : ISelectable
     {
-        public RenderModelNodeBlock( BinaryReader binaryReader ) : base( binaryReader )
-        {
-        }
-    };
+        public CollisionObject CollisionObject { get; set; }
 
-    [LayoutAttribute( Size = 96, Alignment = 4 )]
-    public class RenderModelNodeBlockBase : IGuerilla
-    {
-        internal Moonfish.Tags.StringID name;
-        internal Moonfish.Tags.ShortBlockIndex1 parentNode;
-        internal Moonfish.Tags.ShortBlockIndex1 firstChildNode;
-        internal Moonfish.Tags.ShortBlockIndex1 nextSiblingNode;
-        internal short importNodeIndex;
-        internal OpenTK.Vector3 defaultTranslation;
-        internal OpenTK.Quaternion defaultRotation;
-        internal OpenTK.Vector3 inverseForward;
-        internal OpenTK.Vector3 inverseLeft;
-        internal OpenTK.Vector3 inverseUp;
-        internal OpenTK.Vector3 inversePosition;
-        internal float inverseScale;
-        internal float distanceFromParent;
+        public DisplayMode Mode { get; set; }
 
-        internal RenderModelNodeBlockBase( BinaryReader binaryReader )
+        public enum DisplayMode
         {
-            name = binaryReader.ReadStringID( );
-            parentNode = binaryReader.ReadShortBlockIndex1( );
-            firstChildNode = binaryReader.ReadShortBlockIndex1( );
-            nextSiblingNode = binaryReader.ReadShortBlockIndex1( );
-            importNodeIndex = binaryReader.ReadInt16( );
-            defaultTranslation = binaryReader.ReadVector3( );
-            defaultRotation = binaryReader.ReadQuaternion( );
-            inverseForward = binaryReader.ReadVector3( );
-            inverseLeft = binaryReader.ReadVector3( );
-            inverseUp = binaryReader.ReadVector3( );
-            inversePosition = binaryReader.ReadVector3( );
-            inverseScale = binaryReader.ReadSingle( );
-            distanceFromParent = binaryReader.ReadSingle( );
+            Rest,
+            Pose
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        private void Initialize( )
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            Mode = DisplayMode.Pose;
+            _pose = new Pose {rotation = defaultRotation, translation = defaultTranslation};
+        }
+
+        private Pose _pose;
+
+        public Matrix4 WorldMatrix
+        {
+            get { return CalculateWorldMatrix( Mode ); }
+            set
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( parentNode );
-                binaryWriter.Write( firstChildNode );
-                binaryWriter.Write( nextSiblingNode );
-                binaryWriter.Write( importNodeIndex );
-                binaryWriter.Write( defaultTranslation );
-                binaryWriter.Write( defaultRotation );
-                binaryWriter.Write( inverseForward );
-                binaryWriter.Write( inverseLeft );
-                binaryWriter.Write( inverseUp );
-                binaryWriter.Write( inversePosition );
-                binaryWriter.Write( inverseScale );
-                binaryWriter.Write( distanceFromParent );
-                return nextAddress;
+                switch ( Mode )
+                {
+                    case DisplayMode.Rest:
+                        defaultTranslation = value.ExtractTranslation( );
+                        defaultRotation = value.ExtractRotation( );
+                        break;
+                    default:
+                        _pose.translation = value.ExtractTranslation( );
+                        _pose.rotation = value.ExtractRotation( );
+                        break;
+                }
             }
+        }
+
+        public Matrix4 CalculateWorldMatrix( DisplayMode displayMode )
+        {
+            var translation = CreateTranslation( displayMode );
+            var rotation = CreateFromQuaternion( displayMode );
+            return rotation * translation * Matrix4.Identity;
+        }
+
+        public Matrix4 CalculateInverseBindTransform( )
+        {
+            var translation = CreateTranslation( DisplayMode.Rest );
+            var rotation = CreateFromQuaternion( DisplayMode.Rest );
+            return ( rotation * translation * Matrix4.Identity ).Inverted( );
+        }
+
+        private Matrix4 CreateFromQuaternion( DisplayMode displayMode )
+        {
+            return Matrix4.CreateFromQuaternion( displayMode == DisplayMode.Rest ? defaultRotation : _pose.rotation );
+        }
+
+        private Matrix4 CreateTranslation( DisplayMode displayMode )
+        {
+            return Matrix4.CreateTranslation( displayMode == DisplayMode.Rest ? defaultTranslation : _pose.translation );
+        }
+
+        private struct Pose
+        {
+            public Vector3 translation;
+            public Quaternion rotation;
         }
     };
 }

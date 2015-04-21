@@ -16,7 +16,7 @@ namespace Moonfish.Graphics
             handle = GL.GenTexture( );
         }
 
-        public void Load( BitmapBlock bitmapCollection, MapStream map,
+        public void Load( BitmapBlock bitmapCollection, CacheStream map,
             TextureUnit textureUnit = TextureUnit.Texture0,
             TextureMagFilter textureMagFilter = TextureMagFilter.Linear,
             TextureMinFilter textureMinFilter = TextureMinFilter.Linear )

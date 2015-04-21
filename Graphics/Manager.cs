@@ -98,7 +98,7 @@ namespace Moonfish.Graphics
             }
         }
 
-        public void LoadScenario( MapStream map )
+        public void LoadScenario( CacheStream map )
         {
             this.scenario = map[ "scnr", "" ].Deserialize( );
 

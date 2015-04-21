@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Fasterflect;
 using Microsoft.CSharp;
+using Moonfish.Guerilla.Tags;
 using MethodInvoker = Fasterflect.MethodInvoker;
 
 namespace Moonfish.Tags
@@ -25,7 +26,7 @@ namespace Moonfish.Tags
             CacheBinaryReaderMethods( );
         }
 
-        public static dynamic Deserialize( this MapStream source, Type type )
+        public static dynamic Deserialize( this CacheStream source, Type type )
         {
             var sourceReader = new BinaryReader( source );
             Source = source;
@@ -38,8 +39,15 @@ namespace Moonfish.Tags
             // create the tag using a constructor and exit
             if ( constructor != null )
             {
-                return constructor.Invoke( new[] {sourceReader} );
+                var tag = constructor.Invoke( new object[] {sourceReader} );
+                var resourceInterface = tag as IResourceBlock;
+                if ( resourceInterface != null )
+                {
+                    resourceInterface.LoadRawResources(  );
+                }
+                return tag;
             }
+
 
             System.Diagnostics.Debug.WriteLine( "Enetering Deserialise() fallback! {0}", type );
             MessageBox.Show( string.Format( "Enetering Deserialise() fallback! {0}", type ) );
@@ -485,7 +493,7 @@ namespace Moonfish.Tags
         private static Dictionary<Type, Tuple<MethodInfo, bool>> ExtensionMethodDictionary;
         private static Dictionary<Type, MethodInvoker> ReadTypeMethods;
         private static readonly Assembly ExecutingAssembly;
-        private static MapStream Source;
+        private static CacheStream Source;
         [Obsolete] public static ProcessTagBlockArrayDelegate ProcessTagBlockArray = DefaultProcessTagBlockArray;
     }
 }

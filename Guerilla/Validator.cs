@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla
 
             foreach ( var file in filenames )
             {
-                using ( var map = new MapStream( file ) )
+                using ( var map = new CacheStream( file ) )
                 {
                     var binaryReader = new BinaryReader( map );
 
@@ -48,7 +48,7 @@ namespace Moonfish.Guerilla
                         {
                             metaTableMemory =
                                 map.StructureMemoryBlocks[ map.StructureMemoryBlockBindings[ tag.Identifier ] ];
-                            map.ActiveAllocation( MapStream.StructureCache.VirtualStructureCache0 +
+                            map.ActiveAllocation( CacheStream.StructureCache.VirtualStructureCache0 +
                                                   map.StructureMemoryBlockBindings[ tag.Identifier ] );
                         }
 
@@ -240,7 +240,7 @@ namespace Moonfish.Guerilla
             return blockElementArray.children;
         }
 
-        private bool ValidateBlamPointer( BlamPointer blamPointer, ElementArray info, MapStream stream )
+        private bool ValidateBlamPointer( BlamPointer blamPointer, ElementArray info, CacheStream stream )
         {
             var stringWriter = new StringWriter( );
             if ( blamPointer.elementCount == 0 && blamPointer.startAddress == 0 ) return true;
@@ -286,7 +286,7 @@ namespace Moonfish.Guerilla
             foreach ( var child in childrenArrayPointers )
             {
                 if (
-                    !ValidateBlamPointer( child.ArrayPointer, child.ElementArray, binaryReader.BaseStream as MapStream ) )
+                    !ValidateBlamPointer( child.ArrayPointer, child.ElementArray, binaryReader.BaseStream as CacheStream ) )
                     continue;
                 if ( !( child.ArrayPointer.elementCount == 0 && child.ArrayPointer.startAddress == 0 ) )
                 {
@@ -315,7 +315,7 @@ namespace Moonfish.Guerilla
                                              Padding.GetCount( address, info.alignment );
                         if ( pointer.startAddress != alignedAddress )
                         {
-                            var mapStream = reader.BaseStream as MapStream;
+                            var mapStream = reader.BaseStream as CacheStream;
                             if ( mapStream != null )
                             {
                                 error = true;

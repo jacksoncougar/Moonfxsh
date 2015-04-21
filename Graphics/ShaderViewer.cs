@@ -12,7 +12,7 @@ namespace Moonfish.Graphics
     public partial class ShaderViewer : Form
     {
         private Scene Scene { get; set; }
-        private MapStream Map { get; set; }
+        private CacheStream Map { get; set; }
 
         #region Peek Message Native
 
@@ -66,8 +66,8 @@ namespace Moonfish.Graphics
                               || x.Key == MapType.Shared
                               || x.Key == MapType.SinglePlayerShared )
                 .Select( g => g.First( ) ).ToList( );
-            resourceMaps.ForEach( x => Halo2.LoadResource( new MapStream( x ) ) );
-            Map = new MapStream( fileName );
+            resourceMaps.ForEach( x => Halo2.LoadResource( new CacheStream( x ) ) );
+            Map = new CacheStream( fileName );
 
             var model = ( ModelBlock ) ( Map[ "hlmt", "masterchief" ].Deserialize( ) );
             int width = 1, height = 1;

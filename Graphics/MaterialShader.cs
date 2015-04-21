@@ -26,7 +26,7 @@ namespace Moonfish.Graphics
         public ShaderPassBlock[] shaderPasses;
         public string[] shaderPassPaths;
 
-        public MaterialShader( ShaderBlock shader, MapStream map )
+        public MaterialShader( ShaderBlock shader, CacheStream map )
             : this( )
         {
             this.shader = shader;

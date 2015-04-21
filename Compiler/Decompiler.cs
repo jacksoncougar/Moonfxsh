@@ -1,18 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Moonfish.Guerilla;
+using Moonfish.Tags;
 
 namespace Moonfish.Compiler
 {
-    public class Decompiler
+    public static class Decompiler
     {
-        public void Decompile( MapStream cache )
+        public static void Decompile( this CacheStream cache )
         {
-            foreach ( var tag in cache.Tags )
+            var rootDirectory = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ),
+                "Halo 2 Modding" );
+            foreach ( var tag in cache.Tags.Where( x => x.Class == TagClass.Bitm ) )
             {
-                var tagObject = cache[ tag.Identifier ].Deserialize( );
+                var path = Path.Combine( rootDirectory, Path.ChangeExtension( tag.Path, tag.Class.ToTokenString( ) ) );
+
+                var directory = Path.GetDirectoryName( path );
+                if (directory != null && !Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+
+                using ( var stream = new FileStream( path, FileMode.Create, FileAccess.Write, FileShare.Read ) )
+                {
+                    BinaryWriter binaryWriter = new BinaryWriter( stream );
+                    var tagObject = cache.Deserialize( tag ) as IGuerilla;
+                    tagObject.Write( binaryWriter );
+
+                }
             }
         }
     }

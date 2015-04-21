@@ -18,7 +18,7 @@ namespace Moonfish
         public static MapType CheckMapType( string filename )
         {
             using (
-                BinaryReader reader =
+                var reader =
                     new BinaryReader( new FileStream( filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite,
                         2048, FileOptions.SequentialScan | FileOptions.Asynchronous ) ) )
             {
@@ -93,10 +93,10 @@ namespace Moonfish
             return new ResourceStream( buffer, blockInfo ) {};
         }
 
-        private static MapStream mapStream;
-        private static MapStream resourceShared;
-        private static MapStream resourceSinglePlayer;
-        private static MapStream resourceMainMenu;
+        private static CacheStream mapStream;
+        private static CacheStream resourceShared;
+        private static CacheStream resourceSinglePlayer;
+        private static CacheStream resourceMainMenu;
         private static TagGroupLookup tagGroups = new TagGroupLookup( );
         private static GlobalStrings strings = new GlobalStrings( );
         private static Dictionary<TagClass, Type> definedTagGroupsDictionary;
@@ -105,7 +105,7 @@ namespace Moonfish
         {
             Paths = new GlobalPaths( );
             definedTagGroupsDictionary = new Dictionary<TagClass, Type>( 3 );
-            var assembly = typeof ( Moonfish.Tag ).Assembly;
+            var assembly = typeof ( Tag ).Assembly;
             if ( assembly == null ) throw new ArgumentNullException( "assembly" );
             Type[] types;
             try
@@ -120,18 +120,18 @@ namespace Moonfish
             {
                 //if (!type.IsNested)
                 {
-                    if ( type.IsDefined( typeof ( Tags.TagClassAttribute ), false ) )
+                    if ( type.IsDefined( typeof ( TagClassAttribute ), false ) )
                     {
                         TagClass class_of_tag =
-                            ( type.GetCustomAttributes( typeof ( Tags.TagClassAttribute ), false )[ 0 ] as
-                                Tags.TagClassAttribute ).TagClass;
+                            ( type.GetCustomAttributes( typeof ( TagClassAttribute ), false )[ 0 ] as
+                                TagClassAttribute ).TagClass;
                         definedTagGroupsDictionary.Add( class_of_tag, type );
                     }
                 }
             }
         }
 
-        public static bool LoadResource( MapStream map )
+        public static bool LoadResource( CacheStream map )
         {
             switch ( map.Type )
             {
@@ -154,7 +154,7 @@ namespace Moonfish
             return definedTagGroupsDictionary[ className ];
         }
 
-        internal static void ActiveMap( MapStream mapstream )
+        internal static void ActiveMap( CacheStream mapstream )
         {
             mapStream = mapstream;
         }
@@ -171,25 +171,28 @@ namespace Moonfish
             }
         }
 
-        internal static bool TryGettingResourceStream( int resourceAddress, out System.IO.Stream resourceStream )
+        internal static bool TryGettingResourceStream( int resourceAddress, out Stream resourceStream )
         {
-            var resourceSource = ( ResourceSource ) ( ( resourceAddress & 0xC0000000 ) >> 30 );
-            switch ( resourceSource )
+            var pointer = ( ResourcePointer ) resourceAddress;
+            switch ( pointer.Source )
             {
                 case ResourceSource.Shared:
-                    resourceStream = Halo2.resourceShared;
+                    resourceStream = resourceShared;
                     break;
                 case ResourceSource.SinglePlayerShared:
-                    resourceStream = Halo2.resourceSinglePlayer;
+                    resourceStream = resourceSinglePlayer;
                     break;
                 case ResourceSource.MainMenu:
-                    resourceStream = Halo2.resourceMainMenu;
+                    resourceStream = resourceMainMenu;
+                    break;
+                case ResourceSource.Local:
+                    resourceStream = mapStream;
                     break;
                 default:
                     resourceStream = null;
                     return false;
             }
-            var hasResource = resourceStream == null ? false : true;
+            var hasResource = resourceStream != null;
             return hasResource;
         }
 
@@ -392,7 +395,7 @@ namespace Moonfish
 
         #region IEnumerable Members
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator( )
+        IEnumerator IEnumerable.GetEnumerator( )
         {
             return classes.GetEnumerator( );
         }

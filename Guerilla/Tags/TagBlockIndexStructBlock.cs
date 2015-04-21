@@ -1,38 +1,15 @@
-// ReSharper disable All
-
-using Moonfish.Model;
-using Moonfish.Tags.BlamExtension;
-using Moonfish.Tags;
-using OpenTK;
-using System;
-using System.IO;
-
-namespace Moonfish.Guerilla.Tags
+﻿namespace Moonfish.Guerilla.Tags
 {
-    public partial class TagBlockIndexStructBlock : TagBlockIndexStructBlockBase
+    partial class TagBlockIndexStructBlock
     {
-        public TagBlockIndexStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public byte Length
         {
-        }
-    };
-
-    [LayoutAttribute( Size = 2, Alignment = 4 )]
-    public class TagBlockIndexStructBlockBase : IGuerilla
-    {
-        internal short blockIndexData;
-
-        internal TagBlockIndexStructBlockBase( BinaryReader binaryReader )
-        {
-            blockIndexData = binaryReader.ReadInt16( );
+            get { return ( byte ) ( blockIndexData & 0xFF00 >> 16 ); }
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public byte Index
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
-            {
-                binaryWriter.Write( blockIndexData );
-                return nextAddress;
-            }
+            get { return ( byte ) ( blockIndexData & 0xFF ); }
         }
-    };
+    }
 }

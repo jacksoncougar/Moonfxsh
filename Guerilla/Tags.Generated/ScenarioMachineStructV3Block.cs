@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,32 +9,36 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ScenarioMachineStructV3Block : ScenarioMachineStructV3BlockBase
+    public partial class ScenarioMachineStructV3Block : ScenarioMachineStructV3BlockBase
     {
-        public  ScenarioMachineStructV3Block(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioMachineStructV3Block( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class ScenarioMachineStructV3BlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 12, Alignment = 4 )]
+    public class ScenarioMachineStructV3BlockBase : IGuerilla
     {
         internal Flags flags;
         internal PathfindingObjectIndexListBlock[] pathfindingReferences;
-        internal  ScenarioMachineStructV3BlockBase(BinaryReader binaryReader)
+
+        internal ScenarioMachineStructV3BlockBase( BinaryReader binaryReader )
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            pathfindingReferences = Guerilla.ReadBlockArray<PathfindingObjectIndexListBlock>(binaryReader);
+            flags = ( Flags ) binaryReader.ReadInt32( );
+            pathfindingReferences = Guerilla.ReadBlockArray<PathfindingObjectIndexListBlock>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int32)flags);
-                nextAddress = Guerilla.WriteBlockArray<PathfindingObjectIndexListBlock>(binaryWriter, pathfindingReferences, nextAddress);
+                binaryWriter.Write( ( Int32 ) flags );
+                nextAddress = Guerilla.WriteBlockArray<PathfindingObjectIndexListBlock>( binaryWriter,
+                    pathfindingReferences, nextAddress );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

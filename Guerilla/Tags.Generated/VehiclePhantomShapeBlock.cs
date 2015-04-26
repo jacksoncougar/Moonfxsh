@@ -16,7 +16,7 @@ namespace Moonfish.Guerilla.Tags
         }
     };
 
-    [LayoutAttribute( Size = 224, Alignment = 16 )]
+    [LayoutAttribute( Size = 672, Alignment = 16 )]
     public class VehiclePhantomShapeBlockBase : IGuerilla
     {
         internal byte[] invalidName_;
@@ -107,6 +107,7 @@ namespace Moonfish.Guerilla.Tags
             InvalidName = 2,
         };
 
+        [LayoutAttribute( Size = 8, Alignment = 1 )]
         public class ChildShapesStorage : IGuerilla
         {
             internal ShapeType shapeType;
@@ -152,6 +153,7 @@ namespace Moonfish.Guerilla.Tags
             };
         };
 
+        [LayoutAttribute( Size = 144, Alignment = 1 )]
         public class Multispheres : IGuerilla
         {
             internal byte[] invalidName_;
@@ -198,6 +200,7 @@ namespace Moonfish.Guerilla.Tags
                 }
             }
 
+            [LayoutAttribute( Size = 16, Alignment = 1 )]
             public class FourVectorsStorage : IGuerilla
             {
                 internal OpenTK.Vector3 sphere;

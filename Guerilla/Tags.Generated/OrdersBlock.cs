@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,15 +9,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class OrdersBlock : OrdersBlockBase
+    public partial class OrdersBlock : OrdersBlockBase
     {
-        public  OrdersBlock(BinaryReader binaryReader): base(binaryReader)
+        public OrdersBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 124, Alignment = 4)]
-    public class OrdersBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 124, Alignment = 4 )]
+    public class OrdersBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal Moonfish.Tags.ShortBlockIndex1 style;
@@ -33,46 +34,51 @@ namespace Moonfish.Guerilla.Tags
         internal SecondarySetTriggerBlock[] secondarySetTrigger;
         internal SpecialMovementBlock[] specialMovement;
         internal OrderEndingBlock[] orderEndings;
-        internal  OrdersBlockBase(BinaryReader binaryReader)
+
+        internal OrdersBlockBase( BinaryReader binaryReader )
         {
-            name = binaryReader.ReadString32();
-            style = binaryReader.ReadShortBlockIndex1();
-            invalidName_ = binaryReader.ReadBytes(2);
-            flags = (Flags)binaryReader.ReadInt32();
-            forceCombatStatus = (ForceCombatStatus)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            entryScript = binaryReader.ReadString32();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            followSquad = binaryReader.ReadShortBlockIndex1();
-            followRadius = binaryReader.ReadSingle();
-            primaryAreaSet = Guerilla.ReadBlockArray<ZoneSetBlock>(binaryReader);
-            secondaryAreaSet = Guerilla.ReadBlockArray<SecondaryZoneSetBlock>(binaryReader);
-            secondarySetTrigger = Guerilla.ReadBlockArray<SecondarySetTriggerBlock>(binaryReader);
-            specialMovement = Guerilla.ReadBlockArray<SpecialMovementBlock>(binaryReader);
-            orderEndings = Guerilla.ReadBlockArray<OrderEndingBlock>(binaryReader);
+            name = binaryReader.ReadString32( );
+            style = binaryReader.ReadShortBlockIndex1( );
+            invalidName_ = binaryReader.ReadBytes( 2 );
+            flags = ( Flags ) binaryReader.ReadInt32( );
+            forceCombatStatus = ( ForceCombatStatus ) binaryReader.ReadInt16( );
+            invalidName_0 = binaryReader.ReadBytes( 2 );
+            entryScript = binaryReader.ReadString32( );
+            invalidName_1 = binaryReader.ReadBytes( 2 );
+            followSquad = binaryReader.ReadShortBlockIndex1( );
+            followRadius = binaryReader.ReadSingle( );
+            primaryAreaSet = Guerilla.ReadBlockArray<ZoneSetBlock>( binaryReader );
+            secondaryAreaSet = Guerilla.ReadBlockArray<SecondaryZoneSetBlock>( binaryReader );
+            secondarySetTrigger = Guerilla.ReadBlockArray<SecondarySetTriggerBlock>( binaryReader );
+            specialMovement = Guerilla.ReadBlockArray<SpecialMovementBlock>( binaryReader );
+            orderEndings = Guerilla.ReadBlockArray<OrderEndingBlock>( binaryReader );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(style);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)forceCombatStatus);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write(entryScript);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                binaryWriter.Write(followSquad);
-                binaryWriter.Write(followRadius);
-                nextAddress = Guerilla.WriteBlockArray<ZoneSetBlock>(binaryWriter, primaryAreaSet, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SecondaryZoneSetBlock>(binaryWriter, secondaryAreaSet, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SecondarySetTriggerBlock>(binaryWriter, secondarySetTrigger, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SpecialMovementBlock>(binaryWriter, specialMovement, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<OrderEndingBlock>(binaryWriter, orderEndings, nextAddress);
+                binaryWriter.Write( name );
+                binaryWriter.Write( style );
+                binaryWriter.Write( invalidName_, 0, 2 );
+                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write( ( Int16 ) forceCombatStatus );
+                binaryWriter.Write( invalidName_0, 0, 2 );
+                binaryWriter.Write( entryScript );
+                binaryWriter.Write( invalidName_1, 0, 2 );
+                binaryWriter.Write( followSquad );
+                binaryWriter.Write( followRadius );
+                nextAddress = Guerilla.WriteBlockArray<ZoneSetBlock>( binaryWriter, primaryAreaSet, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<SecondaryZoneSetBlock>( binaryWriter, secondaryAreaSet,
+                    nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<SecondarySetTriggerBlock>( binaryWriter, secondarySetTrigger,
+                    nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<SpecialMovementBlock>( binaryWriter, specialMovement, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<OrderEndingBlock>( binaryWriter, orderEndings, nextAddress );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -86,6 +92,7 @@ namespace Moonfish.Guerilla.Tags
             SuppressCombatUntilEngaged = 128,
             InhibitVehicleUse = 256,
         };
+
         internal enum ForceCombatStatus : short
         {
             NONE = 0,

@@ -143,6 +143,7 @@ namespace Moonfish.Guerilla.Tags
             LeaveMeAlonePlease = 1,
         };
 
+        [LayoutAttribute( Size = 4, Alignment = 1 )]
         public class RedCoefficients : IGuerilla
         {
             internal float redCoefficient;
@@ -162,6 +163,7 @@ namespace Moonfish.Guerilla.Tags
             }
         };
 
+        [LayoutAttribute( Size = 4, Alignment = 1 )]
         public class GreenCoefficients : IGuerilla
         {
             internal float greenCoefficient;
@@ -181,6 +183,7 @@ namespace Moonfish.Guerilla.Tags
             }
         };
 
+        [LayoutAttribute( Size = 4, Alignment = 1 )]
         public class BlueCoefficients : IGuerilla
         {
             internal float blueCoefficient;

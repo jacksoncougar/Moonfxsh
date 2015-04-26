@@ -16,11 +16,11 @@ namespace Moonfish.Guerilla.Tags
         }
     };
 
-    [LayoutAttribute( Size = 84, Alignment = 4 )]
+    [LayoutAttribute( Size = 144, Alignment = 4 )]
     public class ErrorReportQuadsBlockBase : IGuerilla
     {
         internal Points[] points;
-        internal NodeWeights[] nodeWeights;
+        internal OpenTK.Vector4 color;
 
         internal ErrorReportQuadsBlockBase( BinaryReader binaryReader )
         {
@@ -29,11 +29,7 @@ namespace Moonfish.Guerilla.Tags
                 new Points( binaryReader ), new Points( binaryReader ), new Points( binaryReader ),
                 new Points( binaryReader ),
             };
-            nodeWeights = new[]
-            {
-                new NodeWeights( binaryReader ), new NodeWeights( binaryReader ), new NodeWeights( binaryReader ),
-                new NodeWeights( binaryReader ),
-            };
+            color = binaryReader.ReadVector4( );
         }
 
         public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
@@ -44,18 +40,17 @@ namespace Moonfish.Guerilla.Tags
                 points[ 1 ].Write( binaryWriter );
                 points[ 2 ].Write( binaryWriter );
                 points[ 3 ].Write( binaryWriter );
-                nodeWeights[ 0 ].Write( binaryWriter );
-                nodeWeights[ 1 ].Write( binaryWriter );
-                nodeWeights[ 2 ].Write( binaryWriter );
-                nodeWeights[ 3 ].Write( binaryWriter );
+                binaryWriter.Write( color );
                 return nextAddress;
             }
         }
 
+        [LayoutAttribute( Size = 32, Alignment = 1 )]
         public class Points : IGuerilla
         {
             internal OpenTK.Vector3 position;
             internal NodeIndices[] nodeIndices;
+            internal NodeWeights[] nodeWeights;
 
             internal Points( BinaryReader binaryReader )
             {
@@ -64,6 +59,11 @@ namespace Moonfish.Guerilla.Tags
                 {
                     new NodeIndices( binaryReader ), new NodeIndices( binaryReader ), new NodeIndices( binaryReader ),
                     new NodeIndices( binaryReader ),
+                };
+                nodeWeights = new[]
+                {
+                    new NodeWeights( binaryReader ), new NodeWeights( binaryReader ), new NodeWeights( binaryReader ),
+                    new NodeWeights( binaryReader ),
                 };
             }
 
@@ -76,10 +76,15 @@ namespace Moonfish.Guerilla.Tags
                     nodeIndices[ 1 ].Write( binaryWriter );
                     nodeIndices[ 2 ].Write( binaryWriter );
                     nodeIndices[ 3 ].Write( binaryWriter );
+                    nodeWeights[ 0 ].Write( binaryWriter );
+                    nodeWeights[ 1 ].Write( binaryWriter );
+                    nodeWeights[ 2 ].Write( binaryWriter );
+                    nodeWeights[ 3 ].Write( binaryWriter );
                     return nextAddress;
                 }
             }
 
+            [LayoutAttribute( Size = 1, Alignment = 1 )]
             public class NodeIndices : IGuerilla
             {
                 internal byte nodeIndex;
@@ -98,25 +103,26 @@ namespace Moonfish.Guerilla.Tags
                     }
                 }
             };
-        };
 
-        public class NodeWeights : IGuerilla
-        {
-            internal float nodeWeight;
-
-            internal NodeWeights( BinaryReader binaryReader )
+            [LayoutAttribute( Size = 4, Alignment = 1 )]
+            public class NodeWeights : IGuerilla
             {
-                nodeWeight = binaryReader.ReadSingle( );
-            }
+                internal float nodeWeight;
 
-            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
-            {
-                using ( binaryWriter.BaseStream.Pin( ) )
+                internal NodeWeights( BinaryReader binaryReader )
                 {
-                    binaryWriter.Write( nodeWeight );
-                    return nextAddress;
+                    nodeWeight = binaryReader.ReadSingle( );
                 }
-            }
+
+                public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+                {
+                    using ( binaryWriter.BaseStream.Pin( ) )
+                    {
+                        binaryWriter.Write( nodeWeight );
+                        return nextAddress;
+                    }
+                }
+            };
         };
     };
 }

@@ -71,6 +71,7 @@ namespace Moonfish.Guerilla.Tags
             }
         }
 
+        [LayoutAttribute( Size = 4, Alignment = 1 )]
         public class NodeIndicesOLD : IGuerilla
         {
             internal int nodeIndexOLD;
@@ -90,6 +91,7 @@ namespace Moonfish.Guerilla.Tags
             }
         };
 
+        [LayoutAttribute( Size = 4, Alignment = 1 )]
         public class NodeWeights : IGuerilla
         {
             internal float nodeWeight;
@@ -109,6 +111,7 @@ namespace Moonfish.Guerilla.Tags
             }
         };
 
+        [LayoutAttribute( Size = 4, Alignment = 1 )]
         public class NodeIndicesNEW : IGuerilla
         {
             internal int nodeIndexNEW;

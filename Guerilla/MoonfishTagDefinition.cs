@@ -121,18 +121,28 @@ namespace Moonfish.Guerilla
                 var fieldSize = CalculateSizeOfField( field );
                 if ( field.Type == MoonfishFieldType.FieldArrayStart )
                 {
-                    var arrayCount = field.Count;
-                    var elementSize = 0;
-                    do
-                    {
-                        field = fields[ ++i ];
-                        elementSize += CalculateSizeOfField( field );
-                    } while ( field.Type != MoonfishFieldType.FieldArrayEnd );
-                    fieldSize += elementSize * arrayCount;
+                    fieldSize = ProcessArrayField(fields, ref i);
                 }
                 totalFieldSetSize += fieldSize;
             }
             return totalFieldSetSize;
+        }
+
+        private static int ProcessArrayField( IReadOnlyList<MoonfishTagField> fields, ref int i )
+        {
+            var field = fields[ i ];
+            var arrayCount = field.Count;
+            var elementSize = 0;
+            do
+            {
+                field = fields[ ++i ];
+                if ( field.Type == MoonfishFieldType.FieldArrayStart )
+                {
+                    elementSize += ProcessArrayField(fields, ref i);
+                }
+                else elementSize += CalculateSizeOfField( field );
+            } while ( field.Type != MoonfishFieldType.FieldArrayEnd );
+            return elementSize * arrayCount;
         }
     }
 }

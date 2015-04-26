@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,38 +9,41 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class HsScriptsBlock : HsScriptsBlockBase
+    public partial class HsScriptsBlock : HsScriptsBlockBase
     {
-        public  HsScriptsBlock(BinaryReader binaryReader): base(binaryReader)
+        public HsScriptsBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 40, Alignment = 4)]
-    public class HsScriptsBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 40, Alignment = 4 )]
+    public class HsScriptsBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal ScriptType scriptType;
         internal ReturnType returnType;
         internal int rootExpressionIndex;
-        internal  HsScriptsBlockBase(BinaryReader binaryReader)
+
+        internal HsScriptsBlockBase( BinaryReader binaryReader )
         {
-            name = binaryReader.ReadString32();
-            scriptType = (ScriptType)binaryReader.ReadInt16();
-            returnType = (ReturnType)binaryReader.ReadInt16();
-            rootExpressionIndex = binaryReader.ReadInt32();
+            name = binaryReader.ReadString32( );
+            scriptType = ( ScriptType ) binaryReader.ReadInt16( );
+            returnType = ( ReturnType ) binaryReader.ReadInt16( );
+            rootExpressionIndex = binaryReader.ReadInt32( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write((Int16)scriptType);
-                binaryWriter.Write((Int16)returnType);
-                binaryWriter.Write(rootExpressionIndex);
+                binaryWriter.Write( name );
+                binaryWriter.Write( ( Int16 ) scriptType );
+                binaryWriter.Write( ( Int16 ) returnType );
+                binaryWriter.Write( rootExpressionIndex );
                 return nextAddress;
             }
         }
+
         internal enum ScriptType : short
         {
             Startup = 0,
@@ -49,6 +53,7 @@ namespace Moonfish.Guerilla.Tags
             Stub = 4,
             CommandScript = 5,
         };
+
         internal enum ReturnType : short
         {
             Unparsed = 0,

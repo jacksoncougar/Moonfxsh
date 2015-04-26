@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,15 +9,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ScenarioStartingEquipmentBlock : ScenarioStartingEquipmentBlockBase
+    public partial class ScenarioStartingEquipmentBlock : ScenarioStartingEquipmentBlockBase
     {
-        public  ScenarioStartingEquipmentBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioStartingEquipmentBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 156, Alignment = 4)]
-    public class ScenarioStartingEquipmentBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 156, Alignment = 4 )]
+    public class ScenarioStartingEquipmentBlockBase : IGuerilla
     {
         internal Flags flags;
         internal GameType1 gameType1;
@@ -24,61 +25,59 @@ namespace Moonfish.Guerilla.Tags
         internal GameType3 gameType3;
         internal GameType4 gameType4;
         internal byte[] invalidName_;
-        [TagReference("itmc")]
-        internal Moonfish.Tags.TagReference itemCollection1;
-        [TagReference("itmc")]
-        internal Moonfish.Tags.TagReference itemCollection2;
-        [TagReference("itmc")]
-        internal Moonfish.Tags.TagReference itemCollection3;
-        [TagReference("itmc")]
-        internal Moonfish.Tags.TagReference itemCollection4;
-        [TagReference("itmc")]
-        internal Moonfish.Tags.TagReference itemCollection5;
-        [TagReference("itmc")]
-        internal Moonfish.Tags.TagReference itemCollection6;
+        [TagReference( "itmc" )] internal Moonfish.Tags.TagReference itemCollection1;
+        [TagReference( "itmc" )] internal Moonfish.Tags.TagReference itemCollection2;
+        [TagReference( "itmc" )] internal Moonfish.Tags.TagReference itemCollection3;
+        [TagReference( "itmc" )] internal Moonfish.Tags.TagReference itemCollection4;
+        [TagReference( "itmc" )] internal Moonfish.Tags.TagReference itemCollection5;
+        [TagReference( "itmc" )] internal Moonfish.Tags.TagReference itemCollection6;
         internal byte[] invalidName_0;
-        internal  ScenarioStartingEquipmentBlockBase(BinaryReader binaryReader)
+
+        internal ScenarioStartingEquipmentBlockBase( BinaryReader binaryReader )
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            gameType1 = (GameType1)binaryReader.ReadInt16();
-            gameType2 = (GameType2)binaryReader.ReadInt16();
-            gameType3 = (GameType3)binaryReader.ReadInt16();
-            gameType4 = (GameType4)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(48);
-            itemCollection1 = binaryReader.ReadTagReference();
-            itemCollection2 = binaryReader.ReadTagReference();
-            itemCollection3 = binaryReader.ReadTagReference();
-            itemCollection4 = binaryReader.ReadTagReference();
-            itemCollection5 = binaryReader.ReadTagReference();
-            itemCollection6 = binaryReader.ReadTagReference();
-            invalidName_0 = binaryReader.ReadBytes(48);
+            flags = ( Flags ) binaryReader.ReadInt32( );
+            gameType1 = ( GameType1 ) binaryReader.ReadInt16( );
+            gameType2 = ( GameType2 ) binaryReader.ReadInt16( );
+            gameType3 = ( GameType3 ) binaryReader.ReadInt16( );
+            gameType4 = ( GameType4 ) binaryReader.ReadInt16( );
+            invalidName_ = binaryReader.ReadBytes( 48 );
+            itemCollection1 = binaryReader.ReadTagReference( );
+            itemCollection2 = binaryReader.ReadTagReference( );
+            itemCollection3 = binaryReader.ReadTagReference( );
+            itemCollection4 = binaryReader.ReadTagReference( );
+            itemCollection5 = binaryReader.ReadTagReference( );
+            itemCollection6 = binaryReader.ReadTagReference( );
+            invalidName_0 = binaryReader.ReadBytes( 48 );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)gameType1);
-                binaryWriter.Write((Int16)gameType2);
-                binaryWriter.Write((Int16)gameType3);
-                binaryWriter.Write((Int16)gameType4);
-                binaryWriter.Write(invalidName_, 0, 48);
-                binaryWriter.Write(itemCollection1);
-                binaryWriter.Write(itemCollection2);
-                binaryWriter.Write(itemCollection3);
-                binaryWriter.Write(itemCollection4);
-                binaryWriter.Write(itemCollection5);
-                binaryWriter.Write(itemCollection6);
-                binaryWriter.Write(invalidName_0, 0, 48);
+                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write( ( Int16 ) gameType1 );
+                binaryWriter.Write( ( Int16 ) gameType2 );
+                binaryWriter.Write( ( Int16 ) gameType3 );
+                binaryWriter.Write( ( Int16 ) gameType4 );
+                binaryWriter.Write( invalidName_, 0, 48 );
+                binaryWriter.Write( itemCollection1 );
+                binaryWriter.Write( itemCollection2 );
+                binaryWriter.Write( itemCollection3 );
+                binaryWriter.Write( itemCollection4 );
+                binaryWriter.Write( itemCollection5 );
+                binaryWriter.Write( itemCollection6 );
+                binaryWriter.Write( invalidName_0, 0, 48 );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
             NoGrenades = 1,
             PlasmaGrenades = 2,
         };
+
         internal enum GameType1 : short
         {
             NONE = 0,
@@ -97,6 +96,7 @@ namespace Moonfish.Guerilla.Tags
             AllExceptCTF = 13,
             AllExceptCTFRace = 14,
         };
+
         internal enum GameType2 : short
         {
             NONE = 0,
@@ -115,6 +115,7 @@ namespace Moonfish.Guerilla.Tags
             AllExceptCTF = 13,
             AllExceptCTFRace = 14,
         };
+
         internal enum GameType3 : short
         {
             NONE = 0,
@@ -133,6 +134,7 @@ namespace Moonfish.Guerilla.Tags
             AllExceptCTF = 13,
             AllExceptCTFRace = 14,
         };
+
         internal enum GameType4 : short
         {
             NONE = 0,

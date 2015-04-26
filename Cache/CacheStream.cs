@@ -218,24 +218,16 @@ namespace Moonfish
             v.Validate( tagDatum, stream );
 #endif
 
-            Allocate( serializedTagData.Length );
+            Allocate( tagDatum.Identifier, serializedTagData.Length );
         }
 
         void Allocate( TagIdent ident, int size )
         {
-            //copy the table into a buffer
-            var startAddress = (int)Seek( Index.GlobalsIdent );
+            //create virtual stream to write into
+            var tagCacheStream = new VirtualStream( Index[ Index.GlobalsIdent ].VirtualAddress );
 
-            var buffer = new byte[tagCacheLength];
-            Read(buffer, 0, buffer.Length);
-
-            //create virtual stream to read from
-            var tagCacheStream = new VirtualStream(buffer, startAddress);
-
-            var binaryReader = new BinaryReader(this);
             var binaryWriter = new BinaryWriter(tagCacheStream);
 
-            var definitions = Guerilla.Guerilla.h2Tags.Select( x => new MoonfishTagGroup( x ) ).ToList(  );
             for ( var i = 0; i < Index.Count; ++i )
             {
                 var datum = Index[ i ];
@@ -260,6 +252,7 @@ namespace Moonfish
                     Index.Update(datum.Identifier, datum);
                 }
             }
+            binaryWriter.WritePadding( 512 );
         }
 
         private static void ProcessFields( List<MoonfishTagField> fields, BinaryReader binaryReader , BinaryWriter binaryWriter, int address )

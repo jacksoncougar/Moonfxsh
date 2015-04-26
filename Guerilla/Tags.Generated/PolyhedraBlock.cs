@@ -128,6 +128,7 @@ namespace Moonfish.Guerilla.Tags
             Unused = 1,
         };
 
+        [LayoutAttribute( Size = 48, Alignment = 1 )]
         public class FourVectorsStorage : IGuerilla
         {
             internal OpenTK.Vector3 fourVectorsX;

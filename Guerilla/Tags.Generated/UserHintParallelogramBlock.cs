@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,15 +9,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class UserHintParallelogramBlock : UserHintParallelogramBlockBase
+    public partial class UserHintParallelogramBlock : UserHintParallelogramBlockBase
     {
-        public  UserHintParallelogramBlock(BinaryReader binaryReader): base(binaryReader)
+        public UserHintParallelogramBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 68, Alignment = 4)]
-    public class UserHintParallelogramBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 68, Alignment = 4 )]
+    public class UserHintParallelogramBlockBase : IGuerilla
     {
         internal Flags flags;
         internal OpenTK.Vector3 point0;
@@ -31,42 +32,45 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 point3;
         internal short referenceFrame2;
         internal byte[] invalidName_2;
-        internal  UserHintParallelogramBlockBase(BinaryReader binaryReader)
+
+        internal UserHintParallelogramBlockBase( BinaryReader binaryReader )
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            point0 = binaryReader.ReadVector3();
-            referenceFrame = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            point1 = binaryReader.ReadVector3();
-            referenceFrame0 = binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            point2 = binaryReader.ReadVector3();
-            referenceFrame1 = binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            point3 = binaryReader.ReadVector3();
-            referenceFrame2 = binaryReader.ReadInt16();
-            invalidName_2 = binaryReader.ReadBytes(2);
+            flags = ( Flags ) binaryReader.ReadInt32( );
+            point0 = binaryReader.ReadVector3( );
+            referenceFrame = binaryReader.ReadInt16( );
+            invalidName_ = binaryReader.ReadBytes( 2 );
+            point1 = binaryReader.ReadVector3( );
+            referenceFrame0 = binaryReader.ReadInt16( );
+            invalidName_0 = binaryReader.ReadBytes( 2 );
+            point2 = binaryReader.ReadVector3( );
+            referenceFrame1 = binaryReader.ReadInt16( );
+            invalidName_1 = binaryReader.ReadBytes( 2 );
+            point3 = binaryReader.ReadVector3( );
+            referenceFrame2 = binaryReader.ReadInt16( );
+            invalidName_2 = binaryReader.ReadBytes( 2 );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(point0);
-                binaryWriter.Write(referenceFrame);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(point1);
-                binaryWriter.Write(referenceFrame0);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write(point2);
-                binaryWriter.Write(referenceFrame1);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                binaryWriter.Write(point3);
-                binaryWriter.Write(referenceFrame2);
-                binaryWriter.Write(invalidName_2, 0, 2);
+                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write( point0 );
+                binaryWriter.Write( referenceFrame );
+                binaryWriter.Write( invalidName_, 0, 2 );
+                binaryWriter.Write( point1 );
+                binaryWriter.Write( referenceFrame0 );
+                binaryWriter.Write( invalidName_0, 0, 2 );
+                binaryWriter.Write( point2 );
+                binaryWriter.Write( referenceFrame1 );
+                binaryWriter.Write( invalidName_1, 0, 2 );
+                binaryWriter.Write( point3 );
+                binaryWriter.Write( referenceFrame2 );
+                binaryWriter.Write( invalidName_2, 0, 2 );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

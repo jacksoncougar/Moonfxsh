@@ -498,10 +498,21 @@ namespace Moonfish.Guerilla
                     case MoonfishFieldType.FieldArrayStart:
                     {
                         var startIndex = fields.IndexOf( field );
-                        var endIndex = fields.FindIndex(
-                            startIndex,
-                            x => x.Type == MoonfishFieldType.FieldArrayEnd ) + 1;
-                        var arrayFieldSubSet = fields.GetRange( startIndex, endIndex - startIndex );
+                        int endIndex = startIndex;
+                        int depth = 0;
+                        for ( int i = startIndex + 1; i < fields.Count; i++ )
+                        {
+                            if ( fields[ i ].Type == MoonfishFieldType.FieldArrayStart ) depth++;
+                            if ( fields[ i ].Type == MoonfishFieldType.FieldArrayEnd )
+                            {
+                                if (depth == 0) { endIndex = i + 1; break; }
+                                depth--;
+                            }
+                        }
+                        var count = endIndex - startIndex;
+                        if ( count < 1 ) throw new Exception( );
+
+                        var arrayFieldSubSet = fields.GetRange( startIndex, count );
                         @class.ClassDefinitions.Add( ProcessArrayFields( arrayFieldSubSet ) );
 
                         fieldInfo = new FieldInfo

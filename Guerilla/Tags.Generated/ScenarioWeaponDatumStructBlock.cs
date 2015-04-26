@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,35 +9,38 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ScenarioWeaponDatumStructBlock : ScenarioWeaponDatumStructBlockBase
+    public partial class ScenarioWeaponDatumStructBlock : ScenarioWeaponDatumStructBlockBase
     {
-        public  ScenarioWeaponDatumStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioWeaponDatumStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ScenarioWeaponDatumStructBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class ScenarioWeaponDatumStructBlockBase : IGuerilla
     {
         internal short roundsLeft;
         internal short roundsLoaded;
         internal Flags flags;
-        internal  ScenarioWeaponDatumStructBlockBase(BinaryReader binaryReader)
+
+        internal ScenarioWeaponDatumStructBlockBase( BinaryReader binaryReader )
         {
-            roundsLeft = binaryReader.ReadInt16();
-            roundsLoaded = binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt32();
+            roundsLeft = binaryReader.ReadInt16( );
+            roundsLoaded = binaryReader.ReadInt16( );
+            flags = ( Flags ) binaryReader.ReadInt32( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(roundsLeft);
-                binaryWriter.Write(roundsLoaded);
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write( roundsLeft );
+                binaryWriter.Write( roundsLoaded );
+                binaryWriter.Write( ( Int32 ) flags );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

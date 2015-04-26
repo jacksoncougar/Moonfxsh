@@ -104,6 +104,7 @@ namespace Moonfish.Guerilla.Tags
             }
         }
 
+        [LayoutAttribute( Size = 20, Alignment = 1 )]
         public class UnusedCreateNewVariants : IGuerilla
         {
             internal CreateNewVariantStructBlock createNewVariantStruct;

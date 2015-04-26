@@ -276,6 +276,7 @@ namespace Moonfish.Guerilla.Tags
             ContainsRunTimeNodes = 1,
         };
 
+        [LayoutAttribute( Size = 1, Alignment = 1 )]
         public class RenderOnlyNodeFlags : IGuerilla
         {
             internal byte invalidName_;
@@ -295,6 +296,7 @@ namespace Moonfish.Guerilla.Tags
             }
         };
 
+        [LayoutAttribute( Size = 1, Alignment = 1 )]
         public class RenderOnlySectionFlags : IGuerilla
         {
             internal byte invalidName_;

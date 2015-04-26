@@ -63,6 +63,7 @@ namespace Moonfish.Guerilla.Tags
             }
         }
 
+        [LayoutAttribute( Size = 8, Alignment = 1 )]
         public class ChildShapesStorage : IGuerilla
         {
             internal ShapeType shapeType;

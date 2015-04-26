@@ -17,6 +17,7 @@
             {
                 bitmapDataBlock.LoadRawResources();
             }
+            return null;
         }
     }
 }

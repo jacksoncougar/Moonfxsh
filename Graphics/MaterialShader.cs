@@ -37,7 +37,7 @@ namespace Moonfish.Graphics
                 var texture = new Texture( );
                 if ( !TagIdent.IsNull( item.bitmapGroup ) )
                 {
-                    var bitmapBlock = map[ item.bitmapGroup ].Deserialize( ) as BitmapBlock;
+                    var bitmapBlock = map.Deserialize(item.bitmapGroup) as BitmapBlock;
                     texture.Load( bitmapBlock, map );
                 }
                 Textures.Add( texture );
@@ -46,14 +46,14 @@ namespace Moonfish.Graphics
             //  Load shader template class and load shader passes
 
             var shaderTemplateIdent = ( TagIdent ) shader.postprocessDefinition[ 0 ].shaderTemplateIndex;
-            this.shaderTemplate = map[ shaderTemplateIdent ].Deserialize( ) as ShaderTemplateBlock;
+            this.shaderTemplate = map.Deserialize(shaderTemplateIdent) as ShaderTemplateBlock;
 
             this.shaderPasses = new ShaderPassBlock[shaderTemplate.postprocessDefinition[ 0 ].passes.Length];
             this.shaderPassPaths = new string[shaderTemplate.postprocessDefinition[ 0 ].passes.Length];
             for ( int i = 0; i < shaderPasses.Length; ++i )
             {
                 var item = shaderTemplate.postprocessDefinition[ 0 ].passes[ i ];
-                shaderPasses[ i ] = map[ item.pass ].Deserialize( ) as ShaderPassBlock;
+                shaderPasses[i] = map.Deserialize(item.pass.Ident) as ShaderPassBlock;
                 shaderPassPaths[ i ] = item.pass.ToString( );
             }
         }

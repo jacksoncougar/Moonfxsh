@@ -52,8 +52,8 @@ namespace Moonfish
         {
             if ( mapStream == null ) return null;
             if ( reload )
-                mapStream.Remove( identifier );
-            return mapStream[ identifier ].Deserialize( );
+                mapStream.ClearCache( identifier );
+            return mapStream.Deserialize(identifier);
         }
 
         public static dynamic GetReferenceObject( TagReference reference )
@@ -63,7 +63,7 @@ namespace Moonfish
 
             try
             {
-                var @object = mapStream[ reference.Ident ].Deserialize( );
+                var @object = mapStream.Deserialize(reference.Ident);
                 return @object;
             }
             catch
@@ -77,7 +77,7 @@ namespace Moonfish
             if ( mapStream == null ) return null;
             if ( reference.Ident == TagIdent.NullIdentifier ) return null;
 
-            return mapStream[ reference.Ident ].Deserialize( );
+            return mapStream.Deserialize(reference.Ident);
         }
 
 
@@ -105,7 +105,7 @@ namespace Moonfish
         {
             Paths = new GlobalPaths( );
             definedTagGroupsDictionary = new Dictionary<TagClass, Type>( 3 );
-            var assembly = typeof ( Tag ).Assembly;
+            var assembly = typeof ( TagInfo ).Assembly;
             if ( assembly == null ) throw new ArgumentNullException( "assembly" );
             Type[] types;
             try
@@ -161,7 +161,7 @@ namespace Moonfish
 
         internal static bool ObjectChanged( TagIdent ident )
         {
-            var newHash = mapStream.CalculateTaghash( ident );
+            var newHash = mapStream.CalculateHash( ident );
             var currentHash = mapStream.GetTagHash( ident );
             if ( currentHash == null ) return false;
             else

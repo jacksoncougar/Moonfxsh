@@ -100,7 +100,8 @@ namespace Moonfish.Graphics
 
         public void LoadScenario( CacheStream map )
         {
-            this.scenario = map[ "scnr", "" ].Deserialize( );
+            var ident = map.Index.Select( TagClass.Scnr, "" ).First( ).Identifier;
+            scenario = map.Deserialize( ident );
 
             LoadInstances(
                 scenario.scenery.Select( x => ( IH2ObjectInstance ) x ).ToList( ),

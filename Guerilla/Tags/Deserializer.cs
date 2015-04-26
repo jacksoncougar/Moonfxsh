@@ -205,15 +205,6 @@ namespace Moonfish.Tags
         }
 
         [Obsolete]
-        private static void DeserializeTag( this BinaryReader sourceReader, object item, FieldInfo field )
-        {
-            var reference = sourceReader.ReadTagReference( );
-            Source.Position = Source[ reference.Ident ].Meta.VirtualAddress;
-
-            field.SetValue( item, Deserialize( sourceReader, Halo2.GetTypeOf( reference.Class ) ) );
-        }
-
-        [Obsolete]
         private static void InvokeFields( BinaryReader binaryReader, object item, IList<FieldInfo> fields,
             List<FieldDelegateInformation> fieldsMethodInfo )
         {

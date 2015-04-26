@@ -48,6 +48,11 @@ namespace Moonfish.Tags
             : this( BitConverter.GetBytes( value ) )
         {
         }
+        
+        public TagClass(string value)
+        {
+            this = ( TagClass ) value;
+        }
 
         public static explicit operator TagClass( string str )
         {

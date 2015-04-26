@@ -1,0 +1,14 @@
+﻿//  INDEX LAYOUT
+            /*
+             *  Vista doesn't use memory addresses for the following address-values. (they are instead 0-based from the index-address)
+             *  
+             *  0x00    Address to Classes array
+             *  0x04    Classes array length
+             *  0x08    Address to Tags array
+             *  0x0C    Scenario        tag_id
+             *  0x10    Match-Globals   tag_id
+             *  0x14    ~
+             *  0x18    Tags array length
+             *  0xC0    'sgat'          four_cc
+             * 
+             *  */

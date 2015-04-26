@@ -308,6 +308,13 @@ namespace Moonfish.Guerilla
         {
             var arrayClass = new ClassInfo
             {
+                Attributes =
+                {
+                    new AttributeInfo( typeof ( LayoutAttribute ),
+                        StaticReflection.GetMemberName( ( LayoutAttribute layout ) => layout.Size ),
+                        MoonfishTagDefinition.CalculateSizeOfFieldSet( fields ),
+                        StaticReflection.GetMemberName( ( LayoutAttribute layout ) => layout.Alignment ), 4)
+                },
                 Value = ToTypeName( fields[ 0 ].Name ),
                 AccessModifiers = AccessModifiers.Public
             };

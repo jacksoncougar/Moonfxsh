@@ -1,28 +1,22 @@
-﻿using Moonfish.Graphics;
-using Moonfish.Guerilla;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
+using Moonfish.Graphics;
+using Moonfish.Guerilla;
 
 namespace Moonfish.Tags
 {
     [AttributeUsage( AttributeTargets.All, AllowMultiple = true )]
     internal class GuerillaTypeAttribute : Attribute
     {
-        private MoonfishFieldType fieldType;
-
-        public MoonfishFieldType FieldType
-        {
-            get { return fieldType; }
-        }
-
         public GuerillaTypeAttribute( MoonfishFieldType fieldType )
         {
-            this.fieldType = fieldType;
+            FieldType = fieldType;
         }
+
+        public MoonfishFieldType FieldType { get; private set; }
     }
 
     [GuerillaType( MoonfishFieldType.FieldVertexBuffer )]
@@ -112,18 +106,28 @@ namespace Moonfish.Tags
 
         public TagIdent( short index, short salt )
         {
-            this.Index = index;
-            this.Salt = salt;
+            Index = index;
+            Salt = salt;
         }
 
-        public static implicit operator int( TagIdent item )
+        public static explicit operator int( TagIdent item )
         {
             return ( item.Salt << 16 ) | ( ushort ) item.Index;
         }
 
-        public static implicit operator TagIdent( int i )
+        public static explicit operator TagIdent( int i )
         {
             return new TagIdent( ( short ) ( i & 0x0000FFFF ), ( short ) ( ( i & 0xFFFF0000 ) >> 16 ) );
+        }
+
+        public static TagIdent operator ++(TagIdent object1)
+        {
+            return new TagIdent((short)(object1.Index + 1), (short)(object1.Salt + 1));
+        }
+
+        public static TagIdent operator --(TagIdent object1)
+        {
+            return new TagIdent((short)(object1.Index - 1), (short)(object1.Salt - 1));
         }
 
         public static bool operator ==( TagIdent object1, TagIdent object2 )
@@ -153,7 +157,7 @@ namespace Moonfish.Tags
             return String.Format( @"{0}:{1} - {2}", Index, Convert.ToString( Salt, 16 ).ToUpper( ), Halo2.Paths[ Index ] );
         }
 
-        public const int NullIdentifier = -1;
+        public static TagIdent NullIdentifier = ( TagIdent ) ( -1 );
 
         public bool Equals( TagIdent other )
         {
@@ -170,8 +174,8 @@ namespace Moonfish.Tags
 
         public TagReference( TagClass tagClass, TagIdent tagID )
         {
-            this.Class = tagClass;
-            this.Ident = tagID;
+            Class = tagClass;
+            Ident = tagID;
         }
 
         public override string ToString( )
@@ -201,9 +205,9 @@ namespace Moonfish.Tags
 
         public ColorR8G8B8( float r, float g, float b )
         {
-            this.R = r.Clamp( 0, 1 );
-            this.G = g.Clamp( 0, 1 );
-            this.B = b.Clamp( 0, 1 );
+            R = r.Clamp( 0, 1 );
+            G = g.Clamp( 0, 1 );
+            B = b.Clamp( 0, 1 );
         }
     }
 
@@ -244,7 +248,7 @@ namespace Moonfish.Tags
         {
             value = new char[32];
             var length = stringValue.Length > 32 ? 32 : stringValue.Length;
-            Array.Copy( stringValue.ToArray<char>( ), value, length );
+            Array.Copy( stringValue.ToArray( ), value, length );
         }
     }
 
@@ -258,7 +262,7 @@ namespace Moonfish.Tags
         {
             value = new char[256];
             var length = stringValue.Length > 256 ? 256 : stringValue.Length;
-            Array.Copy( stringValue.ToArray<char>( ), value, length );
+            Array.Copy( stringValue.ToArray( ), value, length );
         }
     }
 
@@ -452,8 +456,8 @@ namespace Moonfish.Tags
 
         void IWriteable.Write( BinaryWriter binaryWriter )
         {
-            binaryWriter.Write( this.X );
-            binaryWriter.Write( this.Y );
+            binaryWriter.Write( X );
+            binaryWriter.Write( Y );
         }
     }
 }

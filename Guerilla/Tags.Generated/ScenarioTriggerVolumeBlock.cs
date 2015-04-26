@@ -71,6 +71,7 @@ namespace Moonfish.Guerilla.Tags
             }
         }
 
+        [LayoutAttribute(Size = 4, Alignment = 4)]
         public class EMPTYSTRING : IGuerilla
         {
             internal float eMPTYSTRING;

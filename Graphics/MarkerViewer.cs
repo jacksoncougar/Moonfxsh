@@ -125,7 +125,7 @@ namespace Moonfish.Graphics
             Map = new CacheStream( fileName );
 
             listBox1.Items.Clear( );
-            listBox1.Items.AddRange( Map.Where( x => x.Class.ToString( ) == "hlmt" ).Select( x => x ).ToArray( ) );
+            listBox1.Items.AddRange( Map.Index.Where( x => x.Class.ToString( ) == "hlmt" ).Select( x => (object)x ).ToArray( ) );
             listBox1.DisplayMember = "Path";
             listBox1.SelectedIndex = listBox1.Items.Count > 0 ? 0 : -1;
         }
@@ -228,7 +228,7 @@ namespace Moonfish.Graphics
 
         private void LoadModel( TagIdent ident )
         {
-            var model = ( ModelBlock ) ( Map[ ident ].Deserialize( ) );
+            var model = ( ModelBlock ) ( Map.Deserialize( ident) );
 
             var scenarioObject = new ScenarioObject( model );
             Scene.ObjectManager.Add( ident, scenarioObject );
@@ -262,7 +262,7 @@ namespace Moonfish.Graphics
         {
             if ( listBox1.SelectedIndex < 0 ) return;
             RemoveModel( SelectedTag );
-            SelectedTag = ( ( Tag ) listBox1.SelectedItem ).Identifier;
+            SelectedTag = ( ( TagInfo ) listBox1.SelectedItem ).tagDatum.Identifier;
             if ( Scene.ObjectManager[ SelectedTag ].Any( ) == false )
             {
                 LoadModel( SelectedTag );

@@ -5,7 +5,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Moonfish.Guerilla.Tags;
+using Moonfish.Tags;
 using OpenTK;
+using Point = System.Drawing.Point;
 
 namespace Moonfish.Graphics
 {
@@ -69,7 +71,9 @@ namespace Moonfish.Graphics
             resourceMaps.ForEach( x => Halo2.LoadResource( new CacheStream( x ) ) );
             Map = new CacheStream( fileName );
 
-            var model = ( ModelBlock ) ( Map[ "hlmt", "masterchief" ].Deserialize( ) );
+            var ident = Map.Index.Select(TagClass.Hlmt, "masterchief" ).First().Identifier;
+            Map.Deserialize( ident );
+            var model = ( ModelBlock ) Map.Deserialize( ident ) ;
             int width = 1, height = 1;
             for ( int i = 0; i < width * height; ++i )
             {
@@ -79,11 +83,11 @@ namespace Moonfish.Graphics
                 {
                     WorldMatrix = Matrix4.CreateTranslation( new Vector3( x, y, 0 ) )
                 };
-                Scene.ObjectManager.Add( Map[ "hlmt", "masterchief" ].Meta.Identifier, scenarioObject );
+                Scene.ObjectManager.Add( ident, scenarioObject );
             }
 
-            var shaderTags = Map.Tags.Where( x => x.Class.ToString( ) == "shad" ).ToArray( );
-            listBox1.Items.AddRange( shaderTags );
+            var shaderTags = Map.Index.Where( x => x.Class.ToString( ) == "shad" ).ToArray( );
+            listBox1.Items.AddRange( shaderTags.Select( x=>(object)x.Path ).ToArray(  ) );
             listBox1.DisplayMember = "Path";
 
             listBox1.SelectedIndex = listBox1.FindString( @"objects\characters\masterchief\shaders\masterchief" );
@@ -122,15 +126,15 @@ namespace Moonfish.Graphics
         private void listBox1_SelectedIndexChanged( object sender, EventArgs e )
         {
             if ( listBox1.SelectedIndex < 0 ) return;
-            var selectedShaderTag = ( listBox1.SelectedItem as Tag );
+            var selectedShaderTag = ( listBox1.SelectedItem as TagInfo );
             LoadShader( selectedShaderTag );
         }
 
         private MaterialShader material;
 
-        private void LoadShader( Tag selectedShaderTag )
+        private void LoadShader( TagInfo selectedShaderTag )
         {
-            var shader = Map[ selectedShaderTag.Identifier ].Deserialize( ) as ShaderBlock;
+            var shader = Map.Deserialize(selectedShaderTag.tagDatum.Identifier) as ShaderBlock;
 
             material = new MaterialShader( shader, Map );
             listBox2.Items.Clear( );

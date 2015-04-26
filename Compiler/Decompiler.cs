@@ -16,7 +16,7 @@ namespace Moonfish.Compiler
         {
             var rootDirectory = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ),
                 "Halo 2 Modding" );
-            foreach ( var tag in cache.Tags.Where( x => x.Class == TagClass.Bitm ) )
+            foreach ( var tag in cache.Index.Where( x => x.Class == TagClass.Bitm ) )
             {
                 var path = Path.Combine( rootDirectory, Path.ChangeExtension( tag.Path, tag.Class.ToTokenString( ) ) );
 
@@ -27,9 +27,8 @@ namespace Moonfish.Compiler
                 using ( var stream = new FileStream( path, FileMode.Create, FileAccess.Write, FileShare.Read ) )
                 {
                     BinaryWriter binaryWriter = new BinaryWriter( stream );
-                    var tagObject = cache.Deserialize( tag ) as IGuerilla;
+                    var tagObject = cache.Deserialize( tag.Identifier ) as IGuerilla;
                     tagObject.Write( binaryWriter );
-                    IResourceBlock = 
 
                 }
             }

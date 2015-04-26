@@ -42,7 +42,7 @@ namespace Moonfish.Graphics
             Materials.Clear( );
             foreach ( var shader in shaders )
             {
-                var shaderBlock = map[ shader ].Deserialize( ) as ShaderBlock;
+                var shaderBlock = map.Deserialize(shader) as ShaderBlock;
                 var material = new MaterialShader( shaderBlock, map );
                 material.UsePass( 0 );
                 Materials[ shader ] = material;

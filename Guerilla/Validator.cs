@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Moonfish.Cache;
 using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
 
@@ -20,9 +21,9 @@ namespace Moonfish.Guerilla
         {
             error = false;
             _pointersList = new List<Tuple<BlamPointer, ElementArray>>( );
-            var filename = string.Format( @"{1}\analysis\{0}.txt",
+            var filename = string.Format( @"{1}\test_analysis\analysis.txt",
                 validateTag.Class.ToTokenString( ), Local.MapsDirectory );
-            var stringWriter = File.CreateText( filename );
+            var stringWriter = File.AppendText( filename );
 
             _writeMessage = ( stringWriter.WriteLine );
 
@@ -37,10 +38,11 @@ namespace Moonfish.Guerilla
                 {
                     var binaryReader = new BinaryReader( map );
 
-                    OnWriteMessage( string.Format( "Begin ({0})", map.MapName ) );
+                    //OnWriteMessage(string.Format("Begin ({0})", map.MapName));
 
-                    foreach ( var tag in map.Tags )
+                    foreach ( var tag in map.Index )
                     {
+                        error = false;
                         if ( !( tag.Class == validateTag.Class ) ) continue;
 
                         var metaTableMemory = map.DefaultMemoryBlock;
@@ -48,7 +50,7 @@ namespace Moonfish.Guerilla
                         {
                             metaTableMemory =
                                 map.StructureMemoryBlocks[ map.StructureMemoryBlockBindings[ tag.Identifier ] ];
-                            map.ActiveAllocation( CacheStream.StructureCache.VirtualStructureCache0 +
+                            map.ActiveAllocation( StructureCache.VirtualStructureCache0 +
                                                   map.StructureMemoryBlockBindings[ tag.Identifier ] );
                         }
 
@@ -63,15 +65,19 @@ namespace Moonfish.Guerilla
                             Length = tag.Length
                         };
                         _isPointerOwnedByTagDelegate = virtualTagMemory.Contains;
-                        OnWriteMessage( string.Format( "Tag ({0})", tag.Path ) );
 
-                        offset = ( int ) map.Seek( tag );
+                        offset = ( int ) map.Seek( tag.Identifier );
 
 
-                        elementArray.virtualAddress = map.GetTag( tag.Identifier ).VirtualAddress;
+                        elementArray.virtualAddress = map.Index[ tag.Identifier ].VirtualAddress;
                         _pointersList = new List<Tuple<BlamPointer, ElementArray>>( );
                         ValidateTagBlock( elementArray, elementArray.ToFixedArrayPointer( ), binaryReader, ref offset );
+
+                        if (error)
+                            OnWriteMessage(string.Format("Tag ({0}.{1})", tag.Path, validateTag.Class.ToTokenString()));
+                        
                         stringWriter.Flush( );
+
                     }
 
                     Console.WriteLine( @"Parsed ({0})", map.MapName );
@@ -79,8 +85,6 @@ namespace Moonfish.Guerilla
             }
             stringWriter.Close( );
 
-            if ( !error )
-                File.Delete( filename );
 
             return error;
         }
@@ -359,7 +363,7 @@ namespace Moonfish.Guerilla
                 }
                 else
                 {
-                    OnWriteMessage( string.Format( "EXTERNAL SHARE" ) );
+                   // OnWriteMessage( string.Format( "EXTERNAL SHARE" ) );
                 }
 
                 _pointersList.Add( new Tuple<BlamPointer, ElementArray>( pointer, info ) );

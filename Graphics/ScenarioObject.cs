@@ -319,7 +319,7 @@ namespace Moonfish.Graphics
 
                     batch.Shader = new ShaderReference(
                         ShaderReference.ReferenceType.Halo2,
-                        Model.RenderModel.materials[ part.material ].shader.Ident );
+                        (int)Model.RenderModel.materials[ part.material ].shader.Ident );
                     batch.PrimitiveType = PrimitiveType.TriangleStrip;
                     batch.BatchObject = mesh.TriangleBatch;
                     batch.ChangeState = delegate( ) { GL.PointSize( 10.0f ); };

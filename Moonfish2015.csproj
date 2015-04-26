@@ -86,7 +86,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CacheStream.cs" />
+    <Compile Include="Cache\CacheStream.cs" />
+    <Compile Include="Cache\CacheWriter.cs" />
+    <Compile Include="Cache\StructureCache.cs" />
+    <Compile Include="Cache\TagClassHeirarchy.cs" />
+    <Compile Include="Cache\TagDatum.cs" />
+    <Compile Include="Cache\TagIndex.cs" />
+    <Compile Include="Cache\TagIndexBase.cs" />
+    <Compile Include="Cache\VirtualMappedAddress.cs" />
+    <Compile Include="Cache\VirtualStream.cs" />
     <Compile Include="Collision\DebugDrawer.cs" />
     <Compile Include="Collision\Shapes.cs" />
     <Compile Include="Compiler\Decompiler.cs" />
@@ -2133,7 +2141,7 @@
     <Compile Include="IResource.cs" />
     <Compile Include="Local.cs" />
     <Compile Include="main.cs" />
-    <Compile Include="MapStream.cs" />
+    <Compile Include="Cache\MapType.cs" />
     <Compile Include="OpenTKExtensions.cs" />
     <Compile Include="Padding.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -2167,7 +2175,9 @@
     <Compile Include="Guerilla\Tags\TagBlockIndexStructBlock.cs" />
     <Compile Include="Guerilla\Tags\TagClass.cs" />
     <Compile Include="Guerilla\Tags\ValueTypes.cs" />
+    <Compile Include="Cache\TagIndexElement.cs" />
     <Compile Include="ValueTypes\Range.cs" />
+    <Compile Include="Cache\HaloVersion.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\fragment.frag">
@@ -2192,6 +2202,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Documentation\animations.pdf" />
+    <None Include="Documentation\jmad animations raw.pdf" />
+    <None Include="Documentation\sbsp &amp; lightmap meta.pdf" />
     <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <None Include="packages.config" />
     <Compile Include="Guerilla\Tags\Shader.Code.cs" />
@@ -2202,6 +2214,7 @@
     <Content Include="Documentation\halo_2_header.txt" />
     <Content Include="Documentation\tangent_space_calculations_cpp.txt" />
     <Content Include="Documentation\animation_codecs.txt" />
+    <Content Include="Documentation\index layout.txt" />
     <Content Include="Documentation\vertex_formats.txt" />
     <Content Include="Documentation\vertex_resource_raw.txt" />
     <Content Include="icon.ico" />

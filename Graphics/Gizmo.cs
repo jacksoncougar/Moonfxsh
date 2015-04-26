@@ -66,12 +66,14 @@ namespace Moonfish.Graphics
 
             Open( @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map" );
 
-            var @object = ( ModelBlock ) Map[ "hlmt", "banshee" ].Deserialize( );
+            var identifier = Map.Index.Select( TagClass.Hlmt, "banshee" ).First( ).Identifier;
+
+            var @object = (ModelBlock)Map.Deserialize(identifier);
             var scenarioObject = new ScenarioObject( @object );
-            Scene.ObjectManager.Add( Map[ "hlmt", "warthog" ].Meta.Identifier, scenarioObject );
+            Scene.ObjectManager.Add(identifier, scenarioObject);
             Scene.ProgramManager.LoadMaterials( @object.RenderModel.materials.Select( x => x.shader.Ident ), Map );
             Scene.CollisionManager.LoadScenarioObjectCollision(
-                Scene.ObjectManager[ Map[ "hlmt", "warthog" ].Meta.Identifier ].First( ) );
+                Scene.ObjectManager[identifier].First());
 
             propertyGrid1.SelectedObject = scenarioObject.Nodes[ 0 ];
 

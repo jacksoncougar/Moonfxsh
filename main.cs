@@ -20,10 +20,29 @@ namespace Moonfish
         [STAThread]
         private static void Main( )
         {
-            
-            CacheStream map = new CacheStream( @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map" );
 
-            map.Decompile(  );
+            GuerillaCs converter = new GuerillaCs( Local.GuerillaPath );
+            converter.DumpTagLayout(Guerilla.Guerilla.h2Tags.First(x => x.Class == TagClass.Scnr), 
+@"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags.Generated\");
+
+            var map = new CacheStream( @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map" );
+
+            var item = map.Deserialize( map.Index.ScenarioIdent ) as IGuerilla;
+            map.Add( item, "moonfish/moonfish" );
+
+            var validator = new Validator();
+            var guerilla = new GuerillaCs(Local.GuerillaPath);
+            var files = Directory.GetFiles(Local.MapsDirectory, "*.map", SearchOption.TopDirectoryOnly);
+            foreach (var tag in Guerilla.Guerilla.h2Tags)
+            {
+                if (!validator.Validate(new MoonfishTagGroup(tag),
+                    Guerilla.Guerilla.h2Tags.Select(x => new MoonfishTagGroup(x)), new[] { @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map" }))
+                {
+                   
+                }
+                else Console.WriteLine("{0} failed", tag.Class);
+                Application.DoEvents();
+            }
             
             return;
 

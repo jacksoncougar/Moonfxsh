@@ -106,7 +106,7 @@ namespace Moonfish.Guerilla
             }
         }
 
-        private static int CalculateSizeOfFieldSet( IReadOnlyList<MoonfishTagField> fields )
+        public static int CalculateSizeOfFieldSet( IReadOnlyList<MoonfishTagField> fields )
         {
             var totalFieldSetSize = 0;
             for ( var i = 0; i < fields.Count; ++i )

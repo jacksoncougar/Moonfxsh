@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,28 +8,27 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class ScenarioSkyReferenceBlock : ScenarioSkyReferenceBlockBase
+    public  partial class ScenarioSkyReferenceBlock : ScenarioSkyReferenceBlockBase
     {
-        public ScenarioSkyReferenceBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ScenarioSkyReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ScenarioSkyReferenceBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class ScenarioSkyReferenceBlockBase  : IGuerilla
     {
-        [TagReference( "sky " )] internal Moonfish.Tags.TagReference sky;
-
-        internal ScenarioSkyReferenceBlockBase( BinaryReader binaryReader )
+        [TagReference("sky ")]
+        internal Moonfish.Tags.TagReference sky;
+        internal  ScenarioSkyReferenceBlockBase(BinaryReader binaryReader)
         {
-            sky = binaryReader.ReadTagReference( );
+            sky = binaryReader.ReadTagReference();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( sky );
+                binaryWriter.Write(sky);
                 return nextAddress;
             }
         }

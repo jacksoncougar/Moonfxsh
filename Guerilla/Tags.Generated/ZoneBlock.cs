@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,15 +8,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class ZoneBlock : ZoneBlockBase
+    public  partial class ZoneBlock : ZoneBlockBase
     {
-        public ZoneBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ZoneBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 56, Alignment = 4 )]
-    public class ZoneBlockBase : IGuerilla
+    [LayoutAttribute(Size = 56, Alignment = 4)]
+    public class ZoneBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal Flags flags;
@@ -25,31 +24,28 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal FiringPositionsBlock[] firingPositions;
         internal AreasBlock[] areas;
-
-        internal ZoneBlockBase( BinaryReader binaryReader )
+        internal  ZoneBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadString32( );
-            flags = ( Flags ) binaryReader.ReadInt32( );
-            manualBsp = binaryReader.ReadShortBlockIndex1( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            firingPositions = Guerilla.ReadBlockArray<FiringPositionsBlock>( binaryReader );
-            areas = Guerilla.ReadBlockArray<AreasBlock>( binaryReader );
+            name = binaryReader.ReadString32();
+            flags = (Flags)binaryReader.ReadInt32();
+            manualBsp = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
+            firingPositions = Guerilla.ReadBlockArray<FiringPositionsBlock>(binaryReader);
+            areas = Guerilla.ReadBlockArray<AreasBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( ( Int32 ) flags );
-                binaryWriter.Write( manualBsp );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                nextAddress = Guerilla.WriteBlockArray<FiringPositionsBlock>( binaryWriter, firingPositions, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<AreasBlock>( binaryWriter, areas, nextAddress );
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(manualBsp);
+                binaryWriter.Write(invalidName_, 0, 2);
+                nextAddress = Guerilla.WriteBlockArray<FiringPositionsBlock>(binaryWriter, firingPositions, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AreasBlock>(binaryWriter, areas, nextAddress);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : int
         {

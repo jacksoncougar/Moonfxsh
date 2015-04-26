@@ -58,6 +58,7 @@ namespace Moonfish.Guerilla
             H2LangLib = LoadLibrary( H2LanguageLibrary );
             LoadPostProcessFunctionsObsolete( );
             LoadPostProcessFunctions( );
+            LoadGuerillaExecutable( Local.GuerillaPath );
         }
 
         private static void LoadPostProcessFunctions( )

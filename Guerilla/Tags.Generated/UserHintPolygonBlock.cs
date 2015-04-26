@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,35 +8,32 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class UserHintPolygonBlock : UserHintPolygonBlockBase
+    public  partial class UserHintPolygonBlock : UserHintPolygonBlockBase
     {
-        public UserHintPolygonBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  UserHintPolygonBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class UserHintPolygonBlockBase : IGuerilla
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class UserHintPolygonBlockBase  : IGuerilla
     {
         internal Flags flags;
         internal UserHintPointBlock[] points;
-
-        internal UserHintPolygonBlockBase( BinaryReader binaryReader )
+        internal  UserHintPolygonBlockBase(BinaryReader binaryReader)
         {
-            flags = ( Flags ) binaryReader.ReadInt32( );
-            points = Guerilla.ReadBlockArray<UserHintPointBlock>( binaryReader );
+            flags = (Flags)binaryReader.ReadInt32();
+            points = Guerilla.ReadBlockArray<UserHintPointBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int32 ) flags );
-                nextAddress = Guerilla.WriteBlockArray<UserHintPointBlock>( binaryWriter, points, nextAddress );
+                binaryWriter.Write((Int32)flags);
+                nextAddress = Guerilla.WriteBlockArray<UserHintPointBlock>(binaryWriter, points, nextAddress);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : int
         {

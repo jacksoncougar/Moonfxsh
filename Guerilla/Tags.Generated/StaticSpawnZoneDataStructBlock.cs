@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,41 +8,38 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class StaticSpawnZoneDataStructBlock : StaticSpawnZoneDataStructBlockBase
+    public  partial class StaticSpawnZoneDataStructBlock : StaticSpawnZoneDataStructBlockBase
     {
-        public StaticSpawnZoneDataStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  StaticSpawnZoneDataStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class StaticSpawnZoneDataStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class StaticSpawnZoneDataStructBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal RelevantTeam relevantTeam;
         internal RelevantGames relevantGames;
         internal Flags flags;
-
-        internal StaticSpawnZoneDataStructBlockBase( BinaryReader binaryReader )
+        internal  StaticSpawnZoneDataStructBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadStringID( );
-            relevantTeam = ( RelevantTeam ) binaryReader.ReadInt32( );
-            relevantGames = ( RelevantGames ) binaryReader.ReadInt32( );
-            flags = ( Flags ) binaryReader.ReadInt32( );
+            name = binaryReader.ReadStringID();
+            relevantTeam = (RelevantTeam)binaryReader.ReadInt32();
+            relevantGames = (RelevantGames)binaryReader.ReadInt32();
+            flags = (Flags)binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( ( Int32 ) relevantTeam );
-                binaryWriter.Write( ( Int32 ) relevantGames );
-                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int32)relevantTeam);
+                binaryWriter.Write((Int32)relevantGames);
+                binaryWriter.Write((Int32)flags);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum RelevantTeam : int
         {
@@ -57,7 +53,6 @@ namespace Moonfish.Guerilla.Tags
             PinkHotel = 128,
             NEUTRAL = 256,
         };
-
         [FlagsAttribute]
         internal enum RelevantGames : int
         {
@@ -70,7 +65,6 @@ namespace Moonfish.Guerilla.Tags
             Juggernaut = 64,
             Territories = 128,
         };
-
         [FlagsAttribute]
         internal enum Flags : int
         {

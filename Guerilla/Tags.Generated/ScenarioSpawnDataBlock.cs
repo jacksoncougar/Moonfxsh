@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,15 +8,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class ScenarioSpawnDataBlock : ScenarioSpawnDataBlockBase
+    public  partial class ScenarioSpawnDataBlock : ScenarioSpawnDataBlockBase
     {
-        public ScenarioSpawnDataBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ScenarioSpawnDataBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 96, Alignment = 4 )]
-    public class ScenarioSpawnDataBlockBase : IGuerilla
+    [LayoutAttribute(Size = 96, Alignment = 4)]
+    public class ScenarioSpawnDataBlockBase  : IGuerilla
     {
         internal float dynamicSpawnLowerHeight;
         internal float dynamicSpawnUpperHeight;
@@ -26,32 +25,27 @@ namespace Moonfish.Guerilla.Tags
         internal DynamicSpawnZoneOverloadBlock[] dynamicSpawnOverloads;
         internal StaticSpawnZoneBlock[] staticRespawnZones;
         internal StaticSpawnZoneBlock[] staticInitialSpawnZones;
-
-        internal ScenarioSpawnDataBlockBase( BinaryReader binaryReader )
+        internal  ScenarioSpawnDataBlockBase(BinaryReader binaryReader)
         {
-            dynamicSpawnLowerHeight = binaryReader.ReadSingle( );
-            dynamicSpawnUpperHeight = binaryReader.ReadSingle( );
-            gameObjectResetHeight = binaryReader.ReadSingle( );
-            invalidName_ = binaryReader.ReadBytes( 60 );
-            dynamicSpawnOverloads = Guerilla.ReadBlockArray<DynamicSpawnZoneOverloadBlock>( binaryReader );
-            staticRespawnZones = Guerilla.ReadBlockArray<StaticSpawnZoneBlock>( binaryReader );
-            staticInitialSpawnZones = Guerilla.ReadBlockArray<StaticSpawnZoneBlock>( binaryReader );
+            dynamicSpawnLowerHeight = binaryReader.ReadSingle();
+            dynamicSpawnUpperHeight = binaryReader.ReadSingle();
+            gameObjectResetHeight = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(60);
+            dynamicSpawnOverloads = Guerilla.ReadBlockArray<DynamicSpawnZoneOverloadBlock>(binaryReader);
+            staticRespawnZones = Guerilla.ReadBlockArray<StaticSpawnZoneBlock>(binaryReader);
+            staticInitialSpawnZones = Guerilla.ReadBlockArray<StaticSpawnZoneBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( dynamicSpawnLowerHeight );
-                binaryWriter.Write( dynamicSpawnUpperHeight );
-                binaryWriter.Write( gameObjectResetHeight );
-                binaryWriter.Write( invalidName_, 0, 60 );
-                nextAddress = Guerilla.WriteBlockArray<DynamicSpawnZoneOverloadBlock>( binaryWriter,
-                    dynamicSpawnOverloads, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<StaticSpawnZoneBlock>( binaryWriter, staticRespawnZones,
-                    nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<StaticSpawnZoneBlock>( binaryWriter, staticInitialSpawnZones,
-                    nextAddress );
+                binaryWriter.Write(dynamicSpawnLowerHeight);
+                binaryWriter.Write(dynamicSpawnUpperHeight);
+                binaryWriter.Write(gameObjectResetHeight);
+                binaryWriter.Write(invalidName_, 0, 60);
+                nextAddress = Guerilla.WriteBlockArray<DynamicSpawnZoneOverloadBlock>(binaryWriter, dynamicSpawnOverloads, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StaticSpawnZoneBlock>(binaryWriter, staticRespawnZones, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StaticSpawnZoneBlock>(binaryWriter, staticInitialSpawnZones, nextAddress);
                 return nextAddress;
             }
         }

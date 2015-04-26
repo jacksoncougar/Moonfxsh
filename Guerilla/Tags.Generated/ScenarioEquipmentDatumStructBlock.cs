@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,32 +8,29 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class ScenarioEquipmentDatumStructBlock : ScenarioEquipmentDatumStructBlockBase
+    public  partial class ScenarioEquipmentDatumStructBlock : ScenarioEquipmentDatumStructBlockBase
     {
-        public ScenarioEquipmentDatumStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ScenarioEquipmentDatumStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class ScenarioEquipmentDatumStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class ScenarioEquipmentDatumStructBlockBase  : IGuerilla
     {
         internal EquipmentFlags equipmentFlags;
-
-        internal ScenarioEquipmentDatumStructBlockBase( BinaryReader binaryReader )
+        internal  ScenarioEquipmentDatumStructBlockBase(BinaryReader binaryReader)
         {
-            equipmentFlags = ( EquipmentFlags ) binaryReader.ReadInt32( );
+            equipmentFlags = (EquipmentFlags)binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int32 ) equipmentFlags );
+                binaryWriter.Write((Int32)equipmentFlags);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum EquipmentFlags : int
         {

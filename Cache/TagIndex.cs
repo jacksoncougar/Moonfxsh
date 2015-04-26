@@ -151,7 +151,7 @@ namespace Moonfish.Cache
             binaryWriter.Write( tagClassHeirarchy.Root );
         }
 
-        public void Add( TagClass tagClass, string newPath, int length, int virtualAddress )
+        public TagDatum Add(TagClass tagClass, string newPath, int length, int virtualAddress)
         {
             var last = _data.Last( );
             var newDatum = new TagDatum
@@ -163,6 +163,7 @@ namespace Moonfish.Cache
                 VirtualAddress = virtualAddress
             };
             _data.Insert(IndexOf(last), newDatum);
+            return newDatum;
         }
     }
 }

@@ -17,6 +17,44 @@ namespace Moonfish.Guerilla
 
         private bool error;
 
+        public void Validate( TagDatum datum, Stream dataStream )
+        {
+            error = false;
+
+            _pointersList = new List<Tuple<BlamPointer, ElementArray>>( );
+            _writeMessage = Console.WriteLine;
+
+            var offset = 0;
+
+            var definition =
+                new MoonfishTagGroup( Guerilla.h2Tags.First( x => x.Class == datum.Class ) );
+            var definitionPool = Guerilla.h2Tags.Select( x => new MoonfishTagGroup( x ) );
+
+            var elementArray = CompileElementArray( definition, definitionPool, offset );
+
+            elementArray.count = 1;
+
+            var binaryReader = new BinaryReader( dataStream );
+
+            var virtualTagMemory = new VirtualMappedAddress
+            {
+                Address = datum.VirtualAddress,
+                Length = datum.Length
+            };
+
+            _isValidDelegate = virtualTagMemory.Contains;
+            _isPointerOwnedByTagDelegate = virtualTagMemory.Contains;
+
+            offset = ( int ) dataStream.Seek( datum.VirtualAddress, SeekOrigin.Begin );
+
+
+            elementArray.virtualAddress = datum.VirtualAddress;
+            ValidateTagBlock( elementArray, elementArray.ToFixedArrayPointer( ), binaryReader, ref offset );
+
+            if ( error )
+                OnWriteMessage( string.Format( "Tag ({0}.{1})", datum.Path, datum.Class.ToTokenString( ) ) );
+        }
+
         public bool Validate( MoonfishTagGroup validateTag, IEnumerable<MoonfishTagGroup> tagPool, string[] filenames )
         {
             error = false;
@@ -53,24 +91,20 @@ namespace Moonfish.Guerilla
                             map.ActiveAllocation( StructureCache.VirtualStructureCache0 +
                                                   map.StructureMemoryBlockBindings[ tag.Identifier ] );
                         }
-
-                        if ( tag.Identifier.Index == 8219 )
-                        {
-                            //135010976
-                        }
-                        _isValidDelegate = metaTableMemory.Contains;
                         var virtualTagMemory = new VirtualMappedAddress
                         {
                             Address = tag.VirtualAddress,
                             Length = tag.Length
                         };
+
+                        _isValidDelegate = metaTableMemory.Contains;
                         _isPointerOwnedByTagDelegate = virtualTagMemory.Contains;
+                        _pointersList.Clear();
 
                         offset = ( int ) map.Seek( tag.Identifier );
 
 
                         elementArray.virtualAddress = map.Index[ tag.Identifier ].VirtualAddress;
-                        _pointersList = new List<Tuple<BlamPointer, ElementArray>>( );
                         ValidateTagBlock( elementArray, elementArray.ToFixedArrayPointer( ), binaryReader, ref offset );
 
                         if (error)
@@ -244,7 +278,7 @@ namespace Moonfish.Guerilla
             return blockElementArray.children;
         }
 
-        private bool ValidateBlamPointer( BlamPointer blamPointer, ElementArray info, CacheStream stream )
+        private bool ValidateBlamPointer( BlamPointer blamPointer, ElementArray info )
         {
             var stringWriter = new StringWriter( );
             if ( blamPointer.elementCount == 0 && blamPointer.startAddress == 0 ) return true;
@@ -255,9 +289,10 @@ namespace Moonfish.Guerilla
                 stringWriter.WriteLine( "-> count({0}) is invalid", blamPointer.elementCount );
             if ( blamPointer.elementCount > info.maxElementCount && info.maxElementCount > 0 )
                 stringWriter.WriteLine( "-> count({0}) > max-count({1})", blamPointer.elementCount, info.maxElementCount );
-            if ( !stream.ContainsPointer( blamPointer ) )
-                stringWriter.WriteLine( "-> address({0}) not contained in stream({1})", blamPointer.startAddress,
-                    stream.Name );
+          
+            //if ( !stream.ContainsPointer( blamPointer ) )
+            //    stringWriter.WriteLine( "-> address({0}) not contained in stream({1})", blamPointer.startAddress,
+            //        stream.Name );
 
             var errors = stringWriter.ToString( );
             if ( !string.IsNullOrWhiteSpace( errors ) )
@@ -290,7 +325,7 @@ namespace Moonfish.Guerilla
             foreach ( var child in childrenArrayPointers )
             {
                 if (
-                    !ValidateBlamPointer( child.ArrayPointer, child.ElementArray, binaryReader.BaseStream as CacheStream ) )
+                    !ValidateBlamPointer( child.ArrayPointer, child.ElementArray ) )
                     continue;
                 if ( !( child.ArrayPointer.elementCount == 0 && child.ArrayPointer.startAddress == 0 ) )
                 {

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,38 +8,35 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class PredictedResourceBlock : PredictedResourceBlockBase
+    public  partial class PredictedResourceBlock : PredictedResourceBlockBase
     {
-        public PredictedResourceBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  PredictedResourceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class PredictedResourceBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class PredictedResourceBlockBase  : IGuerilla
     {
         internal Type type;
         internal short resourceIndex;
         internal int tagIndex;
-
-        internal PredictedResourceBlockBase( BinaryReader binaryReader )
+        internal  PredictedResourceBlockBase(BinaryReader binaryReader)
         {
-            type = ( Type ) binaryReader.ReadInt16( );
-            resourceIndex = binaryReader.ReadInt16( );
-            tagIndex = binaryReader.ReadInt32( );
+            type = (Type)binaryReader.ReadInt16();
+            resourceIndex = binaryReader.ReadInt16();
+            tagIndex = binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) type );
-                binaryWriter.Write( resourceIndex );
-                binaryWriter.Write( tagIndex );
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write(resourceIndex);
+                binaryWriter.Write(tagIndex);
                 return nextAddress;
             }
         }
-
         internal enum Type : short
         {
             Bitmap = 0,

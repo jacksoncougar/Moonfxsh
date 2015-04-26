@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Moonfish.Guerilla.Tags;
 
 namespace Moonfish.Cache
 {
@@ -23,10 +24,23 @@ namespace Moonfish.Cache
             _virtualOrigin = virtualOrigin;
         }
 
+        public override long Seek( long offset, SeekOrigin loc )
+        {
+            return IsPointer( offset )
+                ? base.Seek( offset - _virtualOrigin, loc ) + _virtualOrigin
+                : base.Seek( offset, loc );
+        }
+
         public override long Position
         {
             get { return (int)base.Position + _virtualOrigin; }
-            set { base.Position = value - _virtualOrigin; }
+            set { base.Position = IsPointer(value) ? value - _virtualOrigin : value; }
+        }
+
+        private bool IsPointer(long value)
+        {
+            // if 'value' is a Pointer
+            return ( value < 0 || value > Length );
         }
     }
 }

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,44 +8,41 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class DynamicSpawnZoneOverloadBlock : DynamicSpawnZoneOverloadBlockBase
+    public  partial class DynamicSpawnZoneOverloadBlock : DynamicSpawnZoneOverloadBlockBase
     {
-        public DynamicSpawnZoneOverloadBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  DynamicSpawnZoneOverloadBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class DynamicSpawnZoneOverloadBlockBase : IGuerilla
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class DynamicSpawnZoneOverloadBlockBase  : IGuerilla
     {
         internal OverloadType overloadType;
         internal byte[] invalidName_;
         internal float innerRadius;
         internal float outerRadius;
         internal float weight;
-
-        internal DynamicSpawnZoneOverloadBlockBase( BinaryReader binaryReader )
+        internal  DynamicSpawnZoneOverloadBlockBase(BinaryReader binaryReader)
         {
-            overloadType = ( OverloadType ) binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            innerRadius = binaryReader.ReadSingle( );
-            outerRadius = binaryReader.ReadSingle( );
-            weight = binaryReader.ReadSingle( );
+            overloadType = (OverloadType)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            innerRadius = binaryReader.ReadSingle();
+            outerRadius = binaryReader.ReadSingle();
+            weight = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) overloadType );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( innerRadius );
-                binaryWriter.Write( outerRadius );
-                binaryWriter.Write( weight );
+                binaryWriter.Write((Int16)overloadType);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(innerRadius);
+                binaryWriter.Write(outerRadius);
+                binaryWriter.Write(weight);
                 return nextAddress;
             }
         }
-
         internal enum OverloadType : short
         {
             Enemy = 0,

@@ -87,6 +87,12 @@ namespace Moonfish.Guerilla
             return CalculateSizeOfFieldSet( Fields );
         }
 
+        public static  int CalculateOffsetOfField(List<MoonfishTagField>fields, MoonfishTagField field )
+        {
+            var count = fields.IndexOf(field);
+            return CalculateSizeOfFieldSet(fields.GetRange(0, count));
+        }
+
         public static int CalculateSizeOfField( MoonfishTagField field )
         {
             switch ( field.Type )

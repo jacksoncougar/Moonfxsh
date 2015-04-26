@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,28 +8,26 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class ScenarioSimulationDefinitionTableBlock : ScenarioSimulationDefinitionTableBlockBase
+    public  partial class ScenarioSimulationDefinitionTableBlock : ScenarioSimulationDefinitionTableBlockBase
     {
-        public ScenarioSimulationDefinitionTableBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ScenarioSimulationDefinitionTableBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class ScenarioSimulationDefinitionTableBlockBase : IGuerilla
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class ScenarioSimulationDefinitionTableBlockBase  : IGuerilla
     {
         internal byte[] invalidName_;
-
-        internal ScenarioSimulationDefinitionTableBlockBase( BinaryReader binaryReader )
+        internal  ScenarioSimulationDefinitionTableBlockBase(BinaryReader binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes( 4 );
+            invalidName_ = binaryReader.ReadBytes(4);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( invalidName_, 0, 4 );
+                binaryWriter.Write(invalidName_, 0, 4);
                 return nextAddress;
             }
         }

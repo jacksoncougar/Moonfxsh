@@ -78,7 +78,7 @@ namespace Moonfish.Guerilla
         {
             Read( reader );
         }
-
+        
         public TagClass Class
         {
             get { return new TagClass( groupTag ); }

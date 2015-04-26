@@ -9,6 +9,7 @@ using Fasterflect;
 using Moonfish.Cache;
 using Moonfish.Guerilla;
 using Moonfish.Tags;
+using Moonfish.Tags.BlamExtension;
 using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish
@@ -206,23 +207,81 @@ namespace Moonfish
             var stream = new VirtualStream( lastDatum.VirtualAddress);
             var binaryWriter = new BinaryWriter( stream );
 
-            item.Write( binaryWriter, lastDatum.VirtualAddress );
+            binaryWriter.Write( item );
             var serializedTagData = stream.ToArray( );
-
+            
             var attribute = (TagClassAttribute)typeof ( T ).Attribute( typeof ( TagClassAttribute ) );
+            var tagDatum = Index.Add(attribute.TagClass, tagName, serializedTagData.Length, lastDatum.VirtualAddress);
 
-            Index.Add(attribute.TagClass, tagName, serializedTagData.Length, lastDatum.VirtualAddress);
+#if DEBUG
+            var v = new Validator(  );
+            v.Validate( tagDatum, stream );
+#endif
 
             Allocate( serializedTagData.Length );
         }
 
-        void Allocate( int size )
+        void Allocate( TagIdent ident, int size )
         {
             //copy the table into a buffer
-            Seek( Index.GlobalsIdent );
+            var startAddress = (int)Seek( Index.GlobalsIdent );
+
             var buffer = new byte[tagCacheLength];
-            Read( buffer, 0, buffer.Length );
+            Read(buffer, 0, buffer.Length);
+
+            //create virtual stream to read from
+            var tagCacheStream = new VirtualStream(buffer, startAddress);
+
+            var binaryReader = new BinaryReader(this);
+            var binaryWriter = new BinaryWriter(tagCacheStream);
+
+            var definitions = Guerilla.Guerilla.h2Tags.Select( x => new MoonfishTagGroup( x ) ).ToList(  );
+            for ( var i = 0; i < Index.Count; ++i )
+            {
+                var datum = Index[ i ];
+                var data = Deserialize( datum.Identifier );
+                
+                // is this address affected by the shift?
+                if (datum.Identifier == ident)
+                {
+                    var alignment = (int)Guerilla.Guerilla.AlignmentOf(data.GetType());
+                    datum.VirtualAddress = binaryWriter.BaseStream.Pad(alignment);
+                    binaryWriter.Write(new byte[size]);
+                    datum.Length = size;
+                    Index.Update(datum.Identifier, datum);
+                }
+                else
+                {
+                    var alignment = (int)Guerilla.Guerilla.AlignmentOf(data.GetType());
+                    datum.VirtualAddress = binaryWriter.BaseStream.Pad(alignment);
+                    binaryWriter.Write(data);
+                    var length = (int)binaryWriter.BaseStream.Position - datum.VirtualAddress;
+                    datum.Length = length;
+                    Index.Update(datum.Identifier, datum);
+                }
+            }
         }
+
+        private static void ProcessFields( List<MoonfishTagField> fields, BinaryReader binaryReader , BinaryWriter binaryWriter, int address )
+        {
+            foreach (var field in fields)
+            {
+                if ( field.Type == MoonfishFieldType.FieldBlock )
+                {
+                    // move the stream to the field
+                    var offsetOfField = MoonfishTagDefinition.CalculateOffsetOfField(fields, field);
+                    binaryReader.BaseStream.Position = address + offsetOfField;
+
+                    var elementSize = ( ( MoonfishTagDefinition ) field.Definition ).CalculateSizeOfFieldSet( );
+                    var pointer = binaryReader.ReadBlamPointer( elementSize );
+
+                }
+                if ( field.Type == MoonfishFieldType.FieldData )
+                {
+                }
+            }
+        }
+
 
         public void ActiveAllocation( StructureCache activeAllocation )
         {

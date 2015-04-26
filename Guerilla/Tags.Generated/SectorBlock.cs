@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,38 +8,35 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class SectorBlock : SectorBlockBase
+    public  partial class SectorBlock : SectorBlockBase
     {
-        public SectorBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  SectorBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class SectorBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class SectorBlockBase  : IGuerilla
     {
         internal PathFindingSectorFlags pathFindingSectorFlags;
         internal short hintIndex;
         internal int firstLinkDoNotSetManually;
-
-        internal SectorBlockBase( BinaryReader binaryReader )
+        internal  SectorBlockBase(BinaryReader binaryReader)
         {
-            pathFindingSectorFlags = ( PathFindingSectorFlags ) binaryReader.ReadInt16( );
-            hintIndex = binaryReader.ReadInt16( );
-            firstLinkDoNotSetManually = binaryReader.ReadInt32( );
+            pathFindingSectorFlags = (PathFindingSectorFlags)binaryReader.ReadInt16();
+            hintIndex = binaryReader.ReadInt16();
+            firstLinkDoNotSetManually = binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) pathFindingSectorFlags );
-                binaryWriter.Write( hintIndex );
-                binaryWriter.Write( firstLinkDoNotSetManually );
+                binaryWriter.Write((Int16)pathFindingSectorFlags);
+                binaryWriter.Write(hintIndex);
+                binaryWriter.Write(firstLinkDoNotSetManually);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum PathFindingSectorFlags : short
         {

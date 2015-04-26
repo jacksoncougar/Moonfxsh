@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,15 +8,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class SectorLinkBlock : SectorLinkBlockBase
+    public  partial class SectorLinkBlock : SectorLinkBlockBase
     {
-        public SectorLinkBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  SectorLinkBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class SectorLinkBlockBase : IGuerilla
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class SectorLinkBlockBase  : IGuerilla
     {
         internal short vertex1;
         internal short vertex2;
@@ -27,35 +26,32 @@ namespace Moonfish.Guerilla.Tags
         internal short reverseLink;
         internal short leftSector;
         internal short rightSector;
-
-        internal SectorLinkBlockBase( BinaryReader binaryReader )
+        internal  SectorLinkBlockBase(BinaryReader binaryReader)
         {
-            vertex1 = binaryReader.ReadInt16( );
-            vertex2 = binaryReader.ReadInt16( );
-            linkFlags = ( LinkFlags ) binaryReader.ReadInt16( );
-            hintIndex = binaryReader.ReadInt16( );
-            forwardLink = binaryReader.ReadInt16( );
-            reverseLink = binaryReader.ReadInt16( );
-            leftSector = binaryReader.ReadInt16( );
-            rightSector = binaryReader.ReadInt16( );
+            vertex1 = binaryReader.ReadInt16();
+            vertex2 = binaryReader.ReadInt16();
+            linkFlags = (LinkFlags)binaryReader.ReadInt16();
+            hintIndex = binaryReader.ReadInt16();
+            forwardLink = binaryReader.ReadInt16();
+            reverseLink = binaryReader.ReadInt16();
+            leftSector = binaryReader.ReadInt16();
+            rightSector = binaryReader.ReadInt16();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( vertex1 );
-                binaryWriter.Write( vertex2 );
-                binaryWriter.Write( ( Int16 ) linkFlags );
-                binaryWriter.Write( hintIndex );
-                binaryWriter.Write( forwardLink );
-                binaryWriter.Write( reverseLink );
-                binaryWriter.Write( leftSector );
-                binaryWriter.Write( rightSector );
+                binaryWriter.Write(vertex1);
+                binaryWriter.Write(vertex2);
+                binaryWriter.Write((Int16)linkFlags);
+                binaryWriter.Write(hintIndex);
+                binaryWriter.Write(forwardLink);
+                binaryWriter.Write(reverseLink);
+                binaryWriter.Write(leftSector);
+                binaryWriter.Write(rightSector);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum LinkFlags : short
         {

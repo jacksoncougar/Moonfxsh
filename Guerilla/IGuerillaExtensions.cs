@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla
             block.Write( binaryWriter, ( int ) binaryWriter.BaseStream.Position + block.GetSize( ) );
         }
 
-        public static void Write( this BinaryWriter binaryWriter, IGuerilla block )
+        public static void Write( this BinaryWriter binaryWriter, IGuerilla block)
         {
             binaryWriter.WritePadding( block.GetAlignment( ) );
             block.Write( binaryWriter, ( int ) binaryWriter.BaseStream.Position + block.GetSize( ) );

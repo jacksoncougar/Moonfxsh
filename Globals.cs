@@ -77,7 +77,7 @@ namespace Moonfish
             if ( mapStream == null ) return null;
             if ( reference.Ident == TagIdent.NullIdentifier ) return null;
 
-            return mapStream.Deserialize(reference.Ident);
+            return (T)mapStream.Deserialize(reference.Ident);
         }
 
 

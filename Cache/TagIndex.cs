@@ -163,6 +163,8 @@ namespace Moonfish.Cache
                 VirtualAddress = virtualAddress
             };
             _data.Insert(IndexOf(last), newDatum);
+            last.Identifier++;
+            Update( last.Identifier, last );
             return newDatum;
         }
     }

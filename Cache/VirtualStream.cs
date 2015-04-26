@@ -28,7 +28,7 @@ namespace Moonfish.Cache
         {
             return IsPointer( offset )
                 ? base.Seek( offset - _virtualOrigin, loc ) + _virtualOrigin
-                : base.Seek( offset, loc );
+                : base.Seek(offset, loc) + _virtualOrigin;
         }
 
         public override long Position

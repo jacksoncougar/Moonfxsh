@@ -231,12 +231,11 @@ namespace Moonfish
             for ( var i = 0; i < Index.Count; ++i )
             {
                 var datum = Index[ i ];
-                var data = Deserialize( datum.Identifier );
                 
                 // is this address affected by the shift?
                 if (datum.Identifier == ident)
                 {
-                    var alignment = (int)Guerilla.Guerilla.AlignmentOf(data.GetType());
+                    var alignment = Guerilla.Guerilla.AlignmentOf(GetTagType( ident ));
                     datum.VirtualAddress = binaryWriter.BaseStream.Pad(alignment);
                     binaryWriter.Write(new byte[size]);
                     datum.Length = size;
@@ -244,12 +243,15 @@ namespace Moonfish
                 }
                 else
                 {
-                    var alignment = (int)Guerilla.Guerilla.AlignmentOf(data.GetType());
-                    datum.VirtualAddress = binaryWriter.BaseStream.Pad(alignment);
-                    binaryWriter.Write(data);
-                    var length = (int)binaryWriter.BaseStream.Position - datum.VirtualAddress;
-                    datum.Length = length;
-                    Index.Update(datum.Identifier, datum);
+                    var data = (IGuerilla)Deserialize(datum.Identifier);
+                    //var alignment = Guerilla.Guerilla.AlignmentOf(data.GetType());
+                    //datum.VirtualAddress = binaryWriter.BaseStream.Pad(alignment);
+                    //var length = binaryWriter.BaseStream.Length;
+                    //binaryWriter.Write(data);
+                    //binaryWriter.Seek(0, SeekOrigin.End);
+                    //length = ( int ) binaryWriter.BaseStream.Length - length;
+                    //datum.Length = (int)length;
+                    //Index.Update(datum.Identifier, datum);
                 }
             }
             binaryWriter.WritePadding( 512 );
@@ -297,20 +299,15 @@ namespace Moonfish
             return DefaultMemoryBlock.Contains( blamPointer ) || ActiveStructureMemoryAllocation.Contains( blamPointer );
         }
 
-        public dynamic Deserialize( TagIdent ident )
+        public object Deserialize( TagIdent ident )
         {
-            dynamic deserializedTag;
+            object deserializedTag;
             if ( _deserializedTagCache.TryGetValue( ident, out deserializedTag ) )
                 return deserializedTag;
 
             Seek( ident );
 
-            var typeQuery = (
-                from types in Assembly.GetExecutingAssembly( ).GetTypes( )
-                where types.HasAttribute( typeof ( TagClassAttribute ) )
-                where types.Attribute<TagClassAttribute>( ).TagClass == Index[ ident ].Class
-                select types
-                ).FirstOrDefault( );
+            var typeQuery = GetTagType( ident );
 
             if ( typeQuery == null ) return null;
 
@@ -318,6 +315,17 @@ namespace Moonfish
             _tagHashDictionary[ ident ] = CalculateHash( ident );
 
             return _deserializedTagCache[ ident ];
+        }
+
+        private Type GetTagType( TagIdent ident )
+        {
+            var typeQuery = (
+                from types in Assembly.GetExecutingAssembly( ).GetTypes( )
+                where types.HasAttribute( typeof ( TagClassAttribute ) )
+                where types.Attribute<TagClassAttribute>( ).TagClass == Index[ ident ].Class
+                select types
+                ).FirstOrDefault( );
+            return typeQuery;
         }
 
         public long GetFilePosition( )

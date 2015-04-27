@@ -323,18 +323,28 @@ namespace Moonfish.Guerilla
 
         private ClassInfo ProcessArrayFields( List<MoonfishTagField> fields )
         {
+            var size = MoonfishTagDefinition.CalculateSizeOfFieldSet( fields.GetRange( 1, fields.Count - 2 ) );
             var arrayClass = new ClassInfo
             {
                 Attributes =
                 {
                     new AttributeInfo( typeof ( LayoutAttribute ),
-                        StaticReflection.GetMemberName( ( LayoutAttribute layout ) => layout.Size ),
-                        MoonfishTagDefinition.CalculateSizeOfFieldSet( fields.GetRange( 1, fields.Count - 2 ) ),
-                        StaticReflection.GetMemberName( ( LayoutAttribute layout ) => layout.Alignment ), 1)
+                        StaticReflection.GetMemberName( ( LayoutAttribute layout ) => layout.Size ), size,
+                        StaticReflection.GetMemberName( ( LayoutAttribute layout ) => layout.Alignment ), 1 )
                 },
                 Value = ToTypeName( fields[ 0 ].Name ),
                 AccessModifiers = AccessModifiers.Public,
-                BaseClass = "GuerillaBlock"
+                BaseClass = "GuerillaBlock",
+                Properties =
+                {
+                    new PropertyInfo
+                    {
+                        AccessModifiers = AccessModifiers.Public | AccessModifiers.Override,
+                        GetBody = string.Format( "return {0};", size ),
+                        Returns = "int",
+                        Name = "SerializedSize"
+                    }
+                }
             };
             fields.RemoveAt( 0 );
             ProcessFields( fields, arrayClass );

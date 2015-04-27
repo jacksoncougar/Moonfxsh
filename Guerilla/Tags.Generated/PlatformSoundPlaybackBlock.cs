@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 56, Alignment = 4 )]
-    public class PlatformSoundPlaybackBlockBase : IGuerilla
+    public class PlatformSoundPlaybackBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal PlatformSoundPlaybackStructBlock playback;
 
-        internal PlatformSoundPlaybackBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 56; }
+        }
+
+        internal PlatformSoundPlaybackBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadStringID( );
             playback = new PlatformSoundPlaybackStructBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

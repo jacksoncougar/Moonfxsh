@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class PackedDataSizesStructBlockBase : IGuerilla
+    public class PackedDataSizesStructBlockBase : GuerillaBlock
     {
         internal byte invalidName_;
         internal byte invalidName_0;
@@ -27,7 +27,12 @@ namespace Moonfish.Guerilla.Tags
         internal int invalidName_4;
         internal int invalidName_5;
 
-        internal PackedDataSizesStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        internal PackedDataSizesStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             invalidName_ = binaryReader.ReadByte( );
             invalidName_0 = binaryReader.ReadByte( );
@@ -38,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_5 = binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class SoundEffectComponentBlockBase : IGuerilla
+    public class SoundEffectComponentBlockBase : GuerillaBlock
     {
         [TagReference( "null" )] internal Moonfish.Tags.TagReference sound;
 
@@ -28,14 +28,19 @@ namespace Moonfish.Guerilla.Tags
 
         internal Flags flags;
 
-        internal SoundEffectComponentBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        internal SoundEffectComponentBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             sound = binaryReader.ReadTagReference( );
             gainDB = binaryReader.ReadSingle( );
             flags = ( Flags ) binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

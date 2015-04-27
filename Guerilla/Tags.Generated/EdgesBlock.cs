@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class EdgesBlockBase : IGuerilla
+    public class EdgesBlockBase : GuerillaBlock
     {
         internal short startVertex;
         internal short endVertex;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal short leftSurface;
         internal short rightSurface;
 
-        internal EdgesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 12; }
+        }
+
+        internal EdgesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             startVertex = binaryReader.ReadInt16( );
             endVertex = binaryReader.ReadInt16( );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             rightSurface = binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

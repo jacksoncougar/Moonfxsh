@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,97 +9,108 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class InstantaneousDamageRepsonseBlock : InstantaneousDamageRepsonseBlockBase
+    public partial class InstantaneousDamageRepsonseBlock : InstantaneousDamageRepsonseBlockBase
     {
-        public  InstantaneousDamageRepsonseBlock(BinaryReader binaryReader): base(binaryReader)
+        public InstantaneousDamageRepsonseBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 80, Alignment = 4)]
-    public class InstantaneousDamageRepsonseBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 80, Alignment = 4 )]
+    public class InstantaneousDamageRepsonseBlockBase : GuerillaBlock
     {
         internal ResponseType responseType;
         internal ConstraintDamageType constraintDamageType;
         internal Flags flags;
+
         /// <summary>
         /// repsonse fires after crossing this threshold.  1=full health
         /// </summary>
         internal float damageThreshold;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference transitionEffect;
+
+        [TagReference( "effe" )] internal Moonfish.Tags.TagReference transitionEffect;
         internal InstantaneousResponseDamageEffectStructBlock damageEffect;
         internal Moonfish.Tags.StringID region;
         internal NewState newState;
         internal short runtimeRegionIndex;
         internal Moonfish.Tags.StringID effectMarkerName;
         internal InstantaneousResponseDamageEffectMarkerStructBlock damageEffectMarker;
+
         /// <summary>
         /// in seconds
         /// </summary>
         internal float responseDelay;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference delayEffect;
+
+        [TagReference( "effe" )] internal Moonfish.Tags.TagReference delayEffect;
         internal Moonfish.Tags.StringID delayEffectMarkerName;
         internal Moonfish.Tags.StringID constraintGroupName;
         internal Moonfish.Tags.StringID ejectingSeatLabel;
         internal float skipFraction;
         internal Moonfish.Tags.StringID destroyedChildObjectMarkerName;
         internal float totalDamageThreshold;
-        internal  InstantaneousDamageRepsonseBlockBase(BinaryReader binaryReader)
+
+        public override int SerializedSize
         {
-            responseType = (ResponseType)binaryReader.ReadInt16();
-            constraintDamageType = (ConstraintDamageType)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt32();
-            damageThreshold = binaryReader.ReadSingle();
-            transitionEffect = binaryReader.ReadTagReference();
-            damageEffect = new InstantaneousResponseDamageEffectStructBlock(binaryReader);
-            region = binaryReader.ReadStringID();
-            newState = (NewState)binaryReader.ReadInt16();
-            runtimeRegionIndex = binaryReader.ReadInt16();
-            effectMarkerName = binaryReader.ReadStringID();
-            damageEffectMarker = new InstantaneousResponseDamageEffectMarkerStructBlock(binaryReader);
-            responseDelay = binaryReader.ReadSingle();
-            delayEffect = binaryReader.ReadTagReference();
-            delayEffectMarkerName = binaryReader.ReadStringID();
-            constraintGroupName = binaryReader.ReadStringID();
-            ejectingSeatLabel = binaryReader.ReadStringID();
-            skipFraction = binaryReader.ReadSingle();
-            destroyedChildObjectMarkerName = binaryReader.ReadStringID();
-            totalDamageThreshold = binaryReader.ReadSingle();
+            get { return 80; }
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        internal InstantaneousDamageRepsonseBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
-            using(binaryWriter.BaseStream.Pin())
+            responseType = ( ResponseType ) binaryReader.ReadInt16( );
+            constraintDamageType = ( ConstraintDamageType ) binaryReader.ReadInt16( );
+            flags = ( Flags ) binaryReader.ReadInt32( );
+            damageThreshold = binaryReader.ReadSingle( );
+            transitionEffect = binaryReader.ReadTagReference( );
+            damageEffect = new InstantaneousResponseDamageEffectStructBlock( binaryReader );
+            region = binaryReader.ReadStringID( );
+            newState = ( NewState ) binaryReader.ReadInt16( );
+            runtimeRegionIndex = binaryReader.ReadInt16( );
+            effectMarkerName = binaryReader.ReadStringID( );
+            damageEffectMarker = new InstantaneousResponseDamageEffectMarkerStructBlock( binaryReader );
+            responseDelay = binaryReader.ReadSingle( );
+            delayEffect = binaryReader.ReadTagReference( );
+            delayEffectMarkerName = binaryReader.ReadStringID( );
+            constraintGroupName = binaryReader.ReadStringID( );
+            ejectingSeatLabel = binaryReader.ReadStringID( );
+            skipFraction = binaryReader.ReadSingle( );
+            destroyedChildObjectMarkerName = binaryReader.ReadStringID( );
+            totalDamageThreshold = binaryReader.ReadSingle( );
+        }
+
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        {
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int16)responseType);
-                binaryWriter.Write((Int16)constraintDamageType);
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(damageThreshold);
-                binaryWriter.Write(transitionEffect);
-                damageEffect.Write(binaryWriter);
-                binaryWriter.Write(region);
-                binaryWriter.Write((Int16)newState);
-                binaryWriter.Write(runtimeRegionIndex);
-                binaryWriter.Write(effectMarkerName);
-                damageEffectMarker.Write(binaryWriter);
-                binaryWriter.Write(responseDelay);
-                binaryWriter.Write(delayEffect);
-                binaryWriter.Write(delayEffectMarkerName);
-                binaryWriter.Write(constraintGroupName);
-                binaryWriter.Write(ejectingSeatLabel);
-                binaryWriter.Write(skipFraction);
-                binaryWriter.Write(destroyedChildObjectMarkerName);
-                binaryWriter.Write(totalDamageThreshold);
+                binaryWriter.Write( ( Int16 ) responseType );
+                binaryWriter.Write( ( Int16 ) constraintDamageType );
+                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write( damageThreshold );
+                binaryWriter.Write( transitionEffect );
+                damageEffect.Write( binaryWriter );
+                binaryWriter.Write( region );
+                binaryWriter.Write( ( Int16 ) newState );
+                binaryWriter.Write( runtimeRegionIndex );
+                binaryWriter.Write( effectMarkerName );
+                damageEffectMarker.Write( binaryWriter );
+                binaryWriter.Write( responseDelay );
+                binaryWriter.Write( delayEffect );
+                binaryWriter.Write( delayEffectMarkerName );
+                binaryWriter.Write( constraintGroupName );
+                binaryWriter.Write( ejectingSeatLabel );
+                binaryWriter.Write( skipFraction );
+                binaryWriter.Write( destroyedChildObjectMarkerName );
+                binaryWriter.Write( totalDamageThreshold );
                 return nextAddress;
             }
         }
+
         internal enum ResponseType : short
         {
             ReceivesAllDamage = 0,
             ReceivesAreaEffectDamage = 1,
             ReceivesLocalDamage = 2,
         };
+
         internal enum ConstraintDamageType : short
         {
             None = 0,
@@ -107,6 +119,7 @@ namespace Moonfish.Guerilla.Tags
             LoosenOneOfGroup = 3,
             LoosenEntireGroup = 4,
         };
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -136,6 +149,7 @@ namespace Moonfish.Guerilla.Tags
             OnlyOnSpecialDeath = 8388608,
             OnlyNOTOnSpecialDeath = 16777216,
         };
+
         internal enum NewState : short
         {
             Default = 0,

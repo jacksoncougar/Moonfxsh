@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 48, Alignment = 4 )]
-    public class ClothPropertiesBlockBase : IGuerilla
+    public class ClothPropertiesBlockBase : GuerillaBlock
     {
         internal IntegrationType integrationType;
 
@@ -53,7 +53,12 @@ namespace Moonfish.Guerilla.Tags
 
         internal byte[] invalidName_;
 
-        internal ClothPropertiesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 48; }
+        }
+
+        internal ClothPropertiesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             integrationType = ( IntegrationType ) binaryReader.ReadInt16( );
             numberIterations = binaryReader.ReadInt16( );
@@ -65,7 +70,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 24 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

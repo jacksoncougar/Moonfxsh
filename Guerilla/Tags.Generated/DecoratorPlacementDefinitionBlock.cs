@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 48, Alignment = 4 )]
-    public class DecoratorPlacementDefinitionBlockBase : IGuerilla
+    public class DecoratorPlacementDefinitionBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector3 gridOrigin;
         internal int cellCountPerDimension;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal DecoratorCellCollectionBlock[] cells;
         internal DecoratorProjectedDecalBlock[] decals;
 
-        internal DecoratorPlacementDefinitionBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 48; }
+        }
+
+        internal DecoratorPlacementDefinitionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             gridOrigin = binaryReader.ReadVector3( );
             cellCountPerDimension = binaryReader.ReadInt32( );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             decals = Guerilla.ReadBlockArray<DecoratorProjectedDecalBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

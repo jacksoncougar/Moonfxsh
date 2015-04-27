@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 188, Alignment = 4 )]
-    public class ModelAnimationGraphBlockBase : IGuerilla
+    public class ModelAnimationGraphBlockBase : GuerillaBlock
     {
         internal AnimationGraphResourcesStructBlock resources;
         internal AnimationGraphContentsStructBlock content;
@@ -36,7 +36,12 @@ namespace Moonfish.Guerilla.Tags
         internal MoonfishXboxAnimationRawBlock[] xboxUnknownAnimationBlock;
         internal MoonfishXboxAnimationUnknownBlock[] xboxUnknownAnimationBlock0;
 
-        internal ModelAnimationGraphBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 188; }
+        }
+
+        internal ModelAnimationGraphBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             resources = new AnimationGraphResourcesStructBlock( binaryReader );
             content = new AnimationGraphContentsStructBlock( binaryReader );
@@ -47,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
             xboxUnknownAnimationBlock0 = Guerilla.ReadBlockArray<MoonfishXboxAnimationUnknownBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

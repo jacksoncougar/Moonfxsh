@@ -28,7 +28,7 @@ namespace Moonfish.Compiler
                 {
                     BinaryWriter binaryWriter = new BinaryWriter( stream );
                     var tagObject = cache.Deserialize( tag.Identifier ) as IGuerilla;
-                    tagObject.Write( binaryWriter );
+                    //tagObject.Write( binaryWriter );
 
                 }
             }

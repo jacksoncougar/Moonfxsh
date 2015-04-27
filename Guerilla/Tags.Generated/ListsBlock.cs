@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 56, Alignment = 4 )]
-    public class ListsBlockBase : IGuerilla
+    public class ListsBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal short size;
@@ -28,7 +28,12 @@ namespace Moonfish.Guerilla.Tags
         internal int childShapesCapacity;
         internal ChildShapesStorage[] childShapesStorage;
 
-        internal ListsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 56; }
+        }
+
+        internal ListsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 4 );
             size = binaryReader.ReadInt16( );
@@ -44,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
             };
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {
@@ -64,20 +69,25 @@ namespace Moonfish.Guerilla.Tags
         }
 
         [LayoutAttribute( Size = 8, Alignment = 1 )]
-        public class ChildShapesStorage : IGuerilla
+        public class ChildShapesStorage : GuerillaBlock
         {
             internal ShapeType shapeType;
             internal Moonfish.Tags.ShortBlockIndex2 shape;
             internal int collisionFilter;
 
-            internal ChildShapesStorage( BinaryReader binaryReader )
+            public override int SerializedSize
+            {
+                get { return 8; }
+            }
+
+            internal ChildShapesStorage( BinaryReader binaryReader ) : base( binaryReader )
             {
                 shapeType = ( ShapeType ) binaryReader.ReadInt16( );
                 shape = binaryReader.ReadShortBlockIndex2( );
                 collisionFilter = binaryReader.ReadInt32( );
             }
 
-            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
             {
                 using ( binaryWriter.BaseStream.Pin( ) )
                 {

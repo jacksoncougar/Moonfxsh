@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,35 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class InstantaneousResponseDamageEffectMarkerStructBlock : InstantaneousResponseDamageEffectMarkerStructBlockBase
+    public partial class InstantaneousResponseDamageEffectMarkerStructBlock :
+        InstantaneousResponseDamageEffectMarkerStructBlockBase
     {
-        public  InstantaneousResponseDamageEffectMarkerStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public InstantaneousResponseDamageEffectMarkerStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class InstantaneousResponseDamageEffectMarkerStructBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 4, Alignment = 4 )]
+    public class InstantaneousResponseDamageEffectMarkerStructBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID damageEffectMarkerName;
-        internal  InstantaneousResponseDamageEffectMarkerStructBlockBase(BinaryReader binaryReader)
+
+        public override int SerializedSize
         {
-            damageEffectMarkerName = binaryReader.ReadStringID();
+            get { return 4; }
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        internal InstantaneousResponseDamageEffectMarkerStructBlockBase( BinaryReader binaryReader )
+            : base( binaryReader )
         {
-            using(binaryWriter.BaseStream.Pin())
+            damageEffectMarkerName = binaryReader.ReadStringID( );
+        }
+
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        {
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(damageEffectMarkerName);
+                binaryWriter.Write( damageEffectMarkerName );
                 return nextAddress;
             }
         }

@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 56, Alignment = 4 )]
-    public class ScenarioEquipmentBlockBase : IGuerilla
+    public class ScenarioEquipmentBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 type;
         internal Moonfish.Tags.ShortBlockIndex1 name;
         internal ScenarioObjectDatumStructBlock objectData;
         internal ScenarioEquipmentDatumStructBlock equipmentData;
 
-        internal ScenarioEquipmentBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 56; }
+        }
+
+        internal ScenarioEquipmentBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             type = binaryReader.ReadShortBlockIndex1( );
             name = binaryReader.ReadShortBlockIndex1( );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             equipmentData = new ScenarioEquipmentDatumStructBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 188, Alignment = 4 )]
-    public class ObjectBlockBase : IGuerilla
+    public class ObjectBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal Flags flags;
@@ -115,7 +115,12 @@ namespace Moonfish.Guerilla.Tags
         internal ObjectChangeColors[] changeColors;
         internal PredictedResourceBlock[] predictedResources;
 
-        internal ObjectBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 188; }
+        }
+
+        internal ObjectBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 2 );
             flags = ( Flags ) binaryReader.ReadInt16( );
@@ -154,7 +159,7 @@ namespace Moonfish.Guerilla.Tags
             predictedResources = Guerilla.ReadBlockArray<PredictedResourceBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

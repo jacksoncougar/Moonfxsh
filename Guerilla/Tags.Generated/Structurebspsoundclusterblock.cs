@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class StructureBspSoundClusterBlockBase : IGuerilla
+    public class StructureBspSoundClusterBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
         internal StructureSoundClusterPortalDesignators[] enclosingPortalDesignators;
         internal StructureSoundClusterInteriorClusterIndices[] interiorClusterIndices;
 
-        internal StructureBspSoundClusterBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        internal StructureBspSoundClusterBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 2 );
             invalidName_0 = binaryReader.ReadBytes( 2 );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             interiorClusterIndices = Guerilla.ReadBlockArray<StructureSoundClusterInteriorClusterIndices>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

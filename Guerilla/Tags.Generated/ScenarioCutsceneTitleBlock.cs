@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 36, Alignment = 4 )]
-    public class ScenarioCutsceneTitleBlockBase : IGuerilla
+    public class ScenarioCutsceneTitleBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal OpenTK.Vector2 textBoundsOnScreen;
@@ -30,7 +30,12 @@ namespace Moonfish.Guerilla.Tags
         internal float fadeOutTimeSeconds;
         internal byte[] padding;
 
-        internal ScenarioCutsceneTitleBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 36; }
+        }
+
+        internal ScenarioCutsceneTitleBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadStringID( );
             textBoundsOnScreen = binaryReader.ReadVector2( );
@@ -44,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
             padding = binaryReader.ReadBytes( 2 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

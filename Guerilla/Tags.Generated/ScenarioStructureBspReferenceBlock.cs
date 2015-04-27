@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 68, Alignment = 4 )]
-    public class ScenarioStructureBspReferenceBlockBase : IGuerilla
+    public class ScenarioStructureBspReferenceBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         [TagReference( "sbsp" )] internal Moonfish.Tags.TagReference structureBSP;
@@ -33,7 +33,12 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 defaultSky;
         internal byte[] invalidName_4;
 
-        internal ScenarioStructureBspReferenceBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 68; }
+        }
+
+        internal ScenarioStructureBspReferenceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 16 );
             structureBSP = binaryReader.ReadTagReference( );
@@ -50,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_4 = binaryReader.ReadBytes( 2 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

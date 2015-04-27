@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 80, Alignment = 4 )]
-    public class ModelAnimationRuntimeDataStructBlockBase : IGuerilla
+    public class ModelAnimationRuntimeDataStructBlockBase : GuerillaBlock
     {
         internal InheritedAnimationBlock[] inheritenceListBBAAAA;
         internal WeaponClassLookupBlock[] weaponListBBAAAA;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
 
-        internal ModelAnimationRuntimeDataStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 80; }
+        }
+
+        internal ModelAnimationRuntimeDataStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             inheritenceListBBAAAA = Guerilla.ReadBlockArray<InheritedAnimationBlock>( binaryReader );
             weaponListBBAAAA = Guerilla.ReadBlockArray<WeaponClassLookupBlock>( binaryReader );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes( 32 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

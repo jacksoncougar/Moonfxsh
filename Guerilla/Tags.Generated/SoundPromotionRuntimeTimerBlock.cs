@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,27 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class SoundPromotionRuntimeTimerBlock : SoundPromotionRuntimeTimerBlockBase
     {
-        public SoundPromotionRuntimeTimerBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  SoundPromotionRuntimeTimerBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class SoundPromotionRuntimeTimerBlockBase : IGuerilla
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class SoundPromotionRuntimeTimerBlockBase : GuerillaBlock
     {
         internal int invalidName_;
-
-        internal SoundPromotionRuntimeTimerBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        internal  SoundPromotionRuntimeTimerBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            invalidName_ = binaryReader.ReadInt32( );
+            invalidName_ = binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( invalidName_ );
+                binaryWriter.Write(invalidName_);
                 return nextAddress;
             }
         }

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 84, Alignment = 4 )]
-    public class RenderLightingStructBlockBase : IGuerilla
+    public class RenderLightingStructBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ColorR8G8B8 ambient;
         internal OpenTK.Vector3 shadowDirection;
@@ -30,7 +30,12 @@ namespace Moonfish.Guerilla.Tags
         internal short shIndex;
         internal byte[] invalidName_;
 
-        internal RenderLightingStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 84; }
+        }
+
+        internal RenderLightingStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             ambient = binaryReader.ReadColorR8G8B8( );
             shadowDirection = binaryReader.ReadVector3( );
@@ -44,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 2 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

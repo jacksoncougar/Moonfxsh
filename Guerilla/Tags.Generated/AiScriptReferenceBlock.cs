@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class AiScriptReferenceBlockBase : IGuerilla
+    public class AiScriptReferenceBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 scriptName;
         internal byte[] invalidName_;
 
-        internal AiScriptReferenceBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 40; }
+        }
+
+        internal AiScriptReferenceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             scriptName = binaryReader.ReadString32( );
             invalidName_ = binaryReader.ReadBytes( 8 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

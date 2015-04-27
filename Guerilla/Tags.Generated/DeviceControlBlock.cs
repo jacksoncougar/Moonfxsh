@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 36, Alignment = 4 )]
-    public class DeviceControlBlockBase : DeviceBlock
+    public class DeviceControlBlockBase : GuerillaBlock
     {
         internal Type type;
         internal TriggersWhen triggersWhen;
@@ -35,6 +35,11 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "null" )] internal Moonfish.Tags.TagReference on;
         [TagReference( "null" )] internal Moonfish.Tags.TagReference off;
         [TagReference( "null" )] internal Moonfish.Tags.TagReference deny;
+
+        public override int SerializedSize
+        {
+            get { return 36; }
+        }
 
         internal DeviceControlBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
@@ -47,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
             deny = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

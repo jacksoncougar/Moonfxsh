@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 68, Alignment = 4 )]
-    public class GearBlockBase : IGuerilla
+    public class GearBlockBase : GuerillaBlock
     {
         internal TorqueCurveStructBlock loadedTorqueCurve;
         internal TorqueCurveStructBlock cruisingTorqueCurve;
@@ -44,7 +44,12 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float engineDownShiftScale;
 
-        internal GearBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 68; }
+        }
+
+        internal GearBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             loadedTorqueCurve = new TorqueCurveStructBlock( binaryReader );
             cruisingTorqueCurve = new TorqueCurveStructBlock( binaryReader );
@@ -55,7 +60,7 @@ namespace Moonfish.Guerilla.Tags
             engineDownShiftScale = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class ScenarioAtmosphericFogMixerBlockBase : IGuerilla
+    public class ScenarioAtmosphericFogMixerBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal Moonfish.Tags.StringID atmosphericFogSourceFromScenarioAtmosphericFogPalette;
@@ -25,7 +25,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
 
-        internal ScenarioAtmosphericFogMixerBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        internal ScenarioAtmosphericFogMixerBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 4 );
             atmosphericFogSourceFromScenarioAtmosphericFogPalette = binaryReader.ReadStringID( );
@@ -34,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes( 2 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

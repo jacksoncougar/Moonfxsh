@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 96, Alignment = 4 )]
-    public class StatesBlockBase : IGuerilla
+    public class StatesBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
         internal Moonfish.Tags.ColorR8G8B8 color;
@@ -36,7 +36,12 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 eight;
         internal byte[] invalidName_1;
 
-        internal StatesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 96; }
+        }
+
+        internal StatesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadString32( );
             color = binaryReader.ReadColorR8G8B8( );
@@ -56,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes( 2 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 88, Alignment = 4 )]
-    public class StructureBspDebugInfoBlockBase : IGuerilla
+    public class StructureBspDebugInfoBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal StructureBspClusterDebugInfoBlock[] clusters;
         internal StructureBspFogPlaneDebugInfoBlock[] fogPlanes;
         internal StructureBspFogZoneDebugInfoBlock[] fogZones;
 
-        internal StructureBspDebugInfoBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 88; }
+        }
+
+        internal StructureBspDebugInfoBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 64 );
             clusters = Guerilla.ReadBlockArray<StructureBspClusterDebugInfoBlock>( binaryReader );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             fogZones = Guerilla.ReadBlockArray<StructureBspFogZoneDebugInfoBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

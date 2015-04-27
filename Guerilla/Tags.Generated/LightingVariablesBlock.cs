@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 144, Alignment = 4 )]
-    public class LightingVariablesBlockBase : IGuerilla
+    public class LightingVariablesBlockBase : GuerillaBlock
     {
         internal ObjectAffected objectAffected;
         internal float lightmapBrightnessOffset;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal AmbientLightStructBlock ambientLight;
         internal LightmapShadowsStructBlock lightmapShadows;
 
-        internal LightingVariablesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 144; }
+        }
+
+        internal LightingVariablesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             objectAffected = ( ObjectAffected ) binaryReader.ReadInt32( );
             lightmapBrightnessOffset = binaryReader.ReadSingle( );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             lightmapShadows = new LightmapShadowsStructBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

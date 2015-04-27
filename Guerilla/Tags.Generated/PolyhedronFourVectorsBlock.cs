@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 48, Alignment = 16 )]
-    public class PolyhedronFourVectorsBlockBase : IGuerilla
+    public class PolyhedronFourVectorsBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector3 fourVectorsX;
         internal byte[] invalidName_;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 fourVectorsZ;
         internal byte[] invalidName_1;
 
-        internal PolyhedronFourVectorsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 48; }
+        }
+
+        internal PolyhedronFourVectorsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             fourVectorsX = binaryReader.ReadVector3( );
             invalidName_ = binaryReader.ReadBytes( 4 );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes( 4 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

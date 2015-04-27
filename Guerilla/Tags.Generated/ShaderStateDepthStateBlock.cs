@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,13 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderStateDepthStateBlock : ShaderStateDepthStateBlockBase
     {
-        public ShaderStateDepthStateBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderStateDepthStateBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class ShaderStateDepthStateBlockBase : IGuerilla
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class ShaderStateDepthStateBlockBase : GuerillaBlock
     {
         internal Mode mode;
         internal DepthCompareFunction depthCompareFunction;
@@ -25,37 +24,36 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal float depthBiasSlopeScale;
         internal float depthBias;
-
-        internal ShaderStateDepthStateBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        internal  ShaderStateDepthStateBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            mode = ( Mode ) binaryReader.ReadInt16( );
-            depthCompareFunction = ( DepthCompareFunction ) binaryReader.ReadInt16( );
-            flags = ( Flags ) binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            depthBiasSlopeScale = binaryReader.ReadSingle( );
-            depthBias = binaryReader.ReadSingle( );
+            mode = (Mode)binaryReader.ReadInt16();
+            depthCompareFunction = (DepthCompareFunction)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            depthBiasSlopeScale = binaryReader.ReadSingle();
+            depthBias = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) mode );
-                binaryWriter.Write( ( Int16 ) depthCompareFunction );
-                binaryWriter.Write( ( Int16 ) flags );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( depthBiasSlopeScale );
-                binaryWriter.Write( depthBias );
+                binaryWriter.Write((Int16)mode);
+                binaryWriter.Write((Int16)depthCompareFunction);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(depthBiasSlopeScale);
+                binaryWriter.Write(depthBias);
                 return nextAddress;
             }
         }
-
         internal enum Mode : short
         {
             UseZ = 0,
             UseW = 1,
         };
-
         internal enum DepthCompareFunction : short
         {
             Never = 0,
@@ -67,7 +65,6 @@ namespace Moonfish.Guerilla.Tags
             GreaterOrEqual = 6,
             Always = 7,
         };
-
         [FlagsAttribute]
         internal enum Flags : short
         {

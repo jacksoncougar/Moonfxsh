@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class WeaponFirstPersonInterfaceBlockBase : IGuerilla
+    public class WeaponFirstPersonInterfaceBlockBase : GuerillaBlock
     {
         [TagReference( "mode" )] internal Moonfish.Tags.TagReference firstPersonModel;
         [TagReference( "jmad" )] internal Moonfish.Tags.TagReference firstPersonAnimations;
 
-        internal WeaponFirstPersonInterfaceBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        internal WeaponFirstPersonInterfaceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             firstPersonModel = binaryReader.ReadTagReference( );
             firstPersonAnimations = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class MoonfishSoundReferencesBlockBase : IGuerilla
+    public class MoonfishSoundReferencesBlockBase : GuerillaBlock
     {
         [TagReference( "snd!" )] internal Moonfish.Tags.TagReference sound;
 
-        internal MoonfishSoundReferencesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        internal MoonfishSoundReferencesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             sound = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

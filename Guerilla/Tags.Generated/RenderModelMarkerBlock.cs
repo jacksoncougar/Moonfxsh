@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 36, Alignment = 4 )]
-    public class RenderModelMarkerBlockBase : IGuerilla
+    public class RenderModelMarkerBlockBase : GuerillaBlock
     {
         internal byte regionIndex;
         internal byte permutationIndex;
@@ -27,7 +27,12 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Quaternion rotation;
         internal float scale;
 
-        internal RenderModelMarkerBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 36; }
+        }
+
+        internal RenderModelMarkerBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             regionIndex = binaryReader.ReadByte( );
             permutationIndex = binaryReader.ReadByte( );
@@ -38,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
             scale = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

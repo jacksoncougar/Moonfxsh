@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 64, Alignment = 4 )]
-    public class ScenarioCutsceneCameraPointBlockBase : IGuerilla
+    public class ScenarioCutsceneCameraPointBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal Type type;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 orientation;
         internal float unused;
 
-        internal ScenarioCutsceneCameraPointBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 64; }
+        }
+
+        internal ScenarioCutsceneCameraPointBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt16( );
             type = ( Type ) binaryReader.ReadInt16( );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             unused = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

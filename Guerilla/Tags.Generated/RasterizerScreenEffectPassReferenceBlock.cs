@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 172, Alignment = 4 )]
-    public class RasterizerScreenEffectPassReferenceBlockBase : IGuerilla
+    public class RasterizerScreenEffectPassReferenceBlockBase : GuerillaBlock
     {
         internal byte[] explanation;
         internal short layerPassIndexLeaveAs1UnlessDebugging;
@@ -37,7 +37,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal RasterizerScreenEffectConvolutionBlock[] convolution;
 
-        internal RasterizerScreenEffectPassReferenceBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 172; }
+        }
+
+        internal RasterizerScreenEffectPassReferenceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             explanation = Guerilla.ReadData( binaryReader );
             layerPassIndexLeaveAs1UnlessDebugging = binaryReader.ReadInt16( );
@@ -59,7 +64,7 @@ namespace Moonfish.Guerilla.Tags
             convolution = Guerilla.ReadBlockArray<RasterizerScreenEffectConvolutionBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

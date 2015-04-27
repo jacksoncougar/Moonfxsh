@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class DeviceMachineBlockBase : DeviceBlock
+    public class DeviceMachineBlockBase : GuerillaBlock
     {
         internal Type type;
         internal Flags flags;
@@ -42,6 +42,11 @@ namespace Moonfish.Guerilla.Tags
         internal PathfindingPolicy pathfindingPolicy;
         internal byte[] invalidName_;
 
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
         internal DeviceMachineBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             type = ( Type ) binaryReader.ReadInt16( );
@@ -54,7 +59,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 2 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

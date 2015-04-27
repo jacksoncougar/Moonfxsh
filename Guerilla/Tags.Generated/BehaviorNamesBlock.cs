@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,27 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class BehaviorNamesBlock : BehaviorNamesBlockBase
     {
-        public BehaviorNamesBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  BehaviorNamesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class BehaviorNamesBlockBase : IGuerilla
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class BehaviorNamesBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 behaviorName;
-
-        internal BehaviorNamesBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 32; }}
+        
+        internal  BehaviorNamesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            behaviorName = binaryReader.ReadString32( );
+            behaviorName = binaryReader.ReadString32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( behaviorName );
+                binaryWriter.Write(behaviorName);
                 return nextAddress;
             }
         }

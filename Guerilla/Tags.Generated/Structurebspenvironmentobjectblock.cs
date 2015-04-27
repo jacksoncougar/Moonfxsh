@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 104, Alignment = 4 )]
-    public class StructureBspEnvironmentObjectBlockBase : IGuerilla
+    public class StructureBspEnvironmentObjectBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
         internal OpenTK.Quaternion rotation;
@@ -28,7 +28,12 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagClass exportedObjectType;
         internal Moonfish.Tags.String32 scenarioObjectName;
 
-        internal StructureBspEnvironmentObjectBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 104; }
+        }
+
+        internal StructureBspEnvironmentObjectBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadString32( );
             rotation = binaryReader.ReadQuaternion( );
@@ -40,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
             scenarioObjectName = binaryReader.ReadString32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

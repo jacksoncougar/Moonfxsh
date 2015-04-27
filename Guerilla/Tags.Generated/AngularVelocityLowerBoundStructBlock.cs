@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class AngularVelocityLowerBoundStructBlockBase : IGuerilla
+    public class AngularVelocityLowerBoundStructBlockBase : GuerillaBlock
     {
         internal float guidedAngularVelocityLowerDegreesPerSecond;
 
-        internal AngularVelocityLowerBoundStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal AngularVelocityLowerBoundStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             guidedAngularVelocityLowerDegreesPerSecond = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

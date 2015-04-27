@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class EffectAccelerationsBlockBase : IGuerilla
+    public class EffectAccelerationsBlockBase : GuerillaBlock
     {
         internal CreateIn createIn;
         internal CreateIn createIn0;
@@ -27,7 +27,12 @@ namespace Moonfish.Guerilla.Tags
         internal float innerConeAngleDegrees;
         internal float outerConeAngleDegrees;
 
-        internal EffectAccelerationsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        internal EffectAccelerationsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             createIn = ( CreateIn ) binaryReader.ReadInt16( );
             createIn0 = ( CreateIn ) binaryReader.ReadInt16( );
@@ -38,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
             outerConeAngleDegrees = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class GlobalGeometryMaterialBlockBase : IGuerilla
+    public class GlobalGeometryMaterialBlockBase : GuerillaBlock
     {
         [TagReference( "shad" )] internal Moonfish.Tags.TagReference oldShader;
         [TagReference( "shad" )] internal Moonfish.Tags.TagReference shader;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte breakableSurfaceIndex;
         internal byte[] invalidName_0;
 
-        internal GlobalGeometryMaterialBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 32; }
+        }
+
+        internal GlobalGeometryMaterialBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             oldShader = binaryReader.ReadTagReference( );
             shader = binaryReader.ReadTagReference( );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes( 3 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

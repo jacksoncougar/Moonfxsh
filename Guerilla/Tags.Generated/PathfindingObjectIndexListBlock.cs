@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class PathfindingObjectIndexListBlockBase : IGuerilla
+    public class PathfindingObjectIndexListBlockBase : GuerillaBlock
     {
         internal short bSPIndex;
         internal short pathfindingObjectIndex;
 
-        internal PathfindingObjectIndexListBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal PathfindingObjectIndexListBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             bSPIndex = binaryReader.ReadInt16( );
             pathfindingObjectIndex = binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

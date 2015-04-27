@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class DamageAnimationBlockBase : IGuerilla
+    public class DamageAnimationBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID label;
         internal DamageDirectionBlock[] directionsAABBCC;
 
-        internal DamageAnimationBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 12; }
+        }
+
+        internal DamageAnimationBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             label = binaryReader.ReadStringID( );
             directionsAABBCC = Guerilla.ReadBlockArray<DamageDirectionBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

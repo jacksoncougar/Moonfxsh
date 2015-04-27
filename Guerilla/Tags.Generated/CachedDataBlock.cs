@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class CachedDataBlockBase : IGuerilla
+    public class CachedDataBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.VertexBuffer vertexBuffer;
 
-        internal CachedDataBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 32; }
+        }
+
+        internal CachedDataBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             vertexBuffer = binaryReader.ReadVertexBuffer( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

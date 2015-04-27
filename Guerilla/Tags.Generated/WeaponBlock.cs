@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 496, Alignment = 4 )]
-    public class WeaponBlockBase : ItemBlock
+    public class WeaponBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal Moonfish.Tags.StringID invalidName_;
@@ -178,6 +178,11 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 firstPersonWeaponOffset;
         internal OpenTK.Vector2 firstPersonScopeSize;
 
+        public override int SerializedSize
+        {
+            get { return 496; }
+        }
+
         internal WeaponBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
@@ -249,7 +254,7 @@ namespace Moonfish.Guerilla.Tags
             firstPersonScopeSize = binaryReader.ReadVector2( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

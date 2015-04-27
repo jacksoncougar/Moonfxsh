@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 1, Alignment = 4 )]
-    public class OccluderToMachineDoorMappingBase : IGuerilla
+    public class OccluderToMachineDoorMappingBase : GuerillaBlock
     {
         internal byte machineDoorIndex;
 
-        internal OccluderToMachineDoorMappingBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 1; }
+        }
+
+        internal OccluderToMachineDoorMappingBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             machineDoorIndex = binaryReader.ReadByte( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

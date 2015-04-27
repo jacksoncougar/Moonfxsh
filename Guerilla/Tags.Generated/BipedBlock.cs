@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 296, Alignment = 4 )]
-    public class BipedBlockBase : UnitBlock
+    public class BipedBlockBase : GuerillaBlock
     {
         internal float movingTurningSpeedDegreesPerSecond;
         internal Flags flags;
@@ -132,6 +132,11 @@ namespace Moonfish.Guerilla.Tags
         internal short deathSpawnCount;
         internal byte[] invalidName_0;
 
+        public override int SerializedSize
+        {
+            get { return 296; }
+        }
+
         internal BipedBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             movingTurningSpeedDegreesPerSecond = binaryReader.ReadSingle( );
@@ -167,7 +172,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes( 2 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

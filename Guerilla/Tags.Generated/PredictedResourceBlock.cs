@@ -17,20 +17,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class PredictedResourceBlockBase : IGuerilla
+    public class PredictedResourceBlockBase : GuerillaBlock
     {
         internal Type type;
         internal short resourceIndex;
         internal int tagIndex;
 
-        internal PredictedResourceBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        internal PredictedResourceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             type = ( Type ) binaryReader.ReadInt16( );
             resourceIndex = binaryReader.ReadInt16( );
             tagIndex = binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

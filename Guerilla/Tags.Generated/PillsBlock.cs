@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 80, Alignment = 16 )]
-    public class PillsBlockBase : IGuerilla
+    public class PillsBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 material;
@@ -39,7 +39,12 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 top;
         internal byte[] invalidName_3;
 
-        internal PillsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 80; }
+        }
+
+        internal PillsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadStringID( );
             material = binaryReader.ReadShortBlockIndex1( );
@@ -62,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_3 = binaryReader.ReadBytes( 4 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

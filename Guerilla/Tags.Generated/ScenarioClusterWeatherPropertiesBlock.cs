@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class ScenarioClusterWeatherPropertiesBlockBase : IGuerilla
+    public class ScenarioClusterWeatherPropertiesBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 type;
         internal byte[] invalidName_;
 
-        internal ScenarioClusterWeatherPropertiesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal ScenarioClusterWeatherPropertiesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             type = binaryReader.ReadShortBlockIndex1( );
             invalidName_ = binaryReader.ReadBytes( 2 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

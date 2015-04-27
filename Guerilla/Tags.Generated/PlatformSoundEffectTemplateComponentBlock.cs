@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class PlatformSoundEffectTemplateComponentBlockBase : IGuerilla
+    public class PlatformSoundEffectTemplateComponentBlockBase : GuerillaBlock
     {
         internal ValueType valueType;
         internal float defaultValue;
         internal float minimumValue;
         internal float maximumValue;
 
-        internal PlatformSoundEffectTemplateComponentBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        internal PlatformSoundEffectTemplateComponentBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             valueType = ( ValueType ) binaryReader.ReadInt32( );
             defaultValue = binaryReader.ReadSingle( );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             maximumValue = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 52, Alignment = 4 )]
-    public class GlobalStructurePhysicsStructBlockBase : IGuerilla
+    public class GlobalStructurePhysicsStructBlockBase : GuerillaBlock
     {
         internal byte[] moppCode;
         internal byte[] invalidName_;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] breakableSurfacesMoppCode;
         internal BreakableSurfaceKeyTableBlock[] breakableSurfaceKeyTable;
 
-        internal GlobalStructurePhysicsStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 52; }
+        }
+
+        internal GlobalStructurePhysicsStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             moppCode = Guerilla.ReadData( binaryReader );
             invalidName_ = binaryReader.ReadBytes( 4 );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             breakableSurfaceKeyTable = Guerilla.ReadBlockArray<BreakableSurfaceKeyTableBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

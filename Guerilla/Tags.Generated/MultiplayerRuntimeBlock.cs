@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 1384, Alignment = 4 )]
-    public class MultiplayerRuntimeBlockBase : IGuerilla
+    public class MultiplayerRuntimeBlockBase : GuerillaBlock
     {
         [TagReference( "item" )] internal Moonfish.Tags.TagReference flag;
         [TagReference( "item" )] internal Moonfish.Tags.TagReference ball;
@@ -118,7 +118,12 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "shad" )] internal Moonfish.Tags.TagReference scoreboardDeadEmblemShader;
         [TagReference( "bitm" )] internal Moonfish.Tags.TagReference scoreboardDeadEmblemBitmap;
 
-        internal MultiplayerRuntimeBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 1384; }
+        }
+
+        internal MultiplayerRuntimeBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flag = binaryReader.ReadTagReference( );
             ball = binaryReader.ReadTagReference( );
@@ -220,7 +225,7 @@ namespace Moonfish.Guerilla.Tags
             scoreboardDeadEmblemBitmap = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

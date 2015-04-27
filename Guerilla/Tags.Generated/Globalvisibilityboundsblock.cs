@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class GlobalVisibilityBoundsBlockBase : IGuerilla
+    public class GlobalVisibilityBoundsBlockBase : GuerillaBlock
     {
         internal float positionX;
         internal float positionY;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte node0;
         internal byte[] invalidName_;
 
-        internal GlobalVisibilityBoundsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        internal GlobalVisibilityBoundsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             positionX = binaryReader.ReadSingle( );
             positionY = binaryReader.ReadSingle( );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 3 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

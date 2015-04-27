@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 572, Alignment = 4 )]
-    public class ScenarioStructureBspBlockBase : IGuerilla
+    public class ScenarioStructureBspBlockBase : GuerillaBlock
     {
         internal GlobalTagImportInfoBlock[] importInfo;
         internal byte[] invalidName_;
@@ -102,7 +102,12 @@ namespace Moonfish.Guerilla.Tags
         internal StructureBspFakeLightprobesBlock[] objectFakeLightprobes;
         internal DecoratorPlacementDefinitionBlock[] decorators0;
 
-        internal ScenarioStructureBspBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 572; }
+        }
+
+        internal ScenarioStructureBspBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>( binaryReader );
             invalidName_ = binaryReader.ReadBytes( 4 );
@@ -163,7 +168,7 @@ namespace Moonfish.Guerilla.Tags
             decorators0 = Guerilla.ReadBlockArray<DecoratorPlacementDefinitionBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

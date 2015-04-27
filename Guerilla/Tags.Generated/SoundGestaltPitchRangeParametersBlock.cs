@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,35 +9,43 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundGestaltPitchRangeParametersBlock : SoundGestaltPitchRangeParametersBlockBase
+    public artial class SoundGestaltPitchRangeParametersBlock : SoundGestaltPitchRangeParametersBlockBase
     {
-        public  SoundGestaltPitchRangeParametersBlock(BinaryReader binaryReader): base(binaryReader)
+        public  oundGestaltPitchRangeParametersBlock(B inaryReader binaryReader) :  base(b inaryReader) 
         {
-            
-        }
-    };
-    [LayoutAttribute(Size = 10, Alignment = 4)]
-    public class SoundGestaltPitchRangeParametersBlockBase  : IGuerilla
+         
+    };
+
+    LayoutAttribute(S ize = 10, Alignment = 4) ]
+    public class SoundGestaltPitchRangeParametersBlockBase  GuerillaBlock
     {
-        internal short naturalPitchCents;
-        /// <summary>
+        internal short naturalPitchCent
+
+          /// <summary>
         /// the range of pitches that will be represented using this sample.
         /// </summary>
-        internal int bendBoundsCents;
-        internal int maxGainPitchBoundsCents;
-        internal  SoundGestaltPitchRangeParametersBlockBase(BinaryReader binaryReader)
+        internal int bendBoundsCent
+
+          internal int maxGainPitchBoundsCent
+
+          
+       public override int SerializedSize{get {  return 10; }}
+         
+        internal  SoundGestaltPitchRangeParametersBlockBase(BinaryRe ader binaryReader): base(binaryReader)
         {
-            naturalPitchCents = binaryReader.ReadInt16();
-            bendBoundsCents = binaryReader.ReadInt32();
-            maxGainPitchBoundsCents = binaryReader.ReadInt32();
+             naturalPitchCents = binaryReader.ReadInt16();
+             bendBoundsCen
+
+        yReader.ReadInt32 ();
+            maxGainPitchBoundsCents = binaryReade r.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+          public override int Write ( System.IO.BinaryWriter binaryWriter, Int32 nextAddres s)
         {
-            using(binaryWriter.BaseStream.Pin())
-            {
-                binaryWriter.Write(naturalPitchCents);
+             using(binaryWriter.BaseStream .Pin())
+             {
+                binaryWriter.W rite(naturalPitchCents) ;
                 binaryWriter.Write(bendBoundsCents);
-                binaryWriter.Write(maxGainPitchBoundsCents);
+                binyWriter.Write(maxGainPitchBoundsCents);
                 return nextAddress;
             }
         }

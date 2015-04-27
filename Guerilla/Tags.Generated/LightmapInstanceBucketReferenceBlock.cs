@@ -17,20 +17,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class LightmapInstanceBucketReferenceBlockBase : IGuerilla
+    public class LightmapInstanceBucketReferenceBlockBase : GuerillaBlock
     {
         internal short flags;
         internal short bucketIndex;
         internal LightmapInstanceBucketSectionOffsetBlock[] sectionOffsets;
 
-        internal LightmapInstanceBucketReferenceBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 12; }
+        }
+
+        internal LightmapInstanceBucketReferenceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = binaryReader.ReadInt16( );
             bucketIndex = binaryReader.ReadInt16( );
             sectionOffsets = Guerilla.ReadBlockArray<LightmapInstanceBucketSectionOffsetBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

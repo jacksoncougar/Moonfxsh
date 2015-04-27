@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,29 +10,31 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPostprocessPassBlock : ShaderPostprocessPassBlockBase
     {
-        public ShaderPostprocessPassBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderPostprocessPassBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 10, Alignment = 4 )]
-    public class ShaderPostprocessPassBlockBase : IGuerilla
+    [LayoutAttribute(Size = 10, Alignment = 4)]
+    public class ShaderPostprocessPassBlockBase : GuerillaBlock
     {
-        [TagReference( "spas" )] internal Moonfish.Tags.TagReference shaderPass;
+        [TagReference("spas")]
+        internal Moonfish.Tags.TagReference shaderPass;
         internal TagBlockIndexStructBlock implementations;
-
-        internal ShaderPostprocessPassBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 10; }}
+        
+        internal  ShaderPostprocessPassBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            shaderPass = binaryReader.ReadTagReference( );
-            implementations = new TagBlockIndexStructBlock( binaryReader );
+            shaderPass = binaryReader.ReadTagReference();
+            implementations = new TagBlockIndexStructBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( shaderPass );
-                implementations.Write( binaryWriter );
+                binaryWriter.Write(shaderPass);
+                implementations.Write(binaryWriter);
                 return nextAddress;
             }
         }

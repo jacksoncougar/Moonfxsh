@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 56, Alignment = 4 )]
-    public class EffectEventBlockBase : IGuerilla
+    public class EffectEventBlockBase : GuerillaBlock
     {
         internal Flags flags;
 
@@ -41,7 +41,12 @@ namespace Moonfish.Guerilla.Tags
         internal EffectAccelerationsBlock[] accelerations;
         internal ParticleSystemDefinitionBlockNew[] particleSystems;
 
-        internal EffectEventBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 56; }
+        }
+
+        internal EffectEventBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             skipFraction = binaryReader.ReadSingle( );
@@ -53,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
             particleSystems = Guerilla.ReadBlockArray<ParticleSystemDefinitionBlockNew>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

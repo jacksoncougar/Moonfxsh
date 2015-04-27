@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 8 )]
-    public class SurfacesBlockBase : IGuerilla
+    public class SurfacesBlockBase : GuerillaBlock
     {
         internal short plane;
         internal short firstEdge;
@@ -25,7 +25,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte breakableSurface;
         internal short material;
 
-        internal SurfacesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        internal SurfacesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             plane = binaryReader.ReadInt16( );
             firstEdge = binaryReader.ReadInt16( );
@@ -34,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             material = binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,20 +17,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class AnimationGraphContentsStructBlockBase : IGuerilla
+    public class AnimationGraphContentsStructBlockBase : GuerillaBlock
     {
         internal AnimationModeBlock[] modesAABBCC;
         internal VehicleSuspensionBlock[] vehicleSuspensionCCAABB;
         internal ObjectAnimationBlock[] objectOverlaysCCAABB;
 
-        internal AnimationGraphContentsStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        internal AnimationGraphContentsStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             modesAABBCC = Guerilla.ReadBlockArray<AnimationModeBlock>( binaryReader );
             vehicleSuspensionCCAABB = Guerilla.ReadBlockArray<VehicleSuspensionBlock>( binaryReader );
             objectOverlaysCCAABB = Guerilla.ReadBlockArray<ObjectAnimationBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

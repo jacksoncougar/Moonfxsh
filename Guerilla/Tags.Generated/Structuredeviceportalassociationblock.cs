@@ -17,20 +17,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class StructureDevicePortalAssociationBlockBase : IGuerilla
+    public class StructureDevicePortalAssociationBlockBase : GuerillaBlock
     {
         internal ScenarioObjectIdStructBlock deviceId;
         internal short firstGamePortalIndex;
         internal short gamePortalCount;
 
-        internal StructureDevicePortalAssociationBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 12; }
+        }
+
+        internal StructureDevicePortalAssociationBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             deviceId = new ScenarioObjectIdStructBlock( binaryReader );
             firstGamePortalIndex = binaryReader.ReadInt16( );
             gamePortalCount = binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

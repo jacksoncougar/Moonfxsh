@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class AnimationDestinationStateStructBlockBase : IGuerilla
+    public class AnimationDestinationStateStructBlockBase : GuerillaBlock
     {
         /// <summary>
         /// name of the state
@@ -41,7 +41,12 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal byte indexB;
 
-        internal AnimationDestinationStateStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        internal AnimationDestinationStateStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             stateName = binaryReader.ReadStringID( );
             frameEventLink = ( FrameEventLinkWhichFrameEventToLinkTo ) binaryReader.ReadByte( );
@@ -50,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
             indexB = binaryReader.ReadByte( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class FiringPositionsBlockBase : IGuerilla
+    public class FiringPositionsBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector3 positionLocal;
         internal short referenceFrame;
@@ -27,7 +27,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal OpenTK.Vector2 normal;
 
-        internal FiringPositionsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 32; }
+        }
+
+        internal FiringPositionsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             positionLocal = binaryReader.ReadVector3( );
             referenceFrame = binaryReader.ReadInt16( );
@@ -38,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
             normal = binaryReader.ReadVector2( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

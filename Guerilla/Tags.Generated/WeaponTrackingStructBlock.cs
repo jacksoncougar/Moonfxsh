@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class WeaponTrackingStructBlockBase : IGuerilla
+    public class WeaponTrackingStructBlockBase : GuerillaBlock
     {
         internal TrackingType trackingType;
         internal byte[] invalidName_;
 
-        internal WeaponTrackingStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal WeaponTrackingStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             trackingType = ( TrackingType ) binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 60, Alignment = 4 )]
-    public class SecondaryLightStructBlockBase : IGuerilla
+    public class SecondaryLightStructBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ColorR8G8B8 minLightmapColor;
         internal Moonfish.Tags.ColorR8G8B8 maxLightmapColor;
@@ -31,7 +31,12 @@ namespace Moonfish.Guerilla.Tags
 
         internal MappingFunctionBlock function;
 
-        internal SecondaryLightStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 60; }
+        }
+
+        internal SecondaryLightStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             minLightmapColor = binaryReader.ReadColorR8G8B8( );
             maxLightmapColor = binaryReader.ReadColorR8G8B8( );
@@ -41,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
             function = new MappingFunctionBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

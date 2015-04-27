@@ -17,7 +17,7 @@ namespace Moonfish.Tags
 namespace Moonfish.Guerilla.Tags
 {
     [TagClassAttribute("bitm")]
-    public  partial class BitmapBlock : BitmapBlockBase
+    public partial class BitmapBlock : BitmapBlockBase
     {
         public  BitmapBlock(BinaryReader binaryReader): base(binaryReader)
         {
@@ -25,7 +25,7 @@ namespace Moonfish.Guerilla.Tags
         }
     };
     [LayoutAttribute(Size = 76, Alignment = 4)]
-    public class BitmapBlockBase  : IGuerilla
+    public class BitmapBlockBase : GuerillaBlock
     {
         internal Type type;
         internal Format format;
@@ -66,7 +66,10 @@ namespace Moonfish.Guerilla.Tags
         internal ForceFormat forceFormat;
         internal BitmapGroupSequenceBlock[] sequences;
         internal BitmapDataBlock[] bitmaps;
-        internal BitmapBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 76; }}
+        
+        internal  BitmapBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             type = (Type)binaryReader.ReadInt16();
             format = (Format)binaryReader.ReadInt16();
@@ -90,7 +93,7 @@ namespace Moonfish.Guerilla.Tags
             sequences = Guerilla.ReadBlockArray<BitmapGroupSequenceBlock>(binaryReader);
             bitmaps = Guerilla.ReadBlockArray<BitmapDataBlock>(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 548, Alignment = 4 )]
-    public class CellularAutomataBlockBase : IGuerilla
+    public class CellularAutomataBlockBase : GuerillaBlock
     {
         internal short updatesPerSecondHz;
         internal short xWidthCells;
@@ -79,7 +79,12 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "bitm" )] internal Moonfish.Tags.TagReference maskBitmap;
         internal byte[] invalidName_8;
 
-        internal CellularAutomataBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 548; }
+        }
+
+        internal CellularAutomataBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             updatesPerSecondHz = binaryReader.ReadInt16( );
             xWidthCells = binaryReader.ReadInt16( );
@@ -114,7 +119,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_8 = binaryReader.ReadBytes( 240 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 64, Alignment = 4 )]
-    public class ContrailPointStatesBlockBase : IGuerilla
+    public class ContrailPointStatesBlockBase : GuerillaBlock
     {
         /// <summary>
         /// the time a point spends in this state
@@ -51,7 +51,12 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal ScaleFlagsTheseFlagsDetermineWhichFieldsAreScaledByTheContrailDensity scaleFlags;
 
-        internal ContrailPointStatesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 64; }
+        }
+
+        internal ContrailPointStatesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             durationSecondsSeconds = binaryReader.ReadRange( );
             transitionDurationSeconds = binaryReader.ReadRange( );
@@ -63,7 +68,7 @@ namespace Moonfish.Guerilla.Tags
                 ( ScaleFlagsTheseFlagsDetermineWhichFieldsAreScaledByTheContrailDensity ) binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

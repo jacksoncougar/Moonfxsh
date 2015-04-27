@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 52, Alignment = 4 )]
-    public class AnimationGraphResourcesStructBlockBase : IGuerilla
+    public class AnimationGraphResourcesStructBlockBase : GuerillaBlock
     {
         [TagReference( "jmad" )] internal Moonfish.Tags.TagReference parentAnimationGraph;
         internal InheritanceFlags inheritanceFlags;
@@ -29,7 +29,12 @@ namespace Moonfish.Guerilla.Tags
         internal AnimationBlendScreenBlock[] blendScreensABCDCC;
         internal AnimationPoolBlock[] animationsABCDCC;
 
-        internal AnimationGraphResourcesStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 52; }
+        }
+
+        internal AnimationGraphResourcesStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             parentAnimationGraph = binaryReader.ReadTagReference( );
             inheritanceFlags = ( InheritanceFlags ) binaryReader.ReadByte( );
@@ -42,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
             animationsABCDCC = Guerilla.ReadBlockArray<AnimationPoolBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

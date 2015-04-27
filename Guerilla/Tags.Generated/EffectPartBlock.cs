@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 56, Alignment = 4 )]
-    public class EffectPartBlockBase : IGuerilla
+    public class EffectPartBlockBase : GuerillaBlock
     {
         internal CreateIn createIn;
         internal CreateIn createIn0;
@@ -41,7 +41,12 @@ namespace Moonfish.Guerilla.Tags
         internal AScalesValues aScalesValues;
         internal BScalesValues bScalesValues;
 
-        internal EffectPartBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 56; }
+        }
+
+        internal EffectPartBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             createIn = ( CreateIn ) binaryReader.ReadInt16( );
             createIn0 = ( CreateIn ) binaryReader.ReadInt16( );
@@ -57,7 +62,7 @@ namespace Moonfish.Guerilla.Tags
             bScalesValues = ( BScalesValues ) binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,27 +9,32 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class MouseCursorBitmapReferenceBlock : MouseCursorBitmapReferenceBlockBase
+    public artial class MouseCursorBitmapReferenceBlock : MouseCursorBitmapReferenceBlockBase
     {
-        public  MouseCursorBitmapReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public  ouseCursorBitmapReferenceBlock(B inaryReader binaryReader) :  base(b inaryReader) 
         {
-            
-        }
-    };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class MouseCursorBitmapReferenceBlockBase  : IGuerilla
+         
+    };
+
+    LayoutAttribute(S ize = 8, Alignment = 4) ]
+    public class MouseCursorBitmapReferenceBlockBase  GuerillaBlock
     {
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference bitmap;
-        internal  MouseCursorBitmapReferenceBlockBase(BinaryReader binaryReader)
+        [TagReferenc e("bit m"   internal Moonfish.Tags.TagReference bitma
+
+          
+       public override int SerializedSize {get { return 8; }}
+         
+        internal  MouseCursorBitmapReferenceBlockBase(Binar yReader binar
+
+        base(binaryReader )
         {
-            bitmap = binaryReader.ReadTagReference();
+            bitmap = binaryReader.ReadTa gReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
+          public override int Write( S ystem.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+         {
             using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write(bitmap);
+              binaryWriter.Write(bitmap);
                 return nextAddress;
             }
         }

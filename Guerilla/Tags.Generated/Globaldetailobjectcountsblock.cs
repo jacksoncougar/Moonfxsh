@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 2, Alignment = 4 )]
-    public class GlobalDetailObjectCountsBlockBase : IGuerilla
+    public class GlobalDetailObjectCountsBlockBase : GuerillaBlock
     {
         internal short invalidName_;
 
-        internal GlobalDetailObjectCountsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 2; }
+        }
+
+        internal GlobalDetailObjectCountsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             invalidName_ = binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

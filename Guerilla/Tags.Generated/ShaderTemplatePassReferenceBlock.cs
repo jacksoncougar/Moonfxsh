@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,39 +10,40 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderTemplatePassReferenceBlock : ShaderTemplatePassReferenceBlockBase
     {
-        public ShaderTemplatePassReferenceBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderTemplatePassReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class ShaderTemplatePassReferenceBlockBase : IGuerilla
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class ShaderTemplatePassReferenceBlockBase : GuerillaBlock
     {
         internal Layer layer;
         internal byte[] invalidName_;
-        [TagReference( "spas" )] internal Moonfish.Tags.TagReference pass;
+        [TagReference("spas")]
+        internal Moonfish.Tags.TagReference pass;
         internal byte[] invalidName_0;
-
-        internal ShaderTemplatePassReferenceBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 24; }}
+        
+        internal  ShaderTemplatePassReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            layer = ( Layer ) binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            pass = binaryReader.ReadTagReference( );
-            invalidName_0 = binaryReader.ReadBytes( 12 );
+            layer = (Layer)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            pass = binaryReader.ReadTagReference();
+            invalidName_0 = binaryReader.ReadBytes(12);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) layer );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( pass );
-                binaryWriter.Write( invalidName_0, 0, 12 );
+                binaryWriter.Write((Int16)layer);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(pass);
+                binaryWriter.Write(invalidName_0, 0, 12);
                 return nextAddress;
             }
         }
-
         internal enum Layer : short
         {
             Texaccum = 0,

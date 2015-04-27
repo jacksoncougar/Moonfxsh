@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 128, Alignment = 4 )]
-    public class CsScriptDataBlockBase : IGuerilla
+    public class CsScriptDataBlockBase : GuerillaBlock
     {
         internal CsPointSetBlock[] pointSets;
         internal byte[] invalidName_;
 
-        internal CsScriptDataBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 128; }
+        }
+
+        internal CsScriptDataBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             pointSets = Guerilla.ReadBlockArray<CsPointSetBlock>( binaryReader );
             invalidName_ = binaryReader.ReadBytes( 120 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

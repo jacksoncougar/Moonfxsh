@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,15 +9,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundGestaltPermutationsBlock : SoundGestaltPermutationsBlockBase
+    public artial class SoundGestaltPermutationsBlock : SoundGestaltPermutationsBlockBase
     {
-        public  SoundGestaltPermutationsBlock(BinaryReader binaryReader): base(binaryReader)
+        public  oundGestaltPermutationsBlock(B inaryReader binaryReader) :  base(b inaryReader) 
         {
-            
-        }
-    };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class SoundGestaltPermutationsBlockBase  : IGuerilla
+         
+    };
+
+    LayoutAttribute(S ize = 16, Alignment = 4) ]
+    public class SoundGestaltPermutationsBlockBase  GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 name;
         internal short encodedSkipFraction;
@@ -25,30 +26,36 @@ namespace Moonfish.Guerilla.Tags
         internal short languageNeutralTimeMs;
         internal int sampleSize;
         internal Moonfish.Tags.ShortBlockIndex1 firstChunk;
-        internal short chunkCount;
-        internal  SoundGestaltPermutationsBlockBase(BinaryReader binaryReader)
+        internal short chunkCoun
+
+          
+       public override int SerializedSi ze{get { return 16; }}
+         
+        internal  SoundGestaltPermutationsBlockBase(Binary Reader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadShortBlockIndex1();
-            encodedSkipFraction = binaryReader.ReadInt16();
-            encodedGainDB = binaryReader.ReadByte();
-            permutationInfoIndex = binaryReader.ReadByte();
-            languageNeutralTimeMs = binaryReader.ReadInt16();
-            sampleSize = binaryReader.ReadInt32();
-            firstChunk = binaryReader.ReadShortBlockIndex1();
-            chunkCount = binaryReader.ReadInt16();
+             name = binaryReader.ReadShortBlockIndex1();
+             encodedSkipFraction = binaryReader.ReadInt16();
+             encodedGainDB = binaryReader.ReadByte();
+            pe rmutationInfoIndex = binaryReader.ReadByte();
+             languageNeutralTimeMs = binaryReader.ReadInt16();
+             sampleSize = binaryReader.ReadInt32();
+             firstC
+
+        aryReader.ReadSho rtBlockIndex1();
+            chunkCount = binaryReade r.ReadInt16();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+          public override int Write ( System.IO.BinaryWriter binaryWriter, Int32 nextAddres s)
+         {
+            using(binaryWrit er.BaseStream.Pin() )
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(encodedSkipFraction);
-                binaryWriter.Write(encodedGainDB);
-                binaryWriter.Write(permutationInfoIndex);
-                binaryWriter.Write(languageNeutralTimeMs);
-                binaryWriter.Write(sampleSize);
+                binar yWriter.Write (name);
+                binaryWriter.W rite(encodedSkipFrac tion);
+                binaryWriter.Wr ite(encodedGainDB);
+                 binaryWriter.Write(perm utationInf oIndex);
+                binaryWriter. Write(lang uageNeutralTimeMs);
+                bi naryWriter .Write(sampleSize);
                 binaryWriter.Write(firstChunk);
-                binaryWriter.Write(chunkCount);
+              binaryWriter.Write(chunkCount);
                 return nextAddress;
             }
         }

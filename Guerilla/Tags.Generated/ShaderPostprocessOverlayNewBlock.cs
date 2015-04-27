@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class ShaderPostprocessOverlayNewBlockBase : IGuerilla
+    public class ShaderPostprocessOverlayNewBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID inputName;
         internal Moonfish.Tags.StringID rangeName;
         internal float timePeriodInSeconds;
         internal ScalarFunctionStructBlock function;
 
-        internal ShaderPostprocessOverlayNewBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        internal ShaderPostprocessOverlayNewBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             inputName = binaryReader.ReadStringID( );
             rangeName = binaryReader.ReadStringID( );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             function = new ScalarFunctionStructBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

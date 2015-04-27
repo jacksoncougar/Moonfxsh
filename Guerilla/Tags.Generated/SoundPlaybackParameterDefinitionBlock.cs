@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class SoundPlaybackParameterDefinitionBlockBase : IGuerilla
+    public class SoundPlaybackParameterDefinitionBlockBase : GuerillaBlock
     {
         internal Moonfish.Model.Range scaleBounds;
         internal Moonfish.Model.Range randomBaseAndVariance;
 
-        internal SoundPlaybackParameterDefinitionBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        internal SoundPlaybackParameterDefinitionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             scaleBounds = binaryReader.ReadRange( );
             randomBaseAndVariance = binaryReader.ReadRange( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

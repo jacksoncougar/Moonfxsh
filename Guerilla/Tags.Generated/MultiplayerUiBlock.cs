@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class MultiplayerUiBlockBase : IGuerilla
+    public class MultiplayerUiBlockBase : GuerillaBlock
     {
         [TagReference( "unic" )] internal Moonfish.Tags.TagReference randomPlayerNames;
         internal MultiplayerColorBlock[] obsoleteProfileColors;
         internal MultiplayerColorBlock[] teamColors;
         [TagReference( "unic" )] internal Moonfish.Tags.TagReference teamNames;
 
-        internal MultiplayerUiBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 32; }
+        }
+
+        internal MultiplayerUiBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             randomPlayerNames = binaryReader.ReadTagReference( );
             obsoleteProfileColors = Guerilla.ReadBlockArray<MultiplayerColorBlock>( binaryReader );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             teamNames = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

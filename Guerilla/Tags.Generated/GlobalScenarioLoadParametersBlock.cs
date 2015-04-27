@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,33 +9,39 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class GlobalScenarioLoadParametersBlock : GlobalScenarioLoadParametersBlockBase
+    public partial class GlobalScenarioLoadParametersBlock : GlobalScenarioLoadParametersBlockBase
     {
-        public  GlobalScenarioLoadParametersBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalScenarioLoadParametersBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 48, Alignment = 4)]
-    public class GlobalScenarioLoadParametersBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 48, Alignment = 4 )]
+    public class GlobalScenarioLoadParametersBlockBase : GuerillaBlock
     {
-        [TagReference("scnr")]
-        internal Moonfish.Tags.TagReference scenario;
+        [TagReference( "scnr" )] internal Moonfish.Tags.TagReference scenario;
         internal byte[] parameters;
         internal byte[] invalidName_;
-        internal  GlobalScenarioLoadParametersBlockBase(BinaryReader binaryReader)
+
+        public override int SerializedSize
         {
-            scenario = binaryReader.ReadTagReference();
-            parameters = Guerilla.ReadData(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(32);
+            get { return 48; }
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        internal GlobalScenarioLoadParametersBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
-            using(binaryWriter.BaseStream.Pin())
+            scenario = binaryReader.ReadTagReference( );
+            parameters = Guerilla.ReadData( binaryReader );
+            invalidName_ = binaryReader.ReadBytes( 32 );
+        }
+
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        {
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(scenario);
-                nextAddress = Guerilla.WriteData(binaryWriter, parameters, nextAddress);
-                binaryWriter.Write(invalidName_, 0, 32);
+                binaryWriter.Write( scenario );
+                nextAddress = Guerilla.WriteData( binaryWriter, parameters, nextAddress );
+                binaryWriter.Write( invalidName_, 0, 32 );
                 return nextAddress;
             }
         }

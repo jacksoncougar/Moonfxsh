@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 72, Alignment = 4 )]
-    public class StructureBspSoundEnvironmentPaletteBlockBase : IGuerilla
+    public class StructureBspSoundEnvironmentPaletteBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
         [TagReference( "snde" )] internal Moonfish.Tags.TagReference soundEnvironment;
@@ -25,7 +25,12 @@ namespace Moonfish.Guerilla.Tags
         internal float interpolationSpeed1Sec;
         internal byte[] invalidName_;
 
-        internal StructureBspSoundEnvironmentPaletteBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 72; }
+        }
+
+        internal StructureBspSoundEnvironmentPaletteBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadString32( );
             soundEnvironment = binaryReader.ReadTagReference( );
@@ -34,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 24 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

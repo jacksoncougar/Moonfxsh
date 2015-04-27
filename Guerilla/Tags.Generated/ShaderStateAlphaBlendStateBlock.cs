@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,13 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderStateAlphaBlendStateBlock : ShaderStateAlphaBlendStateBlockBase
     {
-        public ShaderStateAlphaBlendStateBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderStateAlphaBlendStateBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class ShaderStateAlphaBlendStateBlockBase : IGuerilla
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class ShaderStateAlphaBlendStateBlockBase : GuerillaBlock
     {
         internal BlendFunction blendFunction;
         internal BlendSrcFactor blendSrcFactor;
@@ -26,33 +25,33 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ColourA1R1G1B1 blendColor;
         internal LogicOpFlags logicOpFlags;
         internal byte[] invalidName_0;
-
-        internal ShaderStateAlphaBlendStateBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        internal  ShaderStateAlphaBlendStateBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            blendFunction = ( BlendFunction ) binaryReader.ReadInt16( );
-            blendSrcFactor = ( BlendSrcFactor ) binaryReader.ReadInt16( );
-            blendDstFactor = ( BlendDstFactor ) binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            blendColor = binaryReader.ReadColourA1R1G1B1( );
-            logicOpFlags = ( LogicOpFlags ) binaryReader.ReadInt16( );
-            invalidName_0 = binaryReader.ReadBytes( 2 );
+            blendFunction = (BlendFunction)binaryReader.ReadInt16();
+            blendSrcFactor = (BlendSrcFactor)binaryReader.ReadInt16();
+            blendDstFactor = (BlendDstFactor)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            blendColor = binaryReader.ReadColourA1R1G1B1();
+            logicOpFlags = (LogicOpFlags)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) blendFunction );
-                binaryWriter.Write( ( Int16 ) blendSrcFactor );
-                binaryWriter.Write( ( Int16 ) blendDstFactor );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( blendColor );
-                binaryWriter.Write( ( Int16 ) logicOpFlags );
-                binaryWriter.Write( invalidName_0, 0, 2 );
+                binaryWriter.Write((Int16)blendFunction);
+                binaryWriter.Write((Int16)blendSrcFactor);
+                binaryWriter.Write((Int16)blendDstFactor);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(blendColor);
+                binaryWriter.Write((Int16)logicOpFlags);
+                binaryWriter.Write(invalidName_0, 0, 2);
                 return nextAddress;
             }
         }
-
         internal enum BlendFunction : short
         {
             Add = 0,
@@ -64,7 +63,6 @@ namespace Moonfish.Guerilla.Tags
             ReverseSubtractSigned = 6,
             LogicOp = 7,
         };
-
         internal enum BlendSrcFactor : short
         {
             Zero = 0,
@@ -83,7 +81,6 @@ namespace Moonfish.Guerilla.Tags
             ConstantAlpha = 13,
             ConstantAlphaInverse = 14,
         };
-
         internal enum BlendDstFactor : short
         {
             Zero = 0,
@@ -102,7 +99,6 @@ namespace Moonfish.Guerilla.Tags
             ConstantAlpha = 13,
             ConstantAlphaInverse = 14,
         };
-
         [FlagsAttribute]
         internal enum LogicOpFlags : short
         {

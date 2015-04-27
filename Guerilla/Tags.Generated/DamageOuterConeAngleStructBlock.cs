@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,27 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class DamageOuterConeAngleStructBlock : DamageOuterConeAngleStructBlockBase
     {
-        public DamageOuterConeAngleStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  DamageOuterConeAngleStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class DamageOuterConeAngleStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class DamageOuterConeAngleStructBlockBase : GuerillaBlock
     {
         internal float dmgOuterConeAngle;
-
-        internal DamageOuterConeAngleStructBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        internal  DamageOuterConeAngleStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            dmgOuterConeAngle = binaryReader.ReadSingle( );
+            dmgOuterConeAngle = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( dmgOuterConeAngle );
+                binaryWriter.Write(dmgOuterConeAngle);
                 return nextAddress;
             }
         }

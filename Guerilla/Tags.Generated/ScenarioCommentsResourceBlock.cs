@@ -26,16 +26,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ScenarioCommentsResourceBlockBase : IGuerilla
+    public class ScenarioCommentsResourceBlockBase : GuerillaBlock
     {
         internal EditorCommentBlock[] comments;
 
-        internal ScenarioCommentsResourceBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        internal ScenarioCommentsResourceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             comments = Guerilla.ReadBlockArray<EditorCommentBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

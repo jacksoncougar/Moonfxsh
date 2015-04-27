@@ -17,20 +17,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class WeaponInterfaceStructBlockBase : IGuerilla
+    public class WeaponInterfaceStructBlockBase : GuerillaBlock
     {
         internal WeaponSharedInterfaceStructBlock sharedInterface;
         internal WeaponFirstPersonInterfaceBlock[] firstPerson;
         [TagReference( "nhdt" )] internal Moonfish.Tags.TagReference newHudInterface;
 
-        internal WeaponInterfaceStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 32; }
+        }
+
+        internal WeaponInterfaceStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             sharedInterface = new WeaponSharedInterfaceStructBlock( binaryReader );
             firstPerson = Guerilla.ReadBlockArray<WeaponFirstPersonInterfaceBlock>( binaryReader );
             newHudInterface = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

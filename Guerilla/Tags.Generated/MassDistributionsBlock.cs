@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 64, Alignment = 16 )]
-    public class MassDistributionsBlockBase : IGuerilla
+    public class MassDistributionsBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector3 centerOfMass;
         internal byte[] invalidName_;
@@ -28,7 +28,12 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 inertiaTensorK;
         internal byte[] invalidName_2;
 
-        internal MassDistributionsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 64; }
+        }
+
+        internal MassDistributionsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             centerOfMass = binaryReader.ReadVector3( );
             invalidName_ = binaryReader.ReadBytes( 4 );
@@ -40,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes( 4 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

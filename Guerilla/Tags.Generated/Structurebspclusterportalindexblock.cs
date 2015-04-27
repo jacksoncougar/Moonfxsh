@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 2, Alignment = 4 )]
-    public class StructureBspClusterPortalIndexBlockBase : IGuerilla
+    public class StructureBspClusterPortalIndexBlockBase : GuerillaBlock
     {
         internal short portalIndex;
 
-        internal StructureBspClusterPortalIndexBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 2; }
+        }
+
+        internal StructureBspClusterPortalIndexBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             portalIndex = binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

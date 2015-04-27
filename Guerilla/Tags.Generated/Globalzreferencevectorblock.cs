@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class GlobalZReferenceVectorBlockBase : IGuerilla
+    public class GlobalZReferenceVectorBlockBase : GuerillaBlock
     {
         internal float invalidName_;
         internal float invalidName_0;
         internal float invalidName_1;
         internal float invalidName_2;
 
-        internal GlobalZReferenceVectorBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        internal GlobalZReferenceVectorBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             invalidName_ = binaryReader.ReadSingle( );
             invalidName_0 = binaryReader.ReadSingle( );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class VertexShaderConstantBlockBase : IGuerilla
+    public class VertexShaderConstantBlockBase : GuerillaBlock
     {
         internal byte registerIndex;
         internal byte parameterIndex;
         internal byte destinationMask;
         internal byte scaleByTextureStage;
 
-        internal VertexShaderConstantBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal VertexShaderConstantBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             registerIndex = binaryReader.ReadByte( );
             parameterIndex = binaryReader.ReadByte( );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             scaleByTextureStage = binaryReader.ReadByte( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

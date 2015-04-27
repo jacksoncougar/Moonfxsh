@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 152, Alignment = 4 )]
-    public class ShaderPostprocessLevelOfDetailBlockBase : IGuerilla
+    public class ShaderPostprocessLevelOfDetailBlockBase : GuerillaBlock
     {
         internal float projectedHeightPercentage;
         internal int availableLayers;
@@ -34,7 +34,12 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderPostprocessVertexShaderConstantBlock[] vertexShaderConstants;
         internal ShaderGpuStateStructBlock gPUState;
 
-        internal ShaderPostprocessLevelOfDetailBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 152; }
+        }
+
+        internal ShaderPostprocessLevelOfDetailBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             projectedHeightPercentage = binaryReader.ReadSingle( );
             availableLayers = binaryReader.ReadInt32( );
@@ -53,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
             gPUState = new ShaderGpuStateStructBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

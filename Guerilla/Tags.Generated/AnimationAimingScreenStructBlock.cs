@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class AnimationAimingScreenStructBlockBase : IGuerilla
+    public class AnimationAimingScreenStructBlockBase : GuerillaBlock
     {
         internal float rightYawPerFrame;
         internal float leftYawPerFrame;
@@ -28,7 +28,12 @@ namespace Moonfish.Guerilla.Tags
         internal short downPitchFrameCount;
         internal short upPitchFrameCount;
 
-        internal AnimationAimingScreenStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        internal AnimationAimingScreenStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             rightYawPerFrame = binaryReader.ReadSingle( );
             leftYawPerFrame = binaryReader.ReadSingle( );
@@ -40,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
             upPitchFrameCount = binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

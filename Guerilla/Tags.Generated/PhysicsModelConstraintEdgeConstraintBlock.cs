@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class PhysicsModelConstraintEdgeConstraintBlockBase : IGuerilla
+    public class PhysicsModelConstraintEdgeConstraintBlockBase : GuerillaBlock
     {
         internal Type type;
         internal Moonfish.Tags.ShortBlockIndex2 index;
@@ -28,7 +28,12 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float friction;
 
-        internal PhysicsModelConstraintEdgeConstraintBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 12; }
+        }
+
+        internal PhysicsModelConstraintEdgeConstraintBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             type = ( Type ) binaryReader.ReadInt16( );
             index = binaryReader.ReadShortBlockIndex2( );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             friction = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

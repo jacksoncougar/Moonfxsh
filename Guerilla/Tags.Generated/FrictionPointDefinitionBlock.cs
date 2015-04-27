@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 76, Alignment = 4 )]
-    public class FrictionPointDefinitionBlockBase : IGuerilla
+    public class FrictionPointDefinitionBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID markerName;
         internal Flags flags;
@@ -56,7 +56,12 @@ namespace Moonfish.Guerilla.Tags
 
         internal byte[] invalidName_2;
 
-        internal FrictionPointDefinitionBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 76; }
+        }
+
+        internal FrictionPointDefinitionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             markerName = binaryReader.ReadStringID( );
             flags = ( Flags ) binaryReader.ReadInt32( );
@@ -77,7 +82,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes( 4 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

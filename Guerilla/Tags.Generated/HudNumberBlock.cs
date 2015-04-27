@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,24 +10,25 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Hud = ( TagClass ) "hud#";
+        public static readonly TagClass Hud = (TagClass)"hud#";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "hud#" )]
+    [TagClassAttribute("hud#")]
     public partial class HudNumberBlock : HudNumberBlockBase
     {
-        public HudNumberBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  HudNumberBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 92, Alignment = 4 )]
-    public class HudNumberBlockBase : IGuerilla
+    [LayoutAttribute(Size = 92, Alignment = 4)]
+    public class HudNumberBlockBase : GuerillaBlock
     {
-        [TagReference( "bitm" )] internal Moonfish.Tags.TagReference digitsBitmap;
+        [TagReference("bitm")]
+        internal Moonfish.Tags.TagReference digitsBitmap;
         internal byte bitmapDigitWidth;
         internal byte screenDigitWidth;
         internal byte xOffset;
@@ -37,33 +37,34 @@ namespace Moonfish.Guerilla.Tags
         internal byte colonWidth;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
-
-        internal HudNumberBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 92; }}
+        
+        internal  HudNumberBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            digitsBitmap = binaryReader.ReadTagReference( );
-            bitmapDigitWidth = binaryReader.ReadByte( );
-            screenDigitWidth = binaryReader.ReadByte( );
-            xOffset = binaryReader.ReadByte( );
-            yOffset = binaryReader.ReadByte( );
-            decimalPointWidth = binaryReader.ReadByte( );
-            colonWidth = binaryReader.ReadByte( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            invalidName_0 = binaryReader.ReadBytes( 76 );
+            digitsBitmap = binaryReader.ReadTagReference();
+            bitmapDigitWidth = binaryReader.ReadByte();
+            screenDigitWidth = binaryReader.ReadByte();
+            xOffset = binaryReader.ReadByte();
+            yOffset = binaryReader.ReadByte();
+            decimalPointWidth = binaryReader.ReadByte();
+            colonWidth = binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(76);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( digitsBitmap );
-                binaryWriter.Write( bitmapDigitWidth );
-                binaryWriter.Write( screenDigitWidth );
-                binaryWriter.Write( xOffset );
-                binaryWriter.Write( yOffset );
-                binaryWriter.Write( decimalPointWidth );
-                binaryWriter.Write( colonWidth );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( invalidName_0, 0, 76 );
+                binaryWriter.Write(digitsBitmap);
+                binaryWriter.Write(bitmapDigitWidth);
+                binaryWriter.Write(screenDigitWidth);
+                binaryWriter.Write(xOffset);
+                binaryWriter.Write(yOffset);
+                binaryWriter.Write(decimalPointWidth);
+                binaryWriter.Write(colonWidth);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(invalidName_0, 0, 76);
                 return nextAddress;
             }
         }

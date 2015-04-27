@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 116, Alignment = 4 )]
-    public class MaterialsSweetenersStructBlockBase : IGuerilla
+    public class MaterialsSweetenersStructBlockBase : GuerillaBlock
     {
         [TagReference( "snd!" )] internal Moonfish.Tags.TagReference soundSweetenerSmall;
         [TagReference( "snd!" )] internal Moonfish.Tags.TagReference soundSweetenerMedium;
@@ -35,7 +35,12 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "null" )] internal Moonfish.Tags.TagReference invalidName_0;
         internal SweetenerInheritanceFlags sweetenerInheritanceFlags;
 
-        internal MaterialsSweetenersStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 116; }
+        }
+
+        internal MaterialsSweetenersStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             soundSweetenerSmall = binaryReader.ReadTagReference( );
             soundSweetenerMedium = binaryReader.ReadTagReference( );
@@ -54,7 +59,7 @@ namespace Moonfish.Guerilla.Tags
             sweetenerInheritanceFlags = ( SweetenerInheritanceFlags ) binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

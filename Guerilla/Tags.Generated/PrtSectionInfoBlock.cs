@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class PrtSectionInfoBlockBase : IGuerilla
+    public class PrtSectionInfoBlockBase : GuerillaBlock
     {
         internal int sectionIndex;
         internal int pcaDataOffset;
 
-        internal PrtSectionInfoBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        internal PrtSectionInfoBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             sectionIndex = binaryReader.ReadInt32( );
             pcaDataOffset = binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

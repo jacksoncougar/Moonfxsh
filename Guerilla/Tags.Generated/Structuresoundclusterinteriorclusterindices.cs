@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 2, Alignment = 4 )]
-    public class StructureSoundClusterInteriorClusterIndicesBase : IGuerilla
+    public class StructureSoundClusterInteriorClusterIndicesBase : GuerillaBlock
     {
         internal short interiorClusterIndex;
 
-        internal StructureSoundClusterInteriorClusterIndicesBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 2; }
+        }
+
+        internal StructureSoundClusterInteriorClusterIndicesBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             interiorClusterIndex = binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

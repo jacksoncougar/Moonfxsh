@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class FlightReferenceBlockBase : IGuerilla
+    public class FlightReferenceBlockBase : GuerillaBlock
     {
         internal short flightHintIndex;
         internal short poitIndex;
 
-        internal FlightReferenceBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal FlightReferenceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flightHintIndex = binaryReader.ReadInt16( );
             poitIndex = binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

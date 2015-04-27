@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 304, Alignment = 4 )]
-    public class EditorCommentBlockBase : IGuerilla
+    public class EditorCommentBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector3 position;
         internal Type type;
         internal Moonfish.Tags.String32 name;
         internal Moonfish.Tags.String256 comment;
 
-        internal EditorCommentBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 304; }
+        }
+
+        internal EditorCommentBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             position = binaryReader.ReadVector3( );
             type = ( Type ) binaryReader.ReadInt32( );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             comment = binaryReader.ReadString256( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

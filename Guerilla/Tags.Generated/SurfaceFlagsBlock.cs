@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class SurfaceFlagsBlockBase : IGuerilla
+    public class SurfaceFlagsBlockBase : GuerillaBlock
     {
         internal int flags;
 
-        internal SurfaceFlagsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal SurfaceFlagsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

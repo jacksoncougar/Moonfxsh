@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,13 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class STextValuePairReferenceBlockUNUSED : STextValuePairReferenceBlockUNUSEDBase
     {
-        public STextValuePairReferenceBlockUNUSED( BinaryReader binaryReader ) : base( binaryReader )
+        public  STextValuePairReferenceBlockUNUSED(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class STextValuePairReferenceBlockUNUSEDBase : IGuerilla
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class STextValuePairReferenceBlockUNUSEDBase : GuerillaBlock
     {
         internal ValueType valueType;
         internal BooleanValue booleanValue;
@@ -25,31 +24,31 @@ namespace Moonfish.Guerilla.Tags
         internal float fpValue;
         internal Moonfish.Tags.StringID textValueStringId;
         internal Moonfish.Tags.StringID textLabelStringId;
-
-        internal STextValuePairReferenceBlockUNUSEDBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        internal  STextValuePairReferenceBlockUNUSEDBase(BinaryReader binaryReader): base(binaryReader)
         {
-            valueType = ( ValueType ) binaryReader.ReadInt16( );
-            booleanValue = ( BooleanValue ) binaryReader.ReadInt16( );
-            integerValue = binaryReader.ReadInt32( );
-            fpValue = binaryReader.ReadSingle( );
-            textValueStringId = binaryReader.ReadStringID( );
-            textLabelStringId = binaryReader.ReadStringID( );
+            valueType = (ValueType)binaryReader.ReadInt16();
+            booleanValue = (BooleanValue)binaryReader.ReadInt16();
+            integerValue = binaryReader.ReadInt32();
+            fpValue = binaryReader.ReadSingle();
+            textValueStringId = binaryReader.ReadStringID();
+            textLabelStringId = binaryReader.ReadStringID();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) valueType );
-                binaryWriter.Write( ( Int16 ) booleanValue );
-                binaryWriter.Write( integerValue );
-                binaryWriter.Write( fpValue );
-                binaryWriter.Write( textValueStringId );
-                binaryWriter.Write( textLabelStringId );
+                binaryWriter.Write((Int16)valueType);
+                binaryWriter.Write((Int16)booleanValue);
+                binaryWriter.Write(integerValue);
+                binaryWriter.Write(fpValue);
+                binaryWriter.Write(textValueStringId);
+                binaryWriter.Write(textLabelStringId);
                 return nextAddress;
             }
         }
-
         internal enum ValueType : short
         {
             IntegerNumber = 0,
@@ -57,7 +56,6 @@ namespace Moonfish.Guerilla.Tags
             Boolean = 2,
             TextString = 3,
         };
-
         internal enum BooleanValue : short
         {
             FALSE = 0,

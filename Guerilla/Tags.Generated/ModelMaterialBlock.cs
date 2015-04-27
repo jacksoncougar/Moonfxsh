@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,15 +9,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ModelMaterialBlock : ModelMaterialBlockBase
+    public partial class ModelMaterialBlock : ModelMaterialBlockBase
     {
-        public  ModelMaterialBlock(BinaryReader binaryReader): base(binaryReader)
+        public ModelMaterialBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class ModelMaterialBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 20, Alignment = 4 )]
+    public class ModelMaterialBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID materialName;
         internal MaterialType materialType;
@@ -25,30 +26,38 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal Moonfish.Tags.StringID globalMaterialName;
         internal byte[] invalidName_1;
-        internal  ModelMaterialBlockBase(BinaryReader binaryReader)
+
+        public override int SerializedSize
         {
-            materialName = binaryReader.ReadStringID();
-            materialType = (MaterialType)binaryReader.ReadInt16();
-            damageSection = binaryReader.ReadShortBlockIndex2();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(2);
-            globalMaterialName = binaryReader.ReadStringID();
-            invalidName_1 = binaryReader.ReadBytes(4);
+            get { return 20; }
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        internal ModelMaterialBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
-            using(binaryWriter.BaseStream.Pin())
+            materialName = binaryReader.ReadStringID( );
+            materialType = ( MaterialType ) binaryReader.ReadInt16( );
+            damageSection = binaryReader.ReadShortBlockIndex2( );
+            invalidName_ = binaryReader.ReadBytes( 2 );
+            invalidName_0 = binaryReader.ReadBytes( 2 );
+            globalMaterialName = binaryReader.ReadStringID( );
+            invalidName_1 = binaryReader.ReadBytes( 4 );
+        }
+
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        {
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(materialName);
-                binaryWriter.Write((Int16)materialType);
-                binaryWriter.Write(damageSection);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write(globalMaterialName);
-                binaryWriter.Write(invalidName_1, 0, 4);
+                binaryWriter.Write( materialName );
+                binaryWriter.Write( ( Int16 ) materialType );
+                binaryWriter.Write( damageSection );
+                binaryWriter.Write( invalidName_, 0, 2 );
+                binaryWriter.Write( invalidName_0, 0, 2 );
+                binaryWriter.Write( globalMaterialName );
+                binaryWriter.Write( invalidName_1, 0, 4 );
                 return nextAddress;
             }
         }
+
         internal enum MaterialType : short
         {
             Dirt = 0,

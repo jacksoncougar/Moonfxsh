@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 80, Alignment = 4 )]
-    public class ScenarioSoundSceneryBlockBase : IGuerilla
+    public class ScenarioSoundSceneryBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 type;
         internal Moonfish.Tags.ShortBlockIndex1 name;
         internal ScenarioObjectDatumStructBlock objectData;
         internal SoundSceneryDatumStructBlock soundScenery;
 
-        internal ScenarioSoundSceneryBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 80; }
+        }
+
+        internal ScenarioSoundSceneryBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             type = binaryReader.ReadShortBlockIndex1( );
             name = binaryReader.ReadShortBlockIndex1( );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             soundScenery = new SoundSceneryDatumStructBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

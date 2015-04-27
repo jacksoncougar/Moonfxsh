@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class PlatformSoundEffectConstantBlockBase : IGuerilla
+    public class PlatformSoundEffectConstantBlockBase : GuerillaBlock
     {
         internal float constantValue;
 
-        internal PlatformSoundEffectConstantBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal PlatformSoundEffectConstantBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             constantValue = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

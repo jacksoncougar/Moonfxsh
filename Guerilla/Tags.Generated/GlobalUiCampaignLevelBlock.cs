@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 2896, Alignment = 4 )]
-    public class GlobalUiCampaignLevelBlockBase : IGuerilla
+    public class GlobalUiCampaignLevelBlockBase : GuerillaBlock
     {
         internal int campaignID;
         internal int mapID;
@@ -25,7 +25,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
 
-        internal GlobalUiCampaignLevelBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 2896; }
+        }
+
+        internal GlobalUiCampaignLevelBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             campaignID = binaryReader.ReadInt32( );
             mapID = binaryReader.ReadInt32( );
@@ -34,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes( 2304 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

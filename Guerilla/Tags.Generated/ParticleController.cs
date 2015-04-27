@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class ParticleControllerBase : IGuerilla
+    public class ParticleControllerBase : GuerillaBlock
     {
         internal Type type;
         internal byte[] invalidName_;
         internal ParticleControllerParameters[] parameters;
         internal byte[] invalidName_0;
 
-        internal ParticleControllerBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        internal ParticleControllerBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             type = ( Type ) binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes( 8 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

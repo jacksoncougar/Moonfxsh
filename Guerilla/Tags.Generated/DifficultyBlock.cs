@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 644, Alignment = 4 )]
-    public class DifficultyBlockBase : IGuerilla
+    public class DifficultyBlockBase : GuerillaBlock
     {
         /// <summary>
         /// enemy damage multiplier on easy difficulty
@@ -572,7 +572,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_6;
         internal byte[] invalidName_7;
 
-        internal DifficultyBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 644; }
+        }
+
+        internal DifficultyBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             easyEnemyDamage = binaryReader.ReadSingle( );
             normalEnemyDamage = binaryReader.ReadSingle( );
@@ -693,7 +698,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_7 = binaryReader.ReadBytes( 84 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

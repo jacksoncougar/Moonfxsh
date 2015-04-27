@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class MaterialPhysicsPropertiesStructBlockBase : IGuerilla
+    public class MaterialPhysicsPropertiesStructBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal float friction;
         internal float restitution;
         internal float densityKgM3;
 
-        internal MaterialPhysicsPropertiesStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        internal MaterialPhysicsPropertiesStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 4 );
             friction = binaryReader.ReadSingle( );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             densityKgM3 = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

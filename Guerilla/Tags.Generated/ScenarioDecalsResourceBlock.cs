@@ -26,18 +26,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class ScenarioDecalsResourceBlockBase : IGuerilla
+    public class ScenarioDecalsResourceBlockBase : GuerillaBlock
     {
         internal ScenarioDecalPaletteBlock[] palette;
         internal ScenarioDecalsBlock[] decals;
 
-        internal ScenarioDecalsResourceBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        internal ScenarioDecalsResourceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             palette = Guerilla.ReadBlockArray<ScenarioDecalPaletteBlock>( binaryReader );
             decals = Guerilla.ReadBlockArray<ScenarioDecalsBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

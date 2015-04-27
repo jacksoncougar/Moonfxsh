@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 52, Alignment = 4 )]
-    public class BarrelFiringEffectBlockBase : IGuerilla
+    public class BarrelFiringEffectBlockBase : GuerillaBlock
     {
         /// <summary>
         /// the minimum number of times this firing effect will be used, once it has been chosen
@@ -59,7 +59,12 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         [TagReference( "jpt!" )] internal Moonfish.Tags.TagReference emptyDamage;
 
-        internal BarrelFiringEffectBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 52; }
+        }
+
+        internal BarrelFiringEffectBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             shotCountLowerBound = binaryReader.ReadInt16( );
             shotCountUpperBound = binaryReader.ReadInt16( );
@@ -71,7 +76,7 @@ namespace Moonfish.Guerilla.Tags
             emptyDamage = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

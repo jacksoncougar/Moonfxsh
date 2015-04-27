@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class AnimationIndexStructBlockBase : IGuerilla
+    public class AnimationIndexStructBlockBase : GuerillaBlock
     {
         internal short graphIndex;
         internal Moonfish.Tags.ShortBlockIndex1 animation;
 
-        internal AnimationIndexStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal AnimationIndexStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             graphIndex = binaryReader.ReadInt16( );
             animation = binaryReader.ReadShortBlockIndex1( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

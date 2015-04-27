@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class OrderEndingBlockBase : IGuerilla
+    public class OrderEndingBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 nextOrder;
         internal CombinationRule combinationRule;
@@ -31,7 +31,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal TriggerReferences[] triggers;
 
-        internal OrderEndingBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        internal OrderEndingBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             nextOrder = binaryReader.ReadShortBlockIndex1( );
             combinationRule = ( CombinationRule ) binaryReader.ReadInt16( );
@@ -42,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
             triggers = Guerilla.ReadBlockArray<TriggerReferences>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

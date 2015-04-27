@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class SecondarySetTriggerBlockBase : IGuerilla
+    public class SecondarySetTriggerBlockBase : GuerillaBlock
     {
         internal CombinationRule combinationRule;
 
@@ -28,7 +28,12 @@ namespace Moonfish.Guerilla.Tags
 
         internal TriggerReferences[] triggers;
 
-        internal SecondarySetTriggerBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 12; }
+        }
+
+        internal SecondarySetTriggerBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             combinationRule = ( CombinationRule ) binaryReader.ReadInt16( );
             dialogueType =
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             triggers = Guerilla.ReadBlockArray<TriggerReferences>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

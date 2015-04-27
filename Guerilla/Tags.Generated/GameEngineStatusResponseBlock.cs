@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 28, Alignment = 4 )]
-    public class GameEngineStatusResponseBlockBase : IGuerilla
+    public class GameEngineStatusResponseBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal byte[] invalidName_;
@@ -28,7 +28,12 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "null" )] internal Moonfish.Tags.TagReference invalidName_1;
         internal byte[] invalidName_2;
 
-        internal GameEngineStatusResponseBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 28; }
+        }
+
+        internal GameEngineStatusResponseBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
@@ -40,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes( 4 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

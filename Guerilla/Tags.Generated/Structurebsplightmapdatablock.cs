@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class StructureBspLightmapDataBlockBase : IGuerilla
+    public class StructureBspLightmapDataBlockBase : GuerillaBlock
     {
         [TagReference( "bitm" )] internal Moonfish.Tags.TagReference bitmapGroup;
 
-        internal StructureBspLightmapDataBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        internal StructureBspLightmapDataBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             bitmapGroup = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

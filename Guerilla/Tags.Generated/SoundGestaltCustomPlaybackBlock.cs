@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,31 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundGestaltCustomPlaybackBlock : SoundGestaltCustomPlaybackBlockBase
+    public artial class SoundGestaltCustomPlaybackBlock : SoundGestaltCustomPlaybackBlockBase
     {
-        public  SoundGestaltCustomPlaybackBlock(BinaryReader binaryReader): base(binaryReader)
+        public  oundGestaltCustomPlaybackBlock(B inaryReader binaryReader) :  base(b inaryReader) 
         {
-            
-        }
-    };
-    [LayoutAttribute(Size = 52, Alignment = 4)]
-    public class SoundGestaltCustomPlaybackBlockBase  : IGuerilla
+         
+    };
+
+    LayoutAttribute(S ize = 52, Alignment = 4) ]
+    public class SoundGestaltCustomPlaybackBlockBase  GuerillaBlock
     {
-        internal SimplePlatformSoundPlaybackStructBlock playbackDefinition;
-        internal  SoundGestaltCustomPlaybackBlockBase(BinaryReader binaryReader)
-        {
-            playbackDefinition = new SimplePlatformSoundPlaybackStructBlock(binaryReader);
+        internal SimplePlatformSoundPlaybackStructBlock playbackDefinitio
+
+          
+       public override int SerializedSize {get { return 52; }}
+         
+        internal  SoundGestaltCustomPlaybackBlockBase(BinaryReader binaryReader): b ase(binaryRe ader)
+      
+
+               playbackDe finition = new SimplePlatformSoundPlaybackStructBlock( binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+          public override int Write ( System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+         {
+             using(binaryWriter.BaseStream.Pin())
             {
-                playbackDefinition.Write(binaryWriter);
+              playbackDefinition.Write(binaryWriter);
                 return nextAddress;
             }
         }

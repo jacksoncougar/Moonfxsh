@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class CollisionModelNodeBlockBase : IGuerilla
+    public class CollisionModelNodeBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal byte[] invalidName_;
@@ -25,7 +25,12 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 nextSiblingNode;
         internal Moonfish.Tags.ShortBlockIndex1 firstChildNode;
 
-        internal CollisionModelNodeBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 12; }
+        }
+
+        internal CollisionModelNodeBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadStringID( );
             invalidName_ = binaryReader.ReadBytes( 2 );
@@ -34,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             firstChildNode = binaryReader.ReadShortBlockIndex1( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

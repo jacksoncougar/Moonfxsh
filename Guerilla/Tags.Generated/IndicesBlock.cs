@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 2, Alignment = 4 )]
-    public class IndicesBlockBase : IGuerilla
+    public class IndicesBlockBase : GuerillaBlock
     {
         internal short index;
 
-        internal IndicesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 2; }
+        }
+
+        internal IndicesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             index = binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

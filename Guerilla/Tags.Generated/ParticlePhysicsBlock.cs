@@ -26,20 +26,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class ParticlePhysicsBlockBase : IGuerilla
+    public class ParticlePhysicsBlockBase : GuerillaBlock
     {
         [TagReference( "pmov" )] internal Moonfish.Tags.TagReference template;
         internal Flags flags;
         internal ParticleController[] movements;
 
-        internal ParticlePhysicsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        internal ParticlePhysicsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             template = binaryReader.ReadTagReference( );
             flags = ( Flags ) binaryReader.ReadInt32( );
             movements = Guerilla.ReadBlockArray<ParticleController>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

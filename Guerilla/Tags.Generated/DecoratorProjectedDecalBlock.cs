@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 64, Alignment = 4 )]
-    public class DecoratorProjectedDecalBlockBase : IGuerilla
+    public class DecoratorProjectedDecalBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ByteBlockIndex1 decoratorSet;
         internal byte decoratorClass;
@@ -29,7 +29,12 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 extents;
         internal OpenTK.Vector3 previousPosition;
 
-        internal DecoratorProjectedDecalBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 64; }
+        }
+
+        internal DecoratorProjectedDecalBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             decoratorSet = binaryReader.ReadByteBlockIndex1( );
             decoratorClass = binaryReader.ReadByte( );
@@ -42,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
             previousPosition = binaryReader.ReadVector3( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

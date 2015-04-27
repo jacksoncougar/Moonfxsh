@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 232, Alignment = 4 )]
-    public class ProjectileBlockBase : ObjectBlock
+    public class ProjectileBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal DetonationTimerStarts detonationTimerStarts;
@@ -124,6 +124,11 @@ namespace Moonfish.Guerilla.Tags
         internal float targetedLeadingFraction;
         internal ProjectileMaterialResponseBlock[] materialResponses;
 
+        public override int SerializedSize
+        {
+            get { return 232; }
+        }
+
         internal ProjectileBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
@@ -170,7 +175,7 @@ namespace Moonfish.Guerilla.Tags
             materialResponses = Guerilla.ReadBlockArray<ProjectileMaterialResponseBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

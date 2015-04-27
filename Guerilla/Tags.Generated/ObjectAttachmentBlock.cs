@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class ObjectAttachmentBlockBase : IGuerilla
+    public class ObjectAttachmentBlockBase : GuerillaBlock
     {
         [TagReference( "null" )] internal Moonfish.Tags.TagReference type;
         internal Moonfish.Tags.StringID marker;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID primaryScale;
         internal Moonfish.Tags.StringID secondaryScale;
 
-        internal ObjectAttachmentBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        internal ObjectAttachmentBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             type = binaryReader.ReadTagReference( );
             marker = binaryReader.ReadStringID( );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             secondaryScale = binaryReader.ReadStringID( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,20 +17,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 68, Alignment = 4 )]
-    public class CollisionModelBspBlockBase : IGuerilla
+    public class CollisionModelBspBlockBase : GuerillaBlock
     {
         internal short nodeIndex;
         internal byte[] invalidName_;
         internal GlobalCollisionBspStructBlock bsp;
 
-        internal CollisionModelBspBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 68; }
+        }
+
+        internal CollisionModelBspBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             nodeIndex = binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
             bsp = new GlobalCollisionBspStructBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

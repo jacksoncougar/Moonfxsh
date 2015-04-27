@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 44, Alignment = 4 )]
-    public class ShaderPostprocessImplementationBlockBase : IGuerilla
+    public class ShaderPostprocessImplementationBlockBase : GuerillaBlock
     {
         internal ShaderGpuStateReferenceStructBlock gPUConstantState;
         internal ShaderGpuStateReferenceStructBlock gPUVolatileState;
@@ -30,7 +30,12 @@ namespace Moonfish.Guerilla.Tags
         internal TagBlockIndexStructBlock colorOverlays;
         internal TagBlockIndexStructBlock vertexShaderConstants;
 
-        internal ShaderPostprocessImplementationBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 44; }
+        }
+
+        internal ShaderPostprocessImplementationBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             gPUConstantState = new ShaderGpuStateReferenceStructBlock( binaryReader );
             gPUVolatileState = new ShaderGpuStateReferenceStructBlock( binaryReader );
@@ -44,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
             vertexShaderConstants = new TagBlockIndexStructBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

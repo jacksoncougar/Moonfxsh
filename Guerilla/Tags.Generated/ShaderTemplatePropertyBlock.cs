@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,36 +10,36 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderTemplatePropertyBlock : ShaderTemplatePropertyBlockBase
     {
-        public ShaderTemplatePropertyBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderTemplatePropertyBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ShaderTemplatePropertyBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class ShaderTemplatePropertyBlockBase : GuerillaBlock
     {
         internal Property property;
         internal byte[] invalidName_;
         internal Moonfish.Tags.StringID parameterName;
-
-        internal ShaderTemplatePropertyBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        internal  ShaderTemplatePropertyBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            property = ( Property ) binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            parameterName = binaryReader.ReadStringID( );
+            property = (Property)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            parameterName = binaryReader.ReadStringID();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) property );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( parameterName );
+                binaryWriter.Write((Int16)property);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(parameterName);
                 return nextAddress;
             }
         }
-
         internal enum Property : short
         {
             Unused = 0,

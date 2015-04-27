@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class AnimationGraphNodeBlockBase : IGuerilla
+    public class AnimationGraphNodeBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 nextSiblingNodeIndex;
@@ -29,7 +29,12 @@ namespace Moonfish.Guerilla.Tags
         internal float vectorRange;
         internal float zPos;
 
-        internal AnimationGraphNodeBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 32; }
+        }
+
+        internal AnimationGraphNodeBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadStringID( );
             nextSiblingNodeIndex = binaryReader.ReadShortBlockIndex1( );
@@ -42,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
             zPos = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

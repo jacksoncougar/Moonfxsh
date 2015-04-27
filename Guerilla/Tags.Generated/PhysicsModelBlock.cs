@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 272, Alignment = 4 )]
-    public class PhysicsModelBlockBase : IGuerilla
+    public class PhysicsModelBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal float mass;
@@ -72,7 +72,12 @@ namespace Moonfish.Guerilla.Tags
         internal PrismaticConstraintsBlock[] prismaticConstraints;
         internal PhantomsBlock[] phantoms;
 
-        internal PhysicsModelBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 272; }
+        }
+
+        internal PhysicsModelBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             mass = binaryReader.ReadSingle( );
@@ -110,7 +115,7 @@ namespace Moonfish.Guerilla.Tags
             phantoms = Guerilla.ReadBlockArray<PhantomsBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

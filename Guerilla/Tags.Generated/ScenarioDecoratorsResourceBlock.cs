@@ -26,18 +26,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class ScenarioDecoratorsResourceBlockBase : IGuerilla
+    public class ScenarioDecoratorsResourceBlockBase : GuerillaBlock
     {
         internal DecoratorPlacementDefinitionBlock[] decorator;
         internal ScenarioDecoratorSetPaletteEntryBlock[] decoratorPalette;
 
-        internal ScenarioDecoratorsResourceBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        internal ScenarioDecoratorsResourceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             decorator = Guerilla.ReadBlockArray<DecoratorPlacementDefinitionBlock>( binaryReader );
             decoratorPalette = Guerilla.ReadBlockArray<ScenarioDecoratorSetPaletteEntryBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

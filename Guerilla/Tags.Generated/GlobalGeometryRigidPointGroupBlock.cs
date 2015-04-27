@@ -17,20 +17,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class GlobalGeometryRigidPointGroupBlockBase : IGuerilla
+    public class GlobalGeometryRigidPointGroupBlockBase : GuerillaBlock
     {
         internal byte rigidNodeIndex;
         internal byte nodesPoint;
         internal short pointCount;
 
-        internal GlobalGeometryRigidPointGroupBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal GlobalGeometryRigidPointGroupBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             rigidNodeIndex = binaryReader.ReadByte( );
             nodesPoint = binaryReader.ReadByte( );
             pointCount = binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

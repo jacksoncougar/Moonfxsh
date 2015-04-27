@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 5, Alignment = 4 )]
-    public class RenderStateBlockBase : IGuerilla
+    public class RenderStateBlockBase : GuerillaBlock
     {
         internal byte stateIndex;
         internal int stateValue;
 
-        internal RenderStateBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 5; }
+        }
+
+        internal RenderStateBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             stateIndex = binaryReader.ReadByte( );
             stateValue = binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

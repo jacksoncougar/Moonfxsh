@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class RuntimeLevelsDefinitionBlockBase : IGuerilla
+    public class RuntimeLevelsDefinitionBlockBase : GuerillaBlock
     {
         internal RuntimeCampaignLevelBlock[] campaignLevels;
 
-        internal RuntimeLevelsDefinitionBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        internal RuntimeLevelsDefinitionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             campaignLevels = Guerilla.ReadBlockArray<RuntimeCampaignLevelBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

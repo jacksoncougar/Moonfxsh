@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 44, Alignment = 4 )]
-    public class GrenadesBlockBase : IGuerilla
+    public class GrenadesBlockBase : GuerillaBlock
     {
         internal short maximumCount;
         internal byte[] invalidName_;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "eqip" )] internal Moonfish.Tags.TagReference equipment;
         [TagReference( "proj" )] internal Moonfish.Tags.TagReference projectile;
 
-        internal GrenadesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 44; }
+        }
+
+        internal GrenadesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             maximumCount = binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             projectile = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

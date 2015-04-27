@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 22, Alignment = 4 )]
-    public class DecoratorPlacementBlockBase : IGuerilla
+    public class DecoratorPlacementBlockBase : GuerillaBlock
     {
         internal int internalData1;
         internal int compressedPosition;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal int compressedLightDirection;
         internal int compressedLight2Direction;
 
-        internal DecoratorPlacementBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 22; }
+        }
+
+        internal DecoratorPlacementBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             internalData1 = binaryReader.ReadInt32( );
             compressedPosition = binaryReader.ReadInt32( );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             compressedLight2Direction = binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

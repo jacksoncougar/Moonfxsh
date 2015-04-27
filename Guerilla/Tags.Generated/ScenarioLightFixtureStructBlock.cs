@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class ScenarioLightFixtureStructBlockBase : IGuerilla
+    public class ScenarioLightFixtureStructBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ColorR8G8B8 color;
         internal float intensity;
         internal float falloffAngleDegrees;
         internal float cutoffAngleDegrees;
 
-        internal ScenarioLightFixtureStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        internal ScenarioLightFixtureStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             color = binaryReader.ReadColorR8G8B8( );
             intensity = binaryReader.ReadSingle( );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             cutoffAngleDegrees = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

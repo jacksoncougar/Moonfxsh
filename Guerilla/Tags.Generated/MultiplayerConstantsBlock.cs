@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 352, Alignment = 4 )]
-    public class MultiplayerConstantsBlockBase : IGuerilla
+    public class MultiplayerConstantsBlockBase : GuerillaBlock
     {
         internal float maximumRandomSpawnBias;
         internal float teleporterRechargeTimeSeconds;
@@ -51,7 +51,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_5;
         internal byte[] invalidName_6;
 
-        internal MultiplayerConstantsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 352; }
+        }
+
+        internal MultiplayerConstantsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             maximumRandomSpawnBias = binaryReader.ReadSingle( );
             teleporterRechargeTimeSeconds = binaryReader.ReadSingle( );
@@ -81,7 +86,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_6 = binaryReader.ReadBytes( 32 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

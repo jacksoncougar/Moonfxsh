@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 72, Alignment = 4 )]
-    public class UserHintBlockBase : IGuerilla
+    public class UserHintBlockBase : GuerillaBlock
     {
         internal UserHintPointBlock[] pointGeometry;
         internal UserHintRayBlock[] rayGeometry;
@@ -29,7 +29,12 @@ namespace Moonfish.Guerilla.Tags
         internal UserHintWellBlock[] wellHints;
         internal UserHintFlightBlock[] flightHints;
 
-        internal UserHintBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 72; }
+        }
+
+        internal UserHintBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             pointGeometry = Guerilla.ReadBlockArray<UserHintPointBlock>( binaryReader );
             rayGeometry = Guerilla.ReadBlockArray<UserHintRayBlock>( binaryReader );
@@ -42,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
             flightHints = Guerilla.ReadBlockArray<UserHintFlightBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class GlobalGeometrySectionInfoStructBlockBase : IGuerilla
+    public class GlobalGeometrySectionInfoStructBlockBase : GuerillaBlock
     {
         internal short totalVertexCount;
         internal short totalTriangleCount;
@@ -39,7 +39,12 @@ namespace Moonfish.Guerilla.Tags
         internal short totalSubpartCont;
         internal SectionLightingFlags sectionLightingFlags;
 
-        internal GlobalGeometrySectionInfoStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 40; }
+        }
+
+        internal GlobalGeometrySectionInfoStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             totalVertexCount = binaryReader.ReadInt16( );
             totalTriangleCount = binaryReader.ReadInt16( );
@@ -62,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
             sectionLightingFlags = ( SectionLightingFlags ) binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

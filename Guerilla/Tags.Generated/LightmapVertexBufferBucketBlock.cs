@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 56, Alignment = 4 )]
-    public class LightmapVertexBufferBucketBlockBase : IGuerilla
+    public class LightmapVertexBufferBucketBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal byte[] invalidName_;
@@ -25,7 +25,12 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
         internal LightmapVertexBufferBucketCacheDataBlock[] cacheData;
 
-        internal LightmapVertexBufferBucketBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 56; }
+        }
+
+        internal LightmapVertexBufferBucketBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
@@ -34,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             cacheData = Guerilla.ReadBlockArray<LightmapVertexBufferBucketCacheDataBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

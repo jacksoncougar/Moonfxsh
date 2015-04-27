@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 132, Alignment = 4 )]
-    public class FlockDefinitionBlockBase : IGuerilla
+    public class FlockDefinitionBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 bsp;
         internal byte[] invalidName_;
@@ -129,7 +129,12 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range randomOffsetPeriodSeconds;
         internal Moonfish.Tags.StringID flockName;
 
-        internal FlockDefinitionBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 132; }
+        }
+
+        internal FlockDefinitionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             bsp = binaryReader.ReadShortBlockIndex1( );
             invalidName_ = binaryReader.ReadBytes( 2 );
@@ -163,7 +168,7 @@ namespace Moonfish.Guerilla.Tags
             flockName = binaryReader.ReadStringID( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

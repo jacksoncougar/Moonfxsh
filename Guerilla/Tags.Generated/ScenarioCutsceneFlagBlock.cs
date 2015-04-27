@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 56, Alignment = 4 )]
-    public class ScenarioCutsceneFlagBlockBase : IGuerilla
+    public class ScenarioCutsceneFlagBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal Moonfish.Tags.String32 name;
         internal OpenTK.Vector3 position;
         internal OpenTK.Vector2 facing;
 
-        internal ScenarioCutsceneFlagBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 56; }
+        }
+
+        internal ScenarioCutsceneFlagBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 4 );
             name = binaryReader.ReadString32( );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             facing = binaryReader.ReadVector2( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

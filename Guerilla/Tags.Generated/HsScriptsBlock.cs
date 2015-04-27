@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class HsScriptsBlockBase : IGuerilla
+    public class HsScriptsBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
         internal ScriptType scriptType;
         internal ReturnType returnType;
         internal int rootExpressionIndex;
 
-        internal HsScriptsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 40; }
+        }
+
+        internal HsScriptsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadString32( );
             scriptType = ( ScriptType ) binaryReader.ReadInt16( );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             rootExpressionIndex = binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

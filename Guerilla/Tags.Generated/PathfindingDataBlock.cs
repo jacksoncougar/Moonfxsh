@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 116, Alignment = 4 )]
-    public class PathfindingDataBlockBase : IGuerilla
+    public class PathfindingDataBlockBase : GuerillaBlock
     {
         internal SectorBlock[] sectors;
         internal SectorLinkBlock[] links;
@@ -32,7 +32,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal UserHintBlock[] userPlacedHints;
 
-        internal PathfindingDataBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 116; }
+        }
+
+        internal PathfindingDataBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             sectors = Guerilla.ReadBlockArray<SectorBlock>( binaryReader );
             links = Guerilla.ReadBlockArray<SectorLinkBlock>( binaryReader );
@@ -48,7 +53,7 @@ namespace Moonfish.Guerilla.Tags
             userPlacedHints = Guerilla.ReadBlockArray<UserHintBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

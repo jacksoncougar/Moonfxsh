@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 76, Alignment = 4 )]
-    public class AiConversationLineBlockBase : IGuerilla
+    public class AiConversationLineBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal Moonfish.Tags.ShortBlockIndex1 participant;
@@ -38,7 +38,12 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "snd!" )] internal Moonfish.Tags.TagReference variant5;
         [TagReference( "snd!" )] internal Moonfish.Tags.TagReference variant6;
 
-        internal AiConversationLineBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 76; }
+        }
+
+        internal AiConversationLineBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt16( );
             participant = binaryReader.ReadShortBlockIndex1( );
@@ -55,7 +60,7 @@ namespace Moonfish.Guerilla.Tags
             variant6 = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

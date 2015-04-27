@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 276, Alignment = 4 )]
-    public class VehicleBlockBase : UnitBlock
+    public class VehicleBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal Type type;
@@ -116,6 +116,11 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "effe" )] internal Moonfish.Tags.TagReference unusedEffect;
         internal HavokVehiclePhysicsStructBlock havokVehiclePhysics;
 
+        public override int SerializedSize
+        {
+            get { return 276; }
+        }
+
         internal VehicleBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
@@ -168,7 +173,7 @@ namespace Moonfish.Guerilla.Tags
             havokVehiclePhysics = new HavokVehiclePhysicsStructBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

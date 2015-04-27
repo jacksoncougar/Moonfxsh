@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 108, Alignment = 4 )]
-    public class AnimationPoolBlockBase : IGuerilla
+    public class AnimationPoolBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal int nodeListChecksum;
@@ -48,7 +48,12 @@ namespace Moonfish.Guerilla.Tags
         internal AnimationEffectEventBlock[] effectEventsABCDCC;
         internal ObjectSpaceNodeDataBlock[] objectSpaceParentNodesABCDCC;
 
-        internal AnimationPoolBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 108; }
+        }
+
+        internal AnimationPoolBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadStringID( );
             nodeListChecksum = binaryReader.ReadInt32( );
@@ -80,7 +85,7 @@ namespace Moonfish.Guerilla.Tags
             objectSpaceParentNodesABCDCC = Guerilla.ReadBlockArray<ObjectSpaceNodeDataBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

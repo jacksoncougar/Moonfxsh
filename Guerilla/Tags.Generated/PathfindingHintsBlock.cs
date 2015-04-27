@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class PathfindingHintsBlockBase : IGuerilla
+    public class PathfindingHintsBlockBase : GuerillaBlock
     {
         internal HintType hintType;
         internal short nextHintIndex;
@@ -30,7 +30,12 @@ namespace Moonfish.Guerilla.Tags
         internal short hintData6;
         internal short hintData7;
 
-        internal PathfindingHintsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        internal PathfindingHintsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             hintType = ( HintType ) binaryReader.ReadInt16( );
             nextHintIndex = binaryReader.ReadInt16( );
@@ -44,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
             hintData7 = binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

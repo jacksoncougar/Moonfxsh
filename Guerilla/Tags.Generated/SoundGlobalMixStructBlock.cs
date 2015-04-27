@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,15 +9,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundGlobalMixStructBlock : SoundGlobalMixStructBlockBase
+    public artial class SoundGlobalMixStructBlock : SoundGlobalMixStructBlockBase
     {
-        public  SoundGlobalMixStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public  oundGlobalMixStructBlock(B inaryReader binaryReader) :  base(b inaryReader) 
         {
-            
-        }
-    };
-    [LayoutAttribute(Size = 48, Alignment = 4)]
-    public class SoundGlobalMixStructBlockBase  : IGuerilla
+         
+    };
+
+    LayoutAttribute(S ize = 48, Alignment = 4) ]
+    public class SoundGlobalMixStructBlockBase  GuerillaBlock
     {
         internal float monoUnspatializedGainDB;
         internal float stereoTo3DGainDB;
@@ -29,38 +30,44 @@ namespace Moonfish.Guerilla.Tags
         internal float soloPlayerFadeOutDelaySeconds;
         internal float soloPlayerFadeOutTimeSeconds;
         internal float soloPlayerFadeInTimeSeconds;
-        internal float gameMusicFadeOutTimeSeconds;
-        internal  SoundGlobalMixStructBlockBase(BinaryReader binaryReader)
+        internal float gameMusicFadeOutTimeSecond
+
+          
+       public override int Serializ edSize{get { return 48; } }
+        
+        internal  SoundGlobalMixStructBlockBase(BinaryReader bi naryReader): base(binaryReader)
         {
-            monoUnspatializedGainDB = binaryReader.ReadSingle();
-            stereoTo3DGainDB = binaryReader.ReadSingle();
-            rearSurroundToFrontStereoGainDB = binaryReader.ReadSingle();
-            frontSpeakerGainDB = binaryReader.ReadSingle();
-            centerSpeakerGainDB = binaryReader.ReadSingle();
-            frontSpeakerGainDB0 = binaryReader.ReadSingle();
-            centerSpeakerGainDB0 = binaryReader.ReadSingle();
-            stereoUnspatializedGainDB = binaryReader.ReadSingle();
-            soloPlayerFadeOutDelaySeconds = binaryReader.ReadSingle();
-            soloPlayerFadeOutTimeSeconds = binaryReader.ReadSingle();
-            soloPlayerFadeInTimeSeconds = binaryReader.ReadSingle();
-            gameMusicFadeOutTimeSeconds = binaryReader.ReadSingle();
+            mon oUnspatializedGainDB = binaryReader.ReadSingle();
+            stereoTo3DG ainDB = binaryReader.ReadSingle();
+            rearSurroundT oFrontStereoGainDB = binaryReader.ReadSingle();
+            f rontSpeakerGainDB = binaryReader.ReadSingle();
+            ce nterSpeakerGainDB = binaryReader.ReadSingle();
+            fro ntSpeakerGainDB0 = binaryReader.ReadSingle();
+            centerSpe akerGainDB0 = binaryReader.ReadSingle();
+            stereoUnspatialize dGainDB = binaryReader.ReadSingle();
+            soloPlayerFadeOutDela ySeconds = binaryReader.ReadSingle();
+            soloPlayerFadeOutTi meSeconds = binaryReader.ReadSingle();
+            soloPlayerFadeInTi meSeconds = b
+
+        r.ReadSingle();
+             gameMusicFadeOutTimeSeconds = binaryReader .ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+          public override int Write ( System.IO.BinaryWriter binaryWriter, Int32 nextAddres s)
         {
-            using(binaryWriter.BaseStream.Pin())
-            {
-                binaryWriter.Write(monoUnspatializedGainDB);
-                binaryWriter.Write(stereoTo3DGainDB);
-                binaryWriter.Write(rearSurroundToFrontStereoGainDB);
-                binaryWriter.Write(frontSpeakerGainDB);
-                binaryWriter.Write(centerSpeakerGainDB);
-                binaryWriter.Write(frontSpeakerGainDB0);
-                binaryWriter.Write(centerSpeakerGainDB0);
-                binaryWriter.Write(stereoUnspatializedGainDB);
-                binaryWriter.Write(soloPlayerFadeOutDelaySeconds);
-                binaryWriter.Write(soloPlayerFadeOutTimeSeconds);
-                binaryWriter.Write(soloPlayerFadeInTimeSeconds);
-                binaryWriter.Write(gameMusicFadeOutTimeSeconds);
+             using(binaryWriter.BaseStream.Pin() )
+            { 
+                binaryWriter.Write(mo noUnspatializedGainDB);
+                 binaryWriter.Write(stereoTo3D GainDB);
+                 binaryWriter.Write(rearSurround ToFrontStereoGainDB );
+                binaryWriter.Write( frontSpeakerGainDB) ;
+                binaryWriter.Write(c enterSpeakerGainDB); 
+                binaryWriter.Write(fr ontSpeakerGainDB0);
+                 binaryWriter.Write(centerSp eakerGainDB0);
+                 binaryWriter.Write(stereoUnspatializ edGainDB);
+                 binaryWriter.Write(soloPlayerFadeOutDel aySeconds);
+                 binaryWriter.Write(soloPlayerFadeOutT imeSeconds);
+                 binaryWriter.Write(soloPlayerFadeInTimeSeconds);
+                binaryWter.Write(gameMusicFadeOutTimeSeconds);
                 return nextAddress;
             }
         }

@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 120, Alignment = 4 )]
-    public class BallAndSocketConstraintsBlockBase : IGuerilla
+    public class BallAndSocketConstraintsBlockBase : GuerillaBlock
     {
         internal ConstraintBodiesStructBlock constraintBodies;
         internal byte[] invalidName_;
 
-        internal BallAndSocketConstraintsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 120; }
+        }
+
+        internal BallAndSocketConstraintsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             constraintBodies = new ConstraintBodiesStructBlock( binaryReader );
             invalidName_ = binaryReader.ReadBytes( 4 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

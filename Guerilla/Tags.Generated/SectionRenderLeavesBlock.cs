@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class SectionRenderLeavesBlockBase : IGuerilla
+    public class SectionRenderLeavesBlockBase : GuerillaBlock
     {
         internal NodeRenderLeavesBlock[] nodeRenderLeaves;
 
-        internal SectionRenderLeavesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        internal SectionRenderLeavesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             nodeRenderLeaves = Guerilla.ReadBlockArray<NodeRenderLeavesBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 60, Alignment = 4 )]
-    public class CsPointBlockBase : IGuerilla
+    public class CsPointBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
         internal OpenTK.Vector3 position;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal int surfaceIndex;
         internal OpenTK.Vector2 facingDirection;
 
-        internal CsPointBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 60; }
+        }
+
+        internal CsPointBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadString32( );
             position = binaryReader.ReadVector3( );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             facingDirection = binaryReader.ReadVector2( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

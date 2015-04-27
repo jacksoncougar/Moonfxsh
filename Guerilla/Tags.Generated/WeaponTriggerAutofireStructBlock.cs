@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class WeaponTriggerAutofireStructBlockBase : IGuerilla
+    public class WeaponTriggerAutofireStructBlockBase : GuerillaBlock
     {
         internal float autofireTime;
         internal float autofireThrow;
         internal SecondaryAction secondaryAction;
         internal PrimaryAction primaryAction;
 
-        internal WeaponTriggerAutofireStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 12; }
+        }
+
+        internal WeaponTriggerAutofireStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             autofireTime = binaryReader.ReadSingle( );
             autofireThrow = binaryReader.ReadSingle( );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             primaryAction = ( PrimaryAction ) binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

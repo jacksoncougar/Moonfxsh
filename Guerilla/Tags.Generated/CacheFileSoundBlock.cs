@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,22 +11,22 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Shit = (TagClass)"$#!+";
+        public static readonly TagClass Shit = ( TagClass ) "$#!+";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("$#!+")]
-    public  partial class CacheFileSoundBlock : CacheFileSoundBlockBase
+    [TagClassAttribute( "$#!+" )]
+    public partial class CacheFileSoundBlock : CacheFileSoundBlockBase
     {
-        public  CacheFileSoundBlock(BinaryReader binaryReader): base(binaryReader)
+        public CacheFileSoundBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class CacheFileSoundBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 20, Alignment = 4 )]
+    public class CacheFileSoundBlockBase : IGuerilla
     {
         internal Flags flags;
         internal SoundClass soundClass;
@@ -40,42 +41,45 @@ namespace Moonfish.Guerilla.Tags
         internal byte customPlaybackIndex;
         internal short extraInfoIndex;
         internal int maximumPlayTimeMs;
-        internal  CacheFileSoundBlockBase(BinaryReader binaryReader)
+
+        internal CacheFileSoundBlockBase( BinaryReader binaryReader )
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            soundClass = (SoundClass)binaryReader.ReadByte();
-            sampleRate = (SampleRate)binaryReader.ReadByte();
-            encoding = (Encoding)binaryReader.ReadByte();
-            compression = (Compression)binaryReader.ReadByte();
-            playbackIndex = binaryReader.ReadInt16();
-            firstPitchRangeIndex = binaryReader.ReadInt16();
-            pitchRangeCount = binaryReader.ReadByte();
-            scaleIndex = binaryReader.ReadByte();
-            promotionIndex = binaryReader.ReadByte();
-            customPlaybackIndex = binaryReader.ReadByte();
-            extraInfoIndex = binaryReader.ReadInt16();
-            maximumPlayTimeMs = binaryReader.ReadInt32();
+            flags = ( Flags ) binaryReader.ReadInt16( );
+            soundClass = ( SoundClass ) binaryReader.ReadByte( );
+            sampleRate = ( SampleRate ) binaryReader.ReadByte( );
+            encoding = ( Encoding ) binaryReader.ReadByte( );
+            compression = ( Compression ) binaryReader.ReadByte( );
+            playbackIndex = binaryReader.ReadInt16( );
+            firstPitchRangeIndex = binaryReader.ReadInt16( );
+            pitchRangeCount = binaryReader.ReadByte( );
+            scaleIndex = binaryReader.ReadByte( );
+            promotionIndex = binaryReader.ReadByte( );
+            customPlaybackIndex = binaryReader.ReadByte( );
+            extraInfoIndex = binaryReader.ReadInt16( );
+            maximumPlayTimeMs = binaryReader.ReadInt32( );
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Byte)soundClass);
-                binaryWriter.Write((Byte)sampleRate);
-                binaryWriter.Write((Byte)encoding);
-                binaryWriter.Write((Byte)compression);
-                binaryWriter.Write(playbackIndex);
-                binaryWriter.Write(firstPitchRangeIndex);
-                binaryWriter.Write(pitchRangeCount);
-                binaryWriter.Write(scaleIndex);
-                binaryWriter.Write(promotionIndex);
-                binaryWriter.Write(customPlaybackIndex);
-                binaryWriter.Write(extraInfoIndex);
-                binaryWriter.Write(maximumPlayTimeMs);
+                binaryWriter.Write( ( Int16 ) flags );
+                binaryWriter.Write( ( Byte ) soundClass );
+                binaryWriter.Write( ( Byte ) sampleRate );
+                binaryWriter.Write( ( Byte ) encoding );
+                binaryWriter.Write( ( Byte ) compression );
+                binaryWriter.Write( playbackIndex );
+                binaryWriter.Write( firstPitchRangeIndex );
+                binaryWriter.Write( pitchRangeCount );
+                binaryWriter.Write( scaleIndex );
+                binaryWriter.Write( promotionIndex );
+                binaryWriter.Write( customPlaybackIndex );
+                binaryWriter.Write( extraInfoIndex );
+                binaryWriter.Write( maximumPlayTimeMs );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {
@@ -90,6 +94,7 @@ namespace Moonfish.Guerilla.Tags
             DontUseSoundClassSpeakerFlag = 256,
             DontUseLipsyncData = 512,
         };
+
         internal enum SoundClass : byte
         {
             ProjectileImpact = 0,
@@ -147,18 +152,21 @@ namespace Moonfish.Guerilla.Tags
             Test = 52,
             MultilingualTest = 53,
         };
+
         internal enum SampleRate : byte
         {
             InvalidName22KHz = 0,
             InvalidName44KHz = 1,
             InvalidName32KHz = 2,
         };
+
         internal enum Encoding : byte
         {
             Mono = 0,
             Stereo = 1,
             Codec = 2,
         };
+
         internal enum Compression : byte
         {
             NoneBigEndian = 0,

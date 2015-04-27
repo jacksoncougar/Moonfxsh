@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class PrtClusterBasisBlockBase : IGuerilla
+    public class PrtClusterBasisBlockBase : GuerillaBlock
     {
         internal float basisData;
 
-        internal PrtClusterBasisBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal PrtClusterBasisBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             basisData = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

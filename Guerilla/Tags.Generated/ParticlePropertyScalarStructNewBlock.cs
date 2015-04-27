@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class ParticlePropertyScalarStructNewBlockBase : IGuerilla
+    public class ParticlePropertyScalarStructNewBlockBase : GuerillaBlock
     {
         internal InputVariable inputVariable;
         internal RangeVariable rangeVariable;
@@ -25,7 +25,12 @@ namespace Moonfish.Guerilla.Tags
         internal OutputModifierInput outputModifierInput;
         internal MappingFunctionBlock mapping;
 
-        internal ParticlePropertyScalarStructNewBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        internal ParticlePropertyScalarStructNewBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             inputVariable = ( InputVariable ) binaryReader.ReadInt16( );
             rangeVariable = ( RangeVariable ) binaryReader.ReadInt16( );
@@ -34,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             mapping = new MappingFunctionBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

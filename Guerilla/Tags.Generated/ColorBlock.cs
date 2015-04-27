@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 48, Alignment = 4 )]
-    public class ColorBlockBase : IGuerilla
+    public class ColorBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
         internal OpenTK.Vector4 color;
 
-        internal ColorBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 48; }
+        }
+
+        internal ColorBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadString32( );
             color = binaryReader.ReadVector4( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

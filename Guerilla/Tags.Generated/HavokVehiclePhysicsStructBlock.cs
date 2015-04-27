@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 84, Alignment = 4 )]
-    public class HavokVehiclePhysicsStructBlockBase : IGuerilla
+    public class HavokVehiclePhysicsStructBlockBase : GuerillaBlock
     {
         internal Flags flags;
 
@@ -77,7 +77,12 @@ namespace Moonfish.Guerilla.Tags
         internal FrictionPointDefinitionBlock[] frictionPoints;
         internal VehiclePhantomShapeBlock[] shapePhantomShape;
 
-        internal HavokVehiclePhysicsStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 84; }
+        }
+
+        internal HavokVehiclePhysicsStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             groundFriction = binaryReader.ReadSingle( );
@@ -96,7 +101,7 @@ namespace Moonfish.Guerilla.Tags
             shapePhantomShape = Guerilla.ReadBlockArray<VehiclePhantomShapeBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

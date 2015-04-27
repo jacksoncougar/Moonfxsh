@@ -17,20 +17,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class SectorBlockBase : IGuerilla
+    public class SectorBlockBase : GuerillaBlock
     {
         internal PathFindingSectorFlags pathFindingSectorFlags;
         internal short hintIndex;
         internal int firstLinkDoNotSetManually;
 
-        internal SectorBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        internal SectorBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             pathFindingSectorFlags = ( PathFindingSectorFlags ) binaryReader.ReadInt16( );
             hintIndex = binaryReader.ReadInt16( );
             firstLinkDoNotSetManually = binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

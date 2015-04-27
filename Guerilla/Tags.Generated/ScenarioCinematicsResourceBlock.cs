@@ -26,20 +26,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class ScenarioCinematicsResourceBlockBase : IGuerilla
+    public class ScenarioCinematicsResourceBlockBase : GuerillaBlock
     {
         internal ScenarioCutsceneFlagBlock[] flags;
         internal ScenarioCutsceneCameraPointBlock[] cameraPoints;
         internal RecordedAnimationBlock[] recordedAnimations;
 
-        internal ScenarioCinematicsResourceBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        internal ScenarioCinematicsResourceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = Guerilla.ReadBlockArray<ScenarioCutsceneFlagBlock>( binaryReader );
             cameraPoints = Guerilla.ReadBlockArray<ScenarioCutsceneCameraPointBlock>( binaryReader );
             recordedAnimations = Guerilla.ReadBlockArray<RecordedAnimationBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

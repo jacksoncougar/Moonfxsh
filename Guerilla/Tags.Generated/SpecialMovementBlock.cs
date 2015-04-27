@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class SpecialMovementBlockBase : IGuerilla
+    public class SpecialMovementBlockBase : GuerillaBlock
     {
         internal SpecialMovement1 specialMovement1;
 
-        internal SpecialMovementBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal SpecialMovementBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             specialMovement1 = ( SpecialMovement1 ) binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

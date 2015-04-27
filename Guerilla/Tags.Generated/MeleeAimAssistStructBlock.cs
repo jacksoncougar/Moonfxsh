@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class MeleeAimAssistStructBlockBase : IGuerilla
+    public class MeleeAimAssistStructBlockBase : GuerillaBlock
     {
         /// <summary>
         /// the maximum angle that magnetism works at full strength
@@ -33,7 +33,12 @@ namespace Moonfish.Guerilla.Tags
         internal float throttleMinimumDistance;
         internal float throttleMaximumAdjustmentAngleDegrees;
 
-        internal MeleeAimAssistStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        internal MeleeAimAssistStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             magnetismAngleDegrees = binaryReader.ReadSingle( );
             magnetismRangeWorldUnits = binaryReader.ReadSingle( );
@@ -42,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
             throttleMaximumAdjustmentAngleDegrees = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 676, Alignment = 4 )]
-    public class GlobalErrorReportCategoriesBlockBase : IGuerilla
+    public class GlobalErrorReportCategoriesBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String256 name;
         internal ReportType reportType;
@@ -27,7 +27,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal ErrorReportsBlock[] reports;
 
-        internal GlobalErrorReportCategoriesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 676; }
+        }
+
+        internal GlobalErrorReportCategoriesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadString256( );
             reportType = ( ReportType ) binaryReader.ReadInt16( );
@@ -38,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
             reports = Guerilla.ReadBlockArray<ErrorReportsBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

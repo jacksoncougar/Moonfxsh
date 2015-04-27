@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class QuantizedOrientationStructBlockBase : IGuerilla
+    public class QuantizedOrientationStructBlockBase : GuerillaBlock
     {
         internal short rotationX;
         internal short rotationY;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 defaultTranslation;
         internal float defaultScale;
 
-        internal QuantizedOrientationStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        internal QuantizedOrientationStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             rotationX = binaryReader.ReadInt16( );
             rotationY = binaryReader.ReadInt16( );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             defaultScale = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

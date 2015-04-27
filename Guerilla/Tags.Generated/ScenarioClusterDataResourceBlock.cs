@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class ScenarioClusterDataResourceBlockBase : IGuerilla
+    public class ScenarioClusterDataResourceBlockBase : GuerillaBlock
     {
         internal ScenarioClusterDataBlock[] clusterData;
         internal StructureBspBackgroundSoundPaletteBlock[] backgroundSoundPalette;
@@ -34,7 +34,12 @@ namespace Moonfish.Guerilla.Tags
         internal StructureBspWeatherPaletteBlock[] weatherPalette;
         internal ScenarioAtmosphericFogPalette[] atmosphericFogPalette;
 
-        internal ScenarioClusterDataResourceBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 40; }
+        }
+
+        internal ScenarioClusterDataResourceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             clusterData = Guerilla.ReadBlockArray<ScenarioClusterDataBlock>( binaryReader );
             backgroundSoundPalette = Guerilla.ReadBlockArray<StructureBspBackgroundSoundPaletteBlock>( binaryReader );
@@ -43,7 +48,7 @@ namespace Moonfish.Guerilla.Tags
             atmosphericFogPalette = Guerilla.ReadBlockArray<ScenarioAtmosphericFogPalette>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

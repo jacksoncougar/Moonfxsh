@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 176, Alignment = 4 )]
-    public class UnitSeatBlockBase : IGuerilla
+    public class UnitSeatBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal Moonfish.Tags.StringID label;
@@ -78,7 +78,12 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID invisibleSeatRegion;
         internal int runtimeInvisibleSeatRegionIndex;
 
-        internal UnitSeatBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 176; }
+        }
+
+        internal UnitSeatBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             label = binaryReader.ReadStringID( );
@@ -113,7 +118,7 @@ namespace Moonfish.Guerilla.Tags
             runtimeInvisibleSeatRegionIndex = binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

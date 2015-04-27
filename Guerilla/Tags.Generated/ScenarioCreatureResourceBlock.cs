@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 52, Alignment = 4 )]
-    public class ScenarioCreatureResourceBlockBase : IGuerilla
+    public class ScenarioCreatureResourceBlockBase : GuerillaBlock
     {
         internal ScenarioObjectNamesBlock[] names;
         internal DontUseMeScenarioEnvironmentObjectBlock[] invalidName_;
@@ -36,7 +36,12 @@ namespace Moonfish.Guerilla.Tags
         internal int nextObjectIDSalt;
         internal GScenarioEditorFolderBlock[] editorFolders;
 
-        internal ScenarioCreatureResourceBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 52; }
+        }
+
+        internal ScenarioCreatureResourceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             names = Guerilla.ReadBlockArray<ScenarioObjectNamesBlock>( binaryReader );
             invalidName_ = Guerilla.ReadBlockArray<DontUseMeScenarioEnvironmentObjectBlock>( binaryReader );
@@ -47,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
             editorFolders = Guerilla.ReadBlockArray<GScenarioEditorFolderBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

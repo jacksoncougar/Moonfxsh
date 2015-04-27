@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,15 +9,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SimplePlatformSoundPlaybackStructBlock : SimplePlatformSoundPlaybackStructBlockBase
+    public artial class SimplePlatformSoundPlaybackStructBlock : SimplePlatformSoundPlaybackStructBlockBase
     {
-        public  SimplePlatformSoundPlaybackStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public  implePlatformSoundPlaybackStructBlock(B inaryReader binaryReader) :  base(b inaryReader) 
         {
-            
-        }
-    };
-    [LayoutAttribute(Size = 52, Alignment = 4)]
-    public class SimplePlatformSoundPlaybackStructBlockBase  : IGuerilla
+         
+    };
+
+    LayoutAttribute(S ize = 52, Alignment = 4) ]
+    public class SimplePlatformSoundPlaybackStructBlockBase  GuerillaBlock
     {
         internal PlatformSoundOverrideMixbinsBlock[] platformSoundOverrideMixbinsBlock;
         internal Flags flags;
@@ -24,32 +25,41 @@ namespace Moonfish.Guerilla.Tags
         internal PlatformSoundFilterBlock[] filter;
         internal PlatformSoundPitchLfoBlock[] pitchLfo;
         internal PlatformSoundFilterLfoBlock[] filterLfo;
-        internal SoundEffectPlaybackBlock[] soundEffect;
-        internal  SimplePlatformSoundPlaybackStructBlockBase(BinaryReader binaryReader)
+        internal SoundEffectPlaybackBlock[] soundEffec
+
+          
+       public override int SerializedSize{get {  return 52; }}
+        
+         internal  SimplePlatformSoundPlaybackStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            platformSoundOverrideMixbinsBlock = Guerilla.ReadBlockArray<PlatformSoundOverrideMixbinsBlock>(binaryReader);
+             p latformSoundOverrideMixbi nsBlo c k = Guerilla.ReadBlockA rray<PlatformSoundOverrideMixbinsBlock>(binaryReader);  
             flags = (Flags)binaryReader.ReadInt32();
-            invalidName_ = binaryReader.ReadBytes(8);
-            filter = Guerilla.ReadBlockArray<PlatformSoundFilterBlock>(binaryReader);
-            pitchLfo = Guerilla.ReadBlockArray<PlatformSoundPitchLfoBlock>(binaryReader);
-            filterLfo = Guerilla.ReadBlockArray<PlatformSoundFilterLfoBlock>(binaryReader);
-            soundEffect = Guerilla.ReadBlockArray<SoundEffectPlaybackBlock>(binaryReader);
+            invalidN ame_ = binar yReader.ReadBytes(8);
+            filter = Guerilla.ReadBlockArray<PlatformSou ndFilterBloc k>(binaryReader);
+            pitchLfo = Guerilla.ReadBlockArray<PlatformSoundPi tchLfoBlock> (binaryReader);
+            filterLfo = Guerilla.ReadBlockArray<PlatformSoundFi lterLfoBlock >(binaryReade
+
+               soundEffec t = Guerilla.ReadBlockArray<SoundEffectPlaybackBlock>( binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+          public override int Write ( System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
-            {
-                nextAddress = Guerilla.WriteBlockArray<PlatformSoundOverrideMixbinsBlock>(binaryWriter, platformSoundOverrideMixbinsBlock, nextAddress);
+            using(binaryWriter.BaseStrea m.Pin())
+   
+                            {
+                nextAddress = Gueri lla.WriteBlockArray<PlatformSoundOverri d eMixb i nsBlo ck>(binaryWriter, platformSoundOverride MixbinsBlock, next Address);
                 binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(invalidName_, 0, 8);
-                nextAddress = Guerilla.WriteBlockArray<PlatformSoundFilterBlock>(binaryWriter, filter, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PlatformSoundPitchLfoBlock>(binaryWriter, pitchLfo, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PlatformSoundFilterLfoBlock>(binaryWriter, filterLfo, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SoundEffectPlaybackBlock>(binaryWriter, soundEffect, nextAddress);
+                binaryW riter.Write(invalidName_, 0, 8); 
+                nextAddress = Guerilla.WriteBlockArray<PlatformSoundFilterBlock>(binar yWriter, filter, nextAddress);
+                 nextAddress = Guerilla.WriteBlockArray<PlatformSoundPitchLfoBlock>(binaryWr iter, pitchLfo, nextAddr
+                    ss);
+                 nextAddress = Guerilla.WriteBlockArray<PlatformSoundFilterLfoBlock>(binary Writer, filterLfo, nextAddress);
+                 nextAddress = Guerilla.WriteBlockArray<SoundEffectPla
+
+        >(binaryWriter, soundEffect, nextAddress);
                 return nextAddress;
             }
         }
-        [FlagsAttribute]
+        [FlsAttribute]
         internal enum Flags : int
         {
             Use3DRadioHack = 1,

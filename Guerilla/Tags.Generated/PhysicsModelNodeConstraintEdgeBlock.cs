@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class PhysicsModelNodeConstraintEdgeBlockBase : IGuerilla
+    public class PhysicsModelNodeConstraintEdgeBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal Moonfish.Tags.ShortBlockIndex1 nodeA;
@@ -34,7 +34,12 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal Moonfish.Tags.StringID nodeBMaterial;
 
-        internal PhysicsModelNodeConstraintEdgeBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        internal PhysicsModelNodeConstraintEdgeBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 4 );
             nodeA = binaryReader.ReadShortBlockIndex1( );
@@ -44,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
             nodeBMaterial = binaryReader.ReadStringID( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

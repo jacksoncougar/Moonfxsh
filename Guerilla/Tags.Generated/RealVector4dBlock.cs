@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class RealVector4dBlockBase : IGuerilla
+    public class RealVector4dBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector3 vector3;
         internal float w;
 
-        internal RealVector4dBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        internal RealVector4dBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             vector3 = binaryReader.ReadVector3( );
             w = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 196, Alignment = 4 )]
-    public class CreatureBlockBase : ObjectBlock
+    public class CreatureBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal DefaultTeam defaultTeam;
@@ -48,6 +48,11 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal Moonfish.Model.Range destroyAfterDeathTimeSeconds;
 
+        public override int SerializedSize
+        {
+            get { return 196; }
+        }
+
         internal CreatureBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
@@ -63,7 +68,7 @@ namespace Moonfish.Guerilla.Tags
             destroyAfterDeathTimeSeconds = binaryReader.ReadRange( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

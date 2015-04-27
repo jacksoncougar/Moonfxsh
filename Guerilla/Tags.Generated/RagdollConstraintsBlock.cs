@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 148, Alignment = 4 )]
-    public class RagdollConstraintsBlockBase : IGuerilla
+    public class RagdollConstraintsBlockBase : GuerillaBlock
     {
         internal ConstraintBodiesStructBlock constraintBodies;
         internal byte[] invalidName_;
@@ -29,7 +29,12 @@ namespace Moonfish.Guerilla.Tags
         internal float maxPlane;
         internal float maxFricitonTorque;
 
-        internal RagdollConstraintsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 148; }
+        }
+
+        internal RagdollConstraintsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             constraintBodies = new ConstraintBodiesStructBlock( binaryReader );
             invalidName_ = binaryReader.ReadBytes( 4 );
@@ -42,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
             maxFricitonTorque = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

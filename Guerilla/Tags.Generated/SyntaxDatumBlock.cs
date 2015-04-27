@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class SyntaxDatumBlockBase : IGuerilla
+    public class SyntaxDatumBlockBase : GuerillaBlock
     {
         internal short datumHeader;
         internal short scriptIndexFunctionIndexConstantTypeUnion;
@@ -27,7 +27,12 @@ namespace Moonfish.Guerilla.Tags
         internal int data;
         internal int sourceOffset;
 
-        internal SyntaxDatumBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        internal SyntaxDatumBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             datumHeader = binaryReader.ReadInt16( );
             scriptIndexFunctionIndexConstantTypeUnion = binaryReader.ReadInt16( );
@@ -38,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
             sourceOffset = binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

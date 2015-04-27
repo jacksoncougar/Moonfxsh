@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 14, Alignment = 4 )]
-    public class ScenarioBspSwitchTriggerVolumeBlockBase : IGuerilla
+    public class ScenarioBspSwitchTriggerVolumeBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 triggerVolume;
         internal short source;
@@ -27,7 +27,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
 
-        internal ScenarioBspSwitchTriggerVolumeBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 14; }
+        }
+
+        internal ScenarioBspSwitchTriggerVolumeBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             triggerVolume = binaryReader.ReadShortBlockIndex1( );
             source = binaryReader.ReadInt16( );
@@ -38,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes( 2 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

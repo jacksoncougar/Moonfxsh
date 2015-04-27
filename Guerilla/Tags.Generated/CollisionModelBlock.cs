@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 52, Alignment = 4 )]
-    public class CollisionModelBlockBase : IGuerilla
+    public class CollisionModelBlockBase : GuerillaBlock
     {
         internal GlobalTagImportInfoBlock[] importInfo;
         internal GlobalErrorReportCategoriesBlock[] errors;
@@ -36,7 +36,12 @@ namespace Moonfish.Guerilla.Tags
         internal CollisionModelPathfindingSphereBlock[] pathfindingSpheres;
         internal CollisionModelNodeBlock[] nodes;
 
-        internal CollisionModelBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 52; }
+        }
+
+        internal CollisionModelBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>( binaryReader );
             errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>( binaryReader );
@@ -47,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
             nodes = Guerilla.ReadBlockArray<CollisionModelNodeBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

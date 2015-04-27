@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,33 +11,28 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Hlmt = (TagClass)"hlmt";
+        public static readonly TagClass Hlmt = ( TagClass ) "hlmt";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("hlmt")]
-    public  partial class ModelBlock : ModelBlockBase
+    [TagClassAttribute( "hlmt" )]
+    public partial class ModelBlock : ModelBlockBase
     {
-        public  ModelBlock(BinaryReader binaryReader): base(binaryReader)
+        public ModelBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 252, Alignment = 4)]
-    public class ModelBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 252, Alignment = 4 )]
+    public class ModelBlockBase : GuerillaBlock
     {
-        [TagReference("mode")]
-        internal Moonfish.Tags.TagReference renderModel;
-        [TagReference("coll")]
-        internal Moonfish.Tags.TagReference collisionModel;
-        [TagReference("jmad")]
-        internal Moonfish.Tags.TagReference animation;
-        [TagReference("phys")]
-        internal Moonfish.Tags.TagReference physics;
-        [TagReference("phmo")]
-        internal Moonfish.Tags.TagReference physicsModel;
+        [TagReference( "mode" )] internal Moonfish.Tags.TagReference renderModel;
+        [TagReference( "coll" )] internal Moonfish.Tags.TagReference collisionModel;
+        [TagReference( "jmad" )] internal Moonfish.Tags.TagReference animation;
+        [TagReference( "phys" )] internal Moonfish.Tags.TagReference physics;
+        [TagReference( "phmo" )] internal Moonfish.Tags.TagReference physicsModel;
         internal float disappearDistanceWorldUnits;
         internal float beginFadeDistanceWorldUnits;
         internal byte[] invalidName_;
@@ -56,165 +52,211 @@ namespace Moonfish.Guerilla.Tags
         internal ModelNodeBlock[] modelNodeBlock;
         internal byte[] invalidName_2;
         internal ModelObjectDataBlock[] modelObjectData;
+
         /// <summary>
         /// The defaultDialogue tag for this model (overriden by variants)
         /// </summary>
-        [TagReference("udlg")]
-        internal Moonfish.Tags.TagReference defaultDialogue;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference uNUSED;
+        [TagReference( "udlg" )] internal Moonfish.Tags.TagReference defaultDialogue;
+
+        [TagReference( "shad" )] internal Moonfish.Tags.TagReference uNUSED;
         internal Flags flags;
+
         /// <summary>
         /// The default dialogue tag for this model (overriden by variants)
         /// </summary>
         internal Moonfish.Tags.StringID defaultDialogueEffect;
+
         internal RenderOnlyNodeFlags[] renderOnlyNodeFlags;
         internal RenderOnlySectionFlags[] renderOnlySectionFlags;
         internal RuntimeFlags runtimeFlags;
         internal GlobalScenarioLoadParametersBlock[] scenarioLoadParameters;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference hologramShader;
+        [TagReference( "shad" )] internal Moonfish.Tags.TagReference hologramShader;
         internal Moonfish.Tags.StringID hologramControlFunction;
-        internal  ModelBlockBase(BinaryReader binaryReader)
+
+        public override int SerializedSize
         {
-            renderModel = binaryReader.ReadTagReference();
-            collisionModel = binaryReader.ReadTagReference();
-            animation = binaryReader.ReadTagReference();
-            physics = binaryReader.ReadTagReference();
-            physicsModel = binaryReader.ReadTagReference();
-            disappearDistanceWorldUnits = binaryReader.ReadSingle();
-            beginFadeDistanceWorldUnits = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(4);
-            reduceToL1WorldUnitsSuperLow = binaryReader.ReadSingle();
-            reduceToL2WorldUnitsLow = binaryReader.ReadSingle();
-            reduceToL3WorldUnitsMedium = binaryReader.ReadSingle();
-            reduceToL4WorldUnitsHigh = binaryReader.ReadSingle();
-            reduceToL5WorldUnitsSuperHigh = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            shadowFadeDistance = (ShadowFadeDistance)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            variants = Guerilla.ReadBlockArray<ModelVariantBlock>(binaryReader);
-            materials = Guerilla.ReadBlockArray<ModelMaterialBlock>(binaryReader);
-            newDamageInfo = Guerilla.ReadBlockArray<GlobalDamageInfoBlock>(binaryReader);
-            targets = Guerilla.ReadBlockArray<ModelTargetBlock>(binaryReader);
-            modelRegionBlock = Guerilla.ReadBlockArray<ModelRegionBlock>(binaryReader);
-            modelNodeBlock = Guerilla.ReadBlockArray<ModelNodeBlock>(binaryReader);
-            invalidName_2 = binaryReader.ReadBytes(4);
-            modelObjectData = Guerilla.ReadBlockArray<ModelObjectDataBlock>(binaryReader);
-            defaultDialogue = binaryReader.ReadTagReference();
-            uNUSED = binaryReader.ReadTagReference();
-            flags = (Flags)binaryReader.ReadInt32();
-            defaultDialogueEffect = binaryReader.ReadStringID();
-            renderOnlyNodeFlags = new []{ new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader),  };
-            renderOnlySectionFlags = new []{ new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader),  };
-            runtimeFlags = (RuntimeFlags)binaryReader.ReadInt32();
-            scenarioLoadParameters = Guerilla.ReadBlockArray<GlobalScenarioLoadParametersBlock>(binaryReader);
-            hologramShader = binaryReader.ReadTagReference();
-            hologramControlFunction = binaryReader.ReadStringID();
+            get { return 252; }
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        internal ModelBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
-            using(binaryWriter.BaseStream.Pin())
+            renderModel = binaryReader.ReadTagReference( );
+            collisionModel = binaryReader.ReadTagReference( );
+            animation = binaryReader.ReadTagReference( );
+            physics = binaryReader.ReadTagReference( );
+            physicsModel = binaryReader.ReadTagReference( );
+            disappearDistanceWorldUnits = binaryReader.ReadSingle( );
+            beginFadeDistanceWorldUnits = binaryReader.ReadSingle( );
+            invalidName_ = binaryReader.ReadBytes( 4 );
+            reduceToL1WorldUnitsSuperLow = binaryReader.ReadSingle( );
+            reduceToL2WorldUnitsLow = binaryReader.ReadSingle( );
+            reduceToL3WorldUnitsMedium = binaryReader.ReadSingle( );
+            reduceToL4WorldUnitsHigh = binaryReader.ReadSingle( );
+            reduceToL5WorldUnitsSuperHigh = binaryReader.ReadSingle( );
+            invalidName_0 = binaryReader.ReadBytes( 4 );
+            shadowFadeDistance = ( ShadowFadeDistance ) binaryReader.ReadInt16( );
+            invalidName_1 = binaryReader.ReadBytes( 2 );
+            variants = Guerilla.ReadBlockArray<ModelVariantBlock>( binaryReader );
+            materials = Guerilla.ReadBlockArray<ModelMaterialBlock>( binaryReader );
+            newDamageInfo = Guerilla.ReadBlockArray<GlobalDamageInfoBlock>( binaryReader );
+            targets = Guerilla.ReadBlockArray<ModelTargetBlock>( binaryReader );
+            modelRegionBlock = Guerilla.ReadBlockArray<ModelRegionBlock>( binaryReader );
+            modelNodeBlock = Guerilla.ReadBlockArray<ModelNodeBlock>( binaryReader );
+            invalidName_2 = binaryReader.ReadBytes( 4 );
+            modelObjectData = Guerilla.ReadBlockArray<ModelObjectDataBlock>( binaryReader );
+            defaultDialogue = binaryReader.ReadTagReference( );
+            uNUSED = binaryReader.ReadTagReference( );
+            flags = ( Flags ) binaryReader.ReadInt32( );
+            defaultDialogueEffect = binaryReader.ReadStringID( );
+            renderOnlyNodeFlags = new[]
             {
-                binaryWriter.Write(renderModel);
-                binaryWriter.Write(collisionModel);
-                binaryWriter.Write(animation);
-                binaryWriter.Write(physics);
-                binaryWriter.Write(physicsModel);
-                binaryWriter.Write(disappearDistanceWorldUnits);
-                binaryWriter.Write(beginFadeDistanceWorldUnits);
-                binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write(reduceToL1WorldUnitsSuperLow);
-                binaryWriter.Write(reduceToL2WorldUnitsLow);
-                binaryWriter.Write(reduceToL3WorldUnitsMedium);
-                binaryWriter.Write(reduceToL4WorldUnitsHigh);
-                binaryWriter.Write(reduceToL5WorldUnitsSuperHigh);
-                binaryWriter.Write(invalidName_0, 0, 4);
-                binaryWriter.Write((Int16)shadowFadeDistance);
-                binaryWriter.Write(invalidName_1, 0, 2);
-                nextAddress = Guerilla.WriteBlockArray<ModelVariantBlock>(binaryWriter, variants, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ModelMaterialBlock>(binaryWriter, materials, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GlobalDamageInfoBlock>(binaryWriter, newDamageInfo, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ModelTargetBlock>(binaryWriter, targets, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ModelRegionBlock>(binaryWriter, modelRegionBlock, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ModelNodeBlock>(binaryWriter, modelNodeBlock, nextAddress);
-                binaryWriter.Write(invalidName_2, 0, 4);
-                nextAddress = Guerilla.WriteBlockArray<ModelObjectDataBlock>(binaryWriter, modelObjectData, nextAddress);
-                binaryWriter.Write(defaultDialogue);
-                binaryWriter.Write(uNUSED);
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(defaultDialogueEffect);
-                renderOnlyNodeFlags[0].Write(binaryWriter);
-                renderOnlyNodeFlags[1].Write(binaryWriter);
-                renderOnlyNodeFlags[2].Write(binaryWriter);
-                renderOnlyNodeFlags[3].Write(binaryWriter);
-                renderOnlyNodeFlags[4].Write(binaryWriter);
-                renderOnlyNodeFlags[5].Write(binaryWriter);
-                renderOnlyNodeFlags[6].Write(binaryWriter);
-                renderOnlyNodeFlags[7].Write(binaryWriter);
-                renderOnlyNodeFlags[8].Write(binaryWriter);
-                renderOnlyNodeFlags[9].Write(binaryWriter);
-                renderOnlyNodeFlags[10].Write(binaryWriter);
-                renderOnlyNodeFlags[11].Write(binaryWriter);
-                renderOnlyNodeFlags[12].Write(binaryWriter);
-                renderOnlyNodeFlags[13].Write(binaryWriter);
-                renderOnlyNodeFlags[14].Write(binaryWriter);
-                renderOnlyNodeFlags[15].Write(binaryWriter);
-                renderOnlyNodeFlags[16].Write(binaryWriter);
-                renderOnlyNodeFlags[17].Write(binaryWriter);
-                renderOnlyNodeFlags[18].Write(binaryWriter);
-                renderOnlyNodeFlags[19].Write(binaryWriter);
-                renderOnlyNodeFlags[20].Write(binaryWriter);
-                renderOnlyNodeFlags[21].Write(binaryWriter);
-                renderOnlyNodeFlags[22].Write(binaryWriter);
-                renderOnlyNodeFlags[23].Write(binaryWriter);
-                renderOnlyNodeFlags[24].Write(binaryWriter);
-                renderOnlyNodeFlags[25].Write(binaryWriter);
-                renderOnlyNodeFlags[26].Write(binaryWriter);
-                renderOnlyNodeFlags[27].Write(binaryWriter);
-                renderOnlyNodeFlags[28].Write(binaryWriter);
-                renderOnlyNodeFlags[29].Write(binaryWriter);
-                renderOnlyNodeFlags[30].Write(binaryWriter);
-                renderOnlyNodeFlags[31].Write(binaryWriter);
-                renderOnlySectionFlags[0].Write(binaryWriter);
-                renderOnlySectionFlags[1].Write(binaryWriter);
-                renderOnlySectionFlags[2].Write(binaryWriter);
-                renderOnlySectionFlags[3].Write(binaryWriter);
-                renderOnlySectionFlags[4].Write(binaryWriter);
-                renderOnlySectionFlags[5].Write(binaryWriter);
-                renderOnlySectionFlags[6].Write(binaryWriter);
-                renderOnlySectionFlags[7].Write(binaryWriter);
-                renderOnlySectionFlags[8].Write(binaryWriter);
-                renderOnlySectionFlags[9].Write(binaryWriter);
-                renderOnlySectionFlags[10].Write(binaryWriter);
-                renderOnlySectionFlags[11].Write(binaryWriter);
-                renderOnlySectionFlags[12].Write(binaryWriter);
-                renderOnlySectionFlags[13].Write(binaryWriter);
-                renderOnlySectionFlags[14].Write(binaryWriter);
-                renderOnlySectionFlags[15].Write(binaryWriter);
-                renderOnlySectionFlags[16].Write(binaryWriter);
-                renderOnlySectionFlags[17].Write(binaryWriter);
-                renderOnlySectionFlags[18].Write(binaryWriter);
-                renderOnlySectionFlags[19].Write(binaryWriter);
-                renderOnlySectionFlags[20].Write(binaryWriter);
-                renderOnlySectionFlags[21].Write(binaryWriter);
-                renderOnlySectionFlags[22].Write(binaryWriter);
-                renderOnlySectionFlags[23].Write(binaryWriter);
-                renderOnlySectionFlags[24].Write(binaryWriter);
-                renderOnlySectionFlags[25].Write(binaryWriter);
-                renderOnlySectionFlags[26].Write(binaryWriter);
-                renderOnlySectionFlags[27].Write(binaryWriter);
-                renderOnlySectionFlags[28].Write(binaryWriter);
-                renderOnlySectionFlags[29].Write(binaryWriter);
-                renderOnlySectionFlags[30].Write(binaryWriter);
-                renderOnlySectionFlags[31].Write(binaryWriter);
-                binaryWriter.Write((Int32)runtimeFlags);
-                nextAddress = Guerilla.WriteBlockArray<GlobalScenarioLoadParametersBlock>(binaryWriter, scenarioLoadParameters, nextAddress);
-                binaryWriter.Write(hologramShader);
-                binaryWriter.Write(hologramControlFunction);
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+                new RenderOnlyNodeFlags( binaryReader ), new RenderOnlyNodeFlags( binaryReader ),
+            };
+            renderOnlySectionFlags = new[]
+            {
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+                new RenderOnlySectionFlags( binaryReader ), new RenderOnlySectionFlags( binaryReader ),
+            };
+            runtimeFlags = ( RuntimeFlags ) binaryReader.ReadInt32( );
+            scenarioLoadParameters = Guerilla.ReadBlockArray<GlobalScenarioLoadParametersBlock>( binaryReader );
+            hologramShader = binaryReader.ReadTagReference( );
+            hologramControlFunction = binaryReader.ReadStringID( );
+        }
+
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        {
+            using ( binaryWriter.BaseStream.Pin( ) )
+            {
+                binaryWriter.Write( renderModel );
+                binaryWriter.Write( collisionModel );
+                binaryWriter.Write( animation );
+                binaryWriter.Write( physics );
+                binaryWriter.Write( physicsModel );
+                binaryWriter.Write( disappearDistanceWorldUnits );
+                binaryWriter.Write( beginFadeDistanceWorldUnits );
+                binaryWriter.Write( invalidName_, 0, 4 );
+                binaryWriter.Write( reduceToL1WorldUnitsSuperLow );
+                binaryWriter.Write( reduceToL2WorldUnitsLow );
+                binaryWriter.Write( reduceToL3WorldUnitsMedium );
+                binaryWriter.Write( reduceToL4WorldUnitsHigh );
+                binaryWriter.Write( reduceToL5WorldUnitsSuperHigh );
+                binaryWriter.Write( invalidName_0, 0, 4 );
+                binaryWriter.Write( ( Int16 ) shadowFadeDistance );
+                binaryWriter.Write( invalidName_1, 0, 2 );
+                nextAddress = Guerilla.WriteBlockArray<ModelVariantBlock>( binaryWriter, variants, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<ModelMaterialBlock>( binaryWriter, materials, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<GlobalDamageInfoBlock>( binaryWriter, newDamageInfo, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<ModelTargetBlock>( binaryWriter, targets, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<ModelRegionBlock>( binaryWriter, modelRegionBlock, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<ModelNodeBlock>( binaryWriter, modelNodeBlock, nextAddress );
+                binaryWriter.Write( invalidName_2, 0, 4 );
+                nextAddress = Guerilla.WriteBlockArray<ModelObjectDataBlock>( binaryWriter, modelObjectData, nextAddress );
+                binaryWriter.Write( defaultDialogue );
+                binaryWriter.Write( uNUSED );
+                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write( defaultDialogueEffect );
+                renderOnlyNodeFlags[ 0 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 1 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 2 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 3 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 4 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 5 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 6 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 7 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 8 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 9 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 10 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 11 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 12 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 13 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 14 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 15 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 16 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 17 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 18 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 19 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 20 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 21 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 22 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 23 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 24 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 25 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 26 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 27 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 28 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 29 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 30 ].Write( binaryWriter );
+                renderOnlyNodeFlags[ 31 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 0 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 1 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 2 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 3 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 4 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 5 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 6 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 7 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 8 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 9 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 10 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 11 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 12 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 13 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 14 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 15 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 16 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 17 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 18 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 19 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 20 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 21 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 22 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 23 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 24 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 25 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 26 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 27 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 28 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 29 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 30 ].Write( binaryWriter );
+                renderOnlySectionFlags[ 31 ].Write( binaryWriter );
+                binaryWriter.Write( ( Int32 ) runtimeFlags );
+                nextAddress = Guerilla.WriteBlockArray<GlobalScenarioLoadParametersBlock>( binaryWriter,
+                    scenarioLoadParameters, nextAddress );
+                binaryWriter.Write( hologramShader );
+                binaryWriter.Write( hologramControlFunction );
                 return nextAddress;
             }
         }
+
         internal enum ShadowFadeDistance : short
         {
             FadeAtSuperHighDetailLevel = 0,
@@ -224,6 +266,7 @@ namespace Moonfish.Guerilla.Tags
             FadeAtSuperLowDetailLevel = 4,
             FadeNever = 5,
         };
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -231,41 +274,58 @@ namespace Moonfish.Guerilla.Tags
             ActiveCamoAlwaysMerge = 2,
             ActiveCamoNeverMerge = 4,
         };
+
         [FlagsAttribute]
         internal enum RuntimeFlags : int
         {
             ContainsRunTimeNodes = 1,
         };
-        [LayoutAttribute(Size = 1, Alignment = 1)]
-        public class RenderOnlyNodeFlags  : IGuerilla
+
+        [LayoutAttribute( Size = 1, Alignment = 1 )]
+        public class RenderOnlyNodeFlags : GuerillaBlock
         {
             internal byte invalidName_;
-            internal  RenderOnlyNodeFlags(BinaryReader binaryReader)
+
+            public override int SerializedSize
             {
-                invalidName_ = binaryReader.ReadByte();
+                get { return 1; }
             }
-            public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+            internal RenderOnlyNodeFlags( BinaryReader binaryReader ) : base( binaryReader )
             {
-                using(binaryWriter.BaseStream.Pin())
+                invalidName_ = binaryReader.ReadByte( );
+            }
+
+            public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            {
+                using ( binaryWriter.BaseStream.Pin( ) )
                 {
-                    binaryWriter.Write(invalidName_);
+                    binaryWriter.Write( invalidName_ );
                     return nextAddress;
                 }
             }
         };
-        [LayoutAttribute(Size = 1, Alignment = 1)]
-        public class RenderOnlySectionFlags  : IGuerilla
+
+        [LayoutAttribute( Size = 1, Alignment = 1 )]
+        public class RenderOnlySectionFlags : GuerillaBlock
         {
             internal byte invalidName_;
-            internal  RenderOnlySectionFlags(BinaryReader binaryReader)
+
+            public override int SerializedSize
             {
-                invalidName_ = binaryReader.ReadByte();
+                get { return 1; }
             }
-            public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+            internal RenderOnlySectionFlags( BinaryReader binaryReader ) : base( binaryReader )
             {
-                using(binaryWriter.BaseStream.Pin())
+                invalidName_ = binaryReader.ReadByte( );
+            }
+
+            public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            {
+                using ( binaryWriter.BaseStream.Pin( ) )
                 {
-                    binaryWriter.Write(invalidName_);
+                    binaryWriter.Write( invalidName_ );
                     return nextAddress;
                 }
             }

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 128, Alignment = 4 )]
-    public class PlayerControlBlockBase : IGuerilla
+    public class PlayerControlBlockBase : GuerillaBlock
     {
         /// <summary>
         /// how much the crosshair slows over enemies
@@ -126,7 +126,12 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float minimumActionHoldTimeSeconds;
 
-        internal PlayerControlBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 128; }
+        }
+
+        internal PlayerControlBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             magnetismFriction = binaryReader.ReadSingle( );
             magnetismAdhesion = binaryReader.ReadSingle( );
@@ -157,7 +162,7 @@ namespace Moonfish.Guerilla.Tags
             minimumActionHoldTimeSeconds = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -16,16 +16,14 @@ namespace Moonfish.Guerilla
             return Guerilla.AlignmentOf( block.GetType( ) );
         }
 
-        public static void Write( this IGuerilla block, BinaryWriter binaryWriter )
+        public static void Write( this GuerillaBlock block, BinaryWriter binaryWriter )
         {
-            binaryWriter.WritePadding( block.GetAlignment( ) );
-            block.Write( binaryWriter, ( int ) binaryWriter.BaseStream.Position + block.GetSize( ) );
+            block.Write( binaryWriter, ( int ) binaryWriter.BaseStream.Position + block.SerializedSize );
         }
 
-        public static void Write( this BinaryWriter binaryWriter, IGuerilla block)
+        public static void Write(this BinaryWriter binaryWriter, GuerillaBlock block)
         {
-            binaryWriter.WritePadding( block.GetAlignment( ) );
-            block.Write( binaryWriter, ( int ) binaryWriter.BaseStream.Position + block.GetSize( ) );
+            block.Write(binaryWriter, (int)binaryWriter.BaseStream.Position + block.SerializedSize);
         }
     };
 }

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,32 +9,40 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ModelTargetLockOnDataStructBlock : ModelTargetLockOnDataStructBlockBase
+    public partial class ModelTargetLockOnDataStructBlock : ModelTargetLockOnDataStructBlockBase
     {
-        public  ModelTargetLockOnDataStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public ModelTargetLockOnDataStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ModelTargetLockOnDataStructBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class ModelTargetLockOnDataStructBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal float lockOnDistance;
-        internal  ModelTargetLockOnDataStructBlockBase(BinaryReader binaryReader)
+
+        public override int SerializedSize
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            lockOnDistance = binaryReader.ReadSingle();
+            get { return 8; }
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        internal ModelTargetLockOnDataStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
-            using(binaryWriter.BaseStream.Pin())
+            flags = ( Flags ) binaryReader.ReadInt32( );
+            lockOnDistance = binaryReader.ReadSingle( );
+        }
+
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        {
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(lockOnDistance);
+                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write( lockOnDistance );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

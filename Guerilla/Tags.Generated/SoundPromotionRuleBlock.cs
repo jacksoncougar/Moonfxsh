@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,38 +9,46 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundPromotionRuleBlock : SoundPromotionRuleBlockBase
+    public artial class SoundPromotionRuleBlock : SoundPromotionRuleBlockBase
     {
-        public  SoundPromotionRuleBlock(BinaryReader binaryReader): base(binaryReader)
+        public  oundPromotionRuleBlock(B inaryReader binaryReader) :  base(b inaryReader) 
         {
-            
-        }
-    };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class SoundPromotionRuleBlockBase  : IGuerilla
+         
+    };
+
+    LayoutAttribute(S ize = 16, Alignment = 4) ]
+    public class SoundPromotionRuleBlockBase  GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 pitchRanges;
-        internal short maximumPlayingCount;
-        /// <summary>
+        internal short maximumPlayingCoun
+
+          /// <summary>
         /// time from when first permutation plays to when another sound from an equal or lower promotion can play
         /// </summary>
-        internal float suppressionTimeSeconds;
-        internal byte[] invalidName_;
-        internal  SoundPromotionRuleBlockBase(BinaryReader binaryReader)
+        internal float suppressionTimeSecond
+
+          internal byte[] invalidName
+
+          
+       public override int Serial izedSize{get { return 16;  }}
+        
+        internal  SoundPromotionRuleBlockBase(BinaryReader  binaryReader): base(binaryReader)
         {
-            pitchRanges = binaryReader.ReadShortBlockIndex1();
-            maximumPlayingCount = binaryReader.ReadInt16();
-            suppressionTimeSeconds = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(8);
+            pit chRanges = binaryReader.ReadShortBlockIndex1();
+            maxi mumPlayingCount = binaryReader.ReadInt16();
+              suppression
+
+        s = binaryReader. ReadSingle();
+            invalidName_ = binaryReader .ReadBytes(8);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
-            {
-                binaryWriter.Write(pitchRanges);
-                binaryWriter.Write(maximumPlayingCount);
+          public override int Write ( System.IO.BinaryWriter binaryWriter, Int32 nextAddres s)
+         {
+            using(binaryWriter.Base Stream.Pin())
+             {
+                binaryWriter .Write(pitchRanges);
+                 binaryWriter.Write(maxi mumPlayingCount); 
                 binaryWriter.Write(suppressionTimeSeconds);
-                binaryWriter.Write(invalidName_, 0, 8);
+              binaryWriter.Write(invalidName_, 0, 8);
                 return nextAddress;
             }
         }

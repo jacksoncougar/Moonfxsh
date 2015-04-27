@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 136, Alignment = 4 )]
-    public class DecoratorCacheBlockDataBlockBase : IGuerilla
+    public class DecoratorCacheBlockDataBlockBase : GuerillaBlock
     {
         internal DecoratorPlacementBlock[] placements;
         internal DecalVerticesBlock[] decalVertices;
@@ -29,7 +29,12 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.VertexBuffer spriteVertexBuffer;
         internal byte[] invalidName_0;
 
-        internal DecoratorCacheBlockDataBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 136; }
+        }
+
+        internal DecoratorCacheBlockDataBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             placements = Guerilla.ReadBlockArray<DecoratorPlacementBlock>( binaryReader );
             decalVertices = Guerilla.ReadBlockArray<DecalVerticesBlock>( binaryReader );
@@ -42,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes( 16 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

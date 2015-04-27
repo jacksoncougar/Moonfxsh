@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 76, Alignment = 4 )]
-    public class AntiGravityPointDefinitionBlockBase : IGuerilla
+    public class AntiGravityPointDefinitionBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID markerName;
         internal Flags flags;
@@ -38,7 +38,12 @@ namespace Moonfish.Guerilla.Tags
         internal float majorDamageError;
         internal float destroyedStateError;
 
-        internal AntiGravityPointDefinitionBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 76; }
+        }
+
+        internal AntiGravityPointDefinitionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             markerName = binaryReader.ReadStringID( );
             flags = ( Flags ) binaryReader.ReadInt32( );
@@ -60,7 +65,7 @@ namespace Moonfish.Guerilla.Tags
             destroyedStateError = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

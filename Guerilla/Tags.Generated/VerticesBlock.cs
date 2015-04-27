@@ -17,20 +17,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 16 )]
-    public class VerticesBlockBase : IGuerilla
+    public class VerticesBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector3 point;
         internal short firstEdge;
         internal byte[] invalidName_;
 
-        internal VerticesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        internal VerticesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             point = binaryReader.ReadVector3( );
             firstEdge = binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

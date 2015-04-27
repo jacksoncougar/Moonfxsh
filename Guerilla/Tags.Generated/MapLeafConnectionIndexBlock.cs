@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class MapLeafConnectionIndexBlockBase : IGuerilla
+    public class MapLeafConnectionIndexBlockBase : GuerillaBlock
     {
         internal int connectionIndex;
 
-        internal MapLeafConnectionIndexBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal MapLeafConnectionIndexBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             connectionIndex = binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

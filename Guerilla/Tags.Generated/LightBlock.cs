@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 228, Alignment = 4 )]
-    public class LightBlockBase : IGuerilla
+    public class LightBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal Type type;
@@ -139,7 +139,12 @@ namespace Moonfish.Guerilla.Tags
         internal LightGelAnimationBlock[] gelAnimation;
         [TagReference( "shad" )] internal Moonfish.Tags.TagReference shader;
 
-        internal LightBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 228; }
+        }
+
+        internal LightBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             type = ( Type ) binaryReader.ReadInt16( );
@@ -194,7 +199,7 @@ namespace Moonfish.Guerilla.Tags
             shader = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

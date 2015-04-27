@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 6, Alignment = 4 )]
-    public class ShaderPostprocessLevelOfDetailNewBlockBase : IGuerilla
+    public class ShaderPostprocessLevelOfDetailNewBlockBase : GuerillaBlock
     {
         internal int availableLayerFlags;
         internal TagBlockIndexStructBlock layers;
 
-        internal ShaderPostprocessLevelOfDetailNewBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 6; }
+        }
+
+        internal ShaderPostprocessLevelOfDetailNewBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             availableLayerFlags = binaryReader.ReadInt32( );
             layers = new TagBlockIndexStructBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

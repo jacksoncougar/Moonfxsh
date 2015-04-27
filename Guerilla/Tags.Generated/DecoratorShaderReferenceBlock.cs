@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,28 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class DecoratorShaderReferenceBlock : DecoratorShaderReferenceBlockBase
     {
-        public DecoratorShaderReferenceBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  DecoratorShaderReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class DecoratorShaderReferenceBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class DecoratorShaderReferenceBlockBase : GuerillaBlock
     {
-        [TagReference( "shad" )] internal Moonfish.Tags.TagReference shader;
-
-        internal DecoratorShaderReferenceBlockBase( BinaryReader binaryReader )
+        [TagReference("shad")]
+        internal Moonfish.Tags.TagReference shader;
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        internal  DecoratorShaderReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            shader = binaryReader.ReadTagReference( );
+            shader = binaryReader.ReadTagReference();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( shader );
+                binaryWriter.Write(shader);
                 return nextAddress;
             }
         }

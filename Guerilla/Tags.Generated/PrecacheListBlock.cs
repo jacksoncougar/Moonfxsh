@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class PrecacheListBlockBase : IGuerilla
+    public class PrecacheListBlockBase : GuerillaBlock
     {
         internal int cacheBlockIndex;
 
-        internal PrecacheListBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal PrecacheListBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             cacheBlockIndex = binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

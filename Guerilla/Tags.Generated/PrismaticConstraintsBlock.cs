@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 132, Alignment = 4 )]
-    public class PrismaticConstraintsBlockBase : IGuerilla
+    public class PrismaticConstraintsBlockBase : GuerillaBlock
     {
         internal ConstraintBodiesStructBlock constraintBodies;
         internal byte[] invalidName_;
@@ -25,7 +25,12 @@ namespace Moonfish.Guerilla.Tags
         internal float maxLimit;
         internal float maxFrictionForce;
 
-        internal PrismaticConstraintsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 132; }
+        }
+
+        internal PrismaticConstraintsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             constraintBodies = new ConstraintBodiesStructBlock( binaryReader );
             invalidName_ = binaryReader.ReadBytes( 4 );
@@ -34,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             maxFrictionForce = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

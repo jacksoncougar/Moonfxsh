@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 644, Alignment = 4 )]
-    public class GlobalsBlockBase : IGuerilla
+    public class GlobalsBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal Language language;
@@ -59,7 +59,12 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "gldf" )] internal Moonfish.Tags.TagReference defaultGlobalLighting;
         internal byte[] invalidName_0;
 
-        internal GlobalsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 644; }
+        }
+
+        internal GlobalsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 172 );
             language = ( Language ) binaryReader.ReadInt32( );
@@ -93,7 +98,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes( 252 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class ParticlesUpdateDataBlockBase : IGuerilla
+    public class ParticlesUpdateDataBlockBase : GuerillaBlock
     {
         internal float velocityX;
         internal float velocityY;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal float mass;
         internal float creationTimeStamp;
 
-        internal ParticlesUpdateDataBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 32; }
+        }
+
+        internal ParticlesUpdateDataBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             velocityX = binaryReader.ReadSingle( );
             velocityY = binaryReader.ReadSingle( );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             creationTimeStamp = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

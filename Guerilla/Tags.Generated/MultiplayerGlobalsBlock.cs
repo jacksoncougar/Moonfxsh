@@ -26,18 +26,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class MultiplayerGlobalsBlockBase : IGuerilla
+    public class MultiplayerGlobalsBlockBase : GuerillaBlock
     {
         internal MultiplayerUniversalBlock[] universal;
         internal MultiplayerRuntimeBlock[] runtime;
 
-        internal MultiplayerGlobalsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        internal MultiplayerGlobalsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             universal = Guerilla.ReadBlockArray<MultiplayerUniversalBlock>( binaryReader );
             runtime = Guerilla.ReadBlockArray<MultiplayerRuntimeBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 112, Alignment = 4 )]
-    public class RenderModelSectionDataBlockBase : IGuerilla
+    public class RenderModelSectionDataBlockBase : GuerillaBlock
     {
         internal GlobalGeometrySectionStructBlock section;
         internal GlobalGeometryPointDataStructBlock pointData;
         internal RenderModelNodeMapBlock[] nodeMap;
         internal byte[] invalidName_;
 
-        internal RenderModelSectionDataBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 112; }
+        }
+
+        internal RenderModelSectionDataBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             section = new GlobalGeometrySectionStructBlock( binaryReader );
             pointData = new GlobalGeometryPointDataStructBlock( binaryReader );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 4 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

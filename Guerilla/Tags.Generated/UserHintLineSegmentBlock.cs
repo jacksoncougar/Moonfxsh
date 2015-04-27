@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 36, Alignment = 4 )]
-    public class UserHintLineSegmentBlockBase : IGuerilla
+    public class UserHintLineSegmentBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal OpenTK.Vector3 point0;
@@ -27,7 +27,12 @@ namespace Moonfish.Guerilla.Tags
         internal short referenceFrame0;
         internal byte[] invalidName_0;
 
-        internal UserHintLineSegmentBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 36; }
+        }
+
+        internal UserHintLineSegmentBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             point0 = binaryReader.ReadVector3( );
@@ -38,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes( 2 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

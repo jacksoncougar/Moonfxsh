@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 76, Alignment = 4 )]
-    public class MeleeDamageParametersStructBlockBase : IGuerilla
+    public class MeleeDamageParametersStructBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector2 damagePyramidAngles;
         internal float damagePyramidDepth;
@@ -38,7 +38,12 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         [TagReference( "jpt!" )] internal Moonfish.Tags.TagReference lungeMeleeResponse;
 
-        internal MeleeDamageParametersStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 76; }
+        }
+
+        internal MeleeDamageParametersStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             damagePyramidAngles = binaryReader.ReadVector2( );
             damagePyramidDepth = binaryReader.ReadSingle( );
@@ -52,7 +57,7 @@ namespace Moonfish.Guerilla.Tags
             lungeMeleeResponse = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

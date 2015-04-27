@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,43 +10,42 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class DecoratorClassesBlock : DecoratorClassesBlockBase
     {
-        public DecoratorClassesBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  DecoratorClassesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class DecoratorClassesBlockBase : IGuerilla
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class DecoratorClassesBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal Type type;
         internal byte[] invalidName_;
         internal float scale;
         internal DecoratorPermutationsBlock[] permutations;
-
-        internal DecoratorClassesBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        internal  DecoratorClassesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadStringID( );
-            type = ( Type ) binaryReader.ReadByte( );
-            invalidName_ = binaryReader.ReadBytes( 3 );
-            scale = binaryReader.ReadSingle( );
-            permutations = Guerilla.ReadBlockArray<DecoratorPermutationsBlock>( binaryReader );
+            name = binaryReader.ReadStringID();
+            type = (Type)binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes(3);
+            scale = binaryReader.ReadSingle();
+            permutations = Guerilla.ReadBlockArray<DecoratorPermutationsBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( ( Byte ) type );
-                binaryWriter.Write( invalidName_, 0, 3 );
-                binaryWriter.Write( scale );
-                nextAddress = Guerilla.WriteBlockArray<DecoratorPermutationsBlock>( binaryWriter, permutations,
-                    nextAddress );
+                binaryWriter.Write(name);
+                binaryWriter.Write((Byte)type);
+                binaryWriter.Write(invalidName_, 0, 3);
+                binaryWriter.Write(scale);
+                nextAddress = Guerilla.WriteBlockArray<DecoratorPermutationsBlock>(binaryWriter, permutations, nextAddress);
                 return nextAddress;
             }
         }
-
         internal enum Type : byte
         {
             Model = 0,

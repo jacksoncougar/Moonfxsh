@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,33 +10,33 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class GDefaultVariantSettingsBlock : GDefaultVariantSettingsBlockBase
     {
-        public GDefaultVariantSettingsBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  GDefaultVariantSettingsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class GDefaultVariantSettingsBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class GDefaultVariantSettingsBlockBase : GuerillaBlock
     {
         internal SettingCategory settingCategory;
         internal int value;
-
-        internal GDefaultVariantSettingsBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        internal  GDefaultVariantSettingsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            settingCategory = ( SettingCategory ) binaryReader.ReadInt32( );
-            value = binaryReader.ReadInt32( );
+            settingCategory = (SettingCategory)binaryReader.ReadInt32();
+            value = binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int32 ) settingCategory );
-                binaryWriter.Write( value );
+                binaryWriter.Write((Int32)settingCategory);
+                binaryWriter.Write(value);
                 return nextAddress;
             }
         }
-
         internal enum SettingCategory : int
         {
             MatchRoundSetting = 0,

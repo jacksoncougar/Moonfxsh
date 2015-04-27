@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 68, Alignment = 4 )]
-    public class ScenarioProfilesBlockBase : IGuerilla
+    public class ScenarioProfilesBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
         internal float startingHealthDamage01;
@@ -33,7 +33,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte startingUnknownGrenadeCount;
         internal byte startingUnknownGrenadeCount0;
 
-        internal ScenarioProfilesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 68; }
+        }
+
+        internal ScenarioProfilesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadString32( );
             startingHealthDamage01 = binaryReader.ReadSingle( );
@@ -50,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
             startingUnknownGrenadeCount0 = binaryReader.ReadByte( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

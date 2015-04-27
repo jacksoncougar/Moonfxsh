@@ -17,20 +17,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 28, Alignment = 4 )]
-    public class ObjectSpaceNodeDataBlockBase : IGuerilla
+    public class ObjectSpaceNodeDataBlockBase : GuerillaBlock
     {
         internal short nodeIndex;
         internal ComponentFlags componentFlags;
         internal QuantizedOrientationStructBlock orientation;
 
-        internal ObjectSpaceNodeDataBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 28; }
+        }
+
+        internal ObjectSpaceNodeDataBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             nodeIndex = binaryReader.ReadInt16( );
             componentFlags = ( ComponentFlags ) binaryReader.ReadInt16( );
             orientation = new QuantizedOrientationStructBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

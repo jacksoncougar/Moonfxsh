@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 168, Alignment = 4 )]
-    public class GameEngineAssaultEventBlockBase : IGuerilla
+    public class GameEngineAssaultEventBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal byte[] invalidName_;
@@ -41,7 +41,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_5;
         internal SoundResponseDefinitionBlock[] soundPermutations;
 
-        internal GameEngineAssaultEventBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 168; }
+        }
+
+        internal GameEngineAssaultEventBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
@@ -66,7 +71,7 @@ namespace Moonfish.Guerilla.Tags
             soundPermutations = Guerilla.ReadBlockArray<SoundResponseDefinitionBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,20 +17,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class ScenarioResourcesBlockBase : IGuerilla
+    public class ScenarioResourcesBlockBase : GuerillaBlock
     {
         internal ScenarioResourceReferenceBlock[] references;
         internal ScenarioHsSourceReferenceBlock[] scriptSource;
         internal ScenarioAiResourceReferenceBlock[] aIResources;
 
-        internal ScenarioResourcesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        internal ScenarioResourcesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             references = Guerilla.ReadBlockArray<ScenarioResourceReferenceBlock>( binaryReader );
             scriptSource = Guerilla.ReadBlockArray<ScenarioHsSourceReferenceBlock>( binaryReader );
             aIResources = Guerilla.ReadBlockArray<ScenarioAiResourceReferenceBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

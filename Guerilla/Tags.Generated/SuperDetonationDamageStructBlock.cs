@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class SuperDetonationDamageStructBlockBase : IGuerilla
+    public class SuperDetonationDamageStructBlockBase : GuerillaBlock
     {
         [TagReference( "jpt!" )] internal Moonfish.Tags.TagReference superDetonationDamage;
 
-        internal SuperDetonationDamageStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        internal SuperDetonationDamageStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             superDetonationDamage = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

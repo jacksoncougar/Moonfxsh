@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 260, Alignment = 4 )]
-    public class ScenarioStructureLightmapBlockBase : IGuerilla
+    public class ScenarioStructureLightmapBlockBase : GuerillaBlock
     {
         internal float searchDistanceLowerBound;
         internal float searchDistanceUpperBound;
@@ -48,7 +48,12 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalErrorReportCategoriesBlock[] errors;
         internal byte[] invalidName_1;
 
-        internal ScenarioStructureLightmapBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 260; }
+        }
+
+        internal ScenarioStructureLightmapBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             searchDistanceLowerBound = binaryReader.ReadSingle( );
             searchDistanceUpperBound = binaryReader.ReadSingle( );
@@ -71,7 +76,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes( 104 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

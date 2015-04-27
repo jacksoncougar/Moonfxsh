@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class RenderModelRegionBlockBase : IGuerilla
+    public class RenderModelRegionBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal short nodeMapOffsetOLD;
         internal short nodeMapSizeOLD;
         internal RenderModelPermutationBlock[] permutations;
 
-        internal RenderModelRegionBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        internal RenderModelRegionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadStringID( );
             nodeMapOffsetOLD = binaryReader.ReadInt16( );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             permutations = Guerilla.ReadBlockArray<RenderModelPermutationBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

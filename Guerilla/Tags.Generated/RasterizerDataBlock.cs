@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 264, Alignment = 4 )]
-    public class RasterizerDataBlockBase : IGuerilla
+    public class RasterizerDataBlockBase : GuerillaBlock
     {
         [TagReference( "bitm" )] internal Moonfish.Tags.TagReference distanceAttenuation;
         [TagReference( "bitm" )] internal Moonfish.Tags.TagReference vectorNormalization;
@@ -51,7 +51,12 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ColorR8G8B8 hyperStealthTintColor;
         [TagReference( "bitm" )] internal Moonfish.Tags.TagReference uNUSED10;
 
-        internal RasterizerDataBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 264; }
+        }
+
+        internal RasterizerDataBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             distanceAttenuation = binaryReader.ReadTagReference( );
             vectorNormalization = binaryReader.ReadTagReference( );
@@ -86,7 +91,7 @@ namespace Moonfish.Guerilla.Tags
             uNUSED10 = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

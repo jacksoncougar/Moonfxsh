@@ -17,20 +17,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class WeaponClassBlockBase : IGuerilla
+    public class WeaponClassBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID label;
         internal WeaponTypeBlock[] weaponTypeAABBCC;
         internal AnimationIkBlock[] weaponIkAABBCC;
 
-        internal WeaponClassBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        internal WeaponClassBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             label = binaryReader.ReadStringID( );
             weaponTypeAABBCC = Guerilla.ReadBlockArray<WeaponTypeBlock>( binaryReader );
             weaponIkAABBCC = Guerilla.ReadBlockArray<AnimationIkBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

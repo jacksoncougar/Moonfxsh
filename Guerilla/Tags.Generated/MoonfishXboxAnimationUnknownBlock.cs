@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class MoonfishXboxAnimationUnknownBlockBase : IGuerilla
+    public class MoonfishXboxAnimationUnknownBlockBase : GuerillaBlock
     {
         internal int unknown1;
         internal int unknown2;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal int unknown5;
         internal int unknown6;
 
-        internal MoonfishXboxAnimationUnknownBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        internal MoonfishXboxAnimationUnknownBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             unknown1 = binaryReader.ReadInt32( );
             unknown2 = binaryReader.ReadInt32( );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             unknown6 = binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

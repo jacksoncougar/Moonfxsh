@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class ObjectFunctionBlockBase : IGuerilla
+    public class ObjectFunctionBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal Moonfish.Tags.StringID importName;
@@ -36,7 +36,12 @@ namespace Moonfish.Guerilla.Tags
         internal MappingFunctionBlock defaultFunction;
         internal Moonfish.Tags.StringID scaleBy;
 
-        internal ObjectFunctionBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 32; }
+        }
+
+        internal ObjectFunctionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             importName = binaryReader.ReadStringID( );
@@ -47,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
             scaleBy = binaryReader.ReadStringID( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

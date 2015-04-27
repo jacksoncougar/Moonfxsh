@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 52, Alignment = 4 )]
-    public class ErrorReportVerticesBlockBase : IGuerilla
+    public class ErrorReportVerticesBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector3 position;
         internal NodeIndices[] nodeIndices;
@@ -25,7 +25,12 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector4 color;
         internal float screenSize;
 
-        internal ErrorReportVerticesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 52; }
+        }
+
+        internal ErrorReportVerticesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             position = binaryReader.ReadVector3( );
             nodeIndices = new[]
@@ -42,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
             screenSize = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {
@@ -62,16 +67,21 @@ namespace Moonfish.Guerilla.Tags
         }
 
         [LayoutAttribute( Size = 1, Alignment = 1 )]
-        public class NodeIndices : IGuerilla
+        public class NodeIndices : GuerillaBlock
         {
             internal byte nodeIndex;
 
-            internal NodeIndices( BinaryReader binaryReader )
+            public override int SerializedSize
+            {
+                get { return 1; }
+            }
+
+            internal NodeIndices( BinaryReader binaryReader ) : base( binaryReader )
             {
                 nodeIndex = binaryReader.ReadByte( );
             }
 
-            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
             {
                 using ( binaryWriter.BaseStream.Pin( ) )
                 {
@@ -82,16 +92,21 @@ namespace Moonfish.Guerilla.Tags
         };
 
         [LayoutAttribute( Size = 4, Alignment = 1 )]
-        public class NodeWeights : IGuerilla
+        public class NodeWeights : GuerillaBlock
         {
             internal float nodeWeight;
 
-            internal NodeWeights( BinaryReader binaryReader )
+            public override int SerializedSize
+            {
+                get { return 4; }
+            }
+
+            internal NodeWeights( BinaryReader binaryReader ) : base( binaryReader )
             {
                 nodeWeight = binaryReader.ReadSingle( );
             }
 
-            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
             {
                 using ( binaryWriter.BaseStream.Pin( ) )
                 {

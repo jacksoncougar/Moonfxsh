@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class RefBlockBase : IGuerilla
+    public class RefBlockBase : GuerillaBlock
     {
         internal int nodeRefOrSectorRef;
 
-        internal RefBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal RefBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             nodeRefOrSectorRef = binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

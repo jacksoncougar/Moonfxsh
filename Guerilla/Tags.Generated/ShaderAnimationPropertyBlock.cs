@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class ShaderAnimationPropertyBlockBase : IGuerilla
+    public class ShaderAnimationPropertyBlockBase : GuerillaBlock
     {
         internal Type type;
         internal byte[] invalidName_;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal float timePeriodSec;
         internal MappingFunctionBlock function;
 
-        internal ShaderAnimationPropertyBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        internal ShaderAnimationPropertyBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             type = ( Type ) binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             function = new MappingFunctionBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

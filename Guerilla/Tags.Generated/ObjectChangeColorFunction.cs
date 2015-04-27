@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class ObjectChangeColorFunctionBase : IGuerilla
+    public class ObjectChangeColorFunctionBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal ScaleFlags scaleFlags;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID darkenBy;
         internal Moonfish.Tags.StringID scaleBy;
 
-        internal ObjectChangeColorFunctionBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 40; }
+        }
+
+        internal ObjectChangeColorFunctionBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 4 );
             scaleFlags = ( ScaleFlags ) binaryReader.ReadInt32( );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             scaleBy = binaryReader.ReadStringID( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

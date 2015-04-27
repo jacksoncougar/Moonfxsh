@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,57 +10,54 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterEvasionBlock : CharacterEvasionBlockBase
     {
-        public CharacterEvasionBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  CharacterEvasionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class CharacterEvasionBlockBase : IGuerilla
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class CharacterEvasionBlockBase : GuerillaBlock
     {
         /// <summary>
         /// Consider evading when immediate danger surpasses threshold
         /// </summary>
         internal float evasionDangerThreshold;
-
         /// <summary>
         /// Wait at least this delay between evasions
         /// </summary>
         internal float evasionDelayTimer;
-
         /// <summary>
         /// If danger is above threshold, the chance that we will evade. Expressed as chance of evading within a 1 second time period
         /// </summary>
         internal float evasionChance;
-
         /// <summary>
         /// If target is within given proximity, possibly evade
         /// </summary>
         internal float evasionProximityThreshold;
-
         /// <summary>
         /// Chance of retreating (fleeing) after danger avoidance dive
         /// </summary>
         internal float diveRetreatChance;
-
-        internal CharacterEvasionBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        internal  CharacterEvasionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            evasionDangerThreshold = binaryReader.ReadSingle( );
-            evasionDelayTimer = binaryReader.ReadSingle( );
-            evasionChance = binaryReader.ReadSingle( );
-            evasionProximityThreshold = binaryReader.ReadSingle( );
-            diveRetreatChance = binaryReader.ReadSingle( );
+            evasionDangerThreshold = binaryReader.ReadSingle();
+            evasionDelayTimer = binaryReader.ReadSingle();
+            evasionChance = binaryReader.ReadSingle();
+            evasionProximityThreshold = binaryReader.ReadSingle();
+            diveRetreatChance = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( evasionDangerThreshold );
-                binaryWriter.Write( evasionDelayTimer );
-                binaryWriter.Write( evasionChance );
-                binaryWriter.Write( evasionProximityThreshold );
-                binaryWriter.Write( diveRetreatChance );
+                binaryWriter.Write(evasionDangerThreshold);
+                binaryWriter.Write(evasionDelayTimer);
+                binaryWriter.Write(evasionChance);
+                binaryWriter.Write(evasionProximityThreshold);
+                binaryWriter.Write(diveRetreatChance);
                 return nextAddress;
             }
         }

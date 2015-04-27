@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 236, Alignment = 4 )]
-    public class LiquidArcBlockBase : IGuerilla
+    public class LiquidArcBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal SpriteCount spriteCount;
@@ -51,7 +51,12 @@ namespace Moonfish.Guerilla.Tags
         internal ScalarFunctionStructBlock rangeScale;
         internal ScalarFunctionStructBlock brightnessScale;
 
-        internal LiquidArcBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 236; }
+        }
+
+        internal LiquidArcBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt16( );
             spriteCount = ( SpriteCount ) binaryReader.ReadInt16( );
@@ -86,7 +91,7 @@ namespace Moonfish.Guerilla.Tags
             brightnessScale = new ScalarFunctionStructBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

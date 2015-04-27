@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundEncodedDialogueSectionBlock : SoundEncodedDialogueSectionBlockBase
+    public partial class SoundEncodedDialogueSectionBlock : SoundEncodedDialogueSectionBlockBase
     {
         public  SoundEncodedDialogueSectionBlock(BinaryReader binaryReader): base(binaryReader)
         {
@@ -16,16 +16,19 @@ namespace Moonfish.Guerilla.Tags
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class SoundEncodedDialogueSectionBlockBase  : IGuerilla
+    public class SoundEncodedDialogueSectionBlockBase : GuerillaBlock
     {
         internal byte[] encodedData;
         internal SoundPermutationDialogueInfoBlock[] soundDialogueInfo;
-        internal  SoundEncodedDialogueSectionBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        internal  SoundEncodedDialogueSectionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             encodedData = Guerilla.ReadData(binaryReader);
             soundDialogueInfo = Guerilla.ReadBlockArray<SoundPermutationDialogueInfoBlock>(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

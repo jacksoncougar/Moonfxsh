@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 48, Alignment = 4 )]
-    public class StructureBspPrecomputedLightingBlockBase : IGuerilla
+    public class StructureBspPrecomputedLightingBlockBase : GuerillaBlock
     {
         internal int index;
         internal LightType lightType;
@@ -25,7 +25,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte objectType;
         internal VisibilityStructBlock visibility;
 
-        internal StructureBspPrecomputedLightingBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 48; }
+        }
+
+        internal StructureBspPrecomputedLightingBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             index = binaryReader.ReadInt32( );
             lightType = ( LightType ) binaryReader.ReadInt16( );
@@ -34,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             visibility = new VisibilityStructBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

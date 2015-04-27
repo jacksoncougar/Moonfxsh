@@ -17,14 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 64, Alignment = 4 )]
-    public class PlatformSoundFilterLfoBlockBase : IGuerilla
+    public class PlatformSoundFilterLfoBlockBase : GuerillaBlock
     {
         internal SoundPlaybackParameterDefinitionBlock delay;
         internal SoundPlaybackParameterDefinitionBlock frequency;
         internal SoundPlaybackParameterDefinitionBlock cutoffModulation;
         internal SoundPlaybackParameterDefinitionBlock gainModulation;
 
-        internal PlatformSoundFilterLfoBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 64; }
+        }
+
+        internal PlatformSoundFilterLfoBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             delay = new SoundPlaybackParameterDefinitionBlock( binaryReader );
             frequency = new SoundPlaybackParameterDefinitionBlock( binaryReader );
@@ -32,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             gainModulation = new SoundPlaybackParameterDefinitionBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

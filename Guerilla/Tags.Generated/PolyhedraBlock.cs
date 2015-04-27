@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 256, Alignment = 16 )]
-    public class PolyhedraBlockBase : IGuerilla
+    public class PolyhedraBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 material;
@@ -48,7 +48,12 @@ namespace Moonfish.Guerilla.Tags
         internal int planeEquationsCapacity;
         internal byte[] invalidName_6;
 
-        internal PolyhedraBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 256; }
+        }
+
+        internal PolyhedraBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadStringID( );
             material = binaryReader.ReadShortBlockIndex1( );
@@ -84,7 +89,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_6 = binaryReader.ReadBytes( 4 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {
@@ -129,7 +134,7 @@ namespace Moonfish.Guerilla.Tags
         };
 
         [LayoutAttribute( Size = 48, Alignment = 1 )]
-        public class FourVectorsStorage : IGuerilla
+        public class FourVectorsStorage : GuerillaBlock
         {
             internal OpenTK.Vector3 fourVectorsX;
             internal byte[] invalidName_;
@@ -138,7 +143,12 @@ namespace Moonfish.Guerilla.Tags
             internal OpenTK.Vector3 fourVectorsZ;
             internal byte[] invalidName_1;
 
-            internal FourVectorsStorage( BinaryReader binaryReader )
+            public override int SerializedSize
+            {
+                get { return 48; }
+            }
+
+            internal FourVectorsStorage( BinaryReader binaryReader ) : base( binaryReader )
             {
                 fourVectorsX = binaryReader.ReadVector3( );
                 invalidName_ = binaryReader.ReadBytes( 4 );
@@ -148,7 +158,7 @@ namespace Moonfish.Guerilla.Tags
                 invalidName_1 = binaryReader.ReadBytes( 4 );
             }
 
-            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
             {
                 using ( binaryWriter.BaseStream.Pin( ) )
                 {

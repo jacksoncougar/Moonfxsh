@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 64, Alignment = 4 )]
-    public class DontUseMeScenarioEnvironmentObjectBlockBase : IGuerilla
+    public class DontUseMeScenarioEnvironmentObjectBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 bSP;
         internal short eMPTYSTRING;
@@ -27,7 +27,12 @@ namespace Moonfish.Guerilla.Tags
         internal int _object;
         internal byte[] invalidName_0;
 
-        internal DontUseMeScenarioEnvironmentObjectBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 64; }
+        }
+
+        internal DontUseMeScenarioEnvironmentObjectBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             bSP = binaryReader.ReadShortBlockIndex1( );
             eMPTYSTRING = binaryReader.ReadInt16( );
@@ -38,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes( 44 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

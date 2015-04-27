@@ -17,20 +17,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class LightmapGeometryRenderInfoBlockBase : IGuerilla
+    public class LightmapGeometryRenderInfoBlockBase : GuerillaBlock
     {
         internal short bitmapIndex;
         internal byte paletteIndex;
         internal byte[] invalidName_;
 
-        internal LightmapGeometryRenderInfoBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal LightmapGeometryRenderInfoBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             bitmapIndex = binaryReader.ReadInt16( );
             paletteIndex = binaryReader.ReadByte( );
             invalidName_ = binaryReader.ReadBytes( 1 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

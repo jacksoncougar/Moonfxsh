@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 100, Alignment = 4 )]
-    public class ActorStartingLocationsBlockBase : IGuerilla
+    public class ActorStartingLocationsBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal OpenTK.Vector3 position;
@@ -52,7 +52,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
 
-        internal ActorStartingLocationsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 100; }
+        }
+
+        internal ActorStartingLocationsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadStringID( );
             position = binaryReader.ReadVector3( );
@@ -78,7 +83,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes( 2 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

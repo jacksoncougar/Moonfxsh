@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class ScenarioNetpointsBlockBase : IGuerilla
+    public class ScenarioNetpointsBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector3 position;
         internal float facingDegrees;
@@ -28,7 +28,12 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID eMPTYSTRING;
         internal Moonfish.Tags.StringID eMPTYSTRING0;
 
-        internal ScenarioNetpointsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 32; }
+        }
+
+        internal ScenarioNetpointsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             position = binaryReader.ReadVector3( );
             facingDegrees = binaryReader.ReadSingle( );
@@ -40,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
             eMPTYSTRING0 = binaryReader.ReadStringID( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 48, Alignment = 4 )]
-    public class TriggersBlockBase : IGuerilla
+    public class TriggersBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
         internal TriggerFlags triggerFlags;
@@ -25,7 +25,12 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal OrderCompletionCondition[] conditions;
 
-        internal TriggersBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 48; }
+        }
+
+        internal TriggersBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadString32( );
             triggerFlags = ( TriggerFlags ) binaryReader.ReadInt32( );
@@ -34,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             conditions = Guerilla.ReadBlockArray<OrderCompletionCondition>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

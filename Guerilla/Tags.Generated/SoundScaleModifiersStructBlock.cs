@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,32 +9,38 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundScaleModifiersStructBlock : SoundScaleModifiersStructBlockBase
+    public artial class SoundScaleModifiersStructBlock : SoundScaleModifiersStructBlockBase
     {
-        public  SoundScaleModifiersStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public  oundScaleModifiersStructBlock(B inaryReader binaryReader) :  base(b inaryReader) 
         {
-            
-        }
-    };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class SoundScaleModifiersStructBlockBase  : IGuerilla
+         
+    };
+
+    LayoutAttribute(S ize = 20, Alignment = 4) ]
+    public class SoundScaleModifiersStructBlockBase  GuerillaBlock
     {
         internal Moonfish.Model.Range gainModifierDB;
         internal int pitchModifierCents;
-        internal OpenTK.Vector2 skipFractionModifier;
-        internal  SoundScaleModifiersStructBlockBase(BinaryReader binaryReader)
+        internal OpenTK.Vector2 skipFractionModifie
+
+          
+       public override int SerializedSiz e{get { return 20; }}
+         
+        internal  SoundScaleModifiersStructBlockBase(Binar yReader binaryReader): base(binaryReader)
         {
-            gainModifierDB = binaryReader.ReadRange();
-            pitchModifierCents = binaryReader.ReadInt32();
-            skipFractionModifier = binaryReader.ReadVector2();
+             gainModifierDB = binaryReader.ReadRange();
+            pi tchModifierCe
+
+        ryReader.ReadInt3 2();
+            skipFractionModifier = binaryReader. ReadVector2();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
-            {
-                binaryWriter.Write(gainModifierDB);
+          public override int Write ( System.IO.BinaryWriter binaryWriter, Int32 nextAddres s)
+        { 
+            using(binaryWriter.BaseStr eam.Pin())
+             {
+                binaryWriter.W rite(gainModifierDB) ;
                 binaryWriter.Write(pitchModifierCents);
-                binaryWriter.Write(skipFractionModifier);
+                naryWriter.Write(skipFractionModifier);
                 return nextAddress;
             }
         }

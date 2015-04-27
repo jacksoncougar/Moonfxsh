@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 1, Alignment = 4 )]
-    public class StructureBspPathfindingEdgesBlockBase : IGuerilla
+    public class StructureBspPathfindingEdgesBlockBase : GuerillaBlock
     {
         internal byte midpoint;
 
-        internal StructureBspPathfindingEdgesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 1; }
+        }
+
+        internal StructureBspPathfindingEdgesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             midpoint = binaryReader.ReadByte( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

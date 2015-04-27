@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,29 +8,29 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class ShaderTemplateRuntimeExternalLightResponseIndexBlock :
-        ShaderTemplateRuntimeExternalLightResponseIndexBlockBase
+    public partial class ShaderTemplateRuntimeExternalLightResponseIndexBlock : ShaderTemplateRuntimeExternalLightResponseIndexBlockBase
     {
-        public ShaderTemplateRuntimeExternalLightResponseIndexBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderTemplateRuntimeExternalLightResponseIndexBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class ShaderTemplateRuntimeExternalLightResponseIndexBlockBase : IGuerilla
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class ShaderTemplateRuntimeExternalLightResponseIndexBlockBase : GuerillaBlock
     {
         internal int eMPTYSTRING;
-
-        internal ShaderTemplateRuntimeExternalLightResponseIndexBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        internal  ShaderTemplateRuntimeExternalLightResponseIndexBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            eMPTYSTRING = binaryReader.ReadInt32( );
+            eMPTYSTRING = binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( eMPTYSTRING );
+                binaryWriter.Write(eMPTYSTRING);
                 return nextAddress;
             }
         }

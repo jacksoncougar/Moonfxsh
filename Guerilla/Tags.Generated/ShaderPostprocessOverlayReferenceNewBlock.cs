@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class ShaderPostprocessOverlayReferenceNewBlockBase : IGuerilla
+    public class ShaderPostprocessOverlayReferenceNewBlockBase : GuerillaBlock
     {
         internal short overlayIndex;
         internal short transformIndex;
 
-        internal ShaderPostprocessOverlayReferenceNewBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        internal ShaderPostprocessOverlayReferenceNewBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             overlayIndex = binaryReader.ReadInt16( );
             transformIndex = binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

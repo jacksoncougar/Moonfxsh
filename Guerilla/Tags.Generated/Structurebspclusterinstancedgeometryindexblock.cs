@@ -18,16 +18,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 2, Alignment = 4 )]
-    public class StructureBspClusterInstancedGeometryIndexBlockBase : IGuerilla
+    public class StructureBspClusterInstancedGeometryIndexBlockBase : GuerillaBlock
     {
         internal short instancedGeometryIndex;
 
-        internal StructureBspClusterInstancedGeometryIndexBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 2; }
+        }
+
+        internal StructureBspClusterInstancedGeometryIndexBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             instancedGeometryIndex = binaryReader.ReadInt16( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 64, Alignment = 4 )]
-    public class PointPhysicsBlockBase : IGuerilla
+    public class PointPhysicsBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal byte[] invalidName_;
@@ -46,7 +46,12 @@ namespace Moonfish.Guerilla.Tags
 
         internal byte[] invalidName_0;
 
-        internal PointPhysicsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 64; }
+        }
+
+        internal PointPhysicsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             invalidName_ = binaryReader.ReadBytes( 28 );
@@ -58,7 +63,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes( 12 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,26 +9,32 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundGestaltRuntimePermutationBitVectorBlock : SoundGestaltRuntimePermutationBitVectorBlockBase
+    public artial class SoundGestaltRuntimePermutationBitVectorBlock : SoundGestaltRuntimePermutationBitVectorBlockBase
     {
-        public  SoundGestaltRuntimePermutationBitVectorBlock(BinaryReader binaryReader): base(binaryReader)
+        public  oundGestaltRuntimePermutationBitVectorBlock(B inaryReader binaryReader) :  base(b inaryReader) 
         {
-            
-        }
-    };
-    [LayoutAttribute(Size = 1, Alignment = 4)]
-    public class SoundGestaltRuntimePermutationBitVectorBlockBase  : IGuerilla
+         
+    };
+
+    LayoutAttribute(S ize = 1, Alignment = 4) ]
+    public class SoundGestaltRuntimePermutationBitVectorBlockBase  GuerillaBlock
     {
-        internal byte invalidName_;
-        internal  SoundGestaltRuntimePermutationBitVectorBlockBase(BinaryReader binaryReader)
+        internal byte invalidName
+
+          
+       public override int SerializedSize{get { return  1; }}
+        
+         internal  SoundGestaltRuntimePermutationBitVectorBlockBase(Bin aryReader bin
+
+        : base(binaryRead er)
         {
-            invalidName_ = binaryReader.ReadByte();
+            invalidName_ = binaryReade r.ReadByte();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
+          public override int Write( S ystem.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        { 
             using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write(invalidName_);
+              binaryWriter.Write(invalidName_);
                 return nextAddress;
             }
         }

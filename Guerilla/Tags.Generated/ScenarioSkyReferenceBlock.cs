@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ScenarioSkyReferenceBlockBase : IGuerilla
+    public class ScenarioSkyReferenceBlockBase : GuerillaBlock
     {
         [TagReference( "sky " )] internal Moonfish.Tags.TagReference sky;
 
-        internal ScenarioSkyReferenceBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        internal ScenarioSkyReferenceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             sky = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,30 +10,30 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderTemplateCategoryBlock : ShaderTemplateCategoryBlockBase
     {
-        public ShaderTemplateCategoryBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderTemplateCategoryBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class ShaderTemplateCategoryBlockBase : IGuerilla
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class ShaderTemplateCategoryBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal ShaderTemplateParameterBlock[] parameters;
-
-        internal ShaderTemplateCategoryBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        internal  ShaderTemplateCategoryBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadStringID( );
-            parameters = Guerilla.ReadBlockArray<ShaderTemplateParameterBlock>( binaryReader );
+            name = binaryReader.ReadStringID();
+            parameters = Guerilla.ReadBlockArray<ShaderTemplateParameterBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                nextAddress = Guerilla.WriteBlockArray<ShaderTemplateParameterBlock>( binaryWriter, parameters,
-                    nextAddress );
+                binaryWriter.Write(name);
+                nextAddress = Guerilla.WriteBlockArray<ShaderTemplateParameterBlock>(binaryWriter, parameters, nextAddress);
                 return nextAddress;
             }
         }

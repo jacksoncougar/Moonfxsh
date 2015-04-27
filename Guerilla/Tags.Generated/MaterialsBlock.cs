@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 180, Alignment = 4 )]
-    public class MaterialsBlockBase : IGuerilla
+    public class MaterialsBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.StringID parentName;
@@ -33,7 +33,12 @@ namespace Moonfish.Guerilla.Tags
         internal MaterialsSweetenersStructBlock sweeteners;
         [TagReference( "foot" )] internal Moonfish.Tags.TagReference materialEffects;
 
-        internal MaterialsBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 180; }
+        }
+
+        internal MaterialsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadStringID( );
             parentName = binaryReader.ReadStringID( );
@@ -50,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
             materialEffects = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

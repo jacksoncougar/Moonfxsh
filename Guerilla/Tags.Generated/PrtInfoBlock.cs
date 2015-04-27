@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 88, Alignment = 4 )]
-    public class PrtInfoBlockBase : IGuerilla
+    public class PrtInfoBlockBase : GuerillaBlock
     {
         internal short sHOrder;
         internal short numOfClusters;
@@ -34,7 +34,12 @@ namespace Moonfish.Guerilla.Tags
         internal PrtVertexBuffersBlock[] vertexBuffers;
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
 
-        internal PrtInfoBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 88; }
+        }
+
+        internal PrtInfoBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             sHOrder = binaryReader.ReadInt16( );
             numOfClusters = binaryReader.ReadInt16( );
@@ -52,7 +57,7 @@ namespace Moonfish.Guerilla.Tags
             geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

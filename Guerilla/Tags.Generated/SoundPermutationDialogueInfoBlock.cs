@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,35 +9,41 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundPermutationDialogueInfoBlock : SoundPermutationDialogueInfoBlockBase
+    public artial class SoundPermutationDialogueInfoBlock : SoundPermutationDialogueInfoBlockBase
     {
-        public  SoundPermutationDialogueInfoBlock(BinaryReader binaryReader): base(binaryReader)
+        public  oundPermutationDialogueInfoBlock(B inaryReader binaryReader) :  base(b inaryReader) 
         {
-            
-        }
-    };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class SoundPermutationDialogueInfoBlockBase  : IGuerilla
+         
+    };
+
+    LayoutAttribute(S ize = 16, Alignment = 4) ]
+    public class SoundPermutationDialogueInfoBlockBase  GuerillaBlock
     {
         internal int mouthDataOffset;
         internal int mouthDataLength;
         internal int lipsyncDataOffset;
-        internal int lipsyncDataLength;
-        internal  SoundPermutationDialogueInfoBlockBase(BinaryReader binaryReader)
+        internal int lipsyncDataLengt
+
+          
+       public override int SerializedSize{g et { return 16; }}
+         
+        internal  SoundPermutationDialogueInfoBlockBase(Binary Reader binaryReader): base(binaryReader)
         {
-            mouthDataOffset = binaryReader.ReadInt32();
-            mouthDataLength = binaryReader.ReadInt32();
-            lipsyncDataOffset = binaryReader.ReadInt32();
-            lipsyncDataLength = binaryReader.ReadInt32();
+             mouthDataOffset = binaryReader.ReadInt32();
+             mouthDataLength = binaryReader.ReadInt32();
+             lipsyncDa
+
+         binaryReader.Rea dInt32();
+            lipsyncDataLength = binaryReade r.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+          public override int Write ( System.IO.BinaryWriter binaryWriter, Int32 nextAddres s)
         {
-            using(binaryWriter.BaseStream.Pin())
-            {
-                binaryWriter.Write(mouthDataOffset);
-                binaryWriter.Write(mouthDataLength);
+             using(binaryWriter.BaseStre am.Pin())
+             {
+                binaryWriter .Write(mouthDataO ffset);
+                binaryWriter.W rite(mouthDataLen gth);
                 binaryWriter.Write(lipsyncDataOffset);
-                binaryWriter.Write(lipsyncDataLength);
+              binaryWriter.Write(lipsyncDataLength);
                 return nextAddress;
             }
         }

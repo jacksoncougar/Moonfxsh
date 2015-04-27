@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 14, Alignment = 4 )]
-    public class ShaderGpuStateReferenceStructBlockBase : IGuerilla
+    public class ShaderGpuStateReferenceStructBlockBase : GuerillaBlock
     {
         internal TagBlockIndexStructBlock renderStates;
         internal TagBlockIndexStructBlock textureStageStates;
@@ -27,7 +27,12 @@ namespace Moonfish.Guerilla.Tags
         internal TagBlockIndexStructBlock vnConstants;
         internal TagBlockIndexStructBlock cnConstants;
 
-        internal ShaderGpuStateReferenceStructBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 14; }
+        }
+
+        internal ShaderGpuStateReferenceStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             renderStates = new TagBlockIndexStructBlock( binaryReader );
             textureStageStates = new TagBlockIndexStructBlock( binaryReader );
@@ -38,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
             cnConstants = new TagBlockIndexStructBlock( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

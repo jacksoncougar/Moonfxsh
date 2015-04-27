@@ -17,16 +17,21 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class StylePaletteBlockBase : IGuerilla
+    public class StylePaletteBlockBase : GuerillaBlock
     {
         [TagReference( "styl" )] internal Moonfish.Tags.TagReference reference;
 
-        internal StylePaletteBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        internal StylePaletteBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             reference = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

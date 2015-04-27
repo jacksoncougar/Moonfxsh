@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 80, Alignment = 4 )]
-    public class SoundResponseDefinitionBlockBase : IGuerilla
+    public class SoundResponseDefinitionBlockBase : GuerillaBlock
     {
         internal SoundFlags soundFlags;
         internal byte[] invalidName_;
@@ -25,7 +25,12 @@ namespace Moonfish.Guerilla.Tags
         internal SoundResponseExtraSoundsStructBlock extraSounds;
         internal float probability;
 
-        internal SoundResponseDefinitionBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 80; }
+        }
+
+        internal SoundResponseDefinitionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             soundFlags = ( SoundFlags ) binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
@@ -34,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             probability = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

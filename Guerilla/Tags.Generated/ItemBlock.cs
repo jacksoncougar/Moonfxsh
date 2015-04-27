@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 112, Alignment = 4 )]
-    public class ItemBlockBase : ObjectBlock
+    public class ItemBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal short oLDMessageIndex;
@@ -50,6 +50,11 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range detonationDelaySeconds;
         [TagReference( "effe" )] internal Moonfish.Tags.TagReference detonatingEffect;
         [TagReference( "effe" )] internal Moonfish.Tags.TagReference detonationEffect;
+
+        public override int SerializedSize
+        {
+            get { return 112; }
+        }
 
         internal ItemBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
@@ -77,7 +82,7 @@ namespace Moonfish.Guerilla.Tags
             detonationEffect = binaryReader.ReadTagReference( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

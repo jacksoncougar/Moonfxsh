@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 88, Alignment = 4 )]
-    public class ProjectileMaterialResponseBlockBase : IGuerilla
+    public class ProjectileMaterialResponseBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal Response response;
@@ -65,7 +65,12 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float perpendicularFriction;
 
-        internal ProjectileMaterialResponseBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 88; }
+        }
+
+        internal ProjectileMaterialResponseBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt16( );
             response = ( Response ) binaryReader.ReadInt16( );
@@ -89,7 +94,7 @@ namespace Moonfish.Guerilla.Tags
             perpendicularFriction = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

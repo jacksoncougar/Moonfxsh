@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,41 +9,50 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class DamageSeatInfoBlock : DamageSeatInfoBlockBase
+    public partial class DamageSeatInfoBlock : DamageSeatInfoBlockBase
     {
-        public  DamageSeatInfoBlock(BinaryReader binaryReader): base(binaryReader)
+        public DamageSeatInfoBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class DamageSeatInfoBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 20, Alignment = 4 )]
+    public class DamageSeatInfoBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID seatLabel;
+
         /// <summary>
         /// 0==no damage, 1==full damage
         /// </summary>
         internal float directDamageScale;
+
         internal float damageTransferFallOffRadius;
         internal float maximumTransferDamageScale;
         internal float minimumTransferDamageScale;
-        internal  DamageSeatInfoBlockBase(BinaryReader binaryReader)
+
+        public override int SerializedSize
         {
-            seatLabel = binaryReader.ReadStringID();
-            directDamageScale = binaryReader.ReadSingle();
-            damageTransferFallOffRadius = binaryReader.ReadSingle();
-            maximumTransferDamageScale = binaryReader.ReadSingle();
-            minimumTransferDamageScale = binaryReader.ReadSingle();
+            get { return 20; }
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        internal DamageSeatInfoBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
-            using(binaryWriter.BaseStream.Pin())
+            seatLabel = binaryReader.ReadStringID( );
+            directDamageScale = binaryReader.ReadSingle( );
+            damageTransferFallOffRadius = binaryReader.ReadSingle( );
+            maximumTransferDamageScale = binaryReader.ReadSingle( );
+            minimumTransferDamageScale = binaryReader.ReadSingle( );
+        }
+
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        {
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(seatLabel);
-                binaryWriter.Write(directDamageScale);
-                binaryWriter.Write(damageTransferFallOffRadius);
-                binaryWriter.Write(maximumTransferDamageScale);
-                binaryWriter.Write(minimumTransferDamageScale);
+                binaryWriter.Write( seatLabel );
+                binaryWriter.Write( directDamageScale );
+                binaryWriter.Write( damageTransferFallOffRadius );
+                binaryWriter.Write( maximumTransferDamageScale );
+                binaryWriter.Write( minimumTransferDamageScale );
                 return nextAddress;
             }
         }

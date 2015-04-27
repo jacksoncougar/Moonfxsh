@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 96, Alignment = 4 )]
-    public class DeviceBlockBase : ObjectBlock
+    public class DeviceBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal float powerTransitionTimeSeconds;
@@ -46,6 +46,11 @@ namespace Moonfish.Guerilla.Tags
         internal float delayTimeSeconds;
         [TagReference( "null" )] internal Moonfish.Tags.TagReference delayEffect;
         internal float automaticActivationRadiusWorldUnits;
+
+        public override int SerializedSize
+        {
+            get { return 96; }
+        }
 
         internal DeviceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
@@ -69,7 +74,7 @@ namespace Moonfish.Guerilla.Tags
             automaticActivationRadiusWorldUnits = binaryReader.ReadSingle( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 72, Alignment = 4 )]
-    public class StructureBspClusterDebugInfoBlockBase : IGuerilla
+    public class StructureBspClusterDebugInfoBlockBase : GuerillaBlock
     {
         internal Errors errors;
         internal Warnings warnings;
@@ -28,7 +28,12 @@ namespace Moonfish.Guerilla.Tags
         internal StructureBspDebugInfoIndicesBlock[] visFogOmissionClusterIndices;
         internal StructureBspDebugInfoIndicesBlock[] containingFogZoneIndices;
 
-        internal StructureBspClusterDebugInfoBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 72; }
+        }
+
+        internal StructureBspClusterDebugInfoBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             errors = ( Errors ) binaryReader.ReadInt16( );
             warnings = ( Warnings ) binaryReader.ReadInt16( );
@@ -40,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
             containingFogZoneIndices = Guerilla.ReadBlockArray<StructureBspDebugInfoIndicesBlock>( binaryReader );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

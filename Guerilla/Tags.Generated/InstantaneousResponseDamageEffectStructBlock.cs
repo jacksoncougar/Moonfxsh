@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -8,27 +9,33 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class InstantaneousResponseDamageEffectStructBlock : InstantaneousResponseDamageEffectStructBlockBase
+    public partial class InstantaneousResponseDamageEffectStructBlock : InstantaneousResponseDamageEffectStructBlockBase
     {
-        public  InstantaneousResponseDamageEffectStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public InstantaneousResponseDamageEffectStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class InstantaneousResponseDamageEffectStructBlockBase  : IGuerilla
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class InstantaneousResponseDamageEffectStructBlockBase : GuerillaBlock
     {
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference transitionDamageEffect;
-        internal  InstantaneousResponseDamageEffectStructBlockBase(BinaryReader binaryReader)
+        [TagReference( "jpt!" )] internal Moonfish.Tags.TagReference transitionDamageEffect;
+
+        public override int SerializedSize
         {
-            transitionDamageEffect = binaryReader.ReadTagReference();
+            get { return 8; }
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        internal InstantaneousResponseDamageEffectStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
-            using(binaryWriter.BaseStream.Pin())
+            transitionDamageEffect = binaryReader.ReadTagReference( );
+        }
+
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        {
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(transitionDamageEffect);
+                binaryWriter.Write( transitionDamageEffect );
                 return nextAddress;
             }
         }

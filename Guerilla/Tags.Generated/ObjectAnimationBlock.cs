@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class ObjectAnimationBlockBase : IGuerilla
+    public class ObjectAnimationBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID label;
         internal AnimationIndexStructBlock animation;
@@ -26,7 +26,12 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID function;
         internal byte[] invalidName_0;
 
-        internal ObjectAnimationBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        internal ObjectAnimationBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             label = binaryReader.ReadStringID( );
             animation = new AnimationIndexStructBlock( binaryReader );
@@ -36,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes( 4 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

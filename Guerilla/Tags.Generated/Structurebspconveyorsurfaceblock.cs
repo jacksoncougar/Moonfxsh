@@ -17,18 +17,23 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class StructureBspConveyorSurfaceBlockBase : IGuerilla
+    public class StructureBspConveyorSurfaceBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector3 u;
         internal OpenTK.Vector3 v;
 
-        internal StructureBspConveyorSurfaceBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        internal StructureBspConveyorSurfaceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             u = binaryReader.ReadVector3( );
             v = binaryReader.ReadVector3( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

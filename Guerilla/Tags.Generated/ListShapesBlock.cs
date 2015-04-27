@@ -17,20 +17,25 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ListShapesBlockBase : IGuerilla
+    public class ListShapesBlockBase : GuerillaBlock
     {
         internal ShapeType shapeType;
         internal Moonfish.Tags.ShortBlockIndex2 shape;
         internal int collisionFilter;
 
-        internal ListShapesBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        internal ListShapesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             shapeType = ( ShapeType ) binaryReader.ReadInt16( );
             shape = binaryReader.ReadShortBlockIndex2( );
             collisionFilter = binaryReader.ReadInt32( );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 128, Alignment = 4 )]
-    public class PoweredMassPointBlockBase : IGuerilla
+    public class PoweredMassPointBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
         internal Flags flags;
@@ -30,7 +30,12 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID damageSourceRegionName;
         internal byte[] invalidName_;
 
-        internal PoweredMassPointBlockBase( BinaryReader binaryReader )
+        public override int SerializedSize
+        {
+            get { return 128; }
+        }
+
+        internal PoweredMassPointBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             name = binaryReader.ReadString32( );
             flags = ( Flags ) binaryReader.ReadInt32( );
@@ -44,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 64 );
         }
 
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -143,7 +143,7 @@ namespace Moonfish.Guerilla
 
         public void GenerateBinaryReaderConstructor()
         {
-            Methods.Add(new MethodInfo
+            Constructors.Add(new MethodInfo
             {
                 ClassName = Value.Name,
                 AccessModifiers = AccessModifiers.Public,

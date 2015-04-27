@@ -231,6 +231,7 @@ namespace Moonfish.Guerilla
                 {
                     new ParameterInfo( typeof ( BinaryReader ) )
                 },
+                Returns = "void"
             });
             var stringBuilder = new StringBuilder();
             foreach (var item in Fields)

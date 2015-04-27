@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioNetgameEquipmentBlock : ScenarioNetgameEquipmentBlockBase
     {
-        public ScenarioNetgameEquipmentBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ScenarioNetgameEquipmentBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioNetgameEquipmentBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 144, Alignment = 4 )]
-    public class ScenarioNetgameEquipmentBlockBase : IGuerilla
+    [LayoutAttribute(Size = 144, Alignment = 4)]
+    public class ScenarioNetgameEquipmentBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal GameType1 gameType1;
@@ -33,60 +36,67 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal OpenTK.Vector3 position;
         internal ScenarioNetgameEquipmentOrientationStructBlock orientation;
-        [TagReference( "null" )] internal Moonfish.Tags.TagReference itemVehicleCollection;
+        [TagReference("null")]
+        internal Moonfish.Tags.TagReference itemVehicleCollection;
         internal byte[] invalidName_2;
-
-        internal ScenarioNetgameEquipmentBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 144; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioNetgameEquipmentBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            flags = ( Flags ) binaryReader.ReadInt32( );
-            gameType1 = ( GameType1 ) binaryReader.ReadInt16( );
-            gameType2 = ( GameType2 ) binaryReader.ReadInt16( );
-            gameType3 = ( GameType3 ) binaryReader.ReadInt16( );
-            gameType4 = ( GameType4 ) binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            spawnTimeInSeconds0Default = binaryReader.ReadInt16( );
-            respawnOnEmptyTimeSeconds = binaryReader.ReadInt16( );
-            respawnTimerStarts = ( RespawnTimerStarts ) binaryReader.ReadInt16( );
-            classification = ( Classification ) binaryReader.ReadByte( );
-            invalidName_0 = binaryReader.ReadBytes( 3 );
-            invalidName_1 = binaryReader.ReadBytes( 40 );
-            position = binaryReader.ReadVector3( );
-            orientation = new ScenarioNetgameEquipmentOrientationStructBlock( binaryReader );
-            itemVehicleCollection = binaryReader.ReadTagReference( );
-            invalidName_2 = binaryReader.ReadBytes( 48 );
+            flags = (Flags)binaryReader.ReadInt32();
+            gameType1 = (GameType1)binaryReader.ReadInt16();
+            gameType2 = (GameType2)binaryReader.ReadInt16();
+            gameType3 = (GameType3)binaryReader.ReadInt16();
+            gameType4 = (GameType4)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            spawnTimeInSeconds0Default = binaryReader.ReadInt16();
+            respawnOnEmptyTimeSeconds = binaryReader.ReadInt16();
+            respawnTimerStarts = (RespawnTimerStarts)binaryReader.ReadInt16();
+            classification = (Classification)binaryReader.ReadByte();
+            invalidName_0 = binaryReader.ReadBytes(3);
+            invalidName_1 = binaryReader.ReadBytes(40);
+            position = binaryReader.ReadVector3();
+            orientation = new ScenarioNetgameEquipmentOrientationStructBlock(binaryReader);
+            itemVehicleCollection = binaryReader.ReadTagReference();
+            invalidName_2 = binaryReader.ReadBytes(48);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ScenarioNetgameEquipmentBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int32 ) flags );
-                binaryWriter.Write( ( Int16 ) gameType1 );
-                binaryWriter.Write( ( Int16 ) gameType2 );
-                binaryWriter.Write( ( Int16 ) gameType3 );
-                binaryWriter.Write( ( Int16 ) gameType4 );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( spawnTimeInSeconds0Default );
-                binaryWriter.Write( respawnOnEmptyTimeSeconds );
-                binaryWriter.Write( ( Int16 ) respawnTimerStarts );
-                binaryWriter.Write( ( Byte ) classification );
-                binaryWriter.Write( invalidName_0, 0, 3 );
-                binaryWriter.Write( invalidName_1, 0, 40 );
-                binaryWriter.Write( position );
-                orientation.Write( binaryWriter );
-                binaryWriter.Write( itemVehicleCollection );
-                binaryWriter.Write( invalidName_2, 0, 48 );
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int16)gameType1);
+                binaryWriter.Write((Int16)gameType2);
+                binaryWriter.Write((Int16)gameType3);
+                binaryWriter.Write((Int16)gameType4);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(spawnTimeInSeconds0Default);
+                binaryWriter.Write(respawnOnEmptyTimeSeconds);
+                binaryWriter.Write((Int16)respawnTimerStarts);
+                binaryWriter.Write((Byte)classification);
+                binaryWriter.Write(invalidName_0, 0, 3);
+                binaryWriter.Write(invalidName_1, 0, 40);
+                binaryWriter.Write(position);
+                orientation.Write(binaryWriter);
+                binaryWriter.Write(itemVehicleCollection);
+                binaryWriter.Write(invalidName_2, 0, 48);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : int
         {
             Levitate = 1,
             DestroyExistingOnNewSpawn = 2,
         };
-
         internal enum GameType1 : short
         {
             NONE = 0,
@@ -105,7 +115,6 @@ namespace Moonfish.Guerilla.Tags
             AllExceptCTF = 13,
             AllExceptCTFRace = 14,
         };
-
         internal enum GameType2 : short
         {
             NONE = 0,
@@ -124,7 +133,6 @@ namespace Moonfish.Guerilla.Tags
             AllExceptCTF = 13,
             AllExceptCTFRace = 14,
         };
-
         internal enum GameType3 : short
         {
             NONE = 0,
@@ -143,7 +151,6 @@ namespace Moonfish.Guerilla.Tags
             AllExceptCTF = 13,
             AllExceptCTFRace = 14,
         };
-
         internal enum GameType4 : short
         {
             NONE = 0,
@@ -162,13 +169,11 @@ namespace Moonfish.Guerilla.Tags
             AllExceptCTF = 13,
             AllExceptCTFRace = 14,
         };
-
         internal enum RespawnTimerStarts : short
         {
             OnPickUp = 0,
             OnBodyDepletion = 1,
         };
-
         internal enum Classification : byte
         {
             Weapon = 0,

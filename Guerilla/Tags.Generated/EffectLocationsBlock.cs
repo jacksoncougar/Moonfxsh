@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class EffectLocationsBlock : EffectLocationsBlockBase
     {
-        public EffectLocationsBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  EffectLocationsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  EffectLocationsBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class EffectLocationsBlockBase : IGuerilla
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class EffectLocationsBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID markerName;
-
-        internal EffectLocationsBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  EffectLocationsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            markerName = binaryReader.ReadStringID( );
+            markerName = binaryReader.ReadStringID();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  EffectLocationsBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( markerName );
+                binaryWriter.Write(markerName);
                 return nextAddress;
             }
         }

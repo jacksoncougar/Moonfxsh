@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundGlobalMixStructBlock : SoundGlobalMixStructBlockBase
+    public partial class SoundGlobalMixStructBlock : SoundGlobalMixStructBlockBase
     {
         public  SoundGlobalMixStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  SoundGlobalMixStructBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 48, Alignment = 4)]
-    public class SoundGlobalMixStructBlockBase  : IGuerilla
+    public class SoundGlobalMixStructBlockBase : GuerillaBlock
     {
         internal float monoUnspatializedGainDB;
         internal float stereoTo3DGainDB;
@@ -30,7 +34,13 @@ namespace Moonfish.Guerilla.Tags
         internal float soloPlayerFadeOutTimeSeconds;
         internal float soloPlayerFadeInTimeSeconds;
         internal float gameMusicFadeOutTimeSeconds;
-        internal  SoundGlobalMixStructBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 48; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundGlobalMixStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             monoUnspatializedGainDB = binaryReader.ReadSingle();
             stereoTo3DGainDB = binaryReader.ReadSingle();
@@ -45,7 +55,11 @@ namespace Moonfish.Guerilla.Tags
             soloPlayerFadeInTimeSeconds = binaryReader.ReadSingle();
             gameMusicFadeOutTimeSeconds = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  SoundGlobalMixStructBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

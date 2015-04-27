@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,38 +10,50 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class UnitBoostStructBlock : UnitBoostStructBlockBase
     {
-        public UnitBoostStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  UnitBoostStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  UnitBoostStructBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class UnitBoostStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class UnitBoostStructBlockBase : GuerillaBlock
     {
         internal float boostPeakPower;
         internal float boostRisePower;
         internal float boostPeakTime;
         internal float boostFallPower;
         internal float deadTime;
-
-        internal UnitBoostStructBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  UnitBoostStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            boostPeakPower = binaryReader.ReadSingle( );
-            boostRisePower = binaryReader.ReadSingle( );
-            boostPeakTime = binaryReader.ReadSingle( );
-            boostFallPower = binaryReader.ReadSingle( );
-            deadTime = binaryReader.ReadSingle( );
+            boostPeakPower = binaryReader.ReadSingle();
+            boostRisePower = binaryReader.ReadSingle();
+            boostPeakTime = binaryReader.ReadSingle();
+            boostFallPower = binaryReader.ReadSingle();
+            deadTime = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  UnitBoostStructBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( boostPeakPower );
-                binaryWriter.Write( boostRisePower );
-                binaryWriter.Write( boostPeakTime );
-                binaryWriter.Write( boostFallPower );
-                binaryWriter.Write( deadTime );
+                binaryWriter.Write(boostPeakPower);
+                binaryWriter.Write(boostRisePower);
+                binaryWriter.Write(boostPeakTime);
+                binaryWriter.Write(boostFallPower);
+                binaryWriter.Write(deadTime);
                 return nextAddress;
             }
         }

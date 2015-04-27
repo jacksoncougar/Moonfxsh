@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,21 +10,27 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class HudBitmapWidgets : HudBitmapWidgetsBase
     {
-        public HudBitmapWidgets( BinaryReader binaryReader ) : base( binaryReader )
+        public  HudBitmapWidgets(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  HudBitmapWidgets(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 100, Alignment = 4 )]
-    public class HudBitmapWidgetsBase : IGuerilla
+    [LayoutAttribute(Size = 100, Alignment = 4)]
+    public class HudBitmapWidgetsBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal HudWidgetInputsStructBlock hudWidgetInputsStruct;
         internal HudWidgetStateDefinitionStructBlock hudWidgetStateDefinitionStruct;
         internal Anchor anchor;
         internal Flags flags;
-        [TagReference( "bitm" )] internal Moonfish.Tags.TagReference bitmap;
-        [TagReference( "shad" )] internal Moonfish.Tags.TagReference shader;
+        [TagReference("bitm")]
+        internal Moonfish.Tags.TagReference bitmap;
+        [TagReference("shad")]
+        internal Moonfish.Tags.TagReference shader;
         internal byte fullscreenSequenceIndex;
         internal byte halfscreenSequenceIndex;
         internal byte quarterscreenSequenceIndex;
@@ -39,59 +44,66 @@ namespace Moonfish.Guerilla.Tags
         internal HudWidgetEffectBlock[] effect;
         internal SpecialHudType specialHudType;
         internal byte[] invalidName_0;
-
-        internal HudBitmapWidgetsBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 100; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  HudBitmapWidgetsBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadStringID( );
-            hudWidgetInputsStruct = new HudWidgetInputsStructBlock( binaryReader );
-            hudWidgetStateDefinitionStruct = new HudWidgetStateDefinitionStructBlock( binaryReader );
-            anchor = ( Anchor ) binaryReader.ReadInt16( );
-            flags = ( Flags ) binaryReader.ReadInt16( );
-            bitmap = binaryReader.ReadTagReference( );
-            shader = binaryReader.ReadTagReference( );
-            fullscreenSequenceIndex = binaryReader.ReadByte( );
-            halfscreenSequenceIndex = binaryReader.ReadByte( );
-            quarterscreenSequenceIndex = binaryReader.ReadByte( );
-            invalidName_ = binaryReader.ReadBytes( 1 );
-            fullscreenOffset = binaryReader.ReadPoint( );
-            halfscreenOffset = binaryReader.ReadPoint( );
-            quarterscreenOffset = binaryReader.ReadPoint( );
-            fullscreenRegistrationPoint = binaryReader.ReadVector2( );
-            halfscreenRegistrationPoint = binaryReader.ReadVector2( );
-            quarterscreenRegistrationPoint = binaryReader.ReadVector2( );
-            effect = Guerilla.ReadBlockArray<HudWidgetEffectBlock>( binaryReader );
-            specialHudType = ( SpecialHudType ) binaryReader.ReadInt16( );
-            invalidName_0 = binaryReader.ReadBytes( 2 );
+            name = binaryReader.ReadStringID();
+            hudWidgetInputsStruct = new HudWidgetInputsStructBlock(binaryReader);
+            hudWidgetStateDefinitionStruct = new HudWidgetStateDefinitionStructBlock(binaryReader);
+            anchor = (Anchor)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            bitmap = binaryReader.ReadTagReference();
+            shader = binaryReader.ReadTagReference();
+            fullscreenSequenceIndex = binaryReader.ReadByte();
+            halfscreenSequenceIndex = binaryReader.ReadByte();
+            quarterscreenSequenceIndex = binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes(1);
+            fullscreenOffset = binaryReader.ReadPoint();
+            halfscreenOffset = binaryReader.ReadPoint();
+            quarterscreenOffset = binaryReader.ReadPoint();
+            fullscreenRegistrationPoint = binaryReader.ReadVector2();
+            halfscreenRegistrationPoint = binaryReader.ReadVector2();
+            quarterscreenRegistrationPoint = binaryReader.ReadVector2();
+            effect = Guerilla.ReadBlockArray<HudWidgetEffectBlock>(binaryReader);
+            specialHudType = (SpecialHudType)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  HudBitmapWidgetsBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                hudWidgetInputsStruct.Write( binaryWriter );
-                hudWidgetStateDefinitionStruct.Write( binaryWriter );
-                binaryWriter.Write( ( Int16 ) anchor );
-                binaryWriter.Write( ( Int16 ) flags );
-                binaryWriter.Write( bitmap );
-                binaryWriter.Write( shader );
-                binaryWriter.Write( fullscreenSequenceIndex );
-                binaryWriter.Write( halfscreenSequenceIndex );
-                binaryWriter.Write( quarterscreenSequenceIndex );
-                binaryWriter.Write( invalidName_, 0, 1 );
-                binaryWriter.Write( fullscreenOffset );
-                binaryWriter.Write( halfscreenOffset );
-                binaryWriter.Write( quarterscreenOffset );
-                binaryWriter.Write( fullscreenRegistrationPoint );
-                binaryWriter.Write( halfscreenRegistrationPoint );
-                binaryWriter.Write( quarterscreenRegistrationPoint );
-                nextAddress = Guerilla.WriteBlockArray<HudWidgetEffectBlock>( binaryWriter, effect, nextAddress );
-                binaryWriter.Write( ( Int16 ) specialHudType );
-                binaryWriter.Write( invalidName_0, 0, 2 );
+                binaryWriter.Write(name);
+                hudWidgetInputsStruct.Write(binaryWriter);
+                hudWidgetStateDefinitionStruct.Write(binaryWriter);
+                binaryWriter.Write((Int16)anchor);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(bitmap);
+                binaryWriter.Write(shader);
+                binaryWriter.Write(fullscreenSequenceIndex);
+                binaryWriter.Write(halfscreenSequenceIndex);
+                binaryWriter.Write(quarterscreenSequenceIndex);
+                binaryWriter.Write(invalidName_, 0, 1);
+                binaryWriter.Write(fullscreenOffset);
+                binaryWriter.Write(halfscreenOffset);
+                binaryWriter.Write(quarterscreenOffset);
+                binaryWriter.Write(fullscreenRegistrationPoint);
+                binaryWriter.Write(halfscreenRegistrationPoint);
+                binaryWriter.Write(quarterscreenRegistrationPoint);
+                nextAddress = Guerilla.WriteBlockArray<HudWidgetEffectBlock>(binaryWriter, effect, nextAddress);
+                binaryWriter.Write((Int16)specialHudType);
+                binaryWriter.Write(invalidName_0, 0, 2);
                 return nextAddress;
             }
         }
-
         internal enum Anchor : short
         {
             HealthAndShield = 0,
@@ -101,7 +113,6 @@ namespace Moonfish.Guerilla.Tags
             Crosshair = 4,
             LockOnTarget = 5,
         };
-
         [FlagsAttribute]
         internal enum Flags : short
         {
@@ -111,7 +122,6 @@ namespace Moonfish.Guerilla.Tags
             ScopeMirrorVertically = 8,
             ScopeStretch = 16,
         };
-
         internal enum SpecialHudType : short
         {
             Unspecial = 0,

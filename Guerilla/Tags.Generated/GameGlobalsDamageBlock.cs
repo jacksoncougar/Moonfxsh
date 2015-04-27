@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class GameGlobalsDamageBlock : GameGlobalsDamageBlockBase
     {
-        public GameGlobalsDamageBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  GameGlobalsDamageBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  GameGlobalsDamageBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class GameGlobalsDamageBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class GameGlobalsDamageBlockBase : GuerillaBlock
     {
         internal DamageGroupBlock[] damageGroups;
-
-        internal GameGlobalsDamageBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  GameGlobalsDamageBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            damageGroups = Guerilla.ReadBlockArray<DamageGroupBlock>( binaryReader );
+            damageGroups = Guerilla.ReadBlockArray<DamageGroupBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  GameGlobalsDamageBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                nextAddress = Guerilla.WriteBlockArray<DamageGroupBlock>( binaryWriter, damageGroups, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<DamageGroupBlock>(binaryWriter, damageGroups, nextAddress);
                 return nextAddress;
             }
         }

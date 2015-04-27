@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,29 +10,41 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPostprocessColorBlock : ShaderPostprocessColorBlockBase
     {
-        public ShaderPostprocessColorBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderPostprocessColorBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderPostprocessColorBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 13, Alignment = 4 )]
-    public class ShaderPostprocessColorBlockBase : IGuerilla
+    [LayoutAttribute(Size = 13, Alignment = 4)]
+    public class ShaderPostprocessColorBlockBase : GuerillaBlock
     {
         internal byte parameterIndex;
         internal Moonfish.Tags.ColorR8G8B8 color;
-
-        internal ShaderPostprocessColorBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 13; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderPostprocessColorBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            parameterIndex = binaryReader.ReadByte( );
-            color = binaryReader.ReadColorR8G8B8( );
+            parameterIndex = binaryReader.ReadByte();
+            color = binaryReader.ReadColorR8G8B8();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ShaderPostprocessColorBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( parameterIndex );
-                binaryWriter.Write( color );
+                binaryWriter.Write(parameterIndex);
+                binaryWriter.Write(color);
                 return nextAddress;
             }
         }

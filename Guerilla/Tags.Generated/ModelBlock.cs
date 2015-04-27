@@ -17,15 +17,19 @@ namespace Moonfish.Tags
 namespace Moonfish.Guerilla.Tags
 {
     [TagClassAttribute("hlmt")]
-    public  partial class ModelBlock : ModelBlockBase
+    public partial class ModelBlock : ModelBlockBase
     {
         public  ModelBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  ModelBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 252, Alignment = 4)]
-    public class ModelBlockBase  : IGuerilla
+    public class ModelBlockBase : GuerillaBlock
     {
         [TagReference("mode")]
         internal Moonfish.Tags.TagReference renderModel;
@@ -75,7 +79,13 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("shad")]
         internal Moonfish.Tags.TagReference hologramShader;
         internal Moonfish.Tags.StringID hologramControlFunction;
-        internal  ModelBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 252; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ModelBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             renderModel = binaryReader.ReadTagReference();
             collisionModel = binaryReader.ReadTagReference();
@@ -112,7 +122,11 @@ namespace Moonfish.Guerilla.Tags
             hologramShader = binaryReader.ReadTagReference();
             hologramControlFunction = binaryReader.ReadStringID();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  ModelBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {
@@ -237,14 +251,24 @@ namespace Moonfish.Guerilla.Tags
             ContainsRunTimeNodes = 1,
         };
         [LayoutAttribute(Size = 1, Alignment = 1)]
-        public class RenderOnlyNodeFlags  : IGuerilla
+        public class RenderOnlyNodeFlags : GuerillaBlock
         {
             internal byte invalidName_;
-            internal  RenderOnlyNodeFlags(BinaryReader binaryReader)
+            
+            public override int SerializedSize{get { return 1; }}
+            
+            
+            public override int Alignment{get { return 1; }}
+            
+            public  RenderOnlyNodeFlags(BinaryReader binaryReader): base(binaryReader)
             {
                 invalidName_ = binaryReader.ReadByte();
             }
-            public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+            public  RenderOnlyNodeFlags(): base()
+            {
+                
+            }
+            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
                 using(binaryWriter.BaseStream.Pin())
                 {
@@ -254,14 +278,24 @@ namespace Moonfish.Guerilla.Tags
             }
         };
         [LayoutAttribute(Size = 1, Alignment = 1)]
-        public class RenderOnlySectionFlags  : IGuerilla
+        public class RenderOnlySectionFlags : GuerillaBlock
         {
             internal byte invalidName_;
-            internal  RenderOnlySectionFlags(BinaryReader binaryReader)
+            
+            public override int SerializedSize{get { return 1; }}
+            
+            
+            public override int Alignment{get { return 1; }}
+            
+            public  RenderOnlySectionFlags(BinaryReader binaryReader): base(binaryReader)
             {
                 invalidName_ = binaryReader.ReadByte();
             }
-            public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+            public  RenderOnlySectionFlags(): base()
+            {
+                
+            }
+            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
                 using(binaryWriter.BaseStream.Pin())
                 {

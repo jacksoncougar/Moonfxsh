@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,36 +10,47 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioDeviceStructBlock : ScenarioDeviceStructBlockBase
     {
-        public ScenarioDeviceStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ScenarioDeviceStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioDeviceStructBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ScenarioDeviceStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class ScenarioDeviceStructBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 powerGroup;
         internal Moonfish.Tags.ShortBlockIndex1 positionGroup;
         internal Flags flags;
-
-        internal ScenarioDeviceStructBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioDeviceStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            powerGroup = binaryReader.ReadShortBlockIndex1( );
-            positionGroup = binaryReader.ReadShortBlockIndex1( );
-            flags = ( Flags ) binaryReader.ReadInt32( );
+            powerGroup = binaryReader.ReadShortBlockIndex1();
+            positionGroup = binaryReader.ReadShortBlockIndex1();
+            flags = (Flags)binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ScenarioDeviceStructBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( powerGroup );
-                binaryWriter.Write( positionGroup );
-                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write(powerGroup);
+                binaryWriter.Write(positionGroup);
+                binaryWriter.Write((Int32)flags);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : int
         {

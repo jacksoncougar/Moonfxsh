@@ -8,22 +8,36 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class InstantaneousResponseDamageEffectMarkerStructBlock : InstantaneousResponseDamageEffectMarkerStructBlockBase
+    public partial class InstantaneousResponseDamageEffectMarkerStructBlock : InstantaneousResponseDamageEffectMarkerStructBlockBase
     {
         public  InstantaneousResponseDamageEffectMarkerStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  InstantaneousResponseDamageEffectMarkerStructBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class InstantaneousResponseDamageEffectMarkerStructBlockBase  : IGuerilla
+    public class InstantaneousResponseDamageEffectMarkerStructBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID damageEffectMarkerName;
-        internal  InstantaneousResponseDamageEffectMarkerStructBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  InstantaneousResponseDamageEffectMarkerStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             damageEffectMarkerName = binaryReader.ReadStringID();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  InstantaneousResponseDamageEffectMarkerStructBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

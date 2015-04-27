@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,33 +10,44 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class PlatformSoundOverrideMixbinsBlock : PlatformSoundOverrideMixbinsBlockBase
     {
-        public PlatformSoundOverrideMixbinsBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  PlatformSoundOverrideMixbinsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PlatformSoundOverrideMixbinsBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class PlatformSoundOverrideMixbinsBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class PlatformSoundOverrideMixbinsBlockBase : GuerillaBlock
     {
         internal Mixbin mixbin;
         internal float gainDB;
-
-        internal PlatformSoundOverrideMixbinsBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PlatformSoundOverrideMixbinsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            mixbin = ( Mixbin ) binaryReader.ReadInt32( );
-            gainDB = binaryReader.ReadSingle( );
+            mixbin = (Mixbin)binaryReader.ReadInt32();
+            gainDB = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  PlatformSoundOverrideMixbinsBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int32 ) mixbin );
-                binaryWriter.Write( gainDB );
+                binaryWriter.Write((Int32)mixbin);
+                binaryWriter.Write(gainDB);
                 return nextAddress;
             }
         }
-
         internal enum Mixbin : int
         {
             FrontLeft = 0,

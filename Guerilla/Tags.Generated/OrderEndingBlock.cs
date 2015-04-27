@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,57 +10,64 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class OrderEndingBlock : OrderEndingBlockBase
     {
-        public OrderEndingBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  OrderEndingBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  OrderEndingBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class OrderEndingBlockBase : IGuerilla
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class OrderEndingBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 nextOrder;
         internal CombinationRule combinationRule;
         internal float delayTime;
-
         /// <summary>
         /// when this ending is triggered, launch a dialogue event of the given type
         /// </summary>
         internal DialogueTypeWhenThisEndingIsTriggeredLaunchADialogueEventOfTheGivenType dialogueType;
-
         internal byte[] invalidName_;
         internal TriggerReferences[] triggers;
-
-        internal OrderEndingBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  OrderEndingBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            nextOrder = binaryReader.ReadShortBlockIndex1( );
-            combinationRule = ( CombinationRule ) binaryReader.ReadInt16( );
-            delayTime = binaryReader.ReadSingle( );
-            dialogueType =
-                ( DialogueTypeWhenThisEndingIsTriggeredLaunchADialogueEventOfTheGivenType ) binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            triggers = Guerilla.ReadBlockArray<TriggerReferences>( binaryReader );
+            nextOrder = binaryReader.ReadShortBlockIndex1();
+            combinationRule = (CombinationRule)binaryReader.ReadInt16();
+            delayTime = binaryReader.ReadSingle();
+            dialogueType = (DialogueTypeWhenThisEndingIsTriggeredLaunchADialogueEventOfTheGivenType)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            triggers = Guerilla.ReadBlockArray<TriggerReferences>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  OrderEndingBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( nextOrder );
-                binaryWriter.Write( ( Int16 ) combinationRule );
-                binaryWriter.Write( delayTime );
-                binaryWriter.Write( ( Int16 ) dialogueType );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                nextAddress = Guerilla.WriteBlockArray<TriggerReferences>( binaryWriter, triggers, nextAddress );
+                binaryWriter.Write(nextOrder);
+                binaryWriter.Write((Int16)combinationRule);
+                binaryWriter.Write(delayTime);
+                binaryWriter.Write((Int16)dialogueType);
+                binaryWriter.Write(invalidName_, 0, 2);
+                nextAddress = Guerilla.WriteBlockArray<TriggerReferences>(binaryWriter, triggers, nextAddress);
                 return nextAddress;
             }
         }
-
         internal enum CombinationRule : short
         {
             OR = 0,
             AND = 1,
         };
-
         internal enum DialogueTypeWhenThisEndingIsTriggeredLaunchADialogueEventOfTheGivenType : short
         {
             None = 0,

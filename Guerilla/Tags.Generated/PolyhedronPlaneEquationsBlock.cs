@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class PolyhedronPlaneEquationsBlock : PolyhedronPlaneEquationsBlockBase
     {
-        public PolyhedronPlaneEquationsBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  PolyhedronPlaneEquationsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PolyhedronPlaneEquationsBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 16 )]
-    public class PolyhedronPlaneEquationsBlockBase : IGuerilla
+    [LayoutAttribute(Size = 16, Alignment = 16)]
+    public class PolyhedronPlaneEquationsBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
-
-        internal PolyhedronPlaneEquationsBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 16; }}
+        
+        public  PolyhedronPlaneEquationsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes( 16 );
+            invalidName_ = binaryReader.ReadBytes(16);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  PolyhedronPlaneEquationsBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( invalidName_, 0, 16 );
+                binaryWriter.Write(invalidName_, 0, 16);
                 return nextAddress;
             }
         }

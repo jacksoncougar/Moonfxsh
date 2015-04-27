@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla
 
         //jesus git
 
-        public static T[] ReadBlockArray<T>( BinaryReader binaryReader ) where T : IGuerilla
+        public static T[] ReadBlockArray<T>(BinaryReader binaryReader) where T : GuerillaBlock
         {
             var elementSize = SizeOf( typeof ( T ) );
             var blamPointer = binaryReader.ReadBlamPointer( elementSize );
@@ -84,7 +84,7 @@ namespace Moonfish.Guerilla
         }
 
         public static int WriteBlockArray<T>( BinaryWriter binaryWriter, IList<T> blocks, int nextAddress )
-            where T : IGuerilla
+            where T : GuerillaBlock
         {
             var elementType = blocks.GetType( ).GetElementType( );
             var blamPointer = new BlamPointer( blocks.Count, nextAddress, SizeOf( elementType ),

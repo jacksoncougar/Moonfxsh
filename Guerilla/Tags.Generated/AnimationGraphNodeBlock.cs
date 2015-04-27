@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class AnimationGraphNodeBlock : AnimationGraphNodeBlockBase
     {
-        public AnimationGraphNodeBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  AnimationGraphNodeBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AnimationGraphNodeBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class AnimationGraphNodeBlockBase : IGuerilla
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class AnimationGraphNodeBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 nextSiblingNodeIndex;
@@ -28,37 +31,44 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 baseVector;
         internal float vectorRange;
         internal float zPos;
-
-        internal AnimationGraphNodeBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 32; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AnimationGraphNodeBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadStringID( );
-            nextSiblingNodeIndex = binaryReader.ReadShortBlockIndex1( );
-            firstChildNodeIndex = binaryReader.ReadShortBlockIndex1( );
-            parentNodeIndex = binaryReader.ReadShortBlockIndex1( );
-            modelFlags = ( ModelFlags ) binaryReader.ReadByte( );
-            nodeJointFlags = ( NodeJointFlags ) binaryReader.ReadByte( );
-            baseVector = binaryReader.ReadVector3( );
-            vectorRange = binaryReader.ReadSingle( );
-            zPos = binaryReader.ReadSingle( );
+            name = binaryReader.ReadStringID();
+            nextSiblingNodeIndex = binaryReader.ReadShortBlockIndex1();
+            firstChildNodeIndex = binaryReader.ReadShortBlockIndex1();
+            parentNodeIndex = binaryReader.ReadShortBlockIndex1();
+            modelFlags = (ModelFlags)binaryReader.ReadByte();
+            nodeJointFlags = (NodeJointFlags)binaryReader.ReadByte();
+            baseVector = binaryReader.ReadVector3();
+            vectorRange = binaryReader.ReadSingle();
+            zPos = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  AnimationGraphNodeBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( nextSiblingNodeIndex );
-                binaryWriter.Write( firstChildNodeIndex );
-                binaryWriter.Write( parentNodeIndex );
-                binaryWriter.Write( ( Byte ) modelFlags );
-                binaryWriter.Write( ( Byte ) nodeJointFlags );
-                binaryWriter.Write( baseVector );
-                binaryWriter.Write( vectorRange );
-                binaryWriter.Write( zPos );
+                binaryWriter.Write(name);
+                binaryWriter.Write(nextSiblingNodeIndex);
+                binaryWriter.Write(firstChildNodeIndex);
+                binaryWriter.Write(parentNodeIndex);
+                binaryWriter.Write((Byte)modelFlags);
+                binaryWriter.Write((Byte)nodeJointFlags);
+                binaryWriter.Write(baseVector);
+                binaryWriter.Write(vectorRange);
+                binaryWriter.Write(zPos);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum ModelFlags : byte
         {
@@ -69,7 +79,6 @@ namespace Moonfish.Guerilla.Tags
             RightHand = 16,
             LeftArmMember = 32,
         };
-
         [FlagsAttribute]
         internal enum NodeJointFlags : byte
         {

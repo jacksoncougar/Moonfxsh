@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,38 +10,50 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPostprocessImplementationNewBlock : ShaderPostprocessImplementationNewBlockBase
     {
-        public ShaderPostprocessImplementationNewBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderPostprocessImplementationNewBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderPostprocessImplementationNewBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 10, Alignment = 4 )]
-    public class ShaderPostprocessImplementationNewBlockBase : IGuerilla
+    [LayoutAttribute(Size = 10, Alignment = 4)]
+    public class ShaderPostprocessImplementationNewBlockBase : GuerillaBlock
     {
         internal TagBlockIndexStructBlock bitmapTransforms;
         internal TagBlockIndexStructBlock renderStates;
         internal TagBlockIndexStructBlock textureStates;
         internal TagBlockIndexStructBlock pixelConstants;
         internal TagBlockIndexStructBlock vertexConstants;
-
-        internal ShaderPostprocessImplementationNewBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 10; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderPostprocessImplementationNewBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            bitmapTransforms = new TagBlockIndexStructBlock( binaryReader );
-            renderStates = new TagBlockIndexStructBlock( binaryReader );
-            textureStates = new TagBlockIndexStructBlock( binaryReader );
-            pixelConstants = new TagBlockIndexStructBlock( binaryReader );
-            vertexConstants = new TagBlockIndexStructBlock( binaryReader );
+            bitmapTransforms = new TagBlockIndexStructBlock(binaryReader);
+            renderStates = new TagBlockIndexStructBlock(binaryReader);
+            textureStates = new TagBlockIndexStructBlock(binaryReader);
+            pixelConstants = new TagBlockIndexStructBlock(binaryReader);
+            vertexConstants = new TagBlockIndexStructBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ShaderPostprocessImplementationNewBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                bitmapTransforms.Write( binaryWriter );
-                renderStates.Write( binaryWriter );
-                textureStates.Write( binaryWriter );
-                pixelConstants.Write( binaryWriter );
-                vertexConstants.Write( binaryWriter );
+                bitmapTransforms.Write(binaryWriter);
+                renderStates.Write(binaryWriter);
+                textureStates.Write(binaryWriter);
+                pixelConstants.Write(binaryWriter);
+                vertexConstants.Write(binaryWriter);
                 return nextAddress;
             }
         }

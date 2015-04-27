@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class UserHintLineSegmentBlock : UserHintLineSegmentBlockBase
     {
-        public UserHintLineSegmentBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  UserHintLineSegmentBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  UserHintLineSegmentBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 36, Alignment = 4 )]
-    public class UserHintLineSegmentBlockBase : IGuerilla
+    [LayoutAttribute(Size = 36, Alignment = 4)]
+    public class UserHintLineSegmentBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal OpenTK.Vector3 point0;
@@ -26,33 +29,40 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 point1;
         internal short referenceFrame0;
         internal byte[] invalidName_0;
-
-        internal UserHintLineSegmentBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 36; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  UserHintLineSegmentBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            flags = ( Flags ) binaryReader.ReadInt32( );
-            point0 = binaryReader.ReadVector3( );
-            referenceFrame = binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            point1 = binaryReader.ReadVector3( );
-            referenceFrame0 = binaryReader.ReadInt16( );
-            invalidName_0 = binaryReader.ReadBytes( 2 );
+            flags = (Flags)binaryReader.ReadInt32();
+            point0 = binaryReader.ReadVector3();
+            referenceFrame = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            point1 = binaryReader.ReadVector3();
+            referenceFrame0 = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  UserHintLineSegmentBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int32 ) flags );
-                binaryWriter.Write( point0 );
-                binaryWriter.Write( referenceFrame );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( point1 );
-                binaryWriter.Write( referenceFrame0 );
-                binaryWriter.Write( invalidName_0, 0, 2 );
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(point0);
+                binaryWriter.Write(referenceFrame);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(point1);
+                binaryWriter.Write(referenceFrame0);
+                binaryWriter.Write(invalidName_0, 0, 2);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : int
         {

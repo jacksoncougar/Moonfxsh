@@ -8,23 +8,37 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class MouseCursorBitmapReferenceBlock : MouseCursorBitmapReferenceBlockBase
+    public partial class MouseCursorBitmapReferenceBlock : MouseCursorBitmapReferenceBlockBase
     {
         public  MouseCursorBitmapReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  MouseCursorBitmapReferenceBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class MouseCursorBitmapReferenceBlockBase  : IGuerilla
+    public class MouseCursorBitmapReferenceBlockBase : GuerillaBlock
     {
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference bitmap;
-        internal  MouseCursorBitmapReferenceBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  MouseCursorBitmapReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             bitmap = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  MouseCursorBitmapReferenceBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

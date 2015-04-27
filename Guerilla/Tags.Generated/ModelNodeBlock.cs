@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ModelNodeBlock : ModelNodeBlockBase
+    public partial class ModelNodeBlock : ModelNodeBlockBase
     {
         public  ModelNodeBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  ModelNodeBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 92, Alignment = 4)]
-    public class ModelNodeBlockBase  : IGuerilla
+    public class ModelNodeBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 parentNode;
@@ -30,7 +34,13 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 defaultInverseLeft;
         internal OpenTK.Vector3 defaultInverseUp;
         internal OpenTK.Vector3 defaultInversePosition;
-        internal  ModelNodeBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 92; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ModelNodeBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             name = binaryReader.ReadStringID();
             parentNode = binaryReader.ReadShortBlockIndex1();
@@ -45,7 +55,11 @@ namespace Moonfish.Guerilla.Tags
             defaultInverseUp = binaryReader.ReadVector3();
             defaultInversePosition = binaryReader.ReadVector3();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  ModelNodeBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

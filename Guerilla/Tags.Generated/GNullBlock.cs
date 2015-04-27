@@ -8,21 +8,35 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class GNullBlock : GNullBlockBase
+    public partial class GNullBlock : GNullBlockBase
     {
         public  GNullBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
-    };
-    [LayoutAttribute(Size = 0, Alignment = 4)]
-    public class GNullBlockBase  : IGuerilla
-    {
-        internal  GNullBlockBase(BinaryReader binaryReader)
+        public  GNullBlock(): base()
         {
             
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+    };
+    [LayoutAttribute(Size = 0, Alignment = 4)]
+    public class GNullBlockBase : GuerillaBlock
+    {
+        
+        public override int SerializedSize{get { return 0; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  GNullBlockBase(BinaryReader binaryReader): base(binaryReader)
+        {
+            
+        }
+        public  GNullBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

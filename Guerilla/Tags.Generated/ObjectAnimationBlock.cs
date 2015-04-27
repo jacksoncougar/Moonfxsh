@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ObjectAnimationBlock : ObjectAnimationBlockBase
     {
-        public ObjectAnimationBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ObjectAnimationBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ObjectAnimationBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class ObjectAnimationBlockBase : IGuerilla
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class ObjectAnimationBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID label;
         internal AnimationIndexStructBlock animation;
@@ -25,31 +28,38 @@ namespace Moonfish.Guerilla.Tags
         internal FunctionControls functionControls;
         internal Moonfish.Tags.StringID function;
         internal byte[] invalidName_0;
-
-        internal ObjectAnimationBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ObjectAnimationBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            label = binaryReader.ReadStringID( );
-            animation = new AnimationIndexStructBlock( binaryReader );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            functionControls = ( FunctionControls ) binaryReader.ReadInt16( );
-            function = binaryReader.ReadStringID( );
-            invalidName_0 = binaryReader.ReadBytes( 4 );
+            label = binaryReader.ReadStringID();
+            animation = new AnimationIndexStructBlock(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(2);
+            functionControls = (FunctionControls)binaryReader.ReadInt16();
+            function = binaryReader.ReadStringID();
+            invalidName_0 = binaryReader.ReadBytes(4);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ObjectAnimationBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( label );
-                animation.Write( binaryWriter );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( ( Int16 ) functionControls );
-                binaryWriter.Write( function );
-                binaryWriter.Write( invalidName_0, 0, 4 );
+                binaryWriter.Write(label);
+                animation.Write(binaryWriter);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Int16)functionControls);
+                binaryWriter.Write(function);
+                binaryWriter.Write(invalidName_0, 0, 4);
                 return nextAddress;
             }
         }
-
         internal enum FunctionControls : short
         {
             Frame = 0,

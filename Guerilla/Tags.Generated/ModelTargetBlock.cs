@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ModelTargetBlock : ModelTargetBlockBase
+    public partial class ModelTargetBlock : ModelTargetBlockBase
     {
         public  ModelTargetBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  ModelTargetBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 28, Alignment = 4)]
-    public class ModelTargetBlockBase  : IGuerilla
+    public class ModelTargetBlockBase : GuerillaBlock
     {
         /// <summary>
         /// multiple markers become multiple spheres of the same radius
@@ -43,7 +47,13 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float targetingRelevance;
         internal ModelTargetLockOnDataStructBlock lockOnData;
-        internal  ModelTargetBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 28; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ModelTargetBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             markerName = binaryReader.ReadStringID();
             size = binaryReader.ReadSingle();
@@ -53,7 +63,11 @@ namespace Moonfish.Guerilla.Tags
             targetingRelevance = binaryReader.ReadSingle();
             lockOnData = new ModelTargetLockOnDataStructBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  ModelTargetBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,39 +10,50 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderStateAlphaTestStateBlock : ShaderStateAlphaTestStateBlockBase
     {
-        public ShaderStateAlphaTestStateBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderStateAlphaTestStateBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderStateAlphaTestStateBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ShaderStateAlphaTestStateBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class ShaderStateAlphaTestStateBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal AlphaCompareFunction alphaCompareFunction;
         internal short alphaTestRef0255;
         internal byte[] invalidName_;
-
-        internal ShaderStateAlphaTestStateBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderStateAlphaTestStateBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            flags = ( Flags ) binaryReader.ReadInt16( );
-            alphaCompareFunction = ( AlphaCompareFunction ) binaryReader.ReadInt16( );
-            alphaTestRef0255 = binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
+            flags = (Flags)binaryReader.ReadInt16();
+            alphaCompareFunction = (AlphaCompareFunction)binaryReader.ReadInt16();
+            alphaTestRef0255 = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ShaderStateAlphaTestStateBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) flags );
-                binaryWriter.Write( ( Int16 ) alphaCompareFunction );
-                binaryWriter.Write( alphaTestRef0255 );
-                binaryWriter.Write( invalidName_, 0, 2 );
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16)alphaCompareFunction);
+                binaryWriter.Write(alphaTestRef0255);
+                binaryWriter.Write(invalidName_, 0, 2);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : short
         {
@@ -51,7 +61,6 @@ namespace Moonfish.Guerilla.Tags
             SampleAlphaToCoverage = 2,
             SampleAlphaToOne = 4,
         };
-
         internal enum AlphaCompareFunction : short
         {
             Never = 0,

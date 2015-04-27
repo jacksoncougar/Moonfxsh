@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,35 +10,47 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Cmnt = ( TagClass ) "/**/";
+        public static readonly TagClass Cmnt = (TagClass)"/**/";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "/**/" )]
+    [TagClassAttribute("/**/")]
     public partial class ScenarioCommentsResourceBlock : ScenarioCommentsResourceBlockBase
     {
-        public ScenarioCommentsResourceBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ScenarioCommentsResourceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioCommentsResourceBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ScenarioCommentsResourceBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class ScenarioCommentsResourceBlockBase : GuerillaBlock
     {
         internal EditorCommentBlock[] comments;
-
-        internal ScenarioCommentsResourceBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioCommentsResourceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            comments = Guerilla.ReadBlockArray<EditorCommentBlock>( binaryReader );
+            comments = Guerilla.ReadBlockArray<EditorCommentBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ScenarioCommentsResourceBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                nextAddress = Guerilla.WriteBlockArray<EditorCommentBlock>( binaryWriter, comments, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<EditorCommentBlock>(binaryWriter, comments, nextAddress);
                 return nextAddress;
             }
         }

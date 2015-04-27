@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,72 +10,80 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Mach = ( TagClass ) "mach";
+        public static readonly TagClass Mach = (TagClass)"mach";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "mach" )]
+    [TagClassAttribute("mach")]
     public partial class DeviceMachineBlock : DeviceMachineBlockBase
     {
-        public DeviceMachineBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  DeviceMachineBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  DeviceMachineBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class DeviceMachineBlockBase : DeviceBlock
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class DeviceMachineBlockBase : GuerillaBlock
     {
         internal Type type;
         internal Flags flags;
         internal float doorOpenTimeSeconds;
-
         /// <summary>
         /// maps position [0,1] to occlusion
         /// </summary>
         internal OpenTK.Vector2 doorOcclusionBounds;
-
         internal CollisionResponse collisionResponse;
         internal short elevatorNode;
         internal PathfindingPolicy pathfindingPolicy;
         internal byte[] invalidName_;
-
-        internal DeviceMachineBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        
+        public override int SerializedSize{get { return 24; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  DeviceMachineBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            type = ( Type ) binaryReader.ReadInt16( );
-            flags = ( Flags ) binaryReader.ReadInt16( );
-            doorOpenTimeSeconds = binaryReader.ReadSingle( );
-            doorOcclusionBounds = binaryReader.ReadVector2( );
-            collisionResponse = ( CollisionResponse ) binaryReader.ReadInt16( );
-            elevatorNode = binaryReader.ReadInt16( );
-            pathfindingPolicy = ( PathfindingPolicy ) binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
+            type = (Type)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            doorOpenTimeSeconds = binaryReader.ReadSingle();
+            doorOcclusionBounds = binaryReader.ReadVector2();
+            collisionResponse = (CollisionResponse)binaryReader.ReadInt16();
+            elevatorNode = binaryReader.ReadInt16();
+            pathfindingPolicy = (PathfindingPolicy)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  DeviceMachineBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) type );
-                binaryWriter.Write( ( Int16 ) flags );
-                binaryWriter.Write( doorOpenTimeSeconds );
-                binaryWriter.Write( doorOcclusionBounds );
-                binaryWriter.Write( ( Int16 ) collisionResponse );
-                binaryWriter.Write( elevatorNode );
-                binaryWriter.Write( ( Int16 ) pathfindingPolicy );
-                binaryWriter.Write( invalidName_, 0, 2 );
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(doorOpenTimeSeconds);
+                binaryWriter.Write(doorOcclusionBounds);
+                binaryWriter.Write((Int16)collisionResponse);
+                binaryWriter.Write(elevatorNode);
+                binaryWriter.Write((Int16)pathfindingPolicy);
+                binaryWriter.Write(invalidName_, 0, 2);
                 return nextAddress;
             }
         }
-
         internal enum Type : short
         {
             Door = 0,
             Platform = 1,
             Gear = 2,
         };
-
         [FlagsAttribute]
         internal enum Flags : short
         {
@@ -84,13 +91,11 @@ namespace Moonfish.Guerilla.Tags
             ButNotWhenOpen = 2,
             ElevatorLightingBasedOnWhatsAroundRatherThanWhatsBelow = 4,
         };
-
         internal enum CollisionResponse : short
         {
             PauseUntilCrushed = 0,
             ReverseDirections = 1,
         };
-
         internal enum PathfindingPolicy : short
         {
             Discs = 0,

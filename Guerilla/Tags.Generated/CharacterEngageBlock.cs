@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,51 +10,59 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterEngageBlock : CharacterEngageBlockBase
     {
-        public CharacterEngageBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  CharacterEngageBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CharacterEngageBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class CharacterEngageBlockBase : IGuerilla
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class CharacterEngageBlockBase : GuerillaBlock
     {
         internal Flags flags;
-
         /// <summary>
         /// When danger rises above the threshold, the actor crouches
         /// </summary>
         internal float crouchDangerThreshold;
-
         /// <summary>
         /// When danger drops below this threshold, the actor can stand again.
         /// </summary>
         internal float standDangerThreshold;
-
         /// <summary>
         /// When danger goes above given level, this actor switches firing positions
         /// </summary>
         internal float fightDangerMoveThreshold;
-
-        internal CharacterEngageBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CharacterEngageBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            flags = ( Flags ) binaryReader.ReadInt32( );
-            crouchDangerThreshold = binaryReader.ReadSingle( );
-            standDangerThreshold = binaryReader.ReadSingle( );
-            fightDangerMoveThreshold = binaryReader.ReadSingle( );
+            flags = (Flags)binaryReader.ReadInt32();
+            crouchDangerThreshold = binaryReader.ReadSingle();
+            standDangerThreshold = binaryReader.ReadSingle();
+            fightDangerMoveThreshold = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  CharacterEngageBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int32 ) flags );
-                binaryWriter.Write( crouchDangerThreshold );
-                binaryWriter.Write( standDangerThreshold );
-                binaryWriter.Write( fightDangerMoveThreshold );
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(crouchDangerThreshold);
+                binaryWriter.Write(standDangerThreshold);
+                binaryWriter.Write(fightDangerMoveThreshold);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : int
         {

@@ -17,15 +17,19 @@ namespace Moonfish.Tags
 namespace Moonfish.Guerilla.Tags
 {
     [TagClassAttribute("snmx")]
-    public  partial class SoundMixBlock : SoundMixBlockBase
+    public partial class SoundMixBlock : SoundMixBlockBase
     {
         public  SoundMixBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  SoundMixBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 88, Alignment = 4)]
-    public class SoundMixBlockBase  : IGuerilla
+    public class SoundMixBlockBase : GuerillaBlock
     {
         internal float leftStereoGainDB;
         internal float rightStereoGainDB;
@@ -38,7 +42,13 @@ namespace Moonfish.Guerilla.Tags
         internal float frontSpeakerGainDB0;
         internal float rearSpeakerGainDB0;
         internal SoundGlobalMixStructBlock globalMix;
-        internal  SoundMixBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 88; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundMixBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             leftStereoGainDB = binaryReader.ReadSingle();
             rightStereoGainDB = binaryReader.ReadSingle();
@@ -52,7 +62,11 @@ namespace Moonfish.Guerilla.Tags
             rearSpeakerGainDB0 = binaryReader.ReadSingle();
             globalMix = new SoundGlobalMixStructBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  SoundMixBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

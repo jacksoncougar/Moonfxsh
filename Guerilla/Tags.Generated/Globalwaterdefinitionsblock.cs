@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,15 +10,20 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalWaterDefinitionsBlock : GlobalWaterDefinitionsBlockBase
     {
-        public GlobalWaterDefinitionsBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  GlobalWaterDefinitionsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  GlobalWaterDefinitionsBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 172, Alignment = 4 )]
-    public class GlobalWaterDefinitionsBlockBase : IGuerilla
+    [LayoutAttribute(Size = 172, Alignment = 4)]
+    public class GlobalWaterDefinitionsBlockBase : GuerillaBlock
     {
-        [TagReference( "shad" )] internal Moonfish.Tags.TagReference shader;
+        [TagReference("shad")]
+        internal Moonfish.Tags.TagReference shader;
         internal WaterGeometrySectionBlock[] section;
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
         internal Moonfish.Tags.ColorR8G8B8 sunSpotColor;
@@ -42,61 +46,69 @@ namespace Moonfish.Guerilla.Tags
         internal float fogNear;
         internal float fogFar;
         internal float dynamicHeightBias;
-
-        internal GlobalWaterDefinitionsBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 172; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  GlobalWaterDefinitionsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            shader = binaryReader.ReadTagReference( );
-            section = Guerilla.ReadBlockArray<WaterGeometrySectionBlock>( binaryReader );
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock( binaryReader );
-            sunSpotColor = binaryReader.ReadColorR8G8B8( );
-            reflectionTint = binaryReader.ReadColorR8G8B8( );
-            refractionTint = binaryReader.ReadColorR8G8B8( );
-            horizonColor = binaryReader.ReadColorR8G8B8( );
-            sunSpecularPower = binaryReader.ReadSingle( );
-            reflectionBumpScale = binaryReader.ReadSingle( );
-            refractionBumpScale = binaryReader.ReadSingle( );
-            fresnelScale = binaryReader.ReadSingle( );
-            sunDirHeading = binaryReader.ReadSingle( );
-            sunDirPitch = binaryReader.ReadSingle( );
-            fOV = binaryReader.ReadSingle( );
-            aspect = binaryReader.ReadSingle( );
-            height = binaryReader.ReadSingle( );
-            farz = binaryReader.ReadSingle( );
-            rotateOffset = binaryReader.ReadSingle( );
-            center = binaryReader.ReadVector2( );
-            extents = binaryReader.ReadVector2( );
-            fogNear = binaryReader.ReadSingle( );
-            fogFar = binaryReader.ReadSingle( );
-            dynamicHeightBias = binaryReader.ReadSingle( );
+            shader = binaryReader.ReadTagReference();
+            section = Guerilla.ReadBlockArray<WaterGeometrySectionBlock>(binaryReader);
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            sunSpotColor = binaryReader.ReadColorR8G8B8();
+            reflectionTint = binaryReader.ReadColorR8G8B8();
+            refractionTint = binaryReader.ReadColorR8G8B8();
+            horizonColor = binaryReader.ReadColorR8G8B8();
+            sunSpecularPower = binaryReader.ReadSingle();
+            reflectionBumpScale = binaryReader.ReadSingle();
+            refractionBumpScale = binaryReader.ReadSingle();
+            fresnelScale = binaryReader.ReadSingle();
+            sunDirHeading = binaryReader.ReadSingle();
+            sunDirPitch = binaryReader.ReadSingle();
+            fOV = binaryReader.ReadSingle();
+            aspect = binaryReader.ReadSingle();
+            height = binaryReader.ReadSingle();
+            farz = binaryReader.ReadSingle();
+            rotateOffset = binaryReader.ReadSingle();
+            center = binaryReader.ReadVector2();
+            extents = binaryReader.ReadVector2();
+            fogNear = binaryReader.ReadSingle();
+            fogFar = binaryReader.ReadSingle();
+            dynamicHeightBias = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  GlobalWaterDefinitionsBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( shader );
-                nextAddress = Guerilla.WriteBlockArray<WaterGeometrySectionBlock>( binaryWriter, section, nextAddress );
-                geometryBlockInfo.Write( binaryWriter );
-                binaryWriter.Write( sunSpotColor );
-                binaryWriter.Write( reflectionTint );
-                binaryWriter.Write( refractionTint );
-                binaryWriter.Write( horizonColor );
-                binaryWriter.Write( sunSpecularPower );
-                binaryWriter.Write( reflectionBumpScale );
-                binaryWriter.Write( refractionBumpScale );
-                binaryWriter.Write( fresnelScale );
-                binaryWriter.Write( sunDirHeading );
-                binaryWriter.Write( sunDirPitch );
-                binaryWriter.Write( fOV );
-                binaryWriter.Write( aspect );
-                binaryWriter.Write( height );
-                binaryWriter.Write( farz );
-                binaryWriter.Write( rotateOffset );
-                binaryWriter.Write( center );
-                binaryWriter.Write( extents );
-                binaryWriter.Write( fogNear );
-                binaryWriter.Write( fogFar );
-                binaryWriter.Write( dynamicHeightBias );
+                binaryWriter.Write(shader);
+                nextAddress = Guerilla.WriteBlockArray<WaterGeometrySectionBlock>(binaryWriter, section, nextAddress);
+                geometryBlockInfo.Write(binaryWriter);
+                binaryWriter.Write(sunSpotColor);
+                binaryWriter.Write(reflectionTint);
+                binaryWriter.Write(refractionTint);
+                binaryWriter.Write(horizonColor);
+                binaryWriter.Write(sunSpecularPower);
+                binaryWriter.Write(reflectionBumpScale);
+                binaryWriter.Write(refractionBumpScale);
+                binaryWriter.Write(fresnelScale);
+                binaryWriter.Write(sunDirHeading);
+                binaryWriter.Write(sunDirPitch);
+                binaryWriter.Write(fOV);
+                binaryWriter.Write(aspect);
+                binaryWriter.Write(height);
+                binaryWriter.Write(farz);
+                binaryWriter.Write(rotateOffset);
+                binaryWriter.Write(center);
+                binaryWriter.Write(extents);
+                binaryWriter.Write(fogNear);
+                binaryWriter.Write(fogFar);
+                binaryWriter.Write(dynamicHeightBias);
                 return nextAddress;
             }
         }

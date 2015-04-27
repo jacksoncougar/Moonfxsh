@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,29 +8,40 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class StructureBspClusterInstancedGeometryIndexBlock :
-        StructureBspClusterInstancedGeometryIndexBlockBase
+    public partial class StructureBspClusterInstancedGeometryIndexBlock : StructureBspClusterInstancedGeometryIndexBlockBase
     {
-        public StructureBspClusterInstancedGeometryIndexBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  StructureBspClusterInstancedGeometryIndexBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StructureBspClusterInstancedGeometryIndexBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 2, Alignment = 4 )]
-    public class StructureBspClusterInstancedGeometryIndexBlockBase : IGuerilla
+    [LayoutAttribute(Size = 2, Alignment = 4)]
+    public class StructureBspClusterInstancedGeometryIndexBlockBase : GuerillaBlock
     {
         internal short instancedGeometryIndex;
-
-        internal StructureBspClusterInstancedGeometryIndexBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 2; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StructureBspClusterInstancedGeometryIndexBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            instancedGeometryIndex = binaryReader.ReadInt16( );
+            instancedGeometryIndex = binaryReader.ReadInt16();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  StructureBspClusterInstancedGeometryIndexBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( instancedGeometryIndex );
+                binaryWriter.Write(instancedGeometryIndex);
                 return nextAddress;
             }
         }

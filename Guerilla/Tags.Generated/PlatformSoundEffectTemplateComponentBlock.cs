@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,39 +10,50 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class PlatformSoundEffectTemplateComponentBlock : PlatformSoundEffectTemplateComponentBlockBase
     {
-        public PlatformSoundEffectTemplateComponentBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  PlatformSoundEffectTemplateComponentBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PlatformSoundEffectTemplateComponentBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class PlatformSoundEffectTemplateComponentBlockBase : IGuerilla
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class PlatformSoundEffectTemplateComponentBlockBase : GuerillaBlock
     {
         internal ValueType valueType;
         internal float defaultValue;
         internal float minimumValue;
         internal float maximumValue;
-
-        internal PlatformSoundEffectTemplateComponentBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PlatformSoundEffectTemplateComponentBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            valueType = ( ValueType ) binaryReader.ReadInt32( );
-            defaultValue = binaryReader.ReadSingle( );
-            minimumValue = binaryReader.ReadSingle( );
-            maximumValue = binaryReader.ReadSingle( );
+            valueType = (ValueType)binaryReader.ReadInt32();
+            defaultValue = binaryReader.ReadSingle();
+            minimumValue = binaryReader.ReadSingle();
+            maximumValue = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  PlatformSoundEffectTemplateComponentBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int32 ) valueType );
-                binaryWriter.Write( defaultValue );
-                binaryWriter.Write( minimumValue );
-                binaryWriter.Write( maximumValue );
+                binaryWriter.Write((Int32)valueType);
+                binaryWriter.Write(defaultValue);
+                binaryWriter.Write(minimumValue);
+                binaryWriter.Write(maximumValue);
                 return nextAddress;
             }
         }
-
         internal enum ValueType : int
         {
             Zero = 0,

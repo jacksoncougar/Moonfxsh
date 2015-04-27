@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,33 +10,44 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class UserHintPolygonBlock : UserHintPolygonBlockBase
     {
-        public UserHintPolygonBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  UserHintPolygonBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  UserHintPolygonBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class UserHintPolygonBlockBase : IGuerilla
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class UserHintPolygonBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal UserHintPointBlock[] points;
-
-        internal UserHintPolygonBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  UserHintPolygonBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            flags = ( Flags ) binaryReader.ReadInt32( );
-            points = Guerilla.ReadBlockArray<UserHintPointBlock>( binaryReader );
+            flags = (Flags)binaryReader.ReadInt32();
+            points = Guerilla.ReadBlockArray<UserHintPointBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  UserHintPolygonBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int32 ) flags );
-                nextAddress = Guerilla.WriteBlockArray<UserHintPointBlock>( binaryWriter, points, nextAddress );
+                binaryWriter.Write((Int32)flags);
+                nextAddress = Guerilla.WriteBlockArray<UserHintPointBlock>(binaryWriter, points, nextAddress);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : int
         {

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,17 +10,22 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ProjectileMaterialResponseBlock : ProjectileMaterialResponseBlockBase
     {
-        public ProjectileMaterialResponseBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ProjectileMaterialResponseBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ProjectileMaterialResponseBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 88, Alignment = 4 )]
-    public class ProjectileMaterialResponseBlockBase : IGuerilla
+    [LayoutAttribute(Size = 88, Alignment = 4)]
+    public class ProjectileMaterialResponseBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal Response response;
-        [TagReference( "effe" )] internal Moonfish.Tags.TagReference dONOTUSEOLDEffect;
+        [TagReference("effe")]
+        internal Moonfish.Tags.TagReference dONOTUSEOLDEffect;
         internal Moonfish.Tags.StringID materialName;
         internal byte[] invalidName_;
         internal Response response0;
@@ -29,100 +33,101 @@ namespace Moonfish.Guerilla.Tags
         internal float chanceFraction01;
         internal Moonfish.Model.Range betweenDegrees;
         internal Moonfish.Model.Range andWorldUnitsPerSecond;
-        [TagReference( "effe" )] internal Moonfish.Tags.TagReference dONOTUSEOLDEffect0;
+        [TagReference("effe")]
+        internal Moonfish.Tags.TagReference dONOTUSEOLDEffect0;
         internal ScaleEffectsBy scaleEffectsBy;
         internal byte[] invalidName_0;
-
         /// <summary>
         /// the angle of incidence is randomly perturbed by at most this amount to simulate irregularity.
         /// </summary>
         internal float angularNoiseDegrees;
-
         /// <summary>
         /// the velocity is randomly perturbed by at most this amount to simulate irregularity.
         /// </summary>
         internal float velocityNoiseWorldUnitsPerSecond;
-
-        [TagReference( "effe" )] internal Moonfish.Tags.TagReference dONOTUSEOLDDetonationEffect;
-
+        [TagReference("effe")]
+        internal Moonfish.Tags.TagReference dONOTUSEOLDDetonationEffect;
         /// <summary>
         /// the fraction of the projectile's velocity lost on penetration
         /// </summary>
         internal float initialFriction;
-
         /// <summary>
         /// the maximumDistance the projectile can travel through on object of this material
         /// </summary>
         internal float maximumDistance;
-
         /// <summary>
         /// the fraction of the projectile's velocity parallel to the surface lost on impact
         /// </summary>
         internal float parallelFriction;
-
         /// <summary>
         /// the fraction of the projectile's velocity perpendicular to the surface lost on impact
         /// </summary>
         internal float perpendicularFriction;
-
-        internal ProjectileMaterialResponseBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 88; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ProjectileMaterialResponseBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            flags = ( Flags ) binaryReader.ReadInt16( );
-            response = ( Response ) binaryReader.ReadInt16( );
-            dONOTUSEOLDEffect = binaryReader.ReadTagReference( );
-            materialName = binaryReader.ReadStringID( );
-            invalidName_ = binaryReader.ReadBytes( 4 );
-            response0 = ( Response ) binaryReader.ReadInt16( );
-            flags0 = ( Flags ) binaryReader.ReadInt16( );
-            chanceFraction01 = binaryReader.ReadSingle( );
-            betweenDegrees = binaryReader.ReadRange( );
-            andWorldUnitsPerSecond = binaryReader.ReadRange( );
-            dONOTUSEOLDEffect0 = binaryReader.ReadTagReference( );
-            scaleEffectsBy = ( ScaleEffectsBy ) binaryReader.ReadInt16( );
-            invalidName_0 = binaryReader.ReadBytes( 2 );
-            angularNoiseDegrees = binaryReader.ReadSingle( );
-            velocityNoiseWorldUnitsPerSecond = binaryReader.ReadSingle( );
-            dONOTUSEOLDDetonationEffect = binaryReader.ReadTagReference( );
-            initialFriction = binaryReader.ReadSingle( );
-            maximumDistance = binaryReader.ReadSingle( );
-            parallelFriction = binaryReader.ReadSingle( );
-            perpendicularFriction = binaryReader.ReadSingle( );
+            flags = (Flags)binaryReader.ReadInt16();
+            response = (Response)binaryReader.ReadInt16();
+            dONOTUSEOLDEffect = binaryReader.ReadTagReference();
+            materialName = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(4);
+            response0 = (Response)binaryReader.ReadInt16();
+            flags0 = (Flags)binaryReader.ReadInt16();
+            chanceFraction01 = binaryReader.ReadSingle();
+            betweenDegrees = binaryReader.ReadRange();
+            andWorldUnitsPerSecond = binaryReader.ReadRange();
+            dONOTUSEOLDEffect0 = binaryReader.ReadTagReference();
+            scaleEffectsBy = (ScaleEffectsBy)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            angularNoiseDegrees = binaryReader.ReadSingle();
+            velocityNoiseWorldUnitsPerSecond = binaryReader.ReadSingle();
+            dONOTUSEOLDDetonationEffect = binaryReader.ReadTagReference();
+            initialFriction = binaryReader.ReadSingle();
+            maximumDistance = binaryReader.ReadSingle();
+            parallelFriction = binaryReader.ReadSingle();
+            perpendicularFriction = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ProjectileMaterialResponseBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) flags );
-                binaryWriter.Write( ( Int16 ) response );
-                binaryWriter.Write( dONOTUSEOLDEffect );
-                binaryWriter.Write( materialName );
-                binaryWriter.Write( invalidName_, 0, 4 );
-                binaryWriter.Write( ( Int16 ) response0 );
-                binaryWriter.Write( ( Int16 ) flags0 );
-                binaryWriter.Write( chanceFraction01 );
-                binaryWriter.Write( betweenDegrees );
-                binaryWriter.Write( andWorldUnitsPerSecond );
-                binaryWriter.Write( dONOTUSEOLDEffect0 );
-                binaryWriter.Write( ( Int16 ) scaleEffectsBy );
-                binaryWriter.Write( invalidName_0, 0, 2 );
-                binaryWriter.Write( angularNoiseDegrees );
-                binaryWriter.Write( velocityNoiseWorldUnitsPerSecond );
-                binaryWriter.Write( dONOTUSEOLDDetonationEffect );
-                binaryWriter.Write( initialFriction );
-                binaryWriter.Write( maximumDistance );
-                binaryWriter.Write( parallelFriction );
-                binaryWriter.Write( perpendicularFriction );
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16)response);
+                binaryWriter.Write(dONOTUSEOLDEffect);
+                binaryWriter.Write(materialName);
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write((Int16)response0);
+                binaryWriter.Write((Int16)flags0);
+                binaryWriter.Write(chanceFraction01);
+                binaryWriter.Write(betweenDegrees);
+                binaryWriter.Write(andWorldUnitsPerSecond);
+                binaryWriter.Write(dONOTUSEOLDEffect0);
+                binaryWriter.Write((Int16)scaleEffectsBy);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(angularNoiseDegrees);
+                binaryWriter.Write(velocityNoiseWorldUnitsPerSecond);
+                binaryWriter.Write(dONOTUSEOLDDetonationEffect);
+                binaryWriter.Write(initialFriction);
+                binaryWriter.Write(maximumDistance);
+                binaryWriter.Write(parallelFriction);
+                binaryWriter.Write(perpendicularFriction);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : short
         {
             CannotBeOverpenetrated = 1,
         };
-
         internal enum Response : short
         {
             ImpactDetonate = 0,
@@ -133,7 +138,6 @@ namespace Moonfish.Guerilla.Tags
             BounceDud = 5,
             FizzleRicochet = 6,
         };
-
         internal enum Response0 : short
         {
             ImpactDetonate = 0,
@@ -144,14 +148,12 @@ namespace Moonfish.Guerilla.Tags
             BounceDud = 5,
             FizzleRicochet = 6,
         };
-
         [FlagsAttribute]
         internal enum Flags0 : short
         {
             OnlyAgainstUnits = 1,
             NeverAgainstUnits = 2,
         };
-
         internal enum ScaleEffectsBy : short
         {
             Damage = 0,

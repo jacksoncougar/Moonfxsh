@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class RenderModelSectionBlock : RenderModelSectionBlockBase
     {
-        public RenderModelSectionBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  RenderModelSectionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  RenderModelSectionBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 92, Alignment = 4 )]
-    public class RenderModelSectionBlockBase : IGuerilla
+    [LayoutAttribute(Size = 92, Alignment = 4)]
+    public class RenderModelSectionBlockBase : GuerillaBlock
     {
         internal GlobalGeometryClassificationEnumDefinition globalGeometryClassificationEnumDefinition;
         internal byte[] invalidName_;
@@ -26,35 +29,40 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal RenderModelSectionDataBlock[] sectionData;
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
-
-        internal RenderModelSectionBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 92; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  RenderModelSectionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            globalGeometryClassificationEnumDefinition =
-                ( GlobalGeometryClassificationEnumDefinition ) binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            sectionInfo = new GlobalGeometrySectionInfoStructBlock( binaryReader );
-            rigidNode = binaryReader.ReadShortBlockIndex1( );
-            flags = ( Flags ) binaryReader.ReadInt16( );
-            sectionData = Guerilla.ReadBlockArray<RenderModelSectionDataBlock>( binaryReader );
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock( binaryReader );
+            globalGeometryClassificationEnumDefinition = (GlobalGeometryClassificationEnumDefinition)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
+            rigidNode = binaryReader.ReadShortBlockIndex1();
+            flags = (Flags)binaryReader.ReadInt16();
+            sectionData = Guerilla.ReadBlockArray<RenderModelSectionDataBlock>(binaryReader);
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  RenderModelSectionBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) globalGeometryClassificationEnumDefinition );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                sectionInfo.Write( binaryWriter );
-                binaryWriter.Write( rigidNode );
-                binaryWriter.Write( ( Int16 ) flags );
-                nextAddress = Guerilla.WriteBlockArray<RenderModelSectionDataBlock>( binaryWriter, sectionData,
-                    nextAddress );
-                geometryBlockInfo.Write( binaryWriter );
+                binaryWriter.Write((Int16)globalGeometryClassificationEnumDefinition);
+                binaryWriter.Write(invalidName_, 0, 2);
+                sectionInfo.Write(binaryWriter);
+                binaryWriter.Write(rigidNode);
+                binaryWriter.Write((Int16)flags);
+                nextAddress = Guerilla.WriteBlockArray<RenderModelSectionDataBlock>(binaryWriter, sectionData, nextAddress);
+                geometryBlockInfo.Write(binaryWriter);
                 return nextAddress;
             }
         }
-
         internal enum GlobalGeometryClassificationEnumDefinition : short
         {
             Worldspace = 0,
@@ -63,7 +71,6 @@ namespace Moonfish.Guerilla.Tags
             Skinned = 3,
             UnsupportedReimport = 4,
         };
-
         [FlagsAttribute]
         internal enum Flags : short
         {

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class CachedDataBlock : CachedDataBlockBase
     {
-        public CachedDataBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  CachedDataBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CachedDataBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class CachedDataBlockBase : IGuerilla
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class CachedDataBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.VertexBuffer vertexBuffer;
-
-        internal CachedDataBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 32; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CachedDataBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            vertexBuffer = binaryReader.ReadVertexBuffer( );
+            vertexBuffer = binaryReader.ReadVertexBuffer();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  CachedDataBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( vertexBuffer );
+                binaryWriter.Write(vertexBuffer);
                 return nextAddress;
             }
         }

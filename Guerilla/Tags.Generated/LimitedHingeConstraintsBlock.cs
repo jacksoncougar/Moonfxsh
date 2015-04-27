@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,38 +10,50 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class LimitedHingeConstraintsBlock : LimitedHingeConstraintsBlockBase
     {
-        public LimitedHingeConstraintsBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  LimitedHingeConstraintsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  LimitedHingeConstraintsBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 132, Alignment = 4 )]
-    public class LimitedHingeConstraintsBlockBase : IGuerilla
+    [LayoutAttribute(Size = 132, Alignment = 4)]
+    public class LimitedHingeConstraintsBlockBase : GuerillaBlock
     {
         internal ConstraintBodiesStructBlock constraintBodies;
         internal byte[] invalidName_;
         internal float limitFriction;
         internal float limitMinAngle;
         internal float limitMaxAngle;
-
-        internal LimitedHingeConstraintsBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 132; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  LimitedHingeConstraintsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            constraintBodies = new ConstraintBodiesStructBlock( binaryReader );
-            invalidName_ = binaryReader.ReadBytes( 4 );
-            limitFriction = binaryReader.ReadSingle( );
-            limitMinAngle = binaryReader.ReadSingle( );
-            limitMaxAngle = binaryReader.ReadSingle( );
+            constraintBodies = new ConstraintBodiesStructBlock(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(4);
+            limitFriction = binaryReader.ReadSingle();
+            limitMinAngle = binaryReader.ReadSingle();
+            limitMaxAngle = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  LimitedHingeConstraintsBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                constraintBodies.Write( binaryWriter );
-                binaryWriter.Write( invalidName_, 0, 4 );
-                binaryWriter.Write( limitFriction );
-                binaryWriter.Write( limitMinAngle );
-                binaryWriter.Write( limitMaxAngle );
+                constraintBodies.Write(binaryWriter);
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(limitFriction);
+                binaryWriter.Write(limitMinAngle);
+                binaryWriter.Write(limitMaxAngle);
                 return nextAddress;
             }
         }

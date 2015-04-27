@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ModelVariantStateBlock : ModelVariantStateBlockBase
+    public partial class ModelVariantStateBlock : ModelVariantStateBlockBase
     {
         public  ModelVariantStateBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  ModelVariantStateBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class ModelVariantStateBlockBase  : IGuerilla
+    public class ModelVariantStateBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID permutationName;
         internal byte[] invalidName_;
@@ -29,7 +33,13 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference loopingEffect;
         internal Moonfish.Tags.StringID loopingEffectMarkerName;
         internal float initialProbability;
-        internal  ModelVariantStateBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 24; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ModelVariantStateBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             permutationName = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(1);
@@ -39,7 +49,11 @@ namespace Moonfish.Guerilla.Tags
             loopingEffectMarkerName = binaryReader.ReadStringID();
             initialProbability = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  ModelVariantStateBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

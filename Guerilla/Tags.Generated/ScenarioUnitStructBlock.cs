@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,33 +10,44 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioUnitStructBlock : ScenarioUnitStructBlockBase
     {
-        public ScenarioUnitStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ScenarioUnitStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioUnitStructBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ScenarioUnitStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class ScenarioUnitStructBlockBase : GuerillaBlock
     {
         internal float bodyVitality01;
         internal Flags flags;
-
-        internal ScenarioUnitStructBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioUnitStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            bodyVitality01 = binaryReader.ReadSingle( );
-            flags = ( Flags ) binaryReader.ReadInt32( );
+            bodyVitality01 = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ScenarioUnitStructBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( bodyVitality01 );
-                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write(bodyVitality01);
+                binaryWriter.Write((Int32)flags);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : int
         {

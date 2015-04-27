@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,36 +10,47 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ObjectSpaceNodeDataBlock : ObjectSpaceNodeDataBlockBase
     {
-        public ObjectSpaceNodeDataBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ObjectSpaceNodeDataBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ObjectSpaceNodeDataBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 28, Alignment = 4 )]
-    public class ObjectSpaceNodeDataBlockBase : IGuerilla
+    [LayoutAttribute(Size = 28, Alignment = 4)]
+    public class ObjectSpaceNodeDataBlockBase : GuerillaBlock
     {
         internal short nodeIndex;
         internal ComponentFlags componentFlags;
         internal QuantizedOrientationStructBlock orientation;
-
-        internal ObjectSpaceNodeDataBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 28; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ObjectSpaceNodeDataBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            nodeIndex = binaryReader.ReadInt16( );
-            componentFlags = ( ComponentFlags ) binaryReader.ReadInt16( );
-            orientation = new QuantizedOrientationStructBlock( binaryReader );
+            nodeIndex = binaryReader.ReadInt16();
+            componentFlags = (ComponentFlags)binaryReader.ReadInt16();
+            orientation = new QuantizedOrientationStructBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ObjectSpaceNodeDataBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( nodeIndex );
-                binaryWriter.Write( ( Int16 ) componentFlags );
-                orientation.Write( binaryWriter );
+                binaryWriter.Write(nodeIndex);
+                binaryWriter.Write((Int16)componentFlags);
+                orientation.Write(binaryWriter);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum ComponentFlags : short
         {

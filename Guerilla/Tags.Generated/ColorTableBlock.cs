@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,35 +10,47 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Colo = ( TagClass ) "colo";
+        public static readonly TagClass Colo = (TagClass)"colo";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "colo" )]
+    [TagClassAttribute("colo")]
     public partial class ColorTableBlock : ColorTableBlockBase
     {
-        public ColorTableBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ColorTableBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ColorTableBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ColorTableBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class ColorTableBlockBase : GuerillaBlock
     {
         internal ColorBlock[] colors;
-
-        internal ColorTableBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ColorTableBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            colors = Guerilla.ReadBlockArray<ColorBlock>( binaryReader );
+            colors = Guerilla.ReadBlockArray<ColorBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ColorTableBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                nextAddress = Guerilla.WriteBlockArray<ColorBlock>( binaryWriter, colors, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<ColorBlock>(binaryWriter, colors, nextAddress);
                 return nextAddress;
             }
         }

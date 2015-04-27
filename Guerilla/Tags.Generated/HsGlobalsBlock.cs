@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,39 +10,50 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class HsGlobalsBlock : HsGlobalsBlockBase
     {
-        public HsGlobalsBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  HsGlobalsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  HsGlobalsBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class HsGlobalsBlockBase : IGuerilla
+    [LayoutAttribute(Size = 40, Alignment = 4)]
+    public class HsGlobalsBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
         internal Type type;
         internal byte[] invalidName_;
         internal int initializationExpressionIndex;
-
-        internal HsGlobalsBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 40; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  HsGlobalsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadString32( );
-            type = ( Type ) binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            initializationExpressionIndex = binaryReader.ReadInt32( );
+            name = binaryReader.ReadString32();
+            type = (Type)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            initializationExpressionIndex = binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  HsGlobalsBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( ( Int16 ) type );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( initializationExpressionIndex );
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(initializationExpressionIndex);
                 return nextAddress;
             }
         }
-
         internal enum Type : short
         {
             Unparsed = 0,

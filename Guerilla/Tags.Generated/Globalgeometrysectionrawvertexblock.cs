@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalGeometrySectionRawVertexBlock : GlobalGeometrySectionRawVertexBlockBase
     {
-        public GlobalGeometrySectionRawVertexBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  GlobalGeometrySectionRawVertexBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  GlobalGeometrySectionRawVertexBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 196, Alignment = 4 )]
-    public class GlobalGeometrySectionRawVertexBlockBase : IGuerilla
+    [LayoutAttribute(Size = 196, Alignment = 4)]
+    public class GlobalGeometrySectionRawVertexBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector3 position;
         internal NodeIndicesOLD[] nodeIndicesOLD;
@@ -37,131 +40,148 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
-
-        internal GlobalGeometrySectionRawVertexBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 196; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  GlobalGeometrySectionRawVertexBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            position = binaryReader.ReadVector3( );
-            nodeIndicesOLD = new[]
-            {
-                new NodeIndicesOLD( binaryReader ), new NodeIndicesOLD( binaryReader ), new NodeIndicesOLD( binaryReader ),
-                new NodeIndicesOLD( binaryReader ),
-            };
-            nodeWeights = new[]
-            {
-                new NodeWeights( binaryReader ), new NodeWeights( binaryReader ), new NodeWeights( binaryReader ),
-                new NodeWeights( binaryReader ),
-            };
-            nodeIndicesNEW = new[]
-            {
-                new NodeIndicesNEW( binaryReader ), new NodeIndicesNEW( binaryReader ), new NodeIndicesNEW( binaryReader ),
-                new NodeIndicesNEW( binaryReader ),
-            };
-            useNewNodeIndices = binaryReader.ReadInt32( );
-            adjustedCompoundNodeIndex = binaryReader.ReadInt32( );
-            texcoord = binaryReader.ReadVector2( );
-            normal = binaryReader.ReadVector3( );
-            binormal = binaryReader.ReadVector3( );
-            tangent = binaryReader.ReadVector3( );
-            anisotropicBinormal = binaryReader.ReadVector3( );
-            secondaryTexcoord = binaryReader.ReadVector2( );
-            primaryLightmapColor = binaryReader.ReadColorR8G8B8( );
-            primaryLightmapTexcoord = binaryReader.ReadVector2( );
-            primaryLightmapIncidentDirection = binaryReader.ReadVector3( );
-            invalidName_ = binaryReader.ReadBytes( 12 );
-            invalidName_0 = binaryReader.ReadBytes( 8 );
-            invalidName_1 = binaryReader.ReadBytes( 12 );
+            position = binaryReader.ReadVector3();
+            nodeIndicesOLD = new []{ new NodeIndicesOLD(binaryReader), new NodeIndicesOLD(binaryReader), new NodeIndicesOLD(binaryReader), new NodeIndicesOLD(binaryReader),  };
+            nodeWeights = new []{ new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader),  };
+            nodeIndicesNEW = new []{ new NodeIndicesNEW(binaryReader), new NodeIndicesNEW(binaryReader), new NodeIndicesNEW(binaryReader), new NodeIndicesNEW(binaryReader),  };
+            useNewNodeIndices = binaryReader.ReadInt32();
+            adjustedCompoundNodeIndex = binaryReader.ReadInt32();
+            texcoord = binaryReader.ReadVector2();
+            normal = binaryReader.ReadVector3();
+            binormal = binaryReader.ReadVector3();
+            tangent = binaryReader.ReadVector3();
+            anisotropicBinormal = binaryReader.ReadVector3();
+            secondaryTexcoord = binaryReader.ReadVector2();
+            primaryLightmapColor = binaryReader.ReadColorR8G8B8();
+            primaryLightmapTexcoord = binaryReader.ReadVector2();
+            primaryLightmapIncidentDirection = binaryReader.ReadVector3();
+            invalidName_ = binaryReader.ReadBytes(12);
+            invalidName_0 = binaryReader.ReadBytes(8);
+            invalidName_1 = binaryReader.ReadBytes(12);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  GlobalGeometrySectionRawVertexBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( position );
-                nodeIndicesOLD[ 0 ].Write( binaryWriter );
-                nodeIndicesOLD[ 1 ].Write( binaryWriter );
-                nodeIndicesOLD[ 2 ].Write( binaryWriter );
-                nodeIndicesOLD[ 3 ].Write( binaryWriter );
-                nodeWeights[ 0 ].Write( binaryWriter );
-                nodeWeights[ 1 ].Write( binaryWriter );
-                nodeWeights[ 2 ].Write( binaryWriter );
-                nodeWeights[ 3 ].Write( binaryWriter );
-                nodeIndicesNEW[ 0 ].Write( binaryWriter );
-                nodeIndicesNEW[ 1 ].Write( binaryWriter );
-                nodeIndicesNEW[ 2 ].Write( binaryWriter );
-                nodeIndicesNEW[ 3 ].Write( binaryWriter );
-                binaryWriter.Write( useNewNodeIndices );
-                binaryWriter.Write( adjustedCompoundNodeIndex );
-                binaryWriter.Write( texcoord );
-                binaryWriter.Write( normal );
-                binaryWriter.Write( binormal );
-                binaryWriter.Write( tangent );
-                binaryWriter.Write( anisotropicBinormal );
-                binaryWriter.Write( secondaryTexcoord );
-                binaryWriter.Write( primaryLightmapColor );
-                binaryWriter.Write( primaryLightmapTexcoord );
-                binaryWriter.Write( primaryLightmapIncidentDirection );
-                binaryWriter.Write( invalidName_, 0, 12 );
-                binaryWriter.Write( invalidName_0, 0, 8 );
-                binaryWriter.Write( invalidName_1, 0, 12 );
+                binaryWriter.Write(position);
+                nodeIndicesOLD[0].Write(binaryWriter);
+                nodeIndicesOLD[1].Write(binaryWriter);
+                nodeIndicesOLD[2].Write(binaryWriter);
+                nodeIndicesOLD[3].Write(binaryWriter);
+                nodeWeights[0].Write(binaryWriter);
+                nodeWeights[1].Write(binaryWriter);
+                nodeWeights[2].Write(binaryWriter);
+                nodeWeights[3].Write(binaryWriter);
+                nodeIndicesNEW[0].Write(binaryWriter);
+                nodeIndicesNEW[1].Write(binaryWriter);
+                nodeIndicesNEW[2].Write(binaryWriter);
+                nodeIndicesNEW[3].Write(binaryWriter);
+                binaryWriter.Write(useNewNodeIndices);
+                binaryWriter.Write(adjustedCompoundNodeIndex);
+                binaryWriter.Write(texcoord);
+                binaryWriter.Write(normal);
+                binaryWriter.Write(binormal);
+                binaryWriter.Write(tangent);
+                binaryWriter.Write(anisotropicBinormal);
+                binaryWriter.Write(secondaryTexcoord);
+                binaryWriter.Write(primaryLightmapColor);
+                binaryWriter.Write(primaryLightmapTexcoord);
+                binaryWriter.Write(primaryLightmapIncidentDirection);
+                binaryWriter.Write(invalidName_, 0, 12);
+                binaryWriter.Write(invalidName_0, 0, 8);
+                binaryWriter.Write(invalidName_1, 0, 12);
                 return nextAddress;
             }
         }
-
-        [LayoutAttribute( Size = 4, Alignment = 1 )]
-        public class NodeIndicesOLD : IGuerilla
+        [LayoutAttribute(Size = 4, Alignment = 1)]
+        public class NodeIndicesOLD : GuerillaBlock
         {
             internal int nodeIndexOLD;
-
-            internal NodeIndicesOLD( BinaryReader binaryReader )
+            
+            public override int SerializedSize{get { return 4; }}
+            
+            
+            public override int Alignment{get { return 1; }}
+            
+            public  NodeIndicesOLD(BinaryReader binaryReader): base(binaryReader)
             {
-                nodeIndexOLD = binaryReader.ReadInt32( );
+                nodeIndexOLD = binaryReader.ReadInt32();
             }
-
-            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public  NodeIndicesOLD(): base()
             {
-                using ( binaryWriter.BaseStream.Pin( ) )
+                
+            }
+            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+            {
+                using(binaryWriter.BaseStream.Pin())
                 {
-                    binaryWriter.Write( nodeIndexOLD );
+                    binaryWriter.Write(nodeIndexOLD);
                     return nextAddress;
                 }
             }
         };
-
-        [LayoutAttribute( Size = 4, Alignment = 1 )]
-        public class NodeWeights : IGuerilla
+        [LayoutAttribute(Size = 4, Alignment = 1)]
+        public class NodeWeights : GuerillaBlock
         {
             internal float nodeWeight;
-
-            internal NodeWeights( BinaryReader binaryReader )
+            
+            public override int SerializedSize{get { return 4; }}
+            
+            
+            public override int Alignment{get { return 1; }}
+            
+            public  NodeWeights(BinaryReader binaryReader): base(binaryReader)
             {
-                nodeWeight = binaryReader.ReadSingle( );
+                nodeWeight = binaryReader.ReadSingle();
             }
-
-            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public  NodeWeights(): base()
             {
-                using ( binaryWriter.BaseStream.Pin( ) )
+                
+            }
+            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+            {
+                using(binaryWriter.BaseStream.Pin())
                 {
-                    binaryWriter.Write( nodeWeight );
+                    binaryWriter.Write(nodeWeight);
                     return nextAddress;
                 }
             }
         };
-
-        [LayoutAttribute( Size = 4, Alignment = 1 )]
-        public class NodeIndicesNEW : IGuerilla
+        [LayoutAttribute(Size = 4, Alignment = 1)]
+        public class NodeIndicesNEW : GuerillaBlock
         {
             internal int nodeIndexNEW;
-
-            internal NodeIndicesNEW( BinaryReader binaryReader )
+            
+            public override int SerializedSize{get { return 4; }}
+            
+            
+            public override int Alignment{get { return 1; }}
+            
+            public  NodeIndicesNEW(BinaryReader binaryReader): base(binaryReader)
             {
-                nodeIndexNEW = binaryReader.ReadInt32( );
+                nodeIndexNEW = binaryReader.ReadInt32();
             }
-
-            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public  NodeIndicesNEW(): base()
             {
-                using ( binaryWriter.BaseStream.Pin( ) )
+                
+            }
+            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+            {
+                using(binaryWriter.BaseStream.Pin())
                 {
-                    binaryWriter.Write( nodeIndexNEW );
+                    binaryWriter.Write(nodeIndexNEW);
                     return nextAddress;
                 }
             }

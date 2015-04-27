@@ -8,22 +8,32 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class DamageConstraintInfoBlock : DamageConstraintInfoBlockBase
+    public partial class DamageConstraintInfoBlock : DamageConstraintInfoBlockBase
     {
         public  DamageConstraintInfoBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  DamageConstraintInfoBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class DamageConstraintInfoBlockBase  : IGuerilla
+    public class DamageConstraintInfoBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID physicsModelConstraintName;
         internal Moonfish.Tags.StringID damageConstraintName;
         internal Moonfish.Tags.StringID damageConstraintGroupName;
         internal float groupProbabilityScale;
         internal byte[] invalidName_;
-        internal  DamageConstraintInfoBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  DamageConstraintInfoBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             physicsModelConstraintName = binaryReader.ReadStringID();
             damageConstraintName = binaryReader.ReadStringID();
@@ -31,7 +41,11 @@ namespace Moonfish.Guerilla.Tags
             groupProbabilityScale = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(4);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  DamageConstraintInfoBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,22 +10,26 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Crea = ( TagClass ) "crea";
+        public static readonly TagClass Crea = (TagClass)"crea";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "crea" )]
+    [TagClassAttribute("crea")]
     public partial class CreatureBlock : CreatureBlockBase
     {
-        public CreatureBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  CreatureBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CreatureBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 196, Alignment = 4 )]
-    public class CreatureBlockBase : ObjectBlock
+    [LayoutAttribute(Size = 196, Alignment = 4)]
+    public class CreatureBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal DefaultTeam defaultTeam;
@@ -36,52 +39,59 @@ namespace Moonfish.Guerilla.Tags
         internal float casualTurningModifier01;
         internal float autoaimWidthWorldUnits;
         internal CharacterPhysicsStructBlock physics;
-        [TagReference( "jpt!" )] internal Moonfish.Tags.TagReference impactDamage;
-
+        [TagReference("jpt!")]
+        internal Moonfish.Tags.TagReference impactDamage;
         /// <summary>
         /// if not specified, uses 'impact damage'
         /// </summary>
-        [TagReference( "jpt!" )] internal Moonfish.Tags.TagReference impactShieldDamage;
-
+        [TagReference("jpt!")]
+        internal Moonfish.Tags.TagReference impactShieldDamage;
         /// <summary>
         /// if non-zero, the creature will destroy itself upon death after this much time
         /// </summary>
         internal Moonfish.Model.Range destroyAfterDeathTimeSeconds;
-
-        internal CreatureBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        
+        public override int SerializedSize{get { return 196; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CreatureBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            flags = ( Flags ) binaryReader.ReadInt32( );
-            defaultTeam = ( DefaultTeam ) binaryReader.ReadInt16( );
-            motionSensorBlipSize = ( MotionSensorBlipSize ) binaryReader.ReadInt16( );
-            turningVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle( );
-            turningAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle( );
-            casualTurningModifier01 = binaryReader.ReadSingle( );
-            autoaimWidthWorldUnits = binaryReader.ReadSingle( );
-            physics = new CharacterPhysicsStructBlock( binaryReader );
-            impactDamage = binaryReader.ReadTagReference( );
-            impactShieldDamage = binaryReader.ReadTagReference( );
-            destroyAfterDeathTimeSeconds = binaryReader.ReadRange( );
+            flags = (Flags)binaryReader.ReadInt32();
+            defaultTeam = (DefaultTeam)binaryReader.ReadInt16();
+            motionSensorBlipSize = (MotionSensorBlipSize)binaryReader.ReadInt16();
+            turningVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
+            turningAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
+            casualTurningModifier01 = binaryReader.ReadSingle();
+            autoaimWidthWorldUnits = binaryReader.ReadSingle();
+            physics = new CharacterPhysicsStructBlock(binaryReader);
+            impactDamage = binaryReader.ReadTagReference();
+            impactShieldDamage = binaryReader.ReadTagReference();
+            destroyAfterDeathTimeSeconds = binaryReader.ReadRange();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  CreatureBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int32 ) flags );
-                binaryWriter.Write( ( Int16 ) defaultTeam );
-                binaryWriter.Write( ( Int16 ) motionSensorBlipSize );
-                binaryWriter.Write( turningVelocityMaximumDegreesPerSecond );
-                binaryWriter.Write( turningAccelerationMaximumDegreesPerSecondSquared );
-                binaryWriter.Write( casualTurningModifier01 );
-                binaryWriter.Write( autoaimWidthWorldUnits );
-                physics.Write( binaryWriter );
-                binaryWriter.Write( impactDamage );
-                binaryWriter.Write( impactShieldDamage );
-                binaryWriter.Write( destroyAfterDeathTimeSeconds );
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int16)defaultTeam);
+                binaryWriter.Write((Int16)motionSensorBlipSize);
+                binaryWriter.Write(turningVelocityMaximumDegreesPerSecond);
+                binaryWriter.Write(turningAccelerationMaximumDegreesPerSecondSquared);
+                binaryWriter.Write(casualTurningModifier01);
+                binaryWriter.Write(autoaimWidthWorldUnits);
+                physics.Write(binaryWriter);
+                binaryWriter.Write(impactDamage);
+                binaryWriter.Write(impactShieldDamage);
+                binaryWriter.Write(destroyAfterDeathTimeSeconds);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -93,7 +103,6 @@ namespace Moonfish.Guerilla.Tags
             AttachUponImpact = 32,
             NotOnMotionSensor = 64,
         };
-
         internal enum DefaultTeam : short
         {
             Default = 0,
@@ -113,7 +122,6 @@ namespace Moonfish.Guerilla.Tags
             Unused14 = 14,
             Unused15 = 15,
         };
-
         internal enum MotionSensorBlipSize : short
         {
             Medium = 0,

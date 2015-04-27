@@ -17,22 +17,32 @@ namespace Moonfish.Tags
 namespace Moonfish.Guerilla.Tags
 {
     [TagClassAttribute("spk!")]
-    public  partial class SoundDialogueConstantsBlock : SoundDialogueConstantsBlockBase
+    public partial class SoundDialogueConstantsBlock : SoundDialogueConstantsBlockBase
     {
         public  SoundDialogueConstantsBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  SoundDialogueConstantsBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
-    public class SoundDialogueConstantsBlockBase  : IGuerilla
+    public class SoundDialogueConstantsBlockBase : GuerillaBlock
     {
         internal float almostNever;
         internal float rarely;
         internal float somewhat;
         internal float often;
         internal byte[] invalidName_;
-        internal  SoundDialogueConstantsBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 40; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundDialogueConstantsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             almostNever = binaryReader.ReadSingle();
             rarely = binaryReader.ReadSingle();
@@ -40,7 +50,11 @@ namespace Moonfish.Guerilla.Tags
             often = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(24);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  SoundDialogueConstantsBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

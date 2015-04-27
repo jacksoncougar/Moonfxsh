@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class PlatformSoundEffectConstantBlock : PlatformSoundEffectConstantBlockBase
     {
-        public PlatformSoundEffectConstantBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  PlatformSoundEffectConstantBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PlatformSoundEffectConstantBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class PlatformSoundEffectConstantBlockBase : IGuerilla
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class PlatformSoundEffectConstantBlockBase : GuerillaBlock
     {
         internal float constantValue;
-
-        internal PlatformSoundEffectConstantBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PlatformSoundEffectConstantBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            constantValue = binaryReader.ReadSingle( );
+            constantValue = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  PlatformSoundEffectConstantBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( constantValue );
+                binaryWriter.Write(constantValue);
                 return nextAddress;
             }
         }

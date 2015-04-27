@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,32 +10,44 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureDevicePortalAssociationBlock : StructureDevicePortalAssociationBlockBase
     {
-        public StructureDevicePortalAssociationBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  StructureDevicePortalAssociationBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StructureDevicePortalAssociationBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class StructureDevicePortalAssociationBlockBase : IGuerilla
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class StructureDevicePortalAssociationBlockBase : GuerillaBlock
     {
         internal ScenarioObjectIdStructBlock deviceId;
         internal short firstGamePortalIndex;
         internal short gamePortalCount;
-
-        internal StructureDevicePortalAssociationBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StructureDevicePortalAssociationBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            deviceId = new ScenarioObjectIdStructBlock( binaryReader );
-            firstGamePortalIndex = binaryReader.ReadInt16( );
-            gamePortalCount = binaryReader.ReadInt16( );
+            deviceId = new ScenarioObjectIdStructBlock(binaryReader);
+            firstGamePortalIndex = binaryReader.ReadInt16();
+            gamePortalCount = binaryReader.ReadInt16();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  StructureDevicePortalAssociationBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                deviceId.Write( binaryWriter );
-                binaryWriter.Write( firstGamePortalIndex );
-                binaryWriter.Write( gamePortalCount );
+                deviceId.Write(binaryWriter);
+                binaryWriter.Write(firstGamePortalIndex);
+                binaryWriter.Write(gamePortalCount);
                 return nextAddress;
             }
         }

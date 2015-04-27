@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class GlobalDamageInfoBlock : GlobalDamageInfoBlockBase
+    public partial class GlobalDamageInfoBlock : GlobalDamageInfoBlockBase
     {
         public  GlobalDamageInfoBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  GlobalDamageInfoBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 248, Alignment = 4)]
-    public class GlobalDamageInfoBlockBase  : IGuerilla
+    public class GlobalDamageInfoBlockBase : GuerillaBlock
     {
         internal Flags flags;
         /// <summary>
@@ -91,7 +95,13 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference overshieldFirstPersonShader;
         [TagReference("shad")]
         internal Moonfish.Tags.TagReference overshieldShader;
-        internal  GlobalDamageInfoBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 248; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  GlobalDamageInfoBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             flags = (Flags)binaryReader.ReadInt32();
             globalIndirectMaterialName = binaryReader.ReadStringID();
@@ -130,7 +140,11 @@ namespace Moonfish.Guerilla.Tags
             overshieldFirstPersonShader = binaryReader.ReadTagReference();
             overshieldShader = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  GlobalDamageInfoBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

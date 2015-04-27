@@ -8,28 +8,42 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ModelPermutationBlock : ModelPermutationBlockBase
+    public partial class ModelPermutationBlock : ModelPermutationBlockBase
     {
         public  ModelPermutationBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  ModelPermutationBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ModelPermutationBlockBase  : IGuerilla
+    public class ModelPermutationBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal Flags flags;
         internal byte collisionPermutationIndex;
         internal byte[] invalidName_;
-        internal  ModelPermutationBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ModelPermutationBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             name = binaryReader.ReadStringID();
             flags = (Flags)binaryReader.ReadByte();
             collisionPermutationIndex = binaryReader.ReadByte();
             invalidName_ = binaryReader.ReadBytes(2);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  ModelPermutationBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

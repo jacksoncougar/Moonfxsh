@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class EffectAccelerationsBlock : EffectAccelerationsBlockBase
     {
-        public EffectAccelerationsBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  EffectAccelerationsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  EffectAccelerationsBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class EffectAccelerationsBlockBase : IGuerilla
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class EffectAccelerationsBlockBase : GuerillaBlock
     {
         internal CreateIn createIn;
         internal CreateIn createIn0;
@@ -26,33 +29,40 @@ namespace Moonfish.Guerilla.Tags
         internal float acceleration;
         internal float innerConeAngleDegrees;
         internal float outerConeAngleDegrees;
-
-        internal EffectAccelerationsBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  EffectAccelerationsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            createIn = ( CreateIn ) binaryReader.ReadInt16( );
-            createIn0 = ( CreateIn ) binaryReader.ReadInt16( );
-            location = binaryReader.ReadShortBlockIndex1( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            acceleration = binaryReader.ReadSingle( );
-            innerConeAngleDegrees = binaryReader.ReadSingle( );
-            outerConeAngleDegrees = binaryReader.ReadSingle( );
+            createIn = (CreateIn)binaryReader.ReadInt16();
+            createIn0 = (CreateIn)binaryReader.ReadInt16();
+            location = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
+            acceleration = binaryReader.ReadSingle();
+            innerConeAngleDegrees = binaryReader.ReadSingle();
+            outerConeAngleDegrees = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  EffectAccelerationsBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) createIn );
-                binaryWriter.Write( ( Int16 ) createIn0 );
-                binaryWriter.Write( location );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( acceleration );
-                binaryWriter.Write( innerConeAngleDegrees );
-                binaryWriter.Write( outerConeAngleDegrees );
+                binaryWriter.Write((Int16)createIn);
+                binaryWriter.Write((Int16)createIn0);
+                binaryWriter.Write(location);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(acceleration);
+                binaryWriter.Write(innerConeAngleDegrees);
+                binaryWriter.Write(outerConeAngleDegrees);
                 return nextAddress;
             }
         }
-
         internal enum CreateIn : short
         {
             AnyEnvironment = 0,
@@ -60,7 +70,6 @@ namespace Moonfish.Guerilla.Tags
             WaterOnly = 2,
             SpaceOnly = 3,
         };
-
         internal enum CreateIn0 : short
         {
             EitherMode = 0,

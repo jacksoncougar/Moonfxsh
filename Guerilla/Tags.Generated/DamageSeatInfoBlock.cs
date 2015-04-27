@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class DamageSeatInfoBlock : DamageSeatInfoBlockBase
+    public partial class DamageSeatInfoBlock : DamageSeatInfoBlockBase
     {
         public  DamageSeatInfoBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  DamageSeatInfoBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class DamageSeatInfoBlockBase  : IGuerilla
+    public class DamageSeatInfoBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID seatLabel;
         /// <summary>
@@ -26,7 +30,13 @@ namespace Moonfish.Guerilla.Tags
         internal float damageTransferFallOffRadius;
         internal float maximumTransferDamageScale;
         internal float minimumTransferDamageScale;
-        internal  DamageSeatInfoBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  DamageSeatInfoBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             seatLabel = binaryReader.ReadStringID();
             directDamageScale = binaryReader.ReadSingle();
@@ -34,7 +44,11 @@ namespace Moonfish.Guerilla.Tags
             maximumTransferDamageScale = binaryReader.ReadSingle();
             minimumTransferDamageScale = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  DamageSeatInfoBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

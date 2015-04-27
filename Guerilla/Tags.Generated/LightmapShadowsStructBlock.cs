@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class LightmapShadowsStructBlock : LightmapShadowsStructBlockBase
     {
-        public LightmapShadowsStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  LightmapShadowsStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  LightmapShadowsStructBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class LightmapShadowsStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class LightmapShadowsStructBlockBase : GuerillaBlock
     {
         internal MappingFunctionBlock function1;
-
-        internal LightmapShadowsStructBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  LightmapShadowsStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            function1 = new MappingFunctionBlock( binaryReader );
+            function1 = new MappingFunctionBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  LightmapShadowsStructBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                function1.Write( binaryWriter );
+                function1.Write(binaryWriter);
                 return nextAddress;
             }
         }

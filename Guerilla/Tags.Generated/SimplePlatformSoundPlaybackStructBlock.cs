@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SimplePlatformSoundPlaybackStructBlock : SimplePlatformSoundPlaybackStructBlockBase
+    public partial class SimplePlatformSoundPlaybackStructBlock : SimplePlatformSoundPlaybackStructBlockBase
     {
         public  SimplePlatformSoundPlaybackStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  SimplePlatformSoundPlaybackStructBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 52, Alignment = 4)]
-    public class SimplePlatformSoundPlaybackStructBlockBase  : IGuerilla
+    public class SimplePlatformSoundPlaybackStructBlockBase : GuerillaBlock
     {
         internal PlatformSoundOverrideMixbinsBlock[] platformSoundOverrideMixbinsBlock;
         internal Flags flags;
@@ -25,7 +29,13 @@ namespace Moonfish.Guerilla.Tags
         internal PlatformSoundPitchLfoBlock[] pitchLfo;
         internal PlatformSoundFilterLfoBlock[] filterLfo;
         internal SoundEffectPlaybackBlock[] soundEffect;
-        internal  SimplePlatformSoundPlaybackStructBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 52; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SimplePlatformSoundPlaybackStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             platformSoundOverrideMixbinsBlock = Guerilla.ReadBlockArray<PlatformSoundOverrideMixbinsBlock>(binaryReader);
             flags = (Flags)binaryReader.ReadInt32();
@@ -35,7 +45,11 @@ namespace Moonfish.Guerilla.Tags
             filterLfo = Guerilla.ReadBlockArray<PlatformSoundFilterLfoBlock>(binaryReader);
             soundEffect = Guerilla.ReadBlockArray<SoundEffectPlaybackBlock>(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  SimplePlatformSoundPlaybackStructBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

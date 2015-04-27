@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class SoundEffectTemplateParameterBlock : SoundEffectTemplateParameterBlockBase
     {
-        public SoundEffectTemplateParameterBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  SoundEffectTemplateParameterBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SoundEffectTemplateParameterBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 36, Alignment = 4 )]
-    public class SoundEffectTemplateParameterBlockBase : IGuerilla
+    [LayoutAttribute(Size = 36, Alignment = 4)]
+    public class SoundEffectTemplateParameterBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal Type type;
@@ -28,44 +31,50 @@ namespace Moonfish.Guerilla.Tags
         internal MappingFunctionBlock defaultFunction;
         internal float minimumScalarValue;
         internal float maximumScalarValue;
-
-        internal SoundEffectTemplateParameterBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 36; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundEffectTemplateParameterBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadStringID( );
-            type = ( Type ) binaryReader.ReadInt16( );
-            flags = ( Flags ) binaryReader.ReadInt16( );
-            hardwareOffset = binaryReader.ReadInt32( );
-            defaultEnumIntegerValue = binaryReader.ReadInt32( );
-            defaultScalarValue = binaryReader.ReadSingle( );
-            defaultFunction = new MappingFunctionBlock( binaryReader );
-            minimumScalarValue = binaryReader.ReadSingle( );
-            maximumScalarValue = binaryReader.ReadSingle( );
+            name = binaryReader.ReadStringID();
+            type = (Type)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            hardwareOffset = binaryReader.ReadInt32();
+            defaultEnumIntegerValue = binaryReader.ReadInt32();
+            defaultScalarValue = binaryReader.ReadSingle();
+            defaultFunction = new MappingFunctionBlock(binaryReader);
+            minimumScalarValue = binaryReader.ReadSingle();
+            maximumScalarValue = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  SoundEffectTemplateParameterBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( ( Int16 ) type );
-                binaryWriter.Write( ( Int16 ) flags );
-                binaryWriter.Write( hardwareOffset );
-                binaryWriter.Write( defaultEnumIntegerValue );
-                binaryWriter.Write( defaultScalarValue );
-                defaultFunction.Write( binaryWriter );
-                binaryWriter.Write( minimumScalarValue );
-                binaryWriter.Write( maximumScalarValue );
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(hardwareOffset);
+                binaryWriter.Write(defaultEnumIntegerValue);
+                binaryWriter.Write(defaultScalarValue);
+                defaultFunction.Write(binaryWriter);
+                binaryWriter.Write(minimumScalarValue);
+                binaryWriter.Write(maximumScalarValue);
                 return nextAddress;
             }
         }
-
         internal enum Type : short
         {
             Integer = 0,
             Real = 1,
             FilterType = 2,
         };
-
         [FlagsAttribute]
         internal enum Flags : short
         {

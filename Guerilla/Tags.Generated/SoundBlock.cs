@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,35 +10,47 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Snd = ( TagClass ) "snd!";
+        public static readonly TagClass Snd = (TagClass)"snd!";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "snd!" )]
+    [TagClassAttribute("snd!")]
     public partial class SoundBlock : SoundBlockBase
     {
-        public SoundBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  SoundBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SoundBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class SoundBlockBase : IGuerilla
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class SoundBlockBase : GuerillaBlock
     {
         internal byte[] soundFields;
-
-        internal SoundBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            soundFields = binaryReader.ReadBytes( 20 );
+            soundFields = binaryReader.ReadBytes(20);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  SoundBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( soundFields, 0, 20 );
+                binaryWriter.Write(soundFields, 0, 20);
                 return nextAddress;
             }
         }

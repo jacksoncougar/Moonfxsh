@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class AiSceneRoleVariantsBlock : AiSceneRoleVariantsBlockBase
     {
-        public AiSceneRoleVariantsBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  AiSceneRoleVariantsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AiSceneRoleVariantsBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class AiSceneRoleVariantsBlockBase : IGuerilla
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class AiSceneRoleVariantsBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID variantDesignation;
-
-        internal AiSceneRoleVariantsBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AiSceneRoleVariantsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            variantDesignation = binaryReader.ReadStringID( );
+            variantDesignation = binaryReader.ReadStringID();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  AiSceneRoleVariantsBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( variantDesignation );
+                binaryWriter.Write(variantDesignation);
                 return nextAddress;
             }
         }

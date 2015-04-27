@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ErrorReportsBlock : ErrorReportsBlockBase
     {
-        public ErrorReportsBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ErrorReportsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ErrorReportsBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 608, Alignment = 4 )]
-    public class ErrorReportsBlockBase : IGuerilla
+    [LayoutAttribute(Size = 608, Alignment = 4)]
+    public class ErrorReportsBlockBase : GuerillaBlock
     {
         internal Type type;
         internal Flags flags;
@@ -38,57 +41,64 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range boundsZ;
         internal OpenTK.Vector4 color;
         internal byte[] invalidName_0;
-
-        internal ErrorReportsBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 608; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ErrorReportsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            type = ( Type ) binaryReader.ReadInt16( );
-            flags = ( Flags ) binaryReader.ReadInt16( );
-            text = Guerilla.ReadData( binaryReader );
-            sourceFilename = binaryReader.ReadString32( );
-            sourceLineNumber = binaryReader.ReadInt32( );
-            vertices = Guerilla.ReadBlockArray<ErrorReportVerticesBlock>( binaryReader );
-            vectors = Guerilla.ReadBlockArray<ErrorReportVectorsBlock>( binaryReader );
-            lines = Guerilla.ReadBlockArray<ErrorReportLinesBlock>( binaryReader );
-            triangles = Guerilla.ReadBlockArray<ErrorReportTrianglesBlock>( binaryReader );
-            quads = Guerilla.ReadBlockArray<ErrorReportQuadsBlock>( binaryReader );
-            comments = Guerilla.ReadBlockArray<ErrorReportCommentsBlock>( binaryReader );
-            invalidName_ = binaryReader.ReadBytes( 380 );
-            reportKey = binaryReader.ReadInt32( );
-            nodeIndex = binaryReader.ReadInt32( );
-            boundsX = binaryReader.ReadRange( );
-            boundsY = binaryReader.ReadRange( );
-            boundsZ = binaryReader.ReadRange( );
-            color = binaryReader.ReadVector4( );
-            invalidName_0 = binaryReader.ReadBytes( 84 );
+            type = (Type)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            text = Guerilla.ReadData(binaryReader);
+            sourceFilename = binaryReader.ReadString32();
+            sourceLineNumber = binaryReader.ReadInt32();
+            vertices = Guerilla.ReadBlockArray<ErrorReportVerticesBlock>(binaryReader);
+            vectors = Guerilla.ReadBlockArray<ErrorReportVectorsBlock>(binaryReader);
+            lines = Guerilla.ReadBlockArray<ErrorReportLinesBlock>(binaryReader);
+            triangles = Guerilla.ReadBlockArray<ErrorReportTrianglesBlock>(binaryReader);
+            quads = Guerilla.ReadBlockArray<ErrorReportQuadsBlock>(binaryReader);
+            comments = Guerilla.ReadBlockArray<ErrorReportCommentsBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(380);
+            reportKey = binaryReader.ReadInt32();
+            nodeIndex = binaryReader.ReadInt32();
+            boundsX = binaryReader.ReadRange();
+            boundsY = binaryReader.ReadRange();
+            boundsZ = binaryReader.ReadRange();
+            color = binaryReader.ReadVector4();
+            invalidName_0 = binaryReader.ReadBytes(84);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ErrorReportsBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) type );
-                binaryWriter.Write( ( Int16 ) flags );
-                nextAddress = Guerilla.WriteData( binaryWriter, text, nextAddress );
-                binaryWriter.Write( sourceFilename );
-                binaryWriter.Write( sourceLineNumber );
-                nextAddress = Guerilla.WriteBlockArray<ErrorReportVerticesBlock>( binaryWriter, vertices, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<ErrorReportVectorsBlock>( binaryWriter, vectors, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<ErrorReportLinesBlock>( binaryWriter, lines, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<ErrorReportTrianglesBlock>( binaryWriter, triangles, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<ErrorReportQuadsBlock>( binaryWriter, quads, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<ErrorReportCommentsBlock>( binaryWriter, comments, nextAddress );
-                binaryWriter.Write( invalidName_, 0, 380 );
-                binaryWriter.Write( reportKey );
-                binaryWriter.Write( nodeIndex );
-                binaryWriter.Write( boundsX );
-                binaryWriter.Write( boundsY );
-                binaryWriter.Write( boundsZ );
-                binaryWriter.Write( color );
-                binaryWriter.Write( invalidName_0, 0, 84 );
+                binaryWriter.Write((Int16)type);
+                binaryWriter.Write((Int16)flags);
+                nextAddress = Guerilla.WriteData(binaryWriter, text, nextAddress);
+                binaryWriter.Write(sourceFilename);
+                binaryWriter.Write(sourceLineNumber);
+                nextAddress = Guerilla.WriteBlockArray<ErrorReportVerticesBlock>(binaryWriter, vertices, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ErrorReportVectorsBlock>(binaryWriter, vectors, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ErrorReportLinesBlock>(binaryWriter, lines, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ErrorReportTrianglesBlock>(binaryWriter, triangles, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ErrorReportQuadsBlock>(binaryWriter, quads, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ErrorReportCommentsBlock>(binaryWriter, comments, nextAddress);
+                binaryWriter.Write(invalidName_, 0, 380);
+                binaryWriter.Write(reportKey);
+                binaryWriter.Write(nodeIndex);
+                binaryWriter.Write(boundsX);
+                binaryWriter.Write(boundsY);
+                binaryWriter.Write(boundsZ);
+                binaryWriter.Write(color);
+                binaryWriter.Write(invalidName_0, 0, 84);
                 return nextAddress;
             }
         }
-
         internal enum Type : short
         {
             Silent = 0,
@@ -96,7 +106,6 @@ namespace Moonfish.Guerilla.Tags
             Warning = 2,
             Error = 3,
         };
-
         [FlagsAttribute]
         internal enum Flags : short
         {

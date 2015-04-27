@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class CollisionModelMaterialBlock : CollisionModelMaterialBlockBase
     {
-        public CollisionModelMaterialBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  CollisionModelMaterialBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CollisionModelMaterialBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class CollisionModelMaterialBlockBase : IGuerilla
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class CollisionModelMaterialBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
-
-        internal CollisionModelMaterialBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CollisionModelMaterialBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadStringID( );
+            name = binaryReader.ReadStringID();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  CollisionModelMaterialBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
+                binaryWriter.Write(name);
                 return nextAddress;
             }
         }

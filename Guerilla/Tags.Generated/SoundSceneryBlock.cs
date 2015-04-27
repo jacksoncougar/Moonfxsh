@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,35 +10,47 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Ssce = ( TagClass ) "ssce";
+        public static readonly TagClass Ssce = (TagClass)"ssce";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "ssce" )]
+    [TagClassAttribute("ssce")]
     public partial class SoundSceneryBlock : SoundSceneryBlockBase
     {
-        public SoundSceneryBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  SoundSceneryBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SoundSceneryBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class SoundSceneryBlockBase : ObjectBlock
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class SoundSceneryBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
-
-        internal SoundSceneryBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundSceneryBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes( 16 );
+            invalidName_ = binaryReader.ReadBytes(16);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  SoundSceneryBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( invalidName_, 0, 16 );
+                binaryWriter.Write(invalidName_, 0, 16);
                 return nextAddress;
             }
         }

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class WaterGeometrySectionBlock : WaterGeometrySectionBlockBase
     {
-        public WaterGeometrySectionBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  WaterGeometrySectionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  WaterGeometrySectionBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 68, Alignment = 4 )]
-    public class WaterGeometrySectionBlockBase : IGuerilla
+    [LayoutAttribute(Size = 68, Alignment = 4)]
+    public class WaterGeometrySectionBlockBase : GuerillaBlock
     {
         internal GlobalGeometrySectionStructBlock section;
-
-        internal WaterGeometrySectionBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 68; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  WaterGeometrySectionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            section = new GlobalGeometrySectionStructBlock( binaryReader );
+            section = new GlobalGeometrySectionStructBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  WaterGeometrySectionBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                section.Write( binaryWriter );
+                section.Write(binaryWriter);
                 return nextAddress;
             }
         }

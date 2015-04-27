@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,39 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class StylePaletteBlock : StylePaletteBlockBase
     {
-        public StylePaletteBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  StylePaletteBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StylePaletteBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class StylePaletteBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class StylePaletteBlockBase : GuerillaBlock
     {
-        [TagReference( "styl" )] internal Moonfish.Tags.TagReference reference;
-
-        internal StylePaletteBlockBase( BinaryReader binaryReader )
+        [TagReference("styl")]
+        internal Moonfish.Tags.TagReference reference;
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StylePaletteBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            reference = binaryReader.ReadTagReference( );
+            reference = binaryReader.ReadTagReference();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  StylePaletteBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( reference );
+                binaryWriter.Write(reference);
                 return nextAddress;
             }
         }

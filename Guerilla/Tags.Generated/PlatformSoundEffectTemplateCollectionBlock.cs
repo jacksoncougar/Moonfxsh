@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,30 +10,41 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class PlatformSoundEffectTemplateCollectionBlock : PlatformSoundEffectTemplateCollectionBlockBase
     {
-        public PlatformSoundEffectTemplateCollectionBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  PlatformSoundEffectTemplateCollectionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PlatformSoundEffectTemplateCollectionBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class PlatformSoundEffectTemplateCollectionBlockBase : IGuerilla
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class PlatformSoundEffectTemplateCollectionBlockBase : GuerillaBlock
     {
         internal PlatformSoundEffectTemplateBlock[] platformEffectTemplates;
         internal Moonfish.Tags.StringID inputDspEffectName;
-
-        internal PlatformSoundEffectTemplateCollectionBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PlatformSoundEffectTemplateCollectionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            platformEffectTemplates = Guerilla.ReadBlockArray<PlatformSoundEffectTemplateBlock>( binaryReader );
-            inputDspEffectName = binaryReader.ReadStringID( );
+            platformEffectTemplates = Guerilla.ReadBlockArray<PlatformSoundEffectTemplateBlock>(binaryReader);
+            inputDspEffectName = binaryReader.ReadStringID();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  PlatformSoundEffectTemplateCollectionBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                nextAddress = Guerilla.WriteBlockArray<PlatformSoundEffectTemplateBlock>( binaryWriter,
-                    platformEffectTemplates, nextAddress );
-                binaryWriter.Write( inputDspEffectName );
+                nextAddress = Guerilla.WriteBlockArray<PlatformSoundEffectTemplateBlock>(binaryWriter, platformEffectTemplates, nextAddress);
+                binaryWriter.Write(inputDspEffectName);
                 return nextAddress;
             }
         }

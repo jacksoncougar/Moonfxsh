@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class Pixel32Block : Pixel32BlockBase
     {
-        public Pixel32Block( BinaryReader binaryReader ) : base( binaryReader )
+        public  Pixel32Block(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  Pixel32Block(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class Pixel32BlockBase : IGuerilla
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class Pixel32BlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ColourA1R1G1B1 color;
-
-        internal Pixel32BlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  Pixel32BlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            color = binaryReader.ReadColourA1R1G1B1( );
+            color = binaryReader.ReadColourA1R1G1B1();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  Pixel32BlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( color );
+                binaryWriter.Write(color);
                 return nextAddress;
             }
         }

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,39 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class HavokCleanupResourcesBlock : HavokCleanupResourcesBlockBase
     {
-        public HavokCleanupResourcesBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  HavokCleanupResourcesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  HavokCleanupResourcesBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class HavokCleanupResourcesBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class HavokCleanupResourcesBlockBase : GuerillaBlock
     {
-        [TagReference( "effe" )] internal Moonfish.Tags.TagReference objectCleanupEffect;
-
-        internal HavokCleanupResourcesBlockBase( BinaryReader binaryReader )
+        [TagReference("effe")]
+        internal Moonfish.Tags.TagReference objectCleanupEffect;
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  HavokCleanupResourcesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            objectCleanupEffect = binaryReader.ReadTagReference( );
+            objectCleanupEffect = binaryReader.ReadTagReference();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  HavokCleanupResourcesBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( objectCleanupEffect );
+                binaryWriter.Write(objectCleanupEffect);
                 return nextAddress;
             }
         }

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,38 +10,50 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPostprocessColorOverlayBlock : ShaderPostprocessColorOverlayBlockBase
     {
-        public ShaderPostprocessColorOverlayBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderPostprocessColorOverlayBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderPostprocessColorOverlayBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 21, Alignment = 4 )]
-    public class ShaderPostprocessColorOverlayBlockBase : IGuerilla
+    [LayoutAttribute(Size = 21, Alignment = 4)]
+    public class ShaderPostprocessColorOverlayBlockBase : GuerillaBlock
     {
         internal byte parameterIndex;
         internal Moonfish.Tags.StringID inputName;
         internal Moonfish.Tags.StringID rangeName;
         internal float timePeriodInSeconds;
         internal ColorFunctionStructBlock function;
-
-        internal ShaderPostprocessColorOverlayBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 21; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderPostprocessColorOverlayBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            parameterIndex = binaryReader.ReadByte( );
-            inputName = binaryReader.ReadStringID( );
-            rangeName = binaryReader.ReadStringID( );
-            timePeriodInSeconds = binaryReader.ReadSingle( );
-            function = new ColorFunctionStructBlock( binaryReader );
+            parameterIndex = binaryReader.ReadByte();
+            inputName = binaryReader.ReadStringID();
+            rangeName = binaryReader.ReadStringID();
+            timePeriodInSeconds = binaryReader.ReadSingle();
+            function = new ColorFunctionStructBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ShaderPostprocessColorOverlayBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( parameterIndex );
-                binaryWriter.Write( inputName );
-                binaryWriter.Write( rangeName );
-                binaryWriter.Write( timePeriodInSeconds );
-                function.Write( binaryWriter );
+                binaryWriter.Write(parameterIndex);
+                binaryWriter.Write(inputName);
+                binaryWriter.Write(rangeName);
+                binaryWriter.Write(timePeriodInSeconds);
+                function.Write(binaryWriter);
                 return nextAddress;
             }
         }

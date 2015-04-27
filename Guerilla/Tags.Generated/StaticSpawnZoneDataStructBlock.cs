@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,39 +10,50 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class StaticSpawnZoneDataStructBlock : StaticSpawnZoneDataStructBlockBase
     {
-        public StaticSpawnZoneDataStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  StaticSpawnZoneDataStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StaticSpawnZoneDataStructBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class StaticSpawnZoneDataStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class StaticSpawnZoneDataStructBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal RelevantTeam relevantTeam;
         internal RelevantGames relevantGames;
         internal Flags flags;
-
-        internal StaticSpawnZoneDataStructBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StaticSpawnZoneDataStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadStringID( );
-            relevantTeam = ( RelevantTeam ) binaryReader.ReadInt32( );
-            relevantGames = ( RelevantGames ) binaryReader.ReadInt32( );
-            flags = ( Flags ) binaryReader.ReadInt32( );
+            name = binaryReader.ReadStringID();
+            relevantTeam = (RelevantTeam)binaryReader.ReadInt32();
+            relevantGames = (RelevantGames)binaryReader.ReadInt32();
+            flags = (Flags)binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  StaticSpawnZoneDataStructBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( ( Int32 ) relevantTeam );
-                binaryWriter.Write( ( Int32 ) relevantGames );
-                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int32)relevantTeam);
+                binaryWriter.Write((Int32)relevantGames);
+                binaryWriter.Write((Int32)flags);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum RelevantTeam : int
         {
@@ -57,7 +67,6 @@ namespace Moonfish.Guerilla.Tags
             PinkHotel = 128,
             NEUTRAL = 256,
         };
-
         [FlagsAttribute]
         internal enum RelevantGames : int
         {
@@ -70,7 +79,6 @@ namespace Moonfish.Guerilla.Tags
             Juggernaut = 64,
             Territories = 128,
         };
-
         [FlagsAttribute]
         internal enum Flags : int
         {

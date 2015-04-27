@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class LensFlareScalarAnimationBlock : LensFlareScalarAnimationBlockBase
     {
-        public LensFlareScalarAnimationBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  LensFlareScalarAnimationBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  LensFlareScalarAnimationBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class LensFlareScalarAnimationBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class LensFlareScalarAnimationBlockBase : GuerillaBlock
     {
         internal ScalarFunctionStructBlock function;
-
-        internal LensFlareScalarAnimationBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  LensFlareScalarAnimationBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            function = new ScalarFunctionStructBlock( binaryReader );
+            function = new ScalarFunctionStructBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  LensFlareScalarAnimationBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                function.Write( binaryWriter );
+                function.Write(binaryWriter);
                 return nextAddress;
             }
         }

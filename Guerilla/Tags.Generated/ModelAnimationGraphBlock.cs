@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,22 +10,26 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Jmad = ( TagClass ) "jmad";
+        public static readonly TagClass Jmad = (TagClass)"jmad";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "jmad" )]
+    [TagClassAttribute("jmad")]
     public partial class ModelAnimationGraphBlock : ModelAnimationGraphBlockBase
     {
-        public ModelAnimationGraphBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ModelAnimationGraphBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ModelAnimationGraphBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 188, Alignment = 4 )]
-    public class ModelAnimationGraphBlockBase : IGuerilla
+    [LayoutAttribute(Size = 188, Alignment = 4)]
+    public class ModelAnimationGraphBlockBase : GuerillaBlock
     {
         internal AnimationGraphResourcesStructBlock resources;
         internal AnimationGraphContentsStructBlock content;
@@ -35,32 +38,37 @@ namespace Moonfish.Guerilla.Tags
         internal AdditionalNodeDataBlock[] additionalNodeData;
         internal MoonfishXboxAnimationRawBlock[] xboxUnknownAnimationBlock;
         internal MoonfishXboxAnimationUnknownBlock[] xboxUnknownAnimationBlock0;
-
-        internal ModelAnimationGraphBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 188; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ModelAnimationGraphBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            resources = new AnimationGraphResourcesStructBlock( binaryReader );
-            content = new AnimationGraphContentsStructBlock( binaryReader );
-            runTimeData = new ModelAnimationRuntimeDataStructBlock( binaryReader );
-            lastImportResults = Guerilla.ReadData( binaryReader );
-            additionalNodeData = Guerilla.ReadBlockArray<AdditionalNodeDataBlock>( binaryReader );
-            xboxUnknownAnimationBlock = Guerilla.ReadBlockArray<MoonfishXboxAnimationRawBlock>( binaryReader );
-            xboxUnknownAnimationBlock0 = Guerilla.ReadBlockArray<MoonfishXboxAnimationUnknownBlock>( binaryReader );
+            resources = new AnimationGraphResourcesStructBlock(binaryReader);
+            content = new AnimationGraphContentsStructBlock(binaryReader);
+            runTimeData = new ModelAnimationRuntimeDataStructBlock(binaryReader);
+            lastImportResults = Guerilla.ReadData(binaryReader);
+            additionalNodeData = Guerilla.ReadBlockArray<AdditionalNodeDataBlock>(binaryReader);
+            xboxUnknownAnimationBlock = Guerilla.ReadBlockArray<MoonfishXboxAnimationRawBlock>(binaryReader);
+            xboxUnknownAnimationBlock0 = Guerilla.ReadBlockArray<MoonfishXboxAnimationUnknownBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ModelAnimationGraphBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                resources.Write( binaryWriter );
-                content.Write( binaryWriter );
-                runTimeData.Write( binaryWriter );
-                nextAddress = Guerilla.WriteData( binaryWriter, lastImportResults, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<AdditionalNodeDataBlock>( binaryWriter, additionalNodeData,
-                    nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<MoonfishXboxAnimationRawBlock>( binaryWriter,
-                    xboxUnknownAnimationBlock, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<MoonfishXboxAnimationUnknownBlock>( binaryWriter,
-                    xboxUnknownAnimationBlock0, nextAddress );
+                resources.Write(binaryWriter);
+                content.Write(binaryWriter);
+                runTimeData.Write(binaryWriter);
+                nextAddress = Guerilla.WriteData(binaryWriter, lastImportResults, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AdditionalNodeDataBlock>(binaryWriter, additionalNodeData, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MoonfishXboxAnimationRawBlock>(binaryWriter, xboxUnknownAnimationBlock, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MoonfishXboxAnimationUnknownBlock>(binaryWriter, xboxUnknownAnimationBlock0, nextAddress);
                 return nextAddress;
             }
         }

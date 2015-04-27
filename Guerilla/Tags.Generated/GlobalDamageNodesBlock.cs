@@ -8,26 +8,40 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class GlobalDamageNodesBlock : GlobalDamageNodesBlockBase
+    public partial class GlobalDamageNodesBlock : GlobalDamageNodesBlockBase
     {
         public  GlobalDamageNodesBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  GlobalDamageNodesBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class GlobalDamageNodesBlockBase  : IGuerilla
+    public class GlobalDamageNodesBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
-        internal  GlobalDamageNodesBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  GlobalDamageNodesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             invalidName_ = binaryReader.ReadBytes(2);
             invalidName_0 = binaryReader.ReadBytes(2);
             invalidName_1 = binaryReader.ReadBytes(12);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  GlobalDamageNodesBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

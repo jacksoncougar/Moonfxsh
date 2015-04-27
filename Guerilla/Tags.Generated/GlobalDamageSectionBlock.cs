@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class GlobalDamageSectionBlock : GlobalDamageSectionBlockBase
+    public partial class GlobalDamageSectionBlock : GlobalDamageSectionBlockBase
     {
         public  GlobalDamageSectionBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  GlobalDamageSectionBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 56, Alignment = 4)]
-    public class GlobalDamageSectionBlockBase  : IGuerilla
+    public class GlobalDamageSectionBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal Flags flags;
@@ -32,7 +36,13 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal Moonfish.Tags.StringID resurrectionRestoredRegionName;
         internal byte[] invalidName_0;
-        internal  GlobalDamageSectionBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 56; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  GlobalDamageSectionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             name = binaryReader.ReadStringID();
             flags = (Flags)binaryReader.ReadInt32();
@@ -46,7 +56,11 @@ namespace Moonfish.Guerilla.Tags
             resurrectionRestoredRegionName = binaryReader.ReadStringID();
             invalidName_0 = binaryReader.ReadBytes(4);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  GlobalDamageSectionBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

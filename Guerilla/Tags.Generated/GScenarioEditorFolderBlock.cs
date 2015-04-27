@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,29 +10,41 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class GScenarioEditorFolderBlock : GScenarioEditorFolderBlockBase
     {
-        public GScenarioEditorFolderBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  GScenarioEditorFolderBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  GScenarioEditorFolderBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 260, Alignment = 4 )]
-    public class GScenarioEditorFolderBlockBase : IGuerilla
+    [LayoutAttribute(Size = 260, Alignment = 4)]
+    public class GScenarioEditorFolderBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.LongBlockIndex1 parentFolder;
         internal Moonfish.Tags.String256 name;
-
-        internal GScenarioEditorFolderBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 260; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  GScenarioEditorFolderBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            parentFolder = binaryReader.ReadLongBlockIndex1( );
-            name = binaryReader.ReadString256( );
+            parentFolder = binaryReader.ReadLongBlockIndex1();
+            name = binaryReader.ReadString256();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  GScenarioEditorFolderBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( parentFolder );
-                binaryWriter.Write( name );
+                binaryWriter.Write(parentFolder);
+                binaryWriter.Write(name);
                 return nextAddress;
             }
         }

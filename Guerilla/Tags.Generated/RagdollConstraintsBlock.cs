@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class RagdollConstraintsBlock : RagdollConstraintsBlockBase
     {
-        public RagdollConstraintsBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  RagdollConstraintsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  RagdollConstraintsBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 148, Alignment = 4 )]
-    public class RagdollConstraintsBlockBase : IGuerilla
+    [LayoutAttribute(Size = 148, Alignment = 4)]
+    public class RagdollConstraintsBlockBase : GuerillaBlock
     {
         internal ConstraintBodiesStructBlock constraintBodies;
         internal byte[] invalidName_;
@@ -28,33 +31,41 @@ namespace Moonfish.Guerilla.Tags
         internal float minPlane;
         internal float maxPlane;
         internal float maxFricitonTorque;
-
-        internal RagdollConstraintsBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 148; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  RagdollConstraintsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            constraintBodies = new ConstraintBodiesStructBlock( binaryReader );
-            invalidName_ = binaryReader.ReadBytes( 4 );
-            minTwist = binaryReader.ReadSingle( );
-            maxTwist = binaryReader.ReadSingle( );
-            minCone = binaryReader.ReadSingle( );
-            maxCone = binaryReader.ReadSingle( );
-            minPlane = binaryReader.ReadSingle( );
-            maxPlane = binaryReader.ReadSingle( );
-            maxFricitonTorque = binaryReader.ReadSingle( );
+            constraintBodies = new ConstraintBodiesStructBlock(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(4);
+            minTwist = binaryReader.ReadSingle();
+            maxTwist = binaryReader.ReadSingle();
+            minCone = binaryReader.ReadSingle();
+            maxCone = binaryReader.ReadSingle();
+            minPlane = binaryReader.ReadSingle();
+            maxPlane = binaryReader.ReadSingle();
+            maxFricitonTorque = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  RagdollConstraintsBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                constraintBodies.Write( binaryWriter );
-                binaryWriter.Write( invalidName_, 0, 4 );
-                binaryWriter.Write( minTwist );
-                binaryWriter.Write( maxTwist );
-                binaryWriter.Write( minCone );
-                binaryWriter.Write( maxCone );
-                binaryWriter.Write( minPlane );
-                binaryWriter.Write( maxPlane );
-                binaryWriter.Write( maxFricitonTorque );
+                constraintBodies.Write(binaryWriter);
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(minTwist);
+                binaryWriter.Write(maxTwist);
+                binaryWriter.Write(minCone);
+                binaryWriter.Write(maxCone);
+                binaryWriter.Write(minPlane);
+                binaryWriter.Write(maxPlane);
+                binaryWriter.Write(maxFricitonTorque);
                 return nextAddress;
             }
         }

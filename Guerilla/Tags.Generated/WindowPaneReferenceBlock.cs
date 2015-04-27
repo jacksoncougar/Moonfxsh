@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class WindowPaneReferenceBlock : WindowPaneReferenceBlockBase
     {
-        public WindowPaneReferenceBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  WindowPaneReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  WindowPaneReferenceBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 76, Alignment = 4 )]
-    public class WindowPaneReferenceBlockBase : IGuerilla
+    [LayoutAttribute(Size = 76, Alignment = 4)]
+    public class WindowPaneReferenceBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal AnimationIndex animationIndex;
@@ -30,46 +33,48 @@ namespace Moonfish.Guerilla.Tags
         internal STextValuePairBlocksBlockUNUSED[] textValueBlocks;
         internal HudBlockReferenceBlock[] hudBlocks;
         internal PlayerBlockReferenceBlock[] playerBlocks;
-
-        internal WindowPaneReferenceBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 76; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  WindowPaneReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            animationIndex = ( AnimationIndex ) binaryReader.ReadInt16( );
-            buttons = Guerilla.ReadBlockArray<ButtonWidgetReferenceBlock>( binaryReader );
-            listBlock = Guerilla.ReadBlockArray<ListReferenceBlock>( binaryReader );
-            tableView = Guerilla.ReadBlockArray<TableViewListReferenceBlock>( binaryReader );
-            textBlocks = Guerilla.ReadBlockArray<TextBlockReferenceBlock>( binaryReader );
-            bitmapBlocks = Guerilla.ReadBlockArray<BitmapBlockReferenceBlock>( binaryReader );
-            modelSceneBlocks = Guerilla.ReadBlockArray<UiModelSceneReferenceBlock>( binaryReader );
-            textValueBlocks = Guerilla.ReadBlockArray<STextValuePairBlocksBlockUNUSED>( binaryReader );
-            hudBlocks = Guerilla.ReadBlockArray<HudBlockReferenceBlock>( binaryReader );
-            playerBlocks = Guerilla.ReadBlockArray<PlayerBlockReferenceBlock>( binaryReader );
+            invalidName_ = binaryReader.ReadBytes(2);
+            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            buttons = Guerilla.ReadBlockArray<ButtonWidgetReferenceBlock>(binaryReader);
+            listBlock = Guerilla.ReadBlockArray<ListReferenceBlock>(binaryReader);
+            tableView = Guerilla.ReadBlockArray<TableViewListReferenceBlock>(binaryReader);
+            textBlocks = Guerilla.ReadBlockArray<TextBlockReferenceBlock>(binaryReader);
+            bitmapBlocks = Guerilla.ReadBlockArray<BitmapBlockReferenceBlock>(binaryReader);
+            modelSceneBlocks = Guerilla.ReadBlockArray<UiModelSceneReferenceBlock>(binaryReader);
+            textValueBlocks = Guerilla.ReadBlockArray<STextValuePairBlocksBlockUNUSED>(binaryReader);
+            hudBlocks = Guerilla.ReadBlockArray<HudBlockReferenceBlock>(binaryReader);
+            playerBlocks = Guerilla.ReadBlockArray<PlayerBlockReferenceBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  WindowPaneReferenceBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( ( Int16 ) animationIndex );
-                nextAddress = Guerilla.WriteBlockArray<ButtonWidgetReferenceBlock>( binaryWriter, buttons, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<ListReferenceBlock>( binaryWriter, listBlock, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<TableViewListReferenceBlock>( binaryWriter, tableView,
-                    nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<TextBlockReferenceBlock>( binaryWriter, textBlocks, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<BitmapBlockReferenceBlock>( binaryWriter, bitmapBlocks,
-                    nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<UiModelSceneReferenceBlock>( binaryWriter, modelSceneBlocks,
-                    nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<STextValuePairBlocksBlockUNUSED>( binaryWriter, textValueBlocks,
-                    nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<HudBlockReferenceBlock>( binaryWriter, hudBlocks, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<PlayerBlockReferenceBlock>( binaryWriter, playerBlocks,
-                    nextAddress );
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Int16)animationIndex);
+                nextAddress = Guerilla.WriteBlockArray<ButtonWidgetReferenceBlock>(binaryWriter, buttons, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ListReferenceBlock>(binaryWriter, listBlock, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<TableViewListReferenceBlock>(binaryWriter, tableView, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<TextBlockReferenceBlock>(binaryWriter, textBlocks, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<BitmapBlockReferenceBlock>(binaryWriter, bitmapBlocks, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<UiModelSceneReferenceBlock>(binaryWriter, modelSceneBlocks, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<STextValuePairBlocksBlockUNUSED>(binaryWriter, textValueBlocks, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<HudBlockReferenceBlock>(binaryWriter, hudBlocks, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PlayerBlockReferenceBlock>(binaryWriter, playerBlocks, nextAddress);
                 return nextAddress;
             }
         }
-
         internal enum AnimationIndex : short
         {
             NONE = 0,

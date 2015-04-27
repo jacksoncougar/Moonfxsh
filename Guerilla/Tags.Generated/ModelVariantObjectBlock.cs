@@ -8,27 +8,41 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ModelVariantObjectBlock : ModelVariantObjectBlockBase
+    public partial class ModelVariantObjectBlock : ModelVariantObjectBlockBase
     {
         public  ModelVariantObjectBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  ModelVariantObjectBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class ModelVariantObjectBlockBase  : IGuerilla
+    public class ModelVariantObjectBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID parentMarker;
         internal Moonfish.Tags.StringID childMarker;
         [TagReference("obje")]
         internal Moonfish.Tags.TagReference childObject;
-        internal  ModelVariantObjectBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ModelVariantObjectBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             parentMarker = binaryReader.ReadStringID();
             childMarker = binaryReader.ReadStringID();
             childObject = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  ModelVariantObjectBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

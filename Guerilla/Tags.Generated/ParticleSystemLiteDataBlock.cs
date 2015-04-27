@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,34 +10,44 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ParticleSystemLiteDataBlock : ParticleSystemLiteDataBlockBase
     {
-        public ParticleSystemLiteDataBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ParticleSystemLiteDataBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ParticleSystemLiteDataBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 48, Alignment = 4 )]
-    public class ParticleSystemLiteDataBlockBase : IGuerilla
+    [LayoutAttribute(Size = 48, Alignment = 4)]
+    public class ParticleSystemLiteDataBlockBase : GuerillaBlock
     {
         internal ParticlesRenderDataBlock[] particlesRenderData;
         internal ParticlesUpdateDataBlock[] particlesOtherData;
         internal byte[] invalidName_;
-
-        internal ParticleSystemLiteDataBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 48; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ParticleSystemLiteDataBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            particlesRenderData = Guerilla.ReadBlockArray<ParticlesRenderDataBlock>( binaryReader );
-            particlesOtherData = Guerilla.ReadBlockArray<ParticlesUpdateDataBlock>( binaryReader );
-            invalidName_ = binaryReader.ReadBytes( 32 );
+            particlesRenderData = Guerilla.ReadBlockArray<ParticlesRenderDataBlock>(binaryReader);
+            particlesOtherData = Guerilla.ReadBlockArray<ParticlesUpdateDataBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(32);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ParticleSystemLiteDataBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                nextAddress = Guerilla.WriteBlockArray<ParticlesRenderDataBlock>( binaryWriter, particlesRenderData,
-                    nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<ParticlesUpdateDataBlock>( binaryWriter, particlesOtherData,
-                    nextAddress );
-                binaryWriter.Write( invalidName_, 0, 32 );
+                nextAddress = Guerilla.WriteBlockArray<ParticlesRenderDataBlock>(binaryWriter, particlesRenderData, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ParticlesUpdateDataBlock>(binaryWriter, particlesOtherData, nextAddress);
+                binaryWriter.Write(invalidName_, 0, 32);
                 return nextAddress;
             }
         }

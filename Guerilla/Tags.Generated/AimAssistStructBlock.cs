@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,64 +10,71 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class AimAssistStructBlock : AimAssistStructBlockBase
     {
-        public AimAssistStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  AimAssistStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AimAssistStructBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 36, Alignment = 4 )]
-    public class AimAssistStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 36, Alignment = 4)]
+    public class AimAssistStructBlockBase : GuerillaBlock
     {
         /// <summary>
         /// the maximum angle that autoaim works at full strength
         /// </summary>
         internal float autoaimAngleDegrees;
-
         /// <summary>
         /// the maximum distance that autoaim works at full strength
         /// </summary>
         internal float autoaimRangeWorldUnits;
-
         /// <summary>
         /// the maximum angle that magnetism works at full strength
         /// </summary>
         internal float magnetismAngleDegrees;
-
         /// <summary>
         /// the maximum distance that magnetism works at full strength
         /// </summary>
         internal float magnetismRangeWorldUnits;
-
         /// <summary>
         /// the maximum angle that a projectile is allowed to deviate from the gun barrel
         /// </summary>
         internal float deviationAngleDegrees;
-
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
-
-        internal AimAssistStructBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 36; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AimAssistStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            autoaimAngleDegrees = binaryReader.ReadSingle( );
-            autoaimRangeWorldUnits = binaryReader.ReadSingle( );
-            magnetismAngleDegrees = binaryReader.ReadSingle( );
-            magnetismRangeWorldUnits = binaryReader.ReadSingle( );
-            deviationAngleDegrees = binaryReader.ReadSingle( );
-            invalidName_ = binaryReader.ReadBytes( 4 );
-            invalidName_0 = binaryReader.ReadBytes( 12 );
+            autoaimAngleDegrees = binaryReader.ReadSingle();
+            autoaimRangeWorldUnits = binaryReader.ReadSingle();
+            magnetismAngleDegrees = binaryReader.ReadSingle();
+            magnetismRangeWorldUnits = binaryReader.ReadSingle();
+            deviationAngleDegrees = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(4);
+            invalidName_0 = binaryReader.ReadBytes(12);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  AimAssistStructBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( autoaimAngleDegrees );
-                binaryWriter.Write( autoaimRangeWorldUnits );
-                binaryWriter.Write( magnetismAngleDegrees );
-                binaryWriter.Write( magnetismRangeWorldUnits );
-                binaryWriter.Write( deviationAngleDegrees );
-                binaryWriter.Write( invalidName_, 0, 4 );
-                binaryWriter.Write( invalidName_0, 0, 12 );
+                binaryWriter.Write(autoaimAngleDegrees);
+                binaryWriter.Write(autoaimRangeWorldUnits);
+                binaryWriter.Write(magnetismAngleDegrees);
+                binaryWriter.Write(magnetismRangeWorldUnits);
+                binaryWriter.Write(deviationAngleDegrees);
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(invalidName_0, 0, 12);
                 return nextAddress;
             }
         }

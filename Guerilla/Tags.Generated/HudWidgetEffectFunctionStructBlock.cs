@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,35 +10,47 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class HudWidgetEffectFunctionStructBlock : HudWidgetEffectFunctionStructBlockBase
     {
-        public HudWidgetEffectFunctionStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  HudWidgetEffectFunctionStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  HudWidgetEffectFunctionStructBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class HudWidgetEffectFunctionStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class HudWidgetEffectFunctionStructBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID inputName;
         internal Moonfish.Tags.StringID rangeName;
         internal float timePeriodInSeconds;
         internal ScalarFunctionStructBlock function;
-
-        internal HudWidgetEffectFunctionStructBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  HudWidgetEffectFunctionStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            inputName = binaryReader.ReadStringID( );
-            rangeName = binaryReader.ReadStringID( );
-            timePeriodInSeconds = binaryReader.ReadSingle( );
-            function = new ScalarFunctionStructBlock( binaryReader );
+            inputName = binaryReader.ReadStringID();
+            rangeName = binaryReader.ReadStringID();
+            timePeriodInSeconds = binaryReader.ReadSingle();
+            function = new ScalarFunctionStructBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  HudWidgetEffectFunctionStructBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( inputName );
-                binaryWriter.Write( rangeName );
-                binaryWriter.Write( timePeriodInSeconds );
-                function.Write( binaryWriter );
+                binaryWriter.Write(inputName);
+                binaryWriter.Write(rangeName);
+                binaryWriter.Write(timePeriodInSeconds);
+                function.Write(binaryWriter);
                 return nextAddress;
             }
         }

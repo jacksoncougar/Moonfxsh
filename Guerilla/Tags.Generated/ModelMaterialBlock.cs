@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ModelMaterialBlock : ModelMaterialBlockBase
+    public partial class ModelMaterialBlock : ModelMaterialBlockBase
     {
         public  ModelMaterialBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  ModelMaterialBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class ModelMaterialBlockBase  : IGuerilla
+    public class ModelMaterialBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID materialName;
         internal MaterialType materialType;
@@ -25,7 +29,13 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal Moonfish.Tags.StringID globalMaterialName;
         internal byte[] invalidName_1;
-        internal  ModelMaterialBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ModelMaterialBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             materialName = binaryReader.ReadStringID();
             materialType = (MaterialType)binaryReader.ReadInt16();
@@ -35,7 +45,11 @@ namespace Moonfish.Guerilla.Tags
             globalMaterialName = binaryReader.ReadStringID();
             invalidName_1 = binaryReader.ReadBytes(4);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  ModelMaterialBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

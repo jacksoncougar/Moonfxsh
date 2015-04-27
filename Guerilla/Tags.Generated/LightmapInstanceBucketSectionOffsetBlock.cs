@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class LightmapInstanceBucketSectionOffsetBlock : LightmapInstanceBucketSectionOffsetBlockBase
     {
-        public LightmapInstanceBucketSectionOffsetBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  LightmapInstanceBucketSectionOffsetBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  LightmapInstanceBucketSectionOffsetBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 2, Alignment = 4 )]
-    public class LightmapInstanceBucketSectionOffsetBlockBase : IGuerilla
+    [LayoutAttribute(Size = 2, Alignment = 4)]
+    public class LightmapInstanceBucketSectionOffsetBlockBase : GuerillaBlock
     {
         internal short sectionOffset;
-
-        internal LightmapInstanceBucketSectionOffsetBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 2; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  LightmapInstanceBucketSectionOffsetBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            sectionOffset = binaryReader.ReadInt16( );
+            sectionOffset = binaryReader.ReadInt16();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  LightmapInstanceBucketSectionOffsetBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( sectionOffset );
+                binaryWriter.Write(sectionOffset);
                 return nextAddress;
             }
         }

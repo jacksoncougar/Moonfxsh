@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,29 +10,41 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ExternReferenceBlock : ExternReferenceBlockBase
     {
-        public ExternReferenceBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ExternReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ExternReferenceBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 2, Alignment = 4 )]
-    public class ExternReferenceBlockBase : IGuerilla
+    [LayoutAttribute(Size = 2, Alignment = 4)]
+    public class ExternReferenceBlockBase : GuerillaBlock
     {
         internal byte parameterIndex;
         internal byte externIndex;
-
-        internal ExternReferenceBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 2; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ExternReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            parameterIndex = binaryReader.ReadByte( );
-            externIndex = binaryReader.ReadByte( );
+            parameterIndex = binaryReader.ReadByte();
+            externIndex = binaryReader.ReadByte();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ExternReferenceBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( parameterIndex );
-                binaryWriter.Write( externIndex );
+                binaryWriter.Write(parameterIndex);
+                binaryWriter.Write(externIndex);
                 return nextAddress;
             }
         }

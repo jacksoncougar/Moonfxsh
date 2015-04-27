@@ -8,22 +8,36 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundGestaltCustomPlaybackBlock : SoundGestaltCustomPlaybackBlockBase
+    public partial class SoundGestaltCustomPlaybackBlock : SoundGestaltCustomPlaybackBlockBase
     {
         public  SoundGestaltCustomPlaybackBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  SoundGestaltCustomPlaybackBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 52, Alignment = 4)]
-    public class SoundGestaltCustomPlaybackBlockBase  : IGuerilla
+    public class SoundGestaltCustomPlaybackBlockBase : GuerillaBlock
     {
         internal SimplePlatformSoundPlaybackStructBlock playbackDefinition;
-        internal  SoundGestaltCustomPlaybackBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 52; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundGestaltCustomPlaybackBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             playbackDefinition = new SimplePlatformSoundPlaybackStructBlock(binaryReader);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  SoundGestaltCustomPlaybackBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

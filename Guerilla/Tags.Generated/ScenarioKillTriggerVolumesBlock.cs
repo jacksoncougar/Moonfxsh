@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioKillTriggerVolumesBlock : ScenarioKillTriggerVolumesBlockBase
     {
-        public ScenarioKillTriggerVolumesBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ScenarioKillTriggerVolumesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioKillTriggerVolumesBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 2, Alignment = 4 )]
-    public class ScenarioKillTriggerVolumesBlockBase : IGuerilla
+    [LayoutAttribute(Size = 2, Alignment = 4)]
+    public class ScenarioKillTriggerVolumesBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 triggerVolume;
-
-        internal ScenarioKillTriggerVolumesBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 2; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioKillTriggerVolumesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            triggerVolume = binaryReader.ReadShortBlockIndex1( );
+            triggerVolume = binaryReader.ReadShortBlockIndex1();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ScenarioKillTriggerVolumesBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( triggerVolume );
+                binaryWriter.Write(triggerVolume);
                 return nextAddress;
             }
         }

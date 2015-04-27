@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,32 +10,44 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class AmbientLightStructBlock : AmbientLightStructBlockBase
     {
-        public AmbientLightStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  AmbientLightStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AmbientLightStructBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class AmbientLightStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class AmbientLightStructBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ColorR8G8B8 minLightmapSample;
         internal Moonfish.Tags.ColorR8G8B8 maxLightmapSample;
         internal MappingFunctionBlock function;
-
-        internal AmbientLightStructBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 32; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AmbientLightStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            minLightmapSample = binaryReader.ReadColorR8G8B8( );
-            maxLightmapSample = binaryReader.ReadColorR8G8B8( );
-            function = new MappingFunctionBlock( binaryReader );
+            minLightmapSample = binaryReader.ReadColorR8G8B8();
+            maxLightmapSample = binaryReader.ReadColorR8G8B8();
+            function = new MappingFunctionBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  AmbientLightStructBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( minLightmapSample );
-                binaryWriter.Write( maxLightmapSample );
-                function.Write( binaryWriter );
+                binaryWriter.Write(minLightmapSample);
+                binaryWriter.Write(maxLightmapSample);
+                function.Write(binaryWriter);
                 return nextAddress;
             }
         }

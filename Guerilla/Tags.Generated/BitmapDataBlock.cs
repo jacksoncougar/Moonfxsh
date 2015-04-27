@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class BitmapDataBlock : BitmapDataBlockBase
+    public partial class BitmapDataBlock : BitmapDataBlockBase
     {
         public  BitmapDataBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  BitmapDataBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 116, Alignment = 4)]
-    public class BitmapDataBlockBase : IGuerilla
+    public class BitmapDataBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.TagClass signature;
         internal short widthPixels;
@@ -47,7 +51,13 @@ namespace Moonfish.Guerilla.Tags
         internal int lOD2TextureDataLength;
         internal int lOD3TextureDataLength;
         internal byte[] invalidName_0;
-        internal BitmapDataBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 116; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  BitmapDataBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             signature = binaryReader.ReadTagClass();
             widthPixels = binaryReader.ReadInt16();
@@ -70,7 +80,11 @@ namespace Moonfish.Guerilla.Tags
             lOD3TextureDataLength = binaryReader.ReadInt32();
             invalidName_0 = binaryReader.ReadBytes(52);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  BitmapDataBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

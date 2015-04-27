@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,32 +10,44 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureBspLeafBlock : StructureBspLeafBlockBase
     {
-        public StructureBspLeafBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  StructureBspLeafBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StructureBspLeafBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class StructureBspLeafBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class StructureBspLeafBlockBase : GuerillaBlock
     {
         internal short cluster;
         internal short surfaceReferenceCount;
         internal int firstSurfaceReferenceIndex;
-
-        internal StructureBspLeafBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StructureBspLeafBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            cluster = binaryReader.ReadInt16( );
-            surfaceReferenceCount = binaryReader.ReadInt16( );
-            firstSurfaceReferenceIndex = binaryReader.ReadInt32( );
+            cluster = binaryReader.ReadInt16();
+            surfaceReferenceCount = binaryReader.ReadInt16();
+            firstSurfaceReferenceIndex = binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  StructureBspLeafBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( cluster );
-                binaryWriter.Write( surfaceReferenceCount );
-                binaryWriter.Write( firstSurfaceReferenceIndex );
+                binaryWriter.Write(cluster);
+                binaryWriter.Write(surfaceReferenceCount);
+                binaryWriter.Write(firstSurfaceReferenceIndex);
                 return nextAddress;
             }
         }

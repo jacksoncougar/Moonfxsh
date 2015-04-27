@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class WeaponSharedInterfaceStructBlock : WeaponSharedInterfaceStructBlockBase
     {
-        public WeaponSharedInterfaceStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  WeaponSharedInterfaceStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  WeaponSharedInterfaceStructBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class WeaponSharedInterfaceStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class WeaponSharedInterfaceStructBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
-
-        internal WeaponSharedInterfaceStructBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  WeaponSharedInterfaceStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes( 16 );
+            invalidName_ = binaryReader.ReadBytes(16);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  WeaponSharedInterfaceStructBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( invalidName_, 0, 16 );
+                binaryWriter.Write(invalidName_, 0, 16);
                 return nextAddress;
             }
         }

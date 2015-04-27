@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,29 +10,41 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class PrtLodInfoBlock : PrtLodInfoBlockBase
     {
-        public PrtLodInfoBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  PrtLodInfoBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PrtLodInfoBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class PrtLodInfoBlockBase : IGuerilla
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class PrtLodInfoBlockBase : GuerillaBlock
     {
         internal int clusterOffset;
         internal PrtSectionInfoBlock[] sectionInfo;
-
-        internal PrtLodInfoBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PrtLodInfoBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            clusterOffset = binaryReader.ReadInt32( );
-            sectionInfo = Guerilla.ReadBlockArray<PrtSectionInfoBlock>( binaryReader );
+            clusterOffset = binaryReader.ReadInt32();
+            sectionInfo = Guerilla.ReadBlockArray<PrtSectionInfoBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  PrtLodInfoBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( clusterOffset );
-                nextAddress = Guerilla.WriteBlockArray<PrtSectionInfoBlock>( binaryWriter, sectionInfo, nextAddress );
+                binaryWriter.Write(clusterOffset);
+                nextAddress = Guerilla.WriteBlockArray<PrtSectionInfoBlock>(binaryWriter, sectionInfo, nextAddress);
                 return nextAddress;
             }
         }

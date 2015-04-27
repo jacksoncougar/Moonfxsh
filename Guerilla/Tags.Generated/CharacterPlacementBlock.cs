@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterPlacementBlock : CharacterPlacementBlockBase
     {
-        public CharacterPlacementBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  CharacterPlacementBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CharacterPlacementBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 52, Alignment = 4 )]
-    public class CharacterPlacementBlockBase : IGuerilla
+    [LayoutAttribute(Size = 52, Alignment = 4)]
+    public class CharacterPlacementBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal float fewUpgradeChanceEasy;
@@ -32,41 +35,49 @@ namespace Moonfish.Guerilla.Tags
         internal float manyUpgradeChanceNormal;
         internal float manyUpgradeChanceHeroic;
         internal float manyUpgradeChanceLegendary;
-
-        internal CharacterPlacementBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 52; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CharacterPlacementBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes( 4 );
-            fewUpgradeChanceEasy = binaryReader.ReadSingle( );
-            fewUpgradeChanceNormal = binaryReader.ReadSingle( );
-            fewUpgradeChanceHeroic = binaryReader.ReadSingle( );
-            fewUpgradeChanceLegendary = binaryReader.ReadSingle( );
-            normalUpgradeChanceEasy = binaryReader.ReadSingle( );
-            normalUpgradeChanceNormal = binaryReader.ReadSingle( );
-            normalUpgradeChanceHeroic = binaryReader.ReadSingle( );
-            normalUpgradeChanceLegendary = binaryReader.ReadSingle( );
-            manyUpgradeChanceEasy = binaryReader.ReadSingle( );
-            manyUpgradeChanceNormal = binaryReader.ReadSingle( );
-            manyUpgradeChanceHeroic = binaryReader.ReadSingle( );
-            manyUpgradeChanceLegendary = binaryReader.ReadSingle( );
+            invalidName_ = binaryReader.ReadBytes(4);
+            fewUpgradeChanceEasy = binaryReader.ReadSingle();
+            fewUpgradeChanceNormal = binaryReader.ReadSingle();
+            fewUpgradeChanceHeroic = binaryReader.ReadSingle();
+            fewUpgradeChanceLegendary = binaryReader.ReadSingle();
+            normalUpgradeChanceEasy = binaryReader.ReadSingle();
+            normalUpgradeChanceNormal = binaryReader.ReadSingle();
+            normalUpgradeChanceHeroic = binaryReader.ReadSingle();
+            normalUpgradeChanceLegendary = binaryReader.ReadSingle();
+            manyUpgradeChanceEasy = binaryReader.ReadSingle();
+            manyUpgradeChanceNormal = binaryReader.ReadSingle();
+            manyUpgradeChanceHeroic = binaryReader.ReadSingle();
+            manyUpgradeChanceLegendary = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  CharacterPlacementBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( invalidName_, 0, 4 );
-                binaryWriter.Write( fewUpgradeChanceEasy );
-                binaryWriter.Write( fewUpgradeChanceNormal );
-                binaryWriter.Write( fewUpgradeChanceHeroic );
-                binaryWriter.Write( fewUpgradeChanceLegendary );
-                binaryWriter.Write( normalUpgradeChanceEasy );
-                binaryWriter.Write( normalUpgradeChanceNormal );
-                binaryWriter.Write( normalUpgradeChanceHeroic );
-                binaryWriter.Write( normalUpgradeChanceLegendary );
-                binaryWriter.Write( manyUpgradeChanceEasy );
-                binaryWriter.Write( manyUpgradeChanceNormal );
-                binaryWriter.Write( manyUpgradeChanceHeroic );
-                binaryWriter.Write( manyUpgradeChanceLegendary );
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(fewUpgradeChanceEasy);
+                binaryWriter.Write(fewUpgradeChanceNormal);
+                binaryWriter.Write(fewUpgradeChanceHeroic);
+                binaryWriter.Write(fewUpgradeChanceLegendary);
+                binaryWriter.Write(normalUpgradeChanceEasy);
+                binaryWriter.Write(normalUpgradeChanceNormal);
+                binaryWriter.Write(normalUpgradeChanceHeroic);
+                binaryWriter.Write(normalUpgradeChanceLegendary);
+                binaryWriter.Write(manyUpgradeChanceEasy);
+                binaryWriter.Write(manyUpgradeChanceNormal);
+                binaryWriter.Write(manyUpgradeChanceHeroic);
+                binaryWriter.Write(manyUpgradeChanceLegendary);
                 return nextAddress;
             }
         }

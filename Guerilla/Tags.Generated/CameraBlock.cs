@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,35 +10,48 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class CameraBlock : CameraBlockBase
     {
-        public CameraBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  CameraBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CameraBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class CameraBlockBase : IGuerilla
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class CameraBlockBase : GuerillaBlock
     {
-        [TagReference( "trak" )] internal Moonfish.Tags.TagReference defaultUnitCameraTrack;
+        [TagReference("trak")]
+        internal Moonfish.Tags.TagReference defaultUnitCameraTrack;
         internal float defaultChangePause;
         internal float firstPersonChangePause;
         internal float followingCameraChangePause;
-
-        internal CameraBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CameraBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            defaultUnitCameraTrack = binaryReader.ReadTagReference( );
-            defaultChangePause = binaryReader.ReadSingle( );
-            firstPersonChangePause = binaryReader.ReadSingle( );
-            followingCameraChangePause = binaryReader.ReadSingle( );
+            defaultUnitCameraTrack = binaryReader.ReadTagReference();
+            defaultChangePause = binaryReader.ReadSingle();
+            firstPersonChangePause = binaryReader.ReadSingle();
+            followingCameraChangePause = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  CameraBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( defaultUnitCameraTrack );
-                binaryWriter.Write( defaultChangePause );
-                binaryWriter.Write( firstPersonChangePause );
-                binaryWriter.Write( followingCameraChangePause );
+                binaryWriter.Write(defaultUnitCameraTrack);
+                binaryWriter.Write(defaultChangePause);
+                binaryWriter.Write(firstPersonChangePause);
+                binaryWriter.Write(followingCameraChangePause);
                 return nextAddress;
             }
         }

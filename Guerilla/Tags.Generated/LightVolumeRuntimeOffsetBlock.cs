@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class LightVolumeRuntimeOffsetBlock : LightVolumeRuntimeOffsetBlockBase
     {
-        public LightVolumeRuntimeOffsetBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  LightVolumeRuntimeOffsetBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  LightVolumeRuntimeOffsetBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class LightVolumeRuntimeOffsetBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class LightVolumeRuntimeOffsetBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector2 invalidName_;
-
-        internal LightVolumeRuntimeOffsetBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  LightVolumeRuntimeOffsetBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            invalidName_ = binaryReader.ReadVector2( );
+            invalidName_ = binaryReader.ReadVector2();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  LightVolumeRuntimeOffsetBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( invalidName_ );
+                binaryWriter.Write(invalidName_);
                 return nextAddress;
             }
         }

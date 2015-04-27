@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,39 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class VehiclesBlock : VehiclesBlockBase
     {
-        public VehiclesBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  VehiclesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  VehiclesBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class VehiclesBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class VehiclesBlockBase : GuerillaBlock
     {
-        [TagReference( "vehi" )] internal Moonfish.Tags.TagReference vehicle;
-
-        internal VehiclesBlockBase( BinaryReader binaryReader )
+        [TagReference("vehi")]
+        internal Moonfish.Tags.TagReference vehicle;
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  VehiclesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            vehicle = binaryReader.ReadTagReference( );
+            vehicle = binaryReader.ReadTagReference();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  VehiclesBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( vehicle );
+                binaryWriter.Write(vehicle);
                 return nextAddress;
             }
         }

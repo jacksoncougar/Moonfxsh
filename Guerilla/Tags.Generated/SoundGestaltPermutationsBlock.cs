@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundGestaltPermutationsBlock : SoundGestaltPermutationsBlockBase
+    public partial class SoundGestaltPermutationsBlock : SoundGestaltPermutationsBlockBase
     {
         public  SoundGestaltPermutationsBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  SoundGestaltPermutationsBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class SoundGestaltPermutationsBlockBase  : IGuerilla
+    public class SoundGestaltPermutationsBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 name;
         internal short encodedSkipFraction;
@@ -26,7 +30,13 @@ namespace Moonfish.Guerilla.Tags
         internal int sampleSize;
         internal Moonfish.Tags.ShortBlockIndex1 firstChunk;
         internal short chunkCount;
-        internal  SoundGestaltPermutationsBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundGestaltPermutationsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             name = binaryReader.ReadShortBlockIndex1();
             encodedSkipFraction = binaryReader.ReadInt16();
@@ -37,7 +47,11 @@ namespace Moonfish.Guerilla.Tags
             firstChunk = binaryReader.ReadShortBlockIndex1();
             chunkCount = binaryReader.ReadInt16();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  SoundGestaltPermutationsBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

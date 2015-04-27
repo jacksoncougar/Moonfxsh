@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,38 +10,50 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Mulg = ( TagClass ) "mulg";
+        public static readonly TagClass Mulg = (TagClass)"mulg";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "mulg" )]
+    [TagClassAttribute("mulg")]
     public partial class MultiplayerGlobalsBlock : MultiplayerGlobalsBlockBase
     {
-        public MultiplayerGlobalsBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  MultiplayerGlobalsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  MultiplayerGlobalsBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class MultiplayerGlobalsBlockBase : IGuerilla
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class MultiplayerGlobalsBlockBase : GuerillaBlock
     {
         internal MultiplayerUniversalBlock[] universal;
         internal MultiplayerRuntimeBlock[] runtime;
-
-        internal MultiplayerGlobalsBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  MultiplayerGlobalsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            universal = Guerilla.ReadBlockArray<MultiplayerUniversalBlock>( binaryReader );
-            runtime = Guerilla.ReadBlockArray<MultiplayerRuntimeBlock>( binaryReader );
+            universal = Guerilla.ReadBlockArray<MultiplayerUniversalBlock>(binaryReader);
+            runtime = Guerilla.ReadBlockArray<MultiplayerRuntimeBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  MultiplayerGlobalsBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                nextAddress = Guerilla.WriteBlockArray<MultiplayerUniversalBlock>( binaryWriter, universal, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<MultiplayerRuntimeBlock>( binaryWriter, runtime, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<MultiplayerUniversalBlock>(binaryWriter, universal, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MultiplayerRuntimeBlock>(binaryWriter, runtime, nextAddress);
                 return nextAddress;
             }
         }

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,39 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioHsSourceReferenceBlock : ScenarioHsSourceReferenceBlockBase
     {
-        public ScenarioHsSourceReferenceBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ScenarioHsSourceReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioHsSourceReferenceBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ScenarioHsSourceReferenceBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class ScenarioHsSourceReferenceBlockBase : GuerillaBlock
     {
-        [TagReference( "hsc*" )] internal Moonfish.Tags.TagReference reference;
-
-        internal ScenarioHsSourceReferenceBlockBase( BinaryReader binaryReader )
+        [TagReference("hsc*")]
+        internal Moonfish.Tags.TagReference reference;
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioHsSourceReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            reference = binaryReader.ReadTagReference( );
+            reference = binaryReader.ReadTagReference();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ScenarioHsSourceReferenceBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( reference );
+                binaryWriter.Write(reference);
                 return nextAddress;
             }
         }

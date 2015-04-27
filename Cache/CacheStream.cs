@@ -200,7 +200,7 @@ namespace Moonfish
 
         private VirtualMappedAddress ActiveStructureMemoryAllocation { get; set; }
 
-        public void Add<T>(T item, string tagName ) where T : IGuerilla
+        public void Add<T>(T item, string tagName ) where T : GuerillaBlock
         {
             var lastDatum = Index.Last( );
 

@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class InstantaneousDamageRepsonseBlock : InstantaneousDamageRepsonseBlockBase
+    public partial class InstantaneousDamageRepsonseBlock : InstantaneousDamageRepsonseBlockBase
     {
         public  InstantaneousDamageRepsonseBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  InstantaneousDamageRepsonseBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 80, Alignment = 4)]
-    public class InstantaneousDamageRepsonseBlockBase  : IGuerilla
+    public class InstantaneousDamageRepsonseBlockBase : GuerillaBlock
     {
         internal ResponseType responseType;
         internal ConstraintDamageType constraintDamageType;
@@ -45,7 +49,13 @@ namespace Moonfish.Guerilla.Tags
         internal float skipFraction;
         internal Moonfish.Tags.StringID destroyedChildObjectMarkerName;
         internal float totalDamageThreshold;
-        internal  InstantaneousDamageRepsonseBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 80; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  InstantaneousDamageRepsonseBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             responseType = (ResponseType)binaryReader.ReadInt16();
             constraintDamageType = (ConstraintDamageType)binaryReader.ReadInt16();
@@ -67,7 +77,11 @@ namespace Moonfish.Guerilla.Tags
             destroyedChildObjectMarkerName = binaryReader.ReadStringID();
             totalDamageThreshold = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  InstantaneousDamageRepsonseBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

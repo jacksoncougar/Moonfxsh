@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,39 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class CheatPowerupsBlock : CheatPowerupsBlockBase
     {
-        public CheatPowerupsBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  CheatPowerupsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CheatPowerupsBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class CheatPowerupsBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class CheatPowerupsBlockBase : GuerillaBlock
     {
-        [TagReference( "eqip" )] internal Moonfish.Tags.TagReference powerup;
-
-        internal CheatPowerupsBlockBase( BinaryReader binaryReader )
+        [TagReference("eqip")]
+        internal Moonfish.Tags.TagReference powerup;
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CheatPowerupsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            powerup = binaryReader.ReadTagReference( );
+            powerup = binaryReader.ReadTagReference();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  CheatPowerupsBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( powerup );
+                binaryWriter.Write(powerup);
                 return nextAddress;
             }
         }

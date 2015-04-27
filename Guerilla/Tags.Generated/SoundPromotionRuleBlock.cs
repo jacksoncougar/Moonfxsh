@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundPromotionRuleBlock : SoundPromotionRuleBlockBase
+    public partial class SoundPromotionRuleBlock : SoundPromotionRuleBlockBase
     {
         public  SoundPromotionRuleBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  SoundPromotionRuleBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class SoundPromotionRuleBlockBase  : IGuerilla
+    public class SoundPromotionRuleBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 pitchRanges;
         internal short maximumPlayingCount;
@@ -25,14 +29,24 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float suppressionTimeSeconds;
         internal byte[] invalidName_;
-        internal  SoundPromotionRuleBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundPromotionRuleBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             pitchRanges = binaryReader.ReadShortBlockIndex1();
             maximumPlayingCount = binaryReader.ReadInt16();
             suppressionTimeSeconds = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(8);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  SoundPromotionRuleBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class AdditionalNodeDataBlock : AdditionalNodeDataBlockBase
     {
-        public AdditionalNodeDataBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  AdditionalNodeDataBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AdditionalNodeDataBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 60, Alignment = 4 )]
-    public class AdditionalNodeDataBlockBase : IGuerilla
+    [LayoutAttribute(Size = 60, Alignment = 4)]
+    public class AdditionalNodeDataBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID nodeName;
         internal OpenTK.Quaternion defaultRotation;
@@ -25,27 +28,35 @@ namespace Moonfish.Guerilla.Tags
         internal float defaultScale;
         internal OpenTK.Vector3 minBounds;
         internal OpenTK.Vector3 maxBounds;
-
-        internal AdditionalNodeDataBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 60; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AdditionalNodeDataBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            nodeName = binaryReader.ReadStringID( );
-            defaultRotation = binaryReader.ReadQuaternion( );
-            defaultTranslation = binaryReader.ReadVector3( );
-            defaultScale = binaryReader.ReadSingle( );
-            minBounds = binaryReader.ReadVector3( );
-            maxBounds = binaryReader.ReadVector3( );
+            nodeName = binaryReader.ReadStringID();
+            defaultRotation = binaryReader.ReadQuaternion();
+            defaultTranslation = binaryReader.ReadVector3();
+            defaultScale = binaryReader.ReadSingle();
+            minBounds = binaryReader.ReadVector3();
+            maxBounds = binaryReader.ReadVector3();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  AdditionalNodeDataBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( nodeName );
-                binaryWriter.Write( defaultRotation );
-                binaryWriter.Write( defaultTranslation );
-                binaryWriter.Write( defaultScale );
-                binaryWriter.Write( minBounds );
-                binaryWriter.Write( maxBounds );
+                binaryWriter.Write(nodeName);
+                binaryWriter.Write(defaultRotation);
+                binaryWriter.Write(defaultTranslation);
+                binaryWriter.Write(defaultScale);
+                binaryWriter.Write(minBounds);
+                binaryWriter.Write(maxBounds);
                 return nextAddress;
             }
         }

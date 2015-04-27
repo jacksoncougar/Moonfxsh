@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,48 +10,61 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Bsdt = ( TagClass ) "bsdt";
+        public static readonly TagClass Bsdt = (TagClass)"bsdt";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "bsdt" )]
+    [TagClassAttribute("bsdt")]
     public partial class BreakableSurfaceBlock : BreakableSurfaceBlockBase
     {
-        public BreakableSurfaceBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  BreakableSurfaceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  BreakableSurfaceBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class BreakableSurfaceBlockBase : IGuerilla
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class BreakableSurfaceBlockBase : GuerillaBlock
     {
         internal float maximumVitality;
-        [TagReference( "effe" )] internal Moonfish.Tags.TagReference effect;
-        [TagReference( "snd!" )] internal Moonfish.Tags.TagReference sound;
+        [TagReference("effe")]
+        internal Moonfish.Tags.TagReference effect;
+        [TagReference("snd!")]
+        internal Moonfish.Tags.TagReference sound;
         internal ParticleSystemDefinitionBlockNew[] particleEffects;
         internal float particleDensity;
-
-        internal BreakableSurfaceBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 32; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  BreakableSurfaceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            maximumVitality = binaryReader.ReadSingle( );
-            effect = binaryReader.ReadTagReference( );
-            sound = binaryReader.ReadTagReference( );
-            particleEffects = Guerilla.ReadBlockArray<ParticleSystemDefinitionBlockNew>( binaryReader );
-            particleDensity = binaryReader.ReadSingle( );
+            maximumVitality = binaryReader.ReadSingle();
+            effect = binaryReader.ReadTagReference();
+            sound = binaryReader.ReadTagReference();
+            particleEffects = Guerilla.ReadBlockArray<ParticleSystemDefinitionBlockNew>(binaryReader);
+            particleDensity = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  BreakableSurfaceBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( maximumVitality );
-                binaryWriter.Write( effect );
-                binaryWriter.Write( sound );
-                nextAddress = Guerilla.WriteBlockArray<ParticleSystemDefinitionBlockNew>( binaryWriter, particleEffects,
-                    nextAddress );
-                binaryWriter.Write( particleDensity );
+                binaryWriter.Write(maximumVitality);
+                binaryWriter.Write(effect);
+                binaryWriter.Write(sound);
+                nextAddress = Guerilla.WriteBlockArray<ParticleSystemDefinitionBlockNew>(binaryWriter, particleEffects, nextAddress);
+                binaryWriter.Write(particleDensity);
                 return nextAddress;
             }
         }

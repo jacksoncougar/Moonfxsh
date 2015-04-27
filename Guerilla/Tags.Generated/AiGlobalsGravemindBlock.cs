@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,32 +10,44 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class AiGlobalsGravemindBlock : AiGlobalsGravemindBlockBase
     {
-        public AiGlobalsGravemindBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  AiGlobalsGravemindBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AiGlobalsGravemindBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class AiGlobalsGravemindBlockBase : IGuerilla
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class AiGlobalsGravemindBlockBase : GuerillaBlock
     {
         internal float minRetreatTimeSecs;
         internal float idealRetreatTimeSecs;
         internal float maxRetreatTimeSecs;
-
-        internal AiGlobalsGravemindBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AiGlobalsGravemindBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            minRetreatTimeSecs = binaryReader.ReadSingle( );
-            idealRetreatTimeSecs = binaryReader.ReadSingle( );
-            maxRetreatTimeSecs = binaryReader.ReadSingle( );
+            minRetreatTimeSecs = binaryReader.ReadSingle();
+            idealRetreatTimeSecs = binaryReader.ReadSingle();
+            maxRetreatTimeSecs = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  AiGlobalsGravemindBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( minRetreatTimeSecs );
-                binaryWriter.Write( idealRetreatTimeSecs );
-                binaryWriter.Write( maxRetreatTimeSecs );
+                binaryWriter.Write(minRetreatTimeSecs);
+                binaryWriter.Write(idealRetreatTimeSecs);
+                binaryWriter.Write(maxRetreatTimeSecs);
                 return nextAddress;
             }
         }

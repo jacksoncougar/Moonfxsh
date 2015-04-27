@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,38 +10,50 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class LightmapSceneryObjectInfoBlock : LightmapSceneryObjectInfoBlockBase
     {
-        public LightmapSceneryObjectInfoBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  LightmapSceneryObjectInfoBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  LightmapSceneryObjectInfoBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class LightmapSceneryObjectInfoBlockBase : IGuerilla
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class LightmapSceneryObjectInfoBlockBase : GuerillaBlock
     {
         internal int uniqueID;
         internal short originBSPIndex;
         internal byte type;
         internal byte source;
         internal int renderModelChecksum;
-
-        internal LightmapSceneryObjectInfoBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  LightmapSceneryObjectInfoBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            uniqueID = binaryReader.ReadInt32( );
-            originBSPIndex = binaryReader.ReadInt16( );
-            type = binaryReader.ReadByte( );
-            source = binaryReader.ReadByte( );
-            renderModelChecksum = binaryReader.ReadInt32( );
+            uniqueID = binaryReader.ReadInt32();
+            originBSPIndex = binaryReader.ReadInt16();
+            type = binaryReader.ReadByte();
+            source = binaryReader.ReadByte();
+            renderModelChecksum = binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  LightmapSceneryObjectInfoBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( uniqueID );
-                binaryWriter.Write( originBSPIndex );
-                binaryWriter.Write( type );
-                binaryWriter.Write( source );
-                binaryWriter.Write( renderModelChecksum );
+                binaryWriter.Write(uniqueID);
+                binaryWriter.Write(originBSPIndex);
+                binaryWriter.Write(type);
+                binaryWriter.Write(source);
+                binaryWriter.Write(renderModelChecksum);
                 return nextAddress;
             }
         }

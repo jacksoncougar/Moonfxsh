@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureBspInstancedGeometryDefinitionBlock : StructureBspInstancedGeometryDefinitionBlockBase
     {
-        public StructureBspInstancedGeometryDefinitionBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  StructureBspInstancedGeometryDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StructureBspInstancedGeometryDefinitionBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 200, Alignment = 4 )]
-    public class StructureBspInstancedGeometryDefinitionBlockBase : IGuerilla
+    [LayoutAttribute(Size = 200, Alignment = 4)]
+    public class StructureBspInstancedGeometryDefinitionBlockBase : GuerillaBlock
     {
         internal StructureInstancedGeometryRenderInfoStructBlock renderInfo;
         internal int checksum;
@@ -27,32 +30,39 @@ namespace Moonfish.Guerilla.Tags
         internal CollisionBspPhysicsBlock[] bspPhysics;
         internal StructureBspLeafBlock[] renderLeaves;
         internal StructureBspSurfaceReferenceBlock[] surfaceReferences;
-
-        internal StructureBspInstancedGeometryDefinitionBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 200; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StructureBspInstancedGeometryDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            renderInfo = new StructureInstancedGeometryRenderInfoStructBlock( binaryReader );
-            checksum = binaryReader.ReadInt32( );
-            boundingSphereCenter = binaryReader.ReadVector3( );
-            boundingSphereRadius = binaryReader.ReadSingle( );
-            collisionInfo = new GlobalCollisionBspStructBlock( binaryReader );
-            bspPhysics = Guerilla.ReadBlockArray<CollisionBspPhysicsBlock>( binaryReader );
-            renderLeaves = Guerilla.ReadBlockArray<StructureBspLeafBlock>( binaryReader );
-            surfaceReferences = Guerilla.ReadBlockArray<StructureBspSurfaceReferenceBlock>( binaryReader );
+            renderInfo = new StructureInstancedGeometryRenderInfoStructBlock(binaryReader);
+            checksum = binaryReader.ReadInt32();
+            boundingSphereCenter = binaryReader.ReadVector3();
+            boundingSphereRadius = binaryReader.ReadSingle();
+            collisionInfo = new GlobalCollisionBspStructBlock(binaryReader);
+            bspPhysics = Guerilla.ReadBlockArray<CollisionBspPhysicsBlock>(binaryReader);
+            renderLeaves = Guerilla.ReadBlockArray<StructureBspLeafBlock>(binaryReader);
+            surfaceReferences = Guerilla.ReadBlockArray<StructureBspSurfaceReferenceBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  StructureBspInstancedGeometryDefinitionBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                renderInfo.Write( binaryWriter );
-                binaryWriter.Write( checksum );
-                binaryWriter.Write( boundingSphereCenter );
-                binaryWriter.Write( boundingSphereRadius );
-                collisionInfo.Write( binaryWriter );
-                nextAddress = Guerilla.WriteBlockArray<CollisionBspPhysicsBlock>( binaryWriter, bspPhysics, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<StructureBspLeafBlock>( binaryWriter, renderLeaves, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<StructureBspSurfaceReferenceBlock>( binaryWriter,
-                    surfaceReferences, nextAddress );
+                renderInfo.Write(binaryWriter);
+                binaryWriter.Write(checksum);
+                binaryWriter.Write(boundingSphereCenter);
+                binaryWriter.Write(boundingSphereRadius);
+                collisionInfo.Write(binaryWriter);
+                nextAddress = Guerilla.WriteBlockArray<CollisionBspPhysicsBlock>(binaryWriter, bspPhysics, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspLeafBlock>(binaryWriter, renderLeaves, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspSurfaceReferenceBlock>(binaryWriter, surfaceReferences, nextAddress);
                 return nextAddress;
             }
         }

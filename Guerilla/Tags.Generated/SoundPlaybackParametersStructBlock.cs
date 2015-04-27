@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundPlaybackParametersStructBlock : SoundPlaybackParametersStructBlockBase
+    public partial class SoundPlaybackParametersStructBlock : SoundPlaybackParametersStructBlockBase
     {
         public  SoundPlaybackParametersStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  SoundPlaybackParametersStructBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 56, Alignment = 4)]
-    public class SoundPlaybackParametersStructBlockBase  : IGuerilla
+    public class SoundPlaybackParametersStructBlockBase : GuerillaBlock
     {
         /// <summary>
         /// the distance below which this sound no longer gets louder
@@ -59,7 +63,13 @@ namespace Moonfish.Guerilla.Tags
         internal float azimuth;
         internal float positionalGainDB;
         internal float firstPersonGainDB;
-        internal  SoundPlaybackParametersStructBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 56; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundPlaybackParametersStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             minimumDistanceWorldUnits = binaryReader.ReadSingle();
             maximumDistanceWorldUnits = binaryReader.ReadSingle();
@@ -76,7 +86,11 @@ namespace Moonfish.Guerilla.Tags
             positionalGainDB = binaryReader.ReadSingle();
             firstPersonGainDB = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  SoundPlaybackParametersStructBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

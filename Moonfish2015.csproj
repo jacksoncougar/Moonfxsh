@@ -828,9 +828,6 @@
     <Compile Include="Guerilla\Tags.Generated\LocalBitmapReferenceBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\LocalStringIdListSectionReferenceBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\LocalStringIdListStringReferenceBlock.cs" />
-    <Compile Include="Guerilla\Tags.Generated\LongBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Guerilla\Tags.Generated\LookFunctionBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\LoopingSoundDetailBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\LoopingSoundTrackBlock.cs" />
@@ -1033,13 +1030,7 @@
     <Compile Include="Guerilla\Tags.Generated\PixelShaderConstantBlock.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Guerilla\Tags.Generated\PixelShaderExternMapBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Guerilla\Tags.Generated\PixelShaderFragmentBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Guerilla\Tags.Generated\PixelShaderIndexBlock.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Guerilla\Tags.Generated\PixelShaderPermutationBlock.cs">
@@ -1583,12 +1574,6 @@
     <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessPassBlock.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessPixelShader.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessPixelShaderConstantDefaults.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessValueBlock.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1698,7 +1683,6 @@
     <Compile Include="Guerilla\Tags.Generated\SoundCacheFileGestaltBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundClassBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundClassesBlock.cs" />
-    <Compile Include="Guerilla\Tags.Generated\SoundDefinitionLanguagePermutationInfoBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundDialogueConstantsBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundEffectCollectionBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundEffectComponentBlock.cs" />
@@ -1712,7 +1696,6 @@
     <Compile Include="Guerilla\Tags.Generated\SoundEffectTemplatesBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundEncodedDialogueSectionBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundEnvironmentBlock.cs" />
-    <Compile Include="Guerilla\Tags.Generated\SoundExtraInfoBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundGestaltCustomPlaybackBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundGestaltExtraInfoBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundGestaltImportNamesBlock.cs" />
@@ -1729,14 +1712,8 @@
     <Compile Include="Guerilla\Tags.Generated\SoundMixBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundPermutationChunkBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundPermutationDialogueInfoBlock.cs" />
-    <Compile Include="Guerilla\Tags.Generated\SoundPermutationMarkerBlock.cs" />
-    <Compile Include="Guerilla\Tags.Generated\SoundPermutationRawInfoBlock.cs" />
-    <Compile Include="Guerilla\Tags.Generated\SoundPermutationsBlock.cs" />
-    <Compile Include="Guerilla\Tags.Generated\SoundPitchRangeBlock.cs" />
-    <Compile Include="Guerilla\Tags.Generated\SoundPlatformSoundPlaybackBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundPlaybackParameterDefinitionBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundPlaybackParametersStructBlock.cs" />
-    <Compile Include="Guerilla\Tags.Generated\SoundPromotionParametersStructBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundPromotionRuleBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundPromotionRuntimeTimerBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\SoundReferencesBlock.cs" />

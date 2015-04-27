@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,42 +10,53 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Unic = ( TagClass ) "unic";
+        public static readonly TagClass Unic = (TagClass)"unic";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "unic" )]
+    [TagClassAttribute("unic")]
     public partial class MultilingualUnicodeStringListBlock : MultilingualUnicodeStringListBlockBase
     {
-        public MultilingualUnicodeStringListBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  MultilingualUnicodeStringListBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  MultilingualUnicodeStringListBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 52, Alignment = 4 )]
-    public class MultilingualUnicodeStringListBlockBase : IGuerilla
+    [LayoutAttribute(Size = 52, Alignment = 4)]
+    public class MultilingualUnicodeStringListBlockBase : GuerillaBlock
     {
         internal MultilingualUnicodeStringReferenceBlock[] stringReferences;
         internal byte[] stringDataUtf8;
         internal byte[] invalidName_;
-
-        internal MultilingualUnicodeStringListBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 52; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  MultilingualUnicodeStringListBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            stringReferences = Guerilla.ReadBlockArray<MultilingualUnicodeStringReferenceBlock>( binaryReader );
-            stringDataUtf8 = Guerilla.ReadData( binaryReader );
-            invalidName_ = binaryReader.ReadBytes( 36 );
+            stringReferences = Guerilla.ReadBlockArray<MultilingualUnicodeStringReferenceBlock>(binaryReader);
+            stringDataUtf8 = Guerilla.ReadData(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(36);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  MultilingualUnicodeStringListBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                nextAddress = Guerilla.WriteBlockArray<MultilingualUnicodeStringReferenceBlock>( binaryWriter,
-                    stringReferences, nextAddress );
-                nextAddress = Guerilla.WriteData( binaryWriter, stringDataUtf8, nextAddress );
-                binaryWriter.Write( invalidName_, 0, 36 );
+                nextAddress = Guerilla.WriteBlockArray<MultilingualUnicodeStringReferenceBlock>(binaryWriter, stringReferences, nextAddress);
+                nextAddress = Guerilla.WriteData(binaryWriter, stringDataUtf8, nextAddress);
+                binaryWriter.Write(invalidName_, 0, 36);
                 return nextAddress;
             }
         }

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,39 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class PowerupBlock : PowerupBlockBase
     {
-        public PowerupBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  PowerupBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PowerupBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class PowerupBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class PowerupBlockBase : GuerillaBlock
     {
-        [TagReference( "eqip" )] internal Moonfish.Tags.TagReference weapon;
-
-        internal PowerupBlockBase( BinaryReader binaryReader )
+        [TagReference("eqip")]
+        internal Moonfish.Tags.TagReference weapon;
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PowerupBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            weapon = binaryReader.ReadTagReference( );
+            weapon = binaryReader.ReadTagReference();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  PowerupBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( weapon );
+                binaryWriter.Write(weapon);
                 return nextAddress;
             }
         }

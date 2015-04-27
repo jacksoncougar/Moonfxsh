@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class VehiclePhantomShapeBlock : VehiclePhantomShapeBlockBase
     {
-        public VehiclePhantomShapeBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  VehiclePhantomShapeBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  VehiclePhantomShapeBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 672, Alignment = 16 )]
-    public class VehiclePhantomShapeBlockBase : IGuerilla
+    [LayoutAttribute(Size = 672, Alignment = 16)]
+    public class VehiclePhantomShapeBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal short size;
@@ -37,101 +40,106 @@ namespace Moonfish.Guerilla.Tags
         internal float z0;
         internal float z1;
         internal Multispheres[] multispheres;
-
-        internal VehiclePhantomShapeBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 672; }}
+        
+        
+        public override int Alignment{get { return 16; }}
+        
+        public  VehiclePhantomShapeBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes( 4 );
-            size = binaryReader.ReadInt16( );
-            count = binaryReader.ReadInt16( );
-            invalidName_0 = binaryReader.ReadBytes( 4 );
-            invalidName_1 = binaryReader.ReadBytes( 4 );
-            childShapesSize = binaryReader.ReadInt32( );
-            childShapesCapacity = binaryReader.ReadInt32( );
-            childShapesStorage = new[]
-            {
-                new ChildShapesStorage( binaryReader ), new ChildShapesStorage( binaryReader ),
-                new ChildShapesStorage( binaryReader ), new ChildShapesStorage( binaryReader ),
-            };
-            multisphereCount = binaryReader.ReadInt32( );
-            flags = ( Flags ) binaryReader.ReadInt32( );
-            invalidName_2 = binaryReader.ReadBytes( 8 );
-            x0 = binaryReader.ReadSingle( );
-            x1 = binaryReader.ReadSingle( );
-            y0 = binaryReader.ReadSingle( );
-            y1 = binaryReader.ReadSingle( );
-            z0 = binaryReader.ReadSingle( );
-            z1 = binaryReader.ReadSingle( );
-            multispheres = new[]
-            {
-                new Multispheres( binaryReader ), new Multispheres( binaryReader ), new Multispheres( binaryReader ),
-                new Multispheres( binaryReader ),
-            };
+            invalidName_ = binaryReader.ReadBytes(4);
+            size = binaryReader.ReadInt16();
+            count = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            invalidName_1 = binaryReader.ReadBytes(4);
+            childShapesSize = binaryReader.ReadInt32();
+            childShapesCapacity = binaryReader.ReadInt32();
+            childShapesStorage = new []{ new ChildShapesStorage(binaryReader), new ChildShapesStorage(binaryReader), new ChildShapesStorage(binaryReader), new ChildShapesStorage(binaryReader),  };
+            multisphereCount = binaryReader.ReadInt32();
+            flags = (Flags)binaryReader.ReadInt32();
+            invalidName_2 = binaryReader.ReadBytes(8);
+            x0 = binaryReader.ReadSingle();
+            x1 = binaryReader.ReadSingle();
+            y0 = binaryReader.ReadSingle();
+            y1 = binaryReader.ReadSingle();
+            z0 = binaryReader.ReadSingle();
+            z1 = binaryReader.ReadSingle();
+            multispheres = new []{ new Multispheres(binaryReader), new Multispheres(binaryReader), new Multispheres(binaryReader), new Multispheres(binaryReader),  };
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  VehiclePhantomShapeBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( invalidName_, 0, 4 );
-                binaryWriter.Write( size );
-                binaryWriter.Write( count );
-                binaryWriter.Write( invalidName_0, 0, 4 );
-                binaryWriter.Write( invalidName_1, 0, 4 );
-                binaryWriter.Write( childShapesSize );
-                binaryWriter.Write( childShapesCapacity );
-                childShapesStorage[ 0 ].Write( binaryWriter );
-                childShapesStorage[ 1 ].Write( binaryWriter );
-                childShapesStorage[ 2 ].Write( binaryWriter );
-                childShapesStorage[ 3 ].Write( binaryWriter );
-                binaryWriter.Write( multisphereCount );
-                binaryWriter.Write( ( Int32 ) flags );
-                binaryWriter.Write( invalidName_2, 0, 8 );
-                binaryWriter.Write( x0 );
-                binaryWriter.Write( x1 );
-                binaryWriter.Write( y0 );
-                binaryWriter.Write( y1 );
-                binaryWriter.Write( z0 );
-                binaryWriter.Write( z1 );
-                multispheres[ 0 ].Write( binaryWriter );
-                multispheres[ 1 ].Write( binaryWriter );
-                multispheres[ 2 ].Write( binaryWriter );
-                multispheres[ 3 ].Write( binaryWriter );
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(size);
+                binaryWriter.Write(count);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write(invalidName_1, 0, 4);
+                binaryWriter.Write(childShapesSize);
+                binaryWriter.Write(childShapesCapacity);
+                childShapesStorage[0].Write(binaryWriter);
+                childShapesStorage[1].Write(binaryWriter);
+                childShapesStorage[2].Write(binaryWriter);
+                childShapesStorage[3].Write(binaryWriter);
+                binaryWriter.Write(multisphereCount);
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(invalidName_2, 0, 8);
+                binaryWriter.Write(x0);
+                binaryWriter.Write(x1);
+                binaryWriter.Write(y0);
+                binaryWriter.Write(y1);
+                binaryWriter.Write(z0);
+                binaryWriter.Write(z1);
+                multispheres[0].Write(binaryWriter);
+                multispheres[1].Write(binaryWriter);
+                multispheres[2].Write(binaryWriter);
+                multispheres[3].Write(binaryWriter);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : int
         {
             HasAabbPhantom = 1,
             InvalidName = 2,
         };
-
-        [LayoutAttribute( Size = 8, Alignment = 1 )]
-        public class ChildShapesStorage : IGuerilla
+        [LayoutAttribute(Size = 8, Alignment = 1)]
+        public class ChildShapesStorage : GuerillaBlock
         {
             internal ShapeType shapeType;
             internal Moonfish.Tags.ShortBlockIndex2 shape;
             internal int collisionFilter;
-
-            internal ChildShapesStorage( BinaryReader binaryReader )
+            
+            public override int SerializedSize{get { return 8; }}
+            
+            
+            public override int Alignment{get { return 1; }}
+            
+            public  ChildShapesStorage(BinaryReader binaryReader): base(binaryReader)
             {
-                shapeType = ( ShapeType ) binaryReader.ReadInt16( );
-                shape = binaryReader.ReadShortBlockIndex2( );
-                collisionFilter = binaryReader.ReadInt32( );
+                shapeType = (ShapeType)binaryReader.ReadInt16();
+                shape = binaryReader.ReadShortBlockIndex2();
+                collisionFilter = binaryReader.ReadInt32();
             }
-
-            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public  ChildShapesStorage(): base()
             {
-                using ( binaryWriter.BaseStream.Pin( ) )
+                
+            }
+            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+            {
+                using(binaryWriter.BaseStream.Pin())
                 {
-                    binaryWriter.Write( ( Int16 ) shapeType );
-                    binaryWriter.Write( shape );
-                    binaryWriter.Write( collisionFilter );
+                    binaryWriter.Write((Int16)shapeType);
+                    binaryWriter.Write(shape);
+                    binaryWriter.Write(collisionFilter);
                     return nextAddress;
                 }
             }
-
             internal enum ShapeType : short
             {
                 Sphere = 0,
@@ -152,9 +160,8 @@ namespace Moonfish.Guerilla.Tags
                 Mopp = 15,
             };
         };
-
-        [LayoutAttribute( Size = 144, Alignment = 1 )]
-        public class Multispheres : IGuerilla
+        [LayoutAttribute(Size = 144, Alignment = 1)]
+        public class Multispheres : GuerillaBlock
         {
             internal byte[] invalidName_;
             internal short size;
@@ -162,62 +169,71 @@ namespace Moonfish.Guerilla.Tags
             internal byte[] invalidName_0;
             internal int numSpheres;
             internal FourVectorsStorage[] fourVectorsStorage;
-
-            internal Multispheres( BinaryReader binaryReader )
+            
+            public override int SerializedSize{get { return 144; }}
+            
+            
+            public override int Alignment{get { return 1; }}
+            
+            public  Multispheres(BinaryReader binaryReader): base(binaryReader)
             {
-                invalidName_ = binaryReader.ReadBytes( 4 );
-                size = binaryReader.ReadInt16( );
-                count = binaryReader.ReadInt16( );
-                invalidName_0 = binaryReader.ReadBytes( 4 );
-                numSpheres = binaryReader.ReadInt32( );
-                fourVectorsStorage = new[]
-                {
-                    new FourVectorsStorage( binaryReader ), new FourVectorsStorage( binaryReader ),
-                    new FourVectorsStorage( binaryReader ), new FourVectorsStorage( binaryReader ),
-                    new FourVectorsStorage( binaryReader ), new FourVectorsStorage( binaryReader ),
-                    new FourVectorsStorage( binaryReader ), new FourVectorsStorage( binaryReader ),
-                };
+                invalidName_ = binaryReader.ReadBytes(4);
+                size = binaryReader.ReadInt16();
+                count = binaryReader.ReadInt16();
+                invalidName_0 = binaryReader.ReadBytes(4);
+                numSpheres = binaryReader.ReadInt32();
+                fourVectorsStorage = new []{ new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader),  };
             }
-
-            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public  Multispheres(): base()
             {
-                using ( binaryWriter.BaseStream.Pin( ) )
+                
+            }
+            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+            {
+                using(binaryWriter.BaseStream.Pin())
                 {
-                    binaryWriter.Write( invalidName_, 0, 4 );
-                    binaryWriter.Write( size );
-                    binaryWriter.Write( count );
-                    binaryWriter.Write( invalidName_0, 0, 4 );
-                    binaryWriter.Write( numSpheres );
-                    fourVectorsStorage[ 0 ].Write( binaryWriter );
-                    fourVectorsStorage[ 1 ].Write( binaryWriter );
-                    fourVectorsStorage[ 2 ].Write( binaryWriter );
-                    fourVectorsStorage[ 3 ].Write( binaryWriter );
-                    fourVectorsStorage[ 4 ].Write( binaryWriter );
-                    fourVectorsStorage[ 5 ].Write( binaryWriter );
-                    fourVectorsStorage[ 6 ].Write( binaryWriter );
-                    fourVectorsStorage[ 7 ].Write( binaryWriter );
+                    binaryWriter.Write(invalidName_, 0, 4);
+                    binaryWriter.Write(size);
+                    binaryWriter.Write(count);
+                    binaryWriter.Write(invalidName_0, 0, 4);
+                    binaryWriter.Write(numSpheres);
+                    fourVectorsStorage[0].Write(binaryWriter);
+                    fourVectorsStorage[1].Write(binaryWriter);
+                    fourVectorsStorage[2].Write(binaryWriter);
+                    fourVectorsStorage[3].Write(binaryWriter);
+                    fourVectorsStorage[4].Write(binaryWriter);
+                    fourVectorsStorage[5].Write(binaryWriter);
+                    fourVectorsStorage[6].Write(binaryWriter);
+                    fourVectorsStorage[7].Write(binaryWriter);
                     return nextAddress;
                 }
             }
-
-            [LayoutAttribute( Size = 16, Alignment = 1 )]
-            public class FourVectorsStorage : IGuerilla
+            [LayoutAttribute(Size = 16, Alignment = 1)]
+            public class FourVectorsStorage : GuerillaBlock
             {
                 internal OpenTK.Vector3 sphere;
                 internal byte[] invalidName_;
-
-                internal FourVectorsStorage( BinaryReader binaryReader )
+                
+                public override int SerializedSize{get { return 16; }}
+                
+                
+                public override int Alignment{get { return 1; }}
+                
+                public  FourVectorsStorage(BinaryReader binaryReader): base(binaryReader)
                 {
-                    sphere = binaryReader.ReadVector3( );
-                    invalidName_ = binaryReader.ReadBytes( 4 );
+                    sphere = binaryReader.ReadVector3();
+                    invalidName_ = binaryReader.ReadBytes(4);
                 }
-
-                public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+                public  FourVectorsStorage(): base()
                 {
-                    using ( binaryWriter.BaseStream.Pin( ) )
+                    
+                }
+                public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+                {
+                    using(binaryWriter.BaseStream.Pin())
                     {
-                        binaryWriter.Write( sphere );
-                        binaryWriter.Write( invalidName_, 0, 4 );
+                        binaryWriter.Write(sphere);
+                        binaryWriter.Write(invalidName_, 0, 4);
                         return nextAddress;
                     }
                 }

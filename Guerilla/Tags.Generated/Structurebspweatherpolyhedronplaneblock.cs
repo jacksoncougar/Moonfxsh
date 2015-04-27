@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureBspWeatherPolyhedronPlaneBlock : StructureBspWeatherPolyhedronPlaneBlockBase
     {
-        public StructureBspWeatherPolyhedronPlaneBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  StructureBspWeatherPolyhedronPlaneBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StructureBspWeatherPolyhedronPlaneBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class StructureBspWeatherPolyhedronPlaneBlockBase : IGuerilla
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class StructureBspWeatherPolyhedronPlaneBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector4 plane;
-
-        internal StructureBspWeatherPolyhedronPlaneBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StructureBspWeatherPolyhedronPlaneBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            plane = binaryReader.ReadVector4( );
+            plane = binaryReader.ReadVector4();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  StructureBspWeatherPolyhedronPlaneBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( plane );
+                binaryWriter.Write(plane);
                 return nextAddress;
             }
         }

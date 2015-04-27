@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,42 +10,53 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class GloalWindPrimitivesBlock : GloalWindPrimitivesBlockBase
     {
-        public GloalWindPrimitivesBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  GloalWindPrimitivesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  GloalWindPrimitivesBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class GloalWindPrimitivesBlockBase : IGuerilla
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class GloalWindPrimitivesBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector3 position;
         internal float radius;
         internal float strength;
         internal WindPrimitiveType windPrimitiveType;
         internal byte[] invalidName_;
-
-        internal GloalWindPrimitivesBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 24; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  GloalWindPrimitivesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            position = binaryReader.ReadVector3( );
-            radius = binaryReader.ReadSingle( );
-            strength = binaryReader.ReadSingle( );
-            windPrimitiveType = ( WindPrimitiveType ) binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
+            position = binaryReader.ReadVector3();
+            radius = binaryReader.ReadSingle();
+            strength = binaryReader.ReadSingle();
+            windPrimitiveType = (WindPrimitiveType)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  GloalWindPrimitivesBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( position );
-                binaryWriter.Write( radius );
-                binaryWriter.Write( strength );
-                binaryWriter.Write( ( Int16 ) windPrimitiveType );
-                binaryWriter.Write( invalidName_, 0, 2 );
+                binaryWriter.Write(position);
+                binaryWriter.Write(radius);
+                binaryWriter.Write(strength);
+                binaryWriter.Write((Int16)windPrimitiveType);
+                binaryWriter.Write(invalidName_, 0, 2);
                 return nextAddress;
             }
         }
-
         internal enum WindPrimitiveType : short
         {
             Vortex = 0,

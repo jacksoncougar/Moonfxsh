@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,39 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class WeaponBarrelDamageEffectStructBlock : WeaponBarrelDamageEffectStructBlockBase
     {
-        public WeaponBarrelDamageEffectStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  WeaponBarrelDamageEffectStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  WeaponBarrelDamageEffectStructBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class WeaponBarrelDamageEffectStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class WeaponBarrelDamageEffectStructBlockBase : GuerillaBlock
     {
-        [TagReference( "jpt!" )] internal Moonfish.Tags.TagReference damageEffect;
-
-        internal WeaponBarrelDamageEffectStructBlockBase( BinaryReader binaryReader )
+        [TagReference("jpt!")]
+        internal Moonfish.Tags.TagReference damageEffect;
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  WeaponBarrelDamageEffectStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            damageEffect = binaryReader.ReadTagReference( );
+            damageEffect = binaryReader.ReadTagReference();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  WeaponBarrelDamageEffectStructBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( damageEffect );
+                binaryWriter.Write(damageEffect);
                 return nextAddress;
             }
         }

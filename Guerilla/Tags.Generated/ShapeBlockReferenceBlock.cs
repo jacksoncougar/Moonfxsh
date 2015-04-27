@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShapeBlockReferenceBlock : ShapeBlockReferenceBlockBase
     {
-        public ShapeBlockReferenceBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShapeBlockReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShapeBlockReferenceBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 48, Alignment = 4 )]
-    public class ShapeBlockReferenceBlockBase : IGuerilla
+    [LayoutAttribute(Size = 48, Alignment = 4)]
+    public class ShapeBlockReferenceBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal AnimationIndex animationIndex;
@@ -26,39 +29,45 @@ namespace Moonfish.Guerilla.Tags
         internal PointBlockReferenceBlock[] points;
         internal short renderDepthBias;
         internal byte[] invalidName_;
-
-        internal ShapeBlockReferenceBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 48; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShapeBlockReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            flags = ( Flags ) binaryReader.ReadInt32( );
-            animationIndex = ( AnimationIndex ) binaryReader.ReadInt16( );
-            introAnimationDelayMilliseconds = binaryReader.ReadInt16( );
-            color = binaryReader.ReadVector4( );
-            points = Guerilla.ReadBlockArray<PointBlockReferenceBlock>( binaryReader );
-            renderDepthBias = binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 14 );
+            flags = (Flags)binaryReader.ReadInt32();
+            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
+            color = binaryReader.ReadVector4();
+            points = Guerilla.ReadBlockArray<PointBlockReferenceBlock>(binaryReader);
+            renderDepthBias = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(14);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ShapeBlockReferenceBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int32 ) flags );
-                binaryWriter.Write( ( Int16 ) animationIndex );
-                binaryWriter.Write( introAnimationDelayMilliseconds );
-                binaryWriter.Write( color );
-                nextAddress = Guerilla.WriteBlockArray<PointBlockReferenceBlock>( binaryWriter, points, nextAddress );
-                binaryWriter.Write( renderDepthBias );
-                binaryWriter.Write( invalidName_, 0, 14 );
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int16)animationIndex);
+                binaryWriter.Write(introAnimationDelayMilliseconds);
+                binaryWriter.Write(color);
+                nextAddress = Guerilla.WriteBlockArray<PointBlockReferenceBlock>(binaryWriter, points, nextAddress);
+                binaryWriter.Write(renderDepthBias);
+                binaryWriter.Write(invalidName_, 0, 14);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : int
         {
             Unused = 1,
         };
-
         internal enum AnimationIndex : short
         {
             NONE = 0,

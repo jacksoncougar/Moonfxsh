@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,29 +10,41 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class UnitAdditionalNodeNamesStructBlock : UnitAdditionalNodeNamesStructBlockBase
     {
-        public UnitAdditionalNodeNamesStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  UnitAdditionalNodeNamesStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  UnitAdditionalNodeNamesStructBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class UnitAdditionalNodeNamesStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class UnitAdditionalNodeNamesStructBlockBase : GuerillaBlock
     {
         /// <summary>
         /// if found, use this gun marker
         /// </summary>
         internal Moonfish.Tags.StringID preferredGunNode;
-
-        internal UnitAdditionalNodeNamesStructBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  UnitAdditionalNodeNamesStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            preferredGunNode = binaryReader.ReadStringID( );
+            preferredGunNode = binaryReader.ReadStringID();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  UnitAdditionalNodeNamesStructBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( preferredGunNode );
+                binaryWriter.Write(preferredGunNode);
                 return nextAddress;
             }
         }

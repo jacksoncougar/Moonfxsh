@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,36 +10,47 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class AnimationIkBlock : AnimationIkBlockBase
     {
-        public AnimationIkBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  AnimationIkBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AnimationIkBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class AnimationIkBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class AnimationIkBlockBase : GuerillaBlock
     {
         /// <summary>
         /// the marker name on the object being attached
         /// </summary>
         internal Moonfish.Tags.StringID marker;
-
         /// <summary>
         /// the marker name object (weapon, vehicle, etc.) the above marker is being attached to
         /// </summary>
         internal Moonfish.Tags.StringID attachToMarker;
-
-        internal AnimationIkBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AnimationIkBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            marker = binaryReader.ReadStringID( );
-            attachToMarker = binaryReader.ReadStringID( );
+            marker = binaryReader.ReadStringID();
+            attachToMarker = binaryReader.ReadStringID();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  AnimationIkBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( marker );
-                binaryWriter.Write( attachToMarker );
+                binaryWriter.Write(marker);
+                binaryWriter.Write(attachToMarker);
                 return nextAddress;
             }
         }

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,37 +10,47 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class RenderModelSectionGroupBlock : RenderModelSectionGroupBlockBase
     {
-        public RenderModelSectionGroupBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  RenderModelSectionGroupBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  RenderModelSectionGroupBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class RenderModelSectionGroupBlockBase : IGuerilla
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class RenderModelSectionGroupBlockBase : GuerillaBlock
     {
         internal DetailLevels detailLevels;
         internal byte[] invalidName_;
         internal RenderModelCompoundNodeBlock[] compoundNodes;
-
-        internal RenderModelSectionGroupBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  RenderModelSectionGroupBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            detailLevels = ( DetailLevels ) binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            compoundNodes = Guerilla.ReadBlockArray<RenderModelCompoundNodeBlock>( binaryReader );
+            detailLevels = (DetailLevels)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            compoundNodes = Guerilla.ReadBlockArray<RenderModelCompoundNodeBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  RenderModelSectionGroupBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) detailLevels );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                nextAddress = Guerilla.WriteBlockArray<RenderModelCompoundNodeBlock>( binaryWriter, compoundNodes,
-                    nextAddress );
+                binaryWriter.Write((Int16)detailLevels);
+                binaryWriter.Write(invalidName_, 0, 2);
+                nextAddress = Guerilla.WriteBlockArray<RenderModelCompoundNodeBlock>(binaryWriter, compoundNodes, nextAddress);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum DetailLevels : short
         {

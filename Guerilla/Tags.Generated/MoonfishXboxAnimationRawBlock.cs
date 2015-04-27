@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,38 +10,50 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class MoonfishXboxAnimationRawBlock : MoonfishXboxAnimationRawBlockBase
     {
-        public MoonfishXboxAnimationRawBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  MoonfishXboxAnimationRawBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  MoonfishXboxAnimationRawBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class MoonfishXboxAnimationRawBlockBase : IGuerilla
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class MoonfishXboxAnimationRawBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.TagIdent ownerTag;
         internal int blockSize;
         internal int blockLength;
         internal int unknown;
         internal int unknown1;
-
-        internal MoonfishXboxAnimationRawBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  MoonfishXboxAnimationRawBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            ownerTag = binaryReader.ReadTagIdent( );
-            blockSize = binaryReader.ReadInt32( );
-            blockLength = binaryReader.ReadInt32( );
-            unknown = binaryReader.ReadInt32( );
-            unknown1 = binaryReader.ReadInt32( );
+            ownerTag = binaryReader.ReadTagIdent();
+            blockSize = binaryReader.ReadInt32();
+            blockLength = binaryReader.ReadInt32();
+            unknown = binaryReader.ReadInt32();
+            unknown1 = binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  MoonfishXboxAnimationRawBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ownerTag );
-                binaryWriter.Write( blockSize );
-                binaryWriter.Write( blockLength );
-                binaryWriter.Write( unknown );
-                binaryWriter.Write( unknown1 );
+                binaryWriter.Write(ownerTag);
+                binaryWriter.Write(blockSize);
+                binaryWriter.Write(blockLength);
+                binaryWriter.Write(unknown);
+                binaryWriter.Write(unknown1);
                 return nextAddress;
             }
         }

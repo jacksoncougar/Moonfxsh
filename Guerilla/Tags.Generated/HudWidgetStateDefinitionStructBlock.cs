@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class HudWidgetStateDefinitionStructBlock : HudWidgetStateDefinitionStructBlockBase
     {
-        public HudWidgetStateDefinitionStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  HudWidgetStateDefinitionStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  HudWidgetStateDefinitionStructBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class HudWidgetStateDefinitionStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 20, Alignment = 4)]
+    public class HudWidgetStateDefinitionStructBlockBase : GuerillaBlock
     {
         internal YUnitFlags yUnitFlags;
         internal YExtraFlags yExtraFlags;
@@ -31,43 +34,50 @@ namespace Moonfish.Guerilla.Tags
         internal byte clipCutoff;
         internal byte totalCutoff;
         internal byte[] invalidName_;
-
-        internal HudWidgetStateDefinitionStructBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  HudWidgetStateDefinitionStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            yUnitFlags = ( YUnitFlags ) binaryReader.ReadInt16( );
-            yExtraFlags = ( YExtraFlags ) binaryReader.ReadInt16( );
-            yWeaponFlags = ( YWeaponFlags ) binaryReader.ReadInt16( );
-            yGameEngineStateFlags = ( YGameEngineStateFlags ) binaryReader.ReadInt16( );
-            nUnitFlags = ( NUnitFlags ) binaryReader.ReadInt16( );
-            nExtraFlags = ( NExtraFlags ) binaryReader.ReadInt16( );
-            nWeaponFlags = ( NWeaponFlags ) binaryReader.ReadInt16( );
-            nGameEngineStateFlags = ( NGameEngineStateFlags ) binaryReader.ReadInt16( );
-            ageCutoff = binaryReader.ReadByte( );
-            clipCutoff = binaryReader.ReadByte( );
-            totalCutoff = binaryReader.ReadByte( );
-            invalidName_ = binaryReader.ReadBytes( 1 );
+            yUnitFlags = (YUnitFlags)binaryReader.ReadInt16();
+            yExtraFlags = (YExtraFlags)binaryReader.ReadInt16();
+            yWeaponFlags = (YWeaponFlags)binaryReader.ReadInt16();
+            yGameEngineStateFlags = (YGameEngineStateFlags)binaryReader.ReadInt16();
+            nUnitFlags = (NUnitFlags)binaryReader.ReadInt16();
+            nExtraFlags = (NExtraFlags)binaryReader.ReadInt16();
+            nWeaponFlags = (NWeaponFlags)binaryReader.ReadInt16();
+            nGameEngineStateFlags = (NGameEngineStateFlags)binaryReader.ReadInt16();
+            ageCutoff = binaryReader.ReadByte();
+            clipCutoff = binaryReader.ReadByte();
+            totalCutoff = binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes(1);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  HudWidgetStateDefinitionStructBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) yUnitFlags );
-                binaryWriter.Write( ( Int16 ) yExtraFlags );
-                binaryWriter.Write( ( Int16 ) yWeaponFlags );
-                binaryWriter.Write( ( Int16 ) yGameEngineStateFlags );
-                binaryWriter.Write( ( Int16 ) nUnitFlags );
-                binaryWriter.Write( ( Int16 ) nExtraFlags );
-                binaryWriter.Write( ( Int16 ) nWeaponFlags );
-                binaryWriter.Write( ( Int16 ) nGameEngineStateFlags );
-                binaryWriter.Write( ageCutoff );
-                binaryWriter.Write( clipCutoff );
-                binaryWriter.Write( totalCutoff );
-                binaryWriter.Write( invalidName_, 0, 1 );
+                binaryWriter.Write((Int16)yUnitFlags);
+                binaryWriter.Write((Int16)yExtraFlags);
+                binaryWriter.Write((Int16)yWeaponFlags);
+                binaryWriter.Write((Int16)yGameEngineStateFlags);
+                binaryWriter.Write((Int16)nUnitFlags);
+                binaryWriter.Write((Int16)nExtraFlags);
+                binaryWriter.Write((Int16)nWeaponFlags);
+                binaryWriter.Write((Int16)nGameEngineStateFlags);
+                binaryWriter.Write(ageCutoff);
+                binaryWriter.Write(clipCutoff);
+                binaryWriter.Write(totalCutoff);
+                binaryWriter.Write(invalidName_, 0, 1);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum YUnitFlags : short
         {
@@ -86,7 +96,6 @@ namespace Moonfish.Guerilla.Tags
             ShieldEnabled = 4096,
             Dervish = 8192,
         };
-
         [FlagsAttribute]
         internal enum YExtraFlags : short
         {
@@ -96,7 +105,6 @@ namespace Moonfish.Guerilla.Tags
             AutoaimVulnerable = 8,
             AutoaimInvincible = 16,
         };
-
         [FlagsAttribute]
         internal enum YWeaponFlags : short
         {
@@ -112,7 +120,6 @@ namespace Moonfish.Guerilla.Tags
             Locking = 512,
             Locked = 1024,
         };
-
         [FlagsAttribute]
         internal enum YGameEngineStateFlags : short
         {
@@ -129,7 +136,6 @@ namespace Moonfish.Guerilla.Tags
             PlayerIsArmingBomb = 1024,
             PlayerTalking = 2048,
         };
-
         [FlagsAttribute]
         internal enum NUnitFlags : short
         {
@@ -148,7 +154,6 @@ namespace Moonfish.Guerilla.Tags
             ShieldEnabled = 4096,
             Dervish = 8192,
         };
-
         [FlagsAttribute]
         internal enum NExtraFlags : short
         {
@@ -158,7 +163,6 @@ namespace Moonfish.Guerilla.Tags
             AutoaimVulnerable = 8,
             AutoaimInvincible = 16,
         };
-
         [FlagsAttribute]
         internal enum NWeaponFlags : short
         {
@@ -174,7 +178,6 @@ namespace Moonfish.Guerilla.Tags
             Locking = 512,
             Locked = 1024,
         };
-
         [FlagsAttribute]
         internal enum NGameEngineStateFlags : short
         {

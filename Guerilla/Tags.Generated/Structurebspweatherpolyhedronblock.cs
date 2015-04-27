@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,33 +10,44 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureBspWeatherPolyhedronBlock : StructureBspWeatherPolyhedronBlockBase
     {
-        public StructureBspWeatherPolyhedronBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  StructureBspWeatherPolyhedronBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StructureBspWeatherPolyhedronBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class StructureBspWeatherPolyhedronBlockBase : IGuerilla
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class StructureBspWeatherPolyhedronBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector3 boundingSphereCenter;
         internal float boundingSphereRadius;
         internal StructureBspWeatherPolyhedronPlaneBlock[] planes;
-
-        internal StructureBspWeatherPolyhedronBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 24; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StructureBspWeatherPolyhedronBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            boundingSphereCenter = binaryReader.ReadVector3( );
-            boundingSphereRadius = binaryReader.ReadSingle( );
-            planes = Guerilla.ReadBlockArray<StructureBspWeatherPolyhedronPlaneBlock>( binaryReader );
+            boundingSphereCenter = binaryReader.ReadVector3();
+            boundingSphereRadius = binaryReader.ReadSingle();
+            planes = Guerilla.ReadBlockArray<StructureBspWeatherPolyhedronPlaneBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  StructureBspWeatherPolyhedronBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( boundingSphereCenter );
-                binaryWriter.Write( boundingSphereRadius );
-                nextAddress = Guerilla.WriteBlockArray<StructureBspWeatherPolyhedronPlaneBlock>( binaryWriter, planes,
-                    nextAddress );
+                binaryWriter.Write(boundingSphereCenter);
+                binaryWriter.Write(boundingSphereRadius);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspWeatherPolyhedronPlaneBlock>(binaryWriter, planes, nextAddress);
                 return nextAddress;
             }
         }

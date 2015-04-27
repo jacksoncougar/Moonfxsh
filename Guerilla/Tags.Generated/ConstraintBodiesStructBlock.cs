@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ConstraintBodiesStructBlock : ConstraintBodiesStructBlockBase
     {
-        public ConstraintBodiesStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ConstraintBodiesStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ConstraintBodiesStructBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 116, Alignment = 4 )]
-    public class ConstraintBodiesStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 116, Alignment = 4)]
+    public class ConstraintBodiesStructBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 nodeA;
@@ -34,45 +37,53 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 bPosition;
         internal Moonfish.Tags.ShortBlockIndex1 edgeIndex;
         internal byte[] invalidName_;
-
-        internal ConstraintBodiesStructBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 116; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ConstraintBodiesStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadStringID( );
-            nodeA = binaryReader.ReadShortBlockIndex1( );
-            nodeB = binaryReader.ReadShortBlockIndex1( );
-            aScale = binaryReader.ReadSingle( );
-            aForward = binaryReader.ReadVector3( );
-            aLeft = binaryReader.ReadVector3( );
-            aUp = binaryReader.ReadVector3( );
-            aPosition = binaryReader.ReadVector3( );
-            bScale = binaryReader.ReadSingle( );
-            bForward = binaryReader.ReadVector3( );
-            bLeft = binaryReader.ReadVector3( );
-            bUp = binaryReader.ReadVector3( );
-            bPosition = binaryReader.ReadVector3( );
-            edgeIndex = binaryReader.ReadShortBlockIndex1( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
+            name = binaryReader.ReadStringID();
+            nodeA = binaryReader.ReadShortBlockIndex1();
+            nodeB = binaryReader.ReadShortBlockIndex1();
+            aScale = binaryReader.ReadSingle();
+            aForward = binaryReader.ReadVector3();
+            aLeft = binaryReader.ReadVector3();
+            aUp = binaryReader.ReadVector3();
+            aPosition = binaryReader.ReadVector3();
+            bScale = binaryReader.ReadSingle();
+            bForward = binaryReader.ReadVector3();
+            bLeft = binaryReader.ReadVector3();
+            bUp = binaryReader.ReadVector3();
+            bPosition = binaryReader.ReadVector3();
+            edgeIndex = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ConstraintBodiesStructBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( nodeA );
-                binaryWriter.Write( nodeB );
-                binaryWriter.Write( aScale );
-                binaryWriter.Write( aForward );
-                binaryWriter.Write( aLeft );
-                binaryWriter.Write( aUp );
-                binaryWriter.Write( aPosition );
-                binaryWriter.Write( bScale );
-                binaryWriter.Write( bForward );
-                binaryWriter.Write( bLeft );
-                binaryWriter.Write( bUp );
-                binaryWriter.Write( bPosition );
-                binaryWriter.Write( edgeIndex );
-                binaryWriter.Write( invalidName_, 0, 2 );
+                binaryWriter.Write(name);
+                binaryWriter.Write(nodeA);
+                binaryWriter.Write(nodeB);
+                binaryWriter.Write(aScale);
+                binaryWriter.Write(aForward);
+                binaryWriter.Write(aLeft);
+                binaryWriter.Write(aUp);
+                binaryWriter.Write(aPosition);
+                binaryWriter.Write(bScale);
+                binaryWriter.Write(bForward);
+                binaryWriter.Write(bLeft);
+                binaryWriter.Write(bUp);
+                binaryWriter.Write(bPosition);
+                binaryWriter.Write(edgeIndex);
+                binaryWriter.Write(invalidName_, 0, 2);
                 return nextAddress;
             }
         }

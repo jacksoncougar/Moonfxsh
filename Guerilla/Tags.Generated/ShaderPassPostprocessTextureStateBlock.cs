@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPassPostprocessTextureStateBlock : ShaderPassPostprocessTextureStateBlockBase
     {
-        public ShaderPassPostprocessTextureStateBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderPassPostprocessTextureStateBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderPassPostprocessTextureStateBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class ShaderPassPostprocessTextureStateBlockBase : IGuerilla
+    [LayoutAttribute(Size = 24, Alignment = 4)]
+    public class ShaderPassPostprocessTextureStateBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
-
-        internal ShaderPassPostprocessTextureStateBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 24; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderPassPostprocessTextureStateBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes( 24 );
+            invalidName_ = binaryReader.ReadBytes(24);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ShaderPassPostprocessTextureStateBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( invalidName_, 0, 24 );
+                binaryWriter.Write(invalidName_, 0, 24);
                 return nextAddress;
             }
         }

@@ -8,24 +8,38 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ModelTargetLockOnDataStructBlock : ModelTargetLockOnDataStructBlockBase
+    public partial class ModelTargetLockOnDataStructBlock : ModelTargetLockOnDataStructBlockBase
     {
         public  ModelTargetLockOnDataStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  ModelTargetLockOnDataStructBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ModelTargetLockOnDataStructBlockBase  : IGuerilla
+    public class ModelTargetLockOnDataStructBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal float lockOnDistance;
-        internal  ModelTargetLockOnDataStructBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ModelTargetLockOnDataStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             flags = (Flags)binaryReader.ReadInt32();
             lockOnDistance = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  ModelTargetLockOnDataStructBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

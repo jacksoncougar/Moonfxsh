@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class PhantomsBlock : PhantomsBlockBase
     {
-        public PhantomsBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  PhantomsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PhantomsBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class PhantomsBlockBase : IGuerilla
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class PhantomsBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal short size;
@@ -29,35 +32,43 @@ namespace Moonfish.Guerilla.Tags
         internal short size0;
         internal short count0;
         internal byte[] invalidName_4;
-
-        internal PhantomsBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 32; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PhantomsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes( 4 );
-            size = binaryReader.ReadInt16( );
-            count = binaryReader.ReadInt16( );
-            invalidName_0 = binaryReader.ReadBytes( 4 );
-            invalidName_1 = binaryReader.ReadBytes( 4 );
-            invalidName_2 = binaryReader.ReadBytes( 4 );
-            invalidName_3 = binaryReader.ReadBytes( 4 );
-            size0 = binaryReader.ReadInt16( );
-            count0 = binaryReader.ReadInt16( );
-            invalidName_4 = binaryReader.ReadBytes( 4 );
+            invalidName_ = binaryReader.ReadBytes(4);
+            size = binaryReader.ReadInt16();
+            count = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            invalidName_1 = binaryReader.ReadBytes(4);
+            invalidName_2 = binaryReader.ReadBytes(4);
+            invalidName_3 = binaryReader.ReadBytes(4);
+            size0 = binaryReader.ReadInt16();
+            count0 = binaryReader.ReadInt16();
+            invalidName_4 = binaryReader.ReadBytes(4);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  PhantomsBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( invalidName_, 0, 4 );
-                binaryWriter.Write( size );
-                binaryWriter.Write( count );
-                binaryWriter.Write( invalidName_0, 0, 4 );
-                binaryWriter.Write( invalidName_1, 0, 4 );
-                binaryWriter.Write( invalidName_2, 0, 4 );
-                binaryWriter.Write( invalidName_3, 0, 4 );
-                binaryWriter.Write( size0 );
-                binaryWriter.Write( count0 );
-                binaryWriter.Write( invalidName_4, 0, 4 );
+                binaryWriter.Write(invalidName_, 0, 4);
+                binaryWriter.Write(size);
+                binaryWriter.Write(count);
+                binaryWriter.Write(invalidName_0, 0, 4);
+                binaryWriter.Write(invalidName_1, 0, 4);
+                binaryWriter.Write(invalidName_2, 0, 4);
+                binaryWriter.Write(invalidName_3, 0, 4);
+                binaryWriter.Write(size0);
+                binaryWriter.Write(count0);
+                binaryWriter.Write(invalidName_4, 0, 4);
                 return nextAddress;
             }
         }

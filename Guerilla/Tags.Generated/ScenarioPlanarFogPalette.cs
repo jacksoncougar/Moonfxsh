@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,35 +10,48 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioPlanarFogPalette : ScenarioPlanarFogPaletteBase
     {
-        public ScenarioPlanarFogPalette( BinaryReader binaryReader ) : base( binaryReader )
+        public  ScenarioPlanarFogPalette(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioPlanarFogPalette(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class ScenarioPlanarFogPaletteBase : IGuerilla
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class ScenarioPlanarFogPaletteBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
-        [TagReference( "fog " )] internal Moonfish.Tags.TagReference planarFog;
+        [TagReference("fog ")]
+        internal Moonfish.Tags.TagReference planarFog;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
-
-        internal ScenarioPlanarFogPaletteBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioPlanarFogPaletteBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadStringID( );
-            planarFog = binaryReader.ReadTagReference( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            invalidName_0 = binaryReader.ReadBytes( 2 );
+            name = binaryReader.ReadStringID();
+            planarFog = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(2);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ScenarioPlanarFogPaletteBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( planarFog );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( invalidName_0, 0, 2 );
+                binaryWriter.Write(name);
+                binaryWriter.Write(planarFog);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(invalidName_0, 0, 2);
                 return nextAddress;
             }
         }

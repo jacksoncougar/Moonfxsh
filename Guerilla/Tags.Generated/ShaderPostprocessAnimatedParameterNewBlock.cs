@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPostprocessAnimatedParameterNewBlock : ShaderPostprocessAnimatedParameterNewBlockBase
     {
-        public ShaderPostprocessAnimatedParameterNewBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderPostprocessAnimatedParameterNewBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderPostprocessAnimatedParameterNewBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 2, Alignment = 4 )]
-    public class ShaderPostprocessAnimatedParameterNewBlockBase : IGuerilla
+    [LayoutAttribute(Size = 2, Alignment = 4)]
+    public class ShaderPostprocessAnimatedParameterNewBlockBase : GuerillaBlock
     {
         internal TagBlockIndexStructBlock overlayReferences;
-
-        internal ShaderPostprocessAnimatedParameterNewBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 2; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderPostprocessAnimatedParameterNewBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            overlayReferences = new TagBlockIndexStructBlock( binaryReader );
+            overlayReferences = new TagBlockIndexStructBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ShaderPostprocessAnimatedParameterNewBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                overlayReferences.Write( binaryWriter );
+                overlayReferences.Write(binaryWriter);
                 return nextAddress;
             }
         }

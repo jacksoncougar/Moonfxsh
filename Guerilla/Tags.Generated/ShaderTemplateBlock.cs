@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,22 +10,26 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Stem = ( TagClass ) "stem";
+        public static readonly TagClass Stem = (TagClass)"stem";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "stem" )]
+    [TagClassAttribute("stem")]
     public partial class ShaderTemplateBlock : ShaderTemplateBlockBase
     {
-        public ShaderTemplateBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderTemplateBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderTemplateBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 96, Alignment = 4 )]
-    public class ShaderTemplateBlockBase : IGuerilla
+    [LayoutAttribute(Size = 96, Alignment = 4)]
+    public class ShaderTemplateBlockBase : GuerillaBlock
     {
         internal byte[] documentation;
         internal Moonfish.Tags.StringID defaultMaterialName;
@@ -34,72 +37,74 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal ShaderTemplatePropertyBlock[] properties;
         internal ShaderTemplateCategoryBlock[] categories;
-        [TagReference( "slit" )] internal Moonfish.Tags.TagReference lightResponse;
+        [TagReference("slit")]
+        internal Moonfish.Tags.TagReference lightResponse;
         internal ShaderTemplateLevelOfDetailBlock[] lODs;
         internal ShaderTemplateRuntimeExternalLightResponseIndexBlock[] eMPTYSTRING;
         internal ShaderTemplateRuntimeExternalLightResponseIndexBlock[] eMPTYSTRING0;
-        [TagReference( "shad" )] internal Moonfish.Tags.TagReference aux1Shader;
+        [TagReference("shad")]
+        internal Moonfish.Tags.TagReference aux1Shader;
         internal Aux1Layer aux1Layer;
         internal byte[] invalidName_0;
-        [TagReference( "shad" )] internal Moonfish.Tags.TagReference aux2Shader;
+        [TagReference("shad")]
+        internal Moonfish.Tags.TagReference aux2Shader;
         internal Aux2Layer aux2Layer;
         internal byte[] invalidName_1;
         internal ShaderTemplatePostprocessDefinitionNewBlock[] postprocessDefinition;
-
-        internal ShaderTemplateBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 96; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderTemplateBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            documentation = Guerilla.ReadData( binaryReader );
-            defaultMaterialName = binaryReader.ReadStringID( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            flags = ( Flags ) binaryReader.ReadInt16( );
-            properties = Guerilla.ReadBlockArray<ShaderTemplatePropertyBlock>( binaryReader );
-            categories = Guerilla.ReadBlockArray<ShaderTemplateCategoryBlock>( binaryReader );
-            lightResponse = binaryReader.ReadTagReference( );
-            lODs = Guerilla.ReadBlockArray<ShaderTemplateLevelOfDetailBlock>( binaryReader );
-            eMPTYSTRING = Guerilla.ReadBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>( binaryReader );
-            eMPTYSTRING0 = Guerilla.ReadBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>( binaryReader );
-            aux1Shader = binaryReader.ReadTagReference( );
-            aux1Layer = ( Aux1Layer ) binaryReader.ReadInt16( );
-            invalidName_0 = binaryReader.ReadBytes( 2 );
-            aux2Shader = binaryReader.ReadTagReference( );
-            aux2Layer = ( Aux2Layer ) binaryReader.ReadInt16( );
-            invalidName_1 = binaryReader.ReadBytes( 2 );
-            postprocessDefinition = Guerilla.ReadBlockArray<ShaderTemplatePostprocessDefinitionNewBlock>( binaryReader );
+            documentation = Guerilla.ReadData(binaryReader);
+            defaultMaterialName = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(2);
+            flags = (Flags)binaryReader.ReadInt16();
+            properties = Guerilla.ReadBlockArray<ShaderTemplatePropertyBlock>(binaryReader);
+            categories = Guerilla.ReadBlockArray<ShaderTemplateCategoryBlock>(binaryReader);
+            lightResponse = binaryReader.ReadTagReference();
+            lODs = Guerilla.ReadBlockArray<ShaderTemplateLevelOfDetailBlock>(binaryReader);
+            eMPTYSTRING = Guerilla.ReadBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader);
+            eMPTYSTRING0 = Guerilla.ReadBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader);
+            aux1Shader = binaryReader.ReadTagReference();
+            aux1Layer = (Aux1Layer)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            aux2Shader = binaryReader.ReadTagReference();
+            aux2Layer = (Aux2Layer)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            postprocessDefinition = Guerilla.ReadBlockArray<ShaderTemplatePostprocessDefinitionNewBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ShaderTemplateBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                nextAddress = Guerilla.WriteData( binaryWriter, documentation, nextAddress );
-                binaryWriter.Write( defaultMaterialName );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( ( Int16 ) flags );
-                nextAddress = Guerilla.WriteBlockArray<ShaderTemplatePropertyBlock>( binaryWriter, properties,
-                    nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<ShaderTemplateCategoryBlock>( binaryWriter, categories,
-                    nextAddress );
-                binaryWriter.Write( lightResponse );
-                nextAddress = Guerilla.WriteBlockArray<ShaderTemplateLevelOfDetailBlock>( binaryWriter, lODs,
-                    nextAddress );
-                nextAddress =
-                    Guerilla.WriteBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>( binaryWriter,
-                        eMPTYSTRING, nextAddress );
-                nextAddress =
-                    Guerilla.WriteBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>( binaryWriter,
-                        eMPTYSTRING0, nextAddress );
-                binaryWriter.Write( aux1Shader );
-                binaryWriter.Write( ( Int16 ) aux1Layer );
-                binaryWriter.Write( invalidName_0, 0, 2 );
-                binaryWriter.Write( aux2Shader );
-                binaryWriter.Write( ( Int16 ) aux2Layer );
-                binaryWriter.Write( invalidName_1, 0, 2 );
-                nextAddress = Guerilla.WriteBlockArray<ShaderTemplatePostprocessDefinitionNewBlock>( binaryWriter,
-                    postprocessDefinition, nextAddress );
+                nextAddress = Guerilla.WriteData(binaryWriter, documentation, nextAddress);
+                binaryWriter.Write(defaultMaterialName);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write((Int16)flags);
+                nextAddress = Guerilla.WriteBlockArray<ShaderTemplatePropertyBlock>(binaryWriter, properties, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderTemplateCategoryBlock>(binaryWriter, categories, nextAddress);
+                binaryWriter.Write(lightResponse);
+                nextAddress = Guerilla.WriteBlockArray<ShaderTemplateLevelOfDetailBlock>(binaryWriter, lODs, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryWriter, eMPTYSTRING, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryWriter, eMPTYSTRING0, nextAddress);
+                binaryWriter.Write(aux1Shader);
+                binaryWriter.Write((Int16)aux1Layer);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                binaryWriter.Write(aux2Shader);
+                binaryWriter.Write((Int16)aux2Layer);
+                binaryWriter.Write(invalidName_1, 0, 2);
+                nextAddress = Guerilla.WriteBlockArray<ShaderTemplatePostprocessDefinitionNewBlock>(binaryWriter, postprocessDefinition, nextAddress);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : short
         {
@@ -108,7 +113,6 @@ namespace Moonfish.Guerilla.Tags
             Foliage = 4,
             HideStandardParameters = 8,
         };
-
         internal enum Aux1Layer : short
         {
             Texaccum = 0,
@@ -131,7 +135,6 @@ namespace Moonfish.Guerilla.Tags
             Hologram = 17,
             LightAlbedo = 18,
         };
-
         internal enum Aux2Layer : short
         {
             Texaccum = 0,

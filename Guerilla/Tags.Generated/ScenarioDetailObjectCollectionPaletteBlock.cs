@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,29 +10,42 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioDetailObjectCollectionPaletteBlock : ScenarioDetailObjectCollectionPaletteBlockBase
     {
-        public ScenarioDetailObjectCollectionPaletteBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ScenarioDetailObjectCollectionPaletteBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioDetailObjectCollectionPaletteBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class ScenarioDetailObjectCollectionPaletteBlockBase : IGuerilla
+    [LayoutAttribute(Size = 40, Alignment = 4)]
+    public class ScenarioDetailObjectCollectionPaletteBlockBase : GuerillaBlock
     {
-        [TagReference( "dobc" )] internal Moonfish.Tags.TagReference name;
+        [TagReference("dobc")]
+        internal Moonfish.Tags.TagReference name;
         internal byte[] invalidName_;
-
-        internal ScenarioDetailObjectCollectionPaletteBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 40; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioDetailObjectCollectionPaletteBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadTagReference( );
-            invalidName_ = binaryReader.ReadBytes( 32 );
+            name = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(32);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ScenarioDetailObjectCollectionPaletteBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( invalidName_, 0, 32 );
+                binaryWriter.Write(name);
+                binaryWriter.Write(invalidName_, 0, 32);
                 return nextAddress;
             }
         }

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class LiquidCoreBlock : LiquidCoreBlockBase
     {
-        public LiquidCoreBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  LiquidCoreBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  LiquidCoreBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 56, Alignment = 4 )]
-    public class LiquidCoreBlockBase : IGuerilla
+    [LayoutAttribute(Size = 56, Alignment = 4)]
+    public class LiquidCoreBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal short bitmapIndex;
@@ -27,31 +30,39 @@ namespace Moonfish.Guerilla.Tags
         internal ScalarFunctionStructBlock brightnessTime;
         internal ScalarFunctionStructBlock brightnessFacing;
         internal ScalarFunctionStructBlock alongAxisScale;
-
-        internal LiquidCoreBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 56; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  LiquidCoreBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes( 12 );
-            bitmapIndex = binaryReader.ReadInt16( );
-            invalidName_0 = binaryReader.ReadBytes( 2 );
-            thickness = new ScalarFunctionStructBlock( binaryReader );
-            color = new ColorFunctionStructBlock( binaryReader );
-            brightnessTime = new ScalarFunctionStructBlock( binaryReader );
-            brightnessFacing = new ScalarFunctionStructBlock( binaryReader );
-            alongAxisScale = new ScalarFunctionStructBlock( binaryReader );
+            invalidName_ = binaryReader.ReadBytes(12);
+            bitmapIndex = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            thickness = new ScalarFunctionStructBlock(binaryReader);
+            color = new ColorFunctionStructBlock(binaryReader);
+            brightnessTime = new ScalarFunctionStructBlock(binaryReader);
+            brightnessFacing = new ScalarFunctionStructBlock(binaryReader);
+            alongAxisScale = new ScalarFunctionStructBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  LiquidCoreBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( invalidName_, 0, 12 );
-                binaryWriter.Write( bitmapIndex );
-                binaryWriter.Write( invalidName_0, 0, 2 );
-                thickness.Write( binaryWriter );
-                color.Write( binaryWriter );
-                brightnessTime.Write( binaryWriter );
-                brightnessFacing.Write( binaryWriter );
-                alongAxisScale.Write( binaryWriter );
+                binaryWriter.Write(invalidName_, 0, 12);
+                binaryWriter.Write(bitmapIndex);
+                binaryWriter.Write(invalidName_0, 0, 2);
+                thickness.Write(binaryWriter);
+                color.Write(binaryWriter);
+                brightnessTime.Write(binaryWriter);
+                brightnessFacing.Write(binaryWriter);
+                alongAxisScale.Write(binaryWriter);
                 return nextAddress;
             }
         }

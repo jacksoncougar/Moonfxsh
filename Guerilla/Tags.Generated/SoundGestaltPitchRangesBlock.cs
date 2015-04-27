@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundGestaltPitchRangesBlock : SoundGestaltPitchRangesBlockBase
+    public partial class SoundGestaltPitchRangesBlock : SoundGestaltPitchRangesBlockBase
     {
         public  SoundGestaltPitchRangesBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  SoundGestaltPitchRangesBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class SoundGestaltPitchRangesBlockBase  : IGuerilla
+    public class SoundGestaltPitchRangesBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 name;
         internal Moonfish.Tags.ShortBlockIndex1 parameters;
@@ -24,7 +28,13 @@ namespace Moonfish.Guerilla.Tags
         internal short firstRuntimePermutationFlagIndex;
         internal Moonfish.Tags.ShortBlockIndex1 firstPermutation;
         internal short permutationCount;
-        internal  SoundGestaltPitchRangesBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundGestaltPitchRangesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             name = binaryReader.ReadShortBlockIndex1();
             parameters = binaryReader.ReadShortBlockIndex1();
@@ -33,7 +43,11 @@ namespace Moonfish.Guerilla.Tags
             firstPermutation = binaryReader.ReadShortBlockIndex1();
             permutationCount = binaryReader.ReadInt16();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  SoundGestaltPitchRangesBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

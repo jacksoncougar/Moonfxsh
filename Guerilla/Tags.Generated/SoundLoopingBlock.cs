@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,65 +10,75 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Lsnd = ( TagClass ) "lsnd";
+        public static readonly TagClass Lsnd = (TagClass)"lsnd";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "lsnd" )]
+    [TagClassAttribute("lsnd")]
     public partial class SoundLoopingBlock : SoundLoopingBlockBase
     {
-        public SoundLoopingBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  SoundLoopingBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SoundLoopingBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 44, Alignment = 4 )]
-    public class SoundLoopingBlockBase : IGuerilla
+    [LayoutAttribute(Size = 44, Alignment = 4)]
+    public class SoundLoopingBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal float martysMusicTimeSeconds;
         internal float invalidName_;
         internal byte[] invalidName_0;
-        [TagReference( "null" )] internal Moonfish.Tags.TagReference invalidName_1;
-
+        [TagReference("null")]
+        internal Moonfish.Tags.TagReference invalidName_1;
         /// <summary>
         /// tracks play in parallel and loop continuously for the duration of the looping sound.
         /// </summary>
         internal LoopingSoundTrackBlock[] tracks;
-
         /// <summary>
         /// detailSounds play at random throughout the duration of the looping sound.
         /// </summary>
         internal LoopingSoundDetailBlock[] detailSounds;
-
-        internal SoundLoopingBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 44; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundLoopingBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            flags = ( Flags ) binaryReader.ReadInt32( );
-            martysMusicTimeSeconds = binaryReader.ReadSingle( );
-            invalidName_ = binaryReader.ReadSingle( );
-            invalidName_0 = binaryReader.ReadBytes( 8 );
-            invalidName_1 = binaryReader.ReadTagReference( );
-            tracks = Guerilla.ReadBlockArray<LoopingSoundTrackBlock>( binaryReader );
-            detailSounds = Guerilla.ReadBlockArray<LoopingSoundDetailBlock>( binaryReader );
+            flags = (Flags)binaryReader.ReadInt32();
+            martysMusicTimeSeconds = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(8);
+            invalidName_1 = binaryReader.ReadTagReference();
+            tracks = Guerilla.ReadBlockArray<LoopingSoundTrackBlock>(binaryReader);
+            detailSounds = Guerilla.ReadBlockArray<LoopingSoundDetailBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  SoundLoopingBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int32 ) flags );
-                binaryWriter.Write( martysMusicTimeSeconds );
-                binaryWriter.Write( invalidName_ );
-                binaryWriter.Write( invalidName_0, 0, 8 );
-                binaryWriter.Write( invalidName_1 );
-                nextAddress = Guerilla.WriteBlockArray<LoopingSoundTrackBlock>( binaryWriter, tracks, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<LoopingSoundDetailBlock>( binaryWriter, detailSounds, nextAddress );
+                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write(martysMusicTimeSeconds);
+                binaryWriter.Write(invalidName_);
+                binaryWriter.Write(invalidName_0, 0, 8);
+                binaryWriter.Write(invalidName_1);
+                nextAddress = Guerilla.WriteBlockArray<LoopingSoundTrackBlock>(binaryWriter, tracks, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<LoopingSoundDetailBlock>(binaryWriter, detailSounds, nextAddress);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : int
         {

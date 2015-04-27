@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioSimulationDefinitionTableBlock : ScenarioSimulationDefinitionTableBlockBase
     {
-        public ScenarioSimulationDefinitionTableBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ScenarioSimulationDefinitionTableBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioSimulationDefinitionTableBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class ScenarioSimulationDefinitionTableBlockBase : IGuerilla
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class ScenarioSimulationDefinitionTableBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
-
-        internal ScenarioSimulationDefinitionTableBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioSimulationDefinitionTableBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes( 4 );
+            invalidName_ = binaryReader.ReadBytes(4);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ScenarioSimulationDefinitionTableBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( invalidName_, 0, 4 );
+                binaryWriter.Write(invalidName_, 0, 4);
                 return nextAddress;
             }
         }

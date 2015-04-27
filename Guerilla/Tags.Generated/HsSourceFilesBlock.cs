@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,38 +10,50 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Hsc = ( TagClass ) "hsc*";
+        public static readonly TagClass Hsc = (TagClass)"hsc*";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "hsc*" )]
+    [TagClassAttribute("hsc*")]
     public partial class HsSourceFilesBlock : HsSourceFilesBlockBase
     {
-        public HsSourceFilesBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  HsSourceFilesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  HsSourceFilesBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class HsSourceFilesBlockBase : IGuerilla
+    [LayoutAttribute(Size = 40, Alignment = 4)]
+    public class HsSourceFilesBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
         internal byte[] source;
-
-        internal HsSourceFilesBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 40; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  HsSourceFilesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadString32( );
-            source = Guerilla.ReadData( binaryReader );
+            name = binaryReader.ReadString32();
+            source = Guerilla.ReadData(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  HsSourceFilesBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                nextAddress = Guerilla.WriteData( binaryWriter, source, nextAddress );
+                binaryWriter.Write(name);
+                nextAddress = Guerilla.WriteData(binaryWriter, source, nextAddress);
                 return nextAddress;
             }
         }

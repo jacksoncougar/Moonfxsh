@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class InheritedAnimationNodeMapBlock : InheritedAnimationNodeMapBlockBase
     {
-        public InheritedAnimationNodeMapBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  InheritedAnimationNodeMapBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  InheritedAnimationNodeMapBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 2, Alignment = 4 )]
-    public class InheritedAnimationNodeMapBlockBase : IGuerilla
+    [LayoutAttribute(Size = 2, Alignment = 4)]
+    public class InheritedAnimationNodeMapBlockBase : GuerillaBlock
     {
         internal short localNode;
-
-        internal InheritedAnimationNodeMapBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 2; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  InheritedAnimationNodeMapBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            localNode = binaryReader.ReadInt16( );
+            localNode = binaryReader.ReadInt16();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  InheritedAnimationNodeMapBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( localNode );
+                binaryWriter.Write(localNode);
                 return nextAddress;
             }
         }

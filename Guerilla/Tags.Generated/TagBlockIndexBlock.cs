@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class TagBlockIndexBlock : TagBlockIndexBlockBase
     {
-        public TagBlockIndexBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  TagBlockIndexBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  TagBlockIndexBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 2, Alignment = 4 )]
-    public class TagBlockIndexBlockBase : IGuerilla
+    [LayoutAttribute(Size = 2, Alignment = 4)]
+    public class TagBlockIndexBlockBase : GuerillaBlock
     {
         internal TagBlockIndexStructBlock indices;
-
-        internal TagBlockIndexBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 2; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  TagBlockIndexBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            indices = new TagBlockIndexStructBlock( binaryReader );
+            indices = new TagBlockIndexStructBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  TagBlockIndexBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                indices.Write( binaryWriter );
+                indices.Write(binaryWriter);
                 return nextAddress;
             }
         }

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,29 +10,41 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class PrtSectionInfoBlock : PrtSectionInfoBlockBase
     {
-        public PrtSectionInfoBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  PrtSectionInfoBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PrtSectionInfoBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class PrtSectionInfoBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class PrtSectionInfoBlockBase : GuerillaBlock
     {
         internal int sectionIndex;
         internal int pcaDataOffset;
-
-        internal PrtSectionInfoBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PrtSectionInfoBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            sectionIndex = binaryReader.ReadInt32( );
-            pcaDataOffset = binaryReader.ReadInt32( );
+            sectionIndex = binaryReader.ReadInt32();
+            pcaDataOffset = binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  PrtSectionInfoBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( sectionIndex );
-                binaryWriter.Write( pcaDataOffset );
+                binaryWriter.Write(sectionIndex);
+                binaryWriter.Write(pcaDataOffset);
                 return nextAddress;
             }
         }

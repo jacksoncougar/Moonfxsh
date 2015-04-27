@@ -8,22 +8,36 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class SoundGestaltRuntimePermutationBitVectorBlock : SoundGestaltRuntimePermutationBitVectorBlockBase
+    public partial class SoundGestaltRuntimePermutationBitVectorBlock : SoundGestaltRuntimePermutationBitVectorBlockBase
     {
         public  SoundGestaltRuntimePermutationBitVectorBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  SoundGestaltRuntimePermutationBitVectorBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 1, Alignment = 4)]
-    public class SoundGestaltRuntimePermutationBitVectorBlockBase  : IGuerilla
+    public class SoundGestaltRuntimePermutationBitVectorBlockBase : GuerillaBlock
     {
         internal byte invalidName_;
-        internal  SoundGestaltRuntimePermutationBitVectorBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 1; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundGestaltRuntimePermutationBitVectorBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             invalidName_ = binaryReader.ReadByte();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  SoundGestaltRuntimePermutationBitVectorBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

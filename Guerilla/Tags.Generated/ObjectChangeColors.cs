@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,30 +10,41 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ObjectChangeColors : ObjectChangeColorsBase
     {
-        public ObjectChangeColors( BinaryReader binaryReader ) : base( binaryReader )
+        public  ObjectChangeColors(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ObjectChangeColors(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class ObjectChangeColorsBase : IGuerilla
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class ObjectChangeColorsBase : GuerillaBlock
     {
         internal ObjectChangeColorInitialPermutation[] initialPermutations;
         internal ObjectChangeColorFunction[] functions;
-
-        internal ObjectChangeColorsBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ObjectChangeColorsBase(BinaryReader binaryReader): base(binaryReader)
         {
-            initialPermutations = Guerilla.ReadBlockArray<ObjectChangeColorInitialPermutation>( binaryReader );
-            functions = Guerilla.ReadBlockArray<ObjectChangeColorFunction>( binaryReader );
+            initialPermutations = Guerilla.ReadBlockArray<ObjectChangeColorInitialPermutation>(binaryReader);
+            functions = Guerilla.ReadBlockArray<ObjectChangeColorFunction>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ObjectChangeColorsBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                nextAddress = Guerilla.WriteBlockArray<ObjectChangeColorInitialPermutation>( binaryWriter,
-                    initialPermutations, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<ObjectChangeColorFunction>( binaryWriter, functions, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<ObjectChangeColorInitialPermutation>(binaryWriter, initialPermutations, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ObjectChangeColorFunction>(binaryWriter, functions, nextAddress);
                 return nextAddress;
             }
         }

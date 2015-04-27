@@ -8,28 +8,42 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ModelObjectDataBlock : ModelObjectDataBlockBase
+    public partial class ModelObjectDataBlock : ModelObjectDataBlockBase
     {
         public  ModelObjectDataBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  ModelObjectDataBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class ModelObjectDataBlockBase  : IGuerilla
+    public class ModelObjectDataBlockBase : GuerillaBlock
     {
         internal Type type;
         internal byte[] invalidName_;
         internal OpenTK.Vector3 offset;
         internal float radius;
-        internal  ModelObjectDataBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ModelObjectDataBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             type = (Type)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             offset = binaryReader.ReadVector3();
             radius = binaryReader.ReadSingle();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  ModelObjectDataBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

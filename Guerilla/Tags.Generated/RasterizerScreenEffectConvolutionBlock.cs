@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class RasterizerScreenEffectConvolutionBlock : RasterizerScreenEffectConvolutionBlockBase
     {
-        public RasterizerScreenEffectConvolutionBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  RasterizerScreenEffectConvolutionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  RasterizerScreenEffectConvolutionBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 92, Alignment = 4 )]
-    public class RasterizerScreenEffectConvolutionBlockBase : IGuerilla
+    [LayoutAttribute(Size = 92, Alignment = 4)]
+    public class RasterizerScreenEffectConvolutionBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal byte[] invalidName_;
@@ -28,37 +31,44 @@ namespace Moonfish.Guerilla.Tags
         internal float zoomFalloffRadius;
         internal float zoomCutoffRadius;
         internal float resolutionScale01;
-
-        internal RasterizerScreenEffectConvolutionBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 92; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  RasterizerScreenEffectConvolutionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            flags = ( Flags ) binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            invalidName_0 = binaryReader.ReadBytes( 64 );
-            convolutionAmount0Inf = binaryReader.ReadSingle( );
-            filterScale = binaryReader.ReadSingle( );
-            filterBoxFactor01NotUsedForZoom = binaryReader.ReadSingle( );
-            zoomFalloffRadius = binaryReader.ReadSingle( );
-            zoomCutoffRadius = binaryReader.ReadSingle( );
-            resolutionScale01 = binaryReader.ReadSingle( );
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(64);
+            convolutionAmount0Inf = binaryReader.ReadSingle();
+            filterScale = binaryReader.ReadSingle();
+            filterBoxFactor01NotUsedForZoom = binaryReader.ReadSingle();
+            zoomFalloffRadius = binaryReader.ReadSingle();
+            zoomCutoffRadius = binaryReader.ReadSingle();
+            resolutionScale01 = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  RasterizerScreenEffectConvolutionBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int16 ) flags );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( invalidName_0, 0, 64 );
-                binaryWriter.Write( convolutionAmount0Inf );
-                binaryWriter.Write( filterScale );
-                binaryWriter.Write( filterBoxFactor01NotUsedForZoom );
-                binaryWriter.Write( zoomFalloffRadius );
-                binaryWriter.Write( zoomCutoffRadius );
-                binaryWriter.Write( resolutionScale01 );
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(invalidName_0, 0, 64);
+                binaryWriter.Write(convolutionAmount0Inf);
+                binaryWriter.Write(filterScale);
+                binaryWriter.Write(filterBoxFactor01NotUsedForZoom);
+                binaryWriter.Write(zoomFalloffRadius);
+                binaryWriter.Write(zoomCutoffRadius);
+                binaryWriter.Write(resolutionScale01);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : short
         {

@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ModelVariantBlock : ModelVariantBlockBase
+    public partial class ModelVariantBlock : ModelVariantBlockBase
     {
         public  ModelVariantBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  ModelVariantBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 56, Alignment = 4)]
-    public class ModelVariantBlockBase  : IGuerilla
+    public class ModelVariantBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal byte[] invalidName_;
@@ -26,7 +30,13 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringID dialogueSoundEffect;
         [TagReference("udlg")]
         internal Moonfish.Tags.TagReference dialogue;
-        internal  ModelVariantBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 56; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ModelVariantBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             name = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(16);
@@ -36,7 +46,11 @@ namespace Moonfish.Guerilla.Tags
             dialogueSoundEffect = binaryReader.ReadStringID();
             dialogue = binaryReader.ReadTagReference();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  ModelVariantBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,39 +10,50 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class HsScriptsBlock : HsScriptsBlockBase
     {
-        public HsScriptsBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  HsScriptsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  HsScriptsBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class HsScriptsBlockBase : IGuerilla
+    [LayoutAttribute(Size = 40, Alignment = 4)]
+    public class HsScriptsBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
         internal ScriptType scriptType;
         internal ReturnType returnType;
         internal int rootExpressionIndex;
-
-        internal HsScriptsBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 40; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  HsScriptsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadString32( );
-            scriptType = ( ScriptType ) binaryReader.ReadInt16( );
-            returnType = ( ReturnType ) binaryReader.ReadInt16( );
-            rootExpressionIndex = binaryReader.ReadInt32( );
+            name = binaryReader.ReadString32();
+            scriptType = (ScriptType)binaryReader.ReadInt16();
+            returnType = (ReturnType)binaryReader.ReadInt16();
+            rootExpressionIndex = binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  HsScriptsBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( ( Int16 ) scriptType );
-                binaryWriter.Write( ( Int16 ) returnType );
-                binaryWriter.Write( rootExpressionIndex );
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int16)scriptType);
+                binaryWriter.Write((Int16)returnType);
+                binaryWriter.Write(rootExpressionIndex);
                 return nextAddress;
             }
         }
-
         internal enum ScriptType : short
         {
             Startup = 0,
@@ -53,7 +63,6 @@ namespace Moonfish.Guerilla.Tags
             Stub = 4,
             CommandScript = 5,
         };
-
         internal enum ReturnType : short
         {
             Unparsed = 0,

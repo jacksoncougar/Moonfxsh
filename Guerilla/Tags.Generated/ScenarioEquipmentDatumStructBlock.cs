@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,30 +10,41 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioEquipmentDatumStructBlock : ScenarioEquipmentDatumStructBlockBase
     {
-        public ScenarioEquipmentDatumStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ScenarioEquipmentDatumStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioEquipmentDatumStructBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class ScenarioEquipmentDatumStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class ScenarioEquipmentDatumStructBlockBase : GuerillaBlock
     {
         internal EquipmentFlags equipmentFlags;
-
-        internal ScenarioEquipmentDatumStructBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioEquipmentDatumStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            equipmentFlags = ( EquipmentFlags ) binaryReader.ReadInt32( );
+            equipmentFlags = (EquipmentFlags)binaryReader.ReadInt32();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ScenarioEquipmentDatumStructBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( ( Int32 ) equipmentFlags );
+                binaryWriter.Write((Int32)equipmentFlags);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum EquipmentFlags : int
         {

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class SoundEffectOverrideParametersBlock : SoundEffectOverrideParametersBlockBase
     {
-        public SoundEffectOverrideParametersBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  SoundEffectOverrideParametersBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SoundEffectOverrideParametersBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class SoundEffectOverrideParametersBlockBase : IGuerilla
+    [LayoutAttribute(Size = 32, Alignment = 4)]
+    public class SoundEffectOverrideParametersBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.StringID input;
@@ -26,29 +29,37 @@ namespace Moonfish.Guerilla.Tags
         internal int integerValue;
         internal float realValue;
         internal MappingFunctionBlock functionValue;
-
-        internal SoundEffectOverrideParametersBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 32; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundEffectOverrideParametersBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadStringID( );
-            input = binaryReader.ReadStringID( );
-            range = binaryReader.ReadStringID( );
-            timePeriodSeconds = binaryReader.ReadSingle( );
-            integerValue = binaryReader.ReadInt32( );
-            realValue = binaryReader.ReadSingle( );
-            functionValue = new MappingFunctionBlock( binaryReader );
+            name = binaryReader.ReadStringID();
+            input = binaryReader.ReadStringID();
+            range = binaryReader.ReadStringID();
+            timePeriodSeconds = binaryReader.ReadSingle();
+            integerValue = binaryReader.ReadInt32();
+            realValue = binaryReader.ReadSingle();
+            functionValue = new MappingFunctionBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  SoundEffectOverrideParametersBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( input );
-                binaryWriter.Write( range );
-                binaryWriter.Write( timePeriodSeconds );
-                binaryWriter.Write( integerValue );
-                binaryWriter.Write( realValue );
-                functionValue.Write( binaryWriter );
+                binaryWriter.Write(name);
+                binaryWriter.Write(input);
+                binaryWriter.Write(range);
+                binaryWriter.Write(timePeriodSeconds);
+                binaryWriter.Write(integerValue);
+                binaryWriter.Write(realValue);
+                functionValue.Write(binaryWriter);
                 return nextAddress;
             }
         }

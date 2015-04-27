@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class PrtRawPcaDataBlock : PrtRawPcaDataBlockBase
     {
-        public PrtRawPcaDataBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  PrtRawPcaDataBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PrtRawPcaDataBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class PrtRawPcaDataBlockBase : IGuerilla
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class PrtRawPcaDataBlockBase : GuerillaBlock
     {
         internal float rawPcaData;
-
-        internal PrtRawPcaDataBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PrtRawPcaDataBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            rawPcaData = binaryReader.ReadSingle( );
+            rawPcaData = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  PrtRawPcaDataBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( rawPcaData );
+                binaryWriter.Write(rawPcaData);
                 return nextAddress;
             }
         }

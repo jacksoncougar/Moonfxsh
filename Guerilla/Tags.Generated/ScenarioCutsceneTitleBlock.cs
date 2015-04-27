@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioCutsceneTitleBlock : ScenarioCutsceneTitleBlockBase
     {
-        public ScenarioCutsceneTitleBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ScenarioCutsceneTitleBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioCutsceneTitleBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 36, Alignment = 4 )]
-    public class ScenarioCutsceneTitleBlockBase : IGuerilla
+    [LayoutAttribute(Size = 36, Alignment = 4)]
+    public class ScenarioCutsceneTitleBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal OpenTK.Vector2 textBoundsOnScreen;
@@ -29,39 +32,46 @@ namespace Moonfish.Guerilla.Tags
         internal float upTimeSeconds;
         internal float fadeOutTimeSeconds;
         internal byte[] padding;
-
-        internal ScenarioCutsceneTitleBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 36; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioCutsceneTitleBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadStringID( );
-            textBoundsOnScreen = binaryReader.ReadVector2( );
-            justification = ( Justification ) binaryReader.ReadInt16( );
-            font = ( Font ) binaryReader.ReadInt16( );
-            textColor = binaryReader.ReadRGBColor( );
-            shadowColor = binaryReader.ReadRGBColor( );
-            fadeInTimeSeconds = binaryReader.ReadSingle( );
-            upTimeSeconds = binaryReader.ReadSingle( );
-            fadeOutTimeSeconds = binaryReader.ReadSingle( );
-            padding = binaryReader.ReadBytes( 2 );
+            name = binaryReader.ReadStringID();
+            textBoundsOnScreen = binaryReader.ReadVector2();
+            justification = (Justification)binaryReader.ReadInt16();
+            font = (Font)binaryReader.ReadInt16();
+            textColor = binaryReader.ReadRGBColor();
+            shadowColor = binaryReader.ReadRGBColor();
+            fadeInTimeSeconds = binaryReader.ReadSingle();
+            upTimeSeconds = binaryReader.ReadSingle();
+            fadeOutTimeSeconds = binaryReader.ReadSingle();
+            padding = binaryReader.ReadBytes(2);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ScenarioCutsceneTitleBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( textBoundsOnScreen );
-                binaryWriter.Write( ( Int16 ) justification );
-                binaryWriter.Write( ( Int16 ) font );
-                binaryWriter.Write( textColor );
-                binaryWriter.Write( shadowColor );
-                binaryWriter.Write( fadeInTimeSeconds );
-                binaryWriter.Write( upTimeSeconds );
-                binaryWriter.Write( fadeOutTimeSeconds );
-                binaryWriter.Write( padding, 0, 2 );
+                binaryWriter.Write(name);
+                binaryWriter.Write(textBoundsOnScreen);
+                binaryWriter.Write((Int16)justification);
+                binaryWriter.Write((Int16)font);
+                binaryWriter.Write(textColor);
+                binaryWriter.Write(shadowColor);
+                binaryWriter.Write(fadeInTimeSeconds);
+                binaryWriter.Write(upTimeSeconds);
+                binaryWriter.Write(fadeOutTimeSeconds);
+                binaryWriter.Write(padding, 0, 2);
                 return nextAddress;
             }
         }
-
         internal enum Justification : short
         {
             Left = 0,
@@ -69,7 +79,6 @@ namespace Moonfish.Guerilla.Tags
             Center = 2,
             CustomTextEntry = 3,
         };
-
         internal enum Font : short
         {
             TerminalFont = 0,

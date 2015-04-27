@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,29 +10,41 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class PlatformSoundPlaybackBlock : PlatformSoundPlaybackBlockBase
     {
-        public PlatformSoundPlaybackBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  PlatformSoundPlaybackBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PlatformSoundPlaybackBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 56, Alignment = 4 )]
-    public class PlatformSoundPlaybackBlockBase : IGuerilla
+    [LayoutAttribute(Size = 56, Alignment = 4)]
+    public class PlatformSoundPlaybackBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID name;
         internal PlatformSoundPlaybackStructBlock playback;
-
-        internal PlatformSoundPlaybackBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 56; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PlatformSoundPlaybackBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadStringID( );
-            playback = new PlatformSoundPlaybackStructBlock( binaryReader );
+            name = binaryReader.ReadStringID();
+            playback = new PlatformSoundPlaybackStructBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  PlatformSoundPlaybackBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                playback.Write( binaryWriter );
+                binaryWriter.Write(name);
+                playback.Write(binaryWriter);
                 return nextAddress;
             }
         }

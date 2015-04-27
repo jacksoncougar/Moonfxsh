@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,13 +10,17 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureBspFogZoneDebugInfoBlock : StructureBspFogZoneDebugInfoBlockBase
     {
-        public StructureBspFogZoneDebugInfoBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  StructureBspFogZoneDebugInfoBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StructureBspFogZoneDebugInfoBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 64, Alignment = 4 )]
-    public class StructureBspFogZoneDebugInfoBlockBase : IGuerilla
+    [LayoutAttribute(Size = 64, Alignment = 4)]
+    public class StructureBspFogZoneDebugInfoBlockBase : GuerillaBlock
     {
         internal int mediaIndexScenarioFogPlane;
         internal int baseFogPlaneIndex;
@@ -26,33 +29,37 @@ namespace Moonfish.Guerilla.Tags
         internal StructureBspDebugInfoIndicesBlock[] immersedClusterIndices;
         internal StructureBspDebugInfoIndicesBlock[] boundingFogPlaneIndices;
         internal StructureBspDebugInfoIndicesBlock[] collisionFogPlaneIndices;
-
-        internal StructureBspFogZoneDebugInfoBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 64; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StructureBspFogZoneDebugInfoBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            mediaIndexScenarioFogPlane = binaryReader.ReadInt32( );
-            baseFogPlaneIndex = binaryReader.ReadInt32( );
-            invalidName_ = binaryReader.ReadBytes( 24 );
-            lines = Guerilla.ReadBlockArray<StructureBspDebugInfoRenderLineBlock>( binaryReader );
-            immersedClusterIndices = Guerilla.ReadBlockArray<StructureBspDebugInfoIndicesBlock>( binaryReader );
-            boundingFogPlaneIndices = Guerilla.ReadBlockArray<StructureBspDebugInfoIndicesBlock>( binaryReader );
-            collisionFogPlaneIndices = Guerilla.ReadBlockArray<StructureBspDebugInfoIndicesBlock>( binaryReader );
+            mediaIndexScenarioFogPlane = binaryReader.ReadInt32();
+            baseFogPlaneIndex = binaryReader.ReadInt32();
+            invalidName_ = binaryReader.ReadBytes(24);
+            lines = Guerilla.ReadBlockArray<StructureBspDebugInfoRenderLineBlock>(binaryReader);
+            immersedClusterIndices = Guerilla.ReadBlockArray<StructureBspDebugInfoIndicesBlock>(binaryReader);
+            boundingFogPlaneIndices = Guerilla.ReadBlockArray<StructureBspDebugInfoIndicesBlock>(binaryReader);
+            collisionFogPlaneIndices = Guerilla.ReadBlockArray<StructureBspDebugInfoIndicesBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  StructureBspFogZoneDebugInfoBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( mediaIndexScenarioFogPlane );
-                binaryWriter.Write( baseFogPlaneIndex );
-                binaryWriter.Write( invalidName_, 0, 24 );
-                nextAddress = Guerilla.WriteBlockArray<StructureBspDebugInfoRenderLineBlock>( binaryWriter, lines,
-                    nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<StructureBspDebugInfoIndicesBlock>( binaryWriter,
-                    immersedClusterIndices, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<StructureBspDebugInfoIndicesBlock>( binaryWriter,
-                    boundingFogPlaneIndices, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<StructureBspDebugInfoIndicesBlock>( binaryWriter,
-                    collisionFogPlaneIndices, nextAddress );
+                binaryWriter.Write(mediaIndexScenarioFogPlane);
+                binaryWriter.Write(baseFogPlaneIndex);
+                binaryWriter.Write(invalidName_, 0, 24);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspDebugInfoRenderLineBlock>(binaryWriter, lines, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspDebugInfoIndicesBlock>(binaryWriter, immersedClusterIndices, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspDebugInfoIndicesBlock>(binaryWriter, boundingFogPlaneIndices, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspDebugInfoIndicesBlock>(binaryWriter, collisionFogPlaneIndices, nextAddress);
                 return nextAddress;
             }
         }

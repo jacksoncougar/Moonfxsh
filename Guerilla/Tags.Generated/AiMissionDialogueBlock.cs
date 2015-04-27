@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,35 +10,47 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Mdlg = ( TagClass ) "mdlg";
+        public static readonly TagClass Mdlg = (TagClass)"mdlg";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "mdlg" )]
+    [TagClassAttribute("mdlg")]
     public partial class AiMissionDialogueBlock : AiMissionDialogueBlockBase
     {
-        public AiMissionDialogueBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  AiMissionDialogueBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AiMissionDialogueBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class AiMissionDialogueBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class AiMissionDialogueBlockBase : GuerillaBlock
     {
         internal MissionDialogueLinesBlock[] lines;
-
-        internal AiMissionDialogueBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AiMissionDialogueBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            lines = Guerilla.ReadBlockArray<MissionDialogueLinesBlock>( binaryReader );
+            lines = Guerilla.ReadBlockArray<MissionDialogueLinesBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  AiMissionDialogueBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                nextAddress = Guerilla.WriteBlockArray<MissionDialogueLinesBlock>( binaryWriter, lines, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<MissionDialogueLinesBlock>(binaryWriter, lines, nextAddress);
                 return nextAddress;
             }
         }

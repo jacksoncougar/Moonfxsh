@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,29 +10,41 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class UnitLipsyncScalesStructBlock : UnitLipsyncScalesStructBlockBase
     {
-        public UnitLipsyncScalesStructBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  UnitLipsyncScalesStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  UnitLipsyncScalesStructBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class UnitLipsyncScalesStructBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class UnitLipsyncScalesStructBlockBase : GuerillaBlock
     {
         internal float attackWeight;
         internal float decayWeight;
-
-        internal UnitLipsyncScalesStructBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  UnitLipsyncScalesStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            attackWeight = binaryReader.ReadSingle( );
-            decayWeight = binaryReader.ReadSingle( );
+            attackWeight = binaryReader.ReadSingle();
+            decayWeight = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  UnitLipsyncScalesStructBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( attackWeight );
-                binaryWriter.Write( decayWeight );
+                binaryWriter.Write(attackWeight);
+                binaryWriter.Write(decayWeight);
                 return nextAddress;
             }
         }

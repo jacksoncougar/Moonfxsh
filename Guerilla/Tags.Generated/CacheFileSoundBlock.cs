@@ -17,15 +17,19 @@ namespace Moonfish.Tags
 namespace Moonfish.Guerilla.Tags
 {
     [TagClassAttribute("$#!+")]
-    public  partial class CacheFileSoundBlock : CacheFileSoundBlockBase
+    public partial class CacheFileSoundBlock : CacheFileSoundBlockBase
     {
         public  CacheFileSoundBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  CacheFileSoundBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class CacheFileSoundBlockBase  : IGuerilla
+    public class CacheFileSoundBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal SoundClass soundClass;
@@ -40,7 +44,13 @@ namespace Moonfish.Guerilla.Tags
         internal byte customPlaybackIndex;
         internal short extraInfoIndex;
         internal int maximumPlayTimeMs;
-        internal  CacheFileSoundBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CacheFileSoundBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             flags = (Flags)binaryReader.ReadInt16();
             soundClass = (SoundClass)binaryReader.ReadByte();
@@ -56,7 +66,11 @@ namespace Moonfish.Guerilla.Tags
             extraInfoIndex = binaryReader.ReadInt16();
             maximumPlayTimeMs = binaryReader.ReadInt32();
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  CacheFileSoundBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

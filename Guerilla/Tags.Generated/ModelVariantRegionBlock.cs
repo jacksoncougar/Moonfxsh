@@ -8,15 +8,19 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public  partial class ModelVariantRegionBlock : ModelVariantRegionBlockBase
+    public partial class ModelVariantRegionBlock : ModelVariantRegionBlockBase
     {
         public  ModelVariantRegionBlock(BinaryReader binaryReader): base(binaryReader)
         {
             
         }
+        public  ModelVariantRegionBlock(): base()
+        {
+            
+        }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class ModelVariantRegionBlockBase  : IGuerilla
+    public class ModelVariantRegionBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID regionNameMustMatchRegionNameInRenderModel;
         internal byte[] invalidName_;
@@ -28,7 +32,13 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal SortOrderNegativeValuesMeanCloserToTheCamera sortOrder;
         internal byte[] invalidName_1;
-        internal  ModelVariantRegionBlockBase(BinaryReader binaryReader)
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ModelVariantRegionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             regionNameMustMatchRegionNameInRenderModel = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(1);
@@ -38,7 +48,11 @@ namespace Moonfish.Guerilla.Tags
             sortOrder = (SortOrderNegativeValuesMeanCloserToTheCamera)binaryReader.ReadInt16();
             invalidName_1 = binaryReader.ReadBytes(2);
         }
-        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public  ModelVariantRegionBlockBase(): base()
+        {
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

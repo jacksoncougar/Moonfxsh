@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,35 +10,47 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Sncl = ( TagClass ) "sncl";
+        public static readonly TagClass Sncl = (TagClass)"sncl";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "sncl" )]
+    [TagClassAttribute("sncl")]
     public partial class SoundClassesBlock : SoundClassesBlockBase
     {
-        public SoundClassesBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  SoundClassesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SoundClassesBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class SoundClassesBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class SoundClassesBlockBase : GuerillaBlock
     {
         internal SoundClassBlock[] soundClasses;
-
-        internal SoundClassesBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundClassesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            soundClasses = Guerilla.ReadBlockArray<SoundClassBlock>( binaryReader );
+            soundClasses = Guerilla.ReadBlockArray<SoundClassBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  SoundClassesBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                nextAddress = Guerilla.WriteBlockArray<SoundClassBlock>( binaryWriter, soundClasses, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<SoundClassBlock>(binaryWriter, soundClasses, nextAddress);
                 return nextAddress;
             }
         }

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,30 +10,41 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class DecoratorCacheBlockBlock : DecoratorCacheBlockBlockBase
     {
-        public DecoratorCacheBlockBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  DecoratorCacheBlockBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  DecoratorCacheBlockBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 44, Alignment = 4 )]
-    public class DecoratorCacheBlockBlockBase : IGuerilla
+    [LayoutAttribute(Size = 44, Alignment = 4)]
+    public class DecoratorCacheBlockBlockBase : GuerillaBlock
     {
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
         internal DecoratorCacheBlockDataBlock[] cacheBlockData;
-
-        internal DecoratorCacheBlockBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 44; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  DecoratorCacheBlockBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock( binaryReader );
-            cacheBlockData = Guerilla.ReadBlockArray<DecoratorCacheBlockDataBlock>( binaryReader );
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            cacheBlockData = Guerilla.ReadBlockArray<DecoratorCacheBlockDataBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  DecoratorCacheBlockBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                geometryBlockInfo.Write( binaryWriter );
-                nextAddress = Guerilla.WriteBlockArray<DecoratorCacheBlockDataBlock>( binaryWriter, cacheBlockData,
-                    nextAddress );
+                geometryBlockInfo.Write(binaryWriter);
+                nextAddress = Guerilla.WriteBlockArray<DecoratorCacheBlockDataBlock>(binaryWriter, cacheBlockData, nextAddress);
                 return nextAddress;
             }
         }

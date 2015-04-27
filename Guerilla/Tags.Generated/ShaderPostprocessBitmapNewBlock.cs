@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,32 +10,44 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPostprocessBitmapNewBlock : ShaderPostprocessBitmapNewBlockBase
     {
-        public ShaderPostprocessBitmapNewBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderPostprocessBitmapNewBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderPostprocessBitmapNewBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class ShaderPostprocessBitmapNewBlockBase : IGuerilla
+    [LayoutAttribute(Size = 12, Alignment = 4)]
+    public class ShaderPostprocessBitmapNewBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.TagIdent bitmapGroup;
         internal int bitmapIndex;
         internal float logBitmapDimension;
-
-        internal ShaderPostprocessBitmapNewBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderPostprocessBitmapNewBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            bitmapGroup = binaryReader.ReadTagIdent( );
-            bitmapIndex = binaryReader.ReadInt32( );
-            logBitmapDimension = binaryReader.ReadSingle( );
+            bitmapGroup = binaryReader.ReadTagIdent();
+            bitmapIndex = binaryReader.ReadInt32();
+            logBitmapDimension = binaryReader.ReadSingle();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ShaderPostprocessBitmapNewBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( bitmapGroup );
-                binaryWriter.Write( bitmapIndex );
-                binaryWriter.Write( logBitmapDimension );
+                binaryWriter.Write(bitmapGroup);
+                binaryWriter.Write(bitmapIndex);
+                binaryWriter.Write(logBitmapDimension);
                 return nextAddress;
             }
         }

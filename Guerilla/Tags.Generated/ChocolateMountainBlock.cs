@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,36 +10,47 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Gldf = ( TagClass ) "gldf";
+        public static readonly TagClass Gldf = (TagClass)"gldf";
     };
-} ;
+};
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute( "gldf" )]
+    [TagClassAttribute("gldf")]
     public partial class ChocolateMountainBlock : ChocolateMountainBlockBase
     {
-        public ChocolateMountainBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ChocolateMountainBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ChocolateMountainBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ChocolateMountainBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class ChocolateMountainBlockBase : GuerillaBlock
     {
         internal LightingVariablesBlock[] lightingVariables;
-
-        internal ChocolateMountainBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ChocolateMountainBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            lightingVariables = Guerilla.ReadBlockArray<LightingVariablesBlock>( binaryReader );
+            lightingVariables = Guerilla.ReadBlockArray<LightingVariablesBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ChocolateMountainBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                nextAddress = Guerilla.WriteBlockArray<LightingVariablesBlock>( binaryWriter, lightingVariables,
-                    nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<LightingVariablesBlock>(binaryWriter, lightingVariables, nextAddress);
                 return nextAddress;
             }
         }

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,32 +8,43 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class ShaderPostprocessAnimatedParameterReferenceNewBlock :
-        ShaderPostprocessAnimatedParameterReferenceNewBlockBase
+    public partial class ShaderPostprocessAnimatedParameterReferenceNewBlock : ShaderPostprocessAnimatedParameterReferenceNewBlockBase
     {
-        public ShaderPostprocessAnimatedParameterReferenceNewBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ShaderPostprocessAnimatedParameterReferenceNewBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderPostprocessAnimatedParameterReferenceNewBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class ShaderPostprocessAnimatedParameterReferenceNewBlockBase : IGuerilla
+    [LayoutAttribute(Size = 4, Alignment = 4)]
+    public class ShaderPostprocessAnimatedParameterReferenceNewBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal byte parameterIndex;
-
-        internal ShaderPostprocessAnimatedParameterReferenceNewBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderPostprocessAnimatedParameterReferenceNewBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            invalidName_ = binaryReader.ReadBytes( 3 );
-            parameterIndex = binaryReader.ReadByte( );
+            invalidName_ = binaryReader.ReadBytes(3);
+            parameterIndex = binaryReader.ReadByte();
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  ShaderPostprocessAnimatedParameterReferenceNewBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( invalidName_, 0, 3 );
-                binaryWriter.Write( parameterIndex );
+                binaryWriter.Write(invalidName_, 0, 3);
+                binaryWriter.Write(parameterIndex);
                 return nextAddress;
             }
         }

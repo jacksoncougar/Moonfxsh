@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,64 +10,71 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class AiConversationBlock : AiConversationBlockBase
     {
-        public AiConversationBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  AiConversationBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AiConversationBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 104, Alignment = 4 )]
-    public class AiConversationBlockBase : IGuerilla
+    [LayoutAttribute(Size = 104, Alignment = 4)]
+    public class AiConversationBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
         internal Flags flags;
         internal byte[] invalidName_;
-
         /// <summary>
         /// distance the player must enter before the conversation can trigger
         /// </summary>
         internal float triggerDistanceWorldUnits;
-
         /// <summary>
         /// if the 'involves player' flag is set, when triggered the conversation's participant(s) will run to within this distance of the player
         /// </summary>
         internal float runToPlayerDistWorldUnits;
-
         internal byte[] invalidName_0;
         internal AiConversationParticipantBlock[] participants;
         internal AiConversationLineBlock[] lines;
         internal GNullBlock[] gNullBlock;
-
-        internal AiConversationBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 104; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AiConversationBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            name = binaryReader.ReadString32( );
-            flags = ( Flags ) binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            triggerDistanceWorldUnits = binaryReader.ReadSingle( );
-            runToPlayerDistWorldUnits = binaryReader.ReadSingle( );
-            invalidName_0 = binaryReader.ReadBytes( 36 );
-            participants = Guerilla.ReadBlockArray<AiConversationParticipantBlock>( binaryReader );
-            lines = Guerilla.ReadBlockArray<AiConversationLineBlock>( binaryReader );
-            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>( binaryReader );
+            name = binaryReader.ReadString32();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            triggerDistanceWorldUnits = binaryReader.ReadSingle();
+            runToPlayerDistWorldUnits = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(36);
+            participants = Guerilla.ReadBlockArray<AiConversationParticipantBlock>(binaryReader);
+            lines = Guerilla.ReadBlockArray<AiConversationLineBlock>(binaryReader);
+            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  AiConversationBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( ( Int16 ) flags );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( triggerDistanceWorldUnits );
-                binaryWriter.Write( runToPlayerDistWorldUnits );
-                binaryWriter.Write( invalidName_0, 0, 36 );
-                nextAddress = Guerilla.WriteBlockArray<AiConversationParticipantBlock>( binaryWriter, participants,
-                    nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<AiConversationLineBlock>( binaryWriter, lines, nextAddress );
-                nextAddress = Guerilla.WriteBlockArray<GNullBlock>( binaryWriter, gNullBlock, nextAddress );
+                binaryWriter.Write(name);
+                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(triggerDistanceWorldUnits);
+                binaryWriter.Write(runToPlayerDistWorldUnits);
+                binaryWriter.Write(invalidName_0, 0, 36);
+                nextAddress = Guerilla.WriteBlockArray<AiConversationParticipantBlock>(binaryWriter, participants, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AiConversationLineBlock>(binaryWriter, lines, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock, nextAddress);
                 return nextAddress;
             }
         }
-
         [FlagsAttribute]
         internal enum Flags : short
         {

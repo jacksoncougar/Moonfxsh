@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,32 +10,44 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class DamageEffectSoundEffectDefinitionBlock : DamageEffectSoundEffectDefinitionBlockBase
     {
-        public DamageEffectSoundEffectDefinitionBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  DamageEffectSoundEffectDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  DamageEffectSoundEffectDefinitionBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class DamageEffectSoundEffectDefinitionBlockBase : IGuerilla
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class DamageEffectSoundEffectDefinitionBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringID effectName;
         internal float durationSeconds;
         internal MappingFunctionBlock effectScaleFunction;
-
-        internal DamageEffectSoundEffectDefinitionBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  DamageEffectSoundEffectDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            effectName = binaryReader.ReadStringID( );
-            durationSeconds = binaryReader.ReadSingle( );
-            effectScaleFunction = new MappingFunctionBlock( binaryReader );
+            effectName = binaryReader.ReadStringID();
+            durationSeconds = binaryReader.ReadSingle();
+            effectScaleFunction = new MappingFunctionBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  DamageEffectSoundEffectDefinitionBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( effectName );
-                binaryWriter.Write( durationSeconds );
-                effectScaleFunction.Write( binaryWriter );
+                binaryWriter.Write(effectName);
+                binaryWriter.Write(durationSeconds);
+                effectScaleFunction.Write(binaryWriter);
                 return nextAddress;
             }
         }

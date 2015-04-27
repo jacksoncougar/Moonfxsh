@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -11,26 +10,38 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class LightBrightnessAnimationBlock : LightBrightnessAnimationBlockBase
     {
-        public LightBrightnessAnimationBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  LightBrightnessAnimationBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  LightBrightnessAnimationBlock(): base()
+        {
+            
         }
     };
-
-    [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class LightBrightnessAnimationBlockBase : IGuerilla
+    [LayoutAttribute(Size = 8, Alignment = 4)]
+    public class LightBrightnessAnimationBlockBase : GuerillaBlock
     {
         internal MappingFunctionBlock function;
-
-        internal LightBrightnessAnimationBlockBase( BinaryReader binaryReader )
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  LightBrightnessAnimationBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            function = new MappingFunctionBlock( binaryReader );
+            function = new MappingFunctionBlock(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public  LightBrightnessAnimationBlockBase(): base()
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                function.Write( binaryWriter );
+                function.Write(binaryWriter);
                 return nextAddress;
             }
         }

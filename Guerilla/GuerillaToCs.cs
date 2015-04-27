@@ -109,6 +109,7 @@ namespace Moonfish.Guerilla
                     info.BaseClass = new ClassInfo.TokenDictionary( ).GenerateValidToken(
                         ToTypeName( parentTag.Definition.Name ) );
                 }
+                else info.BaseClass = "GuerillaBlock";
                 info.Attributes.Add( new AttributeInfo( typeof ( TagClassAttribute ) )
                 {
                     Parameters = {"\"" + tag.Class + "\""}

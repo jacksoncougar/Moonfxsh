@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla
 
         public string Interfaces
         {
-            get { return "GuerillaBlock"; }
+            get { return ""; }
         }
 
         public string BaseClassDeclaration
@@ -325,7 +325,7 @@ return array;",
             var tab = 0;
             var writeMethod = new MethodInfo
             {
-                AccessModifiers = AccessModifiers.Public,
+                AccessModifiers = AccessModifiers.Public | AccessModifiers.Override,
                 Arguments = new List<ParameterInfo>
                 {
                     new ParameterInfo( typeof ( BinaryWriter ) ),

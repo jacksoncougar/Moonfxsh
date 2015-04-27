@@ -39,7 +39,8 @@ namespace Moonfish.Guerilla
         Abstract = 16,
         Virtual = 32,
         Partial = 64,
-        Any = Private | Protected | Internal | Public | Abstract | Virtual | Partial
+        Override = 128,
+        Any = Private | Protected | Internal | Public | Abstract | Virtual | Partial | Override
     }
 
     public static class AccessModifiersExtensions

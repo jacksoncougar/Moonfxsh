@@ -163,7 +163,7 @@
     <Compile Include="Graphics\Track.cs" />
     <Compile Include="Graphics\VertexFunctions.cs" />
     <Compile Include="Guerilla\BinaryIO.cs" />
-    <Compile Include="Guerilla\Class1.cs" />
+    <Compile Include="Guerilla\GuerillaBlock.cs" />
     <Compile Include="Guerilla\ClassInfo.cs" />
     <Compile Include="Guerilla\Guerilla.cs" />
     <Compile Include="Guerilla\GuerillaAttributes.cs" />

@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,14 +8,14 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class BitmapGroupSequenceBlock : BitmapGroupSequenceBlockBase
+    public  partial class BitmapGroupSequenceBlock : BitmapGroupSequenceBlockBase
     {
-        public BitmapGroupSequenceBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  BitmapGroupSequenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 60, Alignment = 4 )]
+    [LayoutAttribute(Size = 60, Alignment = 4)]
     public class BitmapGroupSequenceBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
@@ -24,25 +23,23 @@ namespace Moonfish.Guerilla.Tags
         internal short bitmapCount;
         internal byte[] invalidName_;
         internal BitmapGroupSpriteBlock[] sprites;
-
-        internal BitmapGroupSequenceBlockBase( BinaryReader binaryReader )
+        internal BitmapGroupSequenceBlockBase(BinaryReader binaryReader)
         {
-            name = binaryReader.ReadString32( );
-            firstBitmapIndex = binaryReader.ReadInt16( );
-            bitmapCount = binaryReader.ReadInt16( );
-            invalidName_ = binaryReader.ReadBytes( 16 );
-            sprites = Guerilla.ReadBlockArray<BitmapGroupSpriteBlock>( binaryReader );
+            name = binaryReader.ReadString32();
+            firstBitmapIndex = binaryReader.ReadInt16();
+            bitmapCount = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(16);
+            sprites = Guerilla.ReadBlockArray<BitmapGroupSpriteBlock>(binaryReader);
         }
-
-        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( firstBitmapIndex );
-                binaryWriter.Write( bitmapCount );
-                binaryWriter.Write( invalidName_, 0, 16 );
-                nextAddress = Guerilla.WriteBlockArray<BitmapGroupSpriteBlock>( binaryWriter, sprites, nextAddress );
+                binaryWriter.Write(name);
+                binaryWriter.Write(firstBitmapIndex);
+                binaryWriter.Write(bitmapCount);
+                binaryWriter.Write(invalidName_, 0, 16);
+                nextAddress = Guerilla.WriteBlockArray<BitmapGroupSpriteBlock>(binaryWriter, sprites, nextAddress);
                 return nextAddress;
             }
         }

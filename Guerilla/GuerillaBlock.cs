@@ -9,6 +9,8 @@ namespace Moonfish.Guerilla
 {
     public abstract class GuerillaBlock
     {
+        public abstract int SerializedSize { get; }
+    
         protected GuerillaBlock( BinaryReader binaryReader )
         {
         }

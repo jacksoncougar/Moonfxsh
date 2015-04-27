@@ -189,6 +189,7 @@ namespace Moonfish.Guerilla
             {
                 var wrapperClassInfo = classInfo.GenerateWrapper( classInfo.Value.Name, classInfo.Value.Name + "Base" );
                 classInfo.Value.Name += "Base";
+                classInfo.BaseClass = "GuerillaBlock";
                 classInfo.Generate( );
 
                 foreach ( var item in classInfo.Usings )

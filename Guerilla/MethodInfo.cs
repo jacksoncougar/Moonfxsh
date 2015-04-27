@@ -290,12 +290,12 @@ namespace Moonfish.Guerilla
             if ( hasGetter )
             {
                 var auto = string.IsNullOrWhiteSpace( GetBody );
-                builder.Append( auto ? "get;" : string.Format( "get {{ {0} }}", GetBody ) );
+                builder.Append( auto ? " get; " : string.Format( "get {{ {0} }}", GetBody ) );
             }
             if ( hasSetter )
             {
                 var auto = string.IsNullOrWhiteSpace( SetBody );
-                builder.Append( auto ? "set;" : string.Format( "set {{ {0} }}", GetBody ) );
+                builder.Append( auto ? " set; " : string.Format( "set {{ {0} }}", GetBody ) );
             }
             builder.AppendLine( " }".Tab( ref indent ) );
             return builder.ToString( );

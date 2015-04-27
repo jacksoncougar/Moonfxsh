@@ -95,7 +95,8 @@ namespace Moonfish.Guerilla
                         Returns = "int",
                         Name = "SerializedSize"
                     }
-                }
+                },
+                BaseClass = "GuerillaBlock"
             };
 
 

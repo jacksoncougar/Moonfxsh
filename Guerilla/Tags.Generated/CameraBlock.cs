@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class CameraBlockBase : GuerillaBlock
+    public class CameraBlockBase : IGuerilla
     {
         [TagReference( "trak" )] internal Moonfish.Tags.TagReference defaultUnitCameraTrack;
         internal float defaultChangePause;
         internal float firstPersonChangePause;
         internal float followingCameraChangePause;
 
-        public override int SerializedSize
-        {
-            get { return 20; }
-        }
-
-        internal CameraBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal CameraBlockBase( BinaryReader binaryReader )
         {
             defaultUnitCameraTrack = binaryReader.ReadTagReference( );
             defaultChangePause = binaryReader.ReadSingle( );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             followingCameraChangePause = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

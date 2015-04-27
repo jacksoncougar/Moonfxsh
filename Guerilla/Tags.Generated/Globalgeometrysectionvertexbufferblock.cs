@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class GlobalGeometrySectionVertexBufferBlockBase : GuerillaBlock
+    public class GlobalGeometrySectionVertexBufferBlockBase : IGuerilla
     {
         internal Moonfish.Tags.VertexBuffer vertexBuffer;
 
-        public override int SerializedSize
-        {
-            get { return 32; }
-        }
-
-        internal GlobalGeometrySectionVertexBufferBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GlobalGeometrySectionVertexBufferBlockBase( BinaryReader binaryReader )
         {
             vertexBuffer = binaryReader.ReadVertexBuffer( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

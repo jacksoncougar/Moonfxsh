@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class InheritedAnimationBlockBase : GuerillaBlock
+    public class InheritedAnimationBlockBase : IGuerilla
     {
         [TagReference( "jmad" )] internal Moonfish.Tags.TagReference inheritedGraph;
         internal InheritedAnimationNodeMapBlock[] nodeMap;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal float rootZOffset;
         internal int inheritanceFlags;
 
-        public override int SerializedSize
-        {
-            get { return 32; }
-        }
-
-        internal InheritedAnimationBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal InheritedAnimationBlockBase( BinaryReader binaryReader )
         {
             inheritedGraph = binaryReader.ReadTagReference( );
             nodeMap = Guerilla.ReadBlockArray<InheritedAnimationNodeMapBlock>( binaryReader );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             inheritanceFlags = binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,30 +11,29 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterReadyBlock : CharacterReadyBlockBase
     {
-        public  CharacterReadyBlock(BinaryReader binaryReader): base(binaryReader)
+        public CharacterReadyBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class CharacterReadyBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class CharacterReadyBlockBase : IGuerilla
     {
         /// <summary>
         /// Character will pause for given time before engaging threat
         /// </summary>
         internal Moonfish.Model.Range readyTimeBounds;
-        
-        public override int SerializedSize{get { return 8; }}
-        
-        internal  CharacterReadyBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal CharacterReadyBlockBase( BinaryReader binaryReader )
         {
-            readyTimeBounds = binaryReader.ReadRange();
+            readyTimeBounds = binaryReader.ReadRange( );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(readyTimeBounds);
+                binaryWriter.Write( readyTimeBounds );
                 return nextAddress;
             }
         }

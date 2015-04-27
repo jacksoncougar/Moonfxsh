@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 936, Alignment = 4 )]
-    public class GlobalWeatherBackgroundPlateBlockBase : GuerillaBlock
+    public class GlobalWeatherBackgroundPlateBlockBase : IGuerilla
     {
         [TagReference( "bitm" )] internal Moonfish.Tags.TagReference texture0;
         [TagReference( "bitm" )] internal Moonfish.Tags.TagReference texture1;
@@ -50,12 +50,7 @@ namespace Moonfish.Guerilla.Tags
         internal float mass3;
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 936; }
-        }
-
-        internal GlobalWeatherBackgroundPlateBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GlobalWeatherBackgroundPlateBlockBase( BinaryReader binaryReader )
         {
             texture0 = binaryReader.ReadTagReference( );
             texture1 = binaryReader.ReadTagReference( );
@@ -89,7 +84,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 736 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

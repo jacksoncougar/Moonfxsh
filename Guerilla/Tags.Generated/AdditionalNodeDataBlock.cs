@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 60, Alignment = 4 )]
-    public class AdditionalNodeDataBlockBase : GuerillaBlock
+    public class AdditionalNodeDataBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID nodeName;
         internal OpenTK.Quaternion defaultRotation;
@@ -26,12 +26,7 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 minBounds;
         internal OpenTK.Vector3 maxBounds;
 
-        public override int SerializedSize
-        {
-            get { return 60; }
-        }
-
-        internal AdditionalNodeDataBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AdditionalNodeDataBlockBase( BinaryReader binaryReader )
         {
             nodeName = binaryReader.ReadStringID( );
             defaultRotation = binaryReader.ReadQuaternion( );
@@ -41,7 +36,7 @@ namespace Moonfish.Guerilla.Tags
             maxBounds = binaryReader.ReadVector3( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

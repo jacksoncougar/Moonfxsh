@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class GlobalSubpartsBlockBase : GuerillaBlock
+    public class GlobalSubpartsBlockBase : IGuerilla
     {
         internal short indicesStartIndex;
         internal short indicesLength;
         internal short visibilityBoundsIndex;
         internal short partIndex;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal GlobalSubpartsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GlobalSubpartsBlockBase( BinaryReader binaryReader )
         {
             indicesStartIndex = binaryReader.ReadInt16( );
             indicesLength = binaryReader.ReadInt16( );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             partIndex = binaryReader.ReadInt16( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

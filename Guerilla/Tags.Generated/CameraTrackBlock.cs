@@ -26,23 +26,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class CameraTrackBlockBase : GuerillaBlock
+    public class CameraTrackBlockBase : IGuerilla
     {
         internal Flags flags;
         internal CameraTrackControlPointBlock[] controlPoints;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal CameraTrackBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal CameraTrackBlockBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             controlPoints = Guerilla.ReadBlockArray<CameraTrackControlPointBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

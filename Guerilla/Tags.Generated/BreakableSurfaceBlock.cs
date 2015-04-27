@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class BreakableSurfaceBlockBase : GuerillaBlock
+    public class BreakableSurfaceBlockBase : IGuerilla
     {
         internal float maximumVitality;
         [TagReference( "effe" )] internal Moonfish.Tags.TagReference effect;
@@ -34,12 +34,7 @@ namespace Moonfish.Guerilla.Tags
         internal ParticleSystemDefinitionBlockNew[] particleEffects;
         internal float particleDensity;
 
-        public override int SerializedSize
-        {
-            get { return 32; }
-        }
-
-        internal BreakableSurfaceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal BreakableSurfaceBlockBase( BinaryReader binaryReader )
         {
             maximumVitality = binaryReader.ReadSingle( );
             effect = binaryReader.ReadTagReference( );
@@ -48,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
             particleDensity = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

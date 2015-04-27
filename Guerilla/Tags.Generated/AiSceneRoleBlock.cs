@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class AiSceneRoleBlockBase : GuerillaBlock
+    public class AiSceneRoleBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Group group;
         internal byte[] invalidName_;
         internal AiSceneRoleVariantsBlock[] roleVariants;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal AiSceneRoleBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AiSceneRoleBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             group = ( Group ) binaryReader.ReadInt16( );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             roleVariants = Guerilla.ReadBlockArray<AiSceneRoleVariantsBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 84, Alignment = 4 )]
-    public class AiConversationParticipantBlockBase : GuerillaBlock
+    public class AiConversationParticipantBlockBase : IGuerilla
     {
         internal byte[] invalidName_;
 
@@ -37,12 +37,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal byte[] invalidName_3;
 
-        public override int SerializedSize
-        {
-            get { return 84; }
-        }
-
-        internal AiConversationParticipantBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AiConversationParticipantBlockBase( BinaryReader binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 8 );
             useThisObject = binaryReader.ReadShortBlockIndex1( );
@@ -54,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_3 = binaryReader.ReadBytes( 12 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

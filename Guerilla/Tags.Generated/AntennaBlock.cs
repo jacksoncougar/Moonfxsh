@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 160, Alignment = 4 )]
-    public class AntennaBlockBase : GuerillaBlock
+    public class AntennaBlockBase : IGuerilla
     {
         /// <summary>
         /// the marker name where the antenna should be attached
@@ -47,12 +47,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal AntennaVertexBlock[] vertices;
 
-        public override int SerializedSize
-        {
-            get { return 160; }
-        }
-
-        internal AntennaBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AntennaBlockBase( BinaryReader binaryReader )
         {
             attachmentMarkerName = binaryReader.ReadStringID( );
             bitmaps = binaryReader.ReadTagReference( );
@@ -65,7 +60,7 @@ namespace Moonfish.Guerilla.Tags
             vertices = Guerilla.ReadBlockArray<AntennaVertexBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

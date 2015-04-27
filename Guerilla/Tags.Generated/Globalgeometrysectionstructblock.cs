@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 68, Alignment = 4 )]
-    public class GlobalGeometrySectionStructBlockBase : GuerillaBlock
+    public class GlobalGeometrySectionStructBlockBase : IGuerilla
     {
         internal GlobalGeometryPartBlockNew[] parts;
         internal GlobalSubpartsBlock[] subparts;
@@ -29,12 +29,7 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalGeometrySectionVertexBufferBlock[] vertexBuffers;
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 68; }
-        }
-
-        internal GlobalGeometrySectionStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GlobalGeometrySectionStructBlockBase( BinaryReader binaryReader )
         {
             parts = Guerilla.ReadBlockArray<GlobalGeometryPartBlockNew>( binaryReader );
             subparts = Guerilla.ReadBlockArray<GlobalSubpartsBlock>( binaryReader );
@@ -47,7 +42,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 4 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class CollisionModelRegionBlockBase : GuerillaBlock
+    public class CollisionModelRegionBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal CollisionModelPermutationBlock[] permutations;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal CollisionModelRegionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal CollisionModelRegionBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             permutations = Guerilla.ReadBlockArray<CollisionModelPermutationBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

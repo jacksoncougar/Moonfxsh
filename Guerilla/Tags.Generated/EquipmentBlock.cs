@@ -26,17 +26,12 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class EquipmentBlockBase : GuerillaBlock
+    public class EquipmentBlockBase : ItemBlock
     {
         internal PowerupType powerupType;
         internal GrenadeType grenadeType;
         internal float powerupTimeSeconds;
         [TagReference( "snd!" )] internal Moonfish.Tags.TagReference pickupSound;
-
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
 
         internal EquipmentBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
@@ -46,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             pickupSound = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

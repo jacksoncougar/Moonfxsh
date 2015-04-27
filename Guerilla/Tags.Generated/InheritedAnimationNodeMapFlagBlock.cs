@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class InheritedAnimationNodeMapFlagBlockBase : GuerillaBlock
+    public class InheritedAnimationNodeMapFlagBlockBase : IGuerilla
     {
         internal int localNodeFlags;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal InheritedAnimationNodeMapFlagBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal InheritedAnimationNodeMapFlagBlockBase( BinaryReader binaryReader )
         {
             localNodeFlags = binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

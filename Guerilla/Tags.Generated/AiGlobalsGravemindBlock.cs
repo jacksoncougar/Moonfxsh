@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class AiGlobalsGravemindBlockBase : GuerillaBlock
+    public class AiGlobalsGravemindBlockBase : IGuerilla
     {
         internal float minRetreatTimeSecs;
         internal float idealRetreatTimeSecs;
         internal float maxRetreatTimeSecs;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal AiGlobalsGravemindBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AiGlobalsGravemindBlockBase( BinaryReader binaryReader )
         {
             minRetreatTimeSecs = binaryReader.ReadSingle( );
             idealRetreatTimeSecs = binaryReader.ReadSingle( );
             maxRetreatTimeSecs = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

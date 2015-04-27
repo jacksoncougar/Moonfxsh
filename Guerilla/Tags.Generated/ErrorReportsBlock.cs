@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 608, Alignment = 4 )]
-    public class ErrorReportsBlockBase : GuerillaBlock
+    public class ErrorReportsBlockBase : IGuerilla
     {
         internal Type type;
         internal Flags flags;
@@ -39,12 +39,7 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector4 color;
         internal byte[] invalidName_0;
 
-        public override int SerializedSize
-        {
-            get { return 608; }
-        }
-
-        internal ErrorReportsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ErrorReportsBlockBase( BinaryReader binaryReader )
         {
             type = ( Type ) binaryReader.ReadInt16( );
             flags = ( Flags ) binaryReader.ReadInt16( );
@@ -67,7 +62,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes( 84 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

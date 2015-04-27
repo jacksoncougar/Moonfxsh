@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 120, Alignment = 4 )]
-    public class HingeConstraintsBlockBase : GuerillaBlock
+    public class HingeConstraintsBlockBase : IGuerilla
     {
         internal ConstraintBodiesStructBlock constraintBodies;
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 120; }
-        }
-
-        internal HingeConstraintsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal HingeConstraintsBlockBase( BinaryReader binaryReader )
         {
             constraintBodies = new ConstraintBodiesStructBlock( binaryReader );
             invalidName_ = binaryReader.ReadBytes( 4 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 28, Alignment = 4 )]
-    public class CameraTrackControlPointBlockBase : GuerillaBlock
+    public class CameraTrackControlPointBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 position;
         internal OpenTK.Quaternion orientation;
 
-        public override int SerializedSize
-        {
-            get { return 28; }
-        }
-
-        internal CameraTrackControlPointBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal CameraTrackControlPointBlockBase( BinaryReader binaryReader )
         {
             position = binaryReader.ReadVector3( );
             orientation = binaryReader.ReadQuaternion( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

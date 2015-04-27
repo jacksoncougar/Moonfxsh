@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class ClothLinksBlockBase : GuerillaBlock
+    public class ClothLinksBlockBase : IGuerilla
     {
         internal int attachmentBits;
         internal short index1;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal float defaultDistance;
         internal float dampingMultiplier;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal ClothLinksBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ClothLinksBlockBase( BinaryReader binaryReader )
         {
             attachmentBits = binaryReader.ReadInt32( );
             index1 = binaryReader.ReadInt16( );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             dampingMultiplier = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

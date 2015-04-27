@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class DecoratorCellCollectionBlockBase : GuerillaBlock
+    public class DecoratorCellCollectionBlockBase : IGuerilla
     {
         internal ChildIndices[] childIndices;
         internal Moonfish.Tags.ShortBlockIndex1 cacheBlockIndex;
         internal short groupCount;
         internal int groupStartIndex;
 
-        public override int SerializedSize
-        {
-            get { return 24; }
-        }
-
-        internal DecoratorCellCollectionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal DecoratorCellCollectionBlockBase( BinaryReader binaryReader )
         {
             childIndices = new[]
             {
@@ -42,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             groupStartIndex = binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {
@@ -62,21 +57,16 @@ namespace Moonfish.Guerilla.Tags
         }
 
         [LayoutAttribute( Size = 2, Alignment = 1 )]
-        public class ChildIndices : GuerillaBlock
+        public class ChildIndices : IGuerilla
         {
             internal short childIndex;
 
-            public override int SerializedSize
-            {
-                get { return 2; }
-            }
-
-            internal ChildIndices( BinaryReader binaryReader ) : base( binaryReader )
+            internal ChildIndices( BinaryReader binaryReader )
             {
                 childIndex = binaryReader.ReadInt16( );
             }
 
-            public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
             {
                 using ( binaryWriter.BaseStream.Pin( ) )
                 {

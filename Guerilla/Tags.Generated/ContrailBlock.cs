@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 240, Alignment = 4 )]
-    public class ContrailBlockBase : GuerillaBlock
+    public class ContrailBlockBase : IGuerilla
     {
         internal Flags flags;
 
@@ -146,12 +146,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_6;
         internal ContrailPointStatesBlock[] pointStates;
 
-        public override int SerializedSize
-        {
-            get { return 240; }
-        }
-
-        internal ContrailBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ContrailBlockBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt16( );
             scaleFlags =
@@ -201,7 +196,7 @@ namespace Moonfish.Guerilla.Tags
             pointStates = Guerilla.ReadBlockArray<ContrailPointStatesBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

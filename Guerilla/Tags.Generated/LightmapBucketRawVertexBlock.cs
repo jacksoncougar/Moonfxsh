@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class LightmapBucketRawVertexBlockBase : GuerillaBlock
+    public class LightmapBucketRawVertexBlockBase : IGuerilla
     {
         internal Moonfish.Tags.ColorR8G8B8 primaryLightmapColor;
         internal OpenTK.Vector3 primaryLightmapIncidentDirection;
 
-        public override int SerializedSize
-        {
-            get { return 24; }
-        }
-
-        internal LightmapBucketRawVertexBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal LightmapBucketRawVertexBlockBase( BinaryReader binaryReader )
         {
             primaryLightmapColor = binaryReader.ReadColorR8G8B8( );
             primaryLightmapIncidentDirection = binaryReader.ReadVector3( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

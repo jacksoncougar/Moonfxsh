@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class LeavesBlockBase : GuerillaBlock
+    public class LeavesBlockBase : IGuerilla
     {
         internal Flags flags;
         internal byte bSP2DReferenceCount;
         internal short firstBSP2DReference;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal LeavesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal LeavesBlockBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadByte( );
             bSP2DReferenceCount = binaryReader.ReadByte( );
             firstBSP2DReference = binaryReader.ReadInt16( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

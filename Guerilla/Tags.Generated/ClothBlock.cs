@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 108, Alignment = 4 )]
-    public class ClothBlockBase : GuerillaBlock
+    public class ClothBlockBase : IGuerilla
     {
         internal Flags flags;
         internal Moonfish.Tags.StringID markerAttachmentName;
@@ -41,12 +41,7 @@ namespace Moonfish.Guerilla.Tags
         internal ClothIndicesBlock[] stripIndices;
         internal ClothLinksBlock[] links;
 
-        public override int SerializedSize
-        {
-            get { return 108; }
-        }
-
-        internal ClothBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ClothBlockBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             markerAttachmentName = binaryReader.ReadStringID( );
@@ -62,7 +57,7 @@ namespace Moonfish.Guerilla.Tags
             links = Guerilla.ReadBlockArray<ClothLinksBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

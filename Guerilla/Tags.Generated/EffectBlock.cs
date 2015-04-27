@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 48, Alignment = 4 )]
-    public class EffectBlockBase : GuerillaBlock
+    public class EffectBlockBase : IGuerilla
     {
         internal Flags flags;
         internal Moonfish.Tags.ShortBlockIndex1 loopStartEvent;
@@ -40,12 +40,7 @@ namespace Moonfish.Guerilla.Tags
         internal float alwaysPlayDistance;
         internal float neverPlayDistance;
 
-        public override int SerializedSize
-        {
-            get { return 48; }
-        }
-
-        internal EffectBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal EffectBlockBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             loopStartEvent = binaryReader.ReadShortBlockIndex1( );
@@ -60,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
             neverPlayDistance = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

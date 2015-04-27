@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class CheatWeaponsBlockBase : GuerillaBlock
+    public class CheatWeaponsBlockBase : IGuerilla
     {
         [TagReference( "item" )] internal Moonfish.Tags.TagReference weapon;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal CheatWeaponsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal CheatWeaponsBlockBase( BinaryReader binaryReader )
         {
             weapon = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

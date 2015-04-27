@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 48, Alignment = 4 )]
-    public class CsPointSetBlockBase : GuerillaBlock
+    public class CsPointSetBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal CsPointBlock[] points;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal short manualReferenceFrame;
         internal Flags flags;
 
-        public override int SerializedSize
-        {
-            get { return 48; }
-        }
-
-        internal CsPointSetBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal CsPointSetBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadString32( );
             points = Guerilla.ReadBlockArray<CsPointBlock>( binaryReader );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             flags = ( Flags ) binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

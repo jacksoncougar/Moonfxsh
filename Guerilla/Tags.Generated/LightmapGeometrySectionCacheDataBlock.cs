@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 68, Alignment = 4 )]
-    public class LightmapGeometrySectionCacheDataBlockBase : GuerillaBlock
+    public class LightmapGeometrySectionCacheDataBlockBase : IGuerilla
     {
         internal GlobalGeometrySectionStructBlock geometry;
 
-        public override int SerializedSize
-        {
-            get { return 68; }
-        }
-
-        internal LightmapGeometrySectionCacheDataBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal LightmapGeometrySectionCacheDataBlockBase( BinaryReader binaryReader )
         {
             geometry = new GlobalGeometrySectionStructBlock( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

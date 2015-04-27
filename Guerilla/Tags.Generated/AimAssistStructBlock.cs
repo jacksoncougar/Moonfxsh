@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 36, Alignment = 4 )]
-    public class AimAssistStructBlockBase : GuerillaBlock
+    public class AimAssistStructBlockBase : IGuerilla
     {
         /// <summary>
         /// the maximum angle that autoaim works at full strength
@@ -47,12 +47,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
 
-        public override int SerializedSize
-        {
-            get { return 36; }
-        }
-
-        internal AimAssistStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AimAssistStructBlockBase( BinaryReader binaryReader )
         {
             autoaimAngleDegrees = binaryReader.ReadSingle( );
             autoaimRangeWorldUnits = binaryReader.ReadSingle( );
@@ -63,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes( 12 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

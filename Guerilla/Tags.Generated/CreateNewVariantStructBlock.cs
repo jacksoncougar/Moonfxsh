@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,42 +11,43 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class CreateNewVariantStructBlock : CreateNewVariantStructBlockBase
     {
-        public  CreateNewVariantStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public CreateNewVariantStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class CreateNewVariantStructBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 20, Alignment = 4 )]
+    public class CreateNewVariantStructBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID invalidName_;
         internal InvalidName invalidName_0;
         internal GDefaultVariantSettingsBlock[] settings;
         internal byte invalidName_1;
         internal byte[] invalidName_2;
-        
-        public override int SerializedSize{get { return 20; }}
-        
-        internal  CreateNewVariantStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal CreateNewVariantStructBlockBase( BinaryReader binaryReader )
         {
-            invalidName_ = binaryReader.ReadStringID();
-            invalidName_0 = (InvalidName)binaryReader.ReadInt32();
-            settings = Guerilla.ReadBlockArray<GDefaultVariantSettingsBlock>(binaryReader);
-            invalidName_1 = binaryReader.ReadByte();
-            invalidName_2 = binaryReader.ReadBytes(3);
+            invalidName_ = binaryReader.ReadStringID( );
+            invalidName_0 = ( InvalidName ) binaryReader.ReadInt32( );
+            settings = Guerilla.ReadBlockArray<GDefaultVariantSettingsBlock>( binaryReader );
+            invalidName_1 = binaryReader.ReadByte( );
+            invalidName_2 = binaryReader.ReadBytes( 3 );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(invalidName_);
-                binaryWriter.Write((Int32)invalidName_0);
-                nextAddress = Guerilla.WriteBlockArray<GDefaultVariantSettingsBlock>(binaryWriter, settings, nextAddress);
-                binaryWriter.Write(invalidName_1);
-                binaryWriter.Write(invalidName_2, 0, 3);
+                binaryWriter.Write( invalidName_ );
+                binaryWriter.Write( ( Int32 ) invalidName_0 );
+                nextAddress = Guerilla.WriteBlockArray<GDefaultVariantSettingsBlock>( binaryWriter, settings,
+                    nextAddress );
+                binaryWriter.Write( invalidName_1 );
+                binaryWriter.Write( invalidName_2, 0, 3 );
                 return nextAddress;
             }
         }
+
         internal enum InvalidName : int
         {
             Slayer = 0,

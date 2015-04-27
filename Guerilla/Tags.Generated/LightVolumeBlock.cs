@@ -26,25 +26,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class LightVolumeBlockBase : GuerillaBlock
+    public class LightVolumeBlockBase : IGuerilla
     {
         internal float falloffDistanceFromCameraWorldUnits;
         internal float cutoffDistanceFromCameraWorldUnits;
         internal LightVolumeVolumeBlock[] volumes;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal LightVolumeBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal LightVolumeBlockBase( BinaryReader binaryReader )
         {
             falloffDistanceFromCameraWorldUnits = binaryReader.ReadSingle( );
             cutoffDistanceFromCameraWorldUnits = binaryReader.ReadSingle( );
             volumes = Guerilla.ReadBlockArray<LightVolumeVolumeBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

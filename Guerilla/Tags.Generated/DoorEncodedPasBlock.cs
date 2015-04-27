@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class DoorEncodedPasBlockBase : GuerillaBlock
+    public class DoorEncodedPasBlockBase : IGuerilla
     {
         internal int invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal DoorEncodedPasBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal DoorEncodedPasBlockBase( BinaryReader binaryReader )
         {
             invalidName_ = binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

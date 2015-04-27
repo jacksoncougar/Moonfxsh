@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 3172, Alignment = 4 )]
-    public class GlobalUiMultiplayerLevelBlockBase : GuerillaBlock
+    public class GlobalUiMultiplayerLevelBlockBase : IGuerilla
     {
         internal int mapID;
         [TagReference( "bitm" )] internal Moonfish.Tags.TagReference bitmap;
@@ -44,12 +44,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte maxTeamsStub14;
         internal byte maxTeamsStub15;
 
-        public override int SerializedSize
-        {
-            get { return 3172; }
-        }
-
-        internal GlobalUiMultiplayerLevelBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GlobalUiMultiplayerLevelBlockBase( BinaryReader binaryReader )
         {
             mapID = binaryReader.ReadInt32( );
             bitmap = binaryReader.ReadTagReference( );
@@ -77,7 +72,7 @@ namespace Moonfish.Guerilla.Tags
             maxTeamsStub15 = binaryReader.ReadByte( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

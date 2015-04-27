@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class AnimationGraphEffectReferenceBlockBase : GuerillaBlock
+    public class AnimationGraphEffectReferenceBlockBase : IGuerilla
     {
         [TagReference( "effe" )] internal Moonfish.Tags.TagReference effect;
         internal Flags flags;
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal AnimationGraphEffectReferenceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AnimationGraphEffectReferenceBlockBase( BinaryReader binaryReader )
         {
             effect = binaryReader.ReadTagReference( );
             flags = ( Flags ) binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class EffectLocationsBlockBase : GuerillaBlock
+    public class EffectLocationsBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID markerName;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal EffectLocationsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal EffectLocationsBlockBase( BinaryReader binaryReader )
         {
             markerName = binaryReader.ReadStringID( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

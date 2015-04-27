@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class AnimationIkBlockBase : GuerillaBlock
+    public class AnimationIkBlockBase : IGuerilla
     {
         /// <summary>
         /// the marker name on the object being attached
@@ -29,18 +29,13 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal Moonfish.Tags.StringID attachToMarker;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal AnimationIkBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AnimationIkBlockBase( BinaryReader binaryReader )
         {
             marker = binaryReader.ReadStringID( );
             attachToMarker = binaryReader.ReadStringID( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class LightVolumeRuntimeOffsetBlockBase : GuerillaBlock
+    public class LightVolumeRuntimeOffsetBlockBase : IGuerilla
     {
         internal OpenTK.Vector2 invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal LightVolumeRuntimeOffsetBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal LightVolumeRuntimeOffsetBlockBase( BinaryReader binaryReader )
         {
             invalidName_ = binaryReader.ReadVector2( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

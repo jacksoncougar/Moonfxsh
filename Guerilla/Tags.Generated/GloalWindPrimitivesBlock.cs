@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class GloalWindPrimitivesBlockBase : GuerillaBlock
+    public class GloalWindPrimitivesBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 position;
         internal float radius;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal WindPrimitiveType windPrimitiveType;
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 24; }
-        }
-
-        internal GloalWindPrimitivesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GloalWindPrimitivesBlockBase( BinaryReader binaryReader )
         {
             position = binaryReader.ReadVector3( );
             radius = binaryReader.ReadSingle( );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 2 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

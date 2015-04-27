@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,23 +11,21 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class HudScreenEffectWidgets : HudScreenEffectWidgetsBase
     {
-        public  HudScreenEffectWidgets(BinaryReader binaryReader): base(binaryReader)
+        public HudScreenEffectWidgets( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 80, Alignment = 4)]
-    public class HudScreenEffectWidgetsBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 80, Alignment = 4 )]
+    public class HudScreenEffectWidgetsBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal HudWidgetInputsStructBlock hudWidgetInputsStruct;
         internal HudWidgetStateDefinitionStructBlock hudWidgetStateDefinitionStruct;
         internal Anchor anchor;
         internal Flags flags;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference bitmap;
-        [TagReference("egor")]
-        internal Moonfish.Tags.TagReference fullscreenScreenEffect;
+        [TagReference( "bitm" )] internal Moonfish.Tags.TagReference bitmap;
+        [TagReference( "egor" )] internal Moonfish.Tags.TagReference fullscreenScreenEffect;
         internal ScreenEffectBonusStructBlock waa;
         internal byte fullscreenSequenceIndex;
         internal byte halfscreenSequenceIndex;
@@ -35,49 +34,49 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.Point fullscreenOffset;
         internal Moonfish.Tags.Point halfscreenOffset;
         internal Moonfish.Tags.Point quarterscreenOffset;
-        
-        public override int SerializedSize{get { return 80; }}
-        
-        internal  HudScreenEffectWidgetsBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal HudScreenEffectWidgetsBase( BinaryReader binaryReader )
         {
-            name = binaryReader.ReadStringID();
-            hudWidgetInputsStruct = new HudWidgetInputsStructBlock(binaryReader);
-            hudWidgetStateDefinitionStruct = new HudWidgetStateDefinitionStructBlock(binaryReader);
-            anchor = (Anchor)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            bitmap = binaryReader.ReadTagReference();
-            fullscreenScreenEffect = binaryReader.ReadTagReference();
-            waa = new ScreenEffectBonusStructBlock(binaryReader);
-            fullscreenSequenceIndex = binaryReader.ReadByte();
-            halfscreenSequenceIndex = binaryReader.ReadByte();
-            quarterscreenSequenceIndex = binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(1);
-            fullscreenOffset = binaryReader.ReadPoint();
-            halfscreenOffset = binaryReader.ReadPoint();
-            quarterscreenOffset = binaryReader.ReadPoint();
+            name = binaryReader.ReadStringID( );
+            hudWidgetInputsStruct = new HudWidgetInputsStructBlock( binaryReader );
+            hudWidgetStateDefinitionStruct = new HudWidgetStateDefinitionStructBlock( binaryReader );
+            anchor = ( Anchor ) binaryReader.ReadInt16( );
+            flags = ( Flags ) binaryReader.ReadInt16( );
+            bitmap = binaryReader.ReadTagReference( );
+            fullscreenScreenEffect = binaryReader.ReadTagReference( );
+            waa = new ScreenEffectBonusStructBlock( binaryReader );
+            fullscreenSequenceIndex = binaryReader.ReadByte( );
+            halfscreenSequenceIndex = binaryReader.ReadByte( );
+            quarterscreenSequenceIndex = binaryReader.ReadByte( );
+            invalidName_ = binaryReader.ReadBytes( 1 );
+            fullscreenOffset = binaryReader.ReadPoint( );
+            halfscreenOffset = binaryReader.ReadPoint( );
+            quarterscreenOffset = binaryReader.ReadPoint( );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(name);
-                hudWidgetInputsStruct.Write(binaryWriter);
-                hudWidgetStateDefinitionStruct.Write(binaryWriter);
-                binaryWriter.Write((Int16)anchor);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(bitmap);
-                binaryWriter.Write(fullscreenScreenEffect);
-                waa.Write(binaryWriter);
-                binaryWriter.Write(fullscreenSequenceIndex);
-                binaryWriter.Write(halfscreenSequenceIndex);
-                binaryWriter.Write(quarterscreenSequenceIndex);
-                binaryWriter.Write(invalidName_, 0, 1);
-                binaryWriter.Write(fullscreenOffset);
-                binaryWriter.Write(halfscreenOffset);
-                binaryWriter.Write(quarterscreenOffset);
+                binaryWriter.Write( name );
+                hudWidgetInputsStruct.Write( binaryWriter );
+                hudWidgetStateDefinitionStruct.Write( binaryWriter );
+                binaryWriter.Write( ( Int16 ) anchor );
+                binaryWriter.Write( ( Int16 ) flags );
+                binaryWriter.Write( bitmap );
+                binaryWriter.Write( fullscreenScreenEffect );
+                waa.Write( binaryWriter );
+                binaryWriter.Write( fullscreenSequenceIndex );
+                binaryWriter.Write( halfscreenSequenceIndex );
+                binaryWriter.Write( quarterscreenSequenceIndex );
+                binaryWriter.Write( invalidName_, 0, 1 );
+                binaryWriter.Write( fullscreenOffset );
+                binaryWriter.Write( halfscreenOffset );
+                binaryWriter.Write( quarterscreenOffset );
                 return nextAddress;
             }
         }
+
         internal enum Anchor : short
         {
             HealthAndShield = 0,
@@ -87,6 +86,7 @@ namespace Moonfish.Guerilla.Tags
             Crosshair = 4,
             LockOnTarget = 5,
         };
+
         [FlagsAttribute]
         internal enum Flags : short
         {

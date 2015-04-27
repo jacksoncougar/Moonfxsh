@@ -26,21 +26,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ColorTableBlockBase : GuerillaBlock
+    public class ColorTableBlockBase : IGuerilla
     {
         internal ColorBlock[] colors;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal ColorTableBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ColorTableBlockBase( BinaryReader binaryReader )
         {
             colors = Guerilla.ReadBlockArray<ColorBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

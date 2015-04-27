@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 56, Alignment = 4 )]
-    public class GlobalGeometryCompressionInfoBlockBase : GuerillaBlock
+    public class GlobalGeometryCompressionInfoBlockBase : IGuerilla
     {
         internal Moonfish.Model.Range positionBoundsX;
         internal Moonfish.Model.Range positionBoundsY;
@@ -27,12 +27,7 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range secondaryTexcoordBoundsX;
         internal Moonfish.Model.Range secondaryTexcoordBoundsY;
 
-        public override int SerializedSize
-        {
-            get { return 56; }
-        }
-
-        internal GlobalGeometryCompressionInfoBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GlobalGeometryCompressionInfoBlockBase( BinaryReader binaryReader )
         {
             positionBoundsX = binaryReader.ReadRange( );
             positionBoundsY = binaryReader.ReadRange( );
@@ -43,7 +38,7 @@ namespace Moonfish.Guerilla.Tags
             secondaryTexcoordBoundsY = binaryReader.ReadRange( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

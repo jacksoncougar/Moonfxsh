@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class DecoratorGroupBlockBase : GuerillaBlock
+    public class DecoratorGroupBlockBase : IGuerilla
     {
         internal Moonfish.Tags.ByteBlockIndex1 decoratorSet;
         internal DecoratorType decoratorType;
@@ -33,12 +33,7 @@ namespace Moonfish.Guerilla.Tags
         internal short indexCount;
         internal int compressedBoundingCenter;
 
-        public override int SerializedSize
-        {
-            get { return 24; }
-        }
-
-        internal DecoratorGroupBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal DecoratorGroupBlockBase( BinaryReader binaryReader )
         {
             decoratorSet = binaryReader.ReadByteBlockIndex1( );
             decoratorType = ( DecoratorType ) binaryReader.ReadByte( );
@@ -55,7 +50,7 @@ namespace Moonfish.Guerilla.Tags
             compressedBoundingCenter = binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

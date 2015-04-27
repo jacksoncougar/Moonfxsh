@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 544, Alignment = 4 )]
-    public class CellularAutomata2dBlockBase : GuerillaBlock
+    public class CellularAutomata2dBlockBase : IGuerilla
     {
         internal short updatesPerSecondHz;
         internal byte[] invalidName_;
@@ -57,12 +57,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_6;
         internal RulesBlock[] rules;
 
-        public override int SerializedSize
-        {
-            get { return 544; }
-        }
-
-        internal CellularAutomata2dBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal CellularAutomata2dBlockBase( BinaryReader binaryReader )
         {
             updatesPerSecondHz = binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
@@ -94,7 +89,7 @@ namespace Moonfish.Guerilla.Tags
             rules = Guerilla.ReadBlockArray<RulesBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

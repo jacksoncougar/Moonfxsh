@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 260, Alignment = 4 )]
-    public class GScenarioEditorFolderBlockBase : GuerillaBlock
+    public class GScenarioEditorFolderBlockBase : IGuerilla
     {
         internal Moonfish.Tags.LongBlockIndex1 parentFolder;
         internal Moonfish.Tags.String256 name;
 
-        public override int SerializedSize
-        {
-            get { return 260; }
-        }
-
-        internal GScenarioEditorFolderBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GScenarioEditorFolderBlockBase( BinaryReader binaryReader )
         {
             parentFolder = binaryReader.ReadLongBlockIndex1( );
             name = binaryReader.ReadString256( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

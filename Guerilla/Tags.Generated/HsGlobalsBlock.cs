@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class HsGlobalsBlockBase : GuerillaBlock
+    public class HsGlobalsBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal Type type;
         internal byte[] invalidName_;
         internal int initializationExpressionIndex;
 
-        public override int SerializedSize
-        {
-            get { return 40; }
-        }
-
-        internal HsGlobalsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal HsGlobalsBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadString32( );
             type = ( Type ) binaryReader.ReadInt16( );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             initializationExpressionIndex = binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class AnimationSoundEventBlockBase : GuerillaBlock
+    public class AnimationSoundEventBlockBase : IGuerilla
     {
         internal Moonfish.Tags.ShortBlockIndex1 sound;
         internal short frame;
         internal Moonfish.Tags.StringID markerName;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal AnimationSoundEventBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AnimationSoundEventBlockBase( BinaryReader binaryReader )
         {
             sound = binaryReader.ReadShortBlockIndex1( );
             frame = binaryReader.ReadInt16( );
             markerName = binaryReader.ReadStringID( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

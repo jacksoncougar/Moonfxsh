@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class ClothVerticesBlockBase : GuerillaBlock
+    public class ClothVerticesBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 initialPosition;
         internal OpenTK.Vector2 uv;
 
-        public override int SerializedSize
-        {
-            get { return 20; }
-        }
-
-        internal ClothVerticesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ClothVerticesBlockBase( BinaryReader binaryReader )
         {
             initialPosition = binaryReader.ReadVector3( );
             uv = binaryReader.ReadVector2( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

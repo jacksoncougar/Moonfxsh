@@ -26,21 +26,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ChocolateMountainBlockBase : GuerillaBlock
+    public class ChocolateMountainBlockBase : IGuerilla
     {
         internal LightingVariablesBlock[] lightingVariables;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal ChocolateMountainBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ChocolateMountainBlockBase( BinaryReader binaryReader )
         {
             lightingVariables = Guerilla.ReadBlockArray<LightingVariablesBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

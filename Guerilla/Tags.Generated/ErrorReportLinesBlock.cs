@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,101 +11,108 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ErrorReportLinesBlock : ErrorReportLinesBlockBase
     {
-        public  ErrorReportLinesBlock(BinaryReader binaryReader): base(binaryReader)
+        public ErrorReportLinesBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 80, Alignment = 4)]
-    public class ErrorReportLinesBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 80, Alignment = 4 )]
+    public class ErrorReportLinesBlockBase : IGuerilla
     {
         internal Points[] points;
         internal OpenTK.Vector4 color;
-        
-        public override int SerializedSize{get { return 80; }}
-        
-        internal  ErrorReportLinesBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal ErrorReportLinesBlockBase( BinaryReader binaryReader )
         {
-            points = new []{ new Points(binaryReader), new Points(binaryReader),  };
-            color = binaryReader.ReadVector4();
+            points = new[] {new Points( binaryReader ), new Points( binaryReader ),};
+            color = binaryReader.ReadVector4( );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                points[0].Write(binaryWriter);
-                points[1].Write(binaryWriter);
-                binaryWriter.Write(color);
+                points[ 0 ].Write( binaryWriter );
+                points[ 1 ].Write( binaryWriter );
+                binaryWriter.Write( color );
                 return nextAddress;
             }
         }
-        [LayoutAttribute(Size = 32, Alignment = 1)]
-        public class Points : GuerillaBlock
+
+        [LayoutAttribute( Size = 32, Alignment = 1 )]
+        public class Points : IGuerilla
         {
             internal OpenTK.Vector3 position;
             internal NodeIndices[] nodeIndices;
             internal NodeWeights[] nodeWeights;
-            
-            public override int SerializedSize{get { return 32; }}
-            
-            internal  Points(BinaryReader binaryReader): base(binaryReader)
+
+            internal Points( BinaryReader binaryReader )
             {
-                position = binaryReader.ReadVector3();
-                nodeIndices = new []{ new NodeIndices(binaryReader), new NodeIndices(binaryReader), new NodeIndices(binaryReader), new NodeIndices(binaryReader),  };
-                nodeWeights = new []{ new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader),  };
-            }
-            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-            {
-                using(binaryWriter.BaseStream.Pin())
+                position = binaryReader.ReadVector3( );
+                nodeIndices = new[]
                 {
-                    binaryWriter.Write(position);
-                    nodeIndices[0].Write(binaryWriter);
-                    nodeIndices[1].Write(binaryWriter);
-                    nodeIndices[2].Write(binaryWriter);
-                    nodeIndices[3].Write(binaryWriter);
-                    nodeWeights[0].Write(binaryWriter);
-                    nodeWeights[1].Write(binaryWriter);
-                    nodeWeights[2].Write(binaryWriter);
-                    nodeWeights[3].Write(binaryWriter);
+                    new NodeIndices( binaryReader ), new NodeIndices( binaryReader ), new NodeIndices( binaryReader ),
+                    new NodeIndices( binaryReader ),
+                };
+                nodeWeights = new[]
+                {
+                    new NodeWeights( binaryReader ), new NodeWeights( binaryReader ), new NodeWeights( binaryReader ),
+                    new NodeWeights( binaryReader ),
+                };
+            }
+
+            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            {
+                using ( binaryWriter.BaseStream.Pin( ) )
+                {
+                    binaryWriter.Write( position );
+                    nodeIndices[ 0 ].Write( binaryWriter );
+                    nodeIndices[ 1 ].Write( binaryWriter );
+                    nodeIndices[ 2 ].Write( binaryWriter );
+                    nodeIndices[ 3 ].Write( binaryWriter );
+                    nodeWeights[ 0 ].Write( binaryWriter );
+                    nodeWeights[ 1 ].Write( binaryWriter );
+                    nodeWeights[ 2 ].Write( binaryWriter );
+                    nodeWeights[ 3 ].Write( binaryWriter );
                     return nextAddress;
                 }
             }
-            [LayoutAttribute(Size = 1, Alignment = 1)]
-            public class NodeIndices : GuerillaBlock
+
+            [LayoutAttribute( Size = 1, Alignment = 1 )]
+            public class NodeIndices : IGuerilla
             {
                 internal byte nodeIndex;
-                
-                public override int SerializedSize{get { return 1; }}
-                
-                internal  NodeIndices(BinaryReader binaryReader): base(binaryReader)
+
+                internal NodeIndices( BinaryReader binaryReader )
                 {
-                    nodeIndex = binaryReader.ReadByte();
+                    nodeIndex = binaryReader.ReadByte( );
                 }
-                public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+                public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
                 {
-                    using(binaryWriter.BaseStream.Pin())
+                    using ( binaryWriter.BaseStream.Pin( ) )
                     {
-                        binaryWriter.Write(nodeIndex);
+                        binaryWriter.Write( nodeIndex );
                         return nextAddress;
                     }
                 }
             };
-            [LayoutAttribute(Size = 4, Alignment = 1)]
-            public class NodeWeights : GuerillaBlock
+
+            [LayoutAttribute( Size = 4, Alignment = 1 )]
+            public class NodeWeights : IGuerilla
             {
                 internal float nodeWeight;
-                
-                public override int SerializedSize{get { return 4; }}
-                
-                internal  NodeWeights(BinaryReader binaryReader): base(binaryReader)
+
+                internal NodeWeights( BinaryReader binaryReader )
                 {
-                    nodeWeight = binaryReader.ReadSingle();
+                    nodeWeight = binaryReader.ReadSingle( );
                 }
-                public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+                public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
                 {
-                    using(binaryWriter.BaseStream.Pin())
+                    using ( binaryWriter.BaseStream.Pin( ) )
                     {
-                        binaryWriter.Write(nodeWeight);
+                        binaryWriter.Write( nodeWeight );
                         return nextAddress;
                     }
                 }

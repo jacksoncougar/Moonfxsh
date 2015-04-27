@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 128, Alignment = 4 )]
-    public class AntennaVertexBlockBase : GuerillaBlock
+    public class AntennaVertexBlockBase : IGuerilla
     {
         /// <summary>
         /// strength of the spring (larger values make the spring stronger)
@@ -56,12 +56,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
 
-        public override int SerializedSize
-        {
-            get { return 128; }
-        }
-
-        internal AntennaVertexBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AntennaVertexBlockBase( BinaryReader binaryReader )
         {
             springStrengthCoefficient = binaryReader.ReadSingle( );
             invalidName_ = binaryReader.ReadBytes( 24 );
@@ -75,7 +70,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes( 12 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

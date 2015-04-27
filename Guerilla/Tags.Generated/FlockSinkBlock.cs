@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class FlockSinkBlockBase : GuerillaBlock
+    public class FlockSinkBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 position;
         internal float radius;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal FlockSinkBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal FlockSinkBlockBase( BinaryReader binaryReader )
         {
             position = binaryReader.ReadVector3( );
             radius = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

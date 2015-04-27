@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 112, Alignment = 4 )]
-    public class LiquidBlockBase : GuerillaBlock
+    public class LiquidBlockBase : IGuerilla
     {
         internal byte[] invalidName_;
         internal Type type;
@@ -37,12 +37,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal LiquidArcBlock[] arcs;
 
-        public override int SerializedSize
-        {
-            get { return 112; }
-        }
-
-        internal LiquidBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal LiquidBlockBase( BinaryReader binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 2 );
             type = ( Type ) binaryReader.ReadInt16( );
@@ -54,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
             arcs = Guerilla.ReadBlockArray<LiquidArcBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

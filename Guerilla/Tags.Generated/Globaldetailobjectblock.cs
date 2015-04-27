@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 6, Alignment = 4 )]
-    public class GlobalDetailObjectBlockBase : GuerillaBlock
+    public class GlobalDetailObjectBlockBase : IGuerilla
     {
         internal byte invalidName_;
         internal byte invalidName_0;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte invalidName_2;
         internal short invalidName_3;
 
-        public override int SerializedSize
-        {
-            get { return 6; }
-        }
-
-        internal GlobalDetailObjectBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GlobalDetailObjectBlockBase( BinaryReader binaryReader )
         {
             invalidName_ = binaryReader.ReadByte( );
             invalidName_0 = binaryReader.ReadByte( );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_3 = binaryReader.ReadInt16( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

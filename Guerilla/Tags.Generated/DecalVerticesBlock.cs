@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 31, Alignment = 4 )]
-    public class DecalVerticesBlockBase : GuerillaBlock
+    public class DecalVerticesBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 position;
         internal OpenTK.Vector2 texcoord0;
         internal OpenTK.Vector2 texcoord1;
         internal Moonfish.Tags.RGBColor color;
 
-        public override int SerializedSize
-        {
-            get { return 31; }
-        }
-
-        internal DecalVerticesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal DecalVerticesBlockBase( BinaryReader binaryReader )
         {
             position = binaryReader.ReadVector3( );
             texcoord0 = binaryReader.ReadVector2( );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             color = binaryReader.ReadRGBColor( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

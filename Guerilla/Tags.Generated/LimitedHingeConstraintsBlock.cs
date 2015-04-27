@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 132, Alignment = 4 )]
-    public class LimitedHingeConstraintsBlockBase : GuerillaBlock
+    public class LimitedHingeConstraintsBlockBase : IGuerilla
     {
         internal ConstraintBodiesStructBlock constraintBodies;
         internal byte[] invalidName_;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal float limitMinAngle;
         internal float limitMaxAngle;
 
-        public override int SerializedSize
-        {
-            get { return 132; }
-        }
-
-        internal LimitedHingeConstraintsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal LimitedHingeConstraintsBlockBase( BinaryReader binaryReader )
         {
             constraintBodies = new ConstraintBodiesStructBlock( binaryReader );
             invalidName_ = binaryReader.ReadBytes( 4 );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             limitMaxAngle = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

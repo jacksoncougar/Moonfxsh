@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 140, Alignment = 4 )]
-    public class GlobalParticleSystemLiteBlockBase : GuerillaBlock
+    public class GlobalParticleSystemLiteBlockBase : IGuerilla
     {
         [TagReference( "bitm" )] internal Moonfish.Tags.TagReference sprites;
         internal float viewBoxWidth;
@@ -44,12 +44,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
 
-        public override int SerializedSize
-        {
-            get { return 140; }
-        }
-
-        internal GlobalParticleSystemLiteBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GlobalParticleSystemLiteBlockBase( BinaryReader binaryReader )
         {
             sprites = binaryReader.ReadTagReference( );
             viewBoxWidth = binaryReader.ReadSingle( );
@@ -77,7 +72,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes( 4 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

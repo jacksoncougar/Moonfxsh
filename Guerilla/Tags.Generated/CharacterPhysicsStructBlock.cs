@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 148, Alignment = 4 )]
-    public class CharacterPhysicsStructBlockBase : GuerillaBlock
+    public class CharacterPhysicsStructBlockBase : IGuerilla
     {
         internal Flags flags;
         internal float heightStanding;
@@ -44,12 +44,7 @@ namespace Moonfish.Guerilla.Tags
         internal CharacterPhysicsDeadStructBlock deadPhysics;
         internal CharacterPhysicsSentinelStructBlock sentinelPhysics;
 
-        public override int SerializedSize
-        {
-            get { return 148; }
-        }
-
-        internal CharacterPhysicsStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal CharacterPhysicsStructBlockBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             heightStanding = binaryReader.ReadSingle( );
@@ -68,7 +63,7 @@ namespace Moonfish.Guerilla.Tags
             sentinelPhysics = new CharacterPhysicsSentinelStructBlock( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

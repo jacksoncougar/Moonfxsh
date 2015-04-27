@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 152, Alignment = 4 )]
-    public class LightVolumeVolumeBlockBase : GuerillaBlock
+    public class LightVolumeVolumeBlockBase : IGuerilla
     {
         internal Flags flags;
         [TagReference( "bitm" )] internal Moonfish.Tags.TagReference bitmap;
@@ -39,12 +39,7 @@ namespace Moonfish.Guerilla.Tags
         internal LightVolumeRuntimeOffsetBlock[] invalidName_0;
         internal byte[] invalidName_1;
 
-        public override int SerializedSize
-        {
-            get { return 152; }
-        }
-
-        internal LightVolumeVolumeBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal LightVolumeVolumeBlockBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             bitmap = binaryReader.ReadTagReference( );
@@ -67,7 +62,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes( 48 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 36, Alignment = 4 )]
-    public class InertialMatrixBlockBase : GuerillaBlock
+    public class InertialMatrixBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 yyZzXyZx;
         internal OpenTK.Vector3 xyZzXxYz;
         internal OpenTK.Vector3 zxYzXxYy;
 
-        public override int SerializedSize
-        {
-            get { return 36; }
-        }
-
-        internal InertialMatrixBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal InertialMatrixBlockBase( BinaryReader binaryReader )
         {
             yyZzXyZx = binaryReader.ReadVector3( );
             xyZzXxYz = binaryReader.ReadVector3( );
             zxYzXxYy = binaryReader.ReadVector3( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

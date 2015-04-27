@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 172, Alignment = 4 )]
-    public class GlobalWaterDefinitionsBlockBase : GuerillaBlock
+    public class GlobalWaterDefinitionsBlockBase : IGuerilla
     {
         [TagReference( "shad" )] internal Moonfish.Tags.TagReference shader;
         internal WaterGeometrySectionBlock[] section;
@@ -43,12 +43,7 @@ namespace Moonfish.Guerilla.Tags
         internal float fogFar;
         internal float dynamicHeightBias;
 
-        public override int SerializedSize
-        {
-            get { return 172; }
-        }
-
-        internal GlobalWaterDefinitionsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GlobalWaterDefinitionsBlockBase( BinaryReader binaryReader )
         {
             shader = binaryReader.ReadTagReference( );
             section = Guerilla.ReadBlockArray<WaterGeometrySectionBlock>( binaryReader );
@@ -75,7 +70,7 @@ namespace Moonfish.Guerilla.Tags
             dynamicHeightBias = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

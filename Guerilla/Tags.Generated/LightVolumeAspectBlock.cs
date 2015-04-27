@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 28, Alignment = 4 )]
-    public class LightVolumeAspectBlockBase : GuerillaBlock
+    public class LightVolumeAspectBlockBase : IGuerilla
     {
         internal ScalarFunctionStructBlock alongAxis;
         internal ScalarFunctionStructBlock awayFromAxis;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal float parallelThresholdAngleDegrees;
         internal float parallelExponent;
 
-        public override int SerializedSize
-        {
-            get { return 28; }
-        }
-
-        internal LightVolumeAspectBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal LightVolumeAspectBlockBase( BinaryReader binaryReader )
         {
             alongAxis = new ScalarFunctionStructBlock( binaryReader );
             awayFromAxis = new ScalarFunctionStructBlock( binaryReader );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             parallelExponent = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

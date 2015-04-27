@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 112, Alignment = 16 )]
-    public class CollisionBspPhysicsBlockBase : GuerillaBlock
+    public class CollisionBspPhysicsBlockBase : IGuerilla
     {
         internal byte[] invalidName_;
         internal short size;
@@ -39,12 +39,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] moppCodeData;
         internal byte[] padding;
 
-        public override int SerializedSize
-        {
-            get { return 112; }
-        }
-
-        internal CollisionBspPhysicsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal CollisionBspPhysicsBlockBase( BinaryReader binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 4 );
             size = binaryReader.ReadInt16( );
@@ -67,7 +62,7 @@ namespace Moonfish.Guerilla.Tags
             padding = binaryReader.ReadBytes( 4 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

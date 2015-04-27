@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class Bsp2dReferencesBlockBase : GuerillaBlock
+    public class Bsp2dReferencesBlockBase : IGuerilla
     {
         internal short plane;
         internal short bSP2DNode;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal Bsp2dReferencesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal Bsp2dReferencesBlockBase( BinaryReader binaryReader )
         {
             plane = binaryReader.ReadInt16( );
             bSP2DNode = binaryReader.ReadInt16( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

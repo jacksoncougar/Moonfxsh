@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class BipedLockOnDataStructBlockBase : GuerillaBlock
+    public class BipedLockOnDataStructBlockBase : IGuerilla
     {
         internal Flags flags;
         internal float lockOnDistance;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal BipedLockOnDataStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal BipedLockOnDataStructBlockBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             lockOnDistance = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

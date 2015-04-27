@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 104, Alignment = 4 )]
-    public class AiConversationBlockBase : GuerillaBlock
+    public class AiConversationBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal Flags flags;
@@ -38,12 +38,7 @@ namespace Moonfish.Guerilla.Tags
         internal AiConversationLineBlock[] lines;
         internal GNullBlock[] gNullBlock;
 
-        public override int SerializedSize
-        {
-            get { return 104; }
-        }
-
-        internal AiConversationBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AiConversationBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadString32( );
             flags = ( Flags ) binaryReader.ReadInt16( );
@@ -56,7 +51,7 @@ namespace Moonfish.Guerilla.Tags
             gNullBlock = Guerilla.ReadBlockArray<GNullBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

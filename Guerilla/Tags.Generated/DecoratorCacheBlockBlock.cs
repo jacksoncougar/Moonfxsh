@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 44, Alignment = 4 )]
-    public class DecoratorCacheBlockBlockBase : GuerillaBlock
+    public class DecoratorCacheBlockBlockBase : IGuerilla
     {
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
         internal DecoratorCacheBlockDataBlock[] cacheBlockData;
 
-        public override int SerializedSize
-        {
-            get { return 44; }
-        }
-
-        internal DecoratorCacheBlockBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal DecoratorCacheBlockBlockBase( BinaryReader binaryReader )
         {
             geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock( binaryReader );
             cacheBlockData = Guerilla.ReadBlockArray<DecoratorCacheBlockDataBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

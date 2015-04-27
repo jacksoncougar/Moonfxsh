@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class AnimationEffectEventBlockBase : GuerillaBlock
+    public class AnimationEffectEventBlockBase : IGuerilla
     {
         internal Moonfish.Tags.ShortBlockIndex1 effect;
         internal short frame;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal AnimationEffectEventBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AnimationEffectEventBlockBase( BinaryReader binaryReader )
         {
             effect = binaryReader.ReadShortBlockIndex1( );
             frame = binaryReader.ReadInt16( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class BitmapGroupSpriteBlock : BitmapGroupSpriteBlockBase
+    public  partial class BitmapGroupSpriteBlock : BitmapGroupSpriteBlockBase
     {
         public  BitmapGroupSpriteBlock(BinaryReader binaryReader): base(binaryReader)
         {
@@ -16,7 +16,7 @@ namespace Moonfish.Guerilla.Tags
         }
     };
     [LayoutAttribute(Size = 32, Alignment = 4)]
-    public class BitmapGroupSpriteBlockBase : GuerillaBlock
+    public class BitmapGroupSpriteBlockBase : IGuerilla
     {
         internal short bitmapIndex;
         internal byte[] invalidName_;
@@ -26,10 +26,7 @@ namespace Moonfish.Guerilla.Tags
         internal float top;
         internal float bottom;
         internal OpenTK.Vector2 registrationPoint;
-        
-        public override int SerializedSize{get { return 32; }}
-        
-        internal  BitmapGroupSpriteBlockBase(BinaryReader binaryReader): base(binaryReader)
+        internal  BitmapGroupSpriteBlockBase(BinaryReader binaryReader)
         {
             bitmapIndex = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -40,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             bottom = binaryReader.ReadSingle();
             registrationPoint = binaryReader.ReadVector2();
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {

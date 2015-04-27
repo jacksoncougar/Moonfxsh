@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 48, Alignment = 4 )]
-    public class CharacterPhysicsGroundStructBlockBase : GuerillaBlock
+    public class CharacterPhysicsGroundStructBlockBase : IGuerilla
     {
         internal float maximumSlopeAngleDegrees;
         internal float downhillFalloffAngleDegrees;
@@ -28,12 +28,7 @@ namespace Moonfish.Guerilla.Tags
         internal float uphillVelocityScale;
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 48; }
-        }
-
-        internal CharacterPhysicsGroundStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal CharacterPhysicsGroundStructBlockBase( BinaryReader binaryReader )
         {
             maximumSlopeAngleDegrees = binaryReader.ReadSingle( );
             downhillFalloffAngleDegrees = binaryReader.ReadSingle( );
@@ -45,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 20 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

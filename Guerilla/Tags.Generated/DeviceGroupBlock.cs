@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class DeviceGroupBlockBase : GuerillaBlock
+    public class DeviceGroupBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal float initialValue01;
         internal Flags flags;
 
-        public override int SerializedSize
-        {
-            get { return 40; }
-        }
-
-        internal DeviceGroupBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal DeviceGroupBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadString32( );
             initialValue01 = binaryReader.ReadSingle( );
             flags = ( Flags ) binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,59 +11,58 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class HudBlockReferenceBlock : HudBlockReferenceBlockBase
     {
-        public  HudBlockReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public HudBlockReferenceBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 36, Alignment = 4)]
-    public class HudBlockReferenceBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 36, Alignment = 4 )]
+    public class HudBlockReferenceBlockBase : IGuerilla
     {
         internal Flags flags;
         internal AnimationIndex animationIndex;
         internal short introAnimationDelayMilliseconds;
         internal short renderDepthBias;
         internal short startingBitmapSequenceIndex;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference bitmap;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference shader;
+        [TagReference( "bitm" )] internal Moonfish.Tags.TagReference bitmap;
+        [TagReference( "shad" )] internal Moonfish.Tags.TagReference shader;
         internal OpenTK.Vector2 bounds;
-        
-        public override int SerializedSize{get { return 36; }}
-        
-        internal  HudBlockReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal HudBlockReferenceBlockBase( BinaryReader binaryReader )
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
-            renderDepthBias = binaryReader.ReadInt16();
-            startingBitmapSequenceIndex = binaryReader.ReadInt16();
-            bitmap = binaryReader.ReadTagReference();
-            shader = binaryReader.ReadTagReference();
-            bounds = binaryReader.ReadVector2();
+            flags = ( Flags ) binaryReader.ReadInt32( );
+            animationIndex = ( AnimationIndex ) binaryReader.ReadInt16( );
+            introAnimationDelayMilliseconds = binaryReader.ReadInt16( );
+            renderDepthBias = binaryReader.ReadInt16( );
+            startingBitmapSequenceIndex = binaryReader.ReadInt16( );
+            bitmap = binaryReader.ReadTagReference( );
+            shader = binaryReader.ReadTagReference( );
+            bounds = binaryReader.ReadVector2( );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)animationIndex);
-                binaryWriter.Write(introAnimationDelayMilliseconds);
-                binaryWriter.Write(renderDepthBias);
-                binaryWriter.Write(startingBitmapSequenceIndex);
-                binaryWriter.Write(bitmap);
-                binaryWriter.Write(shader);
-                binaryWriter.Write(bounds);
+                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write( ( Int16 ) animationIndex );
+                binaryWriter.Write( introAnimationDelayMilliseconds );
+                binaryWriter.Write( renderDepthBias );
+                binaryWriter.Write( startingBitmapSequenceIndex );
+                binaryWriter.Write( bitmap );
+                binaryWriter.Write( shader );
+                binaryWriter.Write( bounds );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
             IgnoreForListSkinSize = 1,
             NeedsValidRank = 2,
         };
+
         internal enum AnimationIndex : short
         {
             NONE = 0,

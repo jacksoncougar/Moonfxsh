@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 64, Alignment = 4 )]
-    public class GlobalCollisionBspBlockBase : GuerillaBlock
+    public class GlobalCollisionBspBlockBase : IGuerilla
     {
         internal Bsp3dNodesBlock[] bSP3DNodes;
         internal PlanesBlock[] planes;
@@ -28,12 +28,7 @@ namespace Moonfish.Guerilla.Tags
         internal EdgesBlock[] edges;
         internal VerticesBlock[] vertices;
 
-        public override int SerializedSize
-        {
-            get { return 64; }
-        }
-
-        internal GlobalCollisionBspBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GlobalCollisionBspBlockBase( BinaryReader binaryReader )
         {
             bSP3DNodes = Guerilla.ReadBlockArray<Bsp3dNodesBlock>( binaryReader );
             planes = Guerilla.ReadBlockArray<PlanesBlock>( binaryReader );
@@ -45,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
             vertices = Guerilla.ReadBlockArray<VerticesBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

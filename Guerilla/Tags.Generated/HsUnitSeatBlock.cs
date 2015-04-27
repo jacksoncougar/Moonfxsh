@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class HsUnitSeatBlockBase : GuerillaBlock
+    public class HsUnitSeatBlockBase : IGuerilla
     {
         internal int invalidName_;
         internal int invalidName_0;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal HsUnitSeatBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal HsUnitSeatBlockBase( BinaryReader binaryReader )
         {
             invalidName_ = binaryReader.ReadInt32( );
             invalidName_0 = binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

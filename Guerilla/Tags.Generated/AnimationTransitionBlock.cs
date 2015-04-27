@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class AnimationTransitionBlockBase : GuerillaBlock
+    public class AnimationTransitionBlockBase : IGuerilla
     {
         /// <summary>
         /// name of the mode & state of the source
@@ -27,19 +27,14 @@ namespace Moonfish.Guerilla.Tags
         internal AnimationTransitionStateStructBlock stateInfo;
         internal AnimationTransitionDestinationBlock[] destinationsAABBCC;
 
-        public override int SerializedSize
-        {
-            get { return 20; }
-        }
-
-        internal AnimationTransitionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AnimationTransitionBlockBase( BinaryReader binaryReader )
         {
             fullName = binaryReader.ReadStringID( );
             stateInfo = new AnimationTransitionStateStructBlock( binaryReader );
             destinationsAABBCC = Guerilla.ReadBlockArray<AnimationTransitionDestinationBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

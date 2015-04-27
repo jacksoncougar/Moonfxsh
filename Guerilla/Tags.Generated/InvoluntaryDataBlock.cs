@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,30 +11,29 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class InvoluntaryDataBlock : InvoluntaryDataBlockBase
     {
-        public  InvoluntaryDataBlock(BinaryReader binaryReader): base(binaryReader)
+        public InvoluntaryDataBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class InvoluntaryDataBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 4, Alignment = 4 )]
+    public class InvoluntaryDataBlockBase : IGuerilla
     {
         internal short involuntaryVocalizationIndex;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 4; }}
-        
-        internal  InvoluntaryDataBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal InvoluntaryDataBlockBase( BinaryReader binaryReader )
         {
-            involuntaryVocalizationIndex = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
+            involuntaryVocalizationIndex = binaryReader.ReadInt16( );
+            invalidName_ = binaryReader.ReadBytes( 2 );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(involuntaryVocalizationIndex);
-                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write( involuntaryVocalizationIndex );
+                binaryWriter.Write( invalidName_, 0, 2 );
                 return nextAddress;
             }
         }

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class LightmapSceneryObjectInfoBlockBase : GuerillaBlock
+    public class LightmapSceneryObjectInfoBlockBase : IGuerilla
     {
         internal int uniqueID;
         internal short originBSPIndex;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte source;
         internal int renderModelChecksum;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal LightmapSceneryObjectInfoBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal LightmapSceneryObjectInfoBlockBase( BinaryReader binaryReader )
         {
             uniqueID = binaryReader.ReadInt32( );
             originBSPIndex = binaryReader.ReadInt16( );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             renderModelChecksum = binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

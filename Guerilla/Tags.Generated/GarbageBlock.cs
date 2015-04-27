@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,36 +11,35 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Garb = (TagClass)"garb";
+        public static readonly TagClass Garb = ( TagClass ) "garb";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("garb")]
+    [TagClassAttribute( "garb" )]
     public partial class GarbageBlock : GarbageBlockBase
     {
-        public  GarbageBlock(BinaryReader binaryReader): base(binaryReader)
+        public GarbageBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 168, Alignment = 4)]
-    public class GarbageBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 168, Alignment = 4 )]
+    public class GarbageBlockBase : ItemBlock
     {
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 168; }}
-        
-        internal  GarbageBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal GarbageBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
-            invalidName_ = binaryReader.ReadBytes(168);
+            invalidName_ = binaryReader.ReadBytes( 168 );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(invalidName_, 0, 168);
+                binaryWriter.Write( invalidName_, 0, 168 );
                 return nextAddress;
             }
         }

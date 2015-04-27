@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 44, Alignment = 4 )]
-    public class CharacterPhysicsFlyingStructBlockBase : GuerillaBlock
+    public class CharacterPhysicsFlyingStructBlockBase : IGuerilla
     {
         /// <summary>
         /// angle at which we bank left/right when sidestepping or turning while moving forwards
@@ -67,12 +67,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float crouchVelocityModifier01;
 
-        public override int SerializedSize
-        {
-            get { return 44; }
-        }
-
-        internal CharacterPhysicsFlyingStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal CharacterPhysicsFlyingStructBlockBase( BinaryReader binaryReader )
         {
             bankAngleDegrees = binaryReader.ReadSingle( );
             bankApplyTimeSeconds = binaryReader.ReadSingle( );
@@ -87,7 +82,7 @@ namespace Moonfish.Guerilla.Tags
             crouchVelocityModifier01 = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

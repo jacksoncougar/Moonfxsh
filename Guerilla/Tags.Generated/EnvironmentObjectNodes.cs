@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class EnvironmentObjectNodesBase : GuerillaBlock
+    public class EnvironmentObjectNodesBase : IGuerilla
     {
         internal short referenceFrameIndex;
         internal byte projectionAxis;
         internal ProjectionSign projectionSign;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal EnvironmentObjectNodesBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal EnvironmentObjectNodesBase( BinaryReader binaryReader )
         {
             referenceFrameIndex = binaryReader.ReadInt16( );
             projectionAxis = binaryReader.ReadByte( );
             projectionSign = ( ProjectionSign ) binaryReader.ReadByte( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

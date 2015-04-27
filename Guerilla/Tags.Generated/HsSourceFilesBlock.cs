@@ -26,23 +26,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class HsSourceFilesBlockBase : GuerillaBlock
+    public class HsSourceFilesBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal byte[] source;
 
-        public override int SerializedSize
-        {
-            get { return 40; }
-        }
-
-        internal HsSourceFilesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal HsSourceFilesBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadString32( );
             source = Guerilla.ReadData( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

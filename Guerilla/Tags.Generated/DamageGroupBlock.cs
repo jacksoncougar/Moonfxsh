@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class DamageGroupBlockBase : GuerillaBlock
+    public class DamageGroupBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal ArmorModifierBlock[] armorModifiers;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal DamageGroupBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal DamageGroupBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             armorModifiers = Guerilla.ReadBlockArray<ArmorModifierBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 144, Alignment = 16 )]
-    public class BoxesBlockBase : GuerillaBlock
+    public class BoxesBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 material;
@@ -50,12 +50,7 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 translation;
         internal byte[] invalidName_9;
 
-        public override int SerializedSize
-        {
-            get { return 144; }
-        }
-
-        internal BoxesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal BoxesBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             material = binaryReader.ReadShortBlockIndex1( );
@@ -89,7 +84,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_9 = binaryReader.ReadBytes( 4 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

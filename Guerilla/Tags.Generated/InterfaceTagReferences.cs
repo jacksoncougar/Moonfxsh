@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 152, Alignment = 4 )]
-    public class InterfaceTagReferencesBase : GuerillaBlock
+    public class InterfaceTagReferencesBase : IGuerilla
     {
         [TagReference( "bitm" )] internal Moonfish.Tags.TagReference obsolete1;
         [TagReference( "bitm" )] internal Moonfish.Tags.TagReference obsolete2;
@@ -39,12 +39,7 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "wgtz" )] internal Moonfish.Tags.TagReference singleplayerUiGlobals;
         [TagReference( "wgtz" )] internal Moonfish.Tags.TagReference multiplayerUiGlobals;
 
-        public override int SerializedSize
-        {
-            get { return 152; }
-        }
-
-        internal InterfaceTagReferencesBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal InterfaceTagReferencesBase( BinaryReader binaryReader )
         {
             obsolete1 = binaryReader.ReadTagReference( );
             obsolete2 = binaryReader.ReadTagReference( );
@@ -67,7 +62,7 @@ namespace Moonfish.Guerilla.Tags
             multiplayerUiGlobals = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class AnimationTransitionDestinationBlockBase : GuerillaBlock
+    public class AnimationTransitionDestinationBlockBase : IGuerilla
     {
         /// <summary>
         /// name of the mode & state this transitions to
@@ -32,12 +32,7 @@ namespace Moonfish.Guerilla.Tags
         internal AnimationDestinationStateStructBlock stateInfo;
         internal AnimationIndexStructBlock animation;
 
-        public override int SerializedSize
-        {
-            get { return 20; }
-        }
-
-        internal AnimationTransitionDestinationBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AnimationTransitionDestinationBlockBase( BinaryReader binaryReader )
         {
             fullName = binaryReader.ReadStringID( );
             mode = binaryReader.ReadStringID( );
@@ -45,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
             animation = new AnimationIndexStructBlock( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class AiSceneTriggerBlockBase : GuerillaBlock
+    public class AiSceneTriggerBlockBase : IGuerilla
     {
         internal CombinationRule combinationRule;
         internal byte[] invalidName_;
         internal TriggerReferences[] triggers;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal AiSceneTriggerBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AiSceneTriggerBlockBase( BinaryReader binaryReader )
         {
             combinationRule = ( CombinationRule ) binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
             triggers = Guerilla.ReadBlockArray<TriggerReferences>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

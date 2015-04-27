@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class GlobalLeafConnectionBlockBase : GuerillaBlock
+    public class GlobalLeafConnectionBlockBase : IGuerilla
     {
         internal int planeIndex;
         internal int backLeafIndex;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal LeafConnectionVertexBlock[] vertices;
         internal float area;
 
-        public override int SerializedSize
-        {
-            get { return 24; }
-        }
-
-        internal GlobalLeafConnectionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GlobalLeafConnectionBlockBase( BinaryReader binaryReader )
         {
             planeIndex = binaryReader.ReadInt32( );
             backLeafIndex = binaryReader.ReadInt32( );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             area = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

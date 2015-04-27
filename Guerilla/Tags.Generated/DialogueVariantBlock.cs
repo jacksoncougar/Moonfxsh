@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class DialogueVariantBlockBase : GuerillaBlock
+    public class DialogueVariantBlockBase : IGuerilla
     {
         /// <summary>
         /// variantNumber to use this dialogue with (must match the suffix in the permutations on the unit's model)
@@ -27,19 +27,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         [TagReference( "udlg" )] internal Moonfish.Tags.TagReference dialogue;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal DialogueVariantBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal DialogueVariantBlockBase( BinaryReader binaryReader )
         {
             variantNumber = binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
             dialogue = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

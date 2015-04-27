@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class AnimationFrameEventBlockBase : GuerillaBlock
+    public class AnimationFrameEventBlockBase : IGuerilla
     {
         internal Type type;
         internal short frame;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal AnimationFrameEventBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AnimationFrameEventBlockBase( BinaryReader binaryReader )
         {
             type = ( Type ) binaryReader.ReadInt16( );
             frame = binaryReader.ReadInt16( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

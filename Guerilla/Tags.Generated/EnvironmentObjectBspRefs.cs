@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class EnvironmentObjectBspRefsBase : GuerillaBlock
+    public class EnvironmentObjectBspRefsBase : IGuerilla
     {
         internal int bspReference;
         internal int firstSector;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal short nodeIndex;
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal EnvironmentObjectBspRefsBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal EnvironmentObjectBspRefsBase( BinaryReader binaryReader )
         {
             bspReference = binaryReader.ReadInt32( );
             firstSector = binaryReader.ReadInt32( );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 2 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

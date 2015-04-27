@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,30 +11,29 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class AnimationBlendScreenBlock : AnimationBlendScreenBlockBase
     {
-        public  AnimationBlendScreenBlock(BinaryReader binaryReader): base(binaryReader)
+        public AnimationBlendScreenBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 28, Alignment = 4)]
-    public class AnimationBlendScreenBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 28, Alignment = 4 )]
+    public class AnimationBlendScreenBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID label;
         internal AnimationAimingScreenStructBlock aimingScreen;
-        
-        public override int SerializedSize{get { return 28; }}
-        
-        internal  AnimationBlendScreenBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal AnimationBlendScreenBlockBase( BinaryReader binaryReader )
         {
-            label = binaryReader.ReadStringID();
-            aimingScreen = new AnimationAimingScreenStructBlock(binaryReader);
+            label = binaryReader.ReadStringID( );
+            aimingScreen = new AnimationAimingScreenStructBlock( binaryReader );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(label);
-                aimingScreen.Write(binaryWriter);
+                binaryWriter.Write( label );
+                aimingScreen.Write( binaryWriter );
                 return nextAddress;
             }
         }

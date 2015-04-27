@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 72, Alignment = 4 )]
-    public class CollisionDamageBlockBase : GuerillaBlock
+    public class CollisionDamageBlockBase : IGuerilla
     {
         [TagReference( "jpt!" )] internal Moonfish.Tags.TagReference collisionDamage;
 
@@ -63,12 +63,7 @@ namespace Moonfish.Guerilla.Tags
 
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 72; }
-        }
-
-        internal CollisionDamageBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal CollisionDamageBlockBase( BinaryReader binaryReader )
         {
             collisionDamage = binaryReader.ReadTagReference( );
             minGameAccDefault = binaryReader.ReadSingle( );
@@ -82,7 +77,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 32 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

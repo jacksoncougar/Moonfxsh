@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 28, Alignment = 4 )]
-    public class FlockSourceBlockBase : GuerillaBlock
+    public class FlockSourceBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 position;
         internal OpenTK.Vector2 startingYawPitchDegrees;
@@ -28,12 +28,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float weight;
 
-        public override int SerializedSize
-        {
-            get { return 28; }
-        }
-
-        internal FlockSourceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal FlockSourceBlockBase( BinaryReader binaryReader )
         {
             position = binaryReader.ReadVector3( );
             startingYawPitchDegrees = binaryReader.ReadVector2( );
@@ -41,7 +36,7 @@ namespace Moonfish.Guerilla.Tags
             weight = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

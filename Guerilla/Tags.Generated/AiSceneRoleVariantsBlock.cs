@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class AiSceneRoleVariantsBlockBase : GuerillaBlock
+    public class AiSceneRoleVariantsBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID variantDesignation;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal AiSceneRoleVariantsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal AiSceneRoleVariantsBlockBase( BinaryReader binaryReader )
         {
             variantDesignation = binaryReader.ReadStringID( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

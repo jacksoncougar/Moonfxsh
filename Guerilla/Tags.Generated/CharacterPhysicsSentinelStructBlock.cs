@@ -17,18 +17,13 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 0, Alignment = 4 )]
-    public class CharacterPhysicsSentinelStructBlockBase : GuerillaBlock
+    public class CharacterPhysicsSentinelStructBlockBase : IGuerilla
     {
-        public override int SerializedSize
-        {
-            get { return 0; }
-        }
-
-        internal CharacterPhysicsSentinelStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal CharacterPhysicsSentinelStructBlockBase( BinaryReader binaryReader )
         {
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

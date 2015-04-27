@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class GlobalGeometryPointDataStructBlockBase : GuerillaBlock
+    public class GlobalGeometryPointDataStructBlockBase : IGuerilla
     {
         internal GlobalGeometryRawPointBlock[] rawPoints;
         internal byte[] runtimePointData;
         internal GlobalGeometryRigidPointGroupBlock[] rigidPointGroups;
         internal GlobalGeometryPointDataIndexBlock[] vertexPointIndices;
 
-        public override int SerializedSize
-        {
-            get { return 32; }
-        }
-
-        internal GlobalGeometryPointDataStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GlobalGeometryPointDataStructBlockBase( BinaryReader binaryReader )
         {
             rawPoints = Guerilla.ReadBlockArray<GlobalGeometryRawPointBlock>( binaryReader );
             runtimePointData = Guerilla.ReadData( binaryReader );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             vertexPointIndices = Guerilla.ReadBlockArray<GlobalGeometryPointDataIndexBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

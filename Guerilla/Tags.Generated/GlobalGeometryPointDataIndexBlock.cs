@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 2, Alignment = 4 )]
-    public class GlobalGeometryPointDataIndexBlockBase : GuerillaBlock
+    public class GlobalGeometryPointDataIndexBlockBase : IGuerilla
     {
         internal short index;
 
-        public override int SerializedSize
-        {
-            get { return 2; }
-        }
-
-        internal GlobalGeometryPointDataIndexBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GlobalGeometryPointDataIndexBlockBase( BinaryReader binaryReader )
         {
             index = binaryReader.ReadInt16( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 56, Alignment = 4 )]
-    public class LiquidCoreBlockBase : GuerillaBlock
+    public class LiquidCoreBlockBase : IGuerilla
     {
         internal byte[] invalidName_;
         internal short bitmapIndex;
@@ -28,12 +28,7 @@ namespace Moonfish.Guerilla.Tags
         internal ScalarFunctionStructBlock brightnessFacing;
         internal ScalarFunctionStructBlock alongAxisScale;
 
-        public override int SerializedSize
-        {
-            get { return 56; }
-        }
-
-        internal LiquidCoreBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal LiquidCoreBlockBase( BinaryReader binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 12 );
             bitmapIndex = binaryReader.ReadInt16( );
@@ -45,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
             alongAxisScale = new ScalarFunctionStructBlock( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

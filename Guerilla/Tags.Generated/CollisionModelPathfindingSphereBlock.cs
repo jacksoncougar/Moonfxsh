@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class CollisionModelPathfindingSphereBlockBase : GuerillaBlock
+    public class CollisionModelPathfindingSphereBlockBase : IGuerilla
     {
         internal Moonfish.Tags.ShortBlockIndex1 node;
         internal Flags flags;
         internal OpenTK.Vector3 center;
         internal float radius;
 
-        public override int SerializedSize
-        {
-            get { return 20; }
-        }
-
-        internal CollisionModelPathfindingSphereBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal CollisionModelPathfindingSphereBlockBase( BinaryReader binaryReader )
         {
             node = binaryReader.ReadShortBlockIndex1( );
             flags = ( Flags ) binaryReader.ReadInt16( );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             radius = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

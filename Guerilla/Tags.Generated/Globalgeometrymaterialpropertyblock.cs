@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class GlobalGeometryMaterialPropertyBlockBase : GuerillaBlock
+    public class GlobalGeometryMaterialPropertyBlockBase : IGuerilla
     {
         internal Type type;
         internal short intValue;
         internal float realValue;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal GlobalGeometryMaterialPropertyBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GlobalGeometryMaterialPropertyBlockBase( BinaryReader binaryReader )
         {
             type = ( Type ) binaryReader.ReadInt16( );
             intValue = binaryReader.ReadInt16( );
             realValue = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

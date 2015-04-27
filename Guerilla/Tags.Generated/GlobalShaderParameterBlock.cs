@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class GlobalShaderParameterBlockBase : GuerillaBlock
+    public class GlobalShaderParameterBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Type type;
@@ -27,12 +27,7 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ColorR8G8B8 constColor;
         internal ShaderAnimationPropertyBlock[] animationProperties;
 
-        public override int SerializedSize
-        {
-            get { return 40; }
-        }
-
-        internal GlobalShaderParameterBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal GlobalShaderParameterBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             type = ( Type ) binaryReader.ReadInt16( );
@@ -43,7 +38,7 @@ namespace Moonfish.Guerilla.Tags
             animationProperties = Guerilla.ReadBlockArray<ShaderAnimationPropertyBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

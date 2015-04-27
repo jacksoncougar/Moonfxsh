@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla
 
         public string Interfaces
         {
-            get { return "IGuerilla"; }
+            get { return "GuerillaBlock"; }
         }
 
         public string BaseClassDeclaration

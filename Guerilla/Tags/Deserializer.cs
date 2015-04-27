@@ -26,7 +26,7 @@ namespace Moonfish.Tags
             CacheBinaryReaderMethods( );
         }
 
-        public static dynamic Deserialize( this CacheStream source, Type type )
+        public static object Deserialize( this CacheStream source, Type type )
         {
             var sourceReader = new BinaryReader( source );
             Source = source;

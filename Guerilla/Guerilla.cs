@@ -26,9 +26,9 @@ namespace Moonfish.Guerilla
 
         //jesus git
 
-        public static T[] ReadBlockArray<T>(BinaryReader binaryReader) where T : GuerillaBlock
+        public static T[] ReadBlockArray<T>(BinaryReader binaryReader) where T : GuerillaBlock, new()
         {
-            var elementSize = SizeOf( typeof ( T ) );
+            var elementSize = default(T).SerializedSize;
             var blamPointer = binaryReader.ReadBlamPointer( elementSize );
             var array = new T[blamPointer.elementCount];
             using ( binaryReader.BaseStream.Pin( ) )

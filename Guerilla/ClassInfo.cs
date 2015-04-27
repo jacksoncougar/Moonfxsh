@@ -119,6 +119,7 @@ namespace Moonfish.Guerilla
             Methods.Clear( );
             Constructors.Clear( );
 
+            GenerateBinaryReaderMethod( );
             GenerateReadBlockTemplateMethod( );
             GenerateReadDataMethod( );
             GenerateBinaryReaderConstructor( );
@@ -140,9 +141,9 @@ namespace Moonfish.Guerilla
             });
         }
 
-        public void GenerateBinaryReaderConstructor( )
+        public void GenerateBinaryReaderConstructor()
         {
-            Constructors.Add( new MethodInfo
+            Methods.Add(new MethodInfo
             {
                 ClassName = Value.Name,
                 AccessModifiers = AccessModifiers.Public,
@@ -150,74 +151,153 @@ namespace Moonfish.Guerilla
                 {
                     new ParameterInfo( typeof ( BinaryReader ) )
                 },
-                Wrapper = !string.IsNullOrWhiteSpace( BaseClass )
-            } );
-            var stringBuilder = new StringBuilder( );
-            foreach ( var item in Fields )
+                Wrapper = !string.IsNullOrWhiteSpace(BaseClass)
+            });
+            var stringBuilder = new StringBuilder();
+            foreach (var item in Fields)
             {
-                if ( item.IsArray )
+                if (item.IsArray)
                 {
                     // fixed byte array like padding or skip arrays
-                    if ( item.ArraySize > 0 && Type.GetType( item.FieldTypeName ) == typeof ( byte ) )
+                    if (item.ArraySize > 0 && Type.GetType(item.FieldTypeName) == typeof(byte))
                     {
-                        stringBuilder.AppendLine( string.Format( "{0} = binaryReader.ReadBytes({1});", item.Value.Name,
-                            item.ArraySize ) );
+                        stringBuilder.AppendLine(string.Format("{0} = binaryReader.ReadBytes({1});", item.Value.Name,
+                            item.ArraySize));
                     }
                     // variable byte array (data)
-                    else if ( Type.GetType( item.FieldTypeName ) == typeof ( byte ) )
+                    else if (Type.GetType(item.FieldTypeName) == typeof(byte))
                     {
-                        stringBuilder.AppendLine( string.Format( "{0} = Guerilla.ReadData(binaryReader);",
-                            item.Value.Name ) );
+                        stringBuilder.AppendLine(string.Format("{0} = Guerilla.ReadData(binaryReader);",
+                            item.Value.Name));
                     }
                     // variable short array (data)
-                    else if ( Type.GetType( item.FieldTypeName ) == typeof ( short ) )
+                    else if (Type.GetType(item.FieldTypeName) == typeof(short))
                     {
-                        stringBuilder.AppendLine( string.Format( "{0} = Guerilla.ReadShortData(binaryReader);",
-                            item.Value.Name ) );
+                        stringBuilder.AppendLine(string.Format("{0} = Guerilla.ReadShortData(binaryReader);",
+                            item.Value.Name));
                     }
                     // inline array
-                    else if ( item.ArraySize > 0 )
+                    else if (item.ArraySize > 0)
                     {
                         var initializer = "";
-                        for ( var i = 0; i <= item.ArraySize - 1; i++ )
+                        for (var i = 0; i <= item.ArraySize - 1; i++)
                         {
-                            initializer += string.Format( "new {0}(binaryReader){1}", item.FieldTypeName,
-                                i == item.ArraySize ? "" : ", " );
+                            initializer += string.Format("new {0}(binaryReader){1}", item.FieldTypeName,
+                                i == item.ArraySize ? "" : ", ");
                         }
-                        stringBuilder.AppendLine( string.Format( "{0} = new []{{ {1} }};", item.Value.Name, initializer ) );
+                        stringBuilder.AppendLine(string.Format("{0} = new []{{ {1} }};", item.Value.Name, initializer));
                     }
                     // assume a TagBlock
                     else
                     {
-                        var format = string.Format( "{0} = Guerilla.ReadBlockArray<{1}>(binaryReader);", item.Value.Name,
-                            item.FieldTypeName );
-                        stringBuilder.AppendLine( format );
+                        var format = string.Format("{0} = Guerilla.ReadBlockArray<{1}>(binaryReader);", item.Value.Name,
+                            item.FieldTypeName);
+                        stringBuilder.AppendLine(format);
                     }
                 }
                 else
                 {
-                    if ( EnumDefinitions.Any( x => x.Value.Name == item.FieldTypeName ) )
+                    if (EnumDefinitions.Any(x => x.Value.Name == item.FieldTypeName))
                     {
-                        var enumDefinition = EnumDefinitions.First( x => x.Value.Name == item.FieldTypeName );
+                        var enumDefinition = EnumDefinitions.First(x => x.Value.Name == item.FieldTypeName);
                         var type = enumDefinition.BaseType == EnumInfo.Type.Byte
                             ? "Byte"
                             : enumDefinition.BaseType == EnumInfo.Type.Short ? "Int16" : "Int32";
-                        stringBuilder.AppendLine( string.Format( "{0} = ({1})binaryReader.Read{2}();", item.Value.Name,
-                            item.FieldTypeName, type ) );
+                        stringBuilder.AppendLine(string.Format("{0} = ({1})binaryReader.Read{2}();", item.Value.Name,
+                            item.FieldTypeName, type));
                     }
-                    else if ( Type.GetType( item.FieldTypeName ) == null )
+                    else if (Type.GetType(item.FieldTypeName) == null)
                     {
-                        stringBuilder.AppendLine( string.Format( "{0} = new {1}(binaryReader);", item.Value.Name,
-                            item.FieldTypeName ) );
+                        stringBuilder.AppendLine(string.Format("{0} = new {1}(binaryReader);", item.Value.Name,
+                            item.FieldTypeName));
                     }
                     else
                     {
-                        var value = BinaryIO.GetBinaryReaderMethodName( Type.GetType( item.FieldTypeName ) );
-                        stringBuilder.AppendLine( string.Format( "{0} = binaryReader.{1}();", item.Value.Name, value ) );
+                        var value = BinaryIO.GetBinaryReaderMethodName(Type.GetType(item.FieldTypeName));
+                        stringBuilder.AppendLine(string.Format("{0} = binaryReader.{1}();", item.Value.Name, value));
                     }
                 }
             }
-            Constructors.Last( ).Body = stringBuilder.ToString( ).TrimEnd( );
+            Constructors.Last().Body = stringBuilder.ToString().TrimEnd();
+        }
+
+        public void GenerateBinaryReaderMethod()
+        {
+            Methods.Add(new MethodInfo
+            {
+                ClassName = "Read",
+                AccessModifiers = AccessModifiers.Public,
+                Arguments = new List<ParameterInfo>
+                {
+                    new ParameterInfo( typeof ( BinaryReader ) )
+                },
+            });
+            var stringBuilder = new StringBuilder();
+            foreach (var item in Fields)
+            {
+                if (item.IsArray)
+                {
+                    // fixed byte array like padding or skip arrays
+                    if (item.ArraySize > 0 && Type.GetType(item.FieldTypeName) == typeof(byte))
+                    {
+                        stringBuilder.AppendLine(string.Format("{0} = binaryReader.ReadBytes({1});", item.Value.Name,
+                            item.ArraySize));
+                    }
+                    // variable byte array (data)
+                    else if (Type.GetType(item.FieldTypeName) == typeof(byte))
+                    {
+                        stringBuilder.AppendLine(string.Format("{0} = Guerilla.ReadData(binaryReader);",
+                            item.Value.Name));
+                    }
+                    // variable short array (data)
+                    else if (Type.GetType(item.FieldTypeName) == typeof(short))
+                    {
+                        stringBuilder.AppendLine(string.Format("{0} = Guerilla.ReadShortData(binaryReader);",
+                            item.Value.Name));
+                    }
+                    // inline array
+                    else if (item.ArraySize > 0)
+                    {
+                        var initializer = "";
+                        for (var i = 0; i <= item.ArraySize - 1; i++)
+                        {
+                            initializer += string.Format("new {0}(binaryReader){1}", item.FieldTypeName,
+                                i == item.ArraySize ? "" : ", ");
+                        }
+                        stringBuilder.AppendLine(string.Format("{0} = new []{{ {1} }};", item.Value.Name, initializer));
+                    }
+                    // assume a TagBlock
+                    else
+                    {
+                        var format = string.Format("{0} = Guerilla.ReadBlockArray<{1}>(binaryReader);", item.Value.Name,
+                            item.FieldTypeName);
+                        stringBuilder.AppendLine(format);
+                    }
+                }
+                else
+                {
+                    if (EnumDefinitions.Any(x => x.Value.Name == item.FieldTypeName))
+                    {
+                        var enumDefinition = EnumDefinitions.First(x => x.Value.Name == item.FieldTypeName);
+                        var type = enumDefinition.BaseType == EnumInfo.Type.Byte
+                            ? "Byte"
+                            : enumDefinition.BaseType == EnumInfo.Type.Short ? "Int16" : "Int32";
+                        stringBuilder.AppendLine(string.Format("{0} = ({1})binaryReader.Read{2}();", item.Value.Name,
+                            item.FieldTypeName, type));
+                    }
+                    else if (Type.GetType(item.FieldTypeName) == null)
+                    {
+                        stringBuilder.AppendLine(string.Format("{0} = new {1}(binaryReader);", item.Value.Name,
+                            item.FieldTypeName));
+                    }
+                    else
+                    {
+                        var value = BinaryIO.GetBinaryReaderMethodName(Type.GetType(item.FieldTypeName));
+                        stringBuilder.AppendLine(string.Format("{0} = binaryReader.{1}();", item.Value.Name, value));
+                    }
+                }
+            }
+            Constructors.Last().Body = stringBuilder.ToString().TrimEnd();
         }
 
         public void GenerateReadBlockTemplateMethod( )

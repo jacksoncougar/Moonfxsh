@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class UnitBoardingMeleeStructBlockBase : GuerillaBlock
+    public class UnitBoardingMeleeStructBlockBase : IGuerilla
     {
         [TagReference( "jpt!" )] internal Moonfish.Tags.TagReference boardingMeleeDamage;
         [TagReference( "jpt!" )] internal Moonfish.Tags.TagReference boardingMeleeResponse;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "jpt!" )] internal Moonfish.Tags.TagReference flurryMeleeDamage;
         [TagReference( "jpt!" )] internal Moonfish.Tags.TagReference obstacleSmashDamage;
 
-        public override int SerializedSize
-        {
-            get { return 40; }
-        }
-
-        internal UnitBoardingMeleeStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal UnitBoardingMeleeStructBlockBase( BinaryReader binaryReader )
         {
             boardingMeleeDamage = binaryReader.ReadTagReference( );
             boardingMeleeResponse = binaryReader.ReadTagReference( );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             obstacleSmashDamage = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

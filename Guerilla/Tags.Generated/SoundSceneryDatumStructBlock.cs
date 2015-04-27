@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 28, Alignment = 4 )]
-    public class SoundSceneryDatumStructBlockBase : GuerillaBlock
+    public class SoundSceneryDatumStructBlockBase : IGuerilla
     {
         internal VolumeType volumeType;
         internal float height;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range overrideConeAngleBounds;
         internal float overrideOuterConeGainDB;
 
-        public override int SerializedSize
-        {
-            get { return 28; }
-        }
-
-        internal SoundSceneryDatumStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal SoundSceneryDatumStructBlockBase( BinaryReader binaryReader )
         {
             volumeType = ( VolumeType ) binaryReader.ReadInt32( );
             height = binaryReader.ReadSingle( );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             overrideOuterConeGainDB = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

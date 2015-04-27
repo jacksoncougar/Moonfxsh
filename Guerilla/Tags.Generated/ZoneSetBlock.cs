@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ZoneSetBlockBase : GuerillaBlock
+    public class ZoneSetBlockBase : IGuerilla
     {
         internal AreaType areaType;
         internal byte[] invalidName_;
         internal Moonfish.Tags.ShortBlockIndex1 zone;
         internal Moonfish.Tags.ShortBlockIndex2 area;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal ZoneSetBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ZoneSetBlockBase( BinaryReader binaryReader )
         {
             areaType = ( AreaType ) binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             area = binaryReader.ReadShortBlockIndex2( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

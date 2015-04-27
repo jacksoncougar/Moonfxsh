@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 56, Alignment = 4 )]
-    public class ParticleModelVerticesBlockBase : GuerillaBlock
+    public class ParticleModelVerticesBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 position;
         internal OpenTK.Vector3 normal;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 binormal;
         internal OpenTK.Vector2 texcoord;
 
-        public override int SerializedSize
-        {
-            get { return 56; }
-        }
-
-        internal ParticleModelVerticesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ParticleModelVerticesBlockBase( BinaryReader binaryReader )
         {
             position = binaryReader.ReadVector3( );
             normal = binaryReader.ReadVector3( );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             texcoord = binaryReader.ReadVector2( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

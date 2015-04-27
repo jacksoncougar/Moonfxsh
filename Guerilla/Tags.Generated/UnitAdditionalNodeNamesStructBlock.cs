@@ -17,24 +17,19 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class UnitAdditionalNodeNamesStructBlockBase : GuerillaBlock
+    public class UnitAdditionalNodeNamesStructBlockBase : IGuerilla
     {
         /// <summary>
         /// if found, use this gun marker
         /// </summary>
         internal Moonfish.Tags.StringID preferredGunNode;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal UnitAdditionalNodeNamesStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal UnitAdditionalNodeNamesStructBlockBase( BinaryReader binaryReader )
         {
             preferredGunNode = binaryReader.ReadStringID( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

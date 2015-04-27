@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 88, Alignment = 4 )]
-    public class StructureBspInstancedGeometryInstancesBlockBase : GuerillaBlock
+    public class StructureBspInstancedGeometryInstancesBlockBase : IGuerilla
     {
         internal float scale;
         internal OpenTK.Vector3 forward;
@@ -34,12 +34,7 @@ namespace Moonfish.Guerilla.Tags
         internal PathfindingPolicy pathfindingPolicy;
         internal LightmappingPolicy lightmappingPolicy;
 
-        public override int SerializedSize
-        {
-            get { return 88; }
-        }
-
-        internal StructureBspInstancedGeometryInstancesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureBspInstancedGeometryInstancesBlockBase( BinaryReader binaryReader )
         {
             scale = binaryReader.ReadSingle( );
             forward = binaryReader.ReadVector3( );
@@ -57,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
             lightmappingPolicy = ( LightmappingPolicy ) binaryReader.ReadInt16( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

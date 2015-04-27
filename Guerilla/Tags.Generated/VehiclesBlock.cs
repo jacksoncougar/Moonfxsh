@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class VehiclesBlockBase : GuerillaBlock
+    public class VehiclesBlockBase : IGuerilla
     {
         [TagReference( "vehi" )] internal Moonfish.Tags.TagReference vehicle;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal VehiclesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal VehiclesBlockBase( BinaryReader binaryReader )
         {
             vehicle = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

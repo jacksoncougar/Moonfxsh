@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 2, Alignment = 4 )]
-    public class ScenarioKillTriggerVolumesBlockBase : GuerillaBlock
+    public class ScenarioKillTriggerVolumesBlockBase : IGuerilla
     {
         internal Moonfish.Tags.ShortBlockIndex1 triggerVolume;
 
-        public override int SerializedSize
-        {
-            get { return 2; }
-        }
-
-        internal ScenarioKillTriggerVolumesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioKillTriggerVolumesBlockBase( BinaryReader binaryReader )
         {
             triggerVolume = binaryReader.ReadShortBlockIndex1( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class VehicleSuspensionBlockBase : GuerillaBlock
+    public class VehicleSuspensionBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID label;
         internal AnimationIndexStructBlock animation;
@@ -30,12 +30,7 @@ namespace Moonfish.Guerilla.Tags
         internal float destroyedFullExtensionGroundDepth;
         internal float destroyedFullCompressionGroundDepth;
 
-        public override int SerializedSize
-        {
-            get { return 40; }
-        }
-
-        internal VehicleSuspensionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal VehicleSuspensionBlockBase( BinaryReader binaryReader )
         {
             label = binaryReader.ReadStringID( );
             animation = new AnimationIndexStructBlock( binaryReader );
@@ -49,7 +44,7 @@ namespace Moonfish.Guerilla.Tags
             destroyedFullCompressionGroundDepth = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

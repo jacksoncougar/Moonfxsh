@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 52, Alignment = 4 )]
-    public class RecordedAnimationBlockBase : GuerillaBlock
+    public class RecordedAnimationBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal byte version;
@@ -29,12 +29,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal byte[] recordedAnimationEventStream;
 
-        public override int SerializedSize
-        {
-            get { return 52; }
-        }
-
-        internal RecordedAnimationBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal RecordedAnimationBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadString32( );
             version = binaryReader.ReadByte( );
@@ -47,7 +42,7 @@ namespace Moonfish.Guerilla.Tags
             recordedAnimationEventStream = Guerilla.ReadData( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

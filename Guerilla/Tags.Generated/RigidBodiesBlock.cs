@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 144, Alignment = 16 )]
-    public class RigidBodiesBlockBase : GuerillaBlock
+    public class RigidBodiesBlockBase : IGuerilla
     {
         internal Moonfish.Tags.ShortBlockIndex1 node;
         internal Moonfish.Tags.ShortBlockIndex1 region;
@@ -65,12 +65,7 @@ namespace Moonfish.Guerilla.Tags
 
         internal byte[] invalidName_4;
 
-        public override int SerializedSize
-        {
-            get { return 144; }
-        }
-
-        internal RigidBodiesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal RigidBodiesBlockBase( BinaryReader binaryReader )
         {
             node = binaryReader.ReadShortBlockIndex1( );
             region = binaryReader.ReadShortBlockIndex1( );
@@ -101,7 +96,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_4 = binaryReader.ReadBytes( 12 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

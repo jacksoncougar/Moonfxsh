@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 136, Alignment = 4 )]
-    public class StructureBspWeatherPaletteBlockBase : GuerillaBlock
+    public class StructureBspWeatherPaletteBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         [TagReference( "weat" )] internal Moonfish.Tags.TagReference weatherSystem;
@@ -30,12 +30,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal Moonfish.Tags.String32 windScaleFunction;
 
-        public override int SerializedSize
-        {
-            get { return 136; }
-        }
-
-        internal StructureBspWeatherPaletteBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureBspWeatherPaletteBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadString32( );
             weatherSystem = binaryReader.ReadTagReference( );
@@ -49,7 +44,7 @@ namespace Moonfish.Guerilla.Tags
             windScaleFunction = binaryReader.ReadString32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

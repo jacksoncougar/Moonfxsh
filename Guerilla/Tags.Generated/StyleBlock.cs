@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,22 +11,22 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Styl = (TagClass)"styl";
+        public static readonly TagClass Styl = ( TagClass ) "styl";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TagClassAttribute("styl")]
+    [TagClassAttribute( "styl" )]
     public partial class StyleBlock : StyleBlockBase
     {
-        public  StyleBlock(BinaryReader binaryReader): base(binaryReader)
+        public StyleBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 92, Alignment = 4)]
-    public class StyleBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 92, Alignment = 4 )]
+    public class StyleBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal CombatStatusDecayOptions combatStatusDecayOptions;
@@ -52,81 +53,83 @@ namespace Moonfish.Guerilla.Tags
         internal Behaviors5 behaviors5;
         internal SpecialMovementBlock[] specialMovement;
         internal BehaviorNamesBlock[] behaviorList;
-        
-        public override int SerializedSize{get { return 92; }}
-        
-        internal  StyleBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal StyleBlockBase( BinaryReader binaryReader )
         {
-            name = binaryReader.ReadString32();
-            combatStatusDecayOptions = (CombatStatusDecayOptions)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            attitude = (Attitude)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            engageAttitude = (EngageAttitude)binaryReader.ReadByte();
-            evasionAttitude = (EvasionAttitude)binaryReader.ReadByte();
-            coverAttitude = (CoverAttitude)binaryReader.ReadByte();
-            searchAttitude = (SearchAttitude)binaryReader.ReadByte();
-            presearchAttitude = (PresearchAttitude)binaryReader.ReadByte();
-            retreatAttitude = (RetreatAttitude)binaryReader.ReadByte();
-            chargeAttitude = (ChargeAttitude)binaryReader.ReadByte();
-            readyAttitude = (ReadyAttitude)binaryReader.ReadByte();
-            idleAttitude = (IdleAttitude)binaryReader.ReadByte();
-            weaponAttitude = (WeaponAttitude)binaryReader.ReadByte();
-            swarmAttitude = (SwarmAttitude)binaryReader.ReadByte();
-            invalidName_1 = binaryReader.ReadBytes(1);
-            styleControl = (StyleControl)binaryReader.ReadInt32();
-            behaviors1 = (Behaviors1)binaryReader.ReadInt32();
-            behaviors2 = (Behaviors2)binaryReader.ReadInt32();
-            behaviors3 = (Behaviors3)binaryReader.ReadInt32();
-            behaviors4 = (Behaviors4)binaryReader.ReadInt32();
-            behaviors5 = (Behaviors5)binaryReader.ReadInt32();
-            specialMovement = Guerilla.ReadBlockArray<SpecialMovementBlock>(binaryReader);
-            behaviorList = Guerilla.ReadBlockArray<BehaviorNamesBlock>(binaryReader);
+            name = binaryReader.ReadString32( );
+            combatStatusDecayOptions = ( CombatStatusDecayOptions ) binaryReader.ReadInt16( );
+            invalidName_ = binaryReader.ReadBytes( 2 );
+            attitude = ( Attitude ) binaryReader.ReadInt16( );
+            invalidName_0 = binaryReader.ReadBytes( 2 );
+            engageAttitude = ( EngageAttitude ) binaryReader.ReadByte( );
+            evasionAttitude = ( EvasionAttitude ) binaryReader.ReadByte( );
+            coverAttitude = ( CoverAttitude ) binaryReader.ReadByte( );
+            searchAttitude = ( SearchAttitude ) binaryReader.ReadByte( );
+            presearchAttitude = ( PresearchAttitude ) binaryReader.ReadByte( );
+            retreatAttitude = ( RetreatAttitude ) binaryReader.ReadByte( );
+            chargeAttitude = ( ChargeAttitude ) binaryReader.ReadByte( );
+            readyAttitude = ( ReadyAttitude ) binaryReader.ReadByte( );
+            idleAttitude = ( IdleAttitude ) binaryReader.ReadByte( );
+            weaponAttitude = ( WeaponAttitude ) binaryReader.ReadByte( );
+            swarmAttitude = ( SwarmAttitude ) binaryReader.ReadByte( );
+            invalidName_1 = binaryReader.ReadBytes( 1 );
+            styleControl = ( StyleControl ) binaryReader.ReadInt32( );
+            behaviors1 = ( Behaviors1 ) binaryReader.ReadInt32( );
+            behaviors2 = ( Behaviors2 ) binaryReader.ReadInt32( );
+            behaviors3 = ( Behaviors3 ) binaryReader.ReadInt32( );
+            behaviors4 = ( Behaviors4 ) binaryReader.ReadInt32( );
+            behaviors5 = ( Behaviors5 ) binaryReader.ReadInt32( );
+            specialMovement = Guerilla.ReadBlockArray<SpecialMovementBlock>( binaryReader );
+            behaviorList = Guerilla.ReadBlockArray<BehaviorNamesBlock>( binaryReader );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write((Int16)combatStatusDecayOptions);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int16)attitude);
-                binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write((Byte)engageAttitude);
-                binaryWriter.Write((Byte)evasionAttitude);
-                binaryWriter.Write((Byte)coverAttitude);
-                binaryWriter.Write((Byte)searchAttitude);
-                binaryWriter.Write((Byte)presearchAttitude);
-                binaryWriter.Write((Byte)retreatAttitude);
-                binaryWriter.Write((Byte)chargeAttitude);
-                binaryWriter.Write((Byte)readyAttitude);
-                binaryWriter.Write((Byte)idleAttitude);
-                binaryWriter.Write((Byte)weaponAttitude);
-                binaryWriter.Write((Byte)swarmAttitude);
-                binaryWriter.Write(invalidName_1, 0, 1);
-                binaryWriter.Write((Int32)styleControl);
-                binaryWriter.Write((Int32)behaviors1);
-                binaryWriter.Write((Int32)behaviors2);
-                binaryWriter.Write((Int32)behaviors3);
-                binaryWriter.Write((Int32)behaviors4);
-                binaryWriter.Write((Int32)behaviors5);
-                nextAddress = Guerilla.WriteBlockArray<SpecialMovementBlock>(binaryWriter, specialMovement, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<BehaviorNamesBlock>(binaryWriter, behaviorList, nextAddress);
+                binaryWriter.Write( name );
+                binaryWriter.Write( ( Int16 ) combatStatusDecayOptions );
+                binaryWriter.Write( invalidName_, 0, 2 );
+                binaryWriter.Write( ( Int16 ) attitude );
+                binaryWriter.Write( invalidName_0, 0, 2 );
+                binaryWriter.Write( ( Byte ) engageAttitude );
+                binaryWriter.Write( ( Byte ) evasionAttitude );
+                binaryWriter.Write( ( Byte ) coverAttitude );
+                binaryWriter.Write( ( Byte ) searchAttitude );
+                binaryWriter.Write( ( Byte ) presearchAttitude );
+                binaryWriter.Write( ( Byte ) retreatAttitude );
+                binaryWriter.Write( ( Byte ) chargeAttitude );
+                binaryWriter.Write( ( Byte ) readyAttitude );
+                binaryWriter.Write( ( Byte ) idleAttitude );
+                binaryWriter.Write( ( Byte ) weaponAttitude );
+                binaryWriter.Write( ( Byte ) swarmAttitude );
+                binaryWriter.Write( invalidName_1, 0, 1 );
+                binaryWriter.Write( ( Int32 ) styleControl );
+                binaryWriter.Write( ( Int32 ) behaviors1 );
+                binaryWriter.Write( ( Int32 ) behaviors2 );
+                binaryWriter.Write( ( Int32 ) behaviors3 );
+                binaryWriter.Write( ( Int32 ) behaviors4 );
+                binaryWriter.Write( ( Int32 ) behaviors5 );
+                nextAddress = Guerilla.WriteBlockArray<SpecialMovementBlock>( binaryWriter, specialMovement, nextAddress );
+                nextAddress = Guerilla.WriteBlockArray<BehaviorNamesBlock>( binaryWriter, behaviorList, nextAddress );
                 return nextAddress;
             }
         }
+
         internal enum CombatStatusDecayOptions : short
         {
             LatchAtIdle = 0,
             LatchAtAlert = 1,
             LatchAtCombat = 2,
         };
+
         internal enum Attitude : short
         {
             Normal = 0,
             Timid = 1,
             Aggressive = 2,
         };
+
         internal enum EngageAttitude : byte
         {
             Default = 0,
@@ -134,6 +137,7 @@ namespace Moonfish.Guerilla.Tags
             Timid = 2,
             Aggressive = 3,
         };
+
         internal enum EvasionAttitude : byte
         {
             Default = 0,
@@ -141,6 +145,7 @@ namespace Moonfish.Guerilla.Tags
             Timid = 2,
             Aggressive = 3,
         };
+
         internal enum CoverAttitude : byte
         {
             Default = 0,
@@ -148,6 +153,7 @@ namespace Moonfish.Guerilla.Tags
             Timid = 2,
             Aggressive = 3,
         };
+
         internal enum SearchAttitude : byte
         {
             Default = 0,
@@ -155,6 +161,7 @@ namespace Moonfish.Guerilla.Tags
             Timid = 2,
             Aggressive = 3,
         };
+
         internal enum PresearchAttitude : byte
         {
             Default = 0,
@@ -162,6 +169,7 @@ namespace Moonfish.Guerilla.Tags
             Timid = 2,
             Aggressive = 3,
         };
+
         internal enum RetreatAttitude : byte
         {
             Default = 0,
@@ -169,6 +177,7 @@ namespace Moonfish.Guerilla.Tags
             Timid = 2,
             Aggressive = 3,
         };
+
         internal enum ChargeAttitude : byte
         {
             Default = 0,
@@ -176,6 +185,7 @@ namespace Moonfish.Guerilla.Tags
             Timid = 2,
             Aggressive = 3,
         };
+
         internal enum ReadyAttitude : byte
         {
             Default = 0,
@@ -183,6 +193,7 @@ namespace Moonfish.Guerilla.Tags
             Timid = 2,
             Aggressive = 3,
         };
+
         internal enum IdleAttitude : byte
         {
             Default = 0,
@@ -190,6 +201,7 @@ namespace Moonfish.Guerilla.Tags
             Timid = 2,
             Aggressive = 3,
         };
+
         internal enum WeaponAttitude : byte
         {
             Default = 0,
@@ -197,6 +209,7 @@ namespace Moonfish.Guerilla.Tags
             Timid = 2,
             Aggressive = 3,
         };
+
         internal enum SwarmAttitude : byte
         {
             Default = 0,
@@ -204,11 +217,13 @@ namespace Moonfish.Guerilla.Tags
             Timid = 2,
             Aggressive = 3,
         };
+
         [FlagsAttribute]
         internal enum StyleControl : int
         {
             NewBehaviorsDefaultToON = 1,
         };
+
         [FlagsAttribute]
         internal enum Behaviors1 : int
         {
@@ -245,6 +260,7 @@ namespace Moonfish.Guerilla.Tags
             SuppressingFire = 1073741824,
             GrenadeUncover = -2147483648,
         };
+
         [FlagsAttribute]
         internal enum Behaviors2 : int
         {
@@ -281,6 +297,7 @@ namespace Moonfish.Guerilla.Tags
             LeaderDeadRetreat = 1073741824,
             PeerDeadRetreat = -2147483648,
         };
+
         [FlagsAttribute]
         internal enum Behaviors3 : int
         {
@@ -317,6 +334,7 @@ namespace Moonfish.Guerilla.Tags
             VehicleTurtle = 1073741824,
             VehicleEngagePatrolImpulse = -2147483648,
         };
+
         [FlagsAttribute]
         internal enum Behaviors4 : int
         {
@@ -353,6 +371,7 @@ namespace Moonfish.Guerilla.Tags
             Formation = 1073741824,
             GruntScaredByElite = -2147483648,
         };
+
         [FlagsAttribute]
         internal enum Behaviors5 : int
         {

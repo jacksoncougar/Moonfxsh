@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class TextureStageStateParameterBlockBase : GuerillaBlock
+    public class TextureStageStateParameterBlockBase : IGuerilla
     {
         internal byte parameterIndex;
         internal byte parameterType;
         internal byte stateIndex;
         internal byte stageIndex;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal TextureStageStateParameterBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal TextureStageStateParameterBlockBase( BinaryReader binaryReader )
         {
             parameterIndex = binaryReader.ReadByte( );
             parameterType = binaryReader.ReadByte( );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             stageIndex = binaryReader.ReadByte( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

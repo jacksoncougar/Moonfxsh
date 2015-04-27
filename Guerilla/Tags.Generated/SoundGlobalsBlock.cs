@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 36, Alignment = 4 )]
-    public class SoundGlobalsBlockBase : GuerillaBlock
+    public class SoundGlobalsBlockBase : IGuerilla
     {
         [TagReference( "sncl" )] internal Moonfish.Tags.TagReference soundClasses;
         [TagReference( "sfx+" )] internal Moonfish.Tags.TagReference soundEffects;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "spk!" )] internal Moonfish.Tags.TagReference soundCombatDialogueConstants;
         internal int invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 36; }
-        }
-
-        internal SoundGlobalsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal SoundGlobalsBlockBase( BinaryReader binaryReader )
         {
             soundClasses = binaryReader.ReadTagReference( );
             soundEffects = binaryReader.ReadTagReference( );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

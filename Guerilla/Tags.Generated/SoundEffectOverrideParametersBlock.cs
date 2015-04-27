@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class SoundEffectOverrideParametersBlockBase : GuerillaBlock
+    public class SoundEffectOverrideParametersBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.StringID input;
@@ -27,12 +27,7 @@ namespace Moonfish.Guerilla.Tags
         internal float realValue;
         internal MappingFunctionBlock functionValue;
 
-        public override int SerializedSize
-        {
-            get { return 32; }
-        }
-
-        internal SoundEffectOverrideParametersBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal SoundEffectOverrideParametersBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             input = binaryReader.ReadStringID( );
@@ -43,7 +38,7 @@ namespace Moonfish.Guerilla.Tags
             functionValue = new MappingFunctionBlock( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

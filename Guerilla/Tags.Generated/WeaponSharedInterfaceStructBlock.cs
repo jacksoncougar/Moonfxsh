@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class WeaponSharedInterfaceStructBlockBase : GuerillaBlock
+    public class WeaponSharedInterfaceStructBlockBase : IGuerilla
     {
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal WeaponSharedInterfaceStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal WeaponSharedInterfaceStructBlockBase( BinaryReader binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 16 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 48, Alignment = 4 )]
-    public class ScenarioLightStructBlockBase : GuerillaBlock
+    public class ScenarioLightStructBlockBase : IGuerilla
     {
         internal Type type;
         internal Flags flags;
@@ -32,12 +32,7 @@ namespace Moonfish.Guerilla.Tags
         internal float falloffDistanceWorldUnits;
         internal float cutoffDistanceWorldUnitsFromFarPlane;
 
-        public override int SerializedSize
-        {
-            get { return 48; }
-        }
-
-        internal ScenarioLightStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioLightStructBlockBase( BinaryReader binaryReader )
         {
             type = ( Type ) binaryReader.ReadInt16( );
             flags = ( Flags ) binaryReader.ReadInt16( );
@@ -53,7 +48,7 @@ namespace Moonfish.Guerilla.Tags
             cutoffDistanceWorldUnitsFromFarPlane = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

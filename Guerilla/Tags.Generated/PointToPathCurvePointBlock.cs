@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class PointToPathCurvePointBlockBase : GuerillaBlock
+    public class PointToPathCurvePointBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 position;
         internal float tValue;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal PointToPathCurvePointBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal PointToPathCurvePointBlockBase( BinaryReader binaryReader )
         {
             position = binaryReader.ReadVector3( );
             tValue = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

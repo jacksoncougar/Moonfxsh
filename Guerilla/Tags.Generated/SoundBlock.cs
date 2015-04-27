@@ -26,21 +26,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class SoundBlockBase : GuerillaBlock
+    public class SoundBlockBase : IGuerilla
     {
         internal byte[] soundFields;
 
-        public override int SerializedSize
-        {
-            get { return 20; }
-        }
-
-        internal SoundBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal SoundBlockBase( BinaryReader binaryReader )
         {
             soundFields = binaryReader.ReadBytes( 20 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 72, Alignment = 4 )]
-    public class RasterizerScreenEffectTexcoordGenerationAdvancedControlBlockBase : GuerillaBlock
+    public class RasterizerScreenEffectTexcoordGenerationAdvancedControlBlockBase : IGuerilla
     {
         internal Stage0Flags stage0Flags;
         internal Stage1Flags stage1Flags;
@@ -30,13 +30,7 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector4 stage2Offset;
         internal OpenTK.Vector4 stage3Offset;
 
-        public override int SerializedSize
-        {
-            get { return 72; }
-        }
-
         internal RasterizerScreenEffectTexcoordGenerationAdvancedControlBlockBase( BinaryReader binaryReader )
-            : base( binaryReader )
         {
             stage0Flags = ( Stage0Flags ) binaryReader.ReadInt16( );
             stage1Flags = ( Stage1Flags ) binaryReader.ReadInt16( );
@@ -48,7 +42,7 @@ namespace Moonfish.Guerilla.Tags
             stage3Offset = binaryReader.ReadVector4( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

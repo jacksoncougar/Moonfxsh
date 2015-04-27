@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 104, Alignment = 4 )]
-    public class StructureLightmapGroupBlockBase : GuerillaBlock
+    public class StructureLightmapGroupBlockBase : IGuerilla
     {
         internal Type type;
         internal Flags flags;
@@ -35,12 +35,7 @@ namespace Moonfish.Guerilla.Tags
         internal LightmapSceneryObjectInfoBlock[] sceneryObjectInfo;
         internal LightmapInstanceBucketReferenceBlock[] sceneryObjectBucketRefs;
 
-        public override int SerializedSize
-        {
-            get { return 104; }
-        }
-
-        internal StructureLightmapGroupBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureLightmapGroupBlockBase( BinaryReader binaryReader )
         {
             type = ( Type ) binaryReader.ReadInt16( );
             flags = ( Flags ) binaryReader.ReadInt16( );
@@ -59,7 +54,7 @@ namespace Moonfish.Guerilla.Tags
             sceneryObjectBucketRefs = Guerilla.ReadBlockArray<LightmapInstanceBucketReferenceBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class ScenarioMachineStructV3BlockBase : GuerillaBlock
+    public class ScenarioMachineStructV3BlockBase : IGuerilla
     {
         internal Flags flags;
         internal PathfindingObjectIndexListBlock[] pathfindingReferences;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal ScenarioMachineStructV3BlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioMachineStructV3BlockBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             pathfindingReferences = Guerilla.ReadBlockArray<PathfindingObjectIndexListBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

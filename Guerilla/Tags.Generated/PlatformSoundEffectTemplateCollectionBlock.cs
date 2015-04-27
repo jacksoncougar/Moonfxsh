@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class PlatformSoundEffectTemplateCollectionBlockBase : GuerillaBlock
+    public class PlatformSoundEffectTemplateCollectionBlockBase : IGuerilla
     {
         internal PlatformSoundEffectTemplateBlock[] platformEffectTemplates;
         internal Moonfish.Tags.StringID inputDspEffectName;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal PlatformSoundEffectTemplateCollectionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal PlatformSoundEffectTemplateCollectionBlockBase( BinaryReader binaryReader )
         {
             platformEffectTemplates = Guerilla.ReadBlockArray<PlatformSoundEffectTemplateBlock>( binaryReader );
             inputDspEffectName = binaryReader.ReadStringID( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

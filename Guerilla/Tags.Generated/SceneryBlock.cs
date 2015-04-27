@@ -26,17 +26,12 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class SceneryBlockBase : GuerillaBlock
+    public class SceneryBlockBase : ObjectBlock
     {
         internal PathfindingPolicy pathfindingPolicy;
         internal Flags flags;
         internal LightmappingPolicy lightmappingPolicy;
         internal byte[] invalidName_;
-
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
 
         internal SceneryBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
@@ -46,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 2 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

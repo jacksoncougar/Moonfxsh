@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,33 +11,33 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class MissionDialogueLinesBlock : MissionDialogueLinesBlockBase
     {
-        public  MissionDialogueLinesBlock(BinaryReader binaryReader): base(binaryReader)
+        public MissionDialogueLinesBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class MissionDialogueLinesBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 16, Alignment = 4 )]
+    public class MissionDialogueLinesBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal MissionDialogueVariantsBlock[] variants;
         internal Moonfish.Tags.StringID defaultSoundEffect;
-        
-        public override int SerializedSize{get { return 16; }}
-        
-        internal  MissionDialogueLinesBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal MissionDialogueLinesBlockBase( BinaryReader binaryReader )
         {
-            name = binaryReader.ReadStringID();
-            variants = Guerilla.ReadBlockArray<MissionDialogueVariantsBlock>(binaryReader);
-            defaultSoundEffect = binaryReader.ReadStringID();
+            name = binaryReader.ReadStringID( );
+            variants = Guerilla.ReadBlockArray<MissionDialogueVariantsBlock>( binaryReader );
+            defaultSoundEffect = binaryReader.ReadStringID( );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(name);
-                nextAddress = Guerilla.WriteBlockArray<MissionDialogueVariantsBlock>(binaryWriter, variants, nextAddress);
-                binaryWriter.Write(defaultSoundEffect);
+                binaryWriter.Write( name );
+                nextAddress = Guerilla.WriteBlockArray<MissionDialogueVariantsBlock>( binaryWriter, variants,
+                    nextAddress );
+                binaryWriter.Write( defaultSoundEffect );
                 return nextAddress;
             }
         }

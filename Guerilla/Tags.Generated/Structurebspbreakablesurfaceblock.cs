@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class StructureBspBreakableSurfaceBlockBase : GuerillaBlock
+    public class StructureBspBreakableSurfaceBlockBase : IGuerilla
     {
         internal Moonfish.Tags.ShortBlockIndex1 instancedGeometryInstance;
         internal short breakableSurfaceIndex;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal float radius;
         internal int collisionSurfaceIndex;
 
-        public override int SerializedSize
-        {
-            get { return 24; }
-        }
-
-        internal StructureBspBreakableSurfaceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureBspBreakableSurfaceBlockBase( BinaryReader binaryReader )
         {
             instancedGeometryInstance = binaryReader.ReadShortBlockIndex1( );
             breakableSurfaceIndex = binaryReader.ReadInt16( );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             collisionSurfaceIndex = binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

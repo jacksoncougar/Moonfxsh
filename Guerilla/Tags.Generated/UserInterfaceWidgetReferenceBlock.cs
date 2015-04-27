@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,28 +11,26 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class UserInterfaceWidgetReferenceBlock : UserInterfaceWidgetReferenceBlockBase
     {
-        public  UserInterfaceWidgetReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public UserInterfaceWidgetReferenceBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class UserInterfaceWidgetReferenceBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class UserInterfaceWidgetReferenceBlockBase : IGuerilla
     {
-        [TagReference("wgit")]
-        internal Moonfish.Tags.TagReference widgetTag;
-        
-        public override int SerializedSize{get { return 8; }}
-        
-        internal  UserInterfaceWidgetReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        [TagReference( "wgit" )] internal Moonfish.Tags.TagReference widgetTag;
+
+        internal UserInterfaceWidgetReferenceBlockBase( BinaryReader binaryReader )
         {
-            widgetTag = binaryReader.ReadTagReference();
+            widgetTag = binaryReader.ReadTagReference( );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(widgetTag);
+                binaryWriter.Write( widgetTag );
                 return nextAddress;
             }
         }

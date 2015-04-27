@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class RenderModelPermutationBlockBase : GuerillaBlock
+    public class RenderModelPermutationBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal short l1SectionIndexSuperLow;
@@ -27,12 +27,7 @@ namespace Moonfish.Guerilla.Tags
         internal short l5SectionIndexSuperHigh;
         internal short l6SectionIndexHollywood;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal RenderModelPermutationBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal RenderModelPermutationBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             l1SectionIndexSuperLow = binaryReader.ReadInt16( );
@@ -43,7 +38,7 @@ namespace Moonfish.Guerilla.Tags
             l6SectionIndexHollywood = binaryReader.ReadInt16( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

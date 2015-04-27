@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 28, Alignment = 4 )]
-    public class UserHintRayBlockBase : GuerillaBlock
+    public class UserHintRayBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 point;
         internal short referenceFrame;
         internal byte[] invalidName_;
         internal OpenTK.Vector3 vector;
 
-        public override int SerializedSize
-        {
-            get { return 28; }
-        }
-
-        internal UserHintRayBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal UserHintRayBlockBase( BinaryReader binaryReader )
         {
             point = binaryReader.ReadVector3( );
             referenceFrame = binaryReader.ReadInt16( );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             vector = binaryReader.ReadVector3( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

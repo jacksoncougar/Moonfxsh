@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 56, Alignment = 4 )]
-    public class ParticleSystemDefinitionBlockNewBase : GuerillaBlock
+    public class ParticleSystemDefinitionBlockNewBase : IGuerilla
     {
         [TagReference( "null" )] internal Moonfish.Tags.TagReference particle;
         internal Moonfish.Tags.LongBlockIndex1 location;
@@ -58,12 +58,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal ParticleSystemEmitterDefinitionBlock[] emitters;
 
-        public override int SerializedSize
-        {
-            get { return 56; }
-        }
-
-        internal ParticleSystemDefinitionBlockNewBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ParticleSystemDefinitionBlockNewBase( BinaryReader binaryReader )
         {
             particle = binaryReader.ReadTagReference( );
             location = binaryReader.ReadLongBlockIndex1( );
@@ -82,7 +77,7 @@ namespace Moonfish.Guerilla.Tags
             emitters = Guerilla.ReadBlockArray<ParticleSystemEmitterDefinitionBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

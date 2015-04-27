@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 64, Alignment = 4 )]
-    public class SoundResponseExtraSoundsStructBlockBase : GuerillaBlock
+    public class SoundResponseExtraSoundsStructBlockBase : IGuerilla
     {
         [TagReference( "snd!" )] internal Moonfish.Tags.TagReference japaneseSound;
         [TagReference( "snd!" )] internal Moonfish.Tags.TagReference germanSound;
@@ -28,12 +28,7 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "snd!" )] internal Moonfish.Tags.TagReference chineseSound;
         [TagReference( "snd!" )] internal Moonfish.Tags.TagReference portugueseSound;
 
-        public override int SerializedSize
-        {
-            get { return 64; }
-        }
-
-        internal SoundResponseExtraSoundsStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal SoundResponseExtraSoundsStructBlockBase( BinaryReader binaryReader )
         {
             japaneseSound = binaryReader.ReadTagReference( );
             germanSound = binaryReader.ReadTagReference( );
@@ -45,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
             portugueseSound = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

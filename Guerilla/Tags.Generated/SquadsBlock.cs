@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 116, Alignment = 4 )]
-    public class SquadsBlockBase : GuerillaBlock
+    public class SquadsBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal Flags flags;
@@ -51,12 +51,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
 
-        public override int SerializedSize
-        {
-            get { return 116; }
-        }
-
-        internal SquadsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal SquadsBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadString32( );
             flags = ( Flags ) binaryReader.ReadInt32( );
@@ -82,7 +77,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes( 2 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 200, Alignment = 4 )]
-    public class StructureBspInstancedGeometryDefinitionBlockBase : GuerillaBlock
+    public class StructureBspInstancedGeometryDefinitionBlockBase : IGuerilla
     {
         internal StructureInstancedGeometryRenderInfoStructBlock renderInfo;
         internal int checksum;
@@ -28,12 +28,7 @@ namespace Moonfish.Guerilla.Tags
         internal StructureBspLeafBlock[] renderLeaves;
         internal StructureBspSurfaceReferenceBlock[] surfaceReferences;
 
-        public override int SerializedSize
-        {
-            get { return 200; }
-        }
-
-        internal StructureBspInstancedGeometryDefinitionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureBspInstancedGeometryDefinitionBlockBase( BinaryReader binaryReader )
         {
             renderInfo = new StructureInstancedGeometryRenderInfoStructBlock( binaryReader );
             checksum = binaryReader.ReadInt32( );
@@ -45,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
             surfaceReferences = Guerilla.ReadBlockArray<StructureBspSurfaceReferenceBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

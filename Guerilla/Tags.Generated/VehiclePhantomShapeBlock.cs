@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 672, Alignment = 16 )]
-    public class VehiclePhantomShapeBlockBase : GuerillaBlock
+    public class VehiclePhantomShapeBlockBase : IGuerilla
     {
         internal byte[] invalidName_;
         internal short size;
@@ -38,12 +38,7 @@ namespace Moonfish.Guerilla.Tags
         internal float z1;
         internal Multispheres[] multispheres;
 
-        public override int SerializedSize
-        {
-            get { return 672; }
-        }
-
-        internal VehiclePhantomShapeBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal VehiclePhantomShapeBlockBase( BinaryReader binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 4 );
             size = binaryReader.ReadInt16( );
@@ -73,7 +68,7 @@ namespace Moonfish.Guerilla.Tags
             };
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {
@@ -113,25 +108,20 @@ namespace Moonfish.Guerilla.Tags
         };
 
         [LayoutAttribute( Size = 8, Alignment = 1 )]
-        public class ChildShapesStorage : GuerillaBlock
+        public class ChildShapesStorage : IGuerilla
         {
             internal ShapeType shapeType;
             internal Moonfish.Tags.ShortBlockIndex2 shape;
             internal int collisionFilter;
 
-            public override int SerializedSize
-            {
-                get { return 8; }
-            }
-
-            internal ChildShapesStorage( BinaryReader binaryReader ) : base( binaryReader )
+            internal ChildShapesStorage( BinaryReader binaryReader )
             {
                 shapeType = ( ShapeType ) binaryReader.ReadInt16( );
                 shape = binaryReader.ReadShortBlockIndex2( );
                 collisionFilter = binaryReader.ReadInt32( );
             }
 
-            public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
             {
                 using ( binaryWriter.BaseStream.Pin( ) )
                 {
@@ -164,7 +154,7 @@ namespace Moonfish.Guerilla.Tags
         };
 
         [LayoutAttribute( Size = 144, Alignment = 1 )]
-        public class Multispheres : GuerillaBlock
+        public class Multispheres : IGuerilla
         {
             internal byte[] invalidName_;
             internal short size;
@@ -173,12 +163,7 @@ namespace Moonfish.Guerilla.Tags
             internal int numSpheres;
             internal FourVectorsStorage[] fourVectorsStorage;
 
-            public override int SerializedSize
-            {
-                get { return 144; }
-            }
-
-            internal Multispheres( BinaryReader binaryReader ) : base( binaryReader )
+            internal Multispheres( BinaryReader binaryReader )
             {
                 invalidName_ = binaryReader.ReadBytes( 4 );
                 size = binaryReader.ReadInt16( );
@@ -194,7 +179,7 @@ namespace Moonfish.Guerilla.Tags
                 };
             }
 
-            public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
             {
                 using ( binaryWriter.BaseStream.Pin( ) )
                 {
@@ -216,23 +201,18 @@ namespace Moonfish.Guerilla.Tags
             }
 
             [LayoutAttribute( Size = 16, Alignment = 1 )]
-            public class FourVectorsStorage : GuerillaBlock
+            public class FourVectorsStorage : IGuerilla
             {
                 internal OpenTK.Vector3 sphere;
                 internal byte[] invalidName_;
 
-                public override int SerializedSize
-                {
-                    get { return 16; }
-                }
-
-                internal FourVectorsStorage( BinaryReader binaryReader ) : base( binaryReader )
+                internal FourVectorsStorage( BinaryReader binaryReader )
                 {
                     sphere = binaryReader.ReadVector3( );
                     invalidName_ = binaryReader.ReadBytes( 4 );
                 }
 
-                public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+                public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
                 {
                     using ( binaryWriter.BaseStream.Pin( ) )
                     {

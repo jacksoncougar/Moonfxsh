@@ -24,7 +24,7 @@ namespace Moonfish.Guerilla
             return elementSize;
         }
 
-        public static T[] ReadBlockArray<T>(BinaryReader binaryReader) where T : GuerillaBlock
+        public static T[] ReadBlockArray<T>(BinaryReader binaryReader) where T : IGuerilla
         {
             var elementSize = SizeOf( typeof ( T ) );
             var blamPointer = binaryReader.ReadBlamPointer( elementSize );
@@ -82,7 +82,7 @@ namespace Moonfish.Guerilla
         }
 
         public static int WriteBlockArray<T>( BinaryWriter binaryWriter, IList<T> blocks, int nextAddress )
-            where T : GuerillaBlock
+            where T : IGuerilla
         {
             var elementType = blocks.GetType( ).GetElementType( );
             var elementSize = blocks.Count > 0 ? blocks[ 0 ].SerializedSize : SizeOf( elementType );

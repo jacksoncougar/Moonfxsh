@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 188, Alignment = 4 )]
-    public class PlayerRepresentationBlockBase : GuerillaBlock
+    public class PlayerRepresentationBlockBase : IGuerilla
     {
         [TagReference( "mode" )] internal Moonfish.Tags.TagReference firstPersonHands;
         [TagReference( "mode" )] internal Moonfish.Tags.TagReference firstPersonBody;
@@ -26,12 +26,7 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "unit" )] internal Moonfish.Tags.TagReference thirdPersonUnit;
         internal Moonfish.Tags.StringID thirdPersonVariant;
 
-        public override int SerializedSize
-        {
-            get { return 188; }
-        }
-
-        internal PlayerRepresentationBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal PlayerRepresentationBlockBase( BinaryReader binaryReader )
         {
             firstPersonHands = binaryReader.ReadTagReference( );
             firstPersonBody = binaryReader.ReadTagReference( );
@@ -41,7 +36,7 @@ namespace Moonfish.Guerilla.Tags
             thirdPersonVariant = binaryReader.ReadStringID( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

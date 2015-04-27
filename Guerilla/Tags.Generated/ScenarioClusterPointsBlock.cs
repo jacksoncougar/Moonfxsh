@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class ScenarioClusterPointsBlockBase : GuerillaBlock
+    public class ScenarioClusterPointsBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 centroid;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal ScenarioClusterPointsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioClusterPointsBlockBase( BinaryReader binaryReader )
         {
             centroid = binaryReader.ReadVector3( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

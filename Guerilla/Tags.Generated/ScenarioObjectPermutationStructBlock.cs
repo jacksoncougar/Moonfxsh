@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,13 +11,13 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioObjectPermutationStructBlock : ScenarioObjectPermutationStructBlockBase
     {
-        public  ScenarioObjectPermutationStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioObjectPermutationStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 20, Alignment = 4)]
-    public class ScenarioObjectPermutationStructBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 20, Alignment = 4 )]
+    public class ScenarioObjectPermutationStructBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID variantName;
         internal ActiveChangeColors activeChangeColors;
@@ -24,31 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.RGBColor secondaryColor;
         internal Moonfish.Tags.RGBColor tertiaryColor;
         internal Moonfish.Tags.RGBColor quaternaryColor;
-        
-        public override int SerializedSize{get { return 20; }}
-        
-        internal  ScenarioObjectPermutationStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal ScenarioObjectPermutationStructBlockBase( BinaryReader binaryReader )
         {
-            variantName = binaryReader.ReadStringID();
-            activeChangeColors = (ActiveChangeColors)binaryReader.ReadInt32();
-            primaryColor = binaryReader.ReadRGBColor();
-            secondaryColor = binaryReader.ReadRGBColor();
-            tertiaryColor = binaryReader.ReadRGBColor();
-            quaternaryColor = binaryReader.ReadRGBColor();
+            variantName = binaryReader.ReadStringID( );
+            activeChangeColors = ( ActiveChangeColors ) binaryReader.ReadInt32( );
+            primaryColor = binaryReader.ReadRGBColor( );
+            secondaryColor = binaryReader.ReadRGBColor( );
+            tertiaryColor = binaryReader.ReadRGBColor( );
+            quaternaryColor = binaryReader.ReadRGBColor( );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(variantName);
-                binaryWriter.Write((Int32)activeChangeColors);
-                binaryWriter.Write(primaryColor);
-                binaryWriter.Write(secondaryColor);
-                binaryWriter.Write(tertiaryColor);
-                binaryWriter.Write(quaternaryColor);
+                binaryWriter.Write( variantName );
+                binaryWriter.Write( ( Int32 ) activeChangeColors );
+                binaryWriter.Write( primaryColor );
+                binaryWriter.Write( secondaryColor );
+                binaryWriter.Write( tertiaryColor );
+                binaryWriter.Write( quaternaryColor );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum ActiveChangeColors : int
         {

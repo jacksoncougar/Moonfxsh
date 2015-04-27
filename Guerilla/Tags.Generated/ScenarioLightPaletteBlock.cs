@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class ScenarioLightPaletteBlockBase : GuerillaBlock
+    public class ScenarioLightPaletteBlockBase : IGuerilla
     {
         [TagReference( "ligh" )] internal Moonfish.Tags.TagReference name;
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 40; }
-        }
-
-        internal ScenarioLightPaletteBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioLightPaletteBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadTagReference( );
             invalidName_ = binaryReader.ReadBytes( 32 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

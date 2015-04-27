@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class StructureBspFogPlaneBlockBase : GuerillaBlock
+    public class StructureBspFogPlaneBlockBase : IGuerilla
     {
         internal short scenarioPlanarFogIndex;
         internal byte[] invalidName_;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal short priority;
 
-        public override int SerializedSize
-        {
-            get { return 24; }
-        }
-
-        internal StructureBspFogPlaneBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureBspFogPlaneBlockBase( BinaryReader binaryReader )
         {
             scenarioPlanarFogIndex = binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             priority = binaryReader.ReadInt16( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

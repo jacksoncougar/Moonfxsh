@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,36 +11,37 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class SingleAnimationReferenceBlock : SingleAnimationReferenceBlockBase
     {
-        public  SingleAnimationReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public SingleAnimationReferenceBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class SingleAnimationReferenceBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 16, Alignment = 4 )]
+    public class SingleAnimationReferenceBlockBase : IGuerilla
     {
         internal Flags flags;
         internal int animationPeriodMilliseconds;
         internal ScreenAnimationKeyframeReferenceBlock[] keyframes;
-        
-        public override int SerializedSize{get { return 16; }}
-        
-        internal  SingleAnimationReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal SingleAnimationReferenceBlockBase( BinaryReader binaryReader )
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            animationPeriodMilliseconds = binaryReader.ReadInt32();
-            keyframes = Guerilla.ReadBlockArray<ScreenAnimationKeyframeReferenceBlock>(binaryReader);
+            flags = ( Flags ) binaryReader.ReadInt32( );
+            animationPeriodMilliseconds = binaryReader.ReadInt32( );
+            keyframes = Guerilla.ReadBlockArray<ScreenAnimationKeyframeReferenceBlock>( binaryReader );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(animationPeriodMilliseconds);
-                nextAddress = Guerilla.WriteBlockArray<ScreenAnimationKeyframeReferenceBlock>(binaryWriter, keyframes, nextAddress);
+                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write( animationPeriodMilliseconds );
+                nextAddress = Guerilla.WriteBlockArray<ScreenAnimationKeyframeReferenceBlock>( binaryWriter, keyframes,
+                    nextAddress );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

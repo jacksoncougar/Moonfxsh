@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 64, Alignment = 4 )]
-    public class WeaponTriggersBase : GuerillaBlock
+    public class WeaponTriggersBase : IGuerilla
     {
         internal Flags flags;
         internal Input input;
@@ -29,12 +29,7 @@ namespace Moonfish.Guerilla.Tags
         internal WeaponTriggerAutofireStructBlock autofire;
         internal WeaponTriggerChargingStructBlock charging;
 
-        public override int SerializedSize
-        {
-            get { return 64; }
-        }
-
-        internal WeaponTriggersBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal WeaponTriggersBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             input = ( Input ) binaryReader.ReadInt16( );
@@ -47,7 +42,7 @@ namespace Moonfish.Guerilla.Tags
             charging = new WeaponTriggerChargingStructBlock( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class SoundEffectTemplateAdditionalSoundInputBlockBase : GuerillaBlock
+    public class SoundEffectTemplateAdditionalSoundInputBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID dspEffect;
         internal MappingFunctionBlock lowFrequencySound;
         internal float timePeriodSeconds;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal SoundEffectTemplateAdditionalSoundInputBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal SoundEffectTemplateAdditionalSoundInputBlockBase( BinaryReader binaryReader )
         {
             dspEffect = binaryReader.ReadStringID( );
             lowFrequencySound = new MappingFunctionBlock( binaryReader );
             timePeriodSeconds = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

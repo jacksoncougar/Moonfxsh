@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class MaterialPhysicsBlockBase : GuerillaBlock
+    public class MaterialPhysicsBlockBase : IGuerilla
     {
         /// <summary>
         /// fraction of original velocity parallel to the ground after one tick
@@ -53,12 +53,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float groundDampFractionScale;
 
-        public override int SerializedSize
-        {
-            get { return 20; }
-        }
-
-        internal MaterialPhysicsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal MaterialPhysicsBlockBase( BinaryReader binaryReader )
         {
             groundFrictionScale = binaryReader.ReadSingle( );
             groundFrictionNormalK1Scale = binaryReader.ReadSingle( );
@@ -67,7 +62,7 @@ namespace Moonfish.Guerilla.Tags
             groundDampFractionScale = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class NodesBlockBase : GuerillaBlock
+    public class NodesBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Flags flags;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 sibling;
         internal Moonfish.Tags.ShortBlockIndex1 child;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal NodesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal NodesBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             flags = ( Flags ) binaryReader.ReadInt16( );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             child = binaryReader.ReadShortBlockIndex1( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

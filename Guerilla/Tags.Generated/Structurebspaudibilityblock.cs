@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 52, Alignment = 4 )]
-    public class StructureBspAudibilityBlockBase : GuerillaBlock
+    public class StructureBspAudibilityBlockBase : IGuerilla
     {
         internal int doorPortalCount;
         internal Moonfish.Model.Range clusterDistanceBounds;
@@ -27,12 +27,7 @@ namespace Moonfish.Guerilla.Tags
         internal EncodedClusterDistancesBlock[] clusterDistances;
         internal OccluderToMachineDoorMapping[] machineDoorMapping;
 
-        public override int SerializedSize
-        {
-            get { return 52; }
-        }
-
-        internal StructureBspAudibilityBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureBspAudibilityBlockBase( BinaryReader binaryReader )
         {
             doorPortalCount = binaryReader.ReadInt32( );
             clusterDistanceBounds = binaryReader.ReadRange( );
@@ -43,7 +38,7 @@ namespace Moonfish.Guerilla.Tags
             machineDoorMapping = Guerilla.ReadBlockArray<OccluderToMachineDoorMapping>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

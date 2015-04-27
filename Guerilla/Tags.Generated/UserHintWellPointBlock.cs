@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class UserHintWellPointBlockBase : GuerillaBlock
+    public class UserHintWellPointBlockBase : IGuerilla
     {
         internal Type type;
         internal byte[] invalidName_;
@@ -27,12 +27,7 @@ namespace Moonfish.Guerilla.Tags
         internal int sectorIndex;
         internal OpenTK.Vector2 normal;
 
-        public override int SerializedSize
-        {
-            get { return 32; }
-        }
-
-        internal UserHintWellPointBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal UserHintWellPointBlockBase( BinaryReader binaryReader )
         {
             type = ( Type ) binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
@@ -43,7 +38,7 @@ namespace Moonfish.Guerilla.Tags
             normal = binaryReader.ReadVector2( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

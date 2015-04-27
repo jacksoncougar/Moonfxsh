@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ScenarioUnitStructBlockBase : GuerillaBlock
+    public class ScenarioUnitStructBlockBase : IGuerilla
     {
         internal float bodyVitality01;
         internal Flags flags;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal ScenarioUnitStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioUnitStructBlockBase( BinaryReader binaryReader )
         {
             bodyVitality01 = binaryReader.ReadSingle( );
             flags = ( Flags ) binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

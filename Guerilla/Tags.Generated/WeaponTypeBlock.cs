@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 52, Alignment = 4 )]
-    public class WeaponTypeBlockBase : GuerillaBlock
+    public class WeaponTypeBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID label;
         internal AnimationEntryBlock[] actionsAABBCC;
@@ -27,12 +27,7 @@ namespace Moonfish.Guerilla.Tags
         internal PrecacheListBlock[] highPrecacheCCCCC;
         internal PrecacheListBlock[] lowPrecacheCCCCC;
 
-        public override int SerializedSize
-        {
-            get { return 52; }
-        }
-
-        internal WeaponTypeBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal WeaponTypeBlockBase( BinaryReader binaryReader )
         {
             label = binaryReader.ReadStringID( );
             actionsAABBCC = Guerilla.ReadBlockArray<AnimationEntryBlock>( binaryReader );
@@ -43,7 +38,7 @@ namespace Moonfish.Guerilla.Tags
             lowPrecacheCCCCC = Guerilla.ReadBlockArray<PrecacheListBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

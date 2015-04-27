@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 244, Alignment = 4 )]
-    public class ScenarioAtmosphericFogPaletteBase : GuerillaBlock
+    public class ScenarioAtmosphericFogPaletteBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ColorR8G8B8 color;
@@ -87,12 +87,7 @@ namespace Moonfish.Guerilla.Tags
         internal CameraImmersionFlags cameraImmersionFlags;
         internal byte[] invalidName_5;
 
-        public override int SerializedSize
-        {
-            get { return 244; }
-        }
-
-        internal ScenarioAtmosphericFogPaletteBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioAtmosphericFogPaletteBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             color = binaryReader.ReadColorR8G8B8( );
@@ -127,7 +122,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_5 = binaryReader.ReadBytes( 2 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class SectorLinkBlockBase : GuerillaBlock
+    public class SectorLinkBlockBase : IGuerilla
     {
         internal short vertex1;
         internal short vertex2;
@@ -28,12 +28,7 @@ namespace Moonfish.Guerilla.Tags
         internal short leftSector;
         internal short rightSector;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal SectorLinkBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal SectorLinkBlockBase( BinaryReader binaryReader )
         {
             vertex1 = binaryReader.ReadInt16( );
             vertex2 = binaryReader.ReadInt16( );
@@ -45,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
             rightSector = binaryReader.ReadInt16( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

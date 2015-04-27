@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,30 +11,29 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class VibrationFrequencyDefinitionStructBlock : VibrationFrequencyDefinitionStructBlockBase
     {
-        public  VibrationFrequencyDefinitionStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public VibrationFrequencyDefinitionStructBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class VibrationFrequencyDefinitionStructBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 12, Alignment = 4 )]
+    public class VibrationFrequencyDefinitionStructBlockBase : IGuerilla
     {
         internal float durationSeconds;
         internal MappingFunctionBlock dirtyWhore;
-        
-        public override int SerializedSize{get { return 12; }}
-        
-        internal  VibrationFrequencyDefinitionStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal VibrationFrequencyDefinitionStructBlockBase( BinaryReader binaryReader )
         {
-            durationSeconds = binaryReader.ReadSingle();
-            dirtyWhore = new MappingFunctionBlock(binaryReader);
+            durationSeconds = binaryReader.ReadSingle( );
+            dirtyWhore = new MappingFunctionBlock( binaryReader );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(durationSeconds);
-                dirtyWhore.Write(binaryWriter);
+                binaryWriter.Write( durationSeconds );
+                dirtyWhore.Write( binaryWriter );
                 return nextAddress;
             }
         }

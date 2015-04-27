@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 36, Alignment = 4 )]
-    public class WeaponTriggerChargingStructBlockBase : GuerillaBlock
+    public class WeaponTriggerChargingStructBlockBase : IGuerilla
     {
         /// <summary>
         /// the amount of time it takes for this trigger to become fully charged
@@ -52,12 +52,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         [TagReference( "jpt!" )] internal Moonfish.Tags.TagReference chargingDamageEffect;
 
-        public override int SerializedSize
-        {
-            get { return 36; }
-        }
-
-        internal WeaponTriggerChargingStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal WeaponTriggerChargingStructBlockBase( BinaryReader binaryReader )
         {
             chargingTimeSeconds = binaryReader.ReadSingle( );
             chargedTimeSeconds = binaryReader.ReadSingle( );
@@ -69,7 +64,7 @@ namespace Moonfish.Guerilla.Tags
             chargingDamageEffect = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

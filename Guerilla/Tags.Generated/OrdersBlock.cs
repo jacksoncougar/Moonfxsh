@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 124, Alignment = 4 )]
-    public class OrdersBlockBase : GuerillaBlock
+    public class OrdersBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal Moonfish.Tags.ShortBlockIndex1 style;
@@ -35,12 +35,7 @@ namespace Moonfish.Guerilla.Tags
         internal SpecialMovementBlock[] specialMovement;
         internal OrderEndingBlock[] orderEndings;
 
-        public override int SerializedSize
-        {
-            get { return 124; }
-        }
-
-        internal OrdersBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal OrdersBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadString32( );
             style = binaryReader.ReadShortBlockIndex1( );
@@ -59,7 +54,7 @@ namespace Moonfish.Guerilla.Tags
             orderEndings = Guerilla.ReadBlockArray<OrderEndingBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

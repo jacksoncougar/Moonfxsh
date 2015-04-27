@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class OldUnusedObjectIdentifiersBlockBase : GuerillaBlock
+    public class OldUnusedObjectIdentifiersBlockBase : IGuerilla
     {
         internal ScenarioObjectIdStructBlock objectID;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal OldUnusedObjectIdentifiersBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal OldUnusedObjectIdentifiersBlockBase( BinaryReader binaryReader )
         {
             objectID = new ScenarioObjectIdStructBlock( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

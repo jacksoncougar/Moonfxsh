@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class UnitBoostStructBlockBase : GuerillaBlock
+    public class UnitBoostStructBlockBase : IGuerilla
     {
         internal float boostPeakPower;
         internal float boostRisePower;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal float boostFallPower;
         internal float deadTime;
 
-        public override int SerializedSize
-        {
-            get { return 20; }
-        }
-
-        internal UnitBoostStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal UnitBoostStructBlockBase( BinaryReader binaryReader )
         {
             boostPeakPower = binaryReader.ReadSingle( );
             boostRisePower = binaryReader.ReadSingle( );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             deadTime = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

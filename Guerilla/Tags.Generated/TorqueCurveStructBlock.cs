@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 24, Alignment = 4 )]
-    public class TorqueCurveStructBlockBase : GuerillaBlock
+    public class TorqueCurveStructBlockBase : IGuerilla
     {
         internal float minTorque;
         internal float maxTorque;
@@ -31,12 +31,7 @@ namespace Moonfish.Guerilla.Tags
 
         internal float torqueAt2XMaxAngularVelocity;
 
-        public override int SerializedSize
-        {
-            get { return 24; }
-        }
-
-        internal TorqueCurveStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal TorqueCurveStructBlockBase( BinaryReader binaryReader )
         {
             minTorque = binaryReader.ReadSingle( );
             maxTorque = binaryReader.ReadSingle( );
@@ -46,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             torqueAt2XMaxAngularVelocity = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

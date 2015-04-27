@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class VisibilityStructBlockBase : GuerillaBlock
+    public class VisibilityStructBlockBase : IGuerilla
     {
         internal short projectionCount;
         internal short clusterCount;
@@ -28,12 +28,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] clusterRemapTable;
         internal byte[] visibilityVolumes;
 
-        public override int SerializedSize
-        {
-            get { return 40; }
-        }
-
-        internal VisibilityStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal VisibilityStructBlockBase( BinaryReader binaryReader )
         {
             projectionCount = binaryReader.ReadInt16( );
             clusterCount = binaryReader.ReadInt16( );
@@ -45,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
             visibilityVolumes = Guerilla.ReadData( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

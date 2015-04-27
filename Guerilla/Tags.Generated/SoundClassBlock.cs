@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 92, Alignment = 4 )]
-    public class SoundClassBlockBase : GuerillaBlock
+    public class SoundClassBlockBase : IGuerilla
     {
         /// <summary>
         /// maximum number of sounds playing per individual sound tag
@@ -72,12 +72,7 @@ namespace Moonfish.Guerilla.Tags
         internal float obstructionMaxBend;
         internal float occlusionMaxBend;
 
-        public override int SerializedSize
-        {
-            get { return 92; }
-        }
-
-        internal SoundClassBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal SoundClassBlockBase( BinaryReader binaryReader )
         {
             maxSoundsPerTag116 = binaryReader.ReadInt16( );
             maxSoundsPerObject116 = binaryReader.ReadInt16( );
@@ -106,7 +101,7 @@ namespace Moonfish.Guerilla.Tags
             occlusionMaxBend = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

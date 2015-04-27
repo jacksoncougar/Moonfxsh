@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 132, Alignment = 4 )]
-    public class RenderModelBlockBase : GuerillaBlock
+    public class RenderModelBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Flags flags;
@@ -60,12 +60,7 @@ namespace Moonfish.Guerilla.Tags
         internal PrtInfoBlock[] pRTInfo;
         internal SectionRenderLeavesBlock[] sectionRenderLeaves;
 
-        public override int SerializedSize
-        {
-            get { return 132; }
-        }
-
-        internal RenderModelBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal RenderModelBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             flags = ( Flags ) binaryReader.ReadInt16( );
@@ -95,7 +90,7 @@ namespace Moonfish.Guerilla.Tags
             sectionRenderLeaves = Guerilla.ReadBlockArray<SectionRenderLeavesBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

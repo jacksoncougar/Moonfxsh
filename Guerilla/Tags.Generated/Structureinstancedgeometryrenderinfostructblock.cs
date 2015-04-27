@@ -18,19 +18,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 92, Alignment = 4 )]
-    public class StructureInstancedGeometryRenderInfoStructBlockBase : GuerillaBlock
+    public class StructureInstancedGeometryRenderInfoStructBlockBase : IGuerilla
     {
         internal GlobalGeometrySectionInfoStructBlock sectionInfo;
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
         internal StructureBspClusterDataBlockNew[] renderData;
         internal GlobalGeometrySectionStripIndexBlock[] indexReorderTable;
 
-        public override int SerializedSize
-        {
-            get { return 92; }
-        }
-
-        internal StructureInstancedGeometryRenderInfoStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureInstancedGeometryRenderInfoStructBlockBase( BinaryReader binaryReader )
         {
             sectionInfo = new GlobalGeometrySectionInfoStructBlock( binaryReader );
             geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock( binaryReader );
@@ -38,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
             indexReorderTable = Guerilla.ReadBlockArray<GlobalGeometrySectionStripIndexBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

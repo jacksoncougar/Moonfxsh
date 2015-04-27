@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class PointToPathCurveBlockBase : GuerillaBlock
+    public class PointToPathCurveBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 nodeIndex;
         internal byte[] invalidName_;
         internal PointToPathCurvePointBlock[] points;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal PointToPathCurveBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal PointToPathCurveBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             nodeIndex = binaryReader.ReadShortBlockIndex1( );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             points = Guerilla.ReadBlockArray<PointToPathCurvePointBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

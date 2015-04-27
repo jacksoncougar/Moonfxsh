@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class MoonfishXboxAnimationRawBlockBase : GuerillaBlock
+    public class MoonfishXboxAnimationRawBlockBase : IGuerilla
     {
         internal Moonfish.Tags.TagIdent ownerTag;
         internal int blockSize;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal int unknown;
         internal int unknown1;
 
-        public override int SerializedSize
-        {
-            get { return 20; }
-        }
-
-        internal MoonfishXboxAnimationRawBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal MoonfishXboxAnimationRawBlockBase( BinaryReader binaryReader )
         {
             ownerTag = binaryReader.ReadTagIdent( );
             blockSize = binaryReader.ReadInt32( );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             unknown1 = binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

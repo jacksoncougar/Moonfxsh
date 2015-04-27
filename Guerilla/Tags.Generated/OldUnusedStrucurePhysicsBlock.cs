@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 44, Alignment = 4 )]
-    public class OldUnusedStrucurePhysicsBlockBase : GuerillaBlock
+    public class OldUnusedStrucurePhysicsBlockBase : IGuerilla
     {
         internal byte[] moppCode;
         internal OldUnusedObjectIdentifiersBlock[] evironmentObjectIdentifiers;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 moppBoundsMin;
         internal OpenTK.Vector3 moppBoundsMax;
 
-        public override int SerializedSize
-        {
-            get { return 44; }
-        }
-
-        internal OldUnusedStrucurePhysicsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal OldUnusedStrucurePhysicsBlockBase( BinaryReader binaryReader )
         {
             moppCode = Guerilla.ReadData( binaryReader );
             evironmentObjectIdentifiers = Guerilla.ReadBlockArray<OldUnusedObjectIdentifiersBlock>( binaryReader );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             moppBoundsMax = binaryReader.ReadVector3( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

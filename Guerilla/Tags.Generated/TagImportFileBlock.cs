@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 528, Alignment = 4 )]
-    public class TagImportFileBlockBase : GuerillaBlock
+    public class TagImportFileBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String256 path;
         internal Moonfish.Tags.String32 modificationDate;
@@ -28,12 +28,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] zippedData;
         internal byte[] invalidName_1;
 
-        public override int SerializedSize
-        {
-            get { return 528; }
-        }
-
-        internal TagImportFileBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal TagImportFileBlockBase( BinaryReader binaryReader )
         {
             path = binaryReader.ReadString256( );
             modificationDate = binaryReader.ReadString32( );
@@ -45,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes( 128 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

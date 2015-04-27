@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 40, Alignment = 4 )]
-    public class ScenarioSoundSceneryPaletteBlockBase : GuerillaBlock
+    public class ScenarioSoundSceneryPaletteBlockBase : IGuerilla
     {
         [TagReference( "ssce" )] internal Moonfish.Tags.TagReference name;
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 40; }
-        }
-
-        internal ScenarioSoundSceneryPaletteBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioSoundSceneryPaletteBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadTagReference( );
             invalidName_ = binaryReader.ReadBytes( 32 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

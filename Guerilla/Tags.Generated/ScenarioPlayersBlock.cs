@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 52, Alignment = 4 )]
-    public class ScenarioPlayersBlockBase : GuerillaBlock
+    public class ScenarioPlayersBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 position;
         internal float facingDegrees;
@@ -36,12 +36,7 @@ namespace Moonfish.Guerilla.Tags
         internal CampaignPlayerType campaignPlayerType;
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 52; }
-        }
-
-        internal ScenarioPlayersBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioPlayersBlockBase( BinaryReader binaryReader )
         {
             position = binaryReader.ReadVector3( );
             facingDegrees = binaryReader.ReadSingle( );
@@ -61,7 +56,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 6 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

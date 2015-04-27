@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,33 +11,32 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioBspSwitchTransitionVolumeBlock : ScenarioBspSwitchTransitionVolumeBlockBase
     {
-        public  ScenarioBspSwitchTransitionVolumeBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioBspSwitchTransitionVolumeBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class ScenarioBspSwitchTransitionVolumeBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class ScenarioBspSwitchTransitionVolumeBlockBase : IGuerilla
     {
         internal int bSPIndexKey;
         internal Moonfish.Tags.ShortBlockIndex1 triggerVolume;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 8; }}
-        
-        internal  ScenarioBspSwitchTransitionVolumeBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal ScenarioBspSwitchTransitionVolumeBlockBase( BinaryReader binaryReader )
         {
-            bSPIndexKey = binaryReader.ReadInt32();
-            triggerVolume = binaryReader.ReadShortBlockIndex1();
-            invalidName_ = binaryReader.ReadBytes(2);
+            bSPIndexKey = binaryReader.ReadInt32( );
+            triggerVolume = binaryReader.ReadShortBlockIndex1( );
+            invalidName_ = binaryReader.ReadBytes( 2 );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(bSPIndexKey);
-                binaryWriter.Write(triggerVolume);
-                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write( bSPIndexKey );
+                binaryWriter.Write( triggerVolume );
+                binaryWriter.Write( invalidName_, 0, 2 );
                 return nextAddress;
             }
         }

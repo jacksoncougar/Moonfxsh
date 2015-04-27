@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 88, Alignment = 4 )]
-    public class LoopingSoundTrackBlockBase : GuerillaBlock
+    public class LoopingSoundTrackBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Flags flags;
@@ -36,12 +36,7 @@ namespace Moonfish.Guerilla.Tags
         internal float altCrossfadeDurationSeconds;
         internal float altFadeOutDurationSeconds;
 
-        public override int SerializedSize
-        {
-            get { return 88; }
-        }
-
-        internal LoopingSoundTrackBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal LoopingSoundTrackBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             flags = ( Flags ) binaryReader.ReadInt32( );
@@ -61,7 +56,7 @@ namespace Moonfish.Guerilla.Tags
             altFadeOutDurationSeconds = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

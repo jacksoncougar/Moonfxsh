@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,39 +8,33 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class ModelVariantObjectBlock : ModelVariantObjectBlockBase
+    public  partial class ModelVariantObjectBlock : ModelVariantObjectBlockBase
     {
-        public ModelVariantObjectBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ModelVariantObjectBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class ModelVariantObjectBlockBase : GuerillaBlock
+    [LayoutAttribute(Size = 16, Alignment = 4)]
+    public class ModelVariantObjectBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID parentMarker;
         internal Moonfish.Tags.StringID childMarker;
-        [TagReference( "obje" )] internal Moonfish.Tags.TagReference childObject;
-
-        public override int SerializedSize
+        [TagReference("obje")]
+        internal Moonfish.Tags.TagReference childObject;
+        internal  ModelVariantObjectBlockBase(BinaryReader binaryReader)
         {
-            get { return 16; }
+            parentMarker = binaryReader.ReadStringID();
+            childMarker = binaryReader.ReadStringID();
+            childObject = binaryReader.ReadTagReference();
         }
-
-        internal ModelVariantObjectBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            parentMarker = binaryReader.ReadStringID( );
-            childMarker = binaryReader.ReadStringID( );
-            childObject = binaryReader.ReadTagReference( );
-        }
-
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
-        {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( parentMarker );
-                binaryWriter.Write( childMarker );
-                binaryWriter.Write( childObject );
+                binaryWriter.Write(parentMarker);
+                binaryWriter.Write(childMarker);
+                binaryWriter.Write(childObject);
                 return nextAddress;
             }
         }

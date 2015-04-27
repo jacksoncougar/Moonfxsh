@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 80, Alignment = 4 )]
-    public class OldObjectFunctionBlockBase : GuerillaBlock
+    public class OldObjectFunctionBlockBase : IGuerilla
     {
         internal byte[] invalidName_;
         internal Moonfish.Tags.StringID invalidName_0;
 
-        public override int SerializedSize
-        {
-            get { return 80; }
-        }
-
-        internal OldObjectFunctionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal OldObjectFunctionBlockBase( BinaryReader binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 76 );
             invalidName_0 = binaryReader.ReadStringID( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

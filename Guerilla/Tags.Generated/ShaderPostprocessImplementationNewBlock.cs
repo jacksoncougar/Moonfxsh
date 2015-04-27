@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 10, Alignment = 4 )]
-    public class ShaderPostprocessImplementationNewBlockBase : GuerillaBlock
+    public class ShaderPostprocessImplementationNewBlockBase : IGuerilla
     {
         internal TagBlockIndexStructBlock bitmapTransforms;
         internal TagBlockIndexStructBlock renderStates;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal TagBlockIndexStructBlock pixelConstants;
         internal TagBlockIndexStructBlock vertexConstants;
 
-        public override int SerializedSize
-        {
-            get { return 10; }
-        }
-
-        internal ShaderPostprocessImplementationNewBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ShaderPostprocessImplementationNewBlockBase( BinaryReader binaryReader )
         {
             bitmapTransforms = new TagBlockIndexStructBlock( binaryReader );
             renderStates = new TagBlockIndexStructBlock( binaryReader );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             vertexConstants = new TagBlockIndexStructBlock( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

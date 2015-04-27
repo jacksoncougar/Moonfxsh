@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 236, Alignment = 4 )]
-    public class WeaponBarrelsBase : GuerillaBlock
+    public class WeaponBarrelsBase : IGuerilla
     {
         internal Flags flags;
 
@@ -188,12 +188,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal BarrelFiringEffectBlock[] firingEffects;
 
-        public override int SerializedSize
-        {
-            get { return 236; }
-        }
-
-        internal WeaponBarrelsBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal WeaponBarrelsBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             roundsPerSecond = binaryReader.ReadRange( );
@@ -247,7 +242,7 @@ namespace Moonfish.Guerilla.Tags
             firingEffects = Guerilla.ReadBlockArray<BarrelFiringEffectBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

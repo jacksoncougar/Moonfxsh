@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,42 +11,42 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPassVertexShaderConstantBlock : ShaderPassVertexShaderConstantBlockBase
     {
-        public  ShaderPassVertexShaderConstantBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderPassVertexShaderConstantBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class ShaderPassVertexShaderConstantBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 12, Alignment = 4 )]
+    public class ShaderPassVertexShaderConstantBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID sourceParameter;
         internal ScaleByTextureStage scaleByTextureStage;
         internal RegisterBank registerBank;
         internal short registerIndex;
         internal ComponentMask componentMask;
-        
-        public override int SerializedSize{get { return 12; }}
-        
-        internal  ShaderPassVertexShaderConstantBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal ShaderPassVertexShaderConstantBlockBase( BinaryReader binaryReader )
         {
-            sourceParameter = binaryReader.ReadStringID();
-            scaleByTextureStage = (ScaleByTextureStage)binaryReader.ReadInt16();
-            registerBank = (RegisterBank)binaryReader.ReadInt16();
-            registerIndex = binaryReader.ReadInt16();
-            componentMask = (ComponentMask)binaryReader.ReadInt16();
+            sourceParameter = binaryReader.ReadStringID( );
+            scaleByTextureStage = ( ScaleByTextureStage ) binaryReader.ReadInt16( );
+            registerBank = ( RegisterBank ) binaryReader.ReadInt16( );
+            registerIndex = binaryReader.ReadInt16( );
+            componentMask = ( ComponentMask ) binaryReader.ReadInt16( );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(sourceParameter);
-                binaryWriter.Write((Int16)scaleByTextureStage);
-                binaryWriter.Write((Int16)registerBank);
-                binaryWriter.Write(registerIndex);
-                binaryWriter.Write((Int16)componentMask);
+                binaryWriter.Write( sourceParameter );
+                binaryWriter.Write( ( Int16 ) scaleByTextureStage );
+                binaryWriter.Write( ( Int16 ) registerBank );
+                binaryWriter.Write( registerIndex );
+                binaryWriter.Write( ( Int16 ) componentMask );
                 return nextAddress;
             }
         }
+
         internal enum ScaleByTextureStage : short
         {
             None = 0,
@@ -54,11 +55,13 @@ namespace Moonfish.Guerilla.Tags
             Stage2 = 3,
             Stage3 = 4,
         };
+
         internal enum RegisterBank : short
         {
             Vn015 = 0,
             Cn012 = 1,
         };
+
         internal enum ComponentMask : short
         {
             XValue = 0,

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 156, Alignment = 4 )]
-    public class ScenarioStartingEquipmentBlockBase : GuerillaBlock
+    public class ScenarioStartingEquipmentBlockBase : IGuerilla
     {
         internal Flags flags;
         internal GameType1 gameType1;
@@ -33,12 +33,7 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "itmc" )] internal Moonfish.Tags.TagReference itemCollection6;
         internal byte[] invalidName_0;
 
-        public override int SerializedSize
-        {
-            get { return 156; }
-        }
-
-        internal ScenarioStartingEquipmentBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioStartingEquipmentBlockBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             gameType1 = ( GameType1 ) binaryReader.ReadInt16( );
@@ -55,7 +50,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes( 48 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

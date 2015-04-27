@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class UserHintPolygonBlockBase : GuerillaBlock
+    public class UserHintPolygonBlockBase : IGuerilla
     {
         internal Flags flags;
         internal UserHintPointBlock[] points;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal UserHintPolygonBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal UserHintPolygonBlockBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             points = Guerilla.ReadBlockArray<UserHintPointBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

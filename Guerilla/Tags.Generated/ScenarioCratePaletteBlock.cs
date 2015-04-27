@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,31 +11,29 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioCratePaletteBlock : ScenarioCratePaletteBlockBase
     {
-        public  ScenarioCratePaletteBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioCratePaletteBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 40, Alignment = 4)]
-    public class ScenarioCratePaletteBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 40, Alignment = 4 )]
+    public class ScenarioCratePaletteBlockBase : IGuerilla
     {
-        [TagReference("bloc")]
-        internal Moonfish.Tags.TagReference name;
+        [TagReference( "bloc" )] internal Moonfish.Tags.TagReference name;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 40; }}
-        
-        internal  ScenarioCratePaletteBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal ScenarioCratePaletteBlockBase( BinaryReader binaryReader )
         {
-            name = binaryReader.ReadTagReference();
-            invalidName_ = binaryReader.ReadBytes(32);
+            name = binaryReader.ReadTagReference( );
+            invalidName_ = binaryReader.ReadBytes( 32 );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(name);
-                binaryWriter.Write(invalidName_, 0, 32);
+                binaryWriter.Write( name );
+                binaryWriter.Write( invalidName_, 0, 32 );
                 return nextAddress;
             }
         }

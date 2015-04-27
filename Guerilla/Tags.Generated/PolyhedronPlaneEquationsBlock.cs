@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 16 )]
-    public class PolyhedronPlaneEquationsBlockBase : GuerillaBlock
+    public class PolyhedronPlaneEquationsBlockBase : IGuerilla
     {
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal PolyhedronPlaneEquationsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal PolyhedronPlaneEquationsBlockBase( BinaryReader binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 16 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

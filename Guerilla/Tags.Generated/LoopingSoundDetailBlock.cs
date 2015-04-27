@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 52, Alignment = 4 )]
-    public class LoopingSoundDetailBlockBase : GuerillaBlock
+    public class LoopingSoundDetailBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         [TagReference( "snd!" )] internal Moonfish.Tags.TagReference sound;
@@ -45,12 +45,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal Moonfish.Model.Range distanceBoundsWorldUnits;
 
-        public override int SerializedSize
-        {
-            get { return 52; }
-        }
-
-        internal LoopingSoundDetailBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal LoopingSoundDetailBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             sound = binaryReader.ReadTagReference( );
@@ -62,7 +57,7 @@ namespace Moonfish.Guerilla.Tags
             distanceBoundsWorldUnits = binaryReader.ReadRange( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

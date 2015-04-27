@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class ParticleControllerParametersBase : GuerillaBlock
+    public class ParticleControllerParametersBase : IGuerilla
     {
         internal int parameterId;
         internal ParticlePropertyScalarStructNewBlock property;
 
-        public override int SerializedSize
-        {
-            get { return 20; }
-        }
-
-        internal ParticleControllerParametersBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ParticleControllerParametersBase( BinaryReader binaryReader )
         {
             parameterId = binaryReader.ReadInt32( );
             property = new ParticlePropertyScalarStructNewBlock( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

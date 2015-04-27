@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 152, Alignment = 4 )]
-    public class MultiplayerInformationBlockBase : GuerillaBlock
+    public class MultiplayerInformationBlockBase : IGuerilla
     {
         [TagReference( "item" )] internal Moonfish.Tags.TagReference flag;
         [TagReference( "unit" )] internal Moonfish.Tags.TagReference unit;
@@ -35,12 +35,7 @@ namespace Moonfish.Guerilla.Tags
         internal GNullBlock[] gNullBlock;
         internal GameEngineKingEventBlock[] kingEvents;
 
-        public override int SerializedSize
-        {
-            get { return 152; }
-        }
-
-        internal MultiplayerInformationBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal MultiplayerInformationBlockBase( BinaryReader binaryReader )
         {
             flag = binaryReader.ReadTagReference( );
             unit = binaryReader.ReadTagReference( );
@@ -59,7 +54,7 @@ namespace Moonfish.Guerilla.Tags
             kingEvents = Guerilla.ReadBlockArray<GameEngineKingEventBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

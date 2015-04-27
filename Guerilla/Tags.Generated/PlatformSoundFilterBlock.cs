@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 72, Alignment = 4 )]
-    public class PlatformSoundFilterBlockBase : GuerillaBlock
+    public class PlatformSoundFilterBlockBase : IGuerilla
     {
         internal FilterType filterType;
         internal int filterWidth07;
@@ -26,12 +26,7 @@ namespace Moonfish.Guerilla.Tags
         internal SoundPlaybackParameterDefinitionBlock rightFilterFrequency;
         internal SoundPlaybackParameterDefinitionBlock rightFilterGain;
 
-        public override int SerializedSize
-        {
-            get { return 72; }
-        }
-
-        internal PlatformSoundFilterBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal PlatformSoundFilterBlockBase( BinaryReader binaryReader )
         {
             filterType = ( FilterType ) binaryReader.ReadInt32( );
             filterWidth07 = binaryReader.ReadInt32( );
@@ -41,7 +36,7 @@ namespace Moonfish.Guerilla.Tags
             rightFilterGain = new SoundPlaybackParameterDefinitionBlock( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

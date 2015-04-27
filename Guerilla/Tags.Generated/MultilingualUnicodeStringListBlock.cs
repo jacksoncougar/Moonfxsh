@@ -26,25 +26,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 52, Alignment = 4 )]
-    public class MultilingualUnicodeStringListBlockBase : GuerillaBlock
+    public class MultilingualUnicodeStringListBlockBase : IGuerilla
     {
         internal MultilingualUnicodeStringReferenceBlock[] stringReferences;
         internal byte[] stringDataUtf8;
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 52; }
-        }
-
-        internal MultilingualUnicodeStringListBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal MultilingualUnicodeStringListBlockBase( BinaryReader binaryReader )
         {
             stringReferences = Guerilla.ReadBlockArray<MultilingualUnicodeStringReferenceBlock>( binaryReader );
             stringDataUtf8 = Guerilla.ReadData( binaryReader );
             invalidName_ = binaryReader.ReadBytes( 36 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

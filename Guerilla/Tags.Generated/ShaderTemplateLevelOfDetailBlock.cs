@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,30 +11,30 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderTemplateLevelOfDetailBlock : ShaderTemplateLevelOfDetailBlockBase
     {
-        public  ShaderTemplateLevelOfDetailBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderTemplateLevelOfDetailBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class ShaderTemplateLevelOfDetailBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 12, Alignment = 4 )]
+    public class ShaderTemplateLevelOfDetailBlockBase : IGuerilla
     {
         internal float projectedDiameterPixels;
         internal ShaderTemplatePassReferenceBlock[] pass;
-        
-        public override int SerializedSize{get { return 12; }}
-        
-        internal  ShaderTemplateLevelOfDetailBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal ShaderTemplateLevelOfDetailBlockBase( BinaryReader binaryReader )
         {
-            projectedDiameterPixels = binaryReader.ReadSingle();
-            pass = Guerilla.ReadBlockArray<ShaderTemplatePassReferenceBlock>(binaryReader);
+            projectedDiameterPixels = binaryReader.ReadSingle( );
+            pass = Guerilla.ReadBlockArray<ShaderTemplatePassReferenceBlock>( binaryReader );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(projectedDiameterPixels);
-                nextAddress = Guerilla.WriteBlockArray<ShaderTemplatePassReferenceBlock>(binaryWriter, pass, nextAddress);
+                binaryWriter.Write( projectedDiameterPixels );
+                nextAddress = Guerilla.WriteBlockArray<ShaderTemplatePassReferenceBlock>( binaryWriter, pass,
+                    nextAddress );
                 return nextAddress;
             }
         }

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 56, Alignment = 4 )]
-    public class OrderCompletionConditionBase : GuerillaBlock
+    public class OrderCompletionConditionBase : IGuerilla
     {
         internal RuleType ruleType;
         internal Moonfish.Tags.ShortBlockIndex1 squad;
@@ -31,12 +31,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal Flags flags;
 
-        public override int SerializedSize
-        {
-            get { return 56; }
-        }
-
-        internal OrderCompletionConditionBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal OrderCompletionConditionBase( BinaryReader binaryReader )
         {
             ruleType = ( RuleType ) binaryReader.ReadInt16( );
             squad = binaryReader.ReadShortBlockIndex1( );
@@ -51,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
             flags = ( Flags ) binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

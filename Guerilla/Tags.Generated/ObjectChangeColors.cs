@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class ObjectChangeColorsBase : GuerillaBlock
+    public class ObjectChangeColorsBase : IGuerilla
     {
         internal ObjectChangeColorInitialPermutation[] initialPermutations;
         internal ObjectChangeColorFunction[] functions;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal ObjectChangeColorsBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ObjectChangeColorsBase( BinaryReader binaryReader )
         {
             initialPermutations = Guerilla.ReadBlockArray<ObjectChangeColorInitialPermutation>( binaryReader );
             functions = Guerilla.ReadBlockArray<ObjectChangeColorFunction>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

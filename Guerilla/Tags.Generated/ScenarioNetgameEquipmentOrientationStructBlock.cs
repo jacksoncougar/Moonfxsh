@@ -18,21 +18,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class ScenarioNetgameEquipmentOrientationStructBlockBase : GuerillaBlock
+    public class ScenarioNetgameEquipmentOrientationStructBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 orientation;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal ScenarioNetgameEquipmentOrientationStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioNetgameEquipmentOrientationStructBlockBase( BinaryReader binaryReader )
         {
             orientation = binaryReader.ReadVector3( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

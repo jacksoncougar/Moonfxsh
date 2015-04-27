@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class UnitLipsyncScalesStructBlockBase : GuerillaBlock
+    public class UnitLipsyncScalesStructBlockBase : IGuerilla
     {
         internal float attackWeight;
         internal float decayWeight;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal UnitLipsyncScalesStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal UnitLipsyncScalesStructBlockBase( BinaryReader binaryReader )
         {
             attackWeight = binaryReader.ReadSingle( );
             decayWeight = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

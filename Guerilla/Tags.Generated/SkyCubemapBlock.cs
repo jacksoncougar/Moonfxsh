@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,34 +11,33 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class SkyCubemapBlock : SkyCubemapBlockBase
     {
-        public  SkyCubemapBlock(BinaryReader binaryReader): base(binaryReader)
+        public SkyCubemapBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class SkyCubemapBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 12, Alignment = 4 )]
+    public class SkyCubemapBlockBase : IGuerilla
     {
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference cubeMapReference;
+        [TagReference( "bitm" )] internal Moonfish.Tags.TagReference cubeMapReference;
+
         /// <summary>
         /// 0 Defaults to 1.
         /// </summary>
         internal float powerScale;
-        
-        public override int SerializedSize{get { return 12; }}
-        
-        internal  SkyCubemapBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal SkyCubemapBlockBase( BinaryReader binaryReader )
         {
-            cubeMapReference = binaryReader.ReadTagReference();
-            powerScale = binaryReader.ReadSingle();
+            cubeMapReference = binaryReader.ReadTagReference( );
+            powerScale = binaryReader.ReadSingle( );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(cubeMapReference);
-                binaryWriter.Write(powerScale);
+                binaryWriter.Write( cubeMapReference );
+                binaryWriter.Write( powerScale );
                 return nextAddress;
             }
         }

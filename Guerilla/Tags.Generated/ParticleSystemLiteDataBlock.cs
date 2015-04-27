@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 48, Alignment = 4 )]
-    public class ParticleSystemLiteDataBlockBase : GuerillaBlock
+    public class ParticleSystemLiteDataBlockBase : IGuerilla
     {
         internal ParticlesRenderDataBlock[] particlesRenderData;
         internal ParticlesUpdateDataBlock[] particlesOtherData;
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 48; }
-        }
-
-        internal ParticleSystemLiteDataBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ParticleSystemLiteDataBlockBase( BinaryReader binaryReader )
         {
             particlesRenderData = Guerilla.ReadBlockArray<ParticlesRenderDataBlock>( binaryReader );
             particlesOtherData = Guerilla.ReadBlockArray<ParticlesUpdateDataBlock>( binaryReader );
             invalidName_ = binaryReader.ReadBytes( 32 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

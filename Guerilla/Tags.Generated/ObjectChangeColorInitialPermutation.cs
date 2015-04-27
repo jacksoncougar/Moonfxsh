@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class ObjectChangeColorInitialPermutationBase : GuerillaBlock
+    public class ObjectChangeColorInitialPermutationBase : IGuerilla
     {
         internal float weight;
         internal Moonfish.Tags.ColorR8G8B8 colorLowerBound;
@@ -28,12 +28,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal Moonfish.Tags.StringID variantName;
 
-        public override int SerializedSize
-        {
-            get { return 32; }
-        }
-
-        internal ObjectChangeColorInitialPermutationBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ObjectChangeColorInitialPermutationBase( BinaryReader binaryReader )
         {
             weight = binaryReader.ReadSingle( );
             colorLowerBound = binaryReader.ReadColorR8G8B8( );
@@ -41,7 +36,7 @@ namespace Moonfish.Guerilla.Tags
             variantName = binaryReader.ReadStringID( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

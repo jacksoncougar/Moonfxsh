@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class ObjectAiPropertiesBlockBase : GuerillaBlock
+    public class ObjectAiPropertiesBlockBase : IGuerilla
     {
         internal AiFlags aiFlags;
 
@@ -30,12 +30,7 @@ namespace Moonfish.Guerilla.Tags
         internal AiSize aiSize;
         internal LeapJumpSpeed leapJumpSpeed;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal ObjectAiPropertiesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ObjectAiPropertiesBlockBase( BinaryReader binaryReader )
         {
             aiFlags = ( AiFlags ) binaryReader.ReadInt32( );
             aiTypeName = binaryReader.ReadStringID( );
@@ -44,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             leapJumpSpeed = ( LeapJumpSpeed ) binaryReader.ReadInt16( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

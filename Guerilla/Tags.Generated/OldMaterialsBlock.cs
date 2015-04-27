@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 36, Alignment = 4 )]
-    public class OldMaterialsBlockBase : GuerillaBlock
+    public class OldMaterialsBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID newMaterialName;
         internal Moonfish.Tags.StringID newGeneralMaterialName;
@@ -49,12 +49,7 @@ namespace Moonfish.Guerilla.Tags
 
         [TagReference( "snd!" )] internal Moonfish.Tags.TagReference meleeHitSound;
 
-        public override int SerializedSize
-        {
-            get { return 36; }
-        }
-
-        internal OldMaterialsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal OldMaterialsBlockBase( BinaryReader binaryReader )
         {
             newMaterialName = binaryReader.ReadStringID( );
             newGeneralMaterialName = binaryReader.ReadStringID( );
@@ -66,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
             meleeHitSound = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

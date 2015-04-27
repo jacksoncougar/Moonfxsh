@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class LookFunctionBlockBase : GuerillaBlock
+    public class LookFunctionBlockBase : IGuerilla
     {
         internal float scale;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal LookFunctionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal LookFunctionBlockBase( BinaryReader binaryReader )
         {
             scale = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

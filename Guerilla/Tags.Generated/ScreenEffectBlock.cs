@@ -26,19 +26,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 144, Alignment = 4 )]
-    public class ScreenEffectBlockBase : GuerillaBlock
+    public class ScreenEffectBlockBase : IGuerilla
     {
         internal byte[] invalidName_;
         [TagReference( "shad" )] internal Moonfish.Tags.TagReference shader;
         internal byte[] invalidName_0;
         internal RasterizerScreenEffectPassReferenceBlock[] passReferences;
 
-        public override int SerializedSize
-        {
-            get { return 144; }
-        }
-
-        internal ScreenEffectBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScreenEffectBlockBase( BinaryReader binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 64 );
             shader = binaryReader.ReadTagReference( );
@@ -46,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             passReferences = Guerilla.ReadBlockArray<RasterizerScreenEffectPassReferenceBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

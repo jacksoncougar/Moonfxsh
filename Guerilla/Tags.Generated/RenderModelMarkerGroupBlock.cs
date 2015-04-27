@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class RenderModelMarkerGroupBlockBase : GuerillaBlock
+    public class RenderModelMarkerGroupBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal RenderModelMarkerBlock[] markers;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal RenderModelMarkerGroupBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal RenderModelMarkerGroupBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             markers = Guerilla.ReadBlockArray<RenderModelMarkerBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

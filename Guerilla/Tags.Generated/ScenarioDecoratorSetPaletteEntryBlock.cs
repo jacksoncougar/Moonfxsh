@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ScenarioDecoratorSetPaletteEntryBlockBase : GuerillaBlock
+    public class ScenarioDecoratorSetPaletteEntryBlockBase : IGuerilla
     {
         [TagReference( "DECR" )] internal Moonfish.Tags.TagReference decoratorSet;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal ScenarioDecoratorSetPaletteEntryBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioDecoratorSetPaletteEntryBlockBase( BinaryReader binaryReader )
         {
             decoratorSet = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

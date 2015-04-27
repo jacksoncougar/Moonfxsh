@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 19, Alignment = 4 )]
-    public class ParticlesRenderDataBlockBase : GuerillaBlock
+    public class ParticlesRenderDataBlockBase : IGuerilla
     {
         internal float positionX;
         internal float positionY;
@@ -25,12 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal float size;
         internal Moonfish.Tags.RGBColor color;
 
-        public override int SerializedSize
-        {
-            get { return 19; }
-        }
-
-        internal ParticlesRenderDataBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ParticlesRenderDataBlockBase( BinaryReader binaryReader )
         {
             positionX = binaryReader.ReadSingle( );
             positionY = binaryReader.ReadSingle( );
@@ -39,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             color = binaryReader.ReadRGBColor( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

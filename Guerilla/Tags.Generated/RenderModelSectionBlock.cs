@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 92, Alignment = 4 )]
-    public class RenderModelSectionBlockBase : GuerillaBlock
+    public class RenderModelSectionBlockBase : IGuerilla
     {
         internal GlobalGeometryClassificationEnumDefinition globalGeometryClassificationEnumDefinition;
         internal byte[] invalidName_;
@@ -27,12 +27,7 @@ namespace Moonfish.Guerilla.Tags
         internal RenderModelSectionDataBlock[] sectionData;
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
 
-        public override int SerializedSize
-        {
-            get { return 92; }
-        }
-
-        internal RenderModelSectionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal RenderModelSectionBlockBase( BinaryReader binaryReader )
         {
             globalGeometryClassificationEnumDefinition =
                 ( GlobalGeometryClassificationEnumDefinition ) binaryReader.ReadInt16( );
@@ -44,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

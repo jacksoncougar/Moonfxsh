@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class SectorBsp2dNodesBlockBase : GuerillaBlock
+    public class SectorBsp2dNodesBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 plane;
         internal int leftChild;
         internal int rightChild;
 
-        public override int SerializedSize
-        {
-            get { return 20; }
-        }
-
-        internal SectorBsp2dNodesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal SectorBsp2dNodesBlockBase( BinaryReader binaryReader )
         {
             plane = binaryReader.ReadVector3( );
             leftChild = binaryReader.ReadInt32( );
             rightChild = binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

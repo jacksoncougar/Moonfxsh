@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class UnitCameraTrackBlockBase : GuerillaBlock
+    public class UnitCameraTrackBlockBase : IGuerilla
     {
         [TagReference( "trak" )] internal Moonfish.Tags.TagReference track;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal UnitCameraTrackBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal UnitCameraTrackBlockBase( BinaryReader binaryReader )
         {
             track = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -18,24 +18,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class ScenarioStructureBspSphericalHarmonicLightingBlockBase : GuerillaBlock
+    public class ScenarioStructureBspSphericalHarmonicLightingBlockBase : IGuerilla
     {
         [TagReference( "sbsp" )] internal Moonfish.Tags.TagReference bSP;
         internal ScenarioSphericalHarmonicLightingPoint[] lightingPoints;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
         internal ScenarioStructureBspSphericalHarmonicLightingBlockBase( BinaryReader binaryReader )
-            : base( binaryReader )
         {
             bSP = binaryReader.ReadTagReference( );
             lightingPoints = Guerilla.ReadBlockArray<ScenarioSphericalHarmonicLightingPoint>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

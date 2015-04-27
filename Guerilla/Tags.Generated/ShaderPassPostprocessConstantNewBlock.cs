@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,36 +11,35 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPassPostprocessConstantNewBlock : ShaderPassPostprocessConstantNewBlockBase
     {
-        public  ShaderPassPostprocessConstantNewBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderPassPostprocessConstantNewBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 7, Alignment = 4)]
-    public class ShaderPassPostprocessConstantNewBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 7, Alignment = 4 )]
+    public class ShaderPassPostprocessConstantNewBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID parameterName;
         internal byte componentMask;
         internal byte scaleByTextureStage;
         internal byte functionIndex;
-        
-        public override int SerializedSize{get { return 7; }}
-        
-        internal  ShaderPassPostprocessConstantNewBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal ShaderPassPostprocessConstantNewBlockBase( BinaryReader binaryReader )
         {
-            parameterName = binaryReader.ReadStringID();
-            componentMask = binaryReader.ReadByte();
-            scaleByTextureStage = binaryReader.ReadByte();
-            functionIndex = binaryReader.ReadByte();
+            parameterName = binaryReader.ReadStringID( );
+            componentMask = binaryReader.ReadByte( );
+            scaleByTextureStage = binaryReader.ReadByte( );
+            functionIndex = binaryReader.ReadByte( );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write(parameterName);
-                binaryWriter.Write(componentMask);
-                binaryWriter.Write(scaleByTextureStage);
-                binaryWriter.Write(functionIndex);
+                binaryWriter.Write( parameterName );
+                binaryWriter.Write( componentMask );
+                binaryWriter.Write( scaleByTextureStage );
+                binaryWriter.Write( functionIndex );
                 return nextAddress;
             }
         }

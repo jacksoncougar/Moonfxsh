@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 1024, Alignment = 64 )]
-    public class StructureLightmapPaletteColorBlockBase : GuerillaBlock
+    public class StructureLightmapPaletteColorBlockBase : IGuerilla
     {
         internal int fIRSTPaletteColor;
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 1024; }
-        }
-
-        internal StructureLightmapPaletteColorBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureLightmapPaletteColorBlockBase( BinaryReader binaryReader )
         {
             fIRSTPaletteColor = binaryReader.ReadInt32( );
             invalidName_ = binaryReader.ReadBytes( 1020 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

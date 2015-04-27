@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 16 )]
-    public class PlanesBlockBase : GuerillaBlock
+    public class PlanesBlockBase : IGuerilla
     {
         internal OpenTK.Vector4 plane;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal PlanesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal PlanesBlockBase( BinaryReader binaryReader )
         {
             plane = binaryReader.ReadVector4( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

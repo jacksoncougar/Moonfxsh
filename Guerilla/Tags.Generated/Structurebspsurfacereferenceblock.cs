@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class StructureBspSurfaceReferenceBlockBase : GuerillaBlock
+    public class StructureBspSurfaceReferenceBlockBase : IGuerilla
     {
         internal short stripIndex;
         internal short lightmapTriangleIndex;
         internal int bSPNodeIndex;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal StructureBspSurfaceReferenceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureBspSurfaceReferenceBlockBase( BinaryReader binaryReader )
         {
             stripIndex = binaryReader.ReadInt16( );
             lightmapTriangleIndex = binaryReader.ReadInt16( );
             bSPNodeIndex = binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

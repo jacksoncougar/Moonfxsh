@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class UnitSeatAccelerationStructBlockBase : GuerillaBlock
+    public class UnitSeatAccelerationStructBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 accelerationRangeWorldUnitsPerSecondSquared;
         internal float accelActionScaleActionsFail01;
         internal float accelAttachScaleDetachUnit01;
 
-        public override int SerializedSize
-        {
-            get { return 20; }
-        }
-
-        internal UnitSeatAccelerationStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal UnitSeatAccelerationStructBlockBase( BinaryReader binaryReader )
         {
             accelerationRangeWorldUnitsPerSecondSquared = binaryReader.ReadVector3( );
             accelActionScaleActionsFail01 = binaryReader.ReadSingle( );
             accelAttachScaleDetachUnit01 = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

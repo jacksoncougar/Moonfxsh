@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class UserHintClimbBlockBase : GuerillaBlock
+    public class UserHintClimbBlockBase : IGuerilla
     {
         internal Flags flags;
         internal Moonfish.Tags.ShortBlockIndex1 geometryIndex;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal UserHintClimbBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal UserHintClimbBlockBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt16( );
             geometryIndex = binaryReader.ReadShortBlockIndex1( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

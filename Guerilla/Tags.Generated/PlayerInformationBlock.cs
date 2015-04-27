@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 284, Alignment = 4 )]
-    public class PlayerInformationBlockBase : GuerillaBlock
+    public class PlayerInformationBlockBase : IGuerilla
     {
         [TagReference( "unit" )] internal Moonfish.Tags.TagReference unused;
         internal byte[] invalidName_;
@@ -79,12 +79,7 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "snd!" )] internal Moonfish.Tags.TagReference flashlightOff;
         [TagReference( "snd!" )] internal Moonfish.Tags.TagReference iceCream;
 
-        public override int SerializedSize
-        {
-            get { return 284; }
-        }
-
-        internal PlayerInformationBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal PlayerInformationBlockBase( BinaryReader binaryReader )
         {
             unused = binaryReader.ReadTagReference( );
             invalidName_ = binaryReader.ReadBytes( 28 );
@@ -126,7 +121,7 @@ namespace Moonfish.Guerilla.Tags
             iceCream = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

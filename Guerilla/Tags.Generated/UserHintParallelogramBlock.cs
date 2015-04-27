@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 68, Alignment = 4 )]
-    public class UserHintParallelogramBlockBase : GuerillaBlock
+    public class UserHintParallelogramBlockBase : IGuerilla
     {
         internal Flags flags;
         internal OpenTK.Vector3 point0;
@@ -33,12 +33,7 @@ namespace Moonfish.Guerilla.Tags
         internal short referenceFrame2;
         internal byte[] invalidName_2;
 
-        public override int SerializedSize
-        {
-            get { return 68; }
-        }
-
-        internal UserHintParallelogramBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal UserHintParallelogramBlockBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             point0 = binaryReader.ReadVector3( );
@@ -55,7 +50,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes( 2 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

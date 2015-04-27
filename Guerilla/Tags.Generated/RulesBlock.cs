@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 84, Alignment = 4 )]
-    public class RulesBlockBase : GuerillaBlock
+    public class RulesBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal Moonfish.Tags.ColorR8G8B8 tintColor;
         internal byte[] invalidName_;
         internal StatesBlock[] states;
 
-        public override int SerializedSize
-        {
-            get { return 84; }
-        }
-
-        internal RulesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal RulesBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadString32( );
             tintColor = binaryReader.ReadColorR8G8B8( );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             states = Guerilla.ReadBlockArray<StatesBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

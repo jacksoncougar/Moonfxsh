@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 92, Alignment = 4 )]
-    public class RasterizerScreenEffectConvolutionBlockBase : GuerillaBlock
+    public class RasterizerScreenEffectConvolutionBlockBase : IGuerilla
     {
         internal Flags flags;
         internal byte[] invalidName_;
@@ -29,12 +29,7 @@ namespace Moonfish.Guerilla.Tags
         internal float zoomCutoffRadius;
         internal float resolutionScale01;
 
-        public override int SerializedSize
-        {
-            get { return 92; }
-        }
-
-        internal RasterizerScreenEffectConvolutionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal RasterizerScreenEffectConvolutionBlockBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
@@ -47,7 +42,7 @@ namespace Moonfish.Guerilla.Tags
             resolutionScale01 = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

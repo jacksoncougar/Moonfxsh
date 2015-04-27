@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,36 +11,36 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderStateMiscStateBlock : ShaderStateMiscStateBlockBase
     {
-        public  ShaderStateMiscStateBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderStateMiscStateBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 7, Alignment = 4)]
-    public class ShaderStateMiscStateBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 7, Alignment = 4 )]
+    public class ShaderStateMiscStateBlockBase : IGuerilla
     {
         internal Flags flags;
         internal byte[] invalidName_;
         internal Moonfish.Tags.RGBColor fogColor;
-        
-        public override int SerializedSize{get { return 7; }}
-        
-        internal  ShaderStateMiscStateBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal ShaderStateMiscStateBlockBase( BinaryReader binaryReader )
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            fogColor = binaryReader.ReadRGBColor();
+            flags = ( Flags ) binaryReader.ReadInt16( );
+            invalidName_ = binaryReader.ReadBytes( 2 );
+            fogColor = binaryReader.ReadRGBColor( );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(fogColor);
+                binaryWriter.Write( ( Int16 ) flags );
+                binaryWriter.Write( invalidName_, 0, 2 );
+                binaryWriter.Write( fogColor );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {

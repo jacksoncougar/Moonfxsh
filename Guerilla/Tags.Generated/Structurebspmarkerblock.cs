@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 60, Alignment = 4 )]
-    public class StructureBspMarkerBlockBase : GuerillaBlock
+    public class StructureBspMarkerBlockBase : IGuerilla
     {
         internal Moonfish.Tags.String32 name;
         internal OpenTK.Quaternion rotation;
         internal OpenTK.Vector3 position;
 
-        public override int SerializedSize
-        {
-            get { return 60; }
-        }
-
-        internal StructureBspMarkerBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureBspMarkerBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadString32( );
             rotation = binaryReader.ReadQuaternion( );
             position = binaryReader.ReadVector3( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

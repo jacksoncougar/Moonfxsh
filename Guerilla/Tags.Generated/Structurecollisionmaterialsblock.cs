@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class StructureCollisionMaterialsBlockBase : GuerillaBlock
+    public class StructureCollisionMaterialsBlockBase : IGuerilla
     {
         [TagReference( "shad" )] internal Moonfish.Tags.TagReference oldShader;
         internal byte[] invalidName_;
         internal Moonfish.Tags.ShortBlockIndex1 conveyorSurfaceIndex;
         [TagReference( "shad" )] internal Moonfish.Tags.TagReference newShader;
 
-        public override int SerializedSize
-        {
-            get { return 20; }
-        }
-
-        internal StructureCollisionMaterialsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureCollisionMaterialsBlockBase( BinaryReader binaryReader )
         {
             oldShader = binaryReader.ReadTagReference( );
             invalidName_ = binaryReader.ReadBytes( 2 );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             newShader = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 220, Alignment = 4 )]
-    public class StructureLightmapLightingEnvironmentBlockBase : GuerillaBlock
+    public class StructureLightmapLightingEnvironmentBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 samplePoint;
         internal RedCoefficients[] redCoefficients;
@@ -36,12 +36,7 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 proceduralParam1Xyz;
         internal float proceduralParam1W;
 
-        public override int SerializedSize
-        {
-            get { return 220; }
-        }
-
-        internal StructureLightmapLightingEnvironmentBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureLightmapLightingEnvironmentBlockBase( BinaryReader binaryReader )
         {
             samplePoint = binaryReader.ReadVector3( );
             redCoefficients = new[]
@@ -82,7 +77,7 @@ namespace Moonfish.Guerilla.Tags
             proceduralParam1W = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {
@@ -149,21 +144,16 @@ namespace Moonfish.Guerilla.Tags
         };
 
         [LayoutAttribute( Size = 4, Alignment = 1 )]
-        public class RedCoefficients : GuerillaBlock
+        public class RedCoefficients : IGuerilla
         {
             internal float redCoefficient;
 
-            public override int SerializedSize
-            {
-                get { return 4; }
-            }
-
-            internal RedCoefficients( BinaryReader binaryReader ) : base( binaryReader )
+            internal RedCoefficients( BinaryReader binaryReader )
             {
                 redCoefficient = binaryReader.ReadSingle( );
             }
 
-            public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
             {
                 using ( binaryWriter.BaseStream.Pin( ) )
                 {
@@ -174,21 +164,16 @@ namespace Moonfish.Guerilla.Tags
         };
 
         [LayoutAttribute( Size = 4, Alignment = 1 )]
-        public class GreenCoefficients : GuerillaBlock
+        public class GreenCoefficients : IGuerilla
         {
             internal float greenCoefficient;
 
-            public override int SerializedSize
-            {
-                get { return 4; }
-            }
-
-            internal GreenCoefficients( BinaryReader binaryReader ) : base( binaryReader )
+            internal GreenCoefficients( BinaryReader binaryReader )
             {
                 greenCoefficient = binaryReader.ReadSingle( );
             }
 
-            public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
             {
                 using ( binaryWriter.BaseStream.Pin( ) )
                 {
@@ -199,21 +184,16 @@ namespace Moonfish.Guerilla.Tags
         };
 
         [LayoutAttribute( Size = 4, Alignment = 1 )]
-        public class BlueCoefficients : GuerillaBlock
+        public class BlueCoefficients : IGuerilla
         {
             internal float blueCoefficient;
 
-            public override int SerializedSize
-            {
-                get { return 4; }
-            }
-
-            internal BlueCoefficients( BinaryReader binaryReader ) : base( binaryReader )
+            internal BlueCoefficients( BinaryReader binaryReader )
             {
                 blueCoefficient = binaryReader.ReadSingle( );
             }
 
-            public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
             {
                 using ( binaryWriter.BaseStream.Pin( ) )
                 {

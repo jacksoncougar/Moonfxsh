@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 92, Alignment = 4 )]
-    public class MagazinesBase : GuerillaBlock
+    public class MagazinesBase : IGuerilla
     {
         internal Flags flags;
         internal short roundsRechargedPerSecond;
@@ -47,12 +47,7 @@ namespace Moonfish.Guerilla.Tags
         [TagReference( "jpt!" )] internal Moonfish.Tags.TagReference chamberingDamageEffect;
         internal MagazineObjects[] magazines;
 
-        public override int SerializedSize
-        {
-            get { return 92; }
-        }
-
-        internal MagazinesBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal MagazinesBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             roundsRechargedPerSecond = binaryReader.ReadInt16( );
@@ -73,7 +68,7 @@ namespace Moonfish.Guerilla.Tags
             magazines = Guerilla.ReadBlockArray<MagazineObjects>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 116, Alignment = 4 )]
-    public class PhysicsBlockBase : GuerillaBlock
+    public class PhysicsBlockBase : IGuerilla
     {
         /// <summary>
         /// positive uses old inferior physics, negative uses new improved physics
@@ -57,12 +57,7 @@ namespace Moonfish.Guerilla.Tags
         internal PoweredMassPointBlock[] poweredMassPoints;
         internal MassPointBlock[] massPoints;
 
-        public override int SerializedSize
-        {
-            get { return 116; }
-        }
-
-        internal PhysicsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal PhysicsBlockBase( BinaryReader binaryReader )
         {
             radius = binaryReader.ReadSingle( );
             momentScale = binaryReader.ReadSingle( );
@@ -90,7 +85,7 @@ namespace Moonfish.Guerilla.Tags
             massPoints = Guerilla.ReadBlockArray<MassPointBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

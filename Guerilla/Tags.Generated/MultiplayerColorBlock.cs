@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class MultiplayerColorBlockBase : GuerillaBlock
+    public class MultiplayerColorBlockBase : IGuerilla
     {
         internal Moonfish.Tags.ColorR8G8B8 color;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal MultiplayerColorBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal MultiplayerColorBlockBase( BinaryReader binaryReader )
         {
             color = binaryReader.ReadColorR8G8B8( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

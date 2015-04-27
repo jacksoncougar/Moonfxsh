@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 176, Alignment = 16 )]
-    public class MultiSpheresBlockBase : GuerillaBlock
+    public class MultiSpheresBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 material;
@@ -36,12 +36,7 @@ namespace Moonfish.Guerilla.Tags
         internal int numSpheres;
         internal FourVectorsStorage[] fourVectorsStorage;
 
-        public override int SerializedSize
-        {
-            get { return 176; }
-        }
-
-        internal MultiSpheresBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal MultiSpheresBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             material = binaryReader.ReadShortBlockIndex1( );
@@ -67,7 +62,7 @@ namespace Moonfish.Guerilla.Tags
             };
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {
@@ -105,23 +100,18 @@ namespace Moonfish.Guerilla.Tags
         };
 
         [LayoutAttribute( Size = 16, Alignment = 1 )]
-        public class FourVectorsStorage : GuerillaBlock
+        public class FourVectorsStorage : IGuerilla
         {
             internal OpenTK.Vector3 sphere;
             internal byte[] invalidName_;
 
-            public override int SerializedSize
-            {
-                get { return 16; }
-            }
-
-            internal FourVectorsStorage( BinaryReader binaryReader ) : base( binaryReader )
+            internal FourVectorsStorage( BinaryReader binaryReader )
             {
                 sphere = binaryReader.ReadVector3( );
                 invalidName_ = binaryReader.ReadBytes( 4 );
             }
 
-            public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+            public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
             {
                 using ( binaryWriter.BaseStream.Pin( ) )
                 {

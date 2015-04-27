@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 2884, Alignment = 4 )]
-    public class UiCampaignBlockBase : GuerillaBlock
+    public class UiCampaignBlockBase : IGuerilla
     {
         internal int campaignID;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
 
-        public override int SerializedSize
-        {
-            get { return 2884; }
-        }
-
-        internal UiCampaignBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal UiCampaignBlockBase( BinaryReader binaryReader )
         {
             campaignID = binaryReader.ReadInt32( );
             invalidName_ = binaryReader.ReadBytes( 576 );
             invalidName_0 = binaryReader.ReadBytes( 2304 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

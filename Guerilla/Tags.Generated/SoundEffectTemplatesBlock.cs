@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 28, Alignment = 4 )]
-    public class SoundEffectTemplatesBlockBase : GuerillaBlock
+    public class SoundEffectTemplatesBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID dspEffect;
         internal byte[] explanation;
@@ -26,12 +26,7 @@ namespace Moonfish.Guerilla.Tags
         internal short invalidName_0;
         internal SoundEffectTemplateParameterBlock[] parameters;
 
-        public override int SerializedSize
-        {
-            get { return 28; }
-        }
-
-        internal SoundEffectTemplatesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal SoundEffectTemplatesBlockBase( BinaryReader binaryReader )
         {
             dspEffect = binaryReader.ReadStringID( );
             explanation = Guerilla.ReadData( binaryReader );
@@ -41,7 +36,7 @@ namespace Moonfish.Guerilla.Tags
             parameters = Guerilla.ReadBlockArray<SoundEffectTemplateParameterBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

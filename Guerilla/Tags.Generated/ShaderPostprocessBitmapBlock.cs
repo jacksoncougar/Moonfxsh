@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 10, Alignment = 4 )]
-    public class ShaderPostprocessBitmapBlockBase : GuerillaBlock
+    public class ShaderPostprocessBitmapBlockBase : IGuerilla
     {
         internal byte parameterIndex;
         internal byte flags;
         internal int bitmapGroupIndex;
         internal float logBitmapDimension;
 
-        public override int SerializedSize
-        {
-            get { return 10; }
-        }
-
-        internal ShaderPostprocessBitmapBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ShaderPostprocessBitmapBlockBase( BinaryReader binaryReader )
         {
             parameterIndex = binaryReader.ReadByte( );
             flags = binaryReader.ReadByte( );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             logBitmapDimension = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

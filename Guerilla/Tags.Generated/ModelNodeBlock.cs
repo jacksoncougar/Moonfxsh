@@ -1,5 +1,4 @@
 // ReSharper disable All
-
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -9,15 +8,15 @@ using System.IO;
 
 namespace Moonfish.Guerilla.Tags
 {
-    public partial class ModelNodeBlock : ModelNodeBlockBase
+    public  partial class ModelNodeBlock : ModelNodeBlockBase
     {
-        public ModelNodeBlock( BinaryReader binaryReader ) : base( binaryReader )
+        public  ModelNodeBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
     };
-
-    [LayoutAttribute( Size = 92, Alignment = 4 )]
-    public class ModelNodeBlockBase : GuerillaBlock
+    [LayoutAttribute(Size = 92, Alignment = 4)]
+    public class ModelNodeBlockBase  : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 parentNode;
@@ -31,44 +30,37 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 defaultInverseLeft;
         internal OpenTK.Vector3 defaultInverseUp;
         internal OpenTK.Vector3 defaultInversePosition;
-
-        public override int SerializedSize
+        internal  ModelNodeBlockBase(BinaryReader binaryReader)
         {
-            get { return 92; }
+            name = binaryReader.ReadStringID();
+            parentNode = binaryReader.ReadShortBlockIndex1();
+            firstChildNode = binaryReader.ReadShortBlockIndex1();
+            nextSiblingNode = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
+            defaultTranslation = binaryReader.ReadVector3();
+            defaultRotation = binaryReader.ReadQuaternion();
+            defaultInverseScale = binaryReader.ReadSingle();
+            defaultInverseForward = binaryReader.ReadVector3();
+            defaultInverseLeft = binaryReader.ReadVector3();
+            defaultInverseUp = binaryReader.ReadVector3();
+            defaultInversePosition = binaryReader.ReadVector3();
         }
-
-        internal ModelNodeBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        public int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            name = binaryReader.ReadStringID( );
-            parentNode = binaryReader.ReadShortBlockIndex1( );
-            firstChildNode = binaryReader.ReadShortBlockIndex1( );
-            nextSiblingNode = binaryReader.ReadShortBlockIndex1( );
-            invalidName_ = binaryReader.ReadBytes( 2 );
-            defaultTranslation = binaryReader.ReadVector3( );
-            defaultRotation = binaryReader.ReadQuaternion( );
-            defaultInverseScale = binaryReader.ReadSingle( );
-            defaultInverseForward = binaryReader.ReadVector3( );
-            defaultInverseLeft = binaryReader.ReadVector3( );
-            defaultInverseUp = binaryReader.ReadVector3( );
-            defaultInversePosition = binaryReader.ReadVector3( );
-        }
-
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
-        {
-            using ( binaryWriter.BaseStream.Pin( ) )
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write( name );
-                binaryWriter.Write( parentNode );
-                binaryWriter.Write( firstChildNode );
-                binaryWriter.Write( nextSiblingNode );
-                binaryWriter.Write( invalidName_, 0, 2 );
-                binaryWriter.Write( defaultTranslation );
-                binaryWriter.Write( defaultRotation );
-                binaryWriter.Write( defaultInverseScale );
-                binaryWriter.Write( defaultInverseForward );
-                binaryWriter.Write( defaultInverseLeft );
-                binaryWriter.Write( defaultInverseUp );
-                binaryWriter.Write( defaultInversePosition );
+                binaryWriter.Write(name);
+                binaryWriter.Write(parentNode);
+                binaryWriter.Write(firstChildNode);
+                binaryWriter.Write(nextSiblingNode);
+                binaryWriter.Write(invalidName_, 0, 2);
+                binaryWriter.Write(defaultTranslation);
+                binaryWriter.Write(defaultRotation);
+                binaryWriter.Write(defaultInverseScale);
+                binaryWriter.Write(defaultInverseForward);
+                binaryWriter.Write(defaultInverseLeft);
+                binaryWriter.Write(defaultInverseUp);
+                binaryWriter.Write(defaultInversePosition);
                 return nextAddress;
             }
         }

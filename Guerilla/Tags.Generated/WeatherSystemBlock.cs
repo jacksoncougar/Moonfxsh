@@ -26,19 +26,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 176, Alignment = 4 )]
-    public class WeatherSystemBlockBase : GuerillaBlock
+    public class WeatherSystemBlockBase : IGuerilla
     {
         internal GlobalParticleSystemLiteBlock[] particleSystem;
         internal GlobalWeatherBackgroundPlateBlock[] backgroundPlates;
         internal GlobalWindModelStructBlock windModel;
         internal float fadeRadius;
 
-        public override int SerializedSize
-        {
-            get { return 176; }
-        }
-
-        internal WeatherSystemBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal WeatherSystemBlockBase( BinaryReader binaryReader )
         {
             particleSystem = Guerilla.ReadBlockArray<GlobalParticleSystemLiteBlock>( binaryReader );
             backgroundPlates = Guerilla.ReadBlockArray<GlobalWeatherBackgroundPlateBlock>( binaryReader );
@@ -46,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
             fadeRadius = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class PoweredSeatBlockBase : GuerillaBlock
+    public class PoweredSeatBlockBase : IGuerilla
     {
         internal float driverPowerupTimeSeconds;
         internal float driverPowerdownTimeSeconds;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal PoweredSeatBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal PoweredSeatBlockBase( BinaryReader binaryReader )
         {
             driverPowerupTimeSeconds = binaryReader.ReadSingle( );
             driverPowerdownTimeSeconds = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

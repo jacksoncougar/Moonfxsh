@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class PlatformSoundEffectFunctionBlockBase : GuerillaBlock
+    public class PlatformSoundEffectFunctionBlockBase : IGuerilla
     {
         internal Input input;
         internal Range range;
         internal MappingFunctionBlock function;
         internal float timePeriodSeconds;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal PlatformSoundEffectFunctionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal PlatformSoundEffectFunctionBlockBase( BinaryReader binaryReader )
         {
             input = ( Input ) binaryReader.ReadInt16( );
             range = ( Range ) binaryReader.ReadInt16( );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             timePeriodSeconds = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

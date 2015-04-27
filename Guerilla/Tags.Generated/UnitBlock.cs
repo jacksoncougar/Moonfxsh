@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 304, Alignment = 4 )]
-    public class UnitBlockBase : GuerillaBlock
+    public class UnitBlockBase : ObjectBlock
     {
         internal Flags flags;
         internal DefaultTeam defaultTeam;
@@ -110,11 +110,6 @@ namespace Moonfish.Guerilla.Tags
         internal UnitBoostStructBlock boost;
         internal UnitLipsyncScalesStructBlock lipsync;
 
-        public override int SerializedSize
-        {
-            get { return 304; }
-        }
-
         internal UnitBlockBase( BinaryReader binaryReader ) : base( binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
@@ -165,7 +160,7 @@ namespace Moonfish.Guerilla.Tags
             lipsync = new UnitLipsyncScalesStructBlock( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

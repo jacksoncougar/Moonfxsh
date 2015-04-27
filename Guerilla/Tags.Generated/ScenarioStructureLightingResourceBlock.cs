@@ -26,22 +26,17 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ScenarioStructureLightingResourceBlockBase : GuerillaBlock
+    public class ScenarioStructureLightingResourceBlockBase : IGuerilla
     {
         internal ScenarioStructureBspSphericalHarmonicLightingBlock[] structureLighting;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal ScenarioStructureLightingResourceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioStructureLightingResourceBlockBase( BinaryReader binaryReader )
         {
             structureLighting =
                 Guerilla.ReadBlockArray<ScenarioStructureBspSphericalHarmonicLightingBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

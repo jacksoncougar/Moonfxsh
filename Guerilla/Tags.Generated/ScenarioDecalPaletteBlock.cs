@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ScenarioDecalPaletteBlockBase : GuerillaBlock
+    public class ScenarioDecalPaletteBlockBase : IGuerilla
     {
         [TagReference( "deca" )] internal Moonfish.Tags.TagReference reference;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal ScenarioDecalPaletteBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioDecalPaletteBlockBase( BinaryReader binaryReader )
         {
             reference = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

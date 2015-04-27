@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class ScenarioEquipmentDatumStructBlockBase : GuerillaBlock
+    public class ScenarioEquipmentDatumStructBlockBase : IGuerilla
     {
         internal EquipmentFlags equipmentFlags;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal ScenarioEquipmentDatumStructBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioEquipmentDatumStructBlockBase( BinaryReader binaryReader )
         {
             equipmentFlags = ( EquipmentFlags ) binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

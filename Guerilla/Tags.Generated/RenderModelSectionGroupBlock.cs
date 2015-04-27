@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class RenderModelSectionGroupBlockBase : GuerillaBlock
+    public class RenderModelSectionGroupBlockBase : IGuerilla
     {
         internal DetailLevels detailLevels;
         internal byte[] invalidName_;
         internal RenderModelCompoundNodeBlock[] compoundNodes;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal RenderModelSectionGroupBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal RenderModelSectionGroupBlockBase( BinaryReader binaryReader )
         {
             detailLevels = ( DetailLevels ) binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
             compoundNodes = Guerilla.ReadBlockArray<RenderModelCompoundNodeBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

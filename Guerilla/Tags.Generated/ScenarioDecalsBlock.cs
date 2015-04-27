@@ -17,19 +17,14 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class ScenarioDecalsBlockBase : GuerillaBlock
+    public class ScenarioDecalsBlockBase : IGuerilla
     {
         internal Moonfish.Tags.ShortBlockIndex1 decalType;
         internal byte yaw127127;
         internal byte pitch127127;
         internal OpenTK.Vector3 position;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal ScenarioDecalsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioDecalsBlockBase( BinaryReader binaryReader )
         {
             decalType = binaryReader.ReadShortBlockIndex1( );
             yaw127127 = binaryReader.ReadByte( );
@@ -37,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             position = binaryReader.ReadVector3( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

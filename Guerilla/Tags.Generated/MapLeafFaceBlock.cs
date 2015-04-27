@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class MapLeafFaceBlockBase : GuerillaBlock
+    public class MapLeafFaceBlockBase : IGuerilla
     {
         internal int nodeIndex;
         internal MapLeafFaceVertexBlock[] vertices;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal MapLeafFaceBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal MapLeafFaceBlockBase( BinaryReader binaryReader )
         {
             nodeIndex = binaryReader.ReadInt32( );
             vertices = Guerilla.ReadBlockArray<MapLeafFaceVertexBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

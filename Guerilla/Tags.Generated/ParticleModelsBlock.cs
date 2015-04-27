@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class ParticleModelsBlockBase : GuerillaBlock
+    public class ParticleModelsBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID modelName;
         internal short indexStart;
         internal short indexCount;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal ParticleModelsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ParticleModelsBlockBase( BinaryReader binaryReader )
         {
             modelName = binaryReader.ReadStringID( );
             indexStart = binaryReader.ReadInt16( );
             indexCount = binaryReader.ReadInt16( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

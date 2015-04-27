@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class MoppsBlockBase : GuerillaBlock
+    public class MoppsBlockBase : IGuerilla
     {
         internal byte[] invalidName_;
         internal short size;
@@ -27,12 +27,7 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 list;
         internal int codeOffset;
 
-        public override int SerializedSize
-        {
-            get { return 20; }
-        }
-
-        internal MoppsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal MoppsBlockBase( BinaryReader binaryReader )
         {
             invalidName_ = binaryReader.ReadBytes( 4 );
             size = binaryReader.ReadInt16( );
@@ -43,7 +38,7 @@ namespace Moonfish.Guerilla.Tags
             codeOffset = binaryReader.ReadInt32( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 220, Alignment = 4 )]
-    public class ParticleModelBlockBase : GuerillaBlock
+    public class ParticleModelBlockBase : IGuerilla
     {
         internal Flags flags;
         internal Orientation orientation;
@@ -57,12 +57,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
 
-        public override int SerializedSize
-        {
-            get { return 220; }
-        }
-
-        internal ParticleModelBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ParticleModelBlockBase( BinaryReader binaryReader )
         {
             flags = ( Flags ) binaryReader.ReadInt32( );
             orientation = ( Orientation ) binaryReader.ReadInt32( );
@@ -85,7 +80,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes( 8 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

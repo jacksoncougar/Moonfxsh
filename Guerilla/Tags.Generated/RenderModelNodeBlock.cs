@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 96, Alignment = 4 )]
-    public class RenderModelNodeBlockBase : GuerillaBlock
+    public class RenderModelNodeBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal Moonfish.Tags.ShortBlockIndex1 parentNode;
@@ -33,12 +33,7 @@ namespace Moonfish.Guerilla.Tags
         internal float inverseScale;
         internal float distanceFromParent;
 
-        public override int SerializedSize
-        {
-            get { return 96; }
-        }
-
-        internal RenderModelNodeBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal RenderModelNodeBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             parentNode = binaryReader.ReadShortBlockIndex1( );
@@ -55,7 +50,7 @@ namespace Moonfish.Guerilla.Tags
             distanceFromParent = binaryReader.ReadSingle( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

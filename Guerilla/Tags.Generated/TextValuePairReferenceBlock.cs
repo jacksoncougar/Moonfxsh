@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,36 +11,36 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class TextValuePairReferenceBlock : TextValuePairReferenceBlockBase
     {
-        public  TextValuePairReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public TextValuePairReferenceBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 12, Alignment = 4)]
-    public class TextValuePairReferenceBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 12, Alignment = 4 )]
+    public class TextValuePairReferenceBlockBase : IGuerilla
     {
         internal Flags flags;
         internal int value;
         internal Moonfish.Tags.StringID labelStringId;
-        
-        public override int SerializedSize{get { return 12; }}
-        
-        internal  TextValuePairReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal TextValuePairReferenceBlockBase( BinaryReader binaryReader )
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            value = binaryReader.ReadInt32();
-            labelStringId = binaryReader.ReadStringID();
+            flags = ( Flags ) binaryReader.ReadInt32( );
+            value = binaryReader.ReadInt32( );
+            labelStringId = binaryReader.ReadStringID( );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(value);
-                binaryWriter.Write(labelStringId);
+                binaryWriter.Write( ( Int32 ) flags );
+                binaryWriter.Write( value );
+                binaryWriter.Write( labelStringId );
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

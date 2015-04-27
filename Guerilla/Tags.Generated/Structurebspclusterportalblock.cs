@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 36, Alignment = 4 )]
-    public class StructureBspClusterPortalBlockBase : GuerillaBlock
+    public class StructureBspClusterPortalBlockBase : IGuerilla
     {
         internal short backCluster;
         internal short frontCluster;
@@ -27,12 +27,7 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal StructureBspClusterPortalVertexBlock[] vertices;
 
-        public override int SerializedSize
-        {
-            get { return 36; }
-        }
-
-        internal StructureBspClusterPortalBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureBspClusterPortalBlockBase( BinaryReader binaryReader )
         {
             backCluster = binaryReader.ReadInt16( );
             frontCluster = binaryReader.ReadInt16( );
@@ -43,7 +38,7 @@ namespace Moonfish.Guerilla.Tags
             vertices = Guerilla.ReadBlockArray<StructureBspClusterPortalVertexBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

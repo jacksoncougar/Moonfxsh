@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class PredictedBitmapsBlockBase : GuerillaBlock
+    public class PredictedBitmapsBlockBase : IGuerilla
     {
         [TagReference( "bitm" )] internal Moonfish.Tags.TagReference bitmap;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal PredictedBitmapsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal PredictedBitmapsBlockBase( BinaryReader binaryReader )
         {
             bitmap = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

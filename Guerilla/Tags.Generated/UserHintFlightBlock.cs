@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -10,27 +11,26 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class UserHintFlightBlock : UserHintFlightBlockBase
     {
-        public  UserHintFlightBlock(BinaryReader binaryReader): base(binaryReader)
+        public UserHintFlightBlock( BinaryReader binaryReader ) : base( binaryReader )
         {
-            
         }
     };
-    [LayoutAttribute(Size = 8, Alignment = 4)]
-    public class UserHintFlightBlockBase : GuerillaBlock
+
+    [LayoutAttribute( Size = 8, Alignment = 4 )]
+    public class UserHintFlightBlockBase : IGuerilla
     {
         internal UserHintFlightPointBlock[] points;
-        
-        public override int SerializedSize{get { return 8; }}
-        
-        internal  UserHintFlightBlockBase(BinaryReader binaryReader): base(binaryReader)
+
+        internal UserHintFlightBlockBase( BinaryReader binaryReader )
         {
-            points = Guerilla.ReadBlockArray<UserHintFlightPointBlock>(binaryReader);
+            points = Guerilla.ReadBlockArray<UserHintFlightPointBlock>( binaryReader );
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
-            using(binaryWriter.BaseStream.Pin())
+            using ( binaryWriter.BaseStream.Pin( ) )
             {
-                nextAddress = Guerilla.WriteBlockArray<UserHintFlightPointBlock>(binaryWriter, points, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<UserHintFlightPointBlock>( binaryWriter, points, nextAddress );
                 return nextAddress;
             }
         }

@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 124, Alignment = 4 )]
-    public class ShaderPostprocessDefinitionNewBlockBase : GuerillaBlock
+    public class ShaderPostprocessDefinitionNewBlockBase : IGuerilla
     {
         internal int shaderTemplateIndex;
         internal ShaderPostprocessBitmapNewBlock[] bitmaps;
@@ -36,12 +36,7 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderPostprocessValuePropertyBlock[] valueProperties;
         internal ShaderPostprocessLevelOfDetailBlock[] oldLevelsOfDetail;
 
-        public override int SerializedSize
-        {
-            get { return 124; }
-        }
-
-        internal ShaderPostprocessDefinitionNewBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ShaderPostprocessDefinitionNewBlockBase( BinaryReader binaryReader )
         {
             shaderTemplateIndex = binaryReader.ReadInt32( );
             bitmaps = Guerilla.ReadBlockArray<ShaderPostprocessBitmapNewBlock>( binaryReader );
@@ -62,7 +57,7 @@ namespace Moonfish.Guerilla.Tags
             oldLevelsOfDetail = Guerilla.ReadBlockArray<ShaderPostprocessLevelOfDetailBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

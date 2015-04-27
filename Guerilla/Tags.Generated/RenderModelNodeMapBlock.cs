@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 1, Alignment = 4 )]
-    public class RenderModelNodeMapBlockBase : GuerillaBlock
+    public class RenderModelNodeMapBlockBase : IGuerilla
     {
         internal byte nodeIndex;
 
-        public override int SerializedSize
-        {
-            get { return 1; }
-        }
-
-        internal RenderModelNodeMapBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal RenderModelNodeMapBlockBase( BinaryReader binaryReader )
         {
             nodeIndex = binaryReader.ReadByte( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

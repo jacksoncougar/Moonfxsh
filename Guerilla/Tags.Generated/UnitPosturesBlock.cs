@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 16, Alignment = 4 )]
-    public class UnitPosturesBlockBase : GuerillaBlock
+    public class UnitPosturesBlockBase : IGuerilla
     {
         internal Moonfish.Tags.StringID name;
         internal OpenTK.Vector3 pillOffset;
 
-        public override int SerializedSize
-        {
-            get { return 16; }
-        }
-
-        internal UnitPosturesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal UnitPosturesBlockBase( BinaryReader binaryReader )
         {
             name = binaryReader.ReadStringID( );
             pillOffset = binaryReader.ReadVector3( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

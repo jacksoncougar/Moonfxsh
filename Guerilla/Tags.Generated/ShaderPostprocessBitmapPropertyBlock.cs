@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class ShaderPostprocessBitmapPropertyBlockBase : GuerillaBlock
+    public class ShaderPostprocessBitmapPropertyBlockBase : IGuerilla
     {
         internal short bitmapIndex;
         internal short animatedParameterIndex;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal ShaderPostprocessBitmapPropertyBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ShaderPostprocessBitmapPropertyBlockBase( BinaryReader binaryReader )
         {
             bitmapIndex = binaryReader.ReadInt16( );
             animatedParameterIndex = binaryReader.ReadInt16( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

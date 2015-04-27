@@ -17,21 +17,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class StructureBspClusterPortalVertexBlockBase : GuerillaBlock
+    public class StructureBspClusterPortalVertexBlockBase : IGuerilla
     {
         internal OpenTK.Vector3 point;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal StructureBspClusterPortalVertexBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureBspClusterPortalVertexBlockBase( BinaryReader binaryReader )
         {
             point = binaryReader.ReadVector3( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

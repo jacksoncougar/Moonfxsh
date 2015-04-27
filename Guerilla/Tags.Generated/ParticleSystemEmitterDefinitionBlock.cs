@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 184, Alignment = 4 )]
-    public class ParticleSystemEmitterDefinitionBlockBase : GuerillaBlock
+    public class ParticleSystemEmitterDefinitionBlockBase : IGuerilla
     {
         [TagReference( "pmov" )] internal Moonfish.Tags.TagReference particlePhysics;
         internal ParticlePropertyScalarStructNewBlock particleEmissionRate;
@@ -39,12 +39,7 @@ namespace Moonfish.Guerilla.Tags
 
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 184; }
-        }
-
-        internal ParticleSystemEmitterDefinitionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ParticleSystemEmitterDefinitionBlockBase( BinaryReader binaryReader )
         {
             particlePhysics = binaryReader.ReadTagReference( );
             particleEmissionRate = new ParticlePropertyScalarStructNewBlock( binaryReader );
@@ -62,7 +57,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes( 8 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

@@ -26,21 +26,16 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class SoundEffectCollectionBlockBase : GuerillaBlock
+    public class SoundEffectCollectionBlockBase : IGuerilla
     {
         internal PlatformSoundPlaybackBlock[] soundEffects;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal SoundEffectCollectionBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal SoundEffectCollectionBlockBase( BinaryReader binaryReader )
         {
             soundEffects = Guerilla.ReadBlockArray<PlatformSoundPlaybackBlock>( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

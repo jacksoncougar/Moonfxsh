@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 12, Alignment = 4 )]
-    public class MagazineObjectsBase : GuerillaBlock
+    public class MagazineObjectsBase : IGuerilla
     {
         internal short rounds;
         internal byte[] invalidName_;
         [TagReference( "eqip" )] internal Moonfish.Tags.TagReference equipment;
 
-        public override int SerializedSize
-        {
-            get { return 12; }
-        }
-
-        internal MagazineObjectsBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal MagazineObjectsBase( BinaryReader binaryReader )
         {
             rounds = binaryReader.ReadInt16( );
             invalidName_ = binaryReader.ReadBytes( 2 );
             equipment = binaryReader.ReadTagReference( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

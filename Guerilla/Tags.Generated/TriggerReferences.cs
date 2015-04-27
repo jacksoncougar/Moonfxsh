@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 8, Alignment = 4 )]
-    public class TriggerReferencesBase : GuerillaBlock
+    public class TriggerReferencesBase : IGuerilla
     {
         internal TriggerFlags triggerFlags;
         internal Moonfish.Tags.ShortBlockIndex1 trigger;
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 8; }
-        }
-
-        internal TriggerReferencesBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal TriggerReferencesBase( BinaryReader binaryReader )
         {
             triggerFlags = ( TriggerFlags ) binaryReader.ReadInt32( );
             trigger = binaryReader.ReadShortBlockIndex1( );
             invalidName_ = binaryReader.ReadBytes( 2 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

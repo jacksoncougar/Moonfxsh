@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 4, Alignment = 4 )]
-    public class ScenarioClusterSoundEnvironmentsBlockBase : GuerillaBlock
+    public class ScenarioClusterSoundEnvironmentsBlockBase : IGuerilla
     {
         internal Moonfish.Tags.ShortBlockIndex1 type;
         internal byte[] invalidName_;
 
-        public override int SerializedSize
-        {
-            get { return 4; }
-        }
-
-        internal ScenarioClusterSoundEnvironmentsBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal ScenarioClusterSoundEnvironmentsBlockBase( BinaryReader binaryReader )
         {
             type = binaryReader.ReadShortBlockIndex1( );
             invalidName_ = binaryReader.ReadBytes( 2 );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

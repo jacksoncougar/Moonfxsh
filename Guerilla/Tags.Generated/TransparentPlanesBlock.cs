@@ -17,25 +17,20 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 20, Alignment = 4 )]
-    public class TransparentPlanesBlockBase : GuerillaBlock
+    public class TransparentPlanesBlockBase : IGuerilla
     {
         internal short sectionIndex;
         internal short partIndex;
         internal OpenTK.Vector4 plane;
 
-        public override int SerializedSize
-        {
-            get { return 20; }
-        }
-
-        internal TransparentPlanesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal TransparentPlanesBlockBase( BinaryReader binaryReader )
         {
             sectionIndex = binaryReader.ReadInt16( );
             partIndex = binaryReader.ReadInt16( );
             plane = binaryReader.ReadVector4( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

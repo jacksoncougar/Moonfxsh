@@ -17,23 +17,18 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 92, Alignment = 4 )]
-    public class StructureBspFakeLightprobesBlockBase : GuerillaBlock
+    public class StructureBspFakeLightprobesBlockBase : IGuerilla
     {
         internal ScenarioObjectIdStructBlock objectIdentifier;
         internal RenderLightingStructBlock renderLighting;
 
-        public override int SerializedSize
-        {
-            get { return 92; }
-        }
-
-        internal StructureBspFakeLightprobesBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureBspFakeLightprobesBlockBase( BinaryReader binaryReader )
         {
             objectIdentifier = new ScenarioObjectIdStructBlock( binaryReader );
             renderLighting = new RenderLightingStructBlock( binaryReader );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

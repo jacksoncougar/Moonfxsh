@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute( Size = 32, Alignment = 4 )]
-    public class StructureBspDebugInfoRenderLineBlockBase : GuerillaBlock
+    public class StructureBspDebugInfoRenderLineBlockBase : IGuerilla
     {
         internal Type type;
         internal short code;
@@ -26,12 +26,7 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 point0;
         internal OpenTK.Vector3 point1;
 
-        public override int SerializedSize
-        {
-            get { return 32; }
-        }
-
-        internal StructureBspDebugInfoRenderLineBlockBase( BinaryReader binaryReader ) : base( binaryReader )
+        internal StructureBspDebugInfoRenderLineBlockBase( BinaryReader binaryReader )
         {
             type = ( Type ) binaryReader.ReadInt16( );
             code = binaryReader.ReadInt16( );
@@ -41,7 +36,7 @@ namespace Moonfish.Guerilla.Tags
             point1 = binaryReader.ReadVector3( );
         }
 
-        public override int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
+        public int Write( System.IO.BinaryWriter binaryWriter, Int32 nextAddress )
         {
             using ( binaryWriter.BaseStream.Pin( ) )
             {

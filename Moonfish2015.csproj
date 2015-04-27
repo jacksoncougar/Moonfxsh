@@ -912,8 +912,6 @@
     <Compile Include="Guerilla\Tags.Generated\MoonfishXboxAnimationRawBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\MoonfishXboxAnimationUnknownBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\MoppsBlock.cs" />
-    <Compile Include="Guerilla\Tags.Generated\MouseCursorBitmapReferenceBlock.cs" />
-    <Compile Include="Guerilla\Tags.Generated\MouseCursorDefinitionBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\MultilingualUnicodeStringListBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\MultilingualUnicodeStringReferenceBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\MultiplayerColorBlock.cs" />

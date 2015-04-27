@@ -282,26 +282,19 @@ namespace Moonfish.Guerilla
             var hasGetter = GetBody != null;
 
             var builder =
-                new StringBuilder( string.Format( "{0} {1} {2}", AccessModifiers.ToTokenString( ), Returns, Name ) );
+                new StringBuilder(  );
+            builder.AppendLine( string.Format( "{0} {1} {2}", AccessModifiers.ToTokenString( ), Returns, Name ) );
             var indent = 0;
             builder.Append( "{".Tab( ref indent ) );
             if ( hasGetter )
             {
                 var auto = string.IsNullOrWhiteSpace( GetBody );
-                if ( auto ) builder.Append( "get;" );
-                else
-                {
-                    builder.Append( string.Format("get {{ {0} }}", GetBody) );
-                }
+                builder.Append( auto ? "get;" : string.Format( "get {{ {0} }}", GetBody ) );
             }
             if ( hasSetter )
             {
                 var auto = string.IsNullOrWhiteSpace( SetBody );
-                if ( auto ) builder.Append( "set;" );
-                else
-                {
-                    builder.Append(string.Format("set {{ {0} }}", GetBody));
-                }
+                builder.Append( auto ? "set;" : string.Format( "set {{ {0} }}", GetBody ) );
             }
             builder.AppendLine( "}".Tab( ref indent ) );
             return builder.ToString( );

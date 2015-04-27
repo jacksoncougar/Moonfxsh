@@ -40,22 +40,6 @@ namespace Moonfish.Guerilla
             return array;
         }
 
-        public static T[] ReadGBlockArray<T>(BinaryReader binaryReader) where T : GuerillaBlock
-        {
-            var elementSize = SizeOf(typeof(T));
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            var array = new T[blamPointer.elementCount];
-            using (binaryReader.BaseStream.Pin())
-            {
-                for (var i = 0; i < blamPointer.elementCount; ++i)
-                {
-                    binaryReader.BaseStream.Position = blamPointer[i];
-                    array[i] = (T)Activator.CreateInstance(typeof(T), binaryReader);
-                }
-            }
-            return array;
-        }
-
         public static byte[] ReadData( BinaryReader binaryReader )
         {
             var blamPointer = binaryReader.ReadBlamPointer( sizeof ( byte ) );

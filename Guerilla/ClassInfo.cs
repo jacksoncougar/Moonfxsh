@@ -297,7 +297,7 @@ namespace Moonfish.Guerilla
                     }
                 }
             }
-            Constructors.Last().Body = stringBuilder.ToString().TrimEnd();
+            Methods.Last().Body = stringBuilder.ToString().TrimEnd();
         }
 
         public void GenerateReadBlockTemplateMethod( )

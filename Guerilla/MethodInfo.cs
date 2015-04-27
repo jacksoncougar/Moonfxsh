@@ -151,7 +151,7 @@ namespace Moonfish.Guerilla
                 stringBuilder.AppendLine( attribute.ToString( ) );
             }
             stringBuilder.AppendLine( string.Format( "{0} enum {1} : {2}",
-                AccessModifiersExtensions.ToString( AccessModifiers ), Value.Name,
+                AccessModifiers.ToTokenString(  ), Value.Name,
                 BaseType.ToString( ).ToLowerInvariant( ) ).Trim( ) );
             stringBuilder.AppendLine( "{" );
 
@@ -394,7 +394,7 @@ namespace Moonfish.Guerilla
         public override string ToString( )
         {
             var methodStringBuilder = new StringBuilder( );
-            var modifiersString = AccessModifiersExtensions.ToString( AccessModifiers );
+            var modifiersString = AccessModifiers.ToTokenString();
             methodStringBuilder.AppendFormat( "{0} {1} {2}", modifiersString, Returns, GetMethodSignature( ) );
             if ( Wrapper )
             {

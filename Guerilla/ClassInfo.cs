@@ -27,6 +27,7 @@ namespace Moonfish.Guerilla
             };
             Attributes = new List<AttributeInfo>( );
             Fields = new List<FieldInfo>( );
+            Properties = new List<PropertyInfo>( );
             Constructors = new List<MethodInfo>( );
             EnumDefinitions = new List<EnumInfo>( );
             ClassDefinitions = new List<ClassInfo>( );
@@ -56,7 +57,7 @@ namespace Moonfish.Guerilla
             get
             {
                 return
-                    string.Format( "{0} class {1} {2} {3}", AccessModifiersExtensions.ToString( AccessModifiers ),
+                    string.Format("{0} class {1} {2} {3}", AccessModifiers.ToTokenString(  ),
                         Value.Name,
                         BaseClassDeclaration.Trim( ),
                         string.IsNullOrWhiteSpace( BaseClassDeclaration.Trim( ) )
@@ -70,6 +71,7 @@ namespace Moonfish.Guerilla
         public List<MethodInfo> Constructors { get; set; }
         public List<EnumInfo> EnumDefinitions { get; set; }
         public List<FieldInfo> Fields { get; set; }
+        public List<PropertyInfo> Properties { get; set; }
         public List<MethodInfo> Methods { get; set; }
         public List<MethodInfo> MethodsTemplates { get; set; }
         public string Namespace { get; set; }

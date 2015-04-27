@@ -85,6 +85,16 @@ namespace Moonfish.Guerilla
                         StaticReflection.GetMemberName( ( LayoutAttribute layout ) => layout.Size ), size,
                         StaticReflection.GetMemberName( ( LayoutAttribute layout ) => layout.Alignment ), alignment
                         )
+                },
+                Properties =
+                {
+                    new PropertyInfo
+                    {
+                        AccessModifiers = AccessModifiers.Public | AccessModifiers.Override,
+                        GetBody = string.Format( "return {0};", size ),
+                        Returns = "int",
+                        Name = "SerializedSize"
+                    }
                 }
             };
 

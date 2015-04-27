@@ -45,7 +45,7 @@ namespace Moonfish.Guerilla
 
     public static class AccessModifiersExtensions
     {
-        public static string ToString( this AccessModifiers items )
+        public static string ToTokenString(this AccessModifiers items)
         {
             if ( ( items & AccessModifiers.Any ) == 0 ) return "";
             var value = new StringBuilder( );
@@ -248,7 +248,7 @@ namespace Moonfish.Guerilla
 
             // write Field
             stringBuilder.AppendLine( string.Format( "{0} {1}{2} {3};",
-                AccessModifiersExtensions.ToString( AccessModifiers ),
+                AccessModifiers.ToTokenString(  ),
                 typeString, IsArray ? "[]" : "", Value.Name ) );
 
             return stringBuilder.ToString( ).Trim( );
@@ -265,6 +265,50 @@ namespace Moonfish.Guerilla
                 }
             }
             else return FieldTypeName;
+        }
+    }
+
+    public class PropertyInfo
+    {
+        public AccessModifiers AccessModifiers { get; set; }
+        public string Name { get; set; }
+        public string Returns { get; set; }
+        public string SetBody { get; set; }
+        public string GetBody { get; set; }
+
+        public string GetDefinition( )
+        {
+            var hasSetter = SetBody == null;
+            var hasGetter = GetBody == null;
+
+            var builder =
+                new StringBuilder( string.Format( "{0} {1} {2}", AccessModifiers.ToTokenString( ), Returns, Name ) );
+            var indent = 0;
+            builder.Append( "{".Tab( ref indent ) );
+            if ( hasGetter )
+            {
+                var auto = string.IsNullOrWhiteSpace( GetBody );
+                if ( auto ) builder.Append( "get;" );
+                else
+                {
+                    builder.Append( "get {".Tab( ref indent ) );
+                    builder.Append( GetBody );
+                    builder.Append( "}".Tab( ref indent ) );
+                }
+            }
+            if ( hasSetter )
+            {
+                var auto = string.IsNullOrWhiteSpace( SetBody );
+                if ( auto ) builder.Append( "set;" );
+                else
+                {
+                    builder.Append( "set {".Tab( ref indent ) );
+                    builder.Append( SetBody );
+                    builder.Append( "}".Tab( ref indent ) );
+                }
+            }
+            builder.Append( "}".Tab( ref indent ) );
+            return builder.ToString( );
         }
     }
 

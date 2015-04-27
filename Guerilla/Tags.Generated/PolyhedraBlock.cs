@@ -91,7 +91,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             name = binaryReader.ReadStringID();
             material = binaryReader.ReadShortBlockIndex1();
@@ -192,7 +192,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
-            public void Read(BinaryReader binaryReader)
+            public override void Read(BinaryReader binaryReader)
             {
                 fourVectorsX = binaryReader.ReadVector3();
                 invalidName_ = binaryReader.ReadBytes(4);

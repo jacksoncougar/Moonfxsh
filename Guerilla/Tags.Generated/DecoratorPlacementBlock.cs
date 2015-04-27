@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             internalData1 = binaryReader.ReadInt32();
             compressedPosition = binaryReader.ReadInt32();

@@ -82,7 +82,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             stylePalette = Guerilla.ReadBlockArray<StylePaletteBlock>(binaryReader);
             squadGroups = Guerilla.ReadBlockArray<SquadGroupsBlock>(binaryReader);

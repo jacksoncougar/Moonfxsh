@@ -126,7 +126,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             renderModel = binaryReader.ReadTagReference();
             collisionModel = binaryReader.ReadTagReference();
@@ -305,7 +305,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
-            public void Read(BinaryReader binaryReader)
+            public override void Read(BinaryReader binaryReader)
             {
                 invalidName_ = binaryReader.ReadByte();
             }
@@ -336,7 +336,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
-            public void Read(BinaryReader binaryReader)
+            public override void Read(BinaryReader binaryReader)
             {
                 invalidName_ = binaryReader.ReadByte();
             }

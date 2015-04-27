@@ -91,7 +91,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             invalidName_ = binaryReader.ReadBytes(4);
             priority = binaryReader.ReadInt16();

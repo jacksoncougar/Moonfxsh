@@ -80,7 +80,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             invalidName_ = binaryReader.ReadTagReference();
             invalidName_0 = binaryReader.ReadTagReference();
@@ -146,7 +146,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
-            public void Read(BinaryReader binaryReader)
+            public override void Read(BinaryReader binaryReader)
             {
                 createNewVariantStruct = new CreateNewVariantStructBlock(binaryReader);
             }

@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             blendFunction = (BlendFunction)binaryReader.ReadInt16();
             blendSrcFactor = (BlendSrcFactor)binaryReader.ReadInt16();

@@ -39,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             name = binaryReader.ReadString32();
             textValuePairs = Guerilla.ReadBlockArray<STextValuePairReferenceBlockUNUSED>(binaryReader);

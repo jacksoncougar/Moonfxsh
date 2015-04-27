@@ -39,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             settingCategory = (SettingCategory)binaryReader.ReadInt32();
             value = binaryReader.ReadInt32();

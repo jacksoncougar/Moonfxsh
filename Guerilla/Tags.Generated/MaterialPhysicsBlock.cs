@@ -69,7 +69,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             groundFrictionScale = binaryReader.ReadSingle();
             groundFrictionNormalK1Scale = binaryReader.ReadSingle();

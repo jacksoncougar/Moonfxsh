@@ -65,7 +65,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             flags = (Flags)binaryReader.ReadInt32();
             martysMusicTimeSeconds = binaryReader.ReadSingle();

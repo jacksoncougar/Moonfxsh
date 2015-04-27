@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             mouthDataOffset = binaryReader.ReadInt32();
             mouthDataLength = binaryReader.ReadInt32();

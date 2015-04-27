@@ -41,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             nodeIndex = binaryReader.ReadInt16();
             componentFlags = (ComponentFlags)binaryReader.ReadInt16();

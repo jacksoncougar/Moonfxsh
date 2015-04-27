@@ -83,7 +83,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             anchorOffset = binaryReader.ReadPoint();
             widthScale = binaryReader.ReadSingle();

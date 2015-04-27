@@ -41,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             shapes = Guerilla.ReadBlockArray<ShapeBlockReferenceBlock>(binaryReader);
             modelSceneBlocks = Guerilla.ReadBlockArray<UiModelSceneReferenceBlock>(binaryReader);

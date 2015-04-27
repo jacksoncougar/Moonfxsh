@@ -97,7 +97,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             perceptionFlags = (PerceptionFlags)binaryReader.ReadInt32();
             maxVisionDistanceWorldUnits = binaryReader.ReadSingle();

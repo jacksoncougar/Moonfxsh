@@ -45,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             levelsOfDetail = Guerilla.ReadBlockArray<ShaderTemplatePostprocessLevelOfDetailNewBlock>(binaryReader);
             layers = Guerilla.ReadBlockArray<TagBlockIndexBlock>(binaryReader);

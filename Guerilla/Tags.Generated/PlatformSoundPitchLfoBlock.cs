@@ -41,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             delay = new SoundPlaybackParameterDefinitionBlock(binaryReader);
             frequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);

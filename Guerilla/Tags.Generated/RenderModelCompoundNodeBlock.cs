@@ -39,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             nodeIndices = new []{ new NodeIndices(binaryReader), new NodeIndices(binaryReader), new NodeIndices(binaryReader), new NodeIndices(binaryReader),  };
             nodeWeights = new []{ new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader),  };
@@ -76,7 +76,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
-            public void Read(BinaryReader binaryReader)
+            public override void Read(BinaryReader binaryReader)
             {
                 nodeIndex = binaryReader.ReadByte();
             }
@@ -107,7 +107,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
-            public void Read(BinaryReader binaryReader)
+            public override void Read(BinaryReader binaryReader)
             {
                 nodeWeight = binaryReader.ReadSingle();
             }

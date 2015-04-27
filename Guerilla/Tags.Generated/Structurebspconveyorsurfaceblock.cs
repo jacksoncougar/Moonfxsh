@@ -39,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             u = binaryReader.ReadVector3();
             v = binaryReader.ReadVector3();

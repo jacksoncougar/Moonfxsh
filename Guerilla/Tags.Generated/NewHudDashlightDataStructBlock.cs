@@ -50,7 +50,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             lowClipCutoff = binaryReader.ReadInt16();
             lowAmmoCutoff = binaryReader.ReadInt16();

@@ -93,7 +93,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             dialogueType = (DialogueType)binaryReader.ReadInt16();
             vocalizationIndex = binaryReader.ReadInt16();

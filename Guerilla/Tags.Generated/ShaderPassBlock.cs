@@ -56,7 +56,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             documentation = Guerilla.ReadData(binaryReader);
             parameters = Guerilla.ReadBlockArray<ShaderPassParameterBlock>(binaryReader);

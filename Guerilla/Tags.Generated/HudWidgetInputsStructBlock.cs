@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             input1 = (Input1)binaryReader.ReadByte();
             input2 = (Input2)binaryReader.ReadByte();

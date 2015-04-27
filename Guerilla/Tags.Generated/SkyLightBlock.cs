@@ -48,7 +48,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             directionVector = binaryReader.ReadVector3();
             direction = binaryReader.ReadVector2();

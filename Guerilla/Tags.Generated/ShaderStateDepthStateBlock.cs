@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             mode = (Mode)binaryReader.ReadInt16();
             depthCompareFunction = (DepthCompareFunction)binaryReader.ReadInt16();

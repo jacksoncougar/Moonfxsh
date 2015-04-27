@@ -41,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             shapeType = (ShapeType)binaryReader.ReadInt16();
             shape = binaryReader.ReadShortBlockIndex2();

@@ -56,7 +56,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             maximumVitality = binaryReader.ReadSingle();
             effect = binaryReader.ReadTagReference();

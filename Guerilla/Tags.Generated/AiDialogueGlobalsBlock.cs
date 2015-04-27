@@ -54,7 +54,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             vocalizations = Guerilla.ReadBlockArray<VocalizationDefinitionsBlock0>(binaryReader);
             patterns = Guerilla.ReadBlockArray<VocalizationPatternsBlock>(binaryReader);

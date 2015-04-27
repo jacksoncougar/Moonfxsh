@@ -59,7 +59,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             movementFlags = (MovementFlags)binaryReader.ReadInt32();
             pathfindingRadius = binaryReader.ReadSingle();

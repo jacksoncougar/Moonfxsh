@@ -73,7 +73,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             springStrengthCoefficient = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(24);

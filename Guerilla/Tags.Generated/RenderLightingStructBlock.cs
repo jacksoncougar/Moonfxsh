@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             ambient = binaryReader.ReadColorR8G8B8();
             shadowDirection = binaryReader.ReadVector3();

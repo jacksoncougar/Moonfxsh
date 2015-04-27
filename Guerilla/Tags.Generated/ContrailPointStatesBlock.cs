@@ -68,7 +68,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             durationSecondsSeconds = binaryReader.ReadRange();
             transitionDurationSeconds = binaryReader.ReadRange();

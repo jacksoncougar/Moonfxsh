@@ -69,7 +69,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             integrationType = (IntegrationType)binaryReader.ReadInt16();
             numberIterations = binaryReader.ReadInt16();

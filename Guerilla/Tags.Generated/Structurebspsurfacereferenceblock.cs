@@ -41,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             stripIndex = binaryReader.ReadInt16();
             lightmapTriangleIndex = binaryReader.ReadInt16();

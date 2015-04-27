@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             categories = Guerilla.ReadBlockArray<ShaderTemplateCategoryBlock>(binaryReader);
             shaderLODs = Guerilla.ReadBlockArray<ShaderTemplateLevelOfDetailBlock>(binaryReader);

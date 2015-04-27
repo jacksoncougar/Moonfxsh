@@ -45,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             instancedGeometryInstance = binaryReader.ReadShortBlockIndex1();
             breakableSurfaceIndex = binaryReader.ReadInt16();

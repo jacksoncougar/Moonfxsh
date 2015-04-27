@@ -66,7 +66,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             createIn = (CreateIn)binaryReader.ReadInt16();
             createIn0 = (CreateIn)binaryReader.ReadInt16();

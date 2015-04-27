@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             objectAffected = (ObjectAffected)binaryReader.ReadInt32();
             lightmapBrightnessOffset = binaryReader.ReadSingle();

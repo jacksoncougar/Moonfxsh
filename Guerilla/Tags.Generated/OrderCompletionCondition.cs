@@ -57,7 +57,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             ruleType = (RuleType)binaryReader.ReadInt16();
             squad = binaryReader.ReadShortBlockIndex1();

@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             filterType = (FilterType)binaryReader.ReadInt32();
             filterWidth07 = binaryReader.ReadInt32();

@@ -59,7 +59,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             japaneseSound = binaryReader.ReadTagReference();
             germanSound = binaryReader.ReadTagReference();

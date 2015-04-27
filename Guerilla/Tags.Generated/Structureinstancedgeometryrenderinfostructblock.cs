@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
             geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);

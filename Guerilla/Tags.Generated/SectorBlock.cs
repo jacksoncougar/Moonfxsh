@@ -41,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             pathFindingSectorFlags = (PathFindingSectorFlags)binaryReader.ReadInt16();
             hintIndex = binaryReader.ReadInt16();

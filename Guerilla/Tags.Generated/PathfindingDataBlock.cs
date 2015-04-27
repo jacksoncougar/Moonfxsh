@@ -59,7 +59,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             sectors = Guerilla.ReadBlockArray<SectorBlock>(binaryReader);
             links = Guerilla.ReadBlockArray<SectorLinkBlock>(binaryReader);

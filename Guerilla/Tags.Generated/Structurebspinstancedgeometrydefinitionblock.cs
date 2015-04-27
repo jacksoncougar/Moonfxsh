@@ -51,7 +51,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             renderInfo = new StructureInstancedGeometryRenderInfoStructBlock(binaryReader);
             checksum = binaryReader.ReadInt32();

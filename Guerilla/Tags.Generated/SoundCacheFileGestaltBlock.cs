@@ -66,7 +66,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             playbacks = Guerilla.ReadBlockArray<SoundGestaltPlaybackBlock>(binaryReader);
             scales = Guerilla.ReadBlockArray<SoundGestaltScaleBlock>(binaryReader);

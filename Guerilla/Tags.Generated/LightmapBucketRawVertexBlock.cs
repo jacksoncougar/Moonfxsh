@@ -39,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             primaryLightmapColor = binaryReader.ReadColorR8G8B8();
             primaryLightmapIncidentDirection = binaryReader.ReadVector3();

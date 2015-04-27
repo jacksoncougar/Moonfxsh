@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             data = new StaticSpawnZoneDataStructBlock(binaryReader);
             position = binaryReader.ReadVector3();

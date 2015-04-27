@@ -79,7 +79,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             displayString = binaryReader.ReadStringID();
             displayString2 = binaryReader.ReadStringID();

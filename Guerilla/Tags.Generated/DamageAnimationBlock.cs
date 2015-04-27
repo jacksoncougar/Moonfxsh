@@ -39,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             label = binaryReader.ReadStringID();
             directionsAABBCC = Guerilla.ReadBlockArray<DamageDirectionBlock>(binaryReader);

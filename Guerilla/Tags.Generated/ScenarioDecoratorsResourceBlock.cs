@@ -48,7 +48,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             decorator = Guerilla.ReadBlockArray<DecoratorPlacementDefinitionBlock>(binaryReader);
             decoratorPalette = Guerilla.ReadBlockArray<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader);

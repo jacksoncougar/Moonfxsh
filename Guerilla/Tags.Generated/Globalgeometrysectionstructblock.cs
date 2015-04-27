@@ -53,7 +53,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             parts = Guerilla.ReadBlockArray<GlobalGeometryPartBlockNew>(binaryReader);
             subparts = Guerilla.ReadBlockArray<GlobalSubpartsBlock>(binaryReader);

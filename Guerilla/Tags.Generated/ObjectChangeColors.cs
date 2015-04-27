@@ -39,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             initialPermutations = Guerilla.ReadBlockArray<ObjectChangeColorInitialPermutation>(binaryReader);
             functions = Guerilla.ReadBlockArray<ObjectChangeColorFunction>(binaryReader);

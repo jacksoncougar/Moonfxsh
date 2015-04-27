@@ -156,7 +156,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             vitalityFlags = (VitalityFlags)binaryReader.ReadInt32();
             normalBodyVitality = binaryReader.ReadSingle();

@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             fogZoneIndex = binaryReader.ReadInt32();
             invalidName_ = binaryReader.ReadBytes(24);

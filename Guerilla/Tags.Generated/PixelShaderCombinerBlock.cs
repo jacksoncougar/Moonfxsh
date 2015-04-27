@@ -57,7 +57,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             invalidName_ = binaryReader.ReadBytes(16);
             constantColor0 = binaryReader.ReadColourA1R1G1B1();

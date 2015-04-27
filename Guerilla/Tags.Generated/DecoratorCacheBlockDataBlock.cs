@@ -53,7 +53,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             placements = Guerilla.ReadBlockArray<DecoratorPlacementBlock>(binaryReader);
             decalVertices = Guerilla.ReadBlockArray<DecalVerticesBlock>(binaryReader);

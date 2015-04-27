@@ -41,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             dspEffect = binaryReader.ReadStringID();
             lowFrequencySound = new MappingFunctionBlock(binaryReader);

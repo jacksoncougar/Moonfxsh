@@ -100,7 +100,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             rateOfFire = binaryReader.ReadSingle();
             targetTracking01 = binaryReader.ReadSingle();

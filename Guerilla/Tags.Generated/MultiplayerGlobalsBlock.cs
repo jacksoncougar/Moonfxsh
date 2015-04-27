@@ -48,7 +48,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             universal = Guerilla.ReadBlockArray<MultiplayerUniversalBlock>(binaryReader);
             runtime = Guerilla.ReadBlockArray<MultiplayerRuntimeBlock>(binaryReader);

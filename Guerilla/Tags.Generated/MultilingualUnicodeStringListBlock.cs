@@ -50,7 +50,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             stringReferences = Guerilla.ReadBlockArray<MultilingualUnicodeStringReferenceBlock>(binaryReader);
             stringDataUtf8 = Guerilla.ReadData(binaryReader);

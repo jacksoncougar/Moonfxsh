@@ -61,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             loadedTorqueCurve = new TorqueCurveStructBlock(binaryReader);
             cruisingTorqueCurve = new TorqueCurveStructBlock(binaryReader);

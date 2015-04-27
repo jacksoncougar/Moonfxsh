@@ -51,7 +51,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             vertex1 = binaryReader.ReadInt16();
             vertex2 = binaryReader.ReadInt16();

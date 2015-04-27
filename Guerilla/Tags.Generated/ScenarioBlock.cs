@@ -275,7 +275,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             doNotUse = binaryReader.ReadTagReference();
             skies = Guerilla.ReadBlockArray<ScenarioSkyReferenceBlock>(binaryReader);
@@ -576,7 +576,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
-            public void Read(BinaryReader binaryReader)
+            public override void Read(BinaryReader binaryReader)
             {
                 eMPTYSTRING = binaryReader.ReadInt32();
             }

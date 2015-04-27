@@ -42,7 +42,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             sharedInterface = new WeaponSharedInterfaceStructBlock(binaryReader);
             firstPerson = Guerilla.ReadBlockArray<WeaponFirstPersonInterfaceBlock>(binaryReader);

@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             regionNameMustMatchRegionNameInRenderModel = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(1);

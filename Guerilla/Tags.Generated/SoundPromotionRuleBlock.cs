@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             pitchRanges = binaryReader.ReadShortBlockIndex1();
             maximumPlayingCount = binaryReader.ReadInt16();

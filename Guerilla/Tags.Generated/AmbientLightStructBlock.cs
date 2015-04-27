@@ -41,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             minLightmapSample = binaryReader.ReadColorR8G8B8();
             maxLightmapSample = binaryReader.ReadColorR8G8B8();

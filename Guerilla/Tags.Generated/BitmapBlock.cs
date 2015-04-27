@@ -104,7 +104,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             type = (Type)binaryReader.ReadInt16();
             format = (Format)binaryReader.ReadInt16();

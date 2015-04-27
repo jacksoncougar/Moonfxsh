@@ -48,7 +48,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             aiFlags = (AiFlags)binaryReader.ReadInt32();
             aiTypeName = binaryReader.ReadStringID();

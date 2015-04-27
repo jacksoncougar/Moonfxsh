@@ -84,7 +84,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             mapID = binaryReader.ReadInt32();
             bitmap = binaryReader.ReadTagReference();

@@ -51,7 +51,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             bSP3DNodes = Guerilla.ReadBlockArray<Bsp3dNodesBlock>(binaryReader);
             planes = Guerilla.ReadBlockArray<PlanesBlock>(binaryReader);

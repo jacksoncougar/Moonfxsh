@@ -45,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             oldShader = binaryReader.ReadTagReference();
             invalidName_ = binaryReader.ReadBytes(2);

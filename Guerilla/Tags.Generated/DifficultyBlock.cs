@@ -593,7 +593,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             easyEnemyDamage = binaryReader.ReadSingle();
             normalEnemyDamage = binaryReader.ReadSingle();

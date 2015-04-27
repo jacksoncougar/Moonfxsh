@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             sequenceIndex = binaryReader.ReadInt16();
             widthOffset = binaryReader.ReadInt16();

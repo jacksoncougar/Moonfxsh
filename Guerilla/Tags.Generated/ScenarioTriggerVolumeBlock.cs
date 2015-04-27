@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             name = binaryReader.ReadStringID();
             objectName = binaryReader.ReadShortBlockIndex1();
@@ -108,7 +108,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
-            public void Read(BinaryReader binaryReader)
+            public override void Read(BinaryReader binaryReader)
             {
                 eMPTYSTRING = binaryReader.ReadSingle();
             }

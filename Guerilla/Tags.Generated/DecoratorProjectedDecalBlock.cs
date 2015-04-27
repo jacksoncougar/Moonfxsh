@@ -53,7 +53,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             decoratorSet = binaryReader.ReadByteBlockIndex1();
             decoratorClass = binaryReader.ReadByte();

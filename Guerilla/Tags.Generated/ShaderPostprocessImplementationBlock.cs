@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             gPUConstantState = new ShaderGpuStateReferenceStructBlock(binaryReader);
             gPUVolatileState = new ShaderGpuStateReferenceStructBlock(binaryReader);

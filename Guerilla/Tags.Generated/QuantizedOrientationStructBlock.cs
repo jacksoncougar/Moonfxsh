@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             rotationX = binaryReader.ReadInt16();
             rotationY = binaryReader.ReadInt16();

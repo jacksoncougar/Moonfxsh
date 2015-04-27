@@ -44,7 +44,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             naturalPitchCents = binaryReader.ReadInt16();
             bendBoundsCents = binaryReader.ReadInt32();

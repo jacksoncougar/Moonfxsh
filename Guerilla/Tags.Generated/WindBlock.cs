@@ -62,7 +62,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             velocityWorldUnits = binaryReader.ReadRange();
             variationArea = binaryReader.ReadVector2();

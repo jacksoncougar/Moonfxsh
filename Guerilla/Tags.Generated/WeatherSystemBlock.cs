@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             particleSystem = Guerilla.ReadBlockArray<GlobalParticleSystemLiteBlock>(binaryReader);
             backgroundPlates = Guerilla.ReadBlockArray<GlobalWeatherBackgroundPlateBlock>(binaryReader);

@@ -103,7 +103,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             maxSoundsPerTag116 = binaryReader.ReadInt16();
             maxSoundsPerObject116 = binaryReader.ReadInt16();

@@ -71,7 +71,7 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
-        public void Read(BinaryReader binaryReader)
+        public override void Read(BinaryReader binaryReader)
         {
             invalidName_ = binaryReader.ReadBytes(4);
             size = binaryReader.ReadInt16();
@@ -151,7 +151,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
-            public void Read(BinaryReader binaryReader)
+            public override void Read(BinaryReader binaryReader)
             {
                 shapeType = (ShapeType)binaryReader.ReadInt16();
                 shape = binaryReader.ReadShortBlockIndex2();
@@ -215,7 +215,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
-            public void Read(BinaryReader binaryReader)
+            public override void Read(BinaryReader binaryReader)
             {
                 invalidName_ = binaryReader.ReadBytes(4);
                 size = binaryReader.ReadInt16();
@@ -264,7 +264,7 @@ namespace Moonfish.Guerilla.Tags
                 {
                     
                 }
-                public void Read(BinaryReader binaryReader)
+                public override void Read(BinaryReader binaryReader)
                 {
                     sphere = binaryReader.ReadVector3();
                     invalidName_ = binaryReader.ReadBytes(4);

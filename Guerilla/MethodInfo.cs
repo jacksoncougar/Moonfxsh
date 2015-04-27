@@ -291,9 +291,7 @@ namespace Moonfish.Guerilla
                 if ( auto ) builder.Append( "get;" );
                 else
                 {
-                    builder.Append( "get {".Tab( ref indent ) );
-                    builder.Append( GetBody );
-                    builder.Append( "}".Tab( ref indent ) );
+                    builder.Append( string.Format("get {{ {0} }}", GetBody) );
                 }
             }
             if ( hasSetter )
@@ -302,12 +300,10 @@ namespace Moonfish.Guerilla
                 if ( auto ) builder.Append( "set;" );
                 else
                 {
-                    builder.Append( "set {".Tab( ref indent ) );
-                    builder.Append( SetBody );
-                    builder.Append( "}".Tab( ref indent ) );
+                    builder.Append(string.Format("set {{ {0} }}", GetBody));
                 }
             }
-            builder.Append( "}".Tab( ref indent ) );
+            builder.AppendLine( "}".Tab( ref indent ) );
             return builder.ToString( );
         }
     }

@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla
         {
             if ( ( items & AccessModifiers.Any ) == 0 ) return "";
             var value = new StringBuilder( );
-            var values = items.ToString( ).Split( ',' ).ToList( );
+            var values = Enum.GetName(typeof(AccessModifiers), items);
             values.TakeWhile( x => x != values.Last( ) )
                 .ToList( )
                 .ForEach( x => value.Append( string.Format( "{0} ", x.ToLower( ) ) ) );
@@ -278,8 +278,8 @@ namespace Moonfish.Guerilla
 
         public override string ToString( )
         {
-            var hasSetter = SetBody == null;
-            var hasGetter = GetBody == null;
+            var hasSetter = SetBody != null;
+            var hasGetter = GetBody != null;
 
             var builder =
                 new StringBuilder( string.Format( "{0} {1} {2}", AccessModifiers.ToTokenString( ), Returns, Name ) );

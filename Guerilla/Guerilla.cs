@@ -23,8 +23,7 @@ namespace Moonfish.Guerilla
             var elementSize = layoutAttribute != null ? layoutAttribute.Alignment : 4;
             return elementSize;
         }
-
-        public static T[] ReadBlockArray<T>(BinaryReader binaryReader) where T : IGuerilla
+        public static T[] ReadBlockArray<T>( BinaryReader binaryReader ) where T : IGuerilla
         {
             var elementSize = SizeOf( typeof ( T ) );
             var blamPointer = binaryReader.ReadBlamPointer( elementSize );

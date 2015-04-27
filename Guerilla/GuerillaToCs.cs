@@ -333,7 +333,8 @@ namespace Moonfish.Guerilla
                         StaticReflection.GetMemberName( ( LayoutAttribute layout ) => layout.Alignment ), 1)
                 },
                 Value = ToTypeName( fields[ 0 ].Name ),
-                AccessModifiers = AccessModifiers.Public
+                AccessModifiers = AccessModifiers.Public,
+                BaseClass = "GuerillaBlock"
             };
             fields.RemoveAt( 0 );
             ProcessFields( fields, arrayClass );

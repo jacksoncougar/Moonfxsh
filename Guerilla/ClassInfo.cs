@@ -122,22 +122,11 @@ namespace Moonfish.Guerilla
             GenerateReadBlockTemplateMethod( );
             GenerateReadDataMethod( );
             GenerateBinaryReaderConstructor( );
-            GenerateDefaultConstructor( );
 
             GenerateWriteBlockTemplateMethod( );
             GenerateWriteArrayMethod( );
             GenerateWriteDataMethod( );
             GenerateWriteMethod( );
-        }
-
-        void GenerateDefaultConstructor( )
-        {
-            Constructors.Add(new MethodInfo
-            {
-                ClassName = Value.Name,
-                AccessModifiers = AccessModifiers.Internal,
-                Wrapper = !string.IsNullOrWhiteSpace(BaseClass)
-            });
         }
 
         public void GenerateBinaryReaderConstructor( )

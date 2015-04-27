@@ -283,9 +283,10 @@ namespace Moonfish.Guerilla
 
             var builder =
                 new StringBuilder(  );
-            builder.AppendLine( string.Format( "{0} {1} {2}", AccessModifiers.ToTokenString( ), Returns, Name ) );
+            builder.AppendLine( );
+            builder.Append( string.Format( "{0} {1} {2}", AccessModifiers.ToTokenString( ), Returns, Name ) );
             var indent = 0;
-            builder.Append( "{".Tab( ref indent ) );
+            builder.Append( "{ ".Tab( ref indent ) );
             if ( hasGetter )
             {
                 var auto = string.IsNullOrWhiteSpace( GetBody );
@@ -296,7 +297,7 @@ namespace Moonfish.Guerilla
                 var auto = string.IsNullOrWhiteSpace( SetBody );
                 builder.Append( auto ? "set;" : string.Format( "set {{ {0} }}", GetBody ) );
             }
-            builder.AppendLine( "}".Tab( ref indent ) );
+            builder.AppendLine( " }".Tab( ref indent ) );
             return builder.ToString( );
         }
     }

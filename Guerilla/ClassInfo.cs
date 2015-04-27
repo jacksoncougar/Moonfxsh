@@ -226,7 +226,7 @@ namespace Moonfish.Guerilla
             Methods.Add(new MethodInfo
             {
                 ClassName = "Read",
-                AccessModifiers = AccessModifiers.Public,
+                AccessModifiers = AccessModifiers.Public | AccessModifiers.Override,
                 Arguments = new List<ParameterInfo>
                 {
                     new ParameterInfo( typeof ( BinaryReader ) )

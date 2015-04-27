@@ -22,11 +22,11 @@ namespace Moonfish
         {
 
             GuerillaCs converter = new GuerillaCs(Local.GuerillaPath);
-            foreach ( var tag in Guerilla.Guerilla.h2Tags )
+            foreach (var tag in Guerilla.Guerilla.h2Tags)
             {
                 converter.DumpTagLayout(
-                    new MoonfishTagGroup( tag ),
-                    @"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags.Generated\" );
+                    new MoonfishTagGroup(tag),
+                    @"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags.Generated\");
             }
 
 

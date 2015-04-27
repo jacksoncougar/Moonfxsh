@@ -16,8 +16,8 @@ namespace Moonfish.Guerilla
         protected GuerillaBlock()
         {
         }
-    
-        protected GuerillaBlock( BinaryReader binaryReader )
+
+        protected GuerillaBlock(BinaryReader binaryReader)
         {
         }
 

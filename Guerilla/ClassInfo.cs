@@ -122,6 +122,7 @@ namespace Moonfish.Guerilla
             GenerateReadBlockTemplateMethod( );
             GenerateReadDataMethod( );
             GenerateBinaryReaderConstructor( );
+            GenerateDefaultConstructor( );
 
             GenerateWriteBlockTemplateMethod( );
             GenerateWriteArrayMethod( );
@@ -129,12 +130,22 @@ namespace Moonfish.Guerilla
             GenerateWriteMethod( );
         }
 
+        void GenerateDefaultConstructor( )
+        {
+            Constructors.Add(new MethodInfo
+            {
+                ClassName = Value.Name,
+                AccessModifiers = AccessModifiers.Public,
+                Wrapper = !string.IsNullOrWhiteSpace(BaseClass)
+            });
+        }
+
         public void GenerateBinaryReaderConstructor( )
         {
             Constructors.Add( new MethodInfo
             {
                 ClassName = Value.Name,
-                AccessModifiers = AccessModifiers.Internal,
+                AccessModifiers = AccessModifiers.Public,
                 Arguments = new List<ParameterInfo>
                 {
                     new ParameterInfo( typeof ( BinaryReader ) )

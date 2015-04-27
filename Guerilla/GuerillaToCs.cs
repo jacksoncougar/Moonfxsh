@@ -94,6 +94,13 @@ namespace Moonfish.Guerilla
                         GetBody = string.Format( "return {0};", size ),
                         Returns = "int",
                         Name = "SerializedSize"
+                    },
+                    new PropertyInfo
+                    {
+                        AccessModifiers = AccessModifiers.Public | AccessModifiers.Override,
+                        GetBody = string.Format( "return {0};", alignment ),
+                        Returns = "int",
+                        Name = "Alignment"
                     }
                 },
                 BaseClass = "GuerillaBlock"
@@ -344,6 +351,13 @@ namespace Moonfish.Guerilla
                         GetBody = string.Format( "return {0};", size ),
                         Returns = "int",
                         Name = "SerializedSize"
+                    },
+                    new PropertyInfo
+                    {
+                        AccessModifiers = AccessModifiers.Public | AccessModifiers.Override,
+                        GetBody = string.Format( "return {0};", 1 ),
+                        Returns = "int",
+                        Name = "Alignment"
                     }
                 }
             };

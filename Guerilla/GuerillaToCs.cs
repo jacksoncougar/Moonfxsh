@@ -245,9 +245,14 @@ namespace Moonfish.Guerilla
                     classInfo.Value.Name.Remove( classInfo.Value.Name.LastIndexOf( "Base", StringComparison.Ordinal ), 4 );
             }
 
-            foreach ( var item in classInfo.Fields )
+            foreach (var item in classInfo.Fields)
             {
-                tabCount = ProcessLines( streamWriter, tabCount, item );
+                tabCount = ProcessLines(streamWriter, tabCount, item);
+            }
+
+            foreach (var item in classInfo.Properties)
+            {
+                tabCount = ProcessLines(streamWriter, tabCount, item);
             }
 
             foreach ( var item in classInfo.Constructors )

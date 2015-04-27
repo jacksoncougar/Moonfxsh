@@ -276,7 +276,7 @@ namespace Moonfish.Guerilla
         public string SetBody { get; set; }
         public string GetBody { get; set; }
 
-        public string GetDefinition( )
+        public override string ToString( )
         {
             var hasSetter = SetBody == null;
             var hasGetter = GetBody == null;

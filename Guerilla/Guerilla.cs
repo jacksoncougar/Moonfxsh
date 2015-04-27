@@ -85,7 +85,8 @@ namespace Moonfish.Guerilla
             where T : GuerillaBlock
         {
             var elementType = blocks.GetType( ).GetElementType( );
-            var blamPointer = new BlamPointer( blocks.Count, nextAddress, SizeOf( elementType ),
+            var elementSize = blocks.Count > 0 ? blocks[ 0 ].SerializedSize : SizeOf( elementType );
+            var blamPointer = new BlamPointer(blocks.Count, nextAddress, elementSize,
                 AlignmentOf( elementType ) );
 
             binaryWriter.Write( blamPointer );

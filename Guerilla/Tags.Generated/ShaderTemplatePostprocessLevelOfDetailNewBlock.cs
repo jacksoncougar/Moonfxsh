@@ -41,6 +41,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            layers = new TagBlockIndexStructBlock(binaryReader);
+            availableLayers = binaryReader.ReadInt32();
+            projectedHeightPercentage = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

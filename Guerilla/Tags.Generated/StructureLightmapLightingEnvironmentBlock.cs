@@ -67,6 +67,25 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            samplePoint = binaryReader.ReadVector3();
+            redCoefficients = new []{ new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader), new RedCoefficients(binaryReader),  };
+            greenCoefficients = new []{ new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader), new GreenCoefficients(binaryReader),  };
+            blueCoefficients = new []{ new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader), new BlueCoefficients(binaryReader),  };
+            meanIncomingLightDirection = binaryReader.ReadVector3();
+            incomingLightIntensity = binaryReader.ReadVector3();
+            specularBitmapIndex = binaryReader.ReadInt32();
+            rotationAxis = binaryReader.ReadVector3();
+            rotationSpeed = binaryReader.ReadSingle();
+            bumpDirection = binaryReader.ReadVector3();
+            colorTint = binaryReader.ReadColorR8G8B8();
+            proceduralOveride = (ProceduralOveride)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            proceduralParam0 = binaryReader.ReadVector3();
+            proceduralParam1Xyz = binaryReader.ReadVector3();
+            proceduralParam1W = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
@@ -148,6 +167,10 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
+            public void Read(BinaryReader binaryReader)
+            {
+                redCoefficient = binaryReader.ReadSingle();
+            }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
                 using(binaryWriter.BaseStream.Pin())
@@ -175,6 +198,10 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
+            public void Read(BinaryReader binaryReader)
+            {
+                greenCoefficient = binaryReader.ReadSingle();
+            }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
                 using(binaryWriter.BaseStream.Pin())
@@ -201,6 +228,10 @@ namespace Moonfish.Guerilla.Tags
             public  BlueCoefficients(): base()
             {
                 
+            }
+            public void Read(BinaryReader binaryReader)
+            {
+                blueCoefficient = binaryReader.ReadSingle();
             }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {

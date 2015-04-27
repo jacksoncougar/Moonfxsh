@@ -81,6 +81,26 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            documentation = Guerilla.ReadData(binaryReader);
+            defaultMaterialName = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(2);
+            flags = (Flags)binaryReader.ReadInt16();
+            properties = Guerilla.ReadBlockArray<ShaderTemplatePropertyBlock>(binaryReader);
+            categories = Guerilla.ReadBlockArray<ShaderTemplateCategoryBlock>(binaryReader);
+            lightResponse = binaryReader.ReadTagReference();
+            lODs = Guerilla.ReadBlockArray<ShaderTemplateLevelOfDetailBlock>(binaryReader);
+            eMPTYSTRING = Guerilla.ReadBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader);
+            eMPTYSTRING0 = Guerilla.ReadBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader);
+            aux1Shader = binaryReader.ReadTagReference();
+            aux1Layer = (Aux1Layer)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            aux2Shader = binaryReader.ReadTagReference();
+            aux2Layer = (Aux2Layer)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            postprocessDefinition = Guerilla.ReadBlockArray<ShaderTemplatePostprocessDefinitionNewBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

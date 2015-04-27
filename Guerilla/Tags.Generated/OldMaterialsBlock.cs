@@ -67,6 +67,17 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            newMaterialName = binaryReader.ReadStringID();
+            newGeneralMaterialName = binaryReader.ReadStringID();
+            groundFrictionScale = binaryReader.ReadSingle();
+            groundFrictionNormalK1Scale = binaryReader.ReadSingle();
+            groundFrictionNormalK0Scale = binaryReader.ReadSingle();
+            groundDepthScale = binaryReader.ReadSingle();
+            groundDampFractionScale = binaryReader.ReadSingle();
+            meleeHitSound = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

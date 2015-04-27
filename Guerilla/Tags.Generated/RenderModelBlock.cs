@@ -99,6 +99,35 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadStringID();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(4);
+            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>(binaryReader);
+            compressionInfo = Guerilla.ReadBlockArray<GlobalGeometryCompressionInfoBlock>(binaryReader);
+            regions = Guerilla.ReadBlockArray<RenderModelRegionBlock>(binaryReader);
+            sections = Guerilla.ReadBlockArray<RenderModelSectionBlock>(binaryReader);
+            invalidSectionPairBits = Guerilla.ReadBlockArray<RenderModelInvalidSectionPairsBlock>(binaryReader);
+            sectionGroups = Guerilla.ReadBlockArray<RenderModelSectionGroupBlock>(binaryReader);
+            l1SectionGroupIndexSuperLow = binaryReader.ReadByte();
+            l2SectionGroupIndexLow = binaryReader.ReadByte();
+            l3SectionGroupIndexMedium = binaryReader.ReadByte();
+            l4SectionGroupIndexHigh = binaryReader.ReadByte();
+            l5SectionGroupIndexSuperHigh = binaryReader.ReadByte();
+            l6SectionGroupIndexHollywood = binaryReader.ReadByte();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            nodeListChecksum = binaryReader.ReadInt32();
+            nodes = Guerilla.ReadBlockArray<RenderModelNodeBlock>(binaryReader);
+            nodeMapOLD = Guerilla.ReadBlockArray<RenderModelNodeMapBlockOLD>(binaryReader);
+            markerGroups = Guerilla.ReadBlockArray<RenderModelMarkerGroupBlock>(binaryReader);
+            materials = Guerilla.ReadBlockArray<GlobalGeometryMaterialBlock>(binaryReader);
+            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
+            dontDrawOverCameraCosineAngle = binaryReader.ReadSingle();
+            pRTInfo = Guerilla.ReadBlockArray<PrtInfoBlock>(binaryReader);
+            sectionRenderLeaves = Guerilla.ReadBlockArray<SectionRenderLeavesBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

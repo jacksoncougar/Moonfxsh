@@ -41,6 +41,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            boundingSphereCenter = binaryReader.ReadVector3();
+            boundingSphereRadius = binaryReader.ReadSingle();
+            planes = Guerilla.ReadBlockArray<StructureBspWeatherPolyhedronPlaneBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

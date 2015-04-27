@@ -67,6 +67,25 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            shaderTemplateIndex = binaryReader.ReadInt32();
+            bitmaps = Guerilla.ReadBlockArray<ShaderPostprocessBitmapNewBlock>(binaryReader);
+            pixelConstants = Guerilla.ReadBlockArray<Pixel32Block>(binaryReader);
+            vertexConstants = Guerilla.ReadBlockArray<RealVector4dBlock>(binaryReader);
+            levelsOfDetail = Guerilla.ReadBlockArray<ShaderPostprocessLevelOfDetailNewBlock>(binaryReader);
+            layers = Guerilla.ReadBlockArray<TagBlockIndexBlock>(binaryReader);
+            passes = Guerilla.ReadBlockArray<TagBlockIndexBlock>(binaryReader);
+            implementations = Guerilla.ReadBlockArray<ShaderPostprocessImplementationNewBlock>(binaryReader);
+            overlays = Guerilla.ReadBlockArray<ShaderPostprocessOverlayNewBlock>(binaryReader);
+            overlayReferences = Guerilla.ReadBlockArray<ShaderPostprocessOverlayReferenceNewBlock>(binaryReader);
+            animatedParameters = Guerilla.ReadBlockArray<ShaderPostprocessAnimatedParameterNewBlock>(binaryReader);
+            animatedParameterReferences = Guerilla.ReadBlockArray<ShaderPostprocessAnimatedParameterReferenceNewBlock>(binaryReader);
+            bitmapProperties = Guerilla.ReadBlockArray<ShaderPostprocessBitmapPropertyBlock>(binaryReader);
+            colorProperties = Guerilla.ReadBlockArray<ShaderPostprocessColorPropertyBlock>(binaryReader);
+            valueProperties = Guerilla.ReadBlockArray<ShaderPostprocessValuePropertyBlock>(binaryReader);
+            oldLevelsOfDetail = Guerilla.ReadBlockArray<ShaderPostprocessLevelOfDetailBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

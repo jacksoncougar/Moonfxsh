@@ -46,6 +46,14 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            invalidName_ = binaryReader.ReadTagReference();
+            components = Guerilla.ReadBlockArray<SoundEffectComponentBlock>(binaryReader);
+            soundEffectOverridesBlock = Guerilla.ReadBlockArray<SoundEffectOverridesBlock>(binaryReader);
+            invalidName_0 = Guerilla.ReadData(binaryReader);
+            platformSoundEffectCollectionBlock = Guerilla.ReadBlockArray<PlatformSoundEffectCollectionBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

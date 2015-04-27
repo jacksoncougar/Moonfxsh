@@ -174,6 +174,57 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            radiusWorldUnits = binaryReader.ReadRange();
+            cutoffScale01 = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt32();
+            sideEffect = (SideEffect)binaryReader.ReadInt16();
+            category = (Category)binaryReader.ReadInt16();
+            flags0 = (Flags)binaryReader.ReadInt32();
+            aOECoreRadiusWorldUnits = binaryReader.ReadSingle();
+            damageLowerBound = binaryReader.ReadSingle();
+            damageUpperBound = binaryReader.ReadRange();
+            dmgInnerConeAngle = binaryReader.ReadSingle();
+            blah = new DamageOuterConeAngleStructBlock(binaryReader);
+            activeCamouflageDamage01 = binaryReader.ReadSingle();
+            stun01 = binaryReader.ReadSingle();
+            maximumStun01 = binaryReader.ReadSingle();
+            stunTimeSeconds = binaryReader.ReadSingle();
+            instantaneousAcceleration0Inf = binaryReader.ReadSingle();
+            riderDirectDamageScale = binaryReader.ReadSingle();
+            riderMaximumTransferDamageScale = binaryReader.ReadSingle();
+            riderMinimumTransferDamageScale = binaryReader.ReadSingle();
+            generalDamage = binaryReader.ReadStringID();
+            specificDamage = binaryReader.ReadStringID();
+            aIStunRadiusWorldUnits = binaryReader.ReadSingle();
+            aIStunBounds01 = binaryReader.ReadRange();
+            shakeRadius = binaryReader.ReadSingle();
+            eMPRadius = binaryReader.ReadSingle();
+            playerResponses = Guerilla.ReadBlockArray<DamageEffectPlayerResponseBlock>(binaryReader);
+            durationSeconds = binaryReader.ReadSingle();
+            fadeFunction = (FadeFunction)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            rotationDegrees = binaryReader.ReadSingle();
+            pushbackWorldUnits = binaryReader.ReadSingle();
+            jitterWorldUnits = binaryReader.ReadRange();
+            durationSeconds0 = binaryReader.ReadSingle();
+            falloffFunction = (FalloffFunctionAFunctionToEnvelopeTheEffectsMagnitudeOverTime)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            randomTranslationWorldUnits = binaryReader.ReadSingle();
+            randomRotationDegrees = binaryReader.ReadSingle();
+            wobbleFunction = (WobbleFunctionAFunctionToPerturbTheEffectsBehaviorOverTime)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            wobbleFunctionPeriodSeconds = binaryReader.ReadSingle();
+            wobbleWeight = binaryReader.ReadSingle();
+            sound = binaryReader.ReadTagReference();
+            forwardVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            forwardRadiusWorldUnits = binaryReader.ReadSingle();
+            forwardExponent = binaryReader.ReadSingle();
+            outwardVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            outwardRadiusWorldUnits = binaryReader.ReadSingle();
+            outwardExponent = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

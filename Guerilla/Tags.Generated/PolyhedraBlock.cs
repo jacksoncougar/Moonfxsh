@@ -91,6 +91,37 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadStringID();
+            material = binaryReader.ReadShortBlockIndex1();
+            flags = (Flags)binaryReader.ReadInt16();
+            relativeMassScale = binaryReader.ReadSingle();
+            friction = binaryReader.ReadSingle();
+            restitution = binaryReader.ReadSingle();
+            volume = binaryReader.ReadSingle();
+            mass = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(2);
+            phantom = binaryReader.ReadShortBlockIndex1();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            size = binaryReader.ReadInt16();
+            count = binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(4);
+            radius = binaryReader.ReadSingle();
+            aabbHalfExtents = binaryReader.ReadVector3();
+            invalidName_2 = binaryReader.ReadBytes(4);
+            aabbCenter = binaryReader.ReadVector3();
+            invalidName_3 = binaryReader.ReadBytes(4);
+            invalidName_4 = binaryReader.ReadBytes(4);
+            fourVectorsSize = binaryReader.ReadInt32();
+            fourVectorsCapacity = binaryReader.ReadInt32();
+            numVertices = binaryReader.ReadInt32();
+            fourVectorsStorage = new []{ new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader),  };
+            invalidName_5 = binaryReader.ReadBytes(4);
+            planeEquationsSize = binaryReader.ReadInt32();
+            planeEquationsCapacity = binaryReader.ReadInt32();
+            invalidName_6 = binaryReader.ReadBytes(4);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
@@ -160,6 +191,15 @@ namespace Moonfish.Guerilla.Tags
             public  FourVectorsStorage(): base()
             {
                 
+            }
+            public void Read(BinaryReader binaryReader)
+            {
+                fourVectorsX = binaryReader.ReadVector3();
+                invalidName_ = binaryReader.ReadBytes(4);
+                fourVectorsY = binaryReader.ReadVector3();
+                invalidName_0 = binaryReader.ReadBytes(4);
+                fourVectorsZ = binaryReader.ReadVector3();
+                invalidName_1 = binaryReader.ReadBytes(4);
             }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {

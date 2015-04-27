@@ -117,6 +117,40 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            distanceAttenuation = binaryReader.ReadTagReference();
+            vectorNormalization = binaryReader.ReadTagReference();
+            gradients = binaryReader.ReadTagReference();
+            uNUSED = binaryReader.ReadTagReference();
+            uNUSED0 = binaryReader.ReadTagReference();
+            uNUSED1 = binaryReader.ReadTagReference();
+            glow = binaryReader.ReadTagReference();
+            uNUSED2 = binaryReader.ReadTagReference();
+            uNUSED3 = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(16);
+            globalVertexShaders = Guerilla.ReadBlockArray<VertexShaderReferenceBlock>(binaryReader);
+            default2D = binaryReader.ReadTagReference();
+            default3D = binaryReader.ReadTagReference();
+            defaultCubeMap = binaryReader.ReadTagReference();
+            uNUSED4 = binaryReader.ReadTagReference();
+            uNUSED5 = binaryReader.ReadTagReference();
+            uNUSED6 = binaryReader.ReadTagReference();
+            uNUSED7 = binaryReader.ReadTagReference();
+            uNUSED8 = binaryReader.ReadTagReference();
+            uNUSED9 = binaryReader.ReadTagReference();
+            invalidName_0 = binaryReader.ReadBytes(36);
+            globalShader = binaryReader.ReadTagReference();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            refractionAmountPixels = binaryReader.ReadSingle();
+            distanceFalloff = binaryReader.ReadSingle();
+            tintColor = binaryReader.ReadColorR8G8B8();
+            hyperStealthRefractionPixels = binaryReader.ReadSingle();
+            hyperStealthDistanceFalloff = binaryReader.ReadSingle();
+            hyperStealthTintColor = binaryReader.ReadColorR8G8B8();
+            uNUSED10 = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

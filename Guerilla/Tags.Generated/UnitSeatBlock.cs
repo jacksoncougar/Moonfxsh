@@ -116,6 +116,40 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            label = binaryReader.ReadStringID();
+            markerName = binaryReader.ReadStringID();
+            entryMarkerSName = binaryReader.ReadStringID();
+            boardingGrenadeMarker = binaryReader.ReadStringID();
+            boardingGrenadeString = binaryReader.ReadStringID();
+            boardingMeleeString = binaryReader.ReadStringID();
+            pingScale = binaryReader.ReadSingle();
+            turnoverTimeSeconds = binaryReader.ReadSingle();
+            acceleration = new UnitSeatAccelerationStructBlock(binaryReader);
+            aIScariness = binaryReader.ReadSingle();
+            aiSeatType = (AiSeatType)binaryReader.ReadInt16();
+            boardingSeat = binaryReader.ReadShortBlockIndex1();
+            listenerInterpolationFactor = binaryReader.ReadSingle();
+            yawRateBoundsDegreesPerSecond = binaryReader.ReadRange();
+            pitchRateBoundsDegreesPerSecond = binaryReader.ReadRange();
+            minSpeedReference = binaryReader.ReadSingle();
+            maxSpeedReference = binaryReader.ReadSingle();
+            speedExponent = binaryReader.ReadSingle();
+            unitCamera = new UnitCameraStructBlock(binaryReader);
+            unitHudInterface = Guerilla.ReadBlockArray<UnitHudReferenceBlock>(binaryReader);
+            enterSeatString = binaryReader.ReadStringID();
+            yawMinimum = binaryReader.ReadSingle();
+            yawMaximum = binaryReader.ReadSingle();
+            builtInGunner = binaryReader.ReadTagReference();
+            entryRadius = binaryReader.ReadSingle();
+            entryMarkerConeAngle = binaryReader.ReadSingle();
+            entryMarkerFacingAngle = binaryReader.ReadSingle();
+            maximumRelativeVelocity = binaryReader.ReadSingle();
+            invisibleSeatRegion = binaryReader.ReadStringID();
+            runtimeInvisibleSeatRegionIndex = binaryReader.ReadInt32();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -252,6 +252,107 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flag = binaryReader.ReadTagReference();
+            ball = binaryReader.ReadTagReference();
+            unit = binaryReader.ReadTagReference();
+            flagShader = binaryReader.ReadTagReference();
+            hillShader = binaryReader.ReadTagReference();
+            head = binaryReader.ReadTagReference();
+            juggernautPowerup = binaryReader.ReadTagReference();
+            daBomb = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadTagReference();
+            invalidName_0 = binaryReader.ReadTagReference();
+            invalidName_1 = binaryReader.ReadTagReference();
+            invalidName_2 = binaryReader.ReadTagReference();
+            invalidName_3 = binaryReader.ReadTagReference();
+            weapons = Guerilla.ReadBlockArray<WeaponsBlock>(binaryReader);
+            vehicles = Guerilla.ReadBlockArray<VehiclesBlock>(binaryReader);
+            arr = new GrenadeAndPowerupStructBlock(binaryReader);
+            inGameText = binaryReader.ReadTagReference();
+            sounds = Guerilla.ReadBlockArray<SoundsBlock>(binaryReader);
+            generalEvents = Guerilla.ReadBlockArray<GameEngineGeneralEventBlock>(binaryReader);
+            flavorEvents = Guerilla.ReadBlockArray<GameEngineFlavorEventBlock>(binaryReader);
+            slayerEvents = Guerilla.ReadBlockArray<GameEngineSlayerEventBlock>(binaryReader);
+            ctfEvents = Guerilla.ReadBlockArray<GameEngineCtfEventBlock>(binaryReader);
+            oddballEvents = Guerilla.ReadBlockArray<GameEngineOddballEventBlock>(binaryReader);
+            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            kingEvents = Guerilla.ReadBlockArray<GameEngineKingEventBlock>(binaryReader);
+            gNullBlock0 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            juggernautEvents = Guerilla.ReadBlockArray<GameEngineJuggernautEventBlock>(binaryReader);
+            territoriesEvents = Guerilla.ReadBlockArray<GameEngineTerritoriesEventBlock>(binaryReader);
+            invasionEvents = Guerilla.ReadBlockArray<GameEngineAssaultEventBlock>(binaryReader);
+            gNullBlock1 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            gNullBlock2 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            gNullBlock3 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            gNullBlock4 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            defaultItemCollection1 = binaryReader.ReadTagReference();
+            defaultItemCollection2 = binaryReader.ReadTagReference();
+            defaultFragGrenadeCount = binaryReader.ReadInt32();
+            defaultPlasmaGrenadeCount = binaryReader.ReadInt32();
+            invalidName_4 = binaryReader.ReadBytes(40);
+            dynamicZoneUpperHeight = binaryReader.ReadSingle();
+            dynamicZoneLowerHeight = binaryReader.ReadSingle();
+            invalidName_5 = binaryReader.ReadBytes(40);
+            enemyInnerRadius = binaryReader.ReadSingle();
+            enemyOuterRadius = binaryReader.ReadSingle();
+            enemyWeight = binaryReader.ReadSingle();
+            invalidName_6 = binaryReader.ReadBytes(16);
+            friendInnerRadius = binaryReader.ReadSingle();
+            friendOuterRadius = binaryReader.ReadSingle();
+            friendWeight = binaryReader.ReadSingle();
+            invalidName_7 = binaryReader.ReadBytes(16);
+            enemyVehicleInnerRadius = binaryReader.ReadSingle();
+            enemyVehicleOuterRadius = binaryReader.ReadSingle();
+            enemyVehicleWeight = binaryReader.ReadSingle();
+            invalidName_8 = binaryReader.ReadBytes(16);
+            friendlyVehicleInnerRadius = binaryReader.ReadSingle();
+            friendlyVehicleOuterRadius = binaryReader.ReadSingle();
+            friendlyVehicleWeight = binaryReader.ReadSingle();
+            invalidName_9 = binaryReader.ReadBytes(16);
+            emptyVehicleInnerRadius = binaryReader.ReadSingle();
+            emptyVehicleOuterRadius = binaryReader.ReadSingle();
+            emptyVehicleWeight = binaryReader.ReadSingle();
+            invalidName_10 = binaryReader.ReadBytes(16);
+            oddballInclusionInnerRadius = binaryReader.ReadSingle();
+            oddballInclusionOuterRadius = binaryReader.ReadSingle();
+            oddballInclusionWeight = binaryReader.ReadSingle();
+            invalidName_11 = binaryReader.ReadBytes(16);
+            oddballExclusionInnerRadius = binaryReader.ReadSingle();
+            oddballExclusionOuterRadius = binaryReader.ReadSingle();
+            oddballExclusionWeight = binaryReader.ReadSingle();
+            invalidName_12 = binaryReader.ReadBytes(16);
+            hillInclusionInnerRadius = binaryReader.ReadSingle();
+            hillInclusionOuterRadius = binaryReader.ReadSingle();
+            hillInclusionWeight = binaryReader.ReadSingle();
+            invalidName_13 = binaryReader.ReadBytes(16);
+            hillExclusionInnerRadius = binaryReader.ReadSingle();
+            hillExclusionOuterRadius = binaryReader.ReadSingle();
+            hillExclusionWeight = binaryReader.ReadSingle();
+            invalidName_14 = binaryReader.ReadBytes(16);
+            lastRaceFlagInnerRadius = binaryReader.ReadSingle();
+            lastRaceFlagOuterRadius = binaryReader.ReadSingle();
+            lastRaceFlagWeight = binaryReader.ReadSingle();
+            invalidName_15 = binaryReader.ReadBytes(16);
+            deadAllyInnerRadius = binaryReader.ReadSingle();
+            deadAllyOuterRadius = binaryReader.ReadSingle();
+            deadAllyWeight = binaryReader.ReadSingle();
+            invalidName_16 = binaryReader.ReadBytes(16);
+            controlledTerritoryInnerRadius = binaryReader.ReadSingle();
+            controlledTerritoryOuterRadius = binaryReader.ReadSingle();
+            controlledTerritoryWeight = binaryReader.ReadSingle();
+            invalidName_17 = binaryReader.ReadBytes(16);
+            invalidName_18 = binaryReader.ReadBytes(560);
+            invalidName_19 = binaryReader.ReadBytes(48);
+            multiplayerConstants = Guerilla.ReadBlockArray<MultiplayerConstantsBlock>(binaryReader);
+            stateResponses = Guerilla.ReadBlockArray<GameEngineStatusResponseBlock>(binaryReader);
+            scoreboardHudDefinition = binaryReader.ReadTagReference();
+            scoreboardEmblemShader = binaryReader.ReadTagReference();
+            scoreboardEmblemBitmap = binaryReader.ReadTagReference();
+            scoreboardDeadEmblemShader = binaryReader.ReadTagReference();
+            scoreboardDeadEmblemBitmap = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

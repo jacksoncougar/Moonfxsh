@@ -71,6 +71,24 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flag = binaryReader.ReadTagReference();
+            unit = binaryReader.ReadTagReference();
+            vehicles = Guerilla.ReadBlockArray<VehiclesBlock>(binaryReader);
+            hillShader = binaryReader.ReadTagReference();
+            flagShader = binaryReader.ReadTagReference();
+            ball = binaryReader.ReadTagReference();
+            sounds = Guerilla.ReadBlockArray<SoundsBlock>(binaryReader);
+            inGameText = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(40);
+            generalEvents = Guerilla.ReadBlockArray<GameEngineGeneralEventBlock>(binaryReader);
+            slayerEvents = Guerilla.ReadBlockArray<GameEngineSlayerEventBlock>(binaryReader);
+            ctfEvents = Guerilla.ReadBlockArray<GameEngineCtfEventBlock>(binaryReader);
+            oddballEvents = Guerilla.ReadBlockArray<GameEngineOddballEventBlock>(binaryReader);
+            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            kingEvents = Guerilla.ReadBlockArray<GameEngineKingEventBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

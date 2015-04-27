@@ -92,6 +92,26 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            stencilBitmaps = binaryReader.ReadTagReference();
+            sourceBitmap = binaryReader.ReadTagReference();
+            stencilSequenceIndex = binaryReader.ReadInt16();
+            sourceSequenceIndex = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(16);
+            invalidName_0 = binaryReader.ReadBytes(4);
+            interpolateColors = (InterpolateColors)binaryReader.ReadInt16();
+            anchorColors = (AnchorColors)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(8);
+            emptyColor = binaryReader.ReadVector4();
+            fullColor = binaryReader.ReadVector4();
+            invalidName_2 = binaryReader.ReadBytes(20);
+            unmaskDistanceMeterUnits = binaryReader.ReadSingle();
+            maskDistanceMeterUnits = binaryReader.ReadSingle();
+            invalidName_3 = binaryReader.ReadBytes(20);
+            encodedStencil = Guerilla.ReadData(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -41,6 +41,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            enumIndex = binaryReader.ReadInt16();
+            flags = binaryReader.ReadInt16();
+            combiners = new TagBlockIndexStructBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

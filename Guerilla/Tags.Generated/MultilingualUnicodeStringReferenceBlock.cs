@@ -55,6 +55,19 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            stringId = binaryReader.ReadStringID();
+            englishOffset = binaryReader.ReadInt32();
+            japaneseOffset = binaryReader.ReadInt32();
+            germanOffset = binaryReader.ReadInt32();
+            frenchOffset = binaryReader.ReadInt32();
+            spanishOffset = binaryReader.ReadInt32();
+            italianOffset = binaryReader.ReadInt32();
+            koreanOffset = binaryReader.ReadInt32();
+            chineseOffset = binaryReader.ReadInt32();
+            portugueseOffset = binaryReader.ReadInt32();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

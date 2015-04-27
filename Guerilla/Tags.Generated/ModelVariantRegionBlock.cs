@@ -52,6 +52,16 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            regionNameMustMatchRegionNameInRenderModel = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(1);
+            invalidName_0 = binaryReader.ReadBytes(1);
+            parentVariant = binaryReader.ReadShortBlockIndex1();
+            permutations = Guerilla.ReadBlockArray<ModelVariantPermutationBlock>(binaryReader);
+            sortOrder = (SortOrderNegativeValuesMeanCloserToTheCamera)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

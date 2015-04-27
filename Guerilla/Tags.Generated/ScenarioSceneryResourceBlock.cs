@@ -64,6 +64,19 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            names = Guerilla.ReadBlockArray<ScenarioObjectNamesBlock>(binaryReader);
+            invalidName_ = Guerilla.ReadBlockArray<DontUseMeScenarioEnvironmentObjectBlock>(binaryReader);
+            structureReferences = Guerilla.ReadBlockArray<ScenarioStructureBspReferenceBlock>(binaryReader);
+            palette = Guerilla.ReadBlockArray<ScenarioSceneryPaletteBlock>(binaryReader);
+            objects = Guerilla.ReadBlockArray<ScenarioSceneryBlock>(binaryReader);
+            nextSceneryObjectIDSalt = binaryReader.ReadInt32();
+            palette0 = Guerilla.ReadBlockArray<ScenarioCratePaletteBlock>(binaryReader);
+            objects0 = Guerilla.ReadBlockArray<ScenarioCrateBlock>(binaryReader);
+            nextBlockObjectIDSalt = binaryReader.ReadInt32();
+            editorFolders = Guerilla.ReadBlockArray<GScenarioEditorFolderBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

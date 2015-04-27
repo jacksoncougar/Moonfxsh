@@ -45,6 +45,14 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            boostPeakPower = binaryReader.ReadSingle();
+            boostRisePower = binaryReader.ReadSingle();
+            boostPeakTime = binaryReader.ReadSingle();
+            boostFallPower = binaryReader.ReadSingle();
+            deadTime = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

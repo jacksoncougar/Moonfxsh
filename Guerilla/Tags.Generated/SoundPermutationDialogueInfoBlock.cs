@@ -43,6 +43,13 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            mouthDataOffset = binaryReader.ReadInt32();
+            mouthDataLength = binaryReader.ReadInt32();
+            lipsyncDataOffset = binaryReader.ReadInt32();
+            lipsyncDataLength = binaryReader.ReadInt32();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

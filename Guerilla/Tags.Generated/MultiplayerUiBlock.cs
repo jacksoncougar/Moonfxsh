@@ -45,6 +45,13 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            randomPlayerNames = binaryReader.ReadTagReference();
+            obsoleteProfileColors = Guerilla.ReadBlockArray<MultiplayerColorBlock>(binaryReader);
+            teamColors = Guerilla.ReadBlockArray<MultiplayerColorBlock>(binaryReader);
+            teamNames = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

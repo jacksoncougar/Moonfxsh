@@ -48,6 +48,15 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            directionVector = binaryReader.ReadVector3();
+            direction = binaryReader.ReadVector2();
+            lensFlare = binaryReader.ReadTagReference();
+            fog = Guerilla.ReadBlockArray<SkyLightFogBlock>(binaryReader);
+            fogOpposite = Guerilla.ReadBlockArray<SkyLightFogBlock>(binaryReader);
+            radiosity = Guerilla.ReadBlockArray<SkyRadiosityLightBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

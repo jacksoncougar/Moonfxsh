@@ -67,6 +67,23 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            particlePhysics = binaryReader.ReadTagReference();
+            particleEmissionRate = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            particleLifespan = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            particleVelocity = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            particleAngularVelocity = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            particleSize = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            particleTint = new ParticlePropertyColorStructNewBlock(binaryReader);
+            particleAlpha = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            emissionShape = (EmissionShape)binaryReader.ReadInt32();
+            emissionRadius = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            emissionAngle = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            translationalOffset = binaryReader.ReadVector3();
+            relativeDirection = binaryReader.ReadVector2();
+            invalidName_ = binaryReader.ReadBytes(8);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

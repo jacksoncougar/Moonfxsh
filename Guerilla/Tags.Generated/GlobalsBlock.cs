@@ -106,6 +106,39 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            invalidName_ = binaryReader.ReadBytes(172);
+            language = (Language)binaryReader.ReadInt32();
+            havokCleanupResources = Guerilla.ReadBlockArray<HavokCleanupResourcesBlock>(binaryReader);
+            collisionDamage = Guerilla.ReadBlockArray<CollisionDamageBlock>(binaryReader);
+            soundGlobals = Guerilla.ReadBlockArray<SoundGlobalsBlock>(binaryReader);
+            aiGlobals = Guerilla.ReadBlockArray<AiGlobalsBlock>(binaryReader);
+            damageTable = Guerilla.ReadBlockArray<GameGlobalsDamageBlock>(binaryReader);
+            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            sounds = Guerilla.ReadBlockArray<MoonfishSoundReferencesBlock>(binaryReader);
+            camera = Guerilla.ReadBlockArray<CameraBlock>(binaryReader);
+            playerControl = Guerilla.ReadBlockArray<PlayerControlBlock>(binaryReader);
+            difficulty = Guerilla.ReadBlockArray<DifficultyBlock>(binaryReader);
+            grenades = Guerilla.ReadBlockArray<GrenadesBlock>(binaryReader);
+            rasterizerData = Guerilla.ReadBlockArray<RasterizerDataBlock>(binaryReader);
+            interfaceTags = Guerilla.ReadBlockArray<InterfaceTagReferences>(binaryReader);
+            weaponListUpdateWeaponListEnumInGameGlobalsH = Guerilla.ReadBlockArray<CheatWeaponsBlock>(binaryReader);
+            cheatPowerups = Guerilla.ReadBlockArray<CheatPowerupsBlock>(binaryReader);
+            multiplayerInformation = Guerilla.ReadBlockArray<MultiplayerInformationBlock>(binaryReader);
+            playerInformation = Guerilla.ReadBlockArray<PlayerInformationBlock>(binaryReader);
+            playerRepresentation = Guerilla.ReadBlockArray<PlayerRepresentationBlock>(binaryReader);
+            fallingDamage = Guerilla.ReadBlockArray<FallingDamageBlock>(binaryReader);
+            oldMaterials = Guerilla.ReadBlockArray<OldMaterialsBlock>(binaryReader);
+            materials = Guerilla.ReadBlockArray<MaterialsBlock>(binaryReader);
+            multiplayerUI = Guerilla.ReadBlockArray<MultiplayerUiBlock>(binaryReader);
+            profileColors = Guerilla.ReadBlockArray<MultiplayerColorBlock>(binaryReader);
+            multiplayerGlobals = binaryReader.ReadTagReference();
+            runtimeLevelData = Guerilla.ReadBlockArray<RuntimeLevelsDefinitionBlock>(binaryReader);
+            uiLevelData = Guerilla.ReadBlockArray<UiLevelsDefinitionBlock>(binaryReader);
+            defaultGlobalLighting = binaryReader.ReadTagReference();
+            invalidName_0 = binaryReader.ReadBytes(252);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

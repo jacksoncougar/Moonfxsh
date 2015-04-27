@@ -43,6 +43,13 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            parameterIndex = binaryReader.ReadByte();
+            flags = binaryReader.ReadByte();
+            bitmapGroupIndex = binaryReader.ReadInt32();
+            logBitmapDimension = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

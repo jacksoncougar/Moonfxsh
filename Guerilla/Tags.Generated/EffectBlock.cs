@@ -67,6 +67,20 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            loopStartEvent = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(4);
+            locations = Guerilla.ReadBlockArray<EffectLocationsBlock>(binaryReader);
+            events = Guerilla.ReadBlockArray<EffectEventBlock>(binaryReader);
+            loopingSound = binaryReader.ReadTagReference();
+            location = binaryReader.ReadShortBlockIndex1();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            alwaysPlayDistance = binaryReader.ReadSingle();
+            neverPlayDistance = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

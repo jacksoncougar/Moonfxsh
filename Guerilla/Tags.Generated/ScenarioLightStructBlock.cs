@@ -59,6 +59,21 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            type = (Type)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            lightmapType = (LightmapType)binaryReader.ReadInt16();
+            lightmapFlags = (LightmapFlags)binaryReader.ReadInt16();
+            lightmapHalfLife = binaryReader.ReadSingle();
+            lightmapLightScale = binaryReader.ReadSingle();
+            targetPoint = binaryReader.ReadVector3();
+            widthWorldUnits = binaryReader.ReadSingle();
+            heightScaleWorldUnits = binaryReader.ReadSingle();
+            fieldOfViewDegrees = binaryReader.ReadSingle();
+            falloffDistanceWorldUnits = binaryReader.ReadSingle();
+            cutoffDistanceWorldUnitsFromFarPlane = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

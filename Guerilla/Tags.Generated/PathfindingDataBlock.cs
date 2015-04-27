@@ -59,6 +59,21 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            sectors = Guerilla.ReadBlockArray<SectorBlock>(binaryReader);
+            links = Guerilla.ReadBlockArray<SectorLinkBlock>(binaryReader);
+            refs = Guerilla.ReadBlockArray<RefBlock>(binaryReader);
+            bsp2dNodes = Guerilla.ReadBlockArray<SectorBsp2dNodesBlock>(binaryReader);
+            surfaceFlags = Guerilla.ReadBlockArray<SurfaceFlagsBlock>(binaryReader);
+            vertices = Guerilla.ReadBlockArray<SectorVertexBlock>(binaryReader);
+            objectRefs = Guerilla.ReadBlockArray<EnvironmentObjectRefs>(binaryReader);
+            pathfindingHints = Guerilla.ReadBlockArray<PathfindingHintsBlock>(binaryReader);
+            instancedGeometryRefs = Guerilla.ReadBlockArray<InstancedGeometryReferenceBlock>(binaryReader);
+            structureChecksum = binaryReader.ReadInt32();
+            invalidName_ = binaryReader.ReadBytes(32);
+            userPlacedHints = Guerilla.ReadBlockArray<UserHintBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -47,6 +47,15 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            type = binaryReader.ReadShortBlockIndex1();
+            name = binaryReader.ReadShortBlockIndex1();
+            objectData = new ScenarioObjectDatumStructBlock(binaryReader);
+            indexer = binaryReader.ReadBytes(4);
+            permutationData = new ScenarioObjectPermutationStructBlock(binaryReader);
+            weaponData = new ScenarioWeaponDatumStructBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

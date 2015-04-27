@@ -49,6 +49,16 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            backCluster = binaryReader.ReadInt16();
+            frontCluster = binaryReader.ReadInt16();
+            planeIndex = binaryReader.ReadInt32();
+            centroid = binaryReader.ReadVector3();
+            boundingRadius = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt32();
+            vertices = Guerilla.ReadBlockArray<StructureBspClusterPortalVertexBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

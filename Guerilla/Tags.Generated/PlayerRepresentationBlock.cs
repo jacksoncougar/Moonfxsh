@@ -50,6 +50,15 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            firstPersonHands = binaryReader.ReadTagReference();
+            firstPersonBody = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(40);
+            invalidName_0 = binaryReader.ReadBytes(120);
+            thirdPersonUnit = binaryReader.ReadTagReference();
+            thirdPersonVariant = binaryReader.ReadStringID();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

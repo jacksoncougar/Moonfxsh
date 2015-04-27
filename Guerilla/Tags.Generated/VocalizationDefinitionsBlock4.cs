@@ -122,6 +122,36 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            vocalization = binaryReader.ReadStringID();
+            parentVocalization = binaryReader.ReadStringID();
+            parentIndex = binaryReader.ReadInt16();
+            priority = (Priority)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt32();
+            glanceBehavior = (GlanceBehaviorHowDoesTheSpeakerOfThisVocalizationDirectHisGaze)binaryReader.ReadInt16();
+            glanceRecipientBehavior = (GlanceRecipientBehaviorHowDoesSomeoneWhoHearsMeBehave)binaryReader.ReadInt16();
+            perceptionType = (PerceptionType)binaryReader.ReadInt16();
+            maxCombatStatus = (MaxCombatStatus)binaryReader.ReadInt16();
+            animationImpulse = (AnimationImpulse)binaryReader.ReadInt16();
+            overlapPriority = (OverlapPriority)binaryReader.ReadInt16();
+            soundRepetitionDelayMinutes = binaryReader.ReadSingle();
+            allowableQueueDelaySeconds = binaryReader.ReadSingle();
+            preVocDelaySeconds = binaryReader.ReadSingle();
+            notificationDelaySeconds = binaryReader.ReadSingle();
+            postVocDelaySeconds = binaryReader.ReadSingle();
+            repeatDelaySeconds = binaryReader.ReadSingle();
+            weight01 = binaryReader.ReadSingle();
+            speakerFreezeTime = binaryReader.ReadSingle();
+            listenerFreezeTime = binaryReader.ReadSingle();
+            speakerEmotion = (SpeakerEmotion)binaryReader.ReadInt16();
+            listenerEmotion = (ListenerEmotion)binaryReader.ReadInt16();
+            playerSkipFraction = binaryReader.ReadSingle();
+            skipFraction = binaryReader.ReadSingle();
+            sampleLine = binaryReader.ReadStringID();
+            reponses = Guerilla.ReadBlockArray<ResponseBlock>(binaryReader);
+            children = Guerilla.ReadBlockArray<VocalizationDefinitionsBlock5>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -167,6 +167,64 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(4);
+            collisionMaterials = Guerilla.ReadBlockArray<StructureCollisionMaterialsBlock>(binaryReader);
+            collisionBSP = Guerilla.ReadBlockArray<GlobalCollisionBspBlock>(binaryReader);
+            vehicleFloorWorldUnits = binaryReader.ReadSingle();
+            vehicleCeilingWorldUnits = binaryReader.ReadSingle();
+            uNUSEDNodes = Guerilla.ReadBlockArray<UNUSEDStructureBspNodeBlock>(binaryReader);
+            leaves = Guerilla.ReadBlockArray<StructureBspLeafBlock>(binaryReader);
+            worldBoundsX = binaryReader.ReadRange();
+            worldBoundsY = binaryReader.ReadRange();
+            worldBoundsZ = binaryReader.ReadRange();
+            surfaceReferences = Guerilla.ReadBlockArray<StructureBspSurfaceReferenceBlock>(binaryReader);
+            clusterData = Guerilla.ReadData(binaryReader);
+            clusterPortals = Guerilla.ReadBlockArray<StructureBspClusterPortalBlock>(binaryReader);
+            fogPlanes = Guerilla.ReadBlockArray<StructureBspFogPlaneBlock>(binaryReader);
+            invalidName_0 = binaryReader.ReadBytes(24);
+            weatherPalette = Guerilla.ReadBlockArray<StructureBspWeatherPaletteBlock>(binaryReader);
+            weatherPolyhedra = Guerilla.ReadBlockArray<StructureBspWeatherPolyhedronBlock>(binaryReader);
+            detailObjects = Guerilla.ReadBlockArray<StructureBspDetailObjectDataBlock>(binaryReader);
+            clusters = Guerilla.ReadBlockArray<StructureBspClusterBlock>(binaryReader);
+            materials = Guerilla.ReadBlockArray<GlobalGeometryMaterialBlock>(binaryReader);
+            skyOwnerCluster = Guerilla.ReadBlockArray<StructureBspSkyOwnerClusterBlock>(binaryReader);
+            conveyorSurfaces = Guerilla.ReadBlockArray<StructureBspConveyorSurfaceBlock>(binaryReader);
+            breakableSurfaces = Guerilla.ReadBlockArray<StructureBspBreakableSurfaceBlock>(binaryReader);
+            pathfindingData = Guerilla.ReadBlockArray<PathfindingDataBlock>(binaryReader);
+            pathfindingEdges = Guerilla.ReadBlockArray<StructureBspPathfindingEdgesBlock>(binaryReader);
+            backgroundSoundPalette = Guerilla.ReadBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryReader);
+            soundEnvironmentPalette = Guerilla.ReadBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryReader);
+            soundPASData = Guerilla.ReadData(binaryReader);
+            markers = Guerilla.ReadBlockArray<StructureBspMarkerBlock>(binaryReader);
+            runtimeDecals = Guerilla.ReadBlockArray<StructureBspRuntimeDecalBlock>(binaryReader);
+            environmentObjectPalette = Guerilla.ReadBlockArray<StructureBspEnvironmentObjectPaletteBlock>(binaryReader);
+            environmentObjects = Guerilla.ReadBlockArray<StructureBspEnvironmentObjectBlock>(binaryReader);
+            lightmaps = Guerilla.ReadBlockArray<StructureBspLightmapDataBlock>(binaryReader);
+            invalidName_1 = binaryReader.ReadBytes(4);
+            leafMapLeaves = Guerilla.ReadBlockArray<GlobalMapLeafBlock>(binaryReader);
+            leafMapConnections = Guerilla.ReadBlockArray<GlobalLeafConnectionBlock>(binaryReader);
+            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
+            precomputedLighting = Guerilla.ReadBlockArray<StructureBspPrecomputedLightingBlock>(binaryReader);
+            instancedGeometriesDefinitions = Guerilla.ReadBlockArray<StructureBspInstancedGeometryDefinitionBlock>(binaryReader);
+            instancedGeometryInstances = Guerilla.ReadBlockArray<StructureBspInstancedGeometryInstancesBlock>(binaryReader);
+            ambienceSoundClusters = Guerilla.ReadBlockArray<StructureBspSoundClusterBlock>(binaryReader);
+            reverbSoundClusters = Guerilla.ReadBlockArray<StructureBspSoundClusterBlock>(binaryReader);
+            transparentPlanes = Guerilla.ReadBlockArray<TransparentPlanesBlock>(binaryReader);
+            invalidName_2 = binaryReader.ReadBytes(96);
+            vehicleSpericalLimitRadius = binaryReader.ReadSingle();
+            vehicleSpericalLimitCenter = binaryReader.ReadVector3();
+            debugInfo = Guerilla.ReadBlockArray<StructureBspDebugInfoBlock>(binaryReader);
+            decorators = binaryReader.ReadTagReference();
+            structurePhysics = new GlobalStructurePhysicsStructBlock(binaryReader);
+            waterDefinitions = Guerilla.ReadBlockArray<GlobalWaterDefinitionsBlock>(binaryReader);
+            portalDeviceMapping = Guerilla.ReadBlockArray<StructurePortalDeviceMappingBlock>(binaryReader);
+            audibility = Guerilla.ReadBlockArray<StructureBspAudibilityBlock>(binaryReader);
+            objectFakeLightprobes = Guerilla.ReadBlockArray<StructureBspFakeLightprobesBlock>(binaryReader);
+            decorators0 = Guerilla.ReadBlockArray<DecoratorPlacementDefinitionBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

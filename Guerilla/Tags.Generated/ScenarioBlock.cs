@@ -275,6 +275,120 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            doNotUse = binaryReader.ReadTagReference();
+            skies = Guerilla.ReadBlockArray<ScenarioSkyReferenceBlock>(binaryReader);
+            type = (Type)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            childScenarios = Guerilla.ReadBlockArray<ScenarioChildScenarioBlock>(binaryReader);
+            localNorth = binaryReader.ReadSingle();
+            predictedResources = Guerilla.ReadBlockArray<PredictedResourceBlock>(binaryReader);
+            functions = Guerilla.ReadBlockArray<ScenarioFunctionBlock>(binaryReader);
+            editorScenarioData = Guerilla.ReadData(binaryReader);
+            comments = Guerilla.ReadBlockArray<EditorCommentBlock>(binaryReader);
+            invalidName_ = Guerilla.ReadBlockArray<DontUseMeScenarioEnvironmentObjectBlock>(binaryReader);
+            objectNames = Guerilla.ReadBlockArray<ScenarioObjectNamesBlock>(binaryReader);
+            scenery = Guerilla.ReadBlockArray<ScenarioSceneryBlock>(binaryReader);
+            sceneryPalette = Guerilla.ReadBlockArray<ScenarioSceneryPaletteBlock>(binaryReader);
+            bipeds = Guerilla.ReadBlockArray<ScenarioBipedBlock>(binaryReader);
+            bipedPalette = Guerilla.ReadBlockArray<ScenarioBipedPaletteBlock>(binaryReader);
+            vehicles = Guerilla.ReadBlockArray<ScenarioVehicleBlock>(binaryReader);
+            vehiclePalette = Guerilla.ReadBlockArray<ScenarioVehiclePaletteBlock>(binaryReader);
+            equipment = Guerilla.ReadBlockArray<ScenarioEquipmentBlock>(binaryReader);
+            equipmentPalette = Guerilla.ReadBlockArray<ScenarioEquipmentPaletteBlock>(binaryReader);
+            weapons = Guerilla.ReadBlockArray<ScenarioWeaponBlock>(binaryReader);
+            weaponPalette = Guerilla.ReadBlockArray<ScenarioWeaponPaletteBlock>(binaryReader);
+            deviceGroups = Guerilla.ReadBlockArray<DeviceGroupBlock>(binaryReader);
+            machines = Guerilla.ReadBlockArray<ScenarioMachineBlock>(binaryReader);
+            machinePalette = Guerilla.ReadBlockArray<ScenarioMachinePaletteBlock>(binaryReader);
+            controls = Guerilla.ReadBlockArray<ScenarioControlBlock>(binaryReader);
+            controlPalette = Guerilla.ReadBlockArray<ScenarioControlPaletteBlock>(binaryReader);
+            lightFixtures = Guerilla.ReadBlockArray<ScenarioLightFixtureBlock>(binaryReader);
+            lightFixturesPalette = Guerilla.ReadBlockArray<ScenarioLightFixturePaletteBlock>(binaryReader);
+            soundScenery = Guerilla.ReadBlockArray<ScenarioSoundSceneryBlock>(binaryReader);
+            soundSceneryPalette = Guerilla.ReadBlockArray<ScenarioSoundSceneryPaletteBlock>(binaryReader);
+            lightVolumes = Guerilla.ReadBlockArray<ScenarioLightBlock>(binaryReader);
+            lightVolumesPalette = Guerilla.ReadBlockArray<ScenarioLightPaletteBlock>(binaryReader);
+            playerStartingProfile = Guerilla.ReadBlockArray<ScenarioProfilesBlock>(binaryReader);
+            playerStartingLocations = Guerilla.ReadBlockArray<ScenarioPlayersBlock>(binaryReader);
+            killTriggerVolumes = Guerilla.ReadBlockArray<ScenarioTriggerVolumeBlock>(binaryReader);
+            recordedAnimations = Guerilla.ReadBlockArray<RecordedAnimationBlock>(binaryReader);
+            netgameFlags = Guerilla.ReadBlockArray<ScenarioNetpointsBlock>(binaryReader);
+            netgameEquipment = Guerilla.ReadBlockArray<ScenarioNetgameEquipmentBlock>(binaryReader);
+            startingEquipment = Guerilla.ReadBlockArray<ScenarioStartingEquipmentBlock>(binaryReader);
+            bSPSwitchTriggerVolumes = Guerilla.ReadBlockArray<ScenarioBspSwitchTriggerVolumeBlock>(binaryReader);
+            decals = Guerilla.ReadBlockArray<ScenarioDecalsBlock>(binaryReader);
+            decalsPalette = Guerilla.ReadBlockArray<ScenarioDecalPaletteBlock>(binaryReader);
+            detailObjectCollectionPalette = Guerilla.ReadBlockArray<ScenarioDetailObjectCollectionPaletteBlock>(binaryReader);
+            stylePalette = Guerilla.ReadBlockArray<StylePaletteBlock>(binaryReader);
+            squadGroups = Guerilla.ReadBlockArray<SquadGroupsBlock>(binaryReader);
+            squads = Guerilla.ReadBlockArray<SquadsBlock>(binaryReader);
+            zones = Guerilla.ReadBlockArray<ZoneBlock>(binaryReader);
+            missionScenes = Guerilla.ReadBlockArray<AiSceneBlock>(binaryReader);
+            characterPalette = Guerilla.ReadBlockArray<CharacterPaletteBlock>(binaryReader);
+            aIPathfindingData = Guerilla.ReadBlockArray<PathfindingDataBlock>(binaryReader);
+            aIAnimationReferences = Guerilla.ReadBlockArray<AiAnimationReferenceBlock>(binaryReader);
+            aIScriptReferences = Guerilla.ReadBlockArray<AiScriptReferenceBlock>(binaryReader);
+            aIRecordingReferences = Guerilla.ReadBlockArray<AiRecordingReferenceBlock>(binaryReader);
+            aIConversations = Guerilla.ReadBlockArray<AiConversationBlock>(binaryReader);
+            scriptSyntaxData = Guerilla.ReadData(binaryReader);
+            scriptStringData = Guerilla.ReadData(binaryReader);
+            scripts = Guerilla.ReadBlockArray<HsScriptsBlock>(binaryReader);
+            globals = Guerilla.ReadBlockArray<HsGlobalsBlock>(binaryReader);
+            references = Guerilla.ReadBlockArray<HsReferencesBlock>(binaryReader);
+            sourceFiles = Guerilla.ReadBlockArray<HsSourceFilesBlock>(binaryReader);
+            scriptingData = Guerilla.ReadBlockArray<CsScriptDataBlock>(binaryReader);
+            cutsceneFlags = Guerilla.ReadBlockArray<ScenarioCutsceneFlagBlock>(binaryReader);
+            cutsceneCameraPoints = Guerilla.ReadBlockArray<ScenarioCutsceneCameraPointBlock>(binaryReader);
+            cutsceneTitles = Guerilla.ReadBlockArray<ScenarioCutsceneTitleBlock>(binaryReader);
+            customObjectNames = binaryReader.ReadTagReference();
+            chapterTitleText = binaryReader.ReadTagReference();
+            hUDMessages = binaryReader.ReadTagReference();
+            structureBSPs = Guerilla.ReadBlockArray<ScenarioStructureBspReferenceBlock>(binaryReader);
+            scenarioResources = Guerilla.ReadBlockArray<ScenarioResourcesBlock>(binaryReader);
+            scenarioResources0 = Guerilla.ReadBlockArray<OldUnusedStrucurePhysicsBlock>(binaryReader);
+            hsUnitSeats = Guerilla.ReadBlockArray<HsUnitSeatBlock>(binaryReader);
+            scenarioKillTriggers = Guerilla.ReadBlockArray<ScenarioKillTriggerVolumesBlock>(binaryReader);
+            hsSyntaxDatums = Guerilla.ReadBlockArray<SyntaxDatumBlock>(binaryReader);
+            orders = Guerilla.ReadBlockArray<OrdersBlock>(binaryReader);
+            triggers = Guerilla.ReadBlockArray<TriggersBlock>(binaryReader);
+            backgroundSoundPalette = Guerilla.ReadBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryReader);
+            soundEnvironmentPalette = Guerilla.ReadBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryReader);
+            weatherPalette = Guerilla.ReadBlockArray<StructureBspWeatherPaletteBlock>(binaryReader);
+            eMPTYSTRING = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            eMPTYSTRING0 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            eMPTYSTRING1 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            eMPTYSTRING2 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            eMPTYSTRING3 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            scenarioClusterData = Guerilla.ReadBlockArray<ScenarioClusterDataBlock>(binaryReader);
+            objectSalts = new []{ new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader),  };
+            spawnData = Guerilla.ReadBlockArray<ScenarioSpawnDataBlock>(binaryReader);
+            soundEffectCollection = binaryReader.ReadTagReference();
+            crates = Guerilla.ReadBlockArray<ScenarioCrateBlock>(binaryReader);
+            cratesPalette = Guerilla.ReadBlockArray<ScenarioCratePaletteBlock>(binaryReader);
+            globalLighting = binaryReader.ReadTagReference();
+            atmosphericFogPalette = Guerilla.ReadBlockArray<ScenarioAtmosphericFogPalette>(binaryReader);
+            planarFogPalette = Guerilla.ReadBlockArray<ScenarioPlanarFogPalette>(binaryReader);
+            flocks = Guerilla.ReadBlockArray<FlockDefinitionBlock>(binaryReader);
+            subtitles = binaryReader.ReadTagReference();
+            decorators = Guerilla.ReadBlockArray<DecoratorPlacementDefinitionBlock>(binaryReader);
+            creatures = Guerilla.ReadBlockArray<ScenarioCreatureBlock>(binaryReader);
+            creaturesPalette = Guerilla.ReadBlockArray<ScenarioCreaturePaletteBlock>(binaryReader);
+            decoratorsPalette = Guerilla.ReadBlockArray<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader);
+            bSPTransitionVolumes = Guerilla.ReadBlockArray<ScenarioBspSwitchTransitionVolumeBlock>(binaryReader);
+            structureBSPLighting = Guerilla.ReadBlockArray<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryReader);
+            editorFolders = Guerilla.ReadBlockArray<GScenarioEditorFolderBlock>(binaryReader);
+            levelData = Guerilla.ReadBlockArray<ScenarioLevelDataBlock>(binaryReader);
+            territoryLocationNames = binaryReader.ReadTagReference();
+            invalidName_0 = binaryReader.ReadBytes(8);
+            missionDialogue = Guerilla.ReadBlockArray<AiScenarioMissionDialogueBlock>(binaryReader);
+            objectives = binaryReader.ReadTagReference();
+            interpolators = Guerilla.ReadBlockArray<ScenarioInterpolatorBlock>(binaryReader);
+            sharedReferences = Guerilla.ReadBlockArray<HsReferencesBlock>(binaryReader);
+            screenEffectReferences = Guerilla.ReadBlockArray<ScenarioScreenEffectReferenceBlock>(binaryReader);
+            simulationDefinitionTable = Guerilla.ReadBlockArray<ScenarioSimulationDefinitionTableBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
@@ -461,6 +575,10 @@ namespace Moonfish.Guerilla.Tags
             public  ObjectSalts(): base()
             {
                 
+            }
+            public void Read(BinaryReader binaryReader)
+            {
+                eMPTYSTRING = binaryReader.ReadInt32();
             }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {

@@ -42,6 +42,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            sharedInterface = new WeaponSharedInterfaceStructBlock(binaryReader);
+            firstPerson = Guerilla.ReadBlockArray<WeaponFirstPersonInterfaceBlock>(binaryReader);
+            newHudInterface = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

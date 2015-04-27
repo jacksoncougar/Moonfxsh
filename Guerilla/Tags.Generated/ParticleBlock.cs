@@ -93,6 +93,29 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            particleBillboardStyle = (ParticleBillboardStyle)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            firstSequenceIndex = binaryReader.ReadInt16();
+            sequenceCount = binaryReader.ReadInt16();
+            shaderTemplate = binaryReader.ReadTagReference();
+            shaderParameters = Guerilla.ReadBlockArray<GlobalShaderParameterBlock>(binaryReader);
+            color = new ParticlePropertyColorStructNewBlock(binaryReader);
+            alpha = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            scale = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            rotation = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            frameIndex = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            collisionEffect = binaryReader.ReadTagReference();
+            deathEffect = binaryReader.ReadTagReference();
+            locations = Guerilla.ReadBlockArray<EffectLocationsBlock>(binaryReader);
+            attachedParticleSystems = Guerilla.ReadBlockArray<ParticleSystemDefinitionBlockNew>(binaryReader);
+            shaderPostprocessDefinitionNewBlock = Guerilla.ReadBlockArray<ShaderPostprocessDefinitionNewBlock>(binaryReader);
+            invalidName_0 = binaryReader.ReadBytes(8);
+            invalidName_1 = binaryReader.ReadBytes(16);
+            invalidName_2 = binaryReader.ReadBytes(16);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

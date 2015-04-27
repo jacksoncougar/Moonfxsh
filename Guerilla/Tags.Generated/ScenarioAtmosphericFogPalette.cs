@@ -122,6 +122,40 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadStringID();
+            color = binaryReader.ReadColorR8G8B8();
+            spreadDistanceWorldUnits = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(4);
+            maximumDensity01 = binaryReader.ReadSingle();
+            startDistanceWorldUnits = binaryReader.ReadSingle();
+            opaqueDistanceWorldUnits = binaryReader.ReadSingle();
+            color0 = binaryReader.ReadColorR8G8B8();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            maximumDensity010 = binaryReader.ReadSingle();
+            startDistanceWorldUnits0 = binaryReader.ReadSingle();
+            opaqueDistanceWorldUnits0 = binaryReader.ReadSingle();
+            invalidName_1 = binaryReader.ReadBytes(4);
+            planarColor = binaryReader.ReadColorR8G8B8();
+            planarMaxDensity01 = binaryReader.ReadSingle();
+            planarOverrideAmount01 = binaryReader.ReadSingle();
+            planarMinDistanceBiasWorldUnits = binaryReader.ReadSingle();
+            invalidName_2 = binaryReader.ReadBytes(44);
+            patchyColor = binaryReader.ReadColorR8G8B8();
+            invalidName_3 = binaryReader.ReadBytes(12);
+            patchyDensity01 = binaryReader.ReadVector2();
+            patchyDistanceWorldUnits = binaryReader.ReadRange();
+            invalidName_4 = binaryReader.ReadBytes(32);
+            patchyFog = binaryReader.ReadTagReference();
+            mixers = Guerilla.ReadBlockArray<ScenarioAtmosphericFogMixerBlock>(binaryReader);
+            amount01 = binaryReader.ReadSingle();
+            threshold01 = binaryReader.ReadSingle();
+            brightness01 = binaryReader.ReadSingle();
+            gammaPower = binaryReader.ReadSingle();
+            cameraImmersionFlags = (CameraImmersionFlags)binaryReader.ReadInt16();
+            invalidName_5 = binaryReader.ReadBytes(2);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

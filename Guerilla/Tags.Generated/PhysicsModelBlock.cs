@@ -118,6 +118,43 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            mass = binaryReader.ReadSingle();
+            lowFreqDeactivationScale = binaryReader.ReadSingle();
+            highFreqDeactivationScale = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(24);
+            phantomTypes = Guerilla.ReadBlockArray<PhantomTypesBlock>(binaryReader);
+            nodeEdges = Guerilla.ReadBlockArray<PhysicsModelNodeConstraintEdgeBlock>(binaryReader);
+            rigidBodies = Guerilla.ReadBlockArray<RigidBodiesBlock>(binaryReader);
+            materials = Guerilla.ReadBlockArray<MaterialsBlock>(binaryReader);
+            spheres = Guerilla.ReadBlockArray<SpheresBlock>(binaryReader);
+            multiSpheres = Guerilla.ReadBlockArray<MultiSpheresBlock>(binaryReader);
+            pills = Guerilla.ReadBlockArray<PillsBlock>(binaryReader);
+            boxes = Guerilla.ReadBlockArray<BoxesBlock>(binaryReader);
+            triangles = Guerilla.ReadBlockArray<TrianglesBlock>(binaryReader);
+            polyhedra = Guerilla.ReadBlockArray<PolyhedraBlock>(binaryReader);
+            polyhedronFourVectors = Guerilla.ReadBlockArray<PolyhedronFourVectorsBlock>(binaryReader);
+            polyhedronPlaneEquations = Guerilla.ReadBlockArray<PolyhedronPlaneEquationsBlock>(binaryReader);
+            massDistributions = Guerilla.ReadBlockArray<MassDistributionsBlock>(binaryReader);
+            lists = Guerilla.ReadBlockArray<ListsBlock>(binaryReader);
+            listShapes = Guerilla.ReadBlockArray<ListShapesBlock>(binaryReader);
+            mopps = Guerilla.ReadBlockArray<MoppsBlock>(binaryReader);
+            moppCodes = Guerilla.ReadData(binaryReader);
+            hingeConstraints = Guerilla.ReadBlockArray<HingeConstraintsBlock>(binaryReader);
+            ragdollConstraints = Guerilla.ReadBlockArray<RagdollConstraintsBlock>(binaryReader);
+            regions = Guerilla.ReadBlockArray<RegionsBlock>(binaryReader);
+            nodes = Guerilla.ReadBlockArray<NodesBlock>(binaryReader);
+            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>(binaryReader);
+            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
+            pointToPathCurves = Guerilla.ReadBlockArray<PointToPathCurveBlock>(binaryReader);
+            limitedHingeConstraints = Guerilla.ReadBlockArray<LimitedHingeConstraintsBlock>(binaryReader);
+            ballAndSocketConstraints = Guerilla.ReadBlockArray<BallAndSocketConstraintsBlock>(binaryReader);
+            stiffSpringConstraints = Guerilla.ReadBlockArray<StiffSpringConstraintsBlock>(binaryReader);
+            prismaticConstraints = Guerilla.ReadBlockArray<PrismaticConstraintsBlock>(binaryReader);
+            phantoms = Guerilla.ReadBlockArray<PhantomsBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

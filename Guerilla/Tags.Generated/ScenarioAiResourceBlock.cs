@@ -82,6 +82,28 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            stylePalette = Guerilla.ReadBlockArray<StylePaletteBlock>(binaryReader);
+            squadGroups = Guerilla.ReadBlockArray<SquadGroupsBlock>(binaryReader);
+            squads = Guerilla.ReadBlockArray<SquadsBlock>(binaryReader);
+            zones = Guerilla.ReadBlockArray<ZoneBlock>(binaryReader);
+            characterPalette = Guerilla.ReadBlockArray<CharacterPaletteBlock>(binaryReader);
+            aIAnimationReferences = Guerilla.ReadBlockArray<AiAnimationReferenceBlock>(binaryReader);
+            aIScriptReferences = Guerilla.ReadBlockArray<AiScriptReferenceBlock>(binaryReader);
+            aIRecordingReferences = Guerilla.ReadBlockArray<AiRecordingReferenceBlock>(binaryReader);
+            aIConversations = Guerilla.ReadBlockArray<AiConversationBlock>(binaryReader);
+            scriptingData = Guerilla.ReadBlockArray<CsScriptDataBlock>(binaryReader);
+            orders = Guerilla.ReadBlockArray<OrdersBlock>(binaryReader);
+            triggers = Guerilla.ReadBlockArray<TriggersBlock>(binaryReader);
+            bSPPreferences = Guerilla.ReadBlockArray<ScenarioStructureBspReferenceBlock>(binaryReader);
+            weaponReferences = Guerilla.ReadBlockArray<ScenarioWeaponPaletteBlock>(binaryReader);
+            vehicleReferences = Guerilla.ReadBlockArray<ScenarioVehiclePaletteBlock>(binaryReader);
+            vehicleDatumReferences = Guerilla.ReadBlockArray<ScenarioVehicleBlock>(binaryReader);
+            missionDialogueScenes = Guerilla.ReadBlockArray<AiSceneBlock>(binaryReader);
+            flocks = Guerilla.ReadBlockArray<FlockDefinitionBlock>(binaryReader);
+            triggerVolumeReferences = Guerilla.ReadBlockArray<ScenarioTriggerVolumeBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

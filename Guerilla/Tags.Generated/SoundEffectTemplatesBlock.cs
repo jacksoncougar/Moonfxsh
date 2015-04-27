@@ -47,6 +47,15 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            dspEffect = binaryReader.ReadStringID();
+            explanation = Guerilla.ReadData(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            invalidName_ = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadInt16();
+            parameters = Guerilla.ReadBlockArray<SoundEffectTemplateParameterBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

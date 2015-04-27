@@ -55,6 +55,13 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            sharedGlobals = binaryReader.ReadTagReference();
+            screenWidgets = Guerilla.ReadBlockArray<UserInterfaceWidgetReferenceBlock>(binaryReader);
+            mpVariantSettingsUi = binaryReader.ReadTagReference();
+            gameHopperDescriptions = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

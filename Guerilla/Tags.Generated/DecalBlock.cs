@@ -94,6 +94,30 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt16();
+            type = (TypeControlsHowTheDecalWrapsOntoSurfaceGeometry)binaryReader.ReadInt16();
+            layer = (Layer)binaryReader.ReadInt16();
+            maxOverlappingCount = binaryReader.ReadInt16();
+            nextDecalInChain = binaryReader.ReadTagReference();
+            radiusWorldUnits = binaryReader.ReadRange();
+            radiusOverlapRejectionMuliplier = binaryReader.ReadSingle();
+            colorLowerBounds = binaryReader.ReadColorR8G8B8();
+            colorUpperBounds = binaryReader.ReadColorR8G8B8();
+            lifetimeSeconds = binaryReader.ReadRange();
+            decayTimeSeconds = binaryReader.ReadRange();
+            invalidName_ = binaryReader.ReadBytes(40);
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(2);
+            invalidName_2 = binaryReader.ReadBytes(2);
+            invalidName_3 = binaryReader.ReadBytes(2);
+            invalidName_4 = binaryReader.ReadBytes(20);
+            bitmap = binaryReader.ReadTagReference();
+            invalidName_5 = binaryReader.ReadBytes(20);
+            maximumSpriteExtentPixels = binaryReader.ReadSingle();
+            invalidName_6 = binaryReader.ReadBytes(4);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

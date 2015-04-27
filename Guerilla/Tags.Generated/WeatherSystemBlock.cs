@@ -52,6 +52,13 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            particleSystem = Guerilla.ReadBlockArray<GlobalParticleSystemLiteBlock>(binaryReader);
+            backgroundPlates = Guerilla.ReadBlockArray<GlobalWeatherBackgroundPlateBlock>(binaryReader);
+            windModel = new GlobalWindModelStructBlock(binaryReader);
+            fadeRadius = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

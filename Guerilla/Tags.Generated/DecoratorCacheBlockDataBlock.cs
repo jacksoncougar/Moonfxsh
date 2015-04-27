@@ -53,6 +53,18 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            placements = Guerilla.ReadBlockArray<DecoratorPlacementBlock>(binaryReader);
+            decalVertices = Guerilla.ReadBlockArray<DecalVerticesBlock>(binaryReader);
+            decalIndices = Guerilla.ReadBlockArray<IndicesBlock>(binaryReader);
+            decalVertexBuffer = binaryReader.ReadVertexBuffer();
+            invalidName_ = binaryReader.ReadBytes(16);
+            spriteVertices = Guerilla.ReadBlockArray<SpriteVerticesBlock>(binaryReader);
+            spriteIndices = Guerilla.ReadBlockArray<IndicesBlock>(binaryReader);
+            spriteVertexBuffer = binaryReader.ReadVertexBuffer();
+            invalidName_0 = binaryReader.ReadBytes(16);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -50,6 +50,15 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            minTorque = binaryReader.ReadSingle();
+            maxTorque = binaryReader.ReadSingle();
+            peakTorqueScale = binaryReader.ReadSingle();
+            pastPeakTorqueExponent = binaryReader.ReadSingle();
+            torqueAtMaxAngularVelocity = binaryReader.ReadSingle();
+            torqueAt2XMaxAngularVelocity = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

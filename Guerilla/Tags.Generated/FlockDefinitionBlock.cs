@@ -153,6 +153,39 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            bsp = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
+            boundingVolume = binaryReader.ReadShortBlockIndex1();
+            flags = (Flags)binaryReader.ReadInt16();
+            ecologyMarginWus = binaryReader.ReadSingle();
+            sources = Guerilla.ReadBlockArray<FlockSourceBlock>(binaryReader);
+            sinks = Guerilla.ReadBlockArray<FlockSinkBlock>(binaryReader);
+            productionFrequencyBoidsSec = binaryReader.ReadSingle();
+            scale = binaryReader.ReadRange();
+            creature = binaryReader.ReadTagReference();
+            boidCount = binaryReader.ReadInt32();
+            neighborhoodRadiusWorldUnits = binaryReader.ReadSingle();
+            avoidanceRadiusWorldUnits = binaryReader.ReadSingle();
+            forwardScale01 = binaryReader.ReadSingle();
+            alignmentScale01 = binaryReader.ReadSingle();
+            avoidanceScale01 = binaryReader.ReadSingle();
+            levelingForceScale01 = binaryReader.ReadSingle();
+            sinkScale01 = binaryReader.ReadSingle();
+            perceptionAngleDegrees = binaryReader.ReadSingle();
+            averageThrottle01 = binaryReader.ReadSingle();
+            maximumThrottle01 = binaryReader.ReadSingle();
+            positionScale01 = binaryReader.ReadSingle();
+            positionMinRadiusWus = binaryReader.ReadSingle();
+            positionMaxRadiusWus = binaryReader.ReadSingle();
+            movementWeightThreshold = binaryReader.ReadSingle();
+            dangerRadiusWus = binaryReader.ReadSingle();
+            dangerScale = binaryReader.ReadSingle();
+            randomOffsetScale01 = binaryReader.ReadSingle();
+            randomOffsetPeriodSeconds = binaryReader.ReadRange();
+            flockName = binaryReader.ReadStringID();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -144,6 +144,58 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            type = (Type)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(16);
+            anchorOffset = binaryReader.ReadPoint();
+            widthScale = binaryReader.ReadSingle();
+            heightScale = binaryReader.ReadSingle();
+            scalingFlags = (ScalingFlags)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            invalidName_2 = binaryReader.ReadBytes(20);
+            interfaceBitmap = binaryReader.ReadTagReference();
+            defaultColor = binaryReader.ReadColourA1R1G1B1();
+            flashingColor = binaryReader.ReadColourA1R1G1B1();
+            flashPeriod = binaryReader.ReadSingle();
+            flashDelay = binaryReader.ReadSingle();
+            numberOfFlashes = binaryReader.ReadInt16();
+            flashFlags = (FlashFlags)binaryReader.ReadInt16();
+            flashLength = binaryReader.ReadSingle();
+            disabledColor = binaryReader.ReadColourA1R1G1B1();
+            invalidName_3 = binaryReader.ReadBytes(4);
+            sequenceIndex = binaryReader.ReadInt16();
+            invalidName_4 = binaryReader.ReadBytes(2);
+            multitexOverlay = Guerilla.ReadBlockArray<GlobalHudMultitextureOverlayDefinition>(binaryReader);
+            invalidName_5 = binaryReader.ReadBytes(4);
+            anchorOffset0 = binaryReader.ReadPoint();
+            widthScale0 = binaryReader.ReadSingle();
+            heightScale0 = binaryReader.ReadSingle();
+            scalingFlags0 = (ScalingFlags)binaryReader.ReadInt16();
+            invalidName_6 = binaryReader.ReadBytes(2);
+            invalidName_7 = binaryReader.ReadBytes(20);
+            meterBitmap = binaryReader.ReadTagReference();
+            colorAtMeterMinimum = binaryReader.ReadRGBColor();
+            colorAtMeterMaximum = binaryReader.ReadRGBColor();
+            flashColor = binaryReader.ReadRGBColor();
+            emptyColor = binaryReader.ReadColourA1R1G1B1();
+            flags = (Flags)binaryReader.ReadByte();
+            minumumMeterValue = binaryReader.ReadByte();
+            sequenceIndex0 = binaryReader.ReadInt16();
+            alphaMultiplier = binaryReader.ReadByte();
+            alphaBias = binaryReader.ReadByte();
+            valueScale = binaryReader.ReadInt16();
+            opacity = binaryReader.ReadSingle();
+            translucency = binaryReader.ReadSingle();
+            disabledColor0 = binaryReader.ReadColourA1R1G1B1();
+            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            invalidName_8 = binaryReader.ReadBytes(4);
+            minimumFractionCutoff = binaryReader.ReadSingle();
+            flags0 = (Flags)binaryReader.ReadByte();
+            invalidName_9 = binaryReader.ReadBytes(24);
+            invalidName_10 = binaryReader.ReadBytes(64);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

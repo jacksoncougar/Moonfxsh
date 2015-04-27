@@ -61,6 +61,16 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            loadedTorqueCurve = new TorqueCurveStructBlock(binaryReader);
+            cruisingTorqueCurve = new TorqueCurveStructBlock(binaryReader);
+            minTimeToUpshift = binaryReader.ReadSingle();
+            engineUpShiftScale = binaryReader.ReadSingle();
+            gearRatio = binaryReader.ReadSingle();
+            minTimeToDownshift = binaryReader.ReadSingle();
+            engineDownShiftScale = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

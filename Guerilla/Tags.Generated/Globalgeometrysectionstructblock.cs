@@ -53,6 +53,18 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            parts = Guerilla.ReadBlockArray<GlobalGeometryPartBlockNew>(binaryReader);
+            subparts = Guerilla.ReadBlockArray<GlobalSubpartsBlock>(binaryReader);
+            visibilityBounds = Guerilla.ReadBlockArray<GlobalVisibilityBoundsBlock>(binaryReader);
+            rawVertices = Guerilla.ReadBlockArray<GlobalGeometrySectionRawVertexBlock>(binaryReader);
+            stripIndices = Guerilla.ReadBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryReader);
+            visibilityMoppCode = Guerilla.ReadData(binaryReader);
+            moppReorderTable = Guerilla.ReadBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryReader);
+            vertexBuffers = Guerilla.ReadBlockArray<GlobalGeometrySectionVertexBufferBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(4);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

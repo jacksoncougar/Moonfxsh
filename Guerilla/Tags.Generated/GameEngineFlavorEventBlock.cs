@@ -78,6 +78,30 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            _event = (Event)binaryReader.ReadInt16();
+            audience = (Audience)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(2);
+            displayString = binaryReader.ReadStringID();
+            requiredField = (RequiredField)binaryReader.ReadInt16();
+            excludedAudience = (ExcludedAudience)binaryReader.ReadInt16();
+            primaryString = binaryReader.ReadStringID();
+            primaryStringDurationSeconds = binaryReader.ReadInt32();
+            pluralDisplayString = binaryReader.ReadStringID();
+            invalidName_2 = binaryReader.ReadBytes(28);
+            soundDelayAnnouncerOnly = binaryReader.ReadSingle();
+            soundFlags = (SoundFlags)binaryReader.ReadInt16();
+            invalidName_3 = binaryReader.ReadBytes(2);
+            sound = binaryReader.ReadTagReference();
+            extraSounds = new SoundResponseExtraSoundsStructBlock(binaryReader);
+            invalidName_4 = binaryReader.ReadBytes(4);
+            invalidName_5 = binaryReader.ReadBytes(16);
+            soundPermutations = Guerilla.ReadBlockArray<SoundResponseDefinitionBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

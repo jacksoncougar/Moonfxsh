@@ -50,6 +50,14 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            boardingMeleeDamage = binaryReader.ReadTagReference();
+            boardingMeleeResponse = binaryReader.ReadTagReference();
+            landingMeleeDamage = binaryReader.ReadTagReference();
+            flurryMeleeDamage = binaryReader.ReadTagReference();
+            obstacleSmashDamage = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

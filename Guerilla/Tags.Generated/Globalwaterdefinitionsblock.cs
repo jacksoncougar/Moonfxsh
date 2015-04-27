@@ -82,6 +82,32 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            shader = binaryReader.ReadTagReference();
+            section = Guerilla.ReadBlockArray<WaterGeometrySectionBlock>(binaryReader);
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            sunSpotColor = binaryReader.ReadColorR8G8B8();
+            reflectionTint = binaryReader.ReadColorR8G8B8();
+            refractionTint = binaryReader.ReadColorR8G8B8();
+            horizonColor = binaryReader.ReadColorR8G8B8();
+            sunSpecularPower = binaryReader.ReadSingle();
+            reflectionBumpScale = binaryReader.ReadSingle();
+            refractionBumpScale = binaryReader.ReadSingle();
+            fresnelScale = binaryReader.ReadSingle();
+            sunDirHeading = binaryReader.ReadSingle();
+            sunDirPitch = binaryReader.ReadSingle();
+            fOV = binaryReader.ReadSingle();
+            aspect = binaryReader.ReadSingle();
+            height = binaryReader.ReadSingle();
+            farz = binaryReader.ReadSingle();
+            rotateOffset = binaryReader.ReadSingle();
+            center = binaryReader.ReadVector2();
+            extents = binaryReader.ReadVector2();
+            fogNear = binaryReader.ReadSingle();
+            fogFar = binaryReader.ReadSingle();
+            dynamicHeightBias = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

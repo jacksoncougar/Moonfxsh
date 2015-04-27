@@ -49,6 +49,16 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            renderStates = new TagBlockIndexStructBlock(binaryReader);
+            textureStageStates = new TagBlockIndexStructBlock(binaryReader);
+            renderStateParameters = new TagBlockIndexStructBlock(binaryReader);
+            textureStageParameters = new TagBlockIndexStructBlock(binaryReader);
+            textures = new TagBlockIndexStructBlock(binaryReader);
+            vnConstants = new TagBlockIndexStructBlock(binaryReader);
+            cnConstants = new TagBlockIndexStructBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

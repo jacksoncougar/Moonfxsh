@@ -105,6 +105,33 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            falloffAngleDegrees = binaryReader.ReadSingle();
+            cutoffAngleDegrees = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(4);
+            invalidName_0 = binaryReader.ReadBytes(4);
+            occlusionRadiusWorldUnits = binaryReader.ReadSingle();
+            occlusionOffsetDirection = (OcclusionOffsetDirection)binaryReader.ReadInt16();
+            occlusionInnerRadiusScale = (OcclusionInnerRadiusScale)binaryReader.ReadInt16();
+            nearFadeDistanceWorldUnits = binaryReader.ReadSingle();
+            farFadeDistanceWorldUnits = binaryReader.ReadSingle();
+            bitmap = binaryReader.ReadTagReference();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            rotationFunction = (RotationFunction)binaryReader.ReadInt16();
+            invalidName_2 = binaryReader.ReadBytes(2);
+            rotationFunctionScaleDegrees = binaryReader.ReadSingle();
+            coronaScale = binaryReader.ReadVector2();
+            falloffFunction = (FalloffFunction)binaryReader.ReadInt16();
+            invalidName_3 = binaryReader.ReadBytes(2);
+            reflections = Guerilla.ReadBlockArray<LensFlareReflectionBlock>(binaryReader);
+            flags0 = (Flags)binaryReader.ReadInt16();
+            invalidName_4 = binaryReader.ReadBytes(2);
+            brightness = Guerilla.ReadBlockArray<LensFlareScalarAnimationBlock>(binaryReader);
+            color = Guerilla.ReadBlockArray<LensFlareColorAnimationBlock>(binaryReader);
+            rotation = Guerilla.ReadBlockArray<LensFlareScalarAnimationBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

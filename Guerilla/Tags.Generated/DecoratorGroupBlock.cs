@@ -61,6 +61,22 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            decoratorSet = binaryReader.ReadByteBlockIndex1();
+            decoratorType = (DecoratorType)binaryReader.ReadByte();
+            shaderIndex = binaryReader.ReadByte();
+            compressedRadius = binaryReader.ReadByte();
+            cluster = binaryReader.ReadInt16();
+            cacheBlock = binaryReader.ReadShortBlockIndex1();
+            decoratorStartIndex = binaryReader.ReadInt16();
+            decoratorCount = binaryReader.ReadInt16();
+            vertexStartOffset = binaryReader.ReadInt16();
+            vertexCount = binaryReader.ReadInt16();
+            indexStartOffset = binaryReader.ReadInt16();
+            indexCount = binaryReader.ReadInt16();
+            compressedBoundingCenter = binaryReader.ReadInt32();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

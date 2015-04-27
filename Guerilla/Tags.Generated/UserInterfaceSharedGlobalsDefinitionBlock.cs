@@ -186,6 +186,69 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(16);
+            invalidName_2 = binaryReader.ReadBytes(8);
+            invalidName_3 = binaryReader.ReadBytes(8);
+            invalidName_4 = binaryReader.ReadBytes(16);
+            invalidName_5 = binaryReader.ReadBytes(8);
+            invalidName_6 = binaryReader.ReadBytes(8);
+            overlayedScreenAlphaMod = binaryReader.ReadSingle();
+            incTextUpdatePeriodMilliseconds = binaryReader.ReadInt16();
+            incTextBlockCharacterASCIICode = binaryReader.ReadInt16();
+            calloutTextScale = binaryReader.ReadSingle();
+            progressBarColor = binaryReader.ReadVector4();
+            nearClipPlaneDistanceObjectsCloserThanThisAreNotDrawn = binaryReader.ReadSingle();
+            projectionPlaneDistanceDistanceAtWhichObjectsAreRenderedWhenZ0NormalSize = binaryReader.ReadSingle();
+            farClipPlaneDistanceObjectsFartherThanThisAreNotDrawn = binaryReader.ReadSingle();
+            overlayedInterfaceColor = binaryReader.ReadVector4();
+            invalidName_7 = binaryReader.ReadBytes(12);
+            errors = Guerilla.ReadBlockArray<UiErrorCategoryBlock>(binaryReader);
+            soundTag = binaryReader.ReadTagReference();
+            soundTag0 = binaryReader.ReadTagReference();
+            soundTag1 = binaryReader.ReadTagReference();
+            soundTag2 = binaryReader.ReadTagReference();
+            soundTag3 = binaryReader.ReadTagReference();
+            soundTag4 = binaryReader.ReadTagReference();
+            soundTag5 = binaryReader.ReadTagReference();
+            soundTag6 = binaryReader.ReadTagReference();
+            soundTag7 = binaryReader.ReadTagReference();
+            soundTag8 = binaryReader.ReadTagReference();
+            soundTag9 = binaryReader.ReadTagReference();
+            invalidName_8 = binaryReader.ReadTagReference();
+            soundTag10 = binaryReader.ReadTagReference();
+            invalidName_9 = binaryReader.ReadTagReference();
+            invalidName_10 = binaryReader.ReadTagReference();
+            invalidName_11 = binaryReader.ReadTagReference();
+            globalBitmapsTag = binaryReader.ReadTagReference();
+            unicodeStringListTag = binaryReader.ReadTagReference();
+            screenAnimations = Guerilla.ReadBlockArray<AnimationReferenceBlock>(binaryReader);
+            shapeGroups = Guerilla.ReadBlockArray<ShapeGroupReferenceBlock>(binaryReader);
+            animations = Guerilla.ReadBlockArray<PersistentBackgroundAnimationBlock>(binaryReader);
+            listItemSkins = Guerilla.ReadBlockArray<ListSkinReferenceBlock>(binaryReader);
+            buttonKeyTypeStrings = binaryReader.ReadTagReference();
+            gameTypeStrings = binaryReader.ReadTagReference();
+            invalidName_12 = binaryReader.ReadTagReference();
+            skillMappings = Guerilla.ReadBlockArray<SkillToRankMappingBlock>(binaryReader);
+            fullScreenHeaderTextFont = (FullScreenHeaderTextFont)binaryReader.ReadInt16();
+            largeDialogHeaderTextFont = (LargeDialogHeaderTextFont)binaryReader.ReadInt16();
+            halfDialogHeaderTextFont = (HalfDialogHeaderTextFont)binaryReader.ReadInt16();
+            qtrDialogHeaderTextFont = (QtrDialogHeaderTextFont)binaryReader.ReadInt16();
+            defaultTextColor = binaryReader.ReadVector4();
+            fullScreenHeaderTextBounds = binaryReader.ReadVector2();
+            fullScreenButtonKeyTextBounds = binaryReader.ReadVector2();
+            largeDialogHeaderTextBounds = binaryReader.ReadVector2();
+            largeDialogButtonKeyTextBounds = binaryReader.ReadVector2();
+            halfDialogHeaderTextBounds = binaryReader.ReadVector2();
+            halfDialogButtonKeyTextBounds = binaryReader.ReadVector2();
+            qtrDialogHeaderTextBounds = binaryReader.ReadVector2();
+            qtrDialogButtonKeyTextBounds = binaryReader.ReadVector2();
+            mainMenuMusic = binaryReader.ReadTagReference();
+            musicFadeTimeMilliseconds = binaryReader.ReadInt32();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

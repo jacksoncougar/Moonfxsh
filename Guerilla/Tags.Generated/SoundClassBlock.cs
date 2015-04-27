@@ -103,6 +103,34 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            maxSoundsPerTag116 = binaryReader.ReadInt16();
+            maxSoundsPerObject116 = binaryReader.ReadInt16();
+            preemptionTimeMs = binaryReader.ReadInt32();
+            internalFlags = (InternalFlags)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            priority = binaryReader.ReadInt16();
+            cacheMissMode = (CacheMissMode)binaryReader.ReadInt16();
+            reverbGainDB = binaryReader.ReadSingle();
+            overrideSpeakerGainDB = binaryReader.ReadSingle();
+            distanceBounds = binaryReader.ReadRange();
+            gainBoundsDB = binaryReader.ReadRange();
+            cutsceneDuckingDB = binaryReader.ReadSingle();
+            cutsceneDuckingFadeInTimeSeconds = binaryReader.ReadSingle();
+            cutsceneDuckingSustainTimeSeconds = binaryReader.ReadSingle();
+            cutsceneDuckingFadeOutTimeSeconds = binaryReader.ReadSingle();
+            scriptedDialogDuckingDB = binaryReader.ReadSingle();
+            scriptedDialogDuckingFadeInTimeSeconds = binaryReader.ReadSingle();
+            scriptedDialogDuckingSustainTimeSeconds = binaryReader.ReadSingle();
+            scriptedDialogDuckingFadeOutTimeSeconds = binaryReader.ReadSingle();
+            dopplerFactor = binaryReader.ReadSingle();
+            stereoPlaybackType = (StereoPlaybackType)binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes(3);
+            transmissionMultiplier = binaryReader.ReadSingle();
+            obstructionMaxBend = binaryReader.ReadSingle();
+            occlusionMaxBend = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

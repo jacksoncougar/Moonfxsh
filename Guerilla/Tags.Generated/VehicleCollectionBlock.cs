@@ -50,6 +50,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            vehiclePermutations = Guerilla.ReadBlockArray<VehiclePermutation>(binaryReader);
+            spawnTimeInSeconds0Default = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

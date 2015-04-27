@@ -163,6 +163,55 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            defaultTeam = (DefaultTeam)binaryReader.ReadInt16();
+            constantSoundVolume = (ConstantSoundVolume)binaryReader.ReadInt16();
+            integratedLightToggle = binaryReader.ReadTagReference();
+            cameraFieldOfViewDegrees = binaryReader.ReadSingle();
+            cameraStiffness = binaryReader.ReadSingle();
+            unitCamera = new UnitCameraStructBlock(binaryReader);
+            acceleration = new UnitSeatAccelerationStructBlock(binaryReader);
+            softPingThreshold01 = binaryReader.ReadSingle();
+            softPingInterruptTimeSeconds = binaryReader.ReadSingle();
+            hardPingThreshold01 = binaryReader.ReadSingle();
+            hardPingInterruptTimeSeconds = binaryReader.ReadSingle();
+            hardDeathThreshold01 = binaryReader.ReadSingle();
+            feignDeathThreshold01 = binaryReader.ReadSingle();
+            feignDeathTimeSeconds = binaryReader.ReadSingle();
+            distanceOfEvadeAnimWorldUnits = binaryReader.ReadSingle();
+            distanceOfDiveAnimWorldUnits = binaryReader.ReadSingle();
+            stunnedMovementThreshold01 = binaryReader.ReadSingle();
+            feignDeathChance01 = binaryReader.ReadSingle();
+            feignRepeatChance01 = binaryReader.ReadSingle();
+            spawnedTurretCharacter = binaryReader.ReadTagReference();
+            spawnedActorCount = binaryReader.ReadInt32();
+            spawnedVelocity = binaryReader.ReadSingle();
+            aimingVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
+            aimingAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
+            casualAimingModifier01 = binaryReader.ReadSingle();
+            lookingVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
+            lookingAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
+            rightHandNode = binaryReader.ReadStringID();
+            leftHandNode = binaryReader.ReadStringID();
+            moreDamnNodes = new UnitAdditionalNodeNamesStructBlock(binaryReader);
+            meleeDamage = binaryReader.ReadTagReference();
+            yourMomma = new UnitBoardingMeleeStructBlock(binaryReader);
+            motionSensorBlipSize = (MotionSensorBlipSize)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            postures = Guerilla.ReadBlockArray<UnitPosturesBlock>(binaryReader);
+            nEWHUDINTERFACES = Guerilla.ReadBlockArray<UnitHudReferenceBlock>(binaryReader);
+            dialogueVariants = Guerilla.ReadBlockArray<DialogueVariantBlock>(binaryReader);
+            grenadeVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            grenadeType = (GrenadeType)binaryReader.ReadInt16();
+            grenadeCount = binaryReader.ReadInt16();
+            poweredSeats = Guerilla.ReadBlockArray<PoweredSeatBlock>(binaryReader);
+            weapons = Guerilla.ReadBlockArray<UnitWeaponBlock>(binaryReader);
+            seats = Guerilla.ReadBlockArray<UnitSeatBlock>(binaryReader);
+            boost = new UnitBoostStructBlock(binaryReader);
+            lipsync = new UnitLipsyncScalesStructBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

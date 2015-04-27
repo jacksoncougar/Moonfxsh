@@ -93,6 +93,32 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            dialogueType = (DialogueType)binaryReader.ReadInt16();
+            vocalizationIndex = binaryReader.ReadInt16();
+            vocalizationName = binaryReader.ReadStringID();
+            speakerType = (SpeakerType)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            listenerTarget = (ListenerTargetWhoWhatAmISpeakingToOf)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(4);
+            hostility = (HostilityTheRelationshipBetweenTheSubjectAndTheCause)binaryReader.ReadInt16();
+            damageType = (DamageType)binaryReader.ReadInt16();
+            dangerLevel = (DangerLevelSpeakerMustHaveDangerLevelOfAtLeastThisMuch)binaryReader.ReadInt16();
+            attitude = (Attitude)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(4);
+            subjectActorType = (SubjectActorType)binaryReader.ReadInt16();
+            causeActorType = (CauseActorType)binaryReader.ReadInt16();
+            causeType = (CauseType)binaryReader.ReadInt16();
+            subjectType = (SubjectType)binaryReader.ReadInt16();
+            causeAiTypeName = binaryReader.ReadStringID();
+            spatialRelation = (SpatialRelationWithRespectToTheSubjectTheCauseIs)binaryReader.ReadInt16();
+            invalidName_2 = binaryReader.ReadBytes(2);
+            subjectAiTypeName = binaryReader.ReadStringID();
+            invalidName_3 = binaryReader.ReadBytes(8);
+            conditions = (Conditions)binaryReader.ReadInt32();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -45,6 +45,14 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            pathfindingPolicy = (PathfindingPolicy)binaryReader.ReadInt16();
+            lightmappingPolicy = (LightmappingPolicy)binaryReader.ReadInt16();
+            pathfindingReferences = Guerilla.ReadBlockArray<PathfindingObjectIndexListBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(2);
+            validMultiplayerGames = (ValidMultiplayerGames)binaryReader.ReadInt16();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -156,6 +156,35 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            vitalityFlags = (VitalityFlags)binaryReader.ReadInt32();
+            normalBodyVitality = binaryReader.ReadSingle();
+            normalShieldVitality = binaryReader.ReadSingle();
+            legendaryBodyVitality = binaryReader.ReadSingle();
+            legendaryShieldVitality = binaryReader.ReadSingle();
+            bodyRechargeFraction = binaryReader.ReadSingle();
+            softPingThresholdWithShields = binaryReader.ReadSingle();
+            softPingThresholdNoShields = binaryReader.ReadSingle();
+            softPingMinInterruptTime = binaryReader.ReadSingle();
+            hardPingThresholdWithShields = binaryReader.ReadSingle();
+            hardPingThresholdNoShields = binaryReader.ReadSingle();
+            hardPingMinInterruptTime = binaryReader.ReadSingle();
+            currentDamageDecayDelay = binaryReader.ReadSingle();
+            currentDamageDecayTime = binaryReader.ReadSingle();
+            recentDamageDecayDelay = binaryReader.ReadSingle();
+            recentDamageDecayTime = binaryReader.ReadSingle();
+            bodyRechargeDelayTime = binaryReader.ReadSingle();
+            bodyRechargeTime = binaryReader.ReadSingle();
+            shieldRechargeDelayTime = binaryReader.ReadSingle();
+            shieldRechargeTime = binaryReader.ReadSingle();
+            stunThreshold = binaryReader.ReadSingle();
+            stunTimeBoundsSeconds = binaryReader.ReadRange();
+            extendedShieldDamageThreshold = binaryReader.ReadSingle();
+            extendedBodyDamageThreshold = binaryReader.ReadSingle();
+            suicideRadius = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(8);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

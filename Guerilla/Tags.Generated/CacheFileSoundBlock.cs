@@ -70,6 +70,22 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt16();
+            soundClass = (SoundClass)binaryReader.ReadByte();
+            sampleRate = (SampleRate)binaryReader.ReadByte();
+            encoding = (Encoding)binaryReader.ReadByte();
+            compression = (Compression)binaryReader.ReadByte();
+            playbackIndex = binaryReader.ReadInt16();
+            firstPitchRangeIndex = binaryReader.ReadInt16();
+            pitchRangeCount = binaryReader.ReadByte();
+            scaleIndex = binaryReader.ReadByte();
+            promotionIndex = binaryReader.ReadByte();
+            customPlaybackIndex = binaryReader.ReadByte();
+            extraInfoIndex = binaryReader.ReadInt16();
+            maximumPlayTimeMs = binaryReader.ReadInt32();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

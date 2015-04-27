@@ -219,6 +219,57 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            roundsPerSecond = binaryReader.ReadRange();
+            accelerationTimeSeconds = binaryReader.ReadSingle();
+            decelerationTimeSeconds = binaryReader.ReadSingle();
+            barrelSpinScale = binaryReader.ReadSingle();
+            blurredRateOfFire = binaryReader.ReadSingle();
+            shotsPerFire = binaryReader.ReadInt32();
+            fireRecoveryTimeSeconds = binaryReader.ReadSingle();
+            softRecoveryFraction = binaryReader.ReadSingle();
+            magazine = binaryReader.ReadShortBlockIndex1();
+            roundsPerShot = binaryReader.ReadInt16();
+            minimumRoundsLoaded = binaryReader.ReadInt16();
+            roundsBetweenTracers = binaryReader.ReadInt16();
+            optionalBarrelMarkerName = binaryReader.ReadStringID();
+            predictionType = (PredictionType)binaryReader.ReadInt16();
+            firingNoise = (FiringNoiseHowLoudThisWeaponAppearsToTheAI)binaryReader.ReadInt16();
+            accelerationTimeSeconds0 = binaryReader.ReadSingle();
+            decelerationTimeSeconds0 = binaryReader.ReadSingle();
+            damageError = binaryReader.ReadRange();
+            accelerationTimeSeconds1 = binaryReader.ReadSingle();
+            decelerationTimeSeconds1 = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(8);
+            minimumErrorDegrees = binaryReader.ReadSingle();
+            errorAngleDegrees = binaryReader.ReadRange();
+            dualWieldDamageScale = binaryReader.ReadSingle();
+            distributionFunction = (DistributionFunction)binaryReader.ReadInt16();
+            projectilesPerShot = binaryReader.ReadInt16();
+            distributionAngleDegrees = binaryReader.ReadSingle();
+            minimumErrorDegrees0 = binaryReader.ReadSingle();
+            errorAngleDegrees0 = binaryReader.ReadRange();
+            firstPersonOffsetWorldUnits = binaryReader.ReadVector3();
+            damageEffectReportingType = (DamageEffectReportingType)binaryReader.ReadByte();
+            invalidName_0 = binaryReader.ReadBytes(3);
+            projectile = binaryReader.ReadTagReference();
+            eh = new WeaponBarrelDamageEffectStructBlock(binaryReader);
+            ejectionPortRecoveryTime = binaryReader.ReadSingle();
+            illuminationRecoveryTime = binaryReader.ReadSingle();
+            heatGeneratedPerRound01 = binaryReader.ReadSingle();
+            ageGeneratedPerRound01 = binaryReader.ReadSingle();
+            overloadTimeSeconds = binaryReader.ReadSingle();
+            angleChangePerShot = binaryReader.ReadRange();
+            accelerationTimeSeconds2 = binaryReader.ReadSingle();
+            decelerationTimeSeconds2 = binaryReader.ReadSingle();
+            angleChangeFunction = (AngleChangeFunctionFunctionUsedToScaleBetweenInitialAndFinalAngleChangePerShot)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            invalidName_2 = binaryReader.ReadBytes(8);
+            invalidName_3 = binaryReader.ReadBytes(24);
+            firingEffects = Guerilla.ReadBlockArray<BarrelFiringEffectBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

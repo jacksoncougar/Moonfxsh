@@ -85,6 +85,31 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadStringID();
+            position = binaryReader.ReadVector3();
+            referenceFrame = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            facingYawPitchDegrees = binaryReader.ReadVector2();
+            flags = (Flags)binaryReader.ReadInt32();
+            characterType = binaryReader.ReadShortBlockIndex1();
+            initialWeapon = binaryReader.ReadShortBlockIndex1();
+            initialSecondaryWeapon = binaryReader.ReadShortBlockIndex1();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            vehicleType = binaryReader.ReadShortBlockIndex1();
+            seatType = (SeatType)binaryReader.ReadInt16();
+            grenadeType = (GrenadeType)binaryReader.ReadInt16();
+            swarmCount = binaryReader.ReadInt16();
+            actorVariantName = binaryReader.ReadStringID();
+            vehicleVariantName = binaryReader.ReadStringID();
+            initialMovementDistance = binaryReader.ReadSingle();
+            emitterVehicle = binaryReader.ReadShortBlockIndex1();
+            initialMovementMode = (InitialMovementMode)binaryReader.ReadInt16();
+            placementScript = binaryReader.ReadString32();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            invalidName_2 = binaryReader.ReadBytes(2);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -53,6 +53,17 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
+            renderDepthBias = binaryReader.ReadInt16();
+            startingBitmapSequenceIndex = binaryReader.ReadInt16();
+            bitmap = binaryReader.ReadTagReference();
+            shader = binaryReader.ReadTagReference();
+            bounds = binaryReader.ReadVector2();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

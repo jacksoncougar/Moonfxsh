@@ -111,6 +111,34 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            renderModel = binaryReader.ReadTagReference();
+            animationGraph = binaryReader.ReadTagReference();
+            flags = (Flags)binaryReader.ReadInt32();
+            renderModelScale = binaryReader.ReadSingle();
+            movementScale = binaryReader.ReadSingle();
+            cubeMap = Guerilla.ReadBlockArray<SkyCubemapBlock>(binaryReader);
+            indoorAmbientColor = binaryReader.ReadColorR8G8B8();
+            invalidName_ = binaryReader.ReadBytes(4);
+            outdoorAmbientColor = binaryReader.ReadColorR8G8B8();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            fogSpreadDistanceWorldUnits = binaryReader.ReadSingle();
+            atmosphericFog = Guerilla.ReadBlockArray<SkyAtmosphericFogBlock>(binaryReader);
+            secondaryFog = Guerilla.ReadBlockArray<SkyAtmosphericFogBlock>(binaryReader);
+            skyFog = Guerilla.ReadBlockArray<SkyFogBlock>(binaryReader);
+            patchyFog = Guerilla.ReadBlockArray<SkyPatchyFogBlock>(binaryReader);
+            amount01 = binaryReader.ReadSingle();
+            threshold01 = binaryReader.ReadSingle();
+            brightness01 = binaryReader.ReadSingle();
+            gammaPower = binaryReader.ReadSingle();
+            lights = Guerilla.ReadBlockArray<SkyLightBlock>(binaryReader);
+            globalSkyRotation = binaryReader.ReadSingle();
+            shaderFunctions = Guerilla.ReadBlockArray<SkyShaderFunctionBlock>(binaryReader);
+            animations = Guerilla.ReadBlockArray<SkyAnimationBlock>(binaryReader);
+            invalidName_1 = binaryReader.ReadBytes(12);
+            clearColor = binaryReader.ReadColorR8G8B8();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

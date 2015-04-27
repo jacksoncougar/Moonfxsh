@@ -50,6 +50,16 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(16);
+            regions = Guerilla.ReadBlockArray<ModelVariantRegionBlock>(binaryReader);
+            objects = Guerilla.ReadBlockArray<ModelVariantObjectBlock>(binaryReader);
+            invalidName_0 = binaryReader.ReadBytes(8);
+            dialogueSoundEffect = binaryReader.ReadStringID();
+            dialogue = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

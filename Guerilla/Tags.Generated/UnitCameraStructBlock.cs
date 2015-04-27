@@ -45,6 +45,14 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            cameraMarkerName = binaryReader.ReadStringID();
+            cameraSubmergedMarkerName = binaryReader.ReadStringID();
+            pitchAutoLevel = binaryReader.ReadSingle();
+            pitchRange = binaryReader.ReadRange();
+            cameraTracks = Guerilla.ReadBlockArray<UnitCameraTrackBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

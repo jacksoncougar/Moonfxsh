@@ -49,6 +49,16 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            doorPortalCount = binaryReader.ReadInt32();
+            clusterDistanceBounds = binaryReader.ReadRange();
+            encodedDoorPas = Guerilla.ReadBlockArray<DoorEncodedPasBlock>(binaryReader);
+            clusterDoorPortalEncodedPas = Guerilla.ReadBlockArray<ClusterDoorPortalEncodedPasBlock>(binaryReader);
+            aiDeafeningPas = Guerilla.ReadBlockArray<AiDeafeningEncodedPasBlock>(binaryReader);
+            clusterDistances = Guerilla.ReadBlockArray<EncodedClusterDistancesBlock>(binaryReader);
+            machineDoorMapping = Guerilla.ReadBlockArray<OccluderToMachineDoorMapping>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

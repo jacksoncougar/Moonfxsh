@@ -51,6 +51,17 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            renderInfo = new StructureInstancedGeometryRenderInfoStructBlock(binaryReader);
+            checksum = binaryReader.ReadInt32();
+            boundingSphereCenter = binaryReader.ReadVector3();
+            boundingSphereRadius = binaryReader.ReadSingle();
+            collisionInfo = new GlobalCollisionBspStructBlock(binaryReader);
+            bspPhysics = Guerilla.ReadBlockArray<CollisionBspPhysicsBlock>(binaryReader);
+            renderLeaves = Guerilla.ReadBlockArray<StructureBspLeafBlock>(binaryReader);
+            surfaceReferences = Guerilla.ReadBlockArray<StructureBspSurfaceReferenceBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

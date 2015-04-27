@@ -50,6 +50,16 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            bSP = binaryReader.ReadTagReference();
+            backgroundSounds = Guerilla.ReadBlockArray<ScenarioClusterBackgroundSoundsBlock>(binaryReader);
+            soundEnvironments = Guerilla.ReadBlockArray<ScenarioClusterSoundEnvironmentsBlock>(binaryReader);
+            bSPChecksum = binaryReader.ReadInt32();
+            clusterCentroids = Guerilla.ReadBlockArray<ScenarioClusterPointsBlock>(binaryReader);
+            weatherProperties = Guerilla.ReadBlockArray<ScenarioClusterWeatherPropertiesBlock>(binaryReader);
+            atmosphericFogProperties = Guerilla.ReadBlockArray<ScenarioClusterAtmosphericFogPropertiesBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

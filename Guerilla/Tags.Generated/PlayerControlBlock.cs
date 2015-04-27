@@ -146,6 +146,36 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            magnetismFriction = binaryReader.ReadSingle();
+            magnetismAdhesion = binaryReader.ReadSingle();
+            inconsequentialTargetScale = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(12);
+            crosshairLocation = binaryReader.ReadVector2();
+            secondsToStart = binaryReader.ReadSingle();
+            secondsToFullSpeed = binaryReader.ReadSingle();
+            decayRate = binaryReader.ReadSingle();
+            fullSpeedMultiplier = binaryReader.ReadSingle();
+            peggedMagnitude = binaryReader.ReadSingle();
+            peggedAngularThreshold = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(8);
+            lookDefaultPitchRateDegrees = binaryReader.ReadSingle();
+            lookDefaultYawRateDegrees = binaryReader.ReadSingle();
+            lookPegThreshold01 = binaryReader.ReadSingle();
+            lookYawAccelerationTimeSeconds = binaryReader.ReadSingle();
+            lookYawAccelerationScale = binaryReader.ReadSingle();
+            lookPitchAccelerationTimeSeconds = binaryReader.ReadSingle();
+            lookPitchAccelerationScale = binaryReader.ReadSingle();
+            lookAutolevellingScale = binaryReader.ReadSingle();
+            invalidName_1 = binaryReader.ReadBytes(8);
+            gravityScale = binaryReader.ReadSingle();
+            invalidName_2 = binaryReader.ReadBytes(2);
+            minimumAutolevellingTicks = binaryReader.ReadInt16();
+            minimumAngleForVehicleFlipping = binaryReader.ReadSingle();
+            lookFunction = Guerilla.ReadBlockArray<LookFunctionBlock>(binaryReader);
+            minimumActionHoldTimeSeconds = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

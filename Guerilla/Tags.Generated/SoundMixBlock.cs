@@ -66,6 +66,20 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            leftStereoGainDB = binaryReader.ReadSingle();
+            rightStereoGainDB = binaryReader.ReadSingle();
+            leftStereoGainDB0 = binaryReader.ReadSingle();
+            rightStereoGainDB0 = binaryReader.ReadSingle();
+            leftStereoGainDB1 = binaryReader.ReadSingle();
+            rightStereoGainDB1 = binaryReader.ReadSingle();
+            frontSpeakerGainDB = binaryReader.ReadSingle();
+            rearSpeakerGainDB = binaryReader.ReadSingle();
+            frontSpeakerGainDB0 = binaryReader.ReadSingle();
+            rearSpeakerGainDB0 = binaryReader.ReadSingle();
+            globalMix = new SoundGlobalMixStructBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

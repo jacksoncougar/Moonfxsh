@@ -69,6 +69,26 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            explanation = Guerilla.ReadData(binaryReader);
+            layerPassIndexLeaveAs1UnlessDebugging = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            primary0AndSecondary0ImplementationIndex = binaryReader.ReadByte();
+            primary0AndSecondary0ImplementationIndex0 = binaryReader.ReadByte();
+            primary0AndSecondary0ImplementationIndex1 = binaryReader.ReadByte();
+            primary0AndSecondary0ImplementationIndex2 = binaryReader.ReadByte();
+            invalidName_0 = binaryReader.ReadBytes(64);
+            stage0Mode = (Stage0Mode)binaryReader.ReadInt16();
+            stage1Mode = (Stage1Mode)binaryReader.ReadInt16();
+            stage2Mode = (Stage2Mode)binaryReader.ReadInt16();
+            stage3Mode = (Stage3Mode)binaryReader.ReadInt16();
+            advancedControl = Guerilla.ReadBlockArray<RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock>(binaryReader);
+            target = (Target)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            invalidName_2 = binaryReader.ReadBytes(64);
+            convolution = Guerilla.ReadBlockArray<RasterizerScreenEffectConvolutionBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -80,6 +80,19 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            collisionDamage = binaryReader.ReadTagReference();
+            minGameAccDefault = binaryReader.ReadSingle();
+            maxGameAccDefault = binaryReader.ReadSingle();
+            minGameScaleDefault = binaryReader.ReadSingle();
+            maxGameScaleDefault = binaryReader.ReadSingle();
+            minAbsAccDefault = binaryReader.ReadSingle();
+            maxAbsAccDefault = binaryReader.ReadSingle();
+            minAbsScaleDefault = binaryReader.ReadSingle();
+            maxAbsScaleDefault = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(32);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

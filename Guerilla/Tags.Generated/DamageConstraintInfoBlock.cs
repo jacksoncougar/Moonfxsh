@@ -45,6 +45,14 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            physicsModelConstraintName = binaryReader.ReadStringID();
+            damageConstraintName = binaryReader.ReadStringID();
+            damageConstraintGroupName = binaryReader.ReadStringID();
+            groupProbabilityScale = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(4);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

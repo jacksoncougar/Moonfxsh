@@ -41,6 +41,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            pathFindingSectorFlags = (PathFindingSectorFlags)binaryReader.ReadInt16();
+            hintIndex = binaryReader.ReadInt16();
+            firstLinkDoNotSetManually = binaryReader.ReadInt32();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

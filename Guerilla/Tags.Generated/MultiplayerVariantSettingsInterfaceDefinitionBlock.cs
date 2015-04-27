@@ -80,6 +80,25 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            invalidName_ = binaryReader.ReadTagReference();
+            invalidName_0 = binaryReader.ReadTagReference();
+            invalidName_1 = binaryReader.ReadTagReference();
+            gameEngineSettings = Guerilla.ReadBlockArray<VariantSettingEditReferenceBlock>(binaryReader);
+            defaultVariantStrings = binaryReader.ReadTagReference();
+            defaultVariants = Guerilla.ReadBlockArray<GDefaultVariantsBlock>(binaryReader);
+            createNewVariantStruct = new CreateNewVariantStructBlock(binaryReader);
+            createNewVariantStruct0 = new CreateNewVariantStructBlock(binaryReader);
+            createNewVariantStruct1 = new CreateNewVariantStructBlock(binaryReader);
+            createNewVariantStruct2 = new CreateNewVariantStructBlock(binaryReader);
+            createNewVariantStruct3 = new CreateNewVariantStructBlock(binaryReader);
+            createNewVariantStruct4 = new CreateNewVariantStructBlock(binaryReader);
+            createNewVariantStruct5 = new CreateNewVariantStructBlock(binaryReader);
+            createNewVariantStruct6 = new CreateNewVariantStructBlock(binaryReader);
+            createNewVariantStruct7 = new CreateNewVariantStructBlock(binaryReader);
+            unusedCreateNewVariants = new []{ new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader),  };
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
@@ -126,6 +145,10 @@ namespace Moonfish.Guerilla.Tags
             public  UnusedCreateNewVariants(): base()
             {
                 
+            }
+            public void Read(BinaryReader binaryReader)
+            {
+                createNewVariantStruct = new CreateNewVariantStructBlock(binaryReader);
             }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {

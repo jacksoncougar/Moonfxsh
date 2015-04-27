@@ -51,6 +51,17 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            bSP3DNodes = Guerilla.ReadBlockArray<Bsp3dNodesBlock>(binaryReader);
+            planes = Guerilla.ReadBlockArray<PlanesBlock>(binaryReader);
+            leaves = Guerilla.ReadBlockArray<LeavesBlock>(binaryReader);
+            bSP2DReferences = Guerilla.ReadBlockArray<Bsp2dReferencesBlock>(binaryReader);
+            bSP2DNodes = Guerilla.ReadBlockArray<Bsp2dNodesBlock>(binaryReader);
+            surfaces = Guerilla.ReadBlockArray<SurfacesBlock>(binaryReader);
+            edges = Guerilla.ReadBlockArray<EdgesBlock>(binaryReader);
+            vertices = Guerilla.ReadBlockArray<VerticesBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

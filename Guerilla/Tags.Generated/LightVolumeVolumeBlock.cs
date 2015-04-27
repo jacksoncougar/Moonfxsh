@@ -74,6 +74,28 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            bitmap = binaryReader.ReadTagReference();
+            spriteCount4256 = binaryReader.ReadInt32();
+            offsetFunction = new ScalarFunctionStructBlock(binaryReader);
+            radiusFunction = new ScalarFunctionStructBlock(binaryReader);
+            brightnessFunction = new ScalarFunctionStructBlock(binaryReader);
+            colorFunction = new ColorFunctionStructBlock(binaryReader);
+            facingFunction = new ScalarFunctionStructBlock(binaryReader);
+            aspect = Guerilla.ReadBlockArray<LightVolumeAspectBlock>(binaryReader);
+            radiusFracMin00039062510 = binaryReader.ReadSingle();
+            dEPRECATEDXStepExponent050875 = binaryReader.ReadSingle();
+            dEPRECATEDXBufferLength32512 = binaryReader.ReadInt32();
+            xBufferSpacing1256 = binaryReader.ReadInt32();
+            xBufferMinIterations1256 = binaryReader.ReadInt32();
+            xBufferMaxIterations1256 = binaryReader.ReadInt32();
+            xDeltaMaxError000101 = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(4);
+            invalidName_0 = Guerilla.ReadBlockArray<LightVolumeRuntimeOffsetBlock>(binaryReader);
+            invalidName_1 = binaryReader.ReadBytes(48);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

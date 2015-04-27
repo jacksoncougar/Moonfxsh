@@ -56,6 +56,14 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            maximumVitality = binaryReader.ReadSingle();
+            effect = binaryReader.ReadTagReference();
+            sound = binaryReader.ReadTagReference();
+            particleEffects = Guerilla.ReadBlockArray<ParticleSystemDefinitionBlockNew>(binaryReader);
+            particleDensity = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

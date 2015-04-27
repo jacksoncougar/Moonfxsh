@@ -50,6 +50,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            platform = (Platform)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            geometryClassifications = Guerilla.ReadBlockArray<VertexShaderClassificationBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

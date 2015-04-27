@@ -45,6 +45,14 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            vocalizationName = binaryReader.ReadStringID();
+            flags = (Flags)binaryReader.ReadInt16();
+            vocalizationIndexPostProcess = binaryReader.ReadInt16();
+            responseType = (ResponseType)binaryReader.ReadInt16();
+            dialogueIndexImport = binaryReader.ReadInt16();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

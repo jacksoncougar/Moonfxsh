@@ -56,6 +56,19 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            categoryName = binaryReader.ReadStringID();
+            flags = (Flags)binaryReader.ReadInt16();
+            defaultButton = (DefaultButton)binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes(1);
+            stringTag = binaryReader.ReadTagReference();
+            defaultTitle = binaryReader.ReadStringID();
+            defaultMessage = binaryReader.ReadStringID();
+            defaultOk = binaryReader.ReadStringID();
+            defaultCancel = binaryReader.ReadStringID();
+            errorBlock = Guerilla.ReadBlockArray<UiErrorBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -71,6 +71,27 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            markerName = binaryReader.ReadStringID();
+            flags = (Flags)binaryReader.ReadInt32();
+            antigravStrength = binaryReader.ReadSingle();
+            antigravOffset = binaryReader.ReadSingle();
+            antigravHeight = binaryReader.ReadSingle();
+            antigravDampFactor = binaryReader.ReadSingle();
+            antigravNormalK1 = binaryReader.ReadSingle();
+            antigravNormalK0 = binaryReader.ReadSingle();
+            radius = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(12);
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(2);
+            damageSourceRegionName = binaryReader.ReadStringID();
+            defaultStateError = binaryReader.ReadSingle();
+            minorDamageError = binaryReader.ReadSingle();
+            mediumDamageError = binaryReader.ReadSingle();
+            majorDamageError = binaryReader.ReadSingle();
+            destroyedStateError = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

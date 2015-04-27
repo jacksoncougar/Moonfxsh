@@ -53,6 +53,13 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            powerupType = (PowerupType)binaryReader.ReadInt16();
+            grenadeType = (GrenadeType)binaryReader.ReadInt16();
+            powerupTimeSeconds = binaryReader.ReadSingle();
+            pickupSound = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

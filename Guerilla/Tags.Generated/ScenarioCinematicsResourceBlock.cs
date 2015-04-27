@@ -50,6 +50,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = Guerilla.ReadBlockArray<ScenarioCutsceneFlagBlock>(binaryReader);
+            cameraPoints = Guerilla.ReadBlockArray<ScenarioCutsceneCameraPointBlock>(binaryReader);
+            recordedAnimations = Guerilla.ReadBlockArray<RecordedAnimationBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -56,6 +56,15 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            gridOrigin = binaryReader.ReadVector3();
+            cellCountPerDimension = binaryReader.ReadInt32();
+            cacheBlocks = Guerilla.ReadBlockArray<DecoratorCacheBlockBlock>(binaryReader);
+            groups = Guerilla.ReadBlockArray<DecoratorGroupBlock>(binaryReader);
+            cells = Guerilla.ReadBlockArray<DecoratorCellCollectionBlock>(binaryReader);
+            decals = Guerilla.ReadBlockArray<DecoratorProjectedDecalBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

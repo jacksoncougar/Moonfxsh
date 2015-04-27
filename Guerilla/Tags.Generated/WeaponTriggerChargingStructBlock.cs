@@ -71,6 +71,17 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            chargingTimeSeconds = binaryReader.ReadSingle();
+            chargedTimeSeconds = binaryReader.ReadSingle();
+            overchargedAction = (OverchargedAction)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            chargedIllumination01 = binaryReader.ReadSingle();
+            spewTimeSeconds = binaryReader.ReadSingle();
+            chargingEffect = binaryReader.ReadTagReference();
+            chargingDamageEffect = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

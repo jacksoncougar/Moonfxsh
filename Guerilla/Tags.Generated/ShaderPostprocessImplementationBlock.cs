@@ -55,6 +55,19 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            gPUConstantState = new ShaderGpuStateReferenceStructBlock(binaryReader);
+            gPUVolatileState = new ShaderGpuStateReferenceStructBlock(binaryReader);
+            bitmapParameters = new TagBlockIndexStructBlock(binaryReader);
+            bitmapTransforms = new TagBlockIndexStructBlock(binaryReader);
+            valueParameters = new TagBlockIndexStructBlock(binaryReader);
+            colorParameters = new TagBlockIndexStructBlock(binaryReader);
+            bitmapTransformOverlays = new TagBlockIndexStructBlock(binaryReader);
+            valueOverlays = new TagBlockIndexStructBlock(binaryReader);
+            colorOverlays = new TagBlockIndexStructBlock(binaryReader);
+            vertexShaderConstants = new TagBlockIndexStructBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -63,6 +63,18 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            listFlags = (ListFlags)binaryReader.ReadInt32();
+            arrowsBitmap = binaryReader.ReadTagReference();
+            upArrowsOffsetFromBotLeftOf1StItem = binaryReader.ReadPoint();
+            downArrowsOffsetFromBotLeftOf1StItem = binaryReader.ReadPoint();
+            itemAnimations = Guerilla.ReadBlockArray<SingleAnimationReferenceBlock>(binaryReader);
+            textBlocks = Guerilla.ReadBlockArray<TextBlockReferenceBlock>(binaryReader);
+            bitmapBlocks = Guerilla.ReadBlockArray<BitmapBlockReferenceBlock>(binaryReader);
+            hudBlocks = Guerilla.ReadBlockArray<HudBlockReferenceBlock>(binaryReader);
+            playerBlocks = Guerilla.ReadBlockArray<PlayerBlockReferenceBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

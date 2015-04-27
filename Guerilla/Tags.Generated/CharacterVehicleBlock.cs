@@ -234,6 +234,52 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            unit = binaryReader.ReadTagReference();
+            style = binaryReader.ReadTagReference();
+            vehicleFlags = (VehicleFlags)binaryReader.ReadInt32();
+            aiPathfindingRadiusWorldUnits = binaryReader.ReadSingle();
+            aiDestinationRadiusWorldUnits = binaryReader.ReadSingle();
+            aiDecelerationDistanceworldUnits = binaryReader.ReadSingle();
+            aiTurningRadius = binaryReader.ReadSingle();
+            aiInnerTurningRadiusTr = binaryReader.ReadSingle();
+            aiIdealTurningRadiusTr = binaryReader.ReadSingle();
+            aiBansheeSteeringMaximum = binaryReader.ReadSingle();
+            aiMaxSteeringAngleDegrees = binaryReader.ReadSingle();
+            aiMaxSteeringDeltaDegrees = binaryReader.ReadSingle();
+            aiOversteeringScale = binaryReader.ReadSingle();
+            aiOversteeringBounds = binaryReader.ReadRange();
+            aiSideslipDistance = binaryReader.ReadSingle();
+            aiAvoidanceDistanceWorldUnits = binaryReader.ReadSingle();
+            aiMinUrgency01 = binaryReader.ReadSingle();
+            aiThrottleMaximum01 = binaryReader.ReadSingle();
+            aiGoalMinThrottleScale = binaryReader.ReadSingle();
+            aiTurnMinThrottleScale = binaryReader.ReadSingle();
+            aiDirectionMinThrottleScale = binaryReader.ReadSingle();
+            aiAccelerationScale01 = binaryReader.ReadSingle();
+            aiThrottleBlend01 = binaryReader.ReadSingle();
+            theoreticalMaxSpeedWuS = binaryReader.ReadSingle();
+            errorScale = binaryReader.ReadSingle();
+            aiAllowableAimDeviationAngle = binaryReader.ReadSingle();
+            aiChargeTightAngleDistance = binaryReader.ReadSingle();
+            aiChargeTightAngle01 = binaryReader.ReadSingle();
+            aiChargeRepeatTimeout = binaryReader.ReadSingle();
+            aiChargeLookAheadTime = binaryReader.ReadSingle();
+            aiChargeConsiderDistance = binaryReader.ReadSingle();
+            aiChargeAbortDistance = binaryReader.ReadSingle();
+            vehicleRamTimeout = binaryReader.ReadSingle();
+            ramParalysisTime = binaryReader.ReadSingle();
+            aiCoverDamageThreshold = binaryReader.ReadSingle();
+            aiCoverMinDistance = binaryReader.ReadSingle();
+            aiCoverTime = binaryReader.ReadSingle();
+            aiCoverMinBoostDistance = binaryReader.ReadSingle();
+            turtlingRecentDamageThreshold = binaryReader.ReadSingle();
+            turtlingMinTimeSeconds = binaryReader.ReadSingle();
+            turtlingTimeoutSeconds = binaryReader.ReadSingle();
+            obstacleIgnoreSize = (ObstacleIgnoreSize)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

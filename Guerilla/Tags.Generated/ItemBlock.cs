@@ -93,6 +93,31 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            oLDMessageIndex = binaryReader.ReadInt16();
+            sortOrder = binaryReader.ReadInt16();
+            multiplayerOnGroundScale = binaryReader.ReadSingle();
+            campaignOnGroundScale = binaryReader.ReadSingle();
+            pickupMessage = binaryReader.ReadStringID();
+            swapMessage = binaryReader.ReadStringID();
+            pickupOrDualMsg = binaryReader.ReadStringID();
+            swapOrDualMsg = binaryReader.ReadStringID();
+            dualOnlyMsg = binaryReader.ReadStringID();
+            pickedUpMsg = binaryReader.ReadStringID();
+            singluarQuantityMsg = binaryReader.ReadStringID();
+            pluralQuantityMsg = binaryReader.ReadStringID();
+            switchToMsg = binaryReader.ReadStringID();
+            switchToFromAiMsg = binaryReader.ReadStringID();
+            uNUSED = binaryReader.ReadTagReference();
+            collisionSound = binaryReader.ReadTagReference();
+            predictedBitmaps = Guerilla.ReadBlockArray<PredictedBitmapsBlock>(binaryReader);
+            detonationDamageEffect = binaryReader.ReadTagReference();
+            detonationDelaySeconds = binaryReader.ReadRange();
+            detonatingEffect = binaryReader.ReadTagReference();
+            detonationEffect = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

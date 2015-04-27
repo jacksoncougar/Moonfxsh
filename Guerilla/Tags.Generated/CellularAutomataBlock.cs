@@ -120,6 +120,40 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            updatesPerSecondHz = binaryReader.ReadInt16();
+            xWidthCells = binaryReader.ReadInt16();
+            yDepthCells = binaryReader.ReadInt16();
+            zHeightCells = binaryReader.ReadInt16();
+            xWidthWorldUnits = binaryReader.ReadSingle();
+            yDepthWorldUnits = binaryReader.ReadSingle();
+            zHeightWorldUnits = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(32);
+            marker = binaryReader.ReadStringID();
+            cellBirthChance01 = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(32);
+            cellGeneMutates1InTimes = binaryReader.ReadInt32();
+            virusGeneMutations1InTimes = binaryReader.ReadInt32();
+            invalidName_1 = binaryReader.ReadBytes(32);
+            infectedCellLifespanUpdates = binaryReader.ReadInt32();
+            minimumInfectionAgeUpdates = binaryReader.ReadInt16();
+            invalidName_2 = binaryReader.ReadBytes(2);
+            cellInfectionChance01 = binaryReader.ReadSingle();
+            infectionThreshold01 = binaryReader.ReadSingle();
+            invalidName_3 = binaryReader.ReadBytes(32);
+            newCellFilledChance01 = binaryReader.ReadSingle();
+            newCellInfectedChance01 = binaryReader.ReadSingle();
+            invalidName_4 = binaryReader.ReadBytes(32);
+            detailTextureChangeChance01 = binaryReader.ReadSingle();
+            invalidName_5 = binaryReader.ReadBytes(32);
+            detailTextureWidthCells = binaryReader.ReadInt16();
+            invalidName_6 = binaryReader.ReadBytes(2);
+            detailTexture = binaryReader.ReadTagReference();
+            invalidName_7 = binaryReader.ReadBytes(32);
+            maskBitmap = binaryReader.ReadTagReference();
+            invalidName_8 = binaryReader.ReadBytes(240);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

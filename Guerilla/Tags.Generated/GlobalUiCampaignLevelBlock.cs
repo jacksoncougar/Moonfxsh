@@ -46,6 +46,14 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            campaignID = binaryReader.ReadInt32();
+            mapID = binaryReader.ReadInt32();
+            bitmap = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(576);
+            invalidName_0 = binaryReader.ReadBytes(2304);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

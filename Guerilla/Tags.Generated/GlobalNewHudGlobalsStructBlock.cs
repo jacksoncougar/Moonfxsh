@@ -50,6 +50,16 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            hudText = binaryReader.ReadTagReference();
+            dashlights = Guerilla.ReadBlockArray<HudDashlightsBlock>(binaryReader);
+            waypointArrows = Guerilla.ReadBlockArray<HudWaypointArrowBlock>(binaryReader);
+            waypoints = Guerilla.ReadBlockArray<HudWaypointBlock>(binaryReader);
+            hudSounds = Guerilla.ReadBlockArray<NewHudSoundBlock>(binaryReader);
+            playerTrainingData = Guerilla.ReadBlockArray<PlayerTrainingEntryDataBlock>(binaryReader);
+            constants = new GlobalNewHudGlobalsConstantsStructBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -99,6 +99,40 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt16();
+            spriteCount = (SpriteCount)binaryReader.ReadInt16();
+            naturalLengthWorldUnits = binaryReader.ReadSingle();
+            instances = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            instanceSpreadAngleDegrees = binaryReader.ReadSingle();
+            instanceRotationPeriodSeconds = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(8);
+            materialEffects = binaryReader.ReadTagReference();
+            bitmap = binaryReader.ReadTagReference();
+            invalidName_1 = binaryReader.ReadBytes(8);
+            horizontalRange = new ScalarFunctionStructBlock(binaryReader);
+            verticalRange = new ScalarFunctionStructBlock(binaryReader);
+            verticalNegativeScale01 = binaryReader.ReadSingle();
+            roughness = new ScalarFunctionStructBlock(binaryReader);
+            invalidName_2 = binaryReader.ReadBytes(64);
+            octave1FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave2FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave3FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave4FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave5FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave6FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave7FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave8FrequencyCyclesSecond = binaryReader.ReadSingle();
+            octave9FrequencyCyclesSecond = binaryReader.ReadSingle();
+            invalidName_3 = binaryReader.ReadBytes(28);
+            octaveFlags = (OctaveFlags)binaryReader.ReadInt16();
+            invalidName_4 = binaryReader.ReadBytes(2);
+            cores = Guerilla.ReadBlockArray<LiquidCoreBlock>(binaryReader);
+            rangeScale = new ScalarFunctionStructBlock(binaryReader);
+            brightnessScale = new ScalarFunctionStructBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -41,6 +41,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            accelerationRangeWorldUnitsPerSecondSquared = binaryReader.ReadVector3();
+            accelActionScaleActionsFail01 = binaryReader.ReadSingle();
+            accelAttachScaleDetachUnit01 = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

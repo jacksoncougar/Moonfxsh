@@ -41,6 +41,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            minLightmapSample = binaryReader.ReadColorR8G8B8();
+            maxLightmapSample = binaryReader.ReadColorR8G8B8();
+            function = new MappingFunctionBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

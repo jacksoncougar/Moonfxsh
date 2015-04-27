@@ -51,6 +51,17 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            centerOfMass = binaryReader.ReadVector3();
+            invalidName_ = binaryReader.ReadBytes(4);
+            inertiaTensorI = binaryReader.ReadVector3();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            inertiaTensorJ = binaryReader.ReadVector3();
+            invalidName_1 = binaryReader.ReadBytes(4);
+            inertiaTensorK = binaryReader.ReadVector3();
+            invalidName_2 = binaryReader.ReadBytes(4);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -39,6 +39,11 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            collisionLeaves = Guerilla.ReadBlockArray<BspLeafBlock>(binaryReader);
+            surfaceReferences = Guerilla.ReadBlockArray<BspSurfaceReferenceBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

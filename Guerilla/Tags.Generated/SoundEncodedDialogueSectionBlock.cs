@@ -39,6 +39,11 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            encodedData = Guerilla.ReadData(binaryReader);
+            soundDialogueInfo = Guerilla.ReadBlockArray<SoundPermutationDialogueInfoBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

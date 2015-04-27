@@ -176,6 +176,44 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            weaponsFlags = (WeaponsFlags)binaryReader.ReadInt32();
+            weapon = binaryReader.ReadTagReference();
+            maximumFiringRangeWorldUnits = binaryReader.ReadSingle();
+            minimumFiringRange = binaryReader.ReadSingle();
+            normalCombatRangeWorldUnits = binaryReader.ReadRange();
+            bombardmentRange = binaryReader.ReadSingle();
+            maxSpecialTargetDistanceWorldUnits = binaryReader.ReadSingle();
+            timidCombatRangeWorldUnits = binaryReader.ReadRange();
+            aggressiveCombatRangeWorldUnits = binaryReader.ReadRange();
+            superBallisticRange = binaryReader.ReadSingle();
+            ballisticFiringBoundsWorldUnits = binaryReader.ReadRange();
+            ballisticFractionBounds01 = binaryReader.ReadRange();
+            firstBurstDelayTimeSeconds = binaryReader.ReadRange();
+            surpriseDelayTimeSeconds = binaryReader.ReadSingle();
+            surpriseFireWildlyTimeSeconds = binaryReader.ReadSingle();
+            deathFireWildlyChance01 = binaryReader.ReadSingle();
+            deathFireWildlyTimeSeconds = binaryReader.ReadSingle();
+            customStandGunOffset = binaryReader.ReadVector3();
+            customCrouchGunOffset = binaryReader.ReadVector3();
+            specialFireMode = (SpecialFireModeTheTypeOfSpecialWeaponFireThatWeCanUse)binaryReader.ReadInt16();
+            specialFireSituation = (SpecialFireSituationWhenWeWillDecideToUseOurSpecialWeaponFireMode)binaryReader.ReadInt16();
+            specialFireChance01 = binaryReader.ReadSingle();
+            specialFireDelaySeconds = binaryReader.ReadSingle();
+            specialDamageModifier01 = binaryReader.ReadSingle();
+            specialProjectileErrorDegrees = binaryReader.ReadSingle();
+            dropWeaponLoaded = binaryReader.ReadRange();
+            dropWeaponAmmo = binaryReader.ReadInt32();
+            normalAccuracyBounds = binaryReader.ReadRange();
+            normalAccuracyTime = binaryReader.ReadSingle();
+            heroicAccuracyBounds = binaryReader.ReadRange();
+            heroicAccuracyTime = binaryReader.ReadSingle();
+            legendaryAccuracyBounds = binaryReader.ReadRange();
+            legendaryAccuracyTime = binaryReader.ReadSingle();
+            firingPatterns = Guerilla.ReadBlockArray<CharacterFiringPatternBlock>(binaryReader);
+            weaponMeleeDamage = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

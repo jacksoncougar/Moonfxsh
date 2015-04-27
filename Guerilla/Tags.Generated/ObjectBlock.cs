@@ -155,6 +155,44 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            invalidName_ = binaryReader.ReadBytes(2);
+            flags = (Flags)binaryReader.ReadInt16();
+            boundingRadiusWorldUnits = binaryReader.ReadSingle();
+            boundingOffset = binaryReader.ReadVector3();
+            accelerationScale0Inf = binaryReader.ReadSingle();
+            lightmapShadowMode = (LightmapShadowMode)binaryReader.ReadInt16();
+            sweetenerSize = (SweetenerSize)binaryReader.ReadByte();
+            invalidName_0 = binaryReader.ReadBytes(1);
+            invalidName_1 = binaryReader.ReadBytes(4);
+            dynamicLightSphereRadius = binaryReader.ReadSingle();
+            dynamicLightSphereOffset = binaryReader.ReadVector3();
+            defaultModelVariant = binaryReader.ReadStringID();
+            model = binaryReader.ReadTagReference();
+            crateObject = binaryReader.ReadTagReference();
+            modifierShader = binaryReader.ReadTagReference();
+            creationEffect = binaryReader.ReadTagReference();
+            materialEffects = binaryReader.ReadTagReference();
+            aiProperties = Guerilla.ReadBlockArray<ObjectAiPropertiesBlock>(binaryReader);
+            functions = Guerilla.ReadBlockArray<ObjectFunctionBlock>(binaryReader);
+            applyCollisionDamageScale = binaryReader.ReadSingle();
+            minGameAccDefault = binaryReader.ReadSingle();
+            maxGameAccDefault = binaryReader.ReadSingle();
+            minGameScaleDefault = binaryReader.ReadSingle();
+            maxGameScaleDefault = binaryReader.ReadSingle();
+            minAbsAccDefault = binaryReader.ReadSingle();
+            maxAbsAccDefault = binaryReader.ReadSingle();
+            minAbsScaleDefault = binaryReader.ReadSingle();
+            maxAbsScaleDefault = binaryReader.ReadSingle();
+            hudTextMessageIndex = binaryReader.ReadInt16();
+            invalidName_2 = binaryReader.ReadBytes(2);
+            attachments = Guerilla.ReadBlockArray<ObjectAttachmentBlock>(binaryReader);
+            widgets = Guerilla.ReadBlockArray<ObjectWidgetBlock>(binaryReader);
+            oldFunctions = Guerilla.ReadBlockArray<OldObjectFunctionBlock>(binaryReader);
+            changeColors = Guerilla.ReadBlockArray<ObjectChangeColors>(binaryReader);
+            predictedResources = Guerilla.ReadBlockArray<PredictedResourceBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -60,6 +60,17 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            skipFraction = binaryReader.ReadSingle();
+            delayBoundsSeconds = binaryReader.ReadRange();
+            durationBoundsSeconds = binaryReader.ReadRange();
+            parts = Guerilla.ReadBlockArray<EffectPartBlock>(binaryReader);
+            beams = Guerilla.ReadBlockArray<BeamBlock>(binaryReader);
+            accelerations = Guerilla.ReadBlockArray<EffectAccelerationsBlock>(binaryReader);
+            particleSystems = Guerilla.ReadBlockArray<ParticleSystemDefinitionBlockNew>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

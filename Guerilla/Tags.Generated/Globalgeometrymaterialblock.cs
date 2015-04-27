@@ -49,6 +49,15 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            oldShader = binaryReader.ReadTagReference();
+            shader = binaryReader.ReadTagReference();
+            properties = Guerilla.ReadBlockArray<GlobalGeometryMaterialPropertyBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(4);
+            breakableSurfaceIndex = binaryReader.ReadByte();
+            invalidName_0 = binaryReader.ReadBytes(3);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -70,6 +70,22 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt16();
+            participant = binaryReader.ReadShortBlockIndex1();
+            addressee = (Addressee)binaryReader.ReadInt16();
+            addresseeParticipant = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(4);
+            lineDelayTime = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(12);
+            variant1 = binaryReader.ReadTagReference();
+            variant2 = binaryReader.ReadTagReference();
+            variant3 = binaryReader.ReadTagReference();
+            variant4 = binaryReader.ReadTagReference();
+            variant5 = binaryReader.ReadTagReference();
+            variant6 = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

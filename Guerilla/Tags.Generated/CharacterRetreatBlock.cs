@@ -113,6 +113,25 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            retreatFlags = (RetreatFlags)binaryReader.ReadInt32();
+            shieldThreshold = binaryReader.ReadSingle();
+            scaryTargetThreshold = binaryReader.ReadSingle();
+            dangerThreshold = binaryReader.ReadSingle();
+            proximityThreshold = binaryReader.ReadSingle();
+            minMaxForcedCowerTimeBounds = binaryReader.ReadRange();
+            minMaxCowerTimeoutBounds = binaryReader.ReadRange();
+            proximityAmbushThreshold = binaryReader.ReadSingle();
+            awarenessAmbushThreshold = binaryReader.ReadSingle();
+            leaderDeadRetreatChance = binaryReader.ReadSingle();
+            peerDeadRetreatChance = binaryReader.ReadSingle();
+            secondPeerDeadRetreatChance = binaryReader.ReadSingle();
+            zigZagAngleDegrees = binaryReader.ReadSingle();
+            zigZagPeriodSeconds = binaryReader.ReadSingle();
+            retreatGrenadeChance = binaryReader.ReadSingle();
+            backupWeapon = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -47,6 +47,15 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadString32();
+            flags = (Flags)binaryReader.ReadInt32();
+            manualBsp = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
+            firingPositions = Guerilla.ReadBlockArray<FiringPositionsBlock>(binaryReader);
+            areas = Guerilla.ReadBlockArray<AreasBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

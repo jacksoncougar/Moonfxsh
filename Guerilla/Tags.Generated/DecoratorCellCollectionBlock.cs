@@ -43,6 +43,13 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            childIndices = new []{ new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader),  };
+            cacheBlockIndex = binaryReader.ReadShortBlockIndex1();
+            groupCount = binaryReader.ReadInt16();
+            groupStartIndex = binaryReader.ReadInt32();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
@@ -78,6 +85,10 @@ namespace Moonfish.Guerilla.Tags
             public  ChildIndices(): base()
             {
                 
+            }
+            public void Read(BinaryReader binaryReader)
+            {
+                childIndex = binaryReader.ReadInt16();
             }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {

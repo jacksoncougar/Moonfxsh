@@ -71,6 +71,27 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            position = binaryReader.ReadVector3();
+            nodeIndicesOLD = new []{ new NodeIndicesOLD(binaryReader), new NodeIndicesOLD(binaryReader), new NodeIndicesOLD(binaryReader), new NodeIndicesOLD(binaryReader),  };
+            nodeWeights = new []{ new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader),  };
+            nodeIndicesNEW = new []{ new NodeIndicesNEW(binaryReader), new NodeIndicesNEW(binaryReader), new NodeIndicesNEW(binaryReader), new NodeIndicesNEW(binaryReader),  };
+            useNewNodeIndices = binaryReader.ReadInt32();
+            adjustedCompoundNodeIndex = binaryReader.ReadInt32();
+            texcoord = binaryReader.ReadVector2();
+            normal = binaryReader.ReadVector3();
+            binormal = binaryReader.ReadVector3();
+            tangent = binaryReader.ReadVector3();
+            anisotropicBinormal = binaryReader.ReadVector3();
+            secondaryTexcoord = binaryReader.ReadVector2();
+            primaryLightmapColor = binaryReader.ReadColorR8G8B8();
+            primaryLightmapTexcoord = binaryReader.ReadVector2();
+            primaryLightmapIncidentDirection = binaryReader.ReadVector3();
+            invalidName_ = binaryReader.ReadBytes(12);
+            invalidName_0 = binaryReader.ReadBytes(8);
+            invalidName_1 = binaryReader.ReadBytes(12);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
@@ -123,6 +144,10 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
+            public void Read(BinaryReader binaryReader)
+            {
+                nodeIndexOLD = binaryReader.ReadInt32();
+            }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
                 using(binaryWriter.BaseStream.Pin())
@@ -150,6 +175,10 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
+            public void Read(BinaryReader binaryReader)
+            {
+                nodeWeight = binaryReader.ReadSingle();
+            }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
                 using(binaryWriter.BaseStream.Pin())
@@ -176,6 +205,10 @@ namespace Moonfish.Guerilla.Tags
             public  NodeIndicesNEW(): base()
             {
                 
+            }
+            public void Read(BinaryReader binaryReader)
+            {
+                nodeIndexNEW = binaryReader.ReadInt32();
             }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {

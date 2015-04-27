@@ -64,6 +64,22 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadStringID();
+            parentName = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(2);
+            flags = (Flags)binaryReader.ReadInt16();
+            oldMaterialType = (OldMaterialType)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            generalArmor = binaryReader.ReadStringID();
+            specificArmor = binaryReader.ReadStringID();
+            physicsProperties = new MaterialPhysicsPropertiesStructBlock(binaryReader);
+            oldMaterialPhysics = binaryReader.ReadTagReference();
+            breakableSurface = binaryReader.ReadTagReference();
+            sweeteners = new MaterialsSweetenersStructBlock(binaryReader);
+            materialEffects = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

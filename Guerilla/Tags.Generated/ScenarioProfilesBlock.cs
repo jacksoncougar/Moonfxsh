@@ -63,6 +63,22 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadString32();
+            startingHealthDamage01 = binaryReader.ReadSingle();
+            startingShieldDamage01 = binaryReader.ReadSingle();
+            primaryWeapon = binaryReader.ReadTagReference();
+            roundsLoaded = binaryReader.ReadInt16();
+            roundsTotal = binaryReader.ReadInt16();
+            secondaryWeapon = binaryReader.ReadTagReference();
+            roundsLoaded0 = binaryReader.ReadInt16();
+            roundsTotal0 = binaryReader.ReadInt16();
+            startingFragmentationGrenadeCount = binaryReader.ReadByte();
+            startingPlasmaGrenadeCount = binaryReader.ReadByte();
+            startingUnknownGrenadeCount = binaryReader.ReadByte();
+            startingUnknownGrenadeCount0 = binaryReader.ReadByte();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

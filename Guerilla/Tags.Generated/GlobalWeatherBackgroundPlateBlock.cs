@@ -98,6 +98,39 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            texture0 = binaryReader.ReadTagReference();
+            texture1 = binaryReader.ReadTagReference();
+            texture2 = binaryReader.ReadTagReference();
+            platePositions0 = binaryReader.ReadSingle();
+            platePositions1 = binaryReader.ReadSingle();
+            platePositions2 = binaryReader.ReadSingle();
+            moveSpeed0 = binaryReader.ReadVector3();
+            moveSpeed1 = binaryReader.ReadVector3();
+            moveSpeed2 = binaryReader.ReadVector3();
+            textureScale0 = binaryReader.ReadSingle();
+            textureScale1 = binaryReader.ReadSingle();
+            textureScale2 = binaryReader.ReadSingle();
+            jitter0 = binaryReader.ReadVector3();
+            jitter1 = binaryReader.ReadVector3();
+            jitter2 = binaryReader.ReadVector3();
+            plateZNear = binaryReader.ReadSingle();
+            plateZFar = binaryReader.ReadSingle();
+            depthBlendZNear = binaryReader.ReadSingle();
+            depthBlendZFar = binaryReader.ReadSingle();
+            opacity0 = binaryReader.ReadSingle();
+            opacity1 = binaryReader.ReadSingle();
+            opacity2 = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt32();
+            tintColor0 = binaryReader.ReadColorR8G8B8();
+            tintColor1 = binaryReader.ReadColorR8G8B8();
+            tintColor2 = binaryReader.ReadColorR8G8B8();
+            mass1 = binaryReader.ReadSingle();
+            mass2 = binaryReader.ReadSingle();
+            mass3 = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(736);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

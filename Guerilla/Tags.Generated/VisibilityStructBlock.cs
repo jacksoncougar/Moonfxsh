@@ -51,6 +51,17 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            projectionCount = binaryReader.ReadInt16();
+            clusterCount = binaryReader.ReadInt16();
+            volumeCount = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            projections = Guerilla.ReadData(binaryReader);
+            visibilityClusters = Guerilla.ReadData(binaryReader);
+            clusterRemapTable = Guerilla.ReadData(binaryReader);
+            visibilityVolumes = Guerilla.ReadData(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

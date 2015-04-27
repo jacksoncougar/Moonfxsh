@@ -58,6 +58,16 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            resources = new AnimationGraphResourcesStructBlock(binaryReader);
+            content = new AnimationGraphContentsStructBlock(binaryReader);
+            runTimeData = new ModelAnimationRuntimeDataStructBlock(binaryReader);
+            lastImportResults = Guerilla.ReadData(binaryReader);
+            additionalNodeData = Guerilla.ReadBlockArray<AdditionalNodeDataBlock>(binaryReader);
+            xboxUnknownAnimationBlock = Guerilla.ReadBlockArray<MoonfishXboxAnimationRawBlock>(binaryReader);
+            xboxUnknownAnimationBlock0 = Guerilla.ReadBlockArray<MoonfishXboxAnimationUnknownBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

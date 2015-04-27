@@ -55,6 +55,19 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadString32();
+            flags = (Flags)binaryReader.ReadInt32();
+            antigravStrength = binaryReader.ReadSingle();
+            antigravOffset = binaryReader.ReadSingle();
+            antigravHeight = binaryReader.ReadSingle();
+            antigravDampFraction = binaryReader.ReadSingle();
+            antigravNormalK1 = binaryReader.ReadSingle();
+            antigravNormalK0 = binaryReader.ReadSingle();
+            damageSourceRegionName = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(64);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -58,6 +58,16 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>(binaryReader);
+            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            materials = Guerilla.ReadBlockArray<CollisionModelMaterialBlock>(binaryReader);
+            regions = Guerilla.ReadBlockArray<CollisionModelRegionBlock>(binaryReader);
+            pathfindingSpheres = Guerilla.ReadBlockArray<CollisionModelPathfindingSphereBlock>(binaryReader);
+            nodes = Guerilla.ReadBlockArray<CollisionModelNodeBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

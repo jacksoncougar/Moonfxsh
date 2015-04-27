@@ -48,6 +48,11 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            palette = Guerilla.ReadBlockArray<ScenarioDecalPaletteBlock>(binaryReader);
+            decals = Guerilla.ReadBlockArray<ScenarioDecalsBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

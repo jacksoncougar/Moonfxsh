@@ -69,6 +69,21 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            markerAttachmentName = binaryReader.ReadStringID();
+            shader = binaryReader.ReadTagReference();
+            gridXDimension = binaryReader.ReadInt16();
+            gridYDimension = binaryReader.ReadInt16();
+            gridSpacingX = binaryReader.ReadSingle();
+            gridSpacingY = binaryReader.ReadSingle();
+            properties = new ClothPropertiesBlock(binaryReader);
+            vertices = Guerilla.ReadBlockArray<ClothVerticesBlock>(binaryReader);
+            indices = Guerilla.ReadBlockArray<ClothIndicesBlock>(binaryReader);
+            stripIndices = Guerilla.ReadBlockArray<ClothIndicesBlock>(binaryReader);
+            links = Guerilla.ReadBlockArray<ClothLinksBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

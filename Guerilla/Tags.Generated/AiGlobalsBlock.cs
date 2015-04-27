@@ -124,6 +124,50 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            dangerBroadlyFacing = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(4);
+            dangerShootingNear = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            dangerShootingAt = binaryReader.ReadSingle();
+            invalidName_1 = binaryReader.ReadBytes(4);
+            dangerExtremelyClose = binaryReader.ReadSingle();
+            invalidName_2 = binaryReader.ReadBytes(4);
+            dangerShieldDamage = binaryReader.ReadSingle();
+            dangerExetendedShieldDamage = binaryReader.ReadSingle();
+            dangerBodyDamage = binaryReader.ReadSingle();
+            dangerExtendedBodyDamage = binaryReader.ReadSingle();
+            invalidName_3 = binaryReader.ReadBytes(48);
+            globalDialogueTag = binaryReader.ReadTagReference();
+            defaultMissionDialogueSoundEffect = binaryReader.ReadStringID();
+            invalidName_4 = binaryReader.ReadBytes(20);
+            jumpDownWuTick = binaryReader.ReadSingle();
+            jumpStepWuTick = binaryReader.ReadSingle();
+            jumpCrouchWuTick = binaryReader.ReadSingle();
+            jumpStandWuTick = binaryReader.ReadSingle();
+            jumpStoreyWuTick = binaryReader.ReadSingle();
+            jumpTowerWuTick = binaryReader.ReadSingle();
+            maxJumpDownHeightDownWu = binaryReader.ReadSingle();
+            maxJumpDownHeightStepWu = binaryReader.ReadSingle();
+            maxJumpDownHeightCrouchWu = binaryReader.ReadSingle();
+            maxJumpDownHeightStandWu = binaryReader.ReadSingle();
+            maxJumpDownHeightStoreyWu = binaryReader.ReadSingle();
+            maxJumpDownHeightTowerWu = binaryReader.ReadSingle();
+            hoistStepWus = binaryReader.ReadRange();
+            hoistCrouchWus = binaryReader.ReadRange();
+            hoistStandWus = binaryReader.ReadRange();
+            invalidName_5 = binaryReader.ReadBytes(24);
+            vaultStepWus = binaryReader.ReadRange();
+            vaultCrouchWus = binaryReader.ReadRange();
+            invalidName_6 = binaryReader.ReadBytes(48);
+            gravemindProperties = Guerilla.ReadBlockArray<AiGlobalsGravemindBlock>(binaryReader);
+            invalidName_7 = binaryReader.ReadBytes(48);
+            scaryTargetThrehold = binaryReader.ReadSingle();
+            scaryWeaponThrehold = binaryReader.ReadSingle();
+            playerScariness = binaryReader.ReadSingle();
+            berserkingActorScariness = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -92,6 +92,28 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            obsolete1 = binaryReader.ReadTagReference();
+            obsolete2 = binaryReader.ReadTagReference();
+            screenColorTable = binaryReader.ReadTagReference();
+            hudColorTable = binaryReader.ReadTagReference();
+            editorColorTable = binaryReader.ReadTagReference();
+            dialogColorTable = binaryReader.ReadTagReference();
+            hudGlobals = binaryReader.ReadTagReference();
+            motionSensorSweepBitmap = binaryReader.ReadTagReference();
+            motionSensorSweepBitmapMask = binaryReader.ReadTagReference();
+            multiplayerHudBitmap = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadTagReference();
+            hudDigitsDefinition = binaryReader.ReadTagReference();
+            motionSensorBlipBitmap = binaryReader.ReadTagReference();
+            interfaceGooMap1 = binaryReader.ReadTagReference();
+            interfaceGooMap2 = binaryReader.ReadTagReference();
+            interfaceGooMap3 = binaryReader.ReadTagReference();
+            mainmenuUiGlobals = binaryReader.ReadTagReference();
+            singleplayerUiGlobals = binaryReader.ReadTagReference();
+            multiplayerUiGlobals = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

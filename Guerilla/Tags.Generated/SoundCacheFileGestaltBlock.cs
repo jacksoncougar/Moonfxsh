@@ -66,6 +66,20 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            playbacks = Guerilla.ReadBlockArray<SoundGestaltPlaybackBlock>(binaryReader);
+            scales = Guerilla.ReadBlockArray<SoundGestaltScaleBlock>(binaryReader);
+            importNames = Guerilla.ReadBlockArray<SoundGestaltImportNamesBlock>(binaryReader);
+            pitchRangeParameters = Guerilla.ReadBlockArray<SoundGestaltPitchRangeParametersBlock>(binaryReader);
+            pitchRanges = Guerilla.ReadBlockArray<SoundGestaltPitchRangesBlock>(binaryReader);
+            permutations = Guerilla.ReadBlockArray<SoundGestaltPermutationsBlock>(binaryReader);
+            customPlaybacks = Guerilla.ReadBlockArray<SoundGestaltCustomPlaybackBlock>(binaryReader);
+            runtimePermutationFlags = Guerilla.ReadBlockArray<SoundGestaltRuntimePermutationBitVectorBlock>(binaryReader);
+            chunks = Guerilla.ReadBlockArray<SoundPermutationChunkBlock>(binaryReader);
+            promotions = Guerilla.ReadBlockArray<SoundGestaltPromotionsBlock>(binaryReader);
+            extraInfos = Guerilla.ReadBlockArray<SoundGestaltExtraInfoBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

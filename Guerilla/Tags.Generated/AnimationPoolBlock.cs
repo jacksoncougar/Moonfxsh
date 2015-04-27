@@ -91,6 +91,37 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadStringID();
+            nodeListChecksum = binaryReader.ReadInt32();
+            productionChecksum = binaryReader.ReadInt32();
+            importChecksum = binaryReader.ReadInt32();
+            type = (Type)binaryReader.ReadByte();
+            frameInfoType = (FrameInfoType)binaryReader.ReadByte();
+            blendScreen = binaryReader.ReadByteBlockIndex1();
+            nodeCount = binaryReader.ReadByte();
+            frameCount = binaryReader.ReadInt16();
+            internalFlags = (InternalFlags)binaryReader.ReadByte();
+            productionFlags = (ProductionFlags)binaryReader.ReadByte();
+            playbackFlags = (PlaybackFlags)binaryReader.ReadInt16();
+            desiredCompression = (DesiredCompression)binaryReader.ReadByte();
+            currentCompression = (CurrentCompression)binaryReader.ReadByte();
+            weight = binaryReader.ReadSingle();
+            parentGraphIndex = binaryReader.ReadInt32();
+            parentGraphBlockIndex = binaryReader.ReadInt32();
+            parentGraphBlockOffset = binaryReader.ReadInt32();
+            parentGraphStartingPointIndex = binaryReader.ReadInt16();
+            loopFrameIndex = binaryReader.ReadInt16();
+            parentAnimation = binaryReader.ReadShortBlockIndex1();
+            nextAnimation = binaryReader.ReadShortBlockIndex1();
+            animationData = Guerilla.ReadData(binaryReader);
+            dataSizes = new PackedDataSizesStructBlock(binaryReader);
+            frameEventsABCDCC = Guerilla.ReadBlockArray<AnimationFrameEventBlock>(binaryReader);
+            soundEventsABCDCC = Guerilla.ReadBlockArray<AnimationSoundEventBlock>(binaryReader);
+            effectEventsABCDCC = Guerilla.ReadBlockArray<AnimationEffectEventBlock>(binaryReader);
+            objectSpaceParentNodesABCDCC = Guerilla.ReadBlockArray<ObjectSpaceNodeDataBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

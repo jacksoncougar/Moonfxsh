@@ -79,6 +79,31 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            windTilingScale = binaryReader.ReadSingle();
+            windPrimaryHeadingPitchStrength = binaryReader.ReadVector3();
+            primaryRateOfChange = binaryReader.ReadSingle();
+            primaryMinStrength = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(4);
+            invalidName_0 = binaryReader.ReadBytes(4);
+            invalidName_1 = binaryReader.ReadBytes(12);
+            windGustingHeadingPitchStrength = binaryReader.ReadVector3();
+            gustDiretionalRateOfChange = binaryReader.ReadSingle();
+            gustStrengthRateOfChange = binaryReader.ReadSingle();
+            gustConeAngle = binaryReader.ReadSingle();
+            invalidName_2 = binaryReader.ReadBytes(4);
+            invalidName_3 = binaryReader.ReadBytes(4);
+            invalidName_4 = binaryReader.ReadBytes(12);
+            invalidName_5 = binaryReader.ReadBytes(12);
+            invalidName_6 = binaryReader.ReadBytes(12);
+            invalidName_7 = binaryReader.ReadBytes(12);
+            turbulanceRateOfChange = binaryReader.ReadSingle();
+            turbulenceScaleXYZ = binaryReader.ReadVector3();
+            gravityConstant = binaryReader.ReadSingle();
+            windPirmitives = Guerilla.ReadBlockArray<GloalWindPrimitivesBlock>(binaryReader);
+            invalidName_8 = binaryReader.ReadBytes(4);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

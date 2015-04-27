@@ -81,6 +81,24 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            particle = binaryReader.ReadTagReference();
+            location = binaryReader.ReadLongBlockIndex1();
+            coordinateSystem = (CoordinateSystem)binaryReader.ReadInt16();
+            environment = (Environment)binaryReader.ReadInt16();
+            disposition = (Disposition)binaryReader.ReadInt16();
+            cameraMode = (CameraMode)binaryReader.ReadInt16();
+            sortBias = binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            lODInDistance = binaryReader.ReadSingle();
+            lODFeatherInDelta = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(4);
+            lODOutDistance = binaryReader.ReadSingle();
+            lODFeatherOutDelta = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            emitters = Guerilla.ReadBlockArray<ParticleSystemEmitterDefinitionBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

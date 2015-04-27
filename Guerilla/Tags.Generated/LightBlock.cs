@@ -186,6 +186,57 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            type = (Type)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            sizeModifer = binaryReader.ReadRange();
+            shadowQualityBias = binaryReader.ReadSingle();
+            shadowTapBias = (ShadowTapBiasTheLessTapsYouUseTheFasterTheLightButEdgesCanLookWorse)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            radiusWorldUnits = binaryReader.ReadSingle();
+            specularRadiusWorldUnits = binaryReader.ReadSingle();
+            nearWidthWorldUnits = binaryReader.ReadSingle();
+            heightStretch = binaryReader.ReadSingle();
+            fieldOfViewDegrees = binaryReader.ReadSingle();
+            falloffDistance = binaryReader.ReadSingle();
+            cutoffDistance = binaryReader.ReadSingle();
+            interpolationFlags = (InterpolationFlags)binaryReader.ReadInt32();
+            bloomBounds02 = binaryReader.ReadRange();
+            specularLowerBound = binaryReader.ReadColorR8G8B8();
+            specularUpperBound = binaryReader.ReadColorR8G8B8();
+            diffuseLowerBound = binaryReader.ReadColorR8G8B8();
+            diffuseUpperBound = binaryReader.ReadColorR8G8B8();
+            brightnessBounds02 = binaryReader.ReadRange();
+            gelMap = binaryReader.ReadTagReference();
+            specularMask = (SpecularMask)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            invalidName_2 = binaryReader.ReadBytes(4);
+            falloffFunction = (FalloffFunction)binaryReader.ReadInt16();
+            diffuseContrast = (DiffuseContrast)binaryReader.ReadInt16();
+            specularContrast = (SpecularContrast)binaryReader.ReadInt16();
+            falloffGeometry = (FalloffGeometry)binaryReader.ReadInt16();
+            lensFlare = binaryReader.ReadTagReference();
+            boundingRadiusWorldUnits = binaryReader.ReadSingle();
+            lightVolume = binaryReader.ReadTagReference();
+            defaultLightmapSetting = (DefaultLightmapSetting)binaryReader.ReadInt16();
+            invalidName_3 = binaryReader.ReadBytes(2);
+            lightmapHalfLife = binaryReader.ReadSingle();
+            lightmapLightScale = binaryReader.ReadSingle();
+            durationSeconds = binaryReader.ReadSingle();
+            invalidName_4 = binaryReader.ReadBytes(2);
+            falloffFunction0 = (FalloffFunctionTheScaleOfTheLightWillDiminishOverTimeAccordingToThisFunction)binaryReader.ReadInt16();
+            illuminationFade = (IlluminationFade)binaryReader.ReadInt16();
+            shadowFade = (ShadowFade)binaryReader.ReadInt16();
+            specularFade = (SpecularFade)binaryReader.ReadInt16();
+            invalidName_5 = binaryReader.ReadBytes(2);
+            flags0 = (Flags)binaryReader.ReadInt32();
+            brightnessAnimation = Guerilla.ReadBlockArray<LightBrightnessAnimationBlock>(binaryReader);
+            colorAnimation = Guerilla.ReadBlockArray<LightColorAnimationBlock>(binaryReader);
+            gelAnimation = Guerilla.ReadBlockArray<LightGelAnimationBlock>(binaryReader);
+            shader = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

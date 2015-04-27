@@ -44,6 +44,13 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            sound = binaryReader.ReadTagReference();
+            latchedTo = (LatchedTo)binaryReader.ReadInt32();
+            scale = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(32);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

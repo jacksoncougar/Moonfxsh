@@ -81,6 +81,28 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            responseType = (ResponseType)binaryReader.ReadInt16();
+            constraintDamageType = (ConstraintDamageType)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt32();
+            damageThreshold = binaryReader.ReadSingle();
+            transitionEffect = binaryReader.ReadTagReference();
+            damageEffect = new InstantaneousResponseDamageEffectStructBlock(binaryReader);
+            region = binaryReader.ReadStringID();
+            newState = (NewState)binaryReader.ReadInt16();
+            runtimeRegionIndex = binaryReader.ReadInt16();
+            effectMarkerName = binaryReader.ReadStringID();
+            damageEffectMarker = new InstantaneousResponseDamageEffectMarkerStructBlock(binaryReader);
+            responseDelay = binaryReader.ReadSingle();
+            delayEffect = binaryReader.ReadTagReference();
+            delayEffectMarkerName = binaryReader.ReadStringID();
+            constraintGroupName = binaryReader.ReadStringID();
+            ejectingSeatLabel = binaryReader.ReadStringID();
+            skipFraction = binaryReader.ReadSingle();
+            destroyedChildObjectMarkerName = binaryReader.ReadStringID();
+            totalDamageThreshold = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

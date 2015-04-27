@@ -94,6 +94,34 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadString32();
+            combatStatusDecayOptions = (CombatStatusDecayOptions)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            attitude = (Attitude)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            engageAttitude = (EngageAttitude)binaryReader.ReadByte();
+            evasionAttitude = (EvasionAttitude)binaryReader.ReadByte();
+            coverAttitude = (CoverAttitude)binaryReader.ReadByte();
+            searchAttitude = (SearchAttitude)binaryReader.ReadByte();
+            presearchAttitude = (PresearchAttitude)binaryReader.ReadByte();
+            retreatAttitude = (RetreatAttitude)binaryReader.ReadByte();
+            chargeAttitude = (ChargeAttitude)binaryReader.ReadByte();
+            readyAttitude = (ReadyAttitude)binaryReader.ReadByte();
+            idleAttitude = (IdleAttitude)binaryReader.ReadByte();
+            weaponAttitude = (WeaponAttitude)binaryReader.ReadByte();
+            swarmAttitude = (SwarmAttitude)binaryReader.ReadByte();
+            invalidName_1 = binaryReader.ReadBytes(1);
+            styleControl = (StyleControl)binaryReader.ReadInt32();
+            behaviors1 = (Behaviors1)binaryReader.ReadInt32();
+            behaviors2 = (Behaviors2)binaryReader.ReadInt32();
+            behaviors3 = (Behaviors3)binaryReader.ReadInt32();
+            behaviors4 = (Behaviors4)binaryReader.ReadInt32();
+            behaviors5 = (Behaviors5)binaryReader.ReadInt32();
+            specialMovement = Guerilla.ReadBlockArray<SpecialMovementBlock>(binaryReader);
+            behaviorList = Guerilla.ReadBlockArray<BehaviorNamesBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

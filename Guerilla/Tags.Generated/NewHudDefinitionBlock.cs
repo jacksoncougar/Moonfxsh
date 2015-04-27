@@ -55,6 +55,14 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            dONOTUSE = binaryReader.ReadTagReference();
+            bitmapWidgets = Guerilla.ReadBlockArray<HudBitmapWidgets>(binaryReader);
+            textWidgets = Guerilla.ReadBlockArray<HudTextWidgets>(binaryReader);
+            dashlightData = new NewHudDashlightDataStructBlock(binaryReader);
+            screenEffectWidgets = Guerilla.ReadBlockArray<HudScreenEffectWidgets>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

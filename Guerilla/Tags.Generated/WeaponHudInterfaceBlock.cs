@@ -107,6 +107,37 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            childHud = binaryReader.ReadTagReference();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            inventoryAmmoCutoff = binaryReader.ReadInt16();
+            loadedAmmoCutoff = binaryReader.ReadInt16();
+            heatCutoff = binaryReader.ReadInt16();
+            ageCutoff = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(32);
+            anchor = (Anchor)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            invalidName_2 = binaryReader.ReadBytes(32);
+            staticElements = Guerilla.ReadBlockArray<WeaponHudStaticBlock>(binaryReader);
+            meterElements = Guerilla.ReadBlockArray<WeaponHudMeterBlock>(binaryReader);
+            numberElements = Guerilla.ReadBlockArray<WeaponHudNumberBlock>(binaryReader);
+            crosshairs = Guerilla.ReadBlockArray<WeaponHudCrosshairBlock>(binaryReader);
+            overlayElements = Guerilla.ReadBlockArray<WeaponHudOverlaysBlock>(binaryReader);
+            invalidName_3 = binaryReader.ReadBytes(4);
+            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            screenEffect = Guerilla.ReadBlockArray<GlobalHudScreenEffectDefinition>(binaryReader);
+            invalidName_4 = binaryReader.ReadBytes(132);
+            sequenceIndex = binaryReader.ReadInt16();
+            widthOffset = binaryReader.ReadInt16();
+            offsetFromReferenceCorner = binaryReader.ReadPoint();
+            overrideIconColor = binaryReader.ReadColourA1R1G1B1();
+            frameRate030 = binaryReader.ReadByte();
+            flags0 = (Flags)binaryReader.ReadInt16();
+            textIndex = binaryReader.ReadInt16();
+            invalidName_5 = binaryReader.ReadBytes(48);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

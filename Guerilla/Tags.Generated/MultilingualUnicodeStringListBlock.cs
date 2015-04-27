@@ -50,6 +50,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            stringReferences = Guerilla.ReadBlockArray<MultilingualUnicodeStringReferenceBlock>(binaryReader);
+            stringDataUtf8 = Guerilla.ReadData(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(36);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

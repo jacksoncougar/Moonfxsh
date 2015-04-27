@@ -47,6 +47,15 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            filterType = (FilterType)binaryReader.ReadInt32();
+            filterWidth07 = binaryReader.ReadInt32();
+            leftFilterFrequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            leftFilterGain = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            rightFilterFrequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            rightFilterGain = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

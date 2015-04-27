@@ -82,6 +82,28 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            searchDistanceLowerBound = binaryReader.ReadSingle();
+            searchDistanceUpperBound = binaryReader.ReadSingle();
+            luminelsPerWorldUnit = binaryReader.ReadSingle();
+            outputWhiteReference = binaryReader.ReadSingle();
+            outputBlackReference = binaryReader.ReadSingle();
+            outputSchlickParameter = binaryReader.ReadSingle();
+            diffuseMapScale = binaryReader.ReadSingle();
+            sunScale = binaryReader.ReadSingle();
+            skyScale = binaryReader.ReadSingle();
+            indirectScale = binaryReader.ReadSingle();
+            prtScale = binaryReader.ReadSingle();
+            surfaceLightScale = binaryReader.ReadSingle();
+            scenarioLightScale = binaryReader.ReadSingle();
+            lightprobeInterpolationOveride = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(72);
+            lightmapGroups = Guerilla.ReadBlockArray<StructureLightmapGroupBlock>(binaryReader);
+            invalidName_0 = binaryReader.ReadBytes(12);
+            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
+            invalidName_1 = binaryReader.ReadBytes(104);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

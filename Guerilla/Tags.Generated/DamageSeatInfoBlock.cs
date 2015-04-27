@@ -48,6 +48,14 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            seatLabel = binaryReader.ReadStringID();
+            directDamageScale = binaryReader.ReadSingle();
+            damageTransferFallOffRadius = binaryReader.ReadSingle();
+            maximumTransferDamageScale = binaryReader.ReadSingle();
+            minimumTransferDamageScale = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -70,6 +70,18 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            attachmentMarkerName = binaryReader.ReadStringID();
+            bitmaps = binaryReader.ReadTagReference();
+            physics = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(80);
+            springStrengthCoefficient = binaryReader.ReadSingle();
+            falloffPixels = binaryReader.ReadSingle();
+            cutoffPixels = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(40);
+            vertices = Guerilla.ReadBlockArray<AntennaVertexBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

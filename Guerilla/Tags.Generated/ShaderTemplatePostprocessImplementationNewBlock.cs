@@ -41,6 +41,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            bitmaps = new TagBlockIndexStructBlock(binaryReader);
+            pixelConstants = new TagBlockIndexStructBlock(binaryReader);
+            vertexConstants = new TagBlockIndexStructBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

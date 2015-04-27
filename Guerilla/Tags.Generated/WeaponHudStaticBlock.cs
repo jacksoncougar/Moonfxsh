@@ -94,6 +94,35 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            stateAttachedTo = (StateAttachedTo)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            canUseOnMapType = (CanUseOnMapType)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(28);
+            anchorOffset = binaryReader.ReadPoint();
+            widthScale = binaryReader.ReadSingle();
+            heightScale = binaryReader.ReadSingle();
+            scalingFlags = (ScalingFlags)binaryReader.ReadInt16();
+            invalidName_2 = binaryReader.ReadBytes(2);
+            invalidName_3 = binaryReader.ReadBytes(20);
+            interfaceBitmap = binaryReader.ReadTagReference();
+            defaultColor = binaryReader.ReadColourA1R1G1B1();
+            flashingColor = binaryReader.ReadColourA1R1G1B1();
+            flashPeriod = binaryReader.ReadSingle();
+            flashDelay = binaryReader.ReadSingle();
+            numberOfFlashes = binaryReader.ReadInt16();
+            flashFlags = (FlashFlags)binaryReader.ReadInt16();
+            flashLength = binaryReader.ReadSingle();
+            disabledColor = binaryReader.ReadColourA1R1G1B1();
+            invalidName_4 = binaryReader.ReadBytes(4);
+            sequenceIndex = binaryReader.ReadInt16();
+            invalidName_5 = binaryReader.ReadBytes(2);
+            multitexOverlay = Guerilla.ReadBlockArray<GlobalHudMultitextureOverlayDefinition>(binaryReader);
+            invalidName_6 = binaryReader.ReadBytes(4);
+            invalidName_7 = binaryReader.ReadBytes(40);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

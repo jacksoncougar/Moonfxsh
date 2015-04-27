@@ -95,6 +95,24 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            groundFriction = binaryReader.ReadSingle();
+            groundDepth = binaryReader.ReadSingle();
+            groundDampFactor = binaryReader.ReadSingle();
+            groundMovingFriction = binaryReader.ReadSingle();
+            groundMaximumSlope0 = binaryReader.ReadSingle();
+            groundMaximumSlope1 = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(16);
+            antiGravityBankLift = binaryReader.ReadSingle();
+            steeringBankReactionScale = binaryReader.ReadSingle();
+            gravityScale = binaryReader.ReadSingle();
+            radius = binaryReader.ReadSingle();
+            antiGravityPoints = Guerilla.ReadBlockArray<AntiGravityPointDefinitionBlock>(binaryReader);
+            frictionPoints = Guerilla.ReadBlockArray<FrictionPointDefinitionBlock>(binaryReader);
+            shapePhantomShape = Guerilla.ReadBlockArray<VehiclePhantomShapeBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -49,6 +49,16 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            label = binaryReader.ReadStringID();
+            actionsAABBCC = Guerilla.ReadBlockArray<AnimationEntryBlock>(binaryReader);
+            overlaysAABBCC = Guerilla.ReadBlockArray<AnimationEntryBlock>(binaryReader);
+            deathAndDamageAABBCC = Guerilla.ReadBlockArray<DamageAnimationBlock>(binaryReader);
+            transitionsAABBCC = Guerilla.ReadBlockArray<AnimationTransitionBlock>(binaryReader);
+            highPrecacheCCCCC = Guerilla.ReadBlockArray<PrecacheListBlock>(binaryReader);
+            lowPrecacheCCCCC = Guerilla.ReadBlockArray<PrecacheListBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

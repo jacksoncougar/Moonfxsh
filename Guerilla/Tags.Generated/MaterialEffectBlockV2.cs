@@ -41,6 +41,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            oldMaterialsDONOTUSE = Guerilla.ReadBlockArray<OldMaterialEffectMaterialBlock>(binaryReader);
+            sounds = Guerilla.ReadBlockArray<MaterialEffectMaterialBlock>(binaryReader);
+            effects = Guerilla.ReadBlockArray<MaterialEffectMaterialBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

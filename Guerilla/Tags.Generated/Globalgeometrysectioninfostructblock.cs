@@ -73,6 +73,28 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            totalVertexCount = binaryReader.ReadInt16();
+            totalTriangleCount = binaryReader.ReadInt16();
+            totalPartCount = binaryReader.ReadInt16();
+            shadowCastingTriangleCount = binaryReader.ReadInt16();
+            shadowCastingPartCount = binaryReader.ReadInt16();
+            opaquePointCount = binaryReader.ReadInt16();
+            opaqueVertexCount = binaryReader.ReadInt16();
+            opaquePartCount = binaryReader.ReadInt16();
+            opaqueMaxNodesVertex = binaryReader.ReadByte();
+            transparentMaxNodesVertex = binaryReader.ReadByte();
+            shadowCastingRigidTriangleCount = binaryReader.ReadInt16();
+            geometryClassification = (GeometryClassification)binaryReader.ReadInt16();
+            geometryCompressionFlags = (GeometryCompressionFlags)binaryReader.ReadInt16();
+            eMPTYSTRING = Guerilla.ReadBlockArray<GlobalGeometryCompressionInfoBlock>(binaryReader);
+            hardwareNodeCount = binaryReader.ReadByte();
+            nodeMapSize = binaryReader.ReadByte();
+            softwarePlaneCount = binaryReader.ReadInt16();
+            totalSubpartCont = binaryReader.ReadInt16();
+            sectionLightingFlags = (SectionLightingFlags)binaryReader.ReadInt16();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

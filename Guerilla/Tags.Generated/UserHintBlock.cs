@@ -53,6 +53,18 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            pointGeometry = Guerilla.ReadBlockArray<UserHintPointBlock>(binaryReader);
+            rayGeometry = Guerilla.ReadBlockArray<UserHintRayBlock>(binaryReader);
+            lineSegmentGeometry = Guerilla.ReadBlockArray<UserHintLineSegmentBlock>(binaryReader);
+            parallelogramGeometry = Guerilla.ReadBlockArray<UserHintParallelogramBlock>(binaryReader);
+            polygonGeometry = Guerilla.ReadBlockArray<UserHintPolygonBlock>(binaryReader);
+            jumpHints = Guerilla.ReadBlockArray<UserHintJumpBlock>(binaryReader);
+            climbHints = Guerilla.ReadBlockArray<UserHintClimbBlock>(binaryReader);
+            wellHints = Guerilla.ReadBlockArray<UserHintWellBlock>(binaryReader);
+            flightHints = Guerilla.ReadBlockArray<UserHintFlightBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -63,6 +63,21 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            diffuseMap = binaryReader.ReadTagReference();
+            lightmapEmissiveMap = binaryReader.ReadTagReference();
+            lightmapEmissiveColor = binaryReader.ReadColorR8G8B8();
+            lightmapEmissivePower = binaryReader.ReadSingle();
+            lightmapResolutionScale = binaryReader.ReadSingle();
+            lightmapHalfLife = binaryReader.ReadSingle();
+            lightmapDiffuseScale = binaryReader.ReadSingle();
+            alphaTestMap = binaryReader.ReadTagReference();
+            translucentMap = binaryReader.ReadTagReference();
+            lightmapTransparentColor = binaryReader.ReadColorR8G8B8();
+            lightmapTransparentAlpha = binaryReader.ReadSingle();
+            lightmapFoliageScale = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

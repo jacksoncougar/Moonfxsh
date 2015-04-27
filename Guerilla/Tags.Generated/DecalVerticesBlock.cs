@@ -43,6 +43,13 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            position = binaryReader.ReadVector3();
+            texcoord0 = binaryReader.ReadVector2();
+            texcoord1 = binaryReader.ReadVector2();
+            color = binaryReader.ReadRGBColor();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

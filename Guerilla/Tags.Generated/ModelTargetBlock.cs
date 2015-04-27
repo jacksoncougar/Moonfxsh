@@ -67,6 +67,16 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            markerName = binaryReader.ReadStringID();
+            size = binaryReader.ReadSingle();
+            coneAngle = binaryReader.ReadSingle();
+            damageSection = binaryReader.ReadShortBlockIndex2();
+            variant = binaryReader.ReadShortBlockIndex1();
+            targetingRelevance = binaryReader.ReadSingle();
+            lockOnData = new ModelTargetLockOnDataStructBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

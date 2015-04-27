@@ -54,6 +54,18 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            parentAnimationGraph = binaryReader.ReadTagReference();
+            inheritanceFlags = (InheritanceFlags)binaryReader.ReadByte();
+            privateFlags = (PrivateFlags)binaryReader.ReadByte();
+            animationCodecPack = binaryReader.ReadInt16();
+            skeletonNodesABCDCC = Guerilla.ReadBlockArray<AnimationGraphNodeBlock>(binaryReader);
+            soundReferencesABCDCC = Guerilla.ReadBlockArray<AnimationGraphSoundReferenceBlock>(binaryReader);
+            effectReferencesABCDCC = Guerilla.ReadBlockArray<AnimationGraphEffectReferenceBlock>(binaryReader);
+            blendScreensABCDCC = Guerilla.ReadBlockArray<AnimationBlendScreenBlock>(binaryReader);
+            animationsABCDCC = Guerilla.ReadBlockArray<AnimationPoolBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

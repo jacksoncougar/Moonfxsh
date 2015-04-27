@@ -101,6 +101,37 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            updatesPerSecondHz = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            deadCellPenalty = binaryReader.ReadSingle();
+            liveCellBonus = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(80);
+            widthCells = binaryReader.ReadInt16();
+            heightCells = binaryReader.ReadInt16();
+            cellWidthWorldUnits = binaryReader.ReadSingle();
+            heightWorldUnits = binaryReader.ReadSingle();
+            velocityCellsUpdate = binaryReader.ReadVector2();
+            invalidName_1 = binaryReader.ReadBytes(28);
+            marker = binaryReader.ReadStringID();
+            interpolationFlags = (InterpolationFlags)binaryReader.ReadInt32();
+            baseColor = binaryReader.ReadColorR8G8B8();
+            peakColor = binaryReader.ReadColorR8G8B8();
+            invalidName_2 = binaryReader.ReadBytes(76);
+            widthCells0 = binaryReader.ReadInt16();
+            heightCells0 = binaryReader.ReadInt16();
+            cellWidthWorldUnits0 = binaryReader.ReadSingle();
+            velocityCellsUpdate0 = binaryReader.ReadVector2();
+            invalidName_3 = binaryReader.ReadBytes(48);
+            marker0 = binaryReader.ReadStringID();
+            textureWidthCells = binaryReader.ReadInt16();
+            invalidName_4 = binaryReader.ReadBytes(2);
+            invalidName_5 = binaryReader.ReadBytes(48);
+            texture = binaryReader.ReadTagReference();
+            invalidName_6 = binaryReader.ReadBytes(160);
+            rules = Guerilla.ReadBlockArray<RulesBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -60,6 +60,17 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            color = binaryReader.ReadColorR8G8B8();
+            maximumDensity01 = binaryReader.ReadSingle();
+            startDistanceWorldUnits = binaryReader.ReadSingle();
+            opaqueDistanceWorldUnits = binaryReader.ReadSingle();
+            coneDegrees = binaryReader.ReadRange();
+            atmosphericFogInfluence01 = binaryReader.ReadSingle();
+            secondaryFogInfluence01 = binaryReader.ReadSingle();
+            skyFogInfluence01 = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

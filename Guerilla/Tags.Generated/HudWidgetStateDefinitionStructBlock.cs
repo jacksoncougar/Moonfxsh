@@ -59,6 +59,21 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            yUnitFlags = (YUnitFlags)binaryReader.ReadInt16();
+            yExtraFlags = (YExtraFlags)binaryReader.ReadInt16();
+            yWeaponFlags = (YWeaponFlags)binaryReader.ReadInt16();
+            yGameEngineStateFlags = (YGameEngineStateFlags)binaryReader.ReadInt16();
+            nUnitFlags = (NUnitFlags)binaryReader.ReadInt16();
+            nExtraFlags = (NExtraFlags)binaryReader.ReadInt16();
+            nWeaponFlags = (NWeaponFlags)binaryReader.ReadInt16();
+            nGameEngineStateFlags = (NGameEngineStateFlags)binaryReader.ReadInt16();
+            ageCutoff = binaryReader.ReadByte();
+            clipCutoff = binaryReader.ReadByte();
+            totalCutoff = binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes(1);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

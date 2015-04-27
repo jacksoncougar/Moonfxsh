@@ -55,6 +55,19 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadStringID();
+            objectName = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
+            nodeName = binaryReader.ReadStringID();
+            eMPTYSTRING = new []{ new EMPTYSTRING(binaryReader), new EMPTYSTRING(binaryReader), new EMPTYSTRING(binaryReader), new EMPTYSTRING(binaryReader), new EMPTYSTRING(binaryReader), new EMPTYSTRING(binaryReader),  };
+            position = binaryReader.ReadVector3();
+            extents = binaryReader.ReadVector3();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            killTriggerVolume = binaryReader.ReadShortBlockIndex1();
+            invalidName_1 = binaryReader.ReadBytes(2);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
@@ -94,6 +107,10 @@ namespace Moonfish.Guerilla.Tags
             public  EMPTYSTRING(): base()
             {
                 
+            }
+            public void Read(BinaryReader binaryReader)
+            {
+                eMPTYSTRING = binaryReader.ReadSingle();
             }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {

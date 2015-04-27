@@ -71,6 +71,27 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            invalidName_ = binaryReader.ReadBytes(4);
+            size = binaryReader.ReadInt16();
+            count = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            invalidName_1 = binaryReader.ReadBytes(4);
+            childShapesSize = binaryReader.ReadInt32();
+            childShapesCapacity = binaryReader.ReadInt32();
+            childShapesStorage = new []{ new ChildShapesStorage(binaryReader), new ChildShapesStorage(binaryReader), new ChildShapesStorage(binaryReader), new ChildShapesStorage(binaryReader),  };
+            multisphereCount = binaryReader.ReadInt32();
+            flags = (Flags)binaryReader.ReadInt32();
+            invalidName_2 = binaryReader.ReadBytes(8);
+            x0 = binaryReader.ReadSingle();
+            x1 = binaryReader.ReadSingle();
+            y0 = binaryReader.ReadSingle();
+            y1 = binaryReader.ReadSingle();
+            z0 = binaryReader.ReadSingle();
+            z1 = binaryReader.ReadSingle();
+            multispheres = new []{ new Multispheres(binaryReader), new Multispheres(binaryReader), new Multispheres(binaryReader), new Multispheres(binaryReader),  };
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
@@ -130,6 +151,12 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
+            public void Read(BinaryReader binaryReader)
+            {
+                shapeType = (ShapeType)binaryReader.ReadInt16();
+                shape = binaryReader.ReadShortBlockIndex2();
+                collisionFilter = binaryReader.ReadInt32();
+            }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
                 using(binaryWriter.BaseStream.Pin())
@@ -188,6 +215,15 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
+            public void Read(BinaryReader binaryReader)
+            {
+                invalidName_ = binaryReader.ReadBytes(4);
+                size = binaryReader.ReadInt16();
+                count = binaryReader.ReadInt16();
+                invalidName_0 = binaryReader.ReadBytes(4);
+                numSpheres = binaryReader.ReadInt32();
+                fourVectorsStorage = new []{ new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader), new FourVectorsStorage(binaryReader),  };
+            }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
                 using(binaryWriter.BaseStream.Pin())
@@ -227,6 +263,11 @@ namespace Moonfish.Guerilla.Tags
                 public  FourVectorsStorage(): base()
                 {
                     
+                }
+                public void Read(BinaryReader binaryReader)
+                {
+                    sphere = binaryReader.ReadVector3();
+                    invalidName_ = binaryReader.ReadBytes(4);
                 }
                 public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
                 {

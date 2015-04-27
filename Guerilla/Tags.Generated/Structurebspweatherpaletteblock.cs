@@ -57,6 +57,19 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadString32();
+            weatherSystem = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(32);
+            wind = binaryReader.ReadTagReference();
+            windDirection = binaryReader.ReadVector3();
+            windMagnitude = binaryReader.ReadSingle();
+            invalidName_2 = binaryReader.ReadBytes(4);
+            windScaleFunction = binaryReader.ReadString32();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

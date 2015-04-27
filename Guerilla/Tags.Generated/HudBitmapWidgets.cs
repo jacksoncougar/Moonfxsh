@@ -77,6 +77,29 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadStringID();
+            hudWidgetInputsStruct = new HudWidgetInputsStructBlock(binaryReader);
+            hudWidgetStateDefinitionStruct = new HudWidgetStateDefinitionStructBlock(binaryReader);
+            anchor = (Anchor)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            bitmap = binaryReader.ReadTagReference();
+            shader = binaryReader.ReadTagReference();
+            fullscreenSequenceIndex = binaryReader.ReadByte();
+            halfscreenSequenceIndex = binaryReader.ReadByte();
+            quarterscreenSequenceIndex = binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes(1);
+            fullscreenOffset = binaryReader.ReadPoint();
+            halfscreenOffset = binaryReader.ReadPoint();
+            quarterscreenOffset = binaryReader.ReadPoint();
+            fullscreenRegistrationPoint = binaryReader.ReadVector2();
+            halfscreenRegistrationPoint = binaryReader.ReadVector2();
+            quarterscreenRegistrationPoint = binaryReader.ReadVector2();
+            effect = Guerilla.ReadBlockArray<HudWidgetEffectBlock>(binaryReader);
+            specialHudType = (SpecialHudType)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

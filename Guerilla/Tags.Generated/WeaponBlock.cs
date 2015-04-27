@@ -251,6 +251,76 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            invalidName_ = binaryReader.ReadStringID();
+            secondaryTriggerMode = (SecondaryTriggerMode)binaryReader.ReadInt16();
+            maximumAlternateShotsLoaded = binaryReader.ReadInt16();
+            turnOnTime = binaryReader.ReadSingle();
+            readyTimeSeconds = binaryReader.ReadSingle();
+            readyEffect = binaryReader.ReadTagReference();
+            readyDamageEffect = binaryReader.ReadTagReference();
+            heatRecoveryThreshold01 = binaryReader.ReadSingle();
+            overheatedThreshold01 = binaryReader.ReadSingle();
+            heatDetonationThreshold01 = binaryReader.ReadSingle();
+            heatDetonationFraction01 = binaryReader.ReadSingle();
+            heatLossPerSecond01 = binaryReader.ReadSingle();
+            heatIllumination01 = binaryReader.ReadSingle();
+            overheatedHeatLossPerSecond01 = binaryReader.ReadSingle();
+            overheated = binaryReader.ReadTagReference();
+            overheatedDamageEffect = binaryReader.ReadTagReference();
+            detonation = binaryReader.ReadTagReference();
+            detonationDamageEffect = binaryReader.ReadTagReference();
+            playerMeleeDamage = binaryReader.ReadTagReference();
+            playerMeleeResponse = binaryReader.ReadTagReference();
+            meleeAimAssist = new MeleeAimAssistStructBlock(binaryReader);
+            meleeDamageParameters = new MeleeDamageParametersStructBlock(binaryReader);
+            meleeDamageReportingType = (MeleeDamageReportingType)binaryReader.ReadByte();
+            invalidName_0 = binaryReader.ReadBytes(1);
+            magnificationLevels = binaryReader.ReadInt16();
+            magnificationRange = binaryReader.ReadRange();
+            weaponAimAssist = new AimAssistStructBlock(binaryReader);
+            movementPenalized = (MovementPenalized)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            forwardMovementPenalty = binaryReader.ReadSingle();
+            sidewaysMovementPenalty = binaryReader.ReadSingle();
+            aIScariness = binaryReader.ReadSingle();
+            weaponPowerOnTimeSeconds = binaryReader.ReadSingle();
+            weaponPowerOffTimeSeconds = binaryReader.ReadSingle();
+            weaponPowerOnEffect = binaryReader.ReadTagReference();
+            weaponPowerOffEffect = binaryReader.ReadTagReference();
+            ageHeatRecoveryPenalty = binaryReader.ReadSingle();
+            ageRateOfFirePenalty = binaryReader.ReadSingle();
+            ageMisfireStart01 = binaryReader.ReadSingle();
+            ageMisfireChance01 = binaryReader.ReadSingle();
+            pickupSound = binaryReader.ReadTagReference();
+            zoomInSound = binaryReader.ReadTagReference();
+            zoomOutSound = binaryReader.ReadTagReference();
+            activeCamoDing = binaryReader.ReadSingle();
+            activeCamoRegrowthRate = binaryReader.ReadSingle();
+            handleNode = binaryReader.ReadStringID();
+            weaponClass = binaryReader.ReadStringID();
+            weaponName = binaryReader.ReadStringID();
+            multiplayerWeaponType = (MultiplayerWeaponType)binaryReader.ReadInt16();
+            weaponType = (WeaponType)binaryReader.ReadInt16();
+            tracking = new WeaponTrackingStructBlock(binaryReader);
+            playerInterface = new WeaponInterfaceStructBlock(binaryReader);
+            predictedResources = Guerilla.ReadBlockArray<PredictedResourceBlock>(binaryReader);
+            magazines = Guerilla.ReadBlockArray<Magazines>(binaryReader);
+            newTriggers = Guerilla.ReadBlockArray<WeaponTriggers>(binaryReader);
+            barrels = Guerilla.ReadBlockArray<WeaponBarrels>(binaryReader);
+            invalidName_2 = binaryReader.ReadBytes(8);
+            maxMovementAcceleration = binaryReader.ReadSingle();
+            maxMovementVelocity = binaryReader.ReadSingle();
+            maxTurningAcceleration = binaryReader.ReadSingle();
+            maxTurningVelocity = binaryReader.ReadSingle();
+            deployedVehicle = binaryReader.ReadTagReference();
+            ageEffect = binaryReader.ReadTagReference();
+            agedWeapon = binaryReader.ReadTagReference();
+            firstPersonWeaponOffset = binaryReader.ReadVector3();
+            firstPersonScopeSize = binaryReader.ReadVector2();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

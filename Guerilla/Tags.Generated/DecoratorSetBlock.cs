@@ -70,6 +70,19 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            shaders = Guerilla.ReadBlockArray<DecoratorShaderReferenceBlock>(binaryReader);
+            lightingMinScale = binaryReader.ReadSingle();
+            lightingMaxScale = binaryReader.ReadSingle();
+            classes = Guerilla.ReadBlockArray<DecoratorClassesBlock>(binaryReader);
+            models = Guerilla.ReadBlockArray<DecoratorModelsBlock>(binaryReader);
+            rawVertices = Guerilla.ReadBlockArray<DecoratorModelVerticesBlock>(binaryReader);
+            indices = Guerilla.ReadBlockArray<DecoratorModelIndicesBlock>(binaryReader);
+            cachedData = Guerilla.ReadBlockArray<CachedDataBlock>(binaryReader);
+            geometrySectionInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(16);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

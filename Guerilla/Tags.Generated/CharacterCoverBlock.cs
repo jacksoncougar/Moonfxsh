@@ -102,6 +102,23 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            coverFlags = (CoverFlags)binaryReader.ReadInt32();
+            hideBehindCoverTimeSeconds = binaryReader.ReadRange();
+            coverVitalityThreshold = binaryReader.ReadSingle();
+            coverShieldFraction = binaryReader.ReadSingle();
+            coverCheckDelay = binaryReader.ReadSingle();
+            emergeFromCoverWhenShieldFractionReachesThreshold = binaryReader.ReadSingle();
+            coverDangerThreshold = binaryReader.ReadSingle();
+            dangerUpperThreshold = binaryReader.ReadSingle();
+            coverChance = binaryReader.ReadRange();
+            proximitySelfPreserveWus = binaryReader.ReadSingle();
+            disallowCoverDistanceWorldUnits = binaryReader.ReadSingle();
+            proximityMeleeDistance = binaryReader.ReadSingle();
+            unreachableEnemyDangerThreshold = binaryReader.ReadSingle();
+            scaryTargetThreshold = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

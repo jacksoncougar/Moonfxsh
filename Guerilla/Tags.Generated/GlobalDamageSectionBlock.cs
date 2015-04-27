@@ -60,6 +60,20 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadStringID();
+            flags = (Flags)binaryReader.ReadInt32();
+            vitalityPercentage01 = binaryReader.ReadSingle();
+            instantResponses = Guerilla.ReadBlockArray<InstantaneousDamageRepsonseBlock>(binaryReader);
+            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            gNullBlock0 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            stunTimeSeconds = binaryReader.ReadSingle();
+            rechargeTimeSeconds = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(4);
+            resurrectionRestoredRegionName = binaryReader.ReadStringID();
+            invalidName_0 = binaryReader.ReadBytes(4);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

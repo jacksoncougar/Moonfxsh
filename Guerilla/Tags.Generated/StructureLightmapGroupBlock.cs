@@ -66,6 +66,24 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            type = (Type)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            structureChecksum = binaryReader.ReadInt32();
+            sectionPalette = Guerilla.ReadBlockArray<StructureLightmapPaletteColorBlock>(binaryReader);
+            writablePalettes = Guerilla.ReadBlockArray<StructureLightmapPaletteColorBlock>(binaryReader);
+            bitmapGroup = binaryReader.ReadTagReference();
+            clusters = Guerilla.ReadBlockArray<LightmapGeometrySectionBlock>(binaryReader);
+            clusterRenderInfo = Guerilla.ReadBlockArray<LightmapGeometryRenderInfoBlock>(binaryReader);
+            poopDefinitions = Guerilla.ReadBlockArray<LightmapGeometrySectionBlock>(binaryReader);
+            lightingEnvironments = Guerilla.ReadBlockArray<StructureLightmapLightingEnvironmentBlock>(binaryReader);
+            geometryBuckets = Guerilla.ReadBlockArray<LightmapVertexBufferBucketBlock>(binaryReader);
+            instanceRenderInfo = Guerilla.ReadBlockArray<LightmapGeometryRenderInfoBlock>(binaryReader);
+            instanceBucketRefs = Guerilla.ReadBlockArray<LightmapInstanceBucketReferenceBlock>(binaryReader);
+            sceneryObjectInfo = Guerilla.ReadBlockArray<LightmapSceneryObjectInfoBlock>(binaryReader);
+            sceneryObjectBucketRefs = Guerilla.ReadBlockArray<LightmapInstanceBucketReferenceBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -59,6 +59,17 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            japaneseSound = binaryReader.ReadTagReference();
+            germanSound = binaryReader.ReadTagReference();
+            frenchSound = binaryReader.ReadTagReference();
+            spanishSound = binaryReader.ReadTagReference();
+            italianSound = binaryReader.ReadTagReference();
+            koreanSound = binaryReader.ReadTagReference();
+            chineseSound = binaryReader.ReadTagReference();
+            portugueseSound = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

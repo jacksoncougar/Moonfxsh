@@ -55,6 +55,19 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            label = binaryReader.ReadStringID();
+            animation = new AnimationIndexStructBlock(binaryReader);
+            markerName = binaryReader.ReadStringID();
+            massPointOffset = binaryReader.ReadSingle();
+            fullExtensionGroundDepth = binaryReader.ReadSingle();
+            fullCompressionGroundDepth = binaryReader.ReadSingle();
+            regionName = binaryReader.ReadStringID();
+            destroyedMassPointOffset = binaryReader.ReadSingle();
+            destroyedFullExtensionGroundDepth = binaryReader.ReadSingle();
+            destroyedFullCompressionGroundDepth = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

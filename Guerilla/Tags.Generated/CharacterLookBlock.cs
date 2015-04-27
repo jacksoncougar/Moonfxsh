@@ -87,6 +87,20 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            maximumAimingDeviationDegrees = binaryReader.ReadVector2();
+            maximumLookingDeviationDegrees = binaryReader.ReadVector2();
+            invalidName_ = binaryReader.ReadBytes(16);
+            noncombatLookDeltaLDegrees = binaryReader.ReadSingle();
+            noncombatLookDeltaRDegrees = binaryReader.ReadSingle();
+            combatLookDeltaLDegrees = binaryReader.ReadSingle();
+            combatLookDeltaRDegrees = binaryReader.ReadSingle();
+            noncombatIdleLookingSeconds = binaryReader.ReadRange();
+            noncombatIdleAimingSeconds = binaryReader.ReadRange();
+            combatIdleLookingSeconds = binaryReader.ReadRange();
+            combatIdleAimingSeconds = binaryReader.ReadRange();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

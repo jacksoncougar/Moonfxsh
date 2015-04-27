@@ -95,6 +95,33 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            radius = binaryReader.ReadSingle();
+            momentScale = binaryReader.ReadSingle();
+            mass = binaryReader.ReadSingle();
+            centerOfMass = binaryReader.ReadVector3();
+            density = binaryReader.ReadSingle();
+            gravityScale = binaryReader.ReadSingle();
+            groundFriction = binaryReader.ReadSingle();
+            groundDepth = binaryReader.ReadSingle();
+            groundDampFraction = binaryReader.ReadSingle();
+            groundNormalK1 = binaryReader.ReadSingle();
+            groundNormalK0 = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(4);
+            waterFriction = binaryReader.ReadSingle();
+            waterDepth = binaryReader.ReadSingle();
+            waterDensity = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            airFriction = binaryReader.ReadSingle();
+            invalidName_1 = binaryReader.ReadBytes(4);
+            xxMoment = binaryReader.ReadSingle();
+            yyMoment = binaryReader.ReadSingle();
+            zzMoment = binaryReader.ReadSingle();
+            inertialMatrixAndInverse = Guerilla.ReadBlockArray<InertialMatrixBlock>(binaryReader);
+            poweredMassPoints = Guerilla.ReadBlockArray<PoweredMassPointBlock>(binaryReader);
+            massPoints = Guerilla.ReadBlockArray<MassPointBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

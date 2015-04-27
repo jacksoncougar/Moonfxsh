@@ -84,6 +84,33 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            mapID = binaryReader.ReadInt32();
+            bitmap = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(576);
+            invalidName_0 = binaryReader.ReadBytes(2304);
+            path = binaryReader.ReadString256();
+            sortOrder = binaryReader.ReadInt32();
+            flags = (Flags)binaryReader.ReadByte();
+            invalidName_1 = binaryReader.ReadBytes(3);
+            maxTeamsNone = binaryReader.ReadByte();
+            maxTeamsCTF = binaryReader.ReadByte();
+            maxTeamsSlayer = binaryReader.ReadByte();
+            maxTeamsOddball = binaryReader.ReadByte();
+            maxTeamsKOTH = binaryReader.ReadByte();
+            maxTeamsRace = binaryReader.ReadByte();
+            maxTeamsHeadhunter = binaryReader.ReadByte();
+            maxTeamsJuggernaut = binaryReader.ReadByte();
+            maxTeamsTerritories = binaryReader.ReadByte();
+            maxTeamsAssault = binaryReader.ReadByte();
+            maxTeamsStub10 = binaryReader.ReadByte();
+            maxTeamsStub11 = binaryReader.ReadByte();
+            maxTeamsStub12 = binaryReader.ReadByte();
+            maxTeamsStub13 = binaryReader.ReadByte();
+            maxTeamsStub14 = binaryReader.ReadByte();
+            maxTeamsStub15 = binaryReader.ReadByte();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

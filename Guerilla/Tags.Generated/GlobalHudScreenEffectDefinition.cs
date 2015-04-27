@@ -81,6 +81,30 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            invalidName_ = binaryReader.ReadBytes(4);
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(16);
+            maskFullscreen = binaryReader.ReadTagReference();
+            maskSplitscreen = binaryReader.ReadTagReference();
+            invalidName_2 = binaryReader.ReadBytes(8);
+            invalidName_3 = binaryReader.ReadBytes(20);
+            invalidName_4 = binaryReader.ReadBytes(24);
+            invalidName_5 = binaryReader.ReadBytes(8);
+            invalidName_6 = binaryReader.ReadBytes(24);
+            invalidName_7 = binaryReader.ReadBytes(20);
+            invalidName_8 = binaryReader.ReadBytes(24);
+            screenEffectFlags = (ScreenEffectFlags)binaryReader.ReadInt32();
+            invalidName_9 = binaryReader.ReadBytes(32);
+            screenEffect = binaryReader.ReadTagReference();
+            invalidName_10 = binaryReader.ReadBytes(32);
+            screenEffectFlags0 = (ScreenEffectFlags)binaryReader.ReadInt32();
+            invalidName_11 = binaryReader.ReadBytes(32);
+            screenEffect0 = binaryReader.ReadTagReference();
+            invalidName_12 = binaryReader.ReadBytes(32);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

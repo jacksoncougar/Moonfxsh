@@ -41,6 +41,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            soundPromotionRules = Guerilla.ReadBlockArray<SoundPromotionRuleBlock>(binaryReader);
+            soundPromotionRuntimeTimers = Guerilla.ReadBlockArray<SoundPromotionRuntimeTimerBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(12);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

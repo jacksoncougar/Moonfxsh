@@ -87,6 +87,35 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            clusterData = Guerilla.ReadBlockArray<StructureBspClusterDataBlockNew>(binaryReader);
+            boundsX = binaryReader.ReadRange();
+            boundsY = binaryReader.ReadRange();
+            boundsZ = binaryReader.ReadRange();
+            scenarioSkyIndex = binaryReader.ReadByte();
+            mediaIndex = binaryReader.ReadByte();
+            scenarioVisibleSkyIndex = binaryReader.ReadByte();
+            scenarioAtmosphericFogIndex = binaryReader.ReadByte();
+            planarFogDesignator = binaryReader.ReadByte();
+            visibleFogPlaneIndex = binaryReader.ReadByte();
+            backgroundSound = binaryReader.ReadShortBlockIndex1();
+            soundEnvironment = binaryReader.ReadShortBlockIndex1();
+            weather = binaryReader.ReadShortBlockIndex1();
+            transitionStructureBSP = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(4);
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            predictedResources = Guerilla.ReadBlockArray<PredictedResourceBlock>(binaryReader);
+            portals = Guerilla.ReadBlockArray<StructureBspClusterPortalIndexBlock>(binaryReader);
+            checksumFromStructure = binaryReader.ReadInt32();
+            instancedGeometryIndices = Guerilla.ReadBlockArray<StructureBspClusterInstancedGeometryIndexBlock>(binaryReader);
+            indexReorderTable = Guerilla.ReadBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryReader);
+            collisionMoppCode = Guerilla.ReadData(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

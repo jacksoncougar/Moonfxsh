@@ -52,6 +52,17 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            crosshairType = (CrosshairType)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            canUseOnMapType = (CanUseOnMapType)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(28);
+            crosshairBitmap = binaryReader.ReadTagReference();
+            crosshairOverlays = Guerilla.ReadBlockArray<WeaponHudCrosshairItemBlock>(binaryReader);
+            invalidName_2 = binaryReader.ReadBytes(40);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -49,6 +49,16 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            platformSoundOverrideMixbinsBlock = Guerilla.ReadBlockArray<PlatformSoundOverrideMixbinsBlock>(binaryReader);
+            flags = (Flags)binaryReader.ReadInt32();
+            invalidName_ = binaryReader.ReadBytes(8);
+            filter = Guerilla.ReadBlockArray<PlatformSoundFilterBlock>(binaryReader);
+            pitchLfo = Guerilla.ReadBlockArray<PlatformSoundPitchLfoBlock>(binaryReader);
+            filterLfo = Guerilla.ReadBlockArray<PlatformSoundFilterLfoBlock>(binaryReader);
+            soundEffect = Guerilla.ReadBlockArray<SoundEffectPlaybackBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

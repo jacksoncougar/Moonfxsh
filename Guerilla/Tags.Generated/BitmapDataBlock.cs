@@ -84,6 +84,29 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            signature = binaryReader.ReadTagClass();
+            widthPixels = binaryReader.ReadInt16();
+            heightPixels = binaryReader.ReadInt16();
+            depthPixels = binaryReader.ReadByte();
+            moreFlags = (MoreFlags)binaryReader.ReadByte();
+            type = (TypeDeterminesBitmapGeometry)binaryReader.ReadInt16();
+            format = (FormatDeterminesHowPixelsAreRepresentedInternally)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            registrationPoint = binaryReader.ReadPoint();
+            mipmapCount = binaryReader.ReadInt16();
+            lowDetailMipmapCount = binaryReader.ReadInt16();
+            pixelsOffset = binaryReader.ReadInt32();
+            lOD1TextureDataOffset = binaryReader.ReadInt32();
+            lOD2TextureDataOffset = binaryReader.ReadInt32();
+            lOD3TextureDataOffset = binaryReader.ReadInt32();
+            invalidName_ = binaryReader.ReadBytes(12);
+            lOD1TextureDataLength = binaryReader.ReadInt32();
+            lOD2TextureDataLength = binaryReader.ReadInt32();
+            lOD3TextureDataLength = binaryReader.ReadInt32();
+            invalidName_0 = binaryReader.ReadBytes(52);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

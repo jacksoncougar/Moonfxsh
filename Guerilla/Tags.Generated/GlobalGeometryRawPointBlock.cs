@@ -47,6 +47,15 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            position = binaryReader.ReadVector3();
+            nodeIndicesOLD = new []{ new NodeIndicesOLD(binaryReader), new NodeIndicesOLD(binaryReader), new NodeIndicesOLD(binaryReader), new NodeIndicesOLD(binaryReader),  };
+            nodeWeights = new []{ new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader),  };
+            nodeIndicesNEW = new []{ new NodeIndicesNEW(binaryReader), new NodeIndicesNEW(binaryReader), new NodeIndicesNEW(binaryReader), new NodeIndicesNEW(binaryReader),  };
+            useNewNodeIndices = binaryReader.ReadInt32();
+            adjustedCompoundNodeIndex = binaryReader.ReadInt32();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
@@ -87,6 +96,10 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
+            public void Read(BinaryReader binaryReader)
+            {
+                nodeIndexOLD = binaryReader.ReadInt32();
+            }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
                 using(binaryWriter.BaseStream.Pin())
@@ -114,6 +127,10 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
+            public void Read(BinaryReader binaryReader)
+            {
+                nodeWeight = binaryReader.ReadSingle();
+            }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
                 using(binaryWriter.BaseStream.Pin())
@@ -140,6 +157,10 @@ namespace Moonfish.Guerilla.Tags
             public  NodeIndicesNEW(): base()
             {
                 
+            }
+            public void Read(BinaryReader binaryReader)
+            {
+                nodeIndexNEW = binaryReader.ReadInt32();
             }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {

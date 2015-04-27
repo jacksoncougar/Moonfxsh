@@ -45,6 +45,14 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            volumeType = (VolumeType)binaryReader.ReadInt32();
+            height = binaryReader.ReadSingle();
+            overrideDistanceBounds = binaryReader.ReadRange();
+            overrideConeAngleBounds = binaryReader.ReadRange();
+            overrideOuterConeGainDB = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

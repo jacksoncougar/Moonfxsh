@@ -51,6 +51,17 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadShortBlockIndex1();
+            encodedSkipFraction = binaryReader.ReadInt16();
+            encodedGainDB = binaryReader.ReadByte();
+            permutationInfoIndex = binaryReader.ReadByte();
+            languageNeutralTimeMs = binaryReader.ReadInt16();
+            sampleSize = binaryReader.ReadInt32();
+            firstChunk = binaryReader.ReadShortBlockIndex1();
+            chunkCount = binaryReader.ReadInt16();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

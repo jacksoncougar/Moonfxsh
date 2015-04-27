@@ -82,6 +82,32 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            textures = new TagBlockIndexStructBlock(binaryReader);
+            renderStates = new TagBlockIndexStructBlock(binaryReader);
+            textureStates = new TagBlockIndexStructBlock(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(240);
+            psFragments = new TagBlockIndexStructBlock(binaryReader);
+            psPermutations = new TagBlockIndexStructBlock(binaryReader);
+            psCombiners = new TagBlockIndexStructBlock(binaryReader);
+            vertexShader = binaryReader.ReadTagReference();
+            invalidName_0 = binaryReader.ReadBytes(8);
+            invalidName_1 = binaryReader.ReadBytes(8);
+            invalidName_2 = binaryReader.ReadBytes(4);
+            invalidName_3 = binaryReader.ReadBytes(4);
+            defaultRenderStates = new TagBlockIndexStructBlock(binaryReader);
+            renderStateExterns = new TagBlockIndexStructBlock(binaryReader);
+            textureStateExterns = new TagBlockIndexStructBlock(binaryReader);
+            pixelConstantExterns = new TagBlockIndexStructBlock(binaryReader);
+            vertexConstantExterns = new TagBlockIndexStructBlock(binaryReader);
+            psConstants = new TagBlockIndexStructBlock(binaryReader);
+            vsConstants = new TagBlockIndexStructBlock(binaryReader);
+            pixelConstantInfo = new TagBlockIndexStructBlock(binaryReader);
+            vertexConstantInfo = new TagBlockIndexStructBlock(binaryReader);
+            renderStateInfo = new TagBlockIndexStructBlock(binaryReader);
+            textureStateInfo = new TagBlockIndexStructBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

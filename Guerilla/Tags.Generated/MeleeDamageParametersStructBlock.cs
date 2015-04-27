@@ -69,6 +69,19 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            damagePyramidAngles = binaryReader.ReadVector2();
+            damagePyramidDepth = binaryReader.ReadSingle();
+            invalidName_1StHitMeleeDamage = binaryReader.ReadTagReference();
+            invalidName_1StHitMeleeResponse = binaryReader.ReadTagReference();
+            invalidName_2NdHitMeleeDamage = binaryReader.ReadTagReference();
+            invalidName_2NdHitMeleeResponse = binaryReader.ReadTagReference();
+            invalidName_3RdHitMeleeDamage = binaryReader.ReadTagReference();
+            invalidName_3RdHitMeleeResponse = binaryReader.ReadTagReference();
+            lungeMeleeDamage = binaryReader.ReadTagReference();
+            lungeMeleeResponse = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -60,6 +60,17 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            invalidName_ = binaryReader.ReadBytes(2);
+            type = (Type)binaryReader.ReadInt16();
+            attachmentMarkerName = binaryReader.ReadStringID();
+            invalidName_0 = binaryReader.ReadBytes(56);
+            falloffDistanceFromCameraWorldUnits = binaryReader.ReadSingle();
+            cutoffDistanceFromCameraWorldUnits = binaryReader.ReadSingle();
+            invalidName_1 = binaryReader.ReadBytes(32);
+            arcs = Guerilla.ReadBlockArray<LiquidArcBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

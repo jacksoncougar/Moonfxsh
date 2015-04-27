@@ -92,6 +92,36 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            invalidName_ = binaryReader.ReadBytes(2);
+            type = binaryReader.ReadInt16();
+            framebufferBlendFunc = (FramebufferBlendFunc)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(32);
+            primaryAnchor = (PrimaryAnchor)binaryReader.ReadInt16();
+            secondaryAnchor = (SecondaryAnchor)binaryReader.ReadInt16();
+            tertiaryAnchor = (TertiaryAnchor)binaryReader.ReadInt16();
+            invalidName_0To1BlendFunc = (InvalidName0To1BlendFunc)binaryReader.ReadInt16();
+            invalidName_1To2BlendFunc = (InvalidName1To2BlendFunc)binaryReader.ReadInt16();
+            invalidName_2 = binaryReader.ReadBytes(2);
+            primaryScale = binaryReader.ReadVector2();
+            secondaryScale = binaryReader.ReadVector2();
+            tertiaryScale = binaryReader.ReadVector2();
+            primaryOffset = binaryReader.ReadVector2();
+            secondaryOffset = binaryReader.ReadVector2();
+            tertiaryOffset = binaryReader.ReadVector2();
+            primary = binaryReader.ReadTagReference();
+            secondary = binaryReader.ReadTagReference();
+            tertiary = binaryReader.ReadTagReference();
+            primaryWrapMode = (PrimaryWrapMode)binaryReader.ReadInt16();
+            secondaryWrapMode = (SecondaryWrapMode)binaryReader.ReadInt16();
+            tertiaryWrapMode = (TertiaryWrapMode)binaryReader.ReadInt16();
+            invalidName_3 = binaryReader.ReadBytes(2);
+            invalidName_4 = binaryReader.ReadBytes(184);
+            effectors = Guerilla.ReadBlockArray<GlobalHudMultitextureOverlayEffectorDefinition>(binaryReader);
+            invalidName_5 = binaryReader.ReadBytes(128);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

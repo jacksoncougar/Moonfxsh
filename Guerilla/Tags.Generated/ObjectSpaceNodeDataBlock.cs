@@ -41,6 +41,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            nodeIndex = binaryReader.ReadInt16();
+            componentFlags = (ComponentFlags)binaryReader.ReadInt16();
+            orientation = new QuantizedOrientationStructBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

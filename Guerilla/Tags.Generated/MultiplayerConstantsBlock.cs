@@ -94,6 +94,35 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            maximumRandomSpawnBias = binaryReader.ReadSingle();
+            teleporterRechargeTimeSeconds = binaryReader.ReadSingle();
+            grenadeDangerWeight = binaryReader.ReadSingle();
+            grenadeDangerInnerRadius = binaryReader.ReadSingle();
+            grenadeDangerOuterRadius = binaryReader.ReadSingle();
+            grenadeDangerLeadTimeSeconds = binaryReader.ReadSingle();
+            vehicleDangerMinSpeedWuSec = binaryReader.ReadSingle();
+            vehicleDangerWeight = binaryReader.ReadSingle();
+            vehicleDangerRadius = binaryReader.ReadSingle();
+            vehicleDangerLeadTimeSeconds = binaryReader.ReadSingle();
+            vehicleNearbyPlayerDist = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(84);
+            invalidName_0 = binaryReader.ReadBytes(32);
+            invalidName_1 = binaryReader.ReadBytes(32);
+            hillShader = binaryReader.ReadTagReference();
+            invalidName_2 = binaryReader.ReadBytes(16);
+            flagResetStopDistance = binaryReader.ReadSingle();
+            bombExplodeEffect = binaryReader.ReadTagReference();
+            bombExplodeDmgEffect = binaryReader.ReadTagReference();
+            bombDefuseEffect = binaryReader.ReadTagReference();
+            bombDefusalString = binaryReader.ReadStringID();
+            blockedTeleporterString = binaryReader.ReadStringID();
+            invalidName_3 = binaryReader.ReadBytes(4);
+            invalidName_4 = binaryReader.ReadBytes(32);
+            invalidName_5 = binaryReader.ReadBytes(32);
+            invalidName_6 = binaryReader.ReadBytes(32);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

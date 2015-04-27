@@ -105,6 +105,27 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt16();
+            priority = binaryReader.ReadInt16();
+            globalMaterialName = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(2);
+            maximumDensity01 = binaryReader.ReadSingle();
+            opaqueDistanceWorldUnits = binaryReader.ReadSingle();
+            opaqueDepthWorldUnits = binaryReader.ReadSingle();
+            atmosphericPlanarDepthWorldUnits = binaryReader.ReadRange();
+            eyeOffsetScale11 = binaryReader.ReadSingle();
+            color = binaryReader.ReadColorR8G8B8();
+            patchyFog = Guerilla.ReadBlockArray<PlanarFogPatchyFogBlock>(binaryReader);
+            backgroundSound = binaryReader.ReadTagReference();
+            soundEnvironment = binaryReader.ReadTagReference();
+            environmentDampingFactor = binaryReader.ReadSingle();
+            backgroundSoundGain = binaryReader.ReadSingle();
+            enterSound = binaryReader.ReadTagReference();
+            exitSound = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

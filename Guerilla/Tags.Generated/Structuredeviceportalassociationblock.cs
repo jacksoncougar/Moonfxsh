@@ -41,6 +41,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            deviceId = new ScenarioObjectIdStructBlock(binaryReader);
+            firstGamePortalIndex = binaryReader.ReadInt16();
+            gamePortalCount = binaryReader.ReadInt16();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

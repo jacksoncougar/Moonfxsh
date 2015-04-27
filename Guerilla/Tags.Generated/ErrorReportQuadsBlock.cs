@@ -39,6 +39,11 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            points = new []{ new Points(binaryReader), new Points(binaryReader), new Points(binaryReader), new Points(binaryReader),  };
+            color = binaryReader.ReadVector4();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
@@ -72,6 +77,12 @@ namespace Moonfish.Guerilla.Tags
             public  Points(): base()
             {
                 
+            }
+            public void Read(BinaryReader binaryReader)
+            {
+                position = binaryReader.ReadVector3();
+                nodeIndices = new []{ new NodeIndices(binaryReader), new NodeIndices(binaryReader), new NodeIndices(binaryReader), new NodeIndices(binaryReader),  };
+                nodeWeights = new []{ new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader),  };
             }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
@@ -107,6 +118,10 @@ namespace Moonfish.Guerilla.Tags
                 {
                     
                 }
+                public void Read(BinaryReader binaryReader)
+                {
+                    nodeIndex = binaryReader.ReadByte();
+                }
                 public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
                 {
                     using(binaryWriter.BaseStream.Pin())
@@ -133,6 +148,10 @@ namespace Moonfish.Guerilla.Tags
                 public  NodeWeights(): base()
                 {
                     
+                }
+                public void Read(BinaryReader binaryReader)
+                {
+                    nodeWeight = binaryReader.ReadSingle();
                 }
                 public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
                 {

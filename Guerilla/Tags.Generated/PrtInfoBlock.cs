@@ -63,6 +63,23 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            sHOrder = binaryReader.ReadInt16();
+            numOfClusters = binaryReader.ReadInt16();
+            pcaVectorsPerCluster = binaryReader.ReadInt16();
+            numberOfRays = binaryReader.ReadInt16();
+            numberOfBounces = binaryReader.ReadInt16();
+            matIndexForSbsfcScattering = binaryReader.ReadInt16();
+            lengthScale = binaryReader.ReadSingle();
+            numberOfLodsInModel = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            lodInfo = Guerilla.ReadBlockArray<PrtLodInfoBlock>(binaryReader);
+            clusterBasis = Guerilla.ReadBlockArray<PrtClusterBasisBlock>(binaryReader);
+            rawPcaData = Guerilla.ReadBlockArray<PrtRawPcaDataBlock>(binaryReader);
+            vertexBuffers = Guerilla.ReadBlockArray<PrtVertexBuffersBlock>(binaryReader);
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

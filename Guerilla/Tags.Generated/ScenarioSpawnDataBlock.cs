@@ -49,6 +49,16 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            dynamicSpawnLowerHeight = binaryReader.ReadSingle();
+            dynamicSpawnUpperHeight = binaryReader.ReadSingle();
+            gameObjectResetHeight = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(60);
+            dynamicSpawnOverloads = Guerilla.ReadBlockArray<DynamicSpawnZoneOverloadBlock>(binaryReader);
+            staticRespawnZones = Guerilla.ReadBlockArray<StaticSpawnZoneBlock>(binaryReader);
+            staticInitialSpawnZones = Guerilla.ReadBlockArray<StaticSpawnZoneBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

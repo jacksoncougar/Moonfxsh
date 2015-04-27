@@ -51,6 +51,17 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt32();
+            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
+            customFont = (CustomFont)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            textColor = binaryReader.ReadVector4();
+            topLeft = binaryReader.ReadPoint();
+            tableRows = Guerilla.ReadBlockArray<TableViewListRowReferenceBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

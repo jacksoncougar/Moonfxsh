@@ -50,6 +50,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            lowClipCutoff = binaryReader.ReadInt16();
+            lowAmmoCutoff = binaryReader.ReadInt16();
+            ageCutoff = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

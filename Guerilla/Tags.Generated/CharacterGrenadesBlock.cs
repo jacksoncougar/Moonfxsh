@@ -109,6 +109,25 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            grenadesFlags = (GrenadesFlags)binaryReader.ReadInt32();
+            grenadeType = (GrenadeTypeTypeOfGrenadesThatWeThrow)binaryReader.ReadInt16();
+            trajectoryType = (TrajectoryTypeHowWeThrowOurGrenades)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            minimumEnemyCount = binaryReader.ReadInt16();
+            enemyRadiusWorldUnits = binaryReader.ReadSingle();
+            grenadeIdealVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            grenadeVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            grenadeRangesWorldUnits = binaryReader.ReadRange();
+            collateralDamageRadiusWorldUnits = binaryReader.ReadSingle();
+            grenadeChance01 = binaryReader.ReadSingle();
+            grenadeThrowDelaySeconds = binaryReader.ReadSingle();
+            grenadeUncoverChance01 = binaryReader.ReadSingle();
+            antiVehicleGrenadeChance01 = binaryReader.ReadSingle();
+            grenadeCount = binaryReader.ReadInt32();
+            dontDropGrenadesChance01 = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

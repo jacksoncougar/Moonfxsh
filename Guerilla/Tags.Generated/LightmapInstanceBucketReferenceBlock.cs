@@ -41,6 +41,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = binaryReader.ReadInt16();
+            bucketIndex = binaryReader.ReadInt16();
+            sectionOffsets = Guerilla.ReadBlockArray<LightmapInstanceBucketSectionOffsetBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

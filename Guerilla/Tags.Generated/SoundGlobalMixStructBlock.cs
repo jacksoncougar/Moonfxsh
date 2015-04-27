@@ -59,6 +59,21 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            monoUnspatializedGainDB = binaryReader.ReadSingle();
+            stereoTo3DGainDB = binaryReader.ReadSingle();
+            rearSurroundToFrontStereoGainDB = binaryReader.ReadSingle();
+            frontSpeakerGainDB = binaryReader.ReadSingle();
+            centerSpeakerGainDB = binaryReader.ReadSingle();
+            frontSpeakerGainDB0 = binaryReader.ReadSingle();
+            centerSpeakerGainDB0 = binaryReader.ReadSingle();
+            stereoUnspatializedGainDB = binaryReader.ReadSingle();
+            soloPlayerFadeOutDelaySeconds = binaryReader.ReadSingle();
+            soloPlayerFadeOutTimeSeconds = binaryReader.ReadSingle();
+            soloPlayerFadeInTimeSeconds = binaryReader.ReadSingle();
+            gameMusicFadeOutTimeSeconds = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -101,6 +101,36 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            node = binaryReader.ReadShortBlockIndex1();
+            region = binaryReader.ReadShortBlockIndex1();
+            permutattion = binaryReader.ReadShortBlockIndex2();
+            invalidName_ = binaryReader.ReadBytes(2);
+            boudingSphereOffset = binaryReader.ReadVector3();
+            boundingSphereRadius = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt16();
+            motionType = (MotionType)binaryReader.ReadInt16();
+            noPhantomPowerAlt = binaryReader.ReadShortBlockIndex1();
+            size = (Size)binaryReader.ReadInt16();
+            inertiaTensorScale = binaryReader.ReadSingle();
+            linearDamping = binaryReader.ReadSingle();
+            angularDamping = binaryReader.ReadSingle();
+            centerOffMassOffset = binaryReader.ReadVector3();
+            shapeType = (ShapeType)binaryReader.ReadInt16();
+            shape = binaryReader.ReadShortBlockIndex2();
+            massKg = binaryReader.ReadSingle();
+            centerOfMass = binaryReader.ReadVector3();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            intertiaTensorX = binaryReader.ReadVector3();
+            invalidName_1 = binaryReader.ReadBytes(4);
+            intertiaTensorY = binaryReader.ReadVector3();
+            invalidName_2 = binaryReader.ReadBytes(4);
+            intertiaTensorZ = binaryReader.ReadVector3();
+            invalidName_3 = binaryReader.ReadBytes(4);
+            boundingSpherePad = binaryReader.ReadSingle();
+            invalidName_4 = binaryReader.ReadBytes(12);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

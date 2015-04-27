@@ -63,6 +63,23 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            projectedHeightPercentage = binaryReader.ReadSingle();
+            availableLayers = binaryReader.ReadInt32();
+            layers = Guerilla.ReadBlockArray<ShaderPostprocessLayerBlock>(binaryReader);
+            passes = Guerilla.ReadBlockArray<ShaderPostprocessPassBlock>(binaryReader);
+            implementations = Guerilla.ReadBlockArray<ShaderPostprocessImplementationBlock>(binaryReader);
+            bitmaps = Guerilla.ReadBlockArray<ShaderPostprocessBitmapBlock>(binaryReader);
+            bitmapTransforms = Guerilla.ReadBlockArray<ShaderPostprocessBitmapTransformBlock>(binaryReader);
+            values = Guerilla.ReadBlockArray<ShaderPostprocessValueBlock>(binaryReader);
+            colors = Guerilla.ReadBlockArray<ShaderPostprocessColorBlock>(binaryReader);
+            bitmapTransformOverlays = Guerilla.ReadBlockArray<ShaderPostprocessBitmapTransformOverlayBlock>(binaryReader);
+            valueOverlays = Guerilla.ReadBlockArray<ShaderPostprocessValueOverlayBlock>(binaryReader);
+            colorOverlays = Guerilla.ReadBlockArray<ShaderPostprocessColorOverlayBlock>(binaryReader);
+            vertexShaderConstants = Guerilla.ReadBlockArray<ShaderPostprocessVertexShaderConstantBlock>(binaryReader);
+            gPUState = new ShaderGpuStateStructBlock(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

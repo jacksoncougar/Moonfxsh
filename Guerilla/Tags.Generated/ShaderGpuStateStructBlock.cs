@@ -49,6 +49,16 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            renderStates = Guerilla.ReadBlockArray<RenderStateBlock>(binaryReader);
+            textureStageStates = Guerilla.ReadBlockArray<TextureStageStateBlock>(binaryReader);
+            renderStateParameters = Guerilla.ReadBlockArray<RenderStateParameterBlock>(binaryReader);
+            textureStageParameters = Guerilla.ReadBlockArray<TextureStageStateParameterBlock>(binaryReader);
+            textures = Guerilla.ReadBlockArray<TextureBlock>(binaryReader);
+            vnConstants = Guerilla.ReadBlockArray<VertexShaderConstantBlock>(binaryReader);
+            cnConstants = Guerilla.ReadBlockArray<VertexShaderConstantBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

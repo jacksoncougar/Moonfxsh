@@ -48,6 +48,13 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            descriptiveBitmap = binaryReader.ReadTagReference();
+            displayedMapName = binaryReader.ReadTagReference();
+            scenarioTagDirectoryPath = binaryReader.ReadString32();
+            invalidName_ = binaryReader.ReadBytes(4);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -43,6 +43,13 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            section = new GlobalGeometrySectionStructBlock(binaryReader);
+            pointData = new GlobalGeometryPointDataStructBlock(binaryReader);
+            nodeMap = Guerilla.ReadBlockArray<RenderModelNodeMapBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(4);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

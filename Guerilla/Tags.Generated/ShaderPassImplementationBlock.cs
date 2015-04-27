@@ -75,6 +75,28 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            textures = Guerilla.ReadBlockArray<ShaderPassTextureBlock>(binaryReader);
+            vertexShader = binaryReader.ReadTagReference();
+            vsConstants = Guerilla.ReadBlockArray<ShaderPassVertexShaderConstantBlock>(binaryReader);
+            pixelShaderCodeNOLONGERUSED = Guerilla.ReadData(binaryReader);
+            channels = (Channels)binaryReader.ReadInt16();
+            alphaBlend = (AlphaBlend)binaryReader.ReadInt16();
+            depth = (Depth)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            channelState = Guerilla.ReadBlockArray<ShaderStateChannelsStateBlock>(binaryReader);
+            alphaBlendState = Guerilla.ReadBlockArray<ShaderStateAlphaBlendStateBlock>(binaryReader);
+            alphaTestState = Guerilla.ReadBlockArray<ShaderStateAlphaTestStateBlock>(binaryReader);
+            depthState = Guerilla.ReadBlockArray<ShaderStateDepthStateBlock>(binaryReader);
+            cullState = Guerilla.ReadBlockArray<ShaderStateCullStateBlock>(binaryReader);
+            fillState = Guerilla.ReadBlockArray<ShaderStateFillStateBlock>(binaryReader);
+            miscState = Guerilla.ReadBlockArray<ShaderStateMiscStateBlock>(binaryReader);
+            constants = Guerilla.ReadBlockArray<ShaderStateConstantBlock>(binaryReader);
+            pixelShader = binaryReader.ReadTagReference();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

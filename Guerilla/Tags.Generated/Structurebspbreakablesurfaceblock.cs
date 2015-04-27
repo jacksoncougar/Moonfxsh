@@ -45,6 +45,14 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            instancedGeometryInstance = binaryReader.ReadShortBlockIndex1();
+            breakableSurfaceIndex = binaryReader.ReadInt16();
+            centroid = binaryReader.ReadVector3();
+            radius = binaryReader.ReadSingle();
+            collisionSurfaceIndex = binaryReader.ReadInt32();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

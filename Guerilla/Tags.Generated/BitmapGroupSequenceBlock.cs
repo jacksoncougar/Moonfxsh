@@ -45,6 +45,14 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            name = binaryReader.ReadString32();
+            firstBitmapIndex = binaryReader.ReadInt16();
+            bitmapCount = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(16);
+            sprites = Guerilla.ReadBlockArray<BitmapGroupSpriteBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

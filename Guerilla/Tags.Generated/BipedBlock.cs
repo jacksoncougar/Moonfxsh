@@ -160,6 +160,40 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            movingTurningSpeedDegreesPerSecond = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt32();
+            stationaryTurningThreshold = binaryReader.ReadSingle();
+            jumpVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            maximumSoftLandingTimeSeconds = binaryReader.ReadSingle();
+            maximumHardLandingTimeSeconds = binaryReader.ReadSingle();
+            minimumSoftLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            minimumHardLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            maximumHardLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            deathHardLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            stunDuration = binaryReader.ReadSingle();
+            standingCameraHeightWorldUnits = binaryReader.ReadSingle();
+            crouchingCameraHeightWorldUnits = binaryReader.ReadSingle();
+            crouchTransitionTimeSeconds = binaryReader.ReadSingle();
+            cameraInterpolationStartDegrees = binaryReader.ReadSingle();
+            cameraInterpolationEndDegrees = binaryReader.ReadSingle();
+            cameraForwardMovementScale = binaryReader.ReadSingle();
+            cameraSideMovementScale = binaryReader.ReadSingle();
+            cameraVerticalMovementScale = binaryReader.ReadSingle();
+            cameraExclusionDistanceWorldUnits = binaryReader.ReadSingle();
+            autoaimWidthWorldUnits = binaryReader.ReadSingle();
+            lockOnData = new BipedLockOnDataStructBlock(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(16);
+            headShotAccScale = binaryReader.ReadSingle();
+            areaDamageEffect = binaryReader.ReadTagReference();
+            physics = new CharacterPhysicsStructBlock(binaryReader);
+            contactPoints = Guerilla.ReadBlockArray<ContactPointBlock>(binaryReader);
+            reanimationCharacter = binaryReader.ReadTagReference();
+            deathSpawnCharacter = binaryReader.ReadTagReference();
+            deathSpawnCount = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

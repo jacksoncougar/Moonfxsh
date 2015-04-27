@@ -44,6 +44,13 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            defaultUnitCameraTrack = binaryReader.ReadTagReference();
+            defaultChangePause = binaryReader.ReadSingle();
+            firstPersonChangePause = binaryReader.ReadSingle();
+            followingCameraChangePause = binaryReader.ReadSingle();
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -78,6 +78,30 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            gPUState = new ShaderGpuStateStructBlock(binaryReader);
+            gPUConstantState = new ShaderGpuStateReferenceStructBlock(binaryReader);
+            gPUVolatileState = new ShaderGpuStateReferenceStructBlock(binaryReader);
+            gPUDefaultState = new ShaderGpuStateReferenceStructBlock(binaryReader);
+            vertexShader = binaryReader.ReadTagReference();
+            invalidName_ = binaryReader.ReadBytes(8);
+            invalidName_0 = binaryReader.ReadBytes(8);
+            invalidName_1 = binaryReader.ReadBytes(4);
+            invalidName_2 = binaryReader.ReadBytes(4);
+            valueExterns = Guerilla.ReadBlockArray<ExternReferenceBlock>(binaryReader);
+            colorExterns = Guerilla.ReadBlockArray<ExternReferenceBlock>(binaryReader);
+            switchExterns = Guerilla.ReadBlockArray<ExternReferenceBlock>(binaryReader);
+            bitmapParameterCount = binaryReader.ReadInt16();
+            invalidName_3 = binaryReader.ReadBytes(2);
+            invalidName_4 = binaryReader.ReadBytes(240);
+            pixelShaderFragments = Guerilla.ReadBlockArray<PixelShaderFragmentBlock>(binaryReader);
+            pixelShaderPermutations = Guerilla.ReadBlockArray<PixelShaderPermutationBlock>(binaryReader);
+            pixelShaderCombiners = Guerilla.ReadBlockArray<PixelShaderCombinerBlock>(binaryReader);
+            pixelShaderConstants = Guerilla.ReadBlockArray<PixelShaderConstantBlock>(binaryReader);
+            invalidName_5 = binaryReader.ReadBytes(4);
+            invalidName_6 = binaryReader.ReadBytes(4);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

@@ -41,6 +41,12 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            detailLevels = (DetailLevels)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            compoundNodes = Guerilla.ReadBlockArray<RenderModelCompoundNodeBlock>(binaryReader);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())

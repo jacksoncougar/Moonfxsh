@@ -63,6 +63,23 @@ namespace Moonfish.Guerilla.Tags
         {
             
         }
+        public void Read(BinaryReader binaryReader)
+        {
+            type = (Type)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            material = binaryReader.ReadShortBlockIndex1();
+            stripStartIndex = binaryReader.ReadInt16();
+            stripLength = binaryReader.ReadInt16();
+            firstSubpartIndex = binaryReader.ReadInt16();
+            subpartCount = binaryReader.ReadInt16();
+            maxNodesVertex = binaryReader.ReadByte();
+            contributingCompoundNodeCount = binaryReader.ReadByte();
+            position = binaryReader.ReadVector3();
+            nodeIndices = new []{ new NodeIndices(binaryReader), new NodeIndices(binaryReader), new NodeIndices(binaryReader), new NodeIndices(binaryReader),  };
+            nodeWeights = new []{ new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader),  };
+            lodMipmapMagicNumber = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(24);
+        }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
@@ -125,6 +142,10 @@ namespace Moonfish.Guerilla.Tags
             {
                 
             }
+            public void Read(BinaryReader binaryReader)
+            {
+                nodeIndex = binaryReader.ReadByte();
+            }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {
                 using(binaryWriter.BaseStream.Pin())
@@ -151,6 +172,10 @@ namespace Moonfish.Guerilla.Tags
             public  NodeWeights(): base()
             {
                 
+            }
+            public void Read(BinaryReader binaryReader)
+            {
+                nodeWeight = binaryReader.ReadSingle();
             }
             public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
             {

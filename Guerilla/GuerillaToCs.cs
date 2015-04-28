@@ -86,7 +86,7 @@ namespace Moonfish.Guerilla
                         StaticReflection.GetMemberName( ( LayoutAttribute layout ) => layout.Alignment ), alignment
                         )
                 },
-                Properties =
+                Properties = 
                 {
                     new PropertyInfo
                     {
@@ -102,8 +102,7 @@ namespace Moonfish.Guerilla
                         Returns = "int",
                         Name = "Alignment"
                     }
-                },
-                BaseClass = "GuerillaBlock"
+                }
             };
 
 
@@ -121,13 +120,29 @@ namespace Moonfish.Guerilla
             using ( var stream = new FileStream( Path.Combine( folder, info.Value.Name + ".cs" ), FileMode.Create,
                 FileAccess.Write, FileShare.ReadWrite ) )
             {
+                var size = tag.Definition.CalculateSizeOfFieldSet();
                 var parentTag = h2Tags.SingleOrDefault( x => x.Class == tag.ParentClass );
                 if ( parentTag != null )
                 {
                     info.BaseClass = new ClassInfo.TokenDictionary( ).GenerateValidToken(
                         ToTypeName( parentTag.Definition.Name ) );
+
+                    // loop through all the parents summing up thier sizes
+                    while ( parentTag != null )
+                    {
+                        size += parentTag.Definition.CalculateSizeOfFieldSet( );
+                        parentTag = h2Tags.SingleOrDefault( x => x.Class == parentTag.ParentClass );
+                    }
                 }
-                else info.BaseClass = "GuerillaBlock";
+                else
+                {
+                    info.BaseClass = "GuerillaBlock";
+                }
+
+                var alignment = tag.Definition.Alignment;
+                var property = info.Properties.Single( x => x.Name == "SerializedSize" );
+                property.GetBody = string.Format( "return {0};", size );
+                
                 info.Attributes.Add( new AttributeInfo( typeof ( TagClassAttribute ) )
                 {
                     Parameters = {"\"" + tag.Class + "\""}

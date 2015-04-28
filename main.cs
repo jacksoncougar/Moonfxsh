@@ -21,13 +21,13 @@ namespace Moonfish
         private static void Main( )
         {
 
-            GuerillaCs converter = new GuerillaCs(Local.GuerillaPath);
-            foreach (var tag in Guerilla.Guerilla.h2Tags)
-            {
-                converter.DumpTagLayout(
-                    new MoonfishTagGroup(tag),
-                    @"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags.Generated\");
-            }
+            //GuerillaCs converter = new GuerillaCs(Local.GuerillaPath);
+            //foreach (var tag in Guerilla.Guerilla.h2Tags)
+            //{
+            //    converter.DumpTagLayout(
+            //        new MoonfishTagGroup(tag),
+            //        @"C:\Users\seed\Documents\Visual Studio 2012\Projects\Moonfxsh\Guerilla\Tags.Generated\");
+            //}
 
 
             var map = new CacheStream( @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map" );

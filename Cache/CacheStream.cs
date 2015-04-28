@@ -243,7 +243,7 @@ namespace Moonfish
                 }
                 else
                 {
-                    var data = (IGuerilla)Deserialize(datum.Identifier);
+                    var data = Deserialize(datum.Identifier);
                     //var alignment = Guerilla.Guerilla.AlignmentOf(data.GetType());
                     //datum.VirtualAddress = binaryWriter.BaseStream.Pad(alignment);
                     //var length = binaryWriter.BaseStream.Length;

@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla
 
         public static T[] ReadBlockArray<T>(BinaryReader binaryReader) where T : GuerillaBlock, new()
         {
-            var elementSize = default(T).SerializedSize;
+            var elementSize = new T().SerializedSize;
             var blamPointer = binaryReader.ReadBlamPointer( elementSize );
             var array = new T[blamPointer.elementCount];
             using ( binaryReader.BaseStream.Pin( ) )

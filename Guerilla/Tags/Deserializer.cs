@@ -8,7 +8,10 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Fasterflect;
 using Microsoft.CSharp;
+using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
+using FieldInfo = System.Reflection.FieldInfo;
+using MethodInfo = System.Reflection.MethodInfo;
 using MethodInvoker = Fasterflect.MethodInvoker;
 
 namespace Moonfish.Tags
@@ -26,42 +29,16 @@ namespace Moonfish.Tags
             CacheBinaryReaderMethods( );
         }
 
-        public static object Deserialize( this CacheStream source, Type type )
+
+
+        public static GuerillaBlock Deserialize(this CacheStream source, Type tagType) 
         {
             var sourceReader = new BinaryReader( source );
             Source = source;
-            PostProcessQueue = new List<Tuple<FieldInfo, object, MethodInvoker>>( );
 
-            var constructor = ( from constructors in type.GetConstructors( BindingFlags.Public | BindingFlags.Instance )
-                where constructors.HasParameterSignature( new[] {typeof ( BinaryReader )} )
-                select constructors ).FirstOrDefault( );
-
-            // create the tag using a constructor and exit
-            if ( constructor != null )
-            {
-                var tag = constructor.Invoke( new object[] {sourceReader} );
-                var resourceInterface = tag as IResourceBlock;
-                if ( resourceInterface != null )
-                {
-                    resourceInterface.LoadRawResources(  );
-                }
-                return tag;
-            }
-
-
-            System.Diagnostics.Debug.WriteLine( "Enetering Deserialise() fallback! {0}", type );
-            MessageBox.Show( string.Format( "Enetering Deserialise() fallback! {0}", type ) );
-
-            var returnValue = Deserialize( sourceReader, type );
-            for ( var i = 0; i < PostProcessQueue.Count; ++i )
-            {
-                var field = PostProcessQueue[ i ].Item1;
-                var item = PostProcessQueue[ i ].Item2;
-                var methodInfo = PostProcessQueue[ i ].Item3;
-
-                methodInfo( item, sourceReader, item, field );
-            }
-            return returnValue;
+            var instance = (GuerillaBlock)Activator.CreateInstance(tagType);
+            instance.Read( sourceReader );
+            return instance;
         }
 
         [Obsolete]

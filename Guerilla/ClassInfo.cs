@@ -298,7 +298,8 @@ namespace Moonfish.Guerilla
                     }
                 }
             }
-            Methods.Last().Body = stringBuilder.ToString().TrimEnd();
+            var baseMethodCall = string.Format("base.{0};\n", Methods.Last().GetMethodSignature());
+            Methods.Last().Body = baseMethodCall + stringBuilder.ToString().TrimEnd();
         }
 
         public void GenerateReadBlockTemplateMethod( )

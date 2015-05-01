@@ -2179,7 +2179,6 @@
     <None Include="data\viewscreen.vert">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Documentation\animations.pdf" />
     <None Include="Documentation\jmad animations raw.pdf" />
     <None Include="Documentation\sbsp &amp; lightmap meta.pdf" />
     <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
@@ -2191,7 +2190,6 @@
     <Content Include="bin\x86\Debug\Moonfish2015.pdb" />
     <Content Include="Documentation\halo_2_header.txt" />
     <Content Include="Documentation\tangent_space_calculations_cpp.txt" />
-    <Content Include="Documentation\animation_codecs.txt" />
     <Content Include="Documentation\index layout.txt" />
     <Content Include="Documentation\vertex_formats.txt" />
     <Content Include="Documentation\vertex_resource_raw.txt" />

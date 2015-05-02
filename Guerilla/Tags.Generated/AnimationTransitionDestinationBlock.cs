@@ -25,11 +25,11 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// name of the mode & state this transitions to
         /// </summary>
-        internal Moonfish.Tags.StringID fullName;
+        internal Moonfish.Tags.StringIdent fullName;
         /// <summary>
         /// name of the mode
         /// </summary>
-        internal Moonfish.Tags.StringID mode;
+        internal Moonfish.Tags.StringIdent mode;
         internal AnimationDestinationStateStructBlock stateInfo;
         internal AnimationIndexStructBlock animation;
         

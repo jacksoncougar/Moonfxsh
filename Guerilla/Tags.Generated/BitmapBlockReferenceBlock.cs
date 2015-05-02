@@ -36,7 +36,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal float spriteAnimationSpeedFps;
         internal Moonfish.Tags.Point progressBottomLeft;
-        internal Moonfish.Tags.StringID stringIdentifier;
+        internal Moonfish.Tags.StringIdent stringIdentifier;
         internal OpenTK.Vector2 progressScale;
         
         public override int SerializedSize{get { return 56; }}

@@ -32,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
     public class ClothBlockBase : GuerillaBlock
     {
         internal Flags flags;
-        internal Moonfish.Tags.StringID markerAttachmentName;
+        internal Moonfish.Tags.StringIdent markerAttachmentName;
         [TagReference("shad")]
         internal Moonfish.Tags.TagReference shader;
         internal short gridXDimension;

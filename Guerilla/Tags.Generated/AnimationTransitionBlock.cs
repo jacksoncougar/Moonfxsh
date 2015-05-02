@@ -25,7 +25,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// name of the mode & state of the source
         /// </summary>
-        internal Moonfish.Tags.StringID fullName;
+        internal Moonfish.Tags.StringIdent fullName;
         internal AnimationTransitionStateStructBlock stateInfo;
         internal AnimationTransitionDestinationBlock[] destinationsAABBCC;
         

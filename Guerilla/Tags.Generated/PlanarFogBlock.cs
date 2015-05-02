@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Flags flags;
         internal short priority;
-        internal Moonfish.Tags.StringID globalMaterialName;
+        internal Moonfish.Tags.StringIdent globalMaterialName;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
         /// <summary>
@@ -56,7 +56,7 @@ namespace Moonfish.Guerilla.Tags
         /// negative numbers are bad, mmmkay?
         /// </summary>
         internal float eyeOffsetScale11;
-        internal Moonfish.Tags.ColorR8G8B8 color;
+        internal Moonfish.Tags.ColourR8G8B8 Colour;
         internal PlanarFogPatchyFogBlock[] patchyFog;
         [TagReference("lsnd")]
         internal Moonfish.Tags.TagReference backgroundSound;
@@ -92,7 +92,7 @@ namespace Moonfish.Guerilla.Tags
             opaqueDepthWorldUnits = binaryReader.ReadSingle();
             atmosphericPlanarDepthWorldUnits = binaryReader.ReadRange();
             eyeOffsetScale11 = binaryReader.ReadSingle();
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
             patchyFog = Guerilla.ReadBlockArray<PlanarFogPatchyFogBlock>(binaryReader);
             backgroundSound = binaryReader.ReadTagReference();
             soundEnvironment = binaryReader.ReadTagReference();
@@ -117,7 +117,7 @@ namespace Moonfish.Guerilla.Tags
             opaqueDepthWorldUnits = binaryReader.ReadSingle();
             atmosphericPlanarDepthWorldUnits = binaryReader.ReadRange();
             eyeOffsetScale11 = binaryReader.ReadSingle();
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
             patchyFog = Guerilla.ReadBlockArray<PlanarFogPatchyFogBlock>(binaryReader);
             backgroundSound = binaryReader.ReadTagReference();
             soundEnvironment = binaryReader.ReadTagReference();
@@ -140,7 +140,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(opaqueDepthWorldUnits);
                 binaryWriter.Write(atmosphericPlanarDepthWorldUnits);
                 binaryWriter.Write(eyeOffsetScale11);
-                binaryWriter.Write(color);
+                binaryWriter.Write(Colour);
                 nextAddress = Guerilla.WriteBlockArray<PlanarFogPatchyFogBlock>(binaryWriter, patchyFog, nextAddress);
                 binaryWriter.Write(backgroundSound);
                 binaryWriter.Write(soundEnvironment);

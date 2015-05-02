@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 12, Alignment = 4)]
     public class ShaderPostprocessColorPropertyBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.ColorR8G8B8 color;
+        internal Moonfish.Tags.ColourR8G8B8 Colour;
         
         public override int SerializedSize{get { return 12; }}
         
@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
         
         public  ShaderPostprocessColorPropertyBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
         }
         public  ShaderPostprocessColorPropertyBlockBase(): base()
         {
@@ -39,13 +39,13 @@ namespace Moonfish.Guerilla.Tags
         }
         public override void Read(BinaryReader binaryReader)
         {
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write(color);
+                binaryWriter.Write(Colour);
                 return nextAddress;
             }
         }

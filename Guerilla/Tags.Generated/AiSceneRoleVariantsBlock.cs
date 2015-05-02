@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 4, Alignment = 4)]
     public class AiSceneRoleVariantsBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID variantDesignation;
+        internal Moonfish.Tags.StringIdent variantDesignation;
         
         public override int SerializedSize{get { return 4; }}
         

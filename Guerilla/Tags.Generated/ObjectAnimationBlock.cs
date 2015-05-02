@@ -22,11 +22,11 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class ObjectAnimationBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID label;
+        internal Moonfish.Tags.StringIdent label;
         internal AnimationIndexStructBlock animation;
         internal byte[] invalidName_;
         internal FunctionControls functionControls;
-        internal Moonfish.Tags.StringID function;
+        internal Moonfish.Tags.StringIdent function;
         internal byte[] invalidName_0;
         
         public override int SerializedSize{get { return 20; }}

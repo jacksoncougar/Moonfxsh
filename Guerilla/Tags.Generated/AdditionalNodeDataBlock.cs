@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 60, Alignment = 4)]
     public class AdditionalNodeDataBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID nodeName;
+        internal Moonfish.Tags.StringIdent nodeName;
         internal OpenTK.Quaternion defaultRotation;
         internal OpenTK.Vector3 defaultTranslation;
         internal float defaultScale;

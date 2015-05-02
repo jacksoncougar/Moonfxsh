@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference tagEffectOrSound;
         [TagReference("null")]
         internal Moonfish.Tags.TagReference secondaryTagEffectOrSound;
-        internal Moonfish.Tags.StringID materialName;
+        internal Moonfish.Tags.StringIdent materialName;
         internal byte[] invalidName_;
         internal SweetenerMode sweetenerMode;
         internal byte[] invalidName_0;

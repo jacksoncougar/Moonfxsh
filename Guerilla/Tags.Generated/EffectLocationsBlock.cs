@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 4, Alignment = 4)]
     public class EffectLocationsBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID markerName;
+        internal Moonfish.Tags.StringIdent markerName;
         
         public override int SerializedSize{get { return 4; }}
         

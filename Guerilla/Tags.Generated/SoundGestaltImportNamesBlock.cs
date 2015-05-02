@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 4, Alignment = 4)]
     public class SoundGestaltImportNamesBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID importName;
+        internal Moonfish.Tags.StringIdent importName;
         
         public override int SerializedSize{get { return 4; }}
         

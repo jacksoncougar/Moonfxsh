@@ -25,7 +25,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// name of the state
         /// </summary>
-        internal Moonfish.Tags.StringID stateName;
+        internal Moonfish.Tags.StringIdent stateName;
         /// <summary>
         /// which frame event to link to
         /// </summary>

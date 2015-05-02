@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 16, Alignment = 4)]
     public class DamageEffectSoundEffectDefinitionBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID effectName;
+        internal Moonfish.Tags.StringIdent effectName;
         internal float durationSeconds;
         internal MappingFunctionBlock effectScaleFunction;
         

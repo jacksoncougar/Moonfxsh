@@ -23,18 +23,18 @@ namespace Moonfish.Guerilla.Tags
     public class ObjectFunctionBlockBase : GuerillaBlock
     {
         internal Flags flags;
-        internal Moonfish.Tags.StringID importName;
-        internal Moonfish.Tags.StringID exportName;
+        internal Moonfish.Tags.StringIdent importName;
+        internal Moonfish.Tags.StringIdent exportName;
         /// <summary>
         /// if the specified function is off, so is this function
         /// </summary>
-        internal Moonfish.Tags.StringID turnOffWith;
+        internal Moonfish.Tags.StringIdent turnOffWith;
         /// <summary>
         /// function must exceed this value (after mapping) to be active 0. means do nothing
         /// </summary>
         internal float minValue;
         internal MappingFunctionBlock defaultFunction;
-        internal Moonfish.Tags.StringID scaleBy;
+        internal Moonfish.Tags.StringIdent scaleBy;
         
         public override int SerializedSize{get { return 32; }}
         

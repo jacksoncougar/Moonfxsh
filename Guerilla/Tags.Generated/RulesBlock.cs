@@ -23,7 +23,7 @@ namespace Moonfish.Guerilla.Tags
     public class RulesBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
-        internal Moonfish.Tags.ColorR8G8B8 tintColor;
+        internal Moonfish.Tags.ColourR8G8B8 TintColour;
         internal byte[] invalidName_;
         internal StatesBlock[] states;
         
@@ -35,7 +35,7 @@ namespace Moonfish.Guerilla.Tags
         public  RulesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             name = binaryReader.ReadString32();
-            tintColor = binaryReader.ReadColorR8G8B8();
+            TintColour = binaryReader.ReadColorR8G8B8();
             invalidName_ = binaryReader.ReadBytes(32);
             states = Guerilla.ReadBlockArray<StatesBlock>(binaryReader);
         }
@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
         public override void Read(BinaryReader binaryReader)
         {
             name = binaryReader.ReadString32();
-            tintColor = binaryReader.ReadColorR8G8B8();
+            TintColour = binaryReader.ReadColorR8G8B8();
             invalidName_ = binaryReader.ReadBytes(32);
             states = Guerilla.ReadBlockArray<StatesBlock>(binaryReader);
         }
@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
             using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
-                binaryWriter.Write(tintColor);
+                binaryWriter.Write(TintColour);
                 binaryWriter.Write(invalidName_, 0, 32);
                 nextAddress = Guerilla.WriteBlockArray<StatesBlock>(binaryWriter, states, nextAddress);
                 return nextAddress;

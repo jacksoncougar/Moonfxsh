@@ -109,7 +109,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float randomOffsetScale01;
         internal Moonfish.Model.Range randomOffsetPeriodSeconds;
-        internal Moonfish.Tags.StringID flockName;
+        internal Moonfish.Tags.StringIdent flockName;
         
         public override int SerializedSize{get { return 132; }}
         

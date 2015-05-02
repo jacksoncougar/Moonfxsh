@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 24, Alignment = 4)]
     public class AiSceneBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal Flags flags;
         internal AiSceneTriggerBlock[] triggerConditions;
         internal AiSceneRoleBlock[] roles;

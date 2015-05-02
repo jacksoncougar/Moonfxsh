@@ -22,9 +22,9 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 24, Alignment = 4)]
     public class ScenarioInterpolatorBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
-        internal Moonfish.Tags.StringID acceleratorNameInterpolator;
-        internal Moonfish.Tags.StringID multiplierNameInterpolator;
+        internal Moonfish.Tags.StringIdent name;
+        internal Moonfish.Tags.StringIdent acceleratorNameInterpolator;
+        internal Moonfish.Tags.StringIdent multiplierNameInterpolator;
         internal ScalarFunctionStructBlock function;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;

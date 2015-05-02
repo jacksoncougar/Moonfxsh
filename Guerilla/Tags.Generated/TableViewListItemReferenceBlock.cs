@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.Point bitmapTopLeftIfThereIsABitmap;
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference bitmapTag;
-        internal Moonfish.Tags.StringID stringId;
+        internal Moonfish.Tags.StringIdent StringIdent;
         internal short renderDepthBias;
         internal byte[] invalidName_0;
         
@@ -44,7 +44,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes(2);
             bitmapTopLeftIfThereIsABitmap = binaryReader.ReadPoint();
             bitmapTag = binaryReader.ReadTagReference();
-            stringId = binaryReader.ReadStringID();
+            StringIdent = binaryReader.ReadStringID();
             renderDepthBias = binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
         }
@@ -59,7 +59,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes(2);
             bitmapTopLeftIfThereIsABitmap = binaryReader.ReadPoint();
             bitmapTag = binaryReader.ReadTagReference();
-            stringId = binaryReader.ReadStringID();
+            StringIdent = binaryReader.ReadStringID();
             renderDepthBias = binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
         }
@@ -72,7 +72,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(bitmapTopLeftIfThereIsABitmap);
                 binaryWriter.Write(bitmapTag);
-                binaryWriter.Write(stringId);
+                binaryWriter.Write(StringIdent);
                 binaryWriter.Write(renderDepthBias);
                 binaryWriter.Write(invalidName_0, 0, 2);
                 return nextAddress;

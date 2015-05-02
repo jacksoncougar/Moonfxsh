@@ -22,14 +22,14 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 180, Alignment = 4)]
     public class MaterialsBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
-        internal Moonfish.Tags.StringID parentName;
+        internal Moonfish.Tags.StringIdent name;
+        internal Moonfish.Tags.StringIdent parentName;
         internal byte[] invalidName_;
         internal Flags flags;
         internal OldMaterialType oldMaterialType;
         internal byte[] invalidName_0;
-        internal Moonfish.Tags.StringID generalArmor;
-        internal Moonfish.Tags.StringID specificArmor;
+        internal Moonfish.Tags.StringIdent generalArmor;
+        internal Moonfish.Tags.StringIdent specificArmor;
         internal MaterialPhysicsPropertiesStructBlock physicsProperties;
         [TagReference("mpdt")]
         internal Moonfish.Tags.TagReference oldMaterialPhysics;

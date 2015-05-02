@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 4, Alignment = 4)]
     public class InstantaneousResponseDamageEffectMarkerStructBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID damageEffectMarkerName;
+        internal Moonfish.Tags.StringIdent damageEffectMarkerName;
         
         public override int SerializedSize{get { return 4; }}
         

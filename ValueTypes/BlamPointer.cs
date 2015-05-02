@@ -5,27 +5,28 @@ namespace Moonfish.Tags
 {
     public struct BlamPointer : IEnumerable<int>, IEquatable<BlamPointer>
     {
-        public readonly int elementCount;
-        public readonly int startAddress;
-        public readonly int elementSize;
+        public readonly int ElementCount;
+        public readonly int StartAddress;
+        public readonly int ElementSize;
+
         private readonly int _endAddress;
 
         public int this[ int index ]
         {
-            get { return startAddress + elementSize * index; }
+            get { return StartAddress + ElementSize * index; }
         }
 
         public BlamPointer( int count, int address, int elementsize, int alignment = 4 )
         {
-            elementCount = count;
-            startAddress = Padding.Pad( address, alignment );
-            elementSize = elementsize;
-            _endAddress = address + elementSize * elementCount;
+            ElementCount = count;
+            StartAddress = Padding.Pad( address, alignment );
+            ElementSize = elementsize;
+            _endAddress = address + ElementSize * ElementCount;
         }
 
         public int PointedSize
         {
-            get { return elementCount * elementSize; }
+            get { return ElementCount * ElementSize; }
         }
 
         public int EndAddress
@@ -35,9 +36,9 @@ namespace Moonfish.Tags
 
         public IEnumerator<int> GetEnumerator( )
         {
-            for ( var i = 0; i < elementCount; ++i )
+            for ( var i = 0; i < ElementCount; ++i )
             {
-                yield return startAddress + elementSize * i;
+                yield return StartAddress + ElementSize * i;
             }
         }
 
@@ -48,8 +49,8 @@ namespace Moonfish.Tags
 
         public bool Intersects( BlamPointer other )
         {
-            return !( startAddress + PointedSize <= other.startAddress
-                      || other.startAddress + other.PointedSize <= startAddress );
+            return !( StartAddress + PointedSize <= other.StartAddress
+                      || other.StartAddress + other.PointedSize <= StartAddress );
         }
 
         public override bool Equals( object obj )
@@ -63,18 +64,18 @@ namespace Moonfish.Tags
 
         public override int GetHashCode( )
         {
-            return startAddress.GetHashCode( );
+            return StartAddress.GetHashCode( );
         }
 
         bool IEquatable<BlamPointer>.Equals( BlamPointer other )
         {
-            return startAddress == other.startAddress && elementCount == other.elementCount &&
-                   elementSize == other.elementSize;
+            return StartAddress == other.StartAddress && ElementCount == other.ElementCount &&
+                   ElementSize == other.ElementSize;
         }
 
         public override string ToString( )
         {
-            return string.Format( "{0}:{1}", startAddress, elementCount );
+            return string.Format( "{0}:{1}", StartAddress, ElementCount );
         }
     }
 }

@@ -71,14 +71,14 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// The default dialogue tag for this model (overriden by variants)
         /// </summary>
-        internal Moonfish.Tags.StringID defaultDialogueEffect;
+        internal Moonfish.Tags.StringIdent defaultDialogueEffect;
         internal RenderOnlyNodeFlags[] renderOnlyNodeFlags;
         internal RenderOnlySectionFlags[] renderOnlySectionFlags;
         internal RuntimeFlags runtimeFlags;
         internal GlobalScenarioLoadParametersBlock[] scenarioLoadParameters;
         [TagReference("shad")]
         internal Moonfish.Tags.TagReference hologramShader;
-        internal Moonfish.Tags.StringID hologramControlFunction;
+        internal Moonfish.Tags.StringIdent hologramControlFunction;
         
         public override int SerializedSize{get { return 252; }}
         

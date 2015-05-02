@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// absorbes AOE or child damage
         /// </summary>
-        internal Moonfish.Tags.StringID globalIndirectMaterialName;
+        internal Moonfish.Tags.StringIdent globalIndirectMaterialName;
         /// <summary>
         /// absorbes AOE or child damage
         /// </summary>
@@ -63,7 +63,7 @@ namespace Moonfish.Guerilla.Tags
         /// the default initial and maximumShieldVitality of this object
         /// </summary>
         internal float maximumShieldVitality;
-        internal Moonfish.Tags.StringID globalShieldMaterialName;
+        internal Moonfish.Tags.StringIdent globalShieldMaterialName;
         /// <summary>
         /// the minimum damage required to stun this object's shields
         /// </summary>

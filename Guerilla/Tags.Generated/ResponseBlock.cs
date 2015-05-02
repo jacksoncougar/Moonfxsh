@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 12, Alignment = 4)]
     public class ResponseBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID vocalizationName;
+        internal Moonfish.Tags.StringIdent vocalizationName;
         internal Flags flags;
         internal short vocalizationIndexPostProcess;
         internal ResponseType responseType;

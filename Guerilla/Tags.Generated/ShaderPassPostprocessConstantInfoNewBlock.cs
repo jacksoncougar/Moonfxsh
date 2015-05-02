@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 7, Alignment = 4)]
     public class ShaderPassPostprocessConstantInfoNewBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID parameterName;
+        internal Moonfish.Tags.StringIdent parameterName;
         internal byte[] invalidName_;
         
         public override int SerializedSize{get { return 7; }}

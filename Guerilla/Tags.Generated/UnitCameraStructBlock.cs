@@ -22,8 +22,8 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 28, Alignment = 4)]
     public class UnitCameraStructBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID cameraMarkerName;
-        internal Moonfish.Tags.StringID cameraSubmergedMarkerName;
+        internal Moonfish.Tags.StringIdent cameraMarkerName;
+        internal Moonfish.Tags.StringIdent cameraSubmergedMarkerName;
         internal float pitchAutoLevel;
         internal Moonfish.Model.Range pitchRange;
         internal UnitCameraTrackBlock[] cameraTracks;

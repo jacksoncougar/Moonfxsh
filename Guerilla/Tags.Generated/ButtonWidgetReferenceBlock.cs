@@ -35,7 +35,7 @@ namespace Moonfish.Guerilla.Tags
         /// from top-left
         /// </summary>
         internal Moonfish.Tags.Point bitmapOffset;
-        internal Moonfish.Tags.StringID stringId;
+        internal Moonfish.Tags.StringIdent StringIdent;
         internal short renderDepthBias;
         internal short mouseRegionTopOffset;
         internal ButtonFlags buttonFlags;
@@ -56,7 +56,7 @@ namespace Moonfish.Guerilla.Tags
             bounds = binaryReader.ReadVector2();
             bitmap = binaryReader.ReadTagReference();
             bitmapOffset = binaryReader.ReadPoint();
-            stringId = binaryReader.ReadStringID();
+            StringIdent = binaryReader.ReadStringID();
             renderDepthBias = binaryReader.ReadInt16();
             mouseRegionTopOffset = binaryReader.ReadInt16();
             buttonFlags = (ButtonFlags)binaryReader.ReadInt32();
@@ -76,7 +76,7 @@ namespace Moonfish.Guerilla.Tags
             bounds = binaryReader.ReadVector2();
             bitmap = binaryReader.ReadTagReference();
             bitmapOffset = binaryReader.ReadPoint();
-            stringId = binaryReader.ReadStringID();
+            StringIdent = binaryReader.ReadStringID();
             renderDepthBias = binaryReader.ReadInt16();
             mouseRegionTopOffset = binaryReader.ReadInt16();
             buttonFlags = (ButtonFlags)binaryReader.ReadInt32();
@@ -94,7 +94,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(bounds);
                 binaryWriter.Write(bitmap);
                 binaryWriter.Write(bitmapOffset);
-                binaryWriter.Write(stringId);
+                binaryWriter.Write(StringIdent);
                 binaryWriter.Write(renderDepthBias);
                 binaryWriter.Write(mouseRegionTopOffset);
                 binaryWriter.Write((Int32)buttonFlags);

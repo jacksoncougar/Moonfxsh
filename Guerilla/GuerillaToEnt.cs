@@ -141,7 +141,7 @@ namespace Moonfish.Guerilla
             valueTypeDictionary.Add( field_type._field_long_integer, new Tuple<Type, int>( typeof ( int ), 1 ) );
             valueTypeDictionary.Add( field_type._field_long_string, new Tuple<Type, int>( typeof ( byte ), 256 ) );
             valueTypeDictionary.Add( field_type._field_old_string_id,
-                new Tuple<Type, int>( typeof ( Moonfish.Tags.StringID ), 1 ) );
+                new Tuple<Type, int>( typeof ( Moonfish.Tags.StringIdent ), 1 ) );
             valueTypeDictionary.Add( field_type._field_point_2d, new Tuple<Type, int>( typeof ( short ), 2 ) );
             valueTypeDictionary.Add( field_type._field_real, new Tuple<Type, int>( typeof ( float ), 1 ) );
             valueTypeDictionary.Add( field_type._field_real_ahsv_color, new Tuple<Type, int>( typeof ( float ), 4 ) );
@@ -168,7 +168,7 @@ namespace Moonfish.Guerilla
             valueTypeDictionary.Add( field_type._field_short_integer, new Tuple<Type, int>( typeof ( short ), 1 ) );
             valueTypeDictionary.Add( field_type._field_string, new Tuple<Type, int>( typeof ( byte ), 32 ) );
             valueTypeDictionary.Add( field_type._field_string_id,
-                new Tuple<Type, int>( typeof ( Moonfish.Tags.StringID ), 1 ) );
+                new Tuple<Type, int>( typeof ( Moonfish.Tags.StringIdent ), 1 ) );
             valueTypeDictionary.Add( field_type._field_tag, new Tuple<Type, int>( typeof ( byte ), 4 ) );
             valueTypeDictionary.Add( field_type._field_tag_reference, new Tuple<Type, int>( typeof ( int ), 2 ) );
             valueTypeDictionary.Add( field_type._field_vertex_buffer, new Tuple<Type, int>( typeof ( byte ), 32 ) );

@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 44, Alignment = 4)]
     public class SkyLightFogBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.ColorR8G8B8 color;
+        internal Moonfish.Tags.ColourR8G8B8 Colour;
         /// <summary>
         /// Fog density is clamped to this value.
         /// </summary>
@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
         
         public  SkyLightFogBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
             maximumDensity01 = binaryReader.ReadSingle();
             startDistanceWorldUnits = binaryReader.ReadSingle();
             opaqueDistanceWorldUnits = binaryReader.ReadSingle();
@@ -62,7 +62,7 @@ namespace Moonfish.Guerilla.Tags
         }
         public override void Read(BinaryReader binaryReader)
         {
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
             maximumDensity01 = binaryReader.ReadSingle();
             startDistanceWorldUnits = binaryReader.ReadSingle();
             opaqueDistanceWorldUnits = binaryReader.ReadSingle();
@@ -75,7 +75,7 @@ namespace Moonfish.Guerilla.Tags
         {
             using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write(color);
+                binaryWriter.Write(Colour);
                 binaryWriter.Write(maximumDensity01);
                 binaryWriter.Write(startDistanceWorldUnits);
                 binaryWriter.Write(opaqueDistanceWorldUnits);

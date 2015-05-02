@@ -65,8 +65,8 @@ namespace Moonfish.Guerilla.Tags
         internal float riderDirectDamageScale;
         internal float riderMaximumTransferDamageScale;
         internal float riderMinimumTransferDamageScale;
-        internal Moonfish.Tags.StringID generalDamage;
-        internal Moonfish.Tags.StringID specificDamage;
+        internal Moonfish.Tags.StringIdent generalDamage;
+        internal Moonfish.Tags.StringIdent specificDamage;
         internal float aIStunRadiusWorldUnits;
         internal Moonfish.Model.Range aIStunBounds01;
         internal float shakeRadius;

@@ -22,8 +22,8 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 96, Alignment = 4)]
     public class VocalizationDefinitionsBlock0Base : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID vocalization;
-        internal Moonfish.Tags.StringID parentVocalization;
+        internal Moonfish.Tags.StringIdent vocalization;
+        internal Moonfish.Tags.StringIdent parentVocalization;
         internal short parentIndex;
         internal Priority priority;
         internal Flags flags;
@@ -79,7 +79,7 @@ namespace Moonfish.Guerilla.Tags
         internal ListenerEmotion listenerEmotion;
         internal float playerSkipFraction;
         internal float skipFraction;
-        internal Moonfish.Tags.StringID sampleLine;
+        internal Moonfish.Tags.StringIdent sampleLine;
         internal ResponseBlock[] reponses;
         internal VocalizationDefinitionsBlock1[] children;
         

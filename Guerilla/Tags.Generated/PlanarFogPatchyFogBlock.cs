@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 52, Alignment = 4)]
     public class PlanarFogPatchyFogBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.ColorR8G8B8 color;
+        internal Moonfish.Tags.ColourR8G8B8 Colour;
         internal byte[] invalidName_;
         internal OpenTK.Vector2 density01;
         internal Moonfish.Model.Range distanceWorldUnits;
@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
         
         public  PlanarFogPatchyFogBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
             invalidName_ = binaryReader.ReadBytes(12);
             density01 = binaryReader.ReadVector2();
             distanceWorldUnits = binaryReader.ReadRange();
@@ -53,7 +53,7 @@ namespace Moonfish.Guerilla.Tags
         }
         public override void Read(BinaryReader binaryReader)
         {
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
             invalidName_ = binaryReader.ReadBytes(12);
             density01 = binaryReader.ReadVector2();
             distanceWorldUnits = binaryReader.ReadRange();
@@ -64,7 +64,7 @@ namespace Moonfish.Guerilla.Tags
         {
             using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write(color);
+                binaryWriter.Write(Colour);
                 binaryWriter.Write(invalidName_, 0, 12);
                 binaryWriter.Write(density01);
                 binaryWriter.Write(distanceWorldUnits);

@@ -22,14 +22,14 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 84, Alignment = 4)]
     public class HudTextWidgetsBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal HudWidgetInputsStructBlock hudWidgetInputsStruct;
         internal HudWidgetStateDefinitionStructBlock hudWidgetStateDefinitionStruct;
         internal Anchor anchor;
         internal Flags flags;
         [TagReference("shad")]
         internal Moonfish.Tags.TagReference shader;
-        internal Moonfish.Tags.StringID _string;
+        internal Moonfish.Tags.StringIdent _string;
         internal Justification justification;
         internal byte[] invalidName_;
         internal FullscreenFontIndex fullscreenFontIndex;

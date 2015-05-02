@@ -33,9 +33,9 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 cameraPosition;
         internal float fovDegress;
         internal OpenTK.Vector2 uiViewport;
-        internal Moonfish.Tags.StringID uNUSEDIntroAnim;
-        internal Moonfish.Tags.StringID uNUSEDOutroAnim;
-        internal Moonfish.Tags.StringID uNUSEDAmbientAnim;
+        internal Moonfish.Tags.StringIdent uNUSEDIntroAnim;
+        internal Moonfish.Tags.StringIdent uNUSEDOutroAnim;
+        internal Moonfish.Tags.StringIdent uNUSEDAmbientAnim;
         
         public override int SerializedSize{get { return 76; }}
         

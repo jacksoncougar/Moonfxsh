@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 76, Alignment = 4)]
     public class FrictionPointDefinitionBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID markerName;
+        internal Moonfish.Tags.StringIdent markerName;
         internal Flags flags;
         /// <summary>
         /// (0.0-1.0) fraction of total vehicle mass
@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
         internal float eBrakeFriction;
         internal float eBrakeMovingFrictionVelDiff;
         internal byte[] invalidName_0;
-        internal Moonfish.Tags.StringID collisionGlobalMaterialName;
+        internal Moonfish.Tags.StringIdent collisionGlobalMaterialName;
         internal byte[] invalidName_1;
         /// <summary>
         /// only need point can destroy flag set
@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// only need point can destroy flag set
         /// </summary>
-        internal Moonfish.Tags.StringID regionName;
+        internal Moonfish.Tags.StringIdent regionName;
         internal byte[] invalidName_2;
         
         public override int SerializedSize{get { return 76; }}

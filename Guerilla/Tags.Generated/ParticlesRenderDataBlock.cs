@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
         internal float positionY;
         internal float positionZ;
         internal float size;
-        internal Moonfish.Tags.RGBColor color;
+        internal Moonfish.Tags.ColourR1G1B1 color;
         
         public override int SerializedSize{get { return 19; }}
         
@@ -39,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             positionY = binaryReader.ReadSingle();
             positionZ = binaryReader.ReadSingle();
             size = binaryReader.ReadSingle();
-            color = binaryReader.ReadRGBColor();
+            color = binaryReader.ReadColourR1G1B1();
         }
         public  ParticlesRenderDataBlockBase(): base()
         {
@@ -51,7 +51,7 @@ namespace Moonfish.Guerilla.Tags
             positionY = binaryReader.ReadSingle();
             positionZ = binaryReader.ReadSingle();
             size = binaryReader.ReadSingle();
-            color = binaryReader.ReadRGBColor();
+            color = binaryReader.ReadColourR1G1B1();
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {

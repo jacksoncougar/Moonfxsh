@@ -24,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Flags flags;
         internal int value;
-        internal Moonfish.Tags.StringID labelStringId;
+        internal Moonfish.Tags.StringIdent LabelStringIdent;
         
         public override int SerializedSize{get { return 12; }}
         
@@ -35,7 +35,7 @@ namespace Moonfish.Guerilla.Tags
         {
             flags = (Flags)binaryReader.ReadInt32();
             value = binaryReader.ReadInt32();
-            labelStringId = binaryReader.ReadStringID();
+            LabelStringIdent = binaryReader.ReadStringID();
         }
         public  TextValuePairReferenceBlockBase(): base()
         {
@@ -45,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
         {
             flags = (Flags)binaryReader.ReadInt32();
             value = binaryReader.ReadInt32();
-            labelStringId = binaryReader.ReadStringID();
+            LabelStringIdent = binaryReader.ReadStringID();
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
@@ -53,7 +53,7 @@ namespace Moonfish.Guerilla.Tags
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(value);
-                binaryWriter.Write(labelStringId);
+                binaryWriter.Write(LabelStringIdent);
                 return nextAddress;
             }
         }

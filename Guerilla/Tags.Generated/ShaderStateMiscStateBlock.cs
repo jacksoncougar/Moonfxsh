@@ -24,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Flags flags;
         internal byte[] invalidName_;
-        internal Moonfish.Tags.RGBColor fogColor;
+        internal Moonfish.Tags.ColourR1G1B1 fogColor;
         
         public override int SerializedSize{get { return 7; }}
         
@@ -35,7 +35,7 @@ namespace Moonfish.Guerilla.Tags
         {
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            fogColor = binaryReader.ReadRGBColor();
+            fogColor = binaryReader.ReadColourR1G1B1();
         }
         public  ShaderStateMiscStateBlockBase(): base()
         {
@@ -45,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
         {
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            fogColor = binaryReader.ReadRGBColor();
+            fogColor = binaryReader.ReadColourR1G1B1();
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {

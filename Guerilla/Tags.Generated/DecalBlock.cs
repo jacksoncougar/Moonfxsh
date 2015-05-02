@@ -45,8 +45,8 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal Moonfish.Model.Range radiusWorldUnits;
         internal float radiusOverlapRejectionMuliplier;
-        internal Moonfish.Tags.ColorR8G8B8 colorLowerBounds;
-        internal Moonfish.Tags.ColorR8G8B8 colorUpperBounds;
+        internal Moonfish.Tags.ColourR8G8B8 ColourLowerBounds;
+        internal Moonfish.Tags.ColourR8G8B8 ColourUpperBounds;
         internal Moonfish.Model.Range lifetimeSeconds;
         internal Moonfish.Model.Range decayTimeSeconds;
         internal byte[] invalidName_;
@@ -75,8 +75,8 @@ namespace Moonfish.Guerilla.Tags
             nextDecalInChain = binaryReader.ReadTagReference();
             radiusWorldUnits = binaryReader.ReadRange();
             radiusOverlapRejectionMuliplier = binaryReader.ReadSingle();
-            colorLowerBounds = binaryReader.ReadColorR8G8B8();
-            colorUpperBounds = binaryReader.ReadColorR8G8B8();
+            ColourLowerBounds = binaryReader.ReadColorR8G8B8();
+            ColourUpperBounds = binaryReader.ReadColorR8G8B8();
             lifetimeSeconds = binaryReader.ReadRange();
             decayTimeSeconds = binaryReader.ReadRange();
             invalidName_ = binaryReader.ReadBytes(40);
@@ -103,8 +103,8 @@ namespace Moonfish.Guerilla.Tags
             nextDecalInChain = binaryReader.ReadTagReference();
             radiusWorldUnits = binaryReader.ReadRange();
             radiusOverlapRejectionMuliplier = binaryReader.ReadSingle();
-            colorLowerBounds = binaryReader.ReadColorR8G8B8();
-            colorUpperBounds = binaryReader.ReadColorR8G8B8();
+            ColourLowerBounds = binaryReader.ReadColorR8G8B8();
+            ColourUpperBounds = binaryReader.ReadColorR8G8B8();
             lifetimeSeconds = binaryReader.ReadRange();
             decayTimeSeconds = binaryReader.ReadRange();
             invalidName_ = binaryReader.ReadBytes(40);
@@ -129,8 +129,8 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(nextDecalInChain);
                 binaryWriter.Write(radiusWorldUnits);
                 binaryWriter.Write(radiusOverlapRejectionMuliplier);
-                binaryWriter.Write(colorLowerBounds);
-                binaryWriter.Write(colorUpperBounds);
+                binaryWriter.Write(ColourLowerBounds);
+                binaryWriter.Write(ColourUpperBounds);
                 binaryWriter.Write(lifetimeSeconds);
                 binaryWriter.Write(decayTimeSeconds);
                 binaryWriter.Write(invalidName_, 0, 40);

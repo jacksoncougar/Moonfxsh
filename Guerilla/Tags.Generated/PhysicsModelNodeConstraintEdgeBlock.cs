@@ -29,11 +29,11 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// if you don't fill this out we will pluck the material from the first primitive, of the first rigid body attached to node a
         /// </summary>
-        internal Moonfish.Tags.StringID nodeAMaterial;
+        internal Moonfish.Tags.StringIdent nodeAMaterial;
         /// <summary>
         /// if you don't fill this out we will pluck the material from the first primitive, of the first rigid body attached to node b, if node b is none we use whatever material a has
         /// </summary>
-        internal Moonfish.Tags.StringID nodeBMaterial;
+        internal Moonfish.Tags.StringIdent nodeBMaterial;
         
         public override int SerializedSize{get { return 24; }}
         

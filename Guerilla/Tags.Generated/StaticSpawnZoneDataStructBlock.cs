@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 16, Alignment = 4)]
     public class StaticSpawnZoneDataStructBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal RelevantTeam relevantTeam;
         internal RelevantGames relevantGames;
         internal Flags flags;

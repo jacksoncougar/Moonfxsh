@@ -30,10 +30,10 @@ namespace Moonfish.Guerilla
         {
             var elementSize = new T().SerializedSize;
             var blamPointer = binaryReader.ReadBlamPointer( elementSize );
-            var array = new T[blamPointer.elementCount];
+            var array = new T[blamPointer.ElementCount];
             using ( binaryReader.BaseStream.Pin( ) )
             {
-                for ( var i = 0; i < blamPointer.elementCount; ++i )
+                for ( var i = 0; i < blamPointer.ElementCount; ++i )
                 {
                     binaryReader.BaseStream.Position = blamPointer[ i ];
                     array[ i ] = ( T ) Activator.CreateInstance( typeof ( T ), binaryReader );
@@ -45,12 +45,12 @@ namespace Moonfish.Guerilla
         public static byte[] ReadData( BinaryReader binaryReader )
         {
             var blamPointer = binaryReader.ReadBlamPointer( sizeof ( byte ) );
-            var data = new byte[blamPointer.elementCount];
-            if ( blamPointer.elementCount <= 0 ) return data;
+            var data = new byte[blamPointer.ElementCount];
+            if ( blamPointer.ElementCount <= 0 ) return data;
             using ( binaryReader.BaseStream.Pin( ) )
             {
                 binaryReader.BaseStream.Position = blamPointer[ 0 ];
-                data = binaryReader.ReadBytes( blamPointer.elementCount );
+                data = binaryReader.ReadBytes( blamPointer.ElementCount );
             }
             return data;
         }
@@ -58,11 +58,11 @@ namespace Moonfish.Guerilla
         public static short[] ReadShortData( BinaryReader binaryReader )
         {
             var blamPointer = binaryReader.ReadBlamPointer( sizeof ( short ) );
-            var data = new short[blamPointer.elementCount];
-            if ( blamPointer.elementCount <= 0 ) return data;
+            var data = new short[blamPointer.ElementCount];
+            if ( blamPointer.ElementCount <= 0 ) return data;
             using ( binaryReader.BaseStream.Pin( ) )
             {
-                for ( int i = 0; i < blamPointer.elementCount; ++i )
+                for ( int i = 0; i < blamPointer.ElementCount; ++i )
                 {
                     binaryReader.BaseStream.Position = blamPointer[ i ];
                     data[ i ] = binaryReader.ReadInt16( );
@@ -94,7 +94,7 @@ namespace Moonfish.Guerilla
             nextAddress = blamPointer.EndAddress;
             binaryWriter.BaseStream.Pin( );
             {
-                for ( var i = 0; i < blamPointer.elementCount; ++i )
+                for ( var i = 0; i < blamPointer.ElementCount; ++i )
                 {
                     binaryWriter.BaseStream.Position = blamPointer[ i ];
                     nextAddress = blocks[ i ].Write( binaryWriter, nextAddress );
@@ -106,7 +106,7 @@ namespace Moonfish.Guerilla
         public static int WriteData( BinaryWriter binaryWriter, byte[] data, int nextAddress )
         {
             var blamPointer = new BlamPointer( data.Length, nextAddress, sizeof ( byte ) );
-            if ( blamPointer.elementCount <= 0 ) return nextAddress;
+            if ( blamPointer.ElementCount <= 0 ) return nextAddress;
             using ( binaryWriter.BaseStream.Pin( ) )
             {
                 binaryWriter.BaseStream.Position = blamPointer[ 0 ];
@@ -118,7 +118,7 @@ namespace Moonfish.Guerilla
         public static int WriteData( BinaryWriter binaryWriter, short[] data, int nextAddress )
         {
             var blamPointer = new BlamPointer( data.Length, nextAddress, sizeof ( byte ) );
-            if ( blamPointer.elementCount <= 0 ) return nextAddress;
+            if ( blamPointer.ElementCount <= 0 ) return nextAddress;
             using ( binaryWriter.BaseStream.Pin( ) )
             {
                 binaryWriter.BaseStream.Position = blamPointer[ 0 ];

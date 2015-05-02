@@ -29,11 +29,11 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// you don't need this if you're just generating effects.  If empty it defaults to the up of the object
         /// </summary>
-        internal Moonfish.Tags.StringID markerName;
+        internal Moonfish.Tags.StringIdent markerName;
         /// <summary>
         /// you don't need this if you're just generating effects.  If empty it defaults to "marker name"
         /// </summary>
-        internal Moonfish.Tags.StringID alignmentMarkerName;
+        internal Moonfish.Tags.StringIdent alignmentMarkerName;
         internal byte[] invalidName_0;
         /// <summary>
         /// 0 if you don't want this to behave like spring.  1 is a good starting point if you do.

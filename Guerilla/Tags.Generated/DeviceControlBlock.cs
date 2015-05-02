@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
         internal Type type;
         internal TriggersWhen triggersWhen;
         internal float callValue01;
-        internal Moonfish.Tags.StringID actionString;
+        internal Moonfish.Tags.StringIdent actionString;
         [TagReference("null")]
         internal Moonfish.Tags.TagReference on;
         [TagReference("null")]

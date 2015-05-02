@@ -24,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
     {
         internal int internalData1;
         internal int compressedPosition;
-        internal Moonfish.Tags.RGBColor tintColor;
-        internal Moonfish.Tags.RGBColor lightmapColor;
+        internal Moonfish.Tags.ColourR1G1B1 tintColor;
+        internal Moonfish.Tags.ColourR1G1B1 lightmapColor;
         internal int compressedLightDirection;
         internal int compressedLight2Direction;
         
@@ -38,8 +38,8 @@ namespace Moonfish.Guerilla.Tags
         {
             internalData1 = binaryReader.ReadInt32();
             compressedPosition = binaryReader.ReadInt32();
-            tintColor = binaryReader.ReadRGBColor();
-            lightmapColor = binaryReader.ReadRGBColor();
+            tintColor = binaryReader.ReadColourR1G1B1();
+            lightmapColor = binaryReader.ReadColourR1G1B1();
             compressedLightDirection = binaryReader.ReadInt32();
             compressedLight2Direction = binaryReader.ReadInt32();
         }
@@ -51,8 +51,8 @@ namespace Moonfish.Guerilla.Tags
         {
             internalData1 = binaryReader.ReadInt32();
             compressedPosition = binaryReader.ReadInt32();
-            tintColor = binaryReader.ReadRGBColor();
-            lightmapColor = binaryReader.ReadRGBColor();
+            tintColor = binaryReader.ReadColourR1G1B1();
+            lightmapColor = binaryReader.ReadColourR1G1B1();
             compressedLightDirection = binaryReader.ReadInt32();
             compressedLight2Direction = binaryReader.ReadInt32();
         }

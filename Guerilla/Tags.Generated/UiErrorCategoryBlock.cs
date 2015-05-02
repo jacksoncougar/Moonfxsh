@@ -22,16 +22,16 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 40, Alignment = 4)]
     public class UiErrorCategoryBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID categoryName;
+        internal Moonfish.Tags.StringIdent categoryName;
         internal Flags flags;
         internal DefaultButton defaultButton;
         internal byte[] invalidName_;
         [TagReference("unic")]
         internal Moonfish.Tags.TagReference stringTag;
-        internal Moonfish.Tags.StringID defaultTitle;
-        internal Moonfish.Tags.StringID defaultMessage;
-        internal Moonfish.Tags.StringID defaultOk;
-        internal Moonfish.Tags.StringID defaultCancel;
+        internal Moonfish.Tags.StringIdent defaultTitle;
+        internal Moonfish.Tags.StringIdent defaultMessage;
+        internal Moonfish.Tags.StringIdent defaultOk;
+        internal Moonfish.Tags.StringIdent defaultCancel;
         internal UiErrorBlock[] errorBlock;
         
         public override int SerializedSize{get { return 40; }}

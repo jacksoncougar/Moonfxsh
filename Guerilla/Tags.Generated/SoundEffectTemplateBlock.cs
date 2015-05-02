@@ -32,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
     public class SoundEffectTemplateBlockBase : GuerillaBlock
     {
         internal SoundEffectTemplatesBlock[] templateCollection;
-        internal Moonfish.Tags.StringID inputEffectName;
+        internal Moonfish.Tags.StringIdent inputEffectName;
         internal SoundEffectTemplateAdditionalSoundInputBlock[] additionalSoundInputs;
         internal PlatformSoundEffectTemplateCollectionBlock[] platformSoundEffectTemplateCollectionBlock;
         

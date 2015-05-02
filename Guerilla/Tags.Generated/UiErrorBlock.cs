@@ -26,10 +26,10 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal DefaultButton defaultButton;
         internal byte[] invalidName_;
-        internal Moonfish.Tags.StringID title;
-        internal Moonfish.Tags.StringID message;
-        internal Moonfish.Tags.StringID ok;
-        internal Moonfish.Tags.StringID cancel;
+        internal Moonfish.Tags.StringIdent title;
+        internal Moonfish.Tags.StringIdent message;
+        internal Moonfish.Tags.StringIdent ok;
+        internal Moonfish.Tags.StringIdent cancel;
         
         public override int SerializedSize{get { return 24; }}
         

@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 176, Alignment = 16)]
     public class MultiSpheresBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal Moonfish.Tags.ShortBlockIndex1 material;
         internal Flags flags;
         internal float relativeMassScale;

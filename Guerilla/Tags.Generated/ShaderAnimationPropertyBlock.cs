@@ -24,8 +24,8 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Type type;
         internal byte[] invalidName_;
-        internal Moonfish.Tags.StringID inputName;
-        internal Moonfish.Tags.StringID rangeName;
+        internal Moonfish.Tags.StringIdent inputName;
+        internal Moonfish.Tags.StringIdent rangeName;
         internal float timePeriodSec;
         internal MappingFunctionBlock function;
         

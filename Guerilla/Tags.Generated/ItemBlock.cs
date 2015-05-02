@@ -36,16 +36,16 @@ namespace Moonfish.Guerilla.Tags
         internal short sortOrder;
         internal float multiplayerOnGroundScale;
         internal float campaignOnGroundScale;
-        internal Moonfish.Tags.StringID pickupMessage;
-        internal Moonfish.Tags.StringID swapMessage;
-        internal Moonfish.Tags.StringID pickupOrDualMsg;
-        internal Moonfish.Tags.StringID swapOrDualMsg;
-        internal Moonfish.Tags.StringID dualOnlyMsg;
-        internal Moonfish.Tags.StringID pickedUpMsg;
-        internal Moonfish.Tags.StringID singluarQuantityMsg;
-        internal Moonfish.Tags.StringID pluralQuantityMsg;
-        internal Moonfish.Tags.StringID switchToMsg;
-        internal Moonfish.Tags.StringID switchToFromAiMsg;
+        internal Moonfish.Tags.StringIdent pickupMessage;
+        internal Moonfish.Tags.StringIdent swapMessage;
+        internal Moonfish.Tags.StringIdent pickupOrDualMsg;
+        internal Moonfish.Tags.StringIdent swapOrDualMsg;
+        internal Moonfish.Tags.StringIdent dualOnlyMsg;
+        internal Moonfish.Tags.StringIdent pickedUpMsg;
+        internal Moonfish.Tags.StringIdent singluarQuantityMsg;
+        internal Moonfish.Tags.StringIdent pluralQuantityMsg;
+        internal Moonfish.Tags.StringIdent switchToMsg;
+        internal Moonfish.Tags.StringIdent switchToFromAiMsg;
         [TagReference("foot")]
         internal Moonfish.Tags.TagReference uNUSED;
         [TagReference("snd!")]

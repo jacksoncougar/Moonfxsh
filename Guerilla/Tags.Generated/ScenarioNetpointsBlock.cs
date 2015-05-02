@@ -28,8 +28,8 @@ namespace Moonfish.Guerilla.Tags
         internal TeamDesignator teamDesignator;
         internal short identifier;
         internal Flags flags;
-        internal Moonfish.Tags.StringID eMPTYSTRING;
-        internal Moonfish.Tags.StringID eMPTYSTRING0;
+        internal Moonfish.Tags.StringIdent eMPTYSTRING;
+        internal Moonfish.Tags.StringIdent eMPTYSTRING0;
         
         public override int SerializedSize{get { return 32; }}
         

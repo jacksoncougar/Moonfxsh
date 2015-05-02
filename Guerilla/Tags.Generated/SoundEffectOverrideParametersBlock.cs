@@ -22,9 +22,9 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 32, Alignment = 4)]
     public class SoundEffectOverrideParametersBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
-        internal Moonfish.Tags.StringID input;
-        internal Moonfish.Tags.StringID range;
+        internal Moonfish.Tags.StringIdent name;
+        internal Moonfish.Tags.StringIdent input;
+        internal Moonfish.Tags.StringIdent range;
         internal float timePeriodSeconds;
         internal int integerValue;
         internal float realValue;

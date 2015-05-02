@@ -281,14 +281,14 @@ namespace Moonfish.Guerilla
         private bool ValidateBlamPointer( BlamPointer blamPointer, ElementArray info )
         {
             var stringWriter = new StringWriter( );
-            if ( blamPointer.elementCount == 0 && blamPointer.startAddress == 0 ) return true;
-            if ( blamPointer.elementCount == 0 ^ blamPointer.startAddress == 0 )
-                stringWriter.WriteLine( "-> null-value count({0}) address({1}) is invalid", blamPointer.elementCount,
-                    blamPointer.startAddress );
-            if ( blamPointer.elementCount < 0 )
-                stringWriter.WriteLine( "-> count({0}) is invalid", blamPointer.elementCount );
-            if ( blamPointer.elementCount > info.maxElementCount && info.maxElementCount > 0 )
-                stringWriter.WriteLine( "-> count({0}) > max-count({1})", blamPointer.elementCount, info.maxElementCount );
+            if ( blamPointer.ElementCount == 0 && blamPointer.StartAddress == 0 ) return true;
+            if ( blamPointer.ElementCount == 0 ^ blamPointer.StartAddress == 0 )
+                stringWriter.WriteLine( "-> null-value count({0}) address({1}) is invalid", blamPointer.ElementCount,
+                    blamPointer.StartAddress );
+            if ( blamPointer.ElementCount < 0 )
+                stringWriter.WriteLine( "-> count({0}) is invalid", blamPointer.ElementCount );
+            if ( blamPointer.ElementCount > info.maxElementCount && info.maxElementCount > 0 )
+                stringWriter.WriteLine( "-> count({0}) > max-count({1})", blamPointer.ElementCount, info.maxElementCount );
           
             //if ( !stream.ContainsPointer( blamPointer ) )
             //    stringWriter.WriteLine( "-> address({0}) not contained in stream({1})", blamPointer.startAddress,
@@ -316,8 +316,8 @@ namespace Moonfish.Guerilla
                         {
                             binaryReader.BaseStream.Seek( child.address, SeekOrigin.Current );
                             var arrayPointer = binaryReader.ReadBlamPointer( child.elementSize );
-                            child.virtualAddress = arrayPointer.startAddress;
-                            child.count = arrayPointer.elementCount;
+                            child.virtualAddress = arrayPointer.StartAddress;
+                            child.count = arrayPointer.ElementCount;
                             return arrayPointer;
                         }
                     } )( )
@@ -327,7 +327,7 @@ namespace Moonfish.Guerilla
                 if (
                     !ValidateBlamPointer( child.ArrayPointer, child.ElementArray ) )
                     continue;
-                if ( !( child.ArrayPointer.elementCount == 0 && child.ArrayPointer.startAddress == 0 ) )
+                if ( !( child.ArrayPointer.ElementCount == 0 && child.ArrayPointer.StartAddress == 0 ) )
                 {
                     ValidateTagBlock( child.ElementArray, child.ArrayPointer, binaryReader, ref nextAddress );
                 }
@@ -352,17 +352,17 @@ namespace Moonfish.Guerilla
                     {
                         var alignedAddress = ( address ) +
                                              Padding.GetCount( address, info.alignment );
-                        if ( pointer.startAddress != alignedAddress )
+                        if ( pointer.StartAddress != alignedAddress )
                         {
                             var mapStream = reader.BaseStream as CacheStream;
                             if ( mapStream != null )
                             {
                                 error = true;
                                 OnWriteMessage( string.Format( "{2}: Expected address \"{0}\"  - actually was \"{1}\"",
-                                    alignedAddress, pointer.startAddress, info.name ) );
+                                    alignedAddress, pointer.StartAddress, info.name ) );
                             }
                         }
-                        address = pointer.startAddress + pointer.PointedSize;
+                        address = pointer.StartAddress + pointer.PointedSize;
                     }
                     if ( enumerable.Any( ) )
                     {
@@ -376,16 +376,16 @@ namespace Moonfish.Guerilla
                             foreach ( var overlappingItem in overlappingItems )
                             {
                                 error = true;
-                                var overlap = pointer.startAddress - overlappingItem.Item1.startAddress -
+                                var overlap = pointer.StartAddress - overlappingItem.Item1.StartAddress -
                                               overlappingItem.Item1.PointedSize;
 
                                 OnWriteMessage(
                                     string.Format(
                                         "Overlap of ({0})\n{3} elements sized '{5}' at '{4}'\nwith ({1})\n{6} elements sized '{8}' at '{7}'\nby ({2}) bytes",
                                         overlappingItem.Item2.ToHierarchyString( ), info.ToHierarchyString( ), overlap,
-                                        overlappingItem.Item1.elementCount, overlappingItem.Item1.startAddress,
-                                        overlappingItem.Item1.elementSize,
-                                        pointer.elementCount, pointer.startAddress, pointer.elementSize ) );
+                                        overlappingItem.Item1.ElementCount, overlappingItem.Item1.StartAddress,
+                                        overlappingItem.Item1.ElementSize,
+                                        pointer.ElementCount, pointer.StartAddress, pointer.ElementSize ) );
                             }
                         }
                     }

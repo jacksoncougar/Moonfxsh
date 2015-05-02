@@ -25,7 +25,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// if found, use this gun marker
         /// </summary>
-        internal Moonfish.Tags.StringID preferredGunNode;
+        internal Moonfish.Tags.StringIdent preferredGunNode;
         
         public override int SerializedSize{get { return 4; }}
         

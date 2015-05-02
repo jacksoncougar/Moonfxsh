@@ -23,8 +23,8 @@ namespace Moonfish.Guerilla.Tags
     public class ScenarioAtmosphericFogMixerBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
-        internal Moonfish.Tags.StringID atmosphericFogSourceFromScenarioAtmosphericFogPalette;
-        internal Moonfish.Tags.StringID interpolatorFromScenarioInterpolators;
+        internal Moonfish.Tags.StringIdent atmosphericFogSourceFromScenarioAtmosphericFogPalette;
+        internal Moonfish.Tags.StringIdent interpolatorFromScenarioInterpolators;
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
         

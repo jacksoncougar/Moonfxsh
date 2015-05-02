@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 36, Alignment = 4)]
     public class SoundEffectTemplateParameterBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal Type type;
         internal Flags flags;
         internal int hardwareOffset;

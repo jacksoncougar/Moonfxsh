@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 offset;
         internal OpenTK.Vector3 axis;
         internal OpenTK.Vector2 texcoord;
-        internal Moonfish.Tags.RGBColor color;
+        internal Moonfish.Tags.ColourR1G1B1 color;
         
         public override int SerializedSize{get { return 47; }}
         
@@ -39,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             offset = binaryReader.ReadVector3();
             axis = binaryReader.ReadVector3();
             texcoord = binaryReader.ReadVector2();
-            color = binaryReader.ReadRGBColor();
+            color = binaryReader.ReadColourR1G1B1();
         }
         public  SpriteVerticesBlockBase(): base()
         {
@@ -51,7 +51,7 @@ namespace Moonfish.Guerilla.Tags
             offset = binaryReader.ReadVector3();
             axis = binaryReader.ReadVector3();
             texcoord = binaryReader.ReadVector2();
-            color = binaryReader.ReadRGBColor();
+            color = binaryReader.ReadColourR1G1B1();
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {

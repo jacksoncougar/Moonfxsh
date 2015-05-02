@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal ColorkeyMode colorkeyMode;
         internal byte[] invalidName_0;
-        internal Moonfish.Tags.RGBColor colorkeyColor;
+        internal Moonfish.Tags.ColourR1G1B1 colorkeyColor;
         
         public override int SerializedSize{get { return 11; }}
         
@@ -39,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes(2);
             colorkeyMode = (ColorkeyMode)binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
-            colorkeyColor = binaryReader.ReadRGBColor();
+            colorkeyColor = binaryReader.ReadColourR1G1B1();
         }
         public  ShaderTextureStateKillStateBlockBase(): base()
         {
@@ -51,7 +51,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes(2);
             colorkeyMode = (ColorkeyMode)binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
-            colorkeyColor = binaryReader.ReadRGBColor();
+            colorkeyColor = binaryReader.ReadColourR1G1B1();
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {

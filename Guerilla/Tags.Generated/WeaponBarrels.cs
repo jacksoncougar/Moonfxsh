@@ -71,7 +71,7 @@ namespace Moonfish.Guerilla.Tags
         /// the number of non-tracer rounds fired between tracers
         /// </summary>
         internal short roundsBetweenTracers;
-        internal Moonfish.Tags.StringID optionalBarrelMarkerName;
+        internal Moonfish.Tags.StringIdent optionalBarrelMarkerName;
         internal PredictionType predictionType;
         /// <summary>
         /// how loud this weapon appears to the AI

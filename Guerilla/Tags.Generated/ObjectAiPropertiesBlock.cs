@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// used for combat dialogue, etc.
         /// </summary>
-        internal Moonfish.Tags.StringID aiTypeName;
+        internal Moonfish.Tags.StringIdent aiTypeName;
         internal byte[] invalidName_;
         internal AiSize aiSize;
         internal LeapJumpSpeed leapJumpSpeed;

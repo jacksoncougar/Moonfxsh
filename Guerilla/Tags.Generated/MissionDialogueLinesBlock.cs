@@ -22,9 +22,9 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 16, Alignment = 4)]
     public class MissionDialogueLinesBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal MissionDialogueVariantsBlock[] variants;
-        internal Moonfish.Tags.StringID defaultSoundEffect;
+        internal Moonfish.Tags.StringIdent defaultSoundEffect;
         
         public override int SerializedSize{get { return 16; }}
         

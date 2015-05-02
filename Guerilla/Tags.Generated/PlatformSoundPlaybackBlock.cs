@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 56, Alignment = 4)]
     public class PlatformSoundPlaybackBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal PlatformSoundPlaybackStructBlock playback;
         
         public override int SerializedSize{get { return 56; }}

@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class CollisionModelPermutationBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal CollisionModelBspBlock[] bsps;
         internal CollisionBspPhysicsBlock[] bspPhysics;
         

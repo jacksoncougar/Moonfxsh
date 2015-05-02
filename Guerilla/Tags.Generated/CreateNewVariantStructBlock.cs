@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class CreateNewVariantStructBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID invalidName_;
+        internal Moonfish.Tags.StringIdent invalidName_;
         internal InvalidName invalidName_0;
         internal GDefaultVariantSettingsBlock[] settings;
         internal byte invalidName_1;

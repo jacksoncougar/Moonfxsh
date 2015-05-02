@@ -35,9 +35,9 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         [TagReference("unic")]
         internal Moonfish.Tags.TagReference stringList;
-        internal Moonfish.Tags.StringID titleText;
-        internal Moonfish.Tags.StringID headerText;
-        internal Moonfish.Tags.StringID descriptionText;
+        internal Moonfish.Tags.StringIdent titleText;
+        internal Moonfish.Tags.StringIdent headerText;
+        internal Moonfish.Tags.StringIdent descriptionText;
         internal TextValuePairReferenceBlock[] textValuePairs;
         
         public override int SerializedSize{get { return 36; }}

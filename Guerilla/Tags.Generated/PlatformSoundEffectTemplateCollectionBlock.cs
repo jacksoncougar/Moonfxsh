@@ -23,7 +23,7 @@ namespace Moonfish.Guerilla.Tags
     public class PlatformSoundEffectTemplateCollectionBlockBase : GuerillaBlock
     {
         internal PlatformSoundEffectTemplateBlock[] platformEffectTemplates;
-        internal Moonfish.Tags.StringID inputDspEffectName;
+        internal Moonfish.Tags.StringIdent inputDspEffectName;
         
         public override int SerializedSize{get { return 12; }}
         

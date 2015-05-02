@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 40, Alignment = 4)]
     public class DecoratorPermutationsBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal Moonfish.Tags.ByteBlockIndex1 shader;
         internal byte[] invalidName_;
         internal Flags flags;
@@ -30,9 +30,9 @@ namespace Moonfish.Guerilla.Tags
         internal byte index;
         internal byte distributionWeight;
         internal Moonfish.Model.Range scale;
-        internal Moonfish.Tags.RGBColor tint1;
+        internal Moonfish.Tags.ColourR1G1B1 tint1;
         internal byte[] invalidName_0;
-        internal Moonfish.Tags.RGBColor tint2;
+        internal Moonfish.Tags.ColourR1G1B1 tint2;
         internal byte[] invalidName_1;
         internal float baseMapTintPercentage;
         internal float lightmapTintPercentage;
@@ -53,9 +53,9 @@ namespace Moonfish.Guerilla.Tags
             index = binaryReader.ReadByte();
             distributionWeight = binaryReader.ReadByte();
             scale = binaryReader.ReadRange();
-            tint1 = binaryReader.ReadRGBColor();
+            tint1 = binaryReader.ReadColourR1G1B1();
             invalidName_0 = binaryReader.ReadBytes(1);
-            tint2 = binaryReader.ReadRGBColor();
+            tint2 = binaryReader.ReadColourR1G1B1();
             invalidName_1 = binaryReader.ReadBytes(1);
             baseMapTintPercentage = binaryReader.ReadSingle();
             lightmapTintPercentage = binaryReader.ReadSingle();
@@ -75,9 +75,9 @@ namespace Moonfish.Guerilla.Tags
             index = binaryReader.ReadByte();
             distributionWeight = binaryReader.ReadByte();
             scale = binaryReader.ReadRange();
-            tint1 = binaryReader.ReadRGBColor();
+            tint1 = binaryReader.ReadColourR1G1B1();
             invalidName_0 = binaryReader.ReadBytes(1);
-            tint2 = binaryReader.ReadRGBColor();
+            tint2 = binaryReader.ReadColourR1G1B1();
             invalidName_1 = binaryReader.ReadBytes(1);
             baseMapTintPercentage = binaryReader.ReadSingle();
             lightmapTintPercentage = binaryReader.ReadSingle();

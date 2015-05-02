@@ -67,10 +67,10 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal float refractionAmountPixels;
         internal float distanceFalloff;
-        internal Moonfish.Tags.ColorR8G8B8 tintColor;
+        internal Moonfish.Tags.ColourR8G8B8 TintColour;
         internal float hyperStealthRefractionPixels;
         internal float hyperStealthDistanceFalloff;
-        internal Moonfish.Tags.ColorR8G8B8 hyperStealthTintColor;
+        internal Moonfish.Tags.ColourR8G8B8 HyperStealthTintColour;
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference uNUSED10;
         
@@ -107,10 +107,10 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(2);
             refractionAmountPixels = binaryReader.ReadSingle();
             distanceFalloff = binaryReader.ReadSingle();
-            tintColor = binaryReader.ReadColorR8G8B8();
+            TintColour = binaryReader.ReadColorR8G8B8();
             hyperStealthRefractionPixels = binaryReader.ReadSingle();
             hyperStealthDistanceFalloff = binaryReader.ReadSingle();
-            hyperStealthTintColor = binaryReader.ReadColorR8G8B8();
+            HyperStealthTintColour = binaryReader.ReadColorR8G8B8();
             uNUSED10 = binaryReader.ReadTagReference();
         }
         public  RasterizerDataBlockBase(): base()
@@ -145,10 +145,10 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(2);
             refractionAmountPixels = binaryReader.ReadSingle();
             distanceFalloff = binaryReader.ReadSingle();
-            tintColor = binaryReader.ReadColorR8G8B8();
+            TintColour = binaryReader.ReadColorR8G8B8();
             hyperStealthRefractionPixels = binaryReader.ReadSingle();
             hyperStealthDistanceFalloff = binaryReader.ReadSingle();
-            hyperStealthTintColor = binaryReader.ReadColorR8G8B8();
+            HyperStealthTintColour = binaryReader.ReadColorR8G8B8();
             uNUSED10 = binaryReader.ReadTagReference();
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
@@ -181,10 +181,10 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_1, 0, 2);
                 binaryWriter.Write(refractionAmountPixels);
                 binaryWriter.Write(distanceFalloff);
-                binaryWriter.Write(tintColor);
+                binaryWriter.Write(TintColour);
                 binaryWriter.Write(hyperStealthRefractionPixels);
                 binaryWriter.Write(hyperStealthDistanceFalloff);
-                binaryWriter.Write(hyperStealthTintColor);
+                binaryWriter.Write(HyperStealthTintColour);
                 binaryWriter.Write(uNUSED10);
                 return nextAddress;
             }

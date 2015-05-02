@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal OpenTK.Vector2 brightness01;
         internal float modulationFactor01;
-        internal Moonfish.Tags.ColorR8G8B8 color;
+        internal Moonfish.Tags.ColourR8G8B8 Colour;
         
         public override int SerializedSize{get { return 48; }}
         
@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
             radiusWorldUnits = binaryReader.ReadRange();
             brightness01 = binaryReader.ReadVector2();
             modulationFactor01 = binaryReader.ReadSingle();
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
         }
         public  LensFlareReflectionBlockBase(): base()
         {
@@ -75,7 +75,7 @@ namespace Moonfish.Guerilla.Tags
             radiusWorldUnits = binaryReader.ReadRange();
             brightness01 = binaryReader.ReadVector2();
             modulationFactor01 = binaryReader.ReadSingle();
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
@@ -90,7 +90,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(radiusWorldUnits);
                 binaryWriter.Write(brightness01);
                 binaryWriter.Write(modulationFactor01);
-                binaryWriter.Write(color);
+                binaryWriter.Write(Colour);
                 return nextAddress;
             }
         }

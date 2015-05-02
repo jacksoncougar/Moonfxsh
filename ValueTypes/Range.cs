@@ -12,13 +12,13 @@ namespace Moonfish.Model
 
         public Range( float min, float max )
         {
-            this.Min = min;
-            this.Max = max;
+            Min = min;
+            Max = max;
         }
 
         public override string ToString( )
         {
-            return string.Format( "{{{0}:{1}}}", Min, Max );
+            return string.Format( "Min:{0} Max:{1})", Min, Max );
         }
 
         public float Length

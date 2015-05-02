@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 60, Alignment = 4)]
     public class ShaderPassTextureBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID sourceParameter;
+        internal Moonfish.Tags.StringIdent sourceParameter;
         internal SourceExtern sourceExtern;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;

@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class GDefaultVariantsBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID variantName;
+        internal Moonfish.Tags.StringIdent variantName;
         internal VariantType variantType;
         internal GDefaultVariantSettingsBlock[] settings;
         internal byte descriptionIndex;

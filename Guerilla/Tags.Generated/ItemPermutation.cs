@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         [TagReference("item")]
         internal Moonfish.Tags.TagReference item;
-        internal Moonfish.Tags.StringID variantName;
+        internal Moonfish.Tags.StringIdent variantName;
         
         public override int SerializedSize{get { return 16; }}
         

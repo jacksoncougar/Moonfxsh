@@ -28,12 +28,12 @@ namespace Moonfish.Guerilla.Tags
         internal Audience audience;
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
-        internal Moonfish.Tags.StringID displayString;
+        internal Moonfish.Tags.StringIdent displayString;
         internal RequiredField requiredField;
         internal ExcludedAudience excludedAudience;
-        internal Moonfish.Tags.StringID primaryString;
+        internal Moonfish.Tags.StringIdent primaryString;
         internal int primaryStringDurationSeconds;
-        internal Moonfish.Tags.StringID pluralDisplayString;
+        internal Moonfish.Tags.StringIdent pluralDisplayString;
         internal byte[] invalidName_2;
         internal float soundDelayAnnouncerOnly;
         internal SoundFlags soundFlags;

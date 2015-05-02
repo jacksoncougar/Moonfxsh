@@ -22,8 +22,8 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class WeaponClassLookupBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID weaponName;
-        internal Moonfish.Tags.StringID weaponClass;
+        internal Moonfish.Tags.StringIdent weaponName;
+        internal Moonfish.Tags.StringIdent weaponClass;
         
         public override int SerializedSize{get { return 8; }}
         

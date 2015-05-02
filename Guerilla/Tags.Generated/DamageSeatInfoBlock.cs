@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class DamageSeatInfoBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID seatLabel;
+        internal Moonfish.Tags.StringIdent seatLabel;
         /// <summary>
         /// 0==no damage, 1==full damage
         /// </summary>

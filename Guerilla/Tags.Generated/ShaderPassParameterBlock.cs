@@ -22,14 +22,14 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 44, Alignment = 4)]
     public class ShaderPassParameterBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal byte[] explanation;
         internal Type type;
         internal Flags flags;
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference defaultBitmap;
         internal float defaultConstValue;
-        internal Moonfish.Tags.ColorR8G8B8 defaultConstColor;
+        internal Moonfish.Tags.ColourR8G8B8 DefaultConstColour;
         internal SourceExtern sourceExtern;
         internal byte[] invalidName_;
         
@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
             flags = (Flags)binaryReader.ReadInt16();
             defaultBitmap = binaryReader.ReadTagReference();
             defaultConstValue = binaryReader.ReadSingle();
-            defaultConstColor = binaryReader.ReadColorR8G8B8();
+            DefaultConstColour = binaryReader.ReadColorR8G8B8();
             sourceExtern = (SourceExtern)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
         }
@@ -62,7 +62,7 @@ namespace Moonfish.Guerilla.Tags
             flags = (Flags)binaryReader.ReadInt16();
             defaultBitmap = binaryReader.ReadTagReference();
             defaultConstValue = binaryReader.ReadSingle();
-            defaultConstColor = binaryReader.ReadColorR8G8B8();
+            DefaultConstColour = binaryReader.ReadColorR8G8B8();
             sourceExtern = (SourceExtern)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
         }
@@ -76,7 +76,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write(defaultBitmap);
                 binaryWriter.Write(defaultConstValue);
-                binaryWriter.Write(defaultConstColor);
+                binaryWriter.Write(DefaultConstColour);
                 binaryWriter.Write((Int16)sourceExtern);
                 binaryWriter.Write(invalidName_, 0, 2);
                 return nextAddress;

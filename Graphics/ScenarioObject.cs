@@ -55,7 +55,7 @@ namespace Moonfish.Graphics
 
         private ScenarioObject( )
         {
-            ActivePermuation = StringID.Zero;
+            ActivePermuation = StringIdent.Zero;
             Nodes = new List<RenderModelNodeBlock>( );
             Flags = RenderFlags.RenderMarkers | RenderFlags.RenderMesh | RenderFlags.RenderNodes;
 
@@ -109,7 +109,7 @@ namespace Moonfish.Graphics
             Nodes = new List<RenderModelNodeBlock>( model.RenderModel.nodes );
         }
 
-        public StringID ActivePermuation { get; set; }
+        public StringIdent ActivePermuation { get; set; }
 
         public IEnumerable<RenderBatch> Batches
         {

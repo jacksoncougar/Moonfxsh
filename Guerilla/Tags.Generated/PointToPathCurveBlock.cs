@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 16, Alignment = 4)]
     public class PointToPathCurveBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal Moonfish.Tags.ShortBlockIndex1 nodeIndex;
         internal byte[] invalidName_;
         internal PointToPathCurvePointBlock[] points;

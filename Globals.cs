@@ -47,7 +47,6 @@ namespace Moonfish
 
         public static GlobalPaths Paths { get; set; }
 
-
         public static dynamic GetReferenceObject( TagIdent identifier, bool reload = false )
         {
             if ( mapStream == null ) return null;
@@ -153,6 +152,8 @@ namespace Moonfish
         {
             return definedTagGroupsDictionary[ className ];
         }
+
+
 
         internal static void ActiveMap( CacheStream mapstream )
         {

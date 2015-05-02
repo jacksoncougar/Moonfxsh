@@ -38,7 +38,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// 3-letter missionDialogueDesignator name
         /// </summary>
-        internal Moonfish.Tags.StringID missionDialogueDesignator;
+        internal Moonfish.Tags.StringIdent missionDialogueDesignator;
         
         public override int SerializedSize{get { return 24; }}
         

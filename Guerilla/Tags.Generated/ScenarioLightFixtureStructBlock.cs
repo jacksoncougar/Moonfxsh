@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 24, Alignment = 4)]
     public class ScenarioLightFixtureStructBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.ColorR8G8B8 color;
+        internal Moonfish.Tags.ColourR8G8B8 Colour;
         internal float intensity;
         internal float falloffAngleDegrees;
         internal float cutoffAngleDegrees;
@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
         
         public  ScenarioLightFixtureStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
             intensity = binaryReader.ReadSingle();
             falloffAngleDegrees = binaryReader.ReadSingle();
             cutoffAngleDegrees = binaryReader.ReadSingle();
@@ -45,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
         }
         public override void Read(BinaryReader binaryReader)
         {
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
             intensity = binaryReader.ReadSingle();
             falloffAngleDegrees = binaryReader.ReadSingle();
             cutoffAngleDegrees = binaryReader.ReadSingle();
@@ -54,7 +54,7 @@ namespace Moonfish.Guerilla.Tags
         {
             using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write(color);
+                binaryWriter.Write(Colour);
                 binaryWriter.Write(intensity);
                 binaryWriter.Write(falloffAngleDegrees);
                 binaryWriter.Write(cutoffAngleDegrees);

@@ -22,13 +22,13 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 40, Alignment = 4)]
     public class GlobalShaderParameterBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal Type type;
         internal byte[] invalidName_;
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference bitmap;
         internal float constValue;
-        internal Moonfish.Tags.ColorR8G8B8 constColor;
+        internal Moonfish.Tags.ColourR8G8B8 ConstColour;
         internal ShaderAnimationPropertyBlock[] animationProperties;
         
         public override int SerializedSize{get { return 40; }}
@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes(2);
             bitmap = binaryReader.ReadTagReference();
             constValue = binaryReader.ReadSingle();
-            constColor = binaryReader.ReadColorR8G8B8();
+            ConstColour = binaryReader.ReadColorR8G8B8();
             animationProperties = Guerilla.ReadBlockArray<ShaderAnimationPropertyBlock>(binaryReader);
         }
         public  GlobalShaderParameterBlockBase(): base()
@@ -57,7 +57,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes(2);
             bitmap = binaryReader.ReadTagReference();
             constValue = binaryReader.ReadSingle();
-            constColor = binaryReader.ReadColorR8G8B8();
+            ConstColour = binaryReader.ReadColorR8G8B8();
             animationProperties = Guerilla.ReadBlockArray<ShaderAnimationPropertyBlock>(binaryReader);
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
@@ -69,7 +69,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(bitmap);
                 binaryWriter.Write(constValue);
-                binaryWriter.Write(constColor);
+                binaryWriter.Write(ConstColour);
                 nextAddress = Guerilla.WriteBlockArray<ShaderAnimationPropertyBlock>(binaryWriter, animationProperties, nextAddress);
                 return nextAddress;
             }

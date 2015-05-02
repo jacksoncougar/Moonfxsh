@@ -22,12 +22,12 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 56, Alignment = 4)]
     public class ModelVariantBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal byte[] invalidName_;
         internal ModelVariantRegionBlock[] regions;
         internal ModelVariantObjectBlock[] objects;
         internal byte[] invalidName_0;
-        internal Moonfish.Tags.StringID dialogueSoundEffect;
+        internal Moonfish.Tags.StringIdent dialogueSoundEffect;
         [TagReference("udlg")]
         internal Moonfish.Tags.TagReference dialogue;
         

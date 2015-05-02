@@ -25,7 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 position;
         internal OpenTK.Vector2 texcoord0;
         internal OpenTK.Vector2 texcoord1;
-        internal Moonfish.Tags.RGBColor color;
+        internal Moonfish.Tags.ColourR1G1B1 color;
         
         public override int SerializedSize{get { return 31; }}
         
@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             position = binaryReader.ReadVector3();
             texcoord0 = binaryReader.ReadVector2();
             texcoord1 = binaryReader.ReadVector2();
-            color = binaryReader.ReadRGBColor();
+            color = binaryReader.ReadColourR1G1B1();
         }
         public  DecalVerticesBlockBase(): base()
         {
@@ -48,7 +48,7 @@ namespace Moonfish.Guerilla.Tags
             position = binaryReader.ReadVector3();
             texcoord0 = binaryReader.ReadVector2();
             texcoord1 = binaryReader.ReadVector2();
-            color = binaryReader.ReadRGBColor();
+            color = binaryReader.ReadColourR1G1B1();
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {

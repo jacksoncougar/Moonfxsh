@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_3;
         [TagReference("adlg")]
         internal Moonfish.Tags.TagReference globalDialogueTag;
-        internal Moonfish.Tags.StringID defaultMissionDialogueSoundEffect;
+        internal Moonfish.Tags.StringIdent defaultMissionDialogueSoundEffect;
         internal byte[] invalidName_4;
         internal float jumpDownWuTick;
         internal float jumpStepWuTick;

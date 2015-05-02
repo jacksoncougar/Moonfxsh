@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 108, Alignment = 4)]
     public class AnimationPoolBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal int nodeListChecksum;
         internal int productionChecksum;
         internal int importChecksum;

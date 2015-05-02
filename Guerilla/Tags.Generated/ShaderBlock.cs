@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
     {
         [TagReference("stem")]
         internal Moonfish.Tags.TagReference template;
-        internal Moonfish.Tags.StringID materialName;
+        internal Moonfish.Tags.StringIdent materialName;
         internal ShaderPropertiesBlock[] runtimeProperties;
         internal byte[] invalidName_;
         internal Flags flags;

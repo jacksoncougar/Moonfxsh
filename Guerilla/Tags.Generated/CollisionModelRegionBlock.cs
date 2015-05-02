@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 12, Alignment = 4)]
     public class CollisionModelRegionBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal CollisionModelPermutationBlock[] permutations;
         
         public override int SerializedSize{get { return 12; }}

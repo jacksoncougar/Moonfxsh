@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class DecoratorModelsBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID modelName;
+        internal Moonfish.Tags.StringIdent modelName;
         internal short indexStart;
         internal short indexCount;
         

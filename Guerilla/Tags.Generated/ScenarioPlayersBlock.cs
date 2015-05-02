@@ -34,8 +34,8 @@ namespace Moonfish.Guerilla.Tags
         internal SpawnType1 spawnType1;
         internal SpawnType2 spawnType2;
         internal SpawnType3 spawnType3;
-        internal Moonfish.Tags.StringID eMPTYSTRING;
-        internal Moonfish.Tags.StringID eMPTYSTRING0;
+        internal Moonfish.Tags.StringIdent eMPTYSTRING;
+        internal Moonfish.Tags.StringIdent eMPTYSTRING0;
         internal CampaignPlayerType campaignPlayerType;
         internal byte[] invalidName_;
         

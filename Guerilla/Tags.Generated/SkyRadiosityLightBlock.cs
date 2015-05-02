@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// Light color.
         /// </summary>
-        internal Moonfish.Tags.ColorR8G8B8 color;
+        internal Moonfish.Tags.ColourR8G8B8 Colour;
         /// <summary>
         /// Light power from 0 to infinity.
         /// </summary>
@@ -49,7 +49,7 @@ namespace Moonfish.Guerilla.Tags
         public  SkyRadiosityLightBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             flags = (Flags)binaryReader.ReadInt32();
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
             power0Inf = binaryReader.ReadSingle();
             testDistanceWorldUnits = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(12);
@@ -62,7 +62,7 @@ namespace Moonfish.Guerilla.Tags
         public override void Read(BinaryReader binaryReader)
         {
             flags = (Flags)binaryReader.ReadInt32();
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
             power0Inf = binaryReader.ReadSingle();
             testDistanceWorldUnits = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(12);
@@ -73,7 +73,7 @@ namespace Moonfish.Guerilla.Tags
             using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(color);
+                binaryWriter.Write(Colour);
                 binaryWriter.Write(power0Inf);
                 binaryWriter.Write(testDistanceWorldUnits);
                 binaryWriter.Write(invalidName_, 0, 12);

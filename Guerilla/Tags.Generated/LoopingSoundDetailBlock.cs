@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 52, Alignment = 4)]
     public class LoopingSoundDetailBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         [TagReference("snd!")]
         internal Moonfish.Tags.TagReference sound;
         /// <summary>

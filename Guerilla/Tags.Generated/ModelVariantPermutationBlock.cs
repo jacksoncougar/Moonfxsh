@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 32, Alignment = 4)]
     public class ModelVariantPermutationBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID permutationName;
+        internal Moonfish.Tags.StringIdent permutationName;
         internal byte[] invalidName_;
         internal Flags flags;
         internal byte[] invalidName_0;

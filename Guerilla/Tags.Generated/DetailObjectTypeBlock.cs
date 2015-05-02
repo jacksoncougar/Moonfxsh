@@ -35,8 +35,8 @@ namespace Moonfish.Guerilla.Tags
         internal float farFadeDistanceWorldUnits;
         internal float sizeWorldUnitsPerPixel;
         internal byte[] invalidName_1;
-        internal Moonfish.Tags.ColorR8G8B8 minimumColor01;
-        internal Moonfish.Tags.ColorR8G8B8 maximumColor01;
+        internal Moonfish.Tags.ColourR8G8B8 minimumColor01;
+        internal Moonfish.Tags.ColourR8G8B8 maximumColor01;
         internal Moonfish.Tags.ColourA1R1G1B1 ambientColor0255;
         internal byte[] invalidName_2;
         

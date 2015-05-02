@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 tangent;
         internal OpenTK.Vector3 anisotropicBinormal;
         internal OpenTK.Vector2 secondaryTexcoord;
-        internal Moonfish.Tags.ColorR8G8B8 primaryLightmapColor;
+        internal Moonfish.Tags.ColourR8G8B8 PrimaryLightmapColour;
         internal OpenTK.Vector2 primaryLightmapTexcoord;
         internal OpenTK.Vector3 primaryLightmapIncidentDirection;
         internal byte[] invalidName_;
@@ -60,7 +60,7 @@ namespace Moonfish.Guerilla.Tags
             tangent = binaryReader.ReadVector3();
             anisotropicBinormal = binaryReader.ReadVector3();
             secondaryTexcoord = binaryReader.ReadVector2();
-            primaryLightmapColor = binaryReader.ReadColorR8G8B8();
+            PrimaryLightmapColour = binaryReader.ReadColorR8G8B8();
             primaryLightmapTexcoord = binaryReader.ReadVector2();
             primaryLightmapIncidentDirection = binaryReader.ReadVector3();
             invalidName_ = binaryReader.ReadBytes(12);
@@ -85,7 +85,7 @@ namespace Moonfish.Guerilla.Tags
             tangent = binaryReader.ReadVector3();
             anisotropicBinormal = binaryReader.ReadVector3();
             secondaryTexcoord = binaryReader.ReadVector2();
-            primaryLightmapColor = binaryReader.ReadColorR8G8B8();
+            PrimaryLightmapColour = binaryReader.ReadColorR8G8B8();
             primaryLightmapTexcoord = binaryReader.ReadVector2();
             primaryLightmapIncidentDirection = binaryReader.ReadVector3();
             invalidName_ = binaryReader.ReadBytes(12);
@@ -117,7 +117,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(tangent);
                 binaryWriter.Write(anisotropicBinormal);
                 binaryWriter.Write(secondaryTexcoord);
-                binaryWriter.Write(primaryLightmapColor);
+                binaryWriter.Write(PrimaryLightmapColour);
                 binaryWriter.Write(primaryLightmapTexcoord);
                 binaryWriter.Write(primaryLightmapIncidentDirection);
                 binaryWriter.Write(invalidName_, 0, 12);

@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 16, Alignment = 4)]
     public class RenderModelPermutationBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal short l1SectionIndexSuperLow;
         internal short l2SectionIndexLow;
         internal short l3SectionIndexMedium;

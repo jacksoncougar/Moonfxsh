@@ -26,8 +26,8 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal State state;
         internal byte[] invalidName_0;
-        internal Moonfish.Tags.StringID ffaMessage;
-        internal Moonfish.Tags.StringID teamMessage;
+        internal Moonfish.Tags.StringIdent ffaMessage;
+        internal Moonfish.Tags.StringIdent teamMessage;
         [TagReference("null")]
         internal Moonfish.Tags.TagReference invalidName_1;
         internal byte[] invalidName_2;

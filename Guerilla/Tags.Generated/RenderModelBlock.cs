@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 132, Alignment = 4)]
     public class RenderModelBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal Flags flags;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;

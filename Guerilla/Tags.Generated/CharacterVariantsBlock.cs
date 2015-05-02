@@ -22,10 +22,10 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 12, Alignment = 4)]
     public class CharacterVariantsBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID variantName;
+        internal Moonfish.Tags.StringIdent variantName;
         internal short variantIndex;
         internal byte[] invalidName_;
-        internal Moonfish.Tags.StringID variantDesignator;
+        internal Moonfish.Tags.StringIdent variantDesignator;
         
         public override int SerializedSize{get { return 12; }}
         

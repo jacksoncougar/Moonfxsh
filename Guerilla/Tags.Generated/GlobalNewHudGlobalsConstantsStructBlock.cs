@@ -26,8 +26,8 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference primaryMessageSound;
         [TagReference("null")]
         internal Moonfish.Tags.TagReference secondaryMessageSound;
-        internal Moonfish.Tags.StringID bootGrieferString;
-        internal Moonfish.Tags.StringID cannotBootGrieferString;
+        internal Moonfish.Tags.StringIdent bootGrieferString;
+        internal Moonfish.Tags.StringIdent cannotBootGrieferString;
         [TagReference("shad")]
         internal Moonfish.Tags.TagReference trainingShader;
         [TagReference("bitm")]

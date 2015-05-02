@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 16, Alignment = 4)]
     public class SoundEffectTemplateAdditionalSoundInputBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID dspEffect;
+        internal Moonfish.Tags.StringIdent dspEffect;
         internal MappingFunctionBlock lowFrequencySound;
         internal float timePeriodSeconds;
         

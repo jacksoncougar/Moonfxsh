@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 4, Alignment = 4)]
     public class LocalStringIdListStringReferenceBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID stringId;
+        internal Moonfish.Tags.StringIdent StringIdent;
         
         public override int SerializedSize{get { return 4; }}
         
@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
         
         public  LocalStringIdListStringReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            stringId = binaryReader.ReadStringID();
+            StringIdent = binaryReader.ReadStringID();
         }
         public  LocalStringIdListStringReferenceBlockBase(): base()
         {
@@ -39,13 +39,13 @@ namespace Moonfish.Guerilla.Tags
         }
         public override void Read(BinaryReader binaryReader)
         {
-            stringId = binaryReader.ReadStringID();
+            StringIdent = binaryReader.ReadStringID();
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write(stringId);
+                binaryWriter.Write(StringIdent);
                 return nextAddress;
             }
         }

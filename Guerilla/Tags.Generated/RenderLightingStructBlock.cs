@@ -22,13 +22,13 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 84, Alignment = 4)]
     public class RenderLightingStructBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.ColorR8G8B8 ambient;
+        internal Moonfish.Tags.ColourR8G8B8 ambient;
         internal OpenTK.Vector3 shadowDirection;
         internal float lightingAccuracy;
         internal float shadowOpacity;
-        internal Moonfish.Tags.ColorR8G8B8 primaryDirectionColor;
+        internal Moonfish.Tags.ColourR8G8B8 PrimaryDirectionColour;
         internal OpenTK.Vector3 primaryDirection;
-        internal Moonfish.Tags.ColorR8G8B8 secondaryDirectionColor;
+        internal Moonfish.Tags.ColourR8G8B8 SecondaryDirectionColour;
         internal OpenTK.Vector3 secondaryDirection;
         internal short shIndex;
         internal byte[] invalidName_;
@@ -44,9 +44,9 @@ namespace Moonfish.Guerilla.Tags
             shadowDirection = binaryReader.ReadVector3();
             lightingAccuracy = binaryReader.ReadSingle();
             shadowOpacity = binaryReader.ReadSingle();
-            primaryDirectionColor = binaryReader.ReadColorR8G8B8();
+            PrimaryDirectionColour = binaryReader.ReadColorR8G8B8();
             primaryDirection = binaryReader.ReadVector3();
-            secondaryDirectionColor = binaryReader.ReadColorR8G8B8();
+            SecondaryDirectionColour = binaryReader.ReadColorR8G8B8();
             secondaryDirection = binaryReader.ReadVector3();
             shIndex = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -61,9 +61,9 @@ namespace Moonfish.Guerilla.Tags
             shadowDirection = binaryReader.ReadVector3();
             lightingAccuracy = binaryReader.ReadSingle();
             shadowOpacity = binaryReader.ReadSingle();
-            primaryDirectionColor = binaryReader.ReadColorR8G8B8();
+            PrimaryDirectionColour = binaryReader.ReadColorR8G8B8();
             primaryDirection = binaryReader.ReadVector3();
-            secondaryDirectionColor = binaryReader.ReadColorR8G8B8();
+            SecondaryDirectionColour = binaryReader.ReadColorR8G8B8();
             secondaryDirection = binaryReader.ReadVector3();
             shIndex = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -76,9 +76,9 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(shadowDirection);
                 binaryWriter.Write(lightingAccuracy);
                 binaryWriter.Write(shadowOpacity);
-                binaryWriter.Write(primaryDirectionColor);
+                binaryWriter.Write(PrimaryDirectionColour);
                 binaryWriter.Write(primaryDirection);
-                binaryWriter.Write(secondaryDirectionColor);
+                binaryWriter.Write(SecondaryDirectionColour);
                 binaryWriter.Write(secondaryDirection);
                 binaryWriter.Write(shIndex);
                 binaryWriter.Write(invalidName_, 0, 2);

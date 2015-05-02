@@ -82,11 +82,11 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// where the primary weapon is attached
         /// </summary>
-        internal Moonfish.Tags.StringID rightHandNode;
+        internal Moonfish.Tags.StringIdent rightHandNode;
         /// <summary>
         /// where the seconday weapon is attached (for dual-pistol modes)
         /// </summary>
-        internal Moonfish.Tags.StringID leftHandNode;
+        internal Moonfish.Tags.StringIdent leftHandNode;
         internal UnitAdditionalNodeNamesStructBlock moreDamnNodes;
         [TagReference("jpt!")]
         internal Moonfish.Tags.TagReference meleeDamage;

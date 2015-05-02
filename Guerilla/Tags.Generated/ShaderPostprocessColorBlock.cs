@@ -23,7 +23,7 @@ namespace Moonfish.Guerilla.Tags
     public class ShaderPostprocessColorBlockBase : GuerillaBlock
     {
         internal byte parameterIndex;
-        internal Moonfish.Tags.ColorR8G8B8 color;
+        internal Moonfish.Tags.ColourR8G8B8 Colour;
         
         public override int SerializedSize{get { return 13; }}
         
@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
         public  ShaderPostprocessColorBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             parameterIndex = binaryReader.ReadByte();
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
         }
         public  ShaderPostprocessColorBlockBase(): base()
         {
@@ -42,14 +42,14 @@ namespace Moonfish.Guerilla.Tags
         public override void Read(BinaryReader binaryReader)
         {
             parameterIndex = binaryReader.ReadByte();
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
             using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(parameterIndex);
-                binaryWriter.Write(color);
+                binaryWriter.Write(Colour);
                 return nextAddress;
             }
         }

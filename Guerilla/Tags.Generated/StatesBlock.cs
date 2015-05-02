@@ -23,7 +23,7 @@ namespace Moonfish.Guerilla.Tags
     public class StatesBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
-        internal Moonfish.Tags.ColorR8G8B8 color;
+        internal Moonfish.Tags.ColourR8G8B8 Colour;
         internal short countsAsNeighbors;
         internal byte[] invalidName_;
         internal float initialPlacementWeight;
@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
         public  StatesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
             name = binaryReader.ReadString32();
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
             countsAsNeighbors = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             initialPlacementWeight = binaryReader.ReadSingle();
@@ -70,7 +70,7 @@ namespace Moonfish.Guerilla.Tags
         public override void Read(BinaryReader binaryReader)
         {
             name = binaryReader.ReadString32();
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
             countsAsNeighbors = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             initialPlacementWeight = binaryReader.ReadSingle();
@@ -91,7 +91,7 @@ namespace Moonfish.Guerilla.Tags
             using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
-                binaryWriter.Write(color);
+                binaryWriter.Write(Colour);
                 binaryWriter.Write(countsAsNeighbors);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(initialPlacementWeight);

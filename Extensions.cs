@@ -67,14 +67,14 @@ namespace Moonfish
             return new Range( binary_reader.ReadSingle( ), binary_reader.ReadSingle( ) );
         }
 
-        public static void Write( this BinaryWriter binary_writer, StringID string_id )
+        public static void Write( this BinaryWriter binary_writer, StringIdent stringIdent )
         {
-            binary_writer.Write( ( int ) string_id );
+            binary_writer.Write( ( int ) stringIdent );
         }
 
-        public static StringID ReadStringID( this BinaryReader binary_reader )
+        public static StringIdent ReadStringID( this BinaryReader binary_reader )
         {
-            return ( StringID ) binary_reader.ReadInt32( );
+            return ( StringIdent ) binary_reader.ReadInt32( );
         }
 
         public static double[] ToArray( this Vector3 vector3 )

@@ -32,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
     public class ShaderTemplateBlockBase : GuerillaBlock
     {
         internal byte[] documentation;
-        internal Moonfish.Tags.StringID defaultMaterialName;
+        internal Moonfish.Tags.StringIdent defaultMaterialName;
         internal byte[] invalidName_;
         internal Flags flags;
         internal ShaderTemplatePropertyBlock[] properties;

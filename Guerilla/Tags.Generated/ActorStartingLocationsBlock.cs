@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 100, Alignment = 4)]
     public class ActorStartingLocationsBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal OpenTK.Vector3 position;
         internal short referenceFrame;
         internal byte[] invalidName_;
@@ -39,8 +39,8 @@ namespace Moonfish.Guerilla.Tags
         /// number of cretures in swarm if a swarm is spawned at this location
         /// </summary>
         internal short swarmCount;
-        internal Moonfish.Tags.StringID actorVariantName;
-        internal Moonfish.Tags.StringID vehicleVariantName;
+        internal Moonfish.Tags.StringIdent actorVariantName;
+        internal Moonfish.Tags.StringIdent vehicleVariantName;
         /// <summary>
         /// before doing anything else, the actor will travel the given distance in its forward direction
         /// </summary>

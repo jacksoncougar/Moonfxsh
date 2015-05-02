@@ -23,12 +23,12 @@ namespace Moonfish.Guerilla.Tags
     public class ObjectChangeColorInitialPermutationBase : GuerillaBlock
     {
         internal float weight;
-        internal Moonfish.Tags.ColorR8G8B8 colorLowerBound;
-        internal Moonfish.Tags.ColorR8G8B8 colorUpperBound;
+        internal Moonfish.Tags.ColourR8G8B8 ColourLowerBound;
+        internal Moonfish.Tags.ColourR8G8B8 ColourUpperBound;
         /// <summary>
         /// if empty, may be used by any model variant
         /// </summary>
-        internal Moonfish.Tags.StringID variantName;
+        internal Moonfish.Tags.StringIdent variantName;
         
         public override int SerializedSize{get { return 32; }}
         
@@ -38,8 +38,8 @@ namespace Moonfish.Guerilla.Tags
         public  ObjectChangeColorInitialPermutationBase(BinaryReader binaryReader): base(binaryReader)
         {
             weight = binaryReader.ReadSingle();
-            colorLowerBound = binaryReader.ReadColorR8G8B8();
-            colorUpperBound = binaryReader.ReadColorR8G8B8();
+            ColourLowerBound = binaryReader.ReadColorR8G8B8();
+            ColourUpperBound = binaryReader.ReadColorR8G8B8();
             variantName = binaryReader.ReadStringID();
         }
         public  ObjectChangeColorInitialPermutationBase(): base()
@@ -49,8 +49,8 @@ namespace Moonfish.Guerilla.Tags
         public override void Read(BinaryReader binaryReader)
         {
             weight = binaryReader.ReadSingle();
-            colorLowerBound = binaryReader.ReadColorR8G8B8();
-            colorUpperBound = binaryReader.ReadColorR8G8B8();
+            ColourLowerBound = binaryReader.ReadColorR8G8B8();
+            ColourUpperBound = binaryReader.ReadColorR8G8B8();
             variantName = binaryReader.ReadStringID();
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
@@ -58,8 +58,8 @@ namespace Moonfish.Guerilla.Tags
             using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(weight);
-                binaryWriter.Write(colorLowerBound);
-                binaryWriter.Write(colorUpperBound);
+                binaryWriter.Write(ColourLowerBound);
+                binaryWriter.Write(ColourUpperBound);
                 binaryWriter.Write(variantName);
                 return nextAddress;
             }

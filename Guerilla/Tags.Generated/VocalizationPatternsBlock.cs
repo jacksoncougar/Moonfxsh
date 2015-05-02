@@ -24,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
     {
         internal DialogueType dialogueType;
         internal short vocalizationIndex;
-        internal Moonfish.Tags.StringID vocalizationName;
+        internal Moonfish.Tags.StringIdent vocalizationName;
         internal SpeakerType speakerType;
         internal Flags flags;
         /// <summary>
@@ -48,13 +48,13 @@ namespace Moonfish.Guerilla.Tags
         internal CauseActorType causeActorType;
         internal CauseType causeType;
         internal SubjectType subjectType;
-        internal Moonfish.Tags.StringID causeAiTypeName;
+        internal Moonfish.Tags.StringIdent causeAiTypeName;
         /// <summary>
         /// with respect to the subject, the cause is ...
         /// </summary>
         internal SpatialRelationWithRespectToTheSubjectTheCauseIs spatialRelation;
         internal byte[] invalidName_2;
-        internal Moonfish.Tags.StringID subjectAiTypeName;
+        internal Moonfish.Tags.StringIdent subjectAiTypeName;
         internal byte[] invalidName_3;
         internal Conditions conditions;
         

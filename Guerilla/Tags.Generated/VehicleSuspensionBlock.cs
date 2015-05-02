@@ -22,13 +22,13 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 40, Alignment = 4)]
     public class VehicleSuspensionBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID label;
+        internal Moonfish.Tags.StringIdent label;
         internal AnimationIndexStructBlock animation;
-        internal Moonfish.Tags.StringID markerName;
+        internal Moonfish.Tags.StringIdent markerName;
         internal float massPointOffset;
         internal float fullExtensionGroundDepth;
         internal float fullCompressionGroundDepth;
-        internal Moonfish.Tags.StringID regionName;
+        internal Moonfish.Tags.StringIdent regionName;
         internal float destroyedMassPointOffset;
         internal float destroyedFullExtensionGroundDepth;
         internal float destroyedFullCompressionGroundDepth;

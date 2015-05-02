@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-public class GlobalStrings : IEnumerable<string>, IEnumerable<StringID>
+public class GlobalStrings : IEnumerable<string>, IEnumerable<StringIdent>
 {
     #region Static Fields
 
     private static readonly IList<string> globalStrings;
-    private static readonly StringID[] globalStringIDs;
+    private static readonly StringIdent[] globalStringIDs;
 
     #endregion;
 
@@ -2004,14 +2004,14 @@ public class GlobalStrings : IEnumerable<string>, IEnumerable<StringID>
 
         #endregion
 
-        globalStringIDs = new StringID[globalStrings.Count];
+        globalStringIDs = new StringIdent[globalStrings.Count];
         for ( short i = 0; i < globalStrings.Count; i++ )
         {
-            globalStringIDs[ i ] = new StringID( i, ( sbyte ) Encoding.UTF8.GetByteCount( globalStrings[ i ] ) );
+            globalStringIDs[ i ] = new StringIdent( i, ( sbyte ) Encoding.UTF8.GetByteCount( globalStrings[ i ] ) );
         }
     }
 
-    public string this[ StringID value ]
+    public string this[ StringIdent value ]
     {
         get
         {
@@ -2038,7 +2038,7 @@ public class GlobalStrings : IEnumerable<string>, IEnumerable<StringID>
         return globalStrings.GetEnumerator( );
     }
 
-    IEnumerator<StringID> IEnumerable<StringID>.GetEnumerator( )
+    IEnumerator<StringIdent> IEnumerable<StringIdent>.GetEnumerator( )
     {
         foreach ( var string_id in globalStringIDs ) yield return string_id;
     }

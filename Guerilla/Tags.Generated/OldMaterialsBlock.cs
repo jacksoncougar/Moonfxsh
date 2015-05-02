@@ -22,8 +22,8 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 36, Alignment = 4)]
     public class OldMaterialsBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID newMaterialName;
-        internal Moonfish.Tags.StringID newGeneralMaterialName;
+        internal Moonfish.Tags.StringIdent newMaterialName;
+        internal Moonfish.Tags.StringIdent newGeneralMaterialName;
         /// <summary>
         /// fraction of original velocity parallel to the ground after one tick
         /// </summary>

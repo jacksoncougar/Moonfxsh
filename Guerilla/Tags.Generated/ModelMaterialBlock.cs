@@ -22,12 +22,12 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class ModelMaterialBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID materialName;
+        internal Moonfish.Tags.StringIdent materialName;
         internal MaterialType materialType;
         internal Moonfish.Tags.ShortBlockIndex2 damageSection;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
-        internal Moonfish.Tags.StringID globalMaterialName;
+        internal Moonfish.Tags.StringIdent globalMaterialName;
         internal byte[] invalidName_1;
         
         public override int SerializedSize{get { return 20; }}

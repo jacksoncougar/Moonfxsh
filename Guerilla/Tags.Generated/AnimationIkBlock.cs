@@ -25,11 +25,11 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// the marker name on the object being attached
         /// </summary>
-        internal Moonfish.Tags.StringID marker;
+        internal Moonfish.Tags.StringIdent marker;
         /// <summary>
         /// the marker name object (weapon, vehicle, etc.) the above marker is being attached to
         /// </summary>
-        internal Moonfish.Tags.StringID attachToMarker;
+        internal Moonfish.Tags.StringIdent attachToMarker;
         
         public override int SerializedSize{get { return 8; }}
         

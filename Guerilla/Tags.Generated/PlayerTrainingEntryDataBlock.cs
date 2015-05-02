@@ -25,15 +25,15 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// comes out of the HUD text globals
         /// </summary>
-        internal Moonfish.Tags.StringID displayString;
+        internal Moonfish.Tags.StringIdent displayString;
         /// <summary>
         /// comes out of the HUD text globals, used for grouped prompt
         /// </summary>
-        internal Moonfish.Tags.StringID displayString2;
+        internal Moonfish.Tags.StringIdent displayString2;
         /// <summary>
         /// comes out of the HUD text globals, used for ungrouped prompt
         /// </summary>
-        internal Moonfish.Tags.StringID displayString3;
+        internal Moonfish.Tags.StringIdent displayString3;
         /// <summary>
         /// how long the message can be on screen before being hidden
         /// </summary>

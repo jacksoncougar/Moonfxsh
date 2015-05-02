@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 88, Alignment = 4)]
     public class LoopingSoundTrackBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal Flags flags;
         internal float gainDB;
         internal float fadeInDurationSeconds;

@@ -22,8 +22,8 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 32, Alignment = 4)]
     public class AmbientLightStructBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.ColorR8G8B8 minLightmapSample;
-        internal Moonfish.Tags.ColorR8G8B8 maxLightmapSample;
+        internal Moonfish.Tags.ColourR8G8B8 minLightmapSample;
+        internal Moonfish.Tags.ColourR8G8B8 maxLightmapSample;
         internal MappingFunctionBlock function;
         
         public override int SerializedSize{get { return 32; }}

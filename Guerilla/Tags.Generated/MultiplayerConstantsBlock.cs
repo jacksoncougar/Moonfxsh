@@ -49,8 +49,8 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference bombExplodeDmgEffect;
         [TagReference("effe")]
         internal Moonfish.Tags.TagReference bombDefuseEffect;
-        internal Moonfish.Tags.StringID bombDefusalString;
-        internal Moonfish.Tags.StringID blockedTeleporterString;
+        internal Moonfish.Tags.StringIdent bombDefusalString;
+        internal Moonfish.Tags.StringIdent blockedTeleporterString;
         internal byte[] invalidName_3;
         internal byte[] invalidName_4;
         internal byte[] invalidName_5;

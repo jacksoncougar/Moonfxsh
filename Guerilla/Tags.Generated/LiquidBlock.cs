@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
     {
         internal byte[] invalidName_;
         internal Type type;
-        internal Moonfish.Tags.StringID attachmentMarkerName;
+        internal Moonfish.Tags.StringIdent attachmentMarkerName;
         internal byte[] invalidName_0;
         internal float falloffDistanceFromCameraWorldUnits;
         internal float cutoffDistanceFromCameraWorldUnits;

@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 52, Alignment = 4)]
     public class WeaponTypeBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID label;
+        internal Moonfish.Tags.StringIdent label;
         internal AnimationEntryBlock[] actionsAABBCC;
         internal AnimationEntryBlock[] overlaysAABBCC;
         internal DamageAnimationBlock[] deathAndDamageAABBCC;

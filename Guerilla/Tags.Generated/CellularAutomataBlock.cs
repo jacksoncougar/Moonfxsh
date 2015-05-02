@@ -39,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
         internal float yDepthWorldUnits;
         internal float zHeightWorldUnits;
         internal byte[] invalidName_;
-        internal Moonfish.Tags.StringID marker;
+        internal Moonfish.Tags.StringIdent marker;
         internal float cellBirthChance01;
         internal byte[] invalidName_0;
         internal int cellGeneMutates1InTimes;

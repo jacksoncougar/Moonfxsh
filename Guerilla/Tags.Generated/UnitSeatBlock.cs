@@ -23,12 +23,12 @@ namespace Moonfish.Guerilla.Tags
     public class UnitSeatBlockBase : GuerillaBlock
     {
         internal Flags flags;
-        internal Moonfish.Tags.StringID label;
-        internal Moonfish.Tags.StringID markerName;
-        internal Moonfish.Tags.StringID entryMarkerSName;
-        internal Moonfish.Tags.StringID boardingGrenadeMarker;
-        internal Moonfish.Tags.StringID boardingGrenadeString;
-        internal Moonfish.Tags.StringID boardingMeleeString;
+        internal Moonfish.Tags.StringIdent label;
+        internal Moonfish.Tags.StringIdent markerName;
+        internal Moonfish.Tags.StringIdent entryMarkerSName;
+        internal Moonfish.Tags.StringIdent boardingGrenadeMarker;
+        internal Moonfish.Tags.StringIdent boardingGrenadeString;
+        internal Moonfish.Tags.StringIdent boardingMeleeString;
         /// <summary>
         /// nathan is too lazy to make pings for each seat.
         /// </summary>
@@ -52,7 +52,7 @@ namespace Moonfish.Guerilla.Tags
         internal float speedExponent;
         internal UnitCameraStructBlock unitCamera;
         internal UnitHudReferenceBlock[] unitHudInterface;
-        internal Moonfish.Tags.StringID enterSeatString;
+        internal Moonfish.Tags.StringIdent enterSeatString;
         internal float yawMinimum;
         internal float yawMaximum;
         [TagReference("char")]
@@ -70,7 +70,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float entryMarkerFacingAngle;
         internal float maximumRelativeVelocity;
-        internal Moonfish.Tags.StringID invisibleSeatRegion;
+        internal Moonfish.Tags.StringIdent invisibleSeatRegion;
         internal int runtimeInvisibleSeatRegionIndex;
         
         public override int SerializedSize{get { return 176; }}

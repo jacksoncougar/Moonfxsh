@@ -24,10 +24,10 @@ namespace Moonfish.Guerilla.Tags
     {
         internal byte[] invalidName_;
         internal ScaleFlags scaleFlags;
-        internal Moonfish.Tags.ColorR8G8B8 colorLowerBound;
-        internal Moonfish.Tags.ColorR8G8B8 colorUpperBound;
-        internal Moonfish.Tags.StringID darkenBy;
-        internal Moonfish.Tags.StringID scaleBy;
+        internal Moonfish.Tags.ColourR8G8B8 ColourLowerBound;
+        internal Moonfish.Tags.ColourR8G8B8 ColourUpperBound;
+        internal Moonfish.Tags.StringIdent darkenBy;
+        internal Moonfish.Tags.StringIdent scaleBy;
         
         public override int SerializedSize{get { return 40; }}
         
@@ -38,8 +38,8 @@ namespace Moonfish.Guerilla.Tags
         {
             invalidName_ = binaryReader.ReadBytes(4);
             scaleFlags = (ScaleFlags)binaryReader.ReadInt32();
-            colorLowerBound = binaryReader.ReadColorR8G8B8();
-            colorUpperBound = binaryReader.ReadColorR8G8B8();
+            ColourLowerBound = binaryReader.ReadColorR8G8B8();
+            ColourUpperBound = binaryReader.ReadColorR8G8B8();
             darkenBy = binaryReader.ReadStringID();
             scaleBy = binaryReader.ReadStringID();
         }
@@ -51,8 +51,8 @@ namespace Moonfish.Guerilla.Tags
         {
             invalidName_ = binaryReader.ReadBytes(4);
             scaleFlags = (ScaleFlags)binaryReader.ReadInt32();
-            colorLowerBound = binaryReader.ReadColorR8G8B8();
-            colorUpperBound = binaryReader.ReadColorR8G8B8();
+            ColourLowerBound = binaryReader.ReadColorR8G8B8();
+            ColourUpperBound = binaryReader.ReadColorR8G8B8();
             darkenBy = binaryReader.ReadStringID();
             scaleBy = binaryReader.ReadStringID();
         }
@@ -62,8 +62,8 @@ namespace Moonfish.Guerilla.Tags
             {
                 binaryWriter.Write(invalidName_, 0, 4);
                 binaryWriter.Write((Int32)scaleFlags);
-                binaryWriter.Write(colorLowerBound);
-                binaryWriter.Write(colorUpperBound);
+                binaryWriter.Write(ColourLowerBound);
+                binaryWriter.Write(ColourUpperBound);
                 binaryWriter.Write(darkenBy);
                 binaryWriter.Write(scaleBy);
                 return nextAddress;

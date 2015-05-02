@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 56, Alignment = 4)]
     public class GlobalDamageSectionBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal Flags flags;
         /// <summary>
         /// percentage of total object vitality
@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
         internal float stunTimeSeconds;
         internal float rechargeTimeSeconds;
         internal byte[] invalidName_;
-        internal Moonfish.Tags.StringID resurrectionRestoredRegionName;
+        internal Moonfish.Tags.StringIdent resurrectionRestoredRegionName;
         internal byte[] invalidName_0;
         
         public override int SerializedSize{get { return 56; }}

@@ -25,8 +25,8 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         [TagReference("egor")]
         internal Moonfish.Tags.TagReference screenEffect;
-        internal Moonfish.Tags.StringID primaryInputInterpolator;
-        internal Moonfish.Tags.StringID secondaryInputInterpolator;
+        internal Moonfish.Tags.StringIdent primaryInputInterpolator;
+        internal Moonfish.Tags.StringIdent secondaryInputInterpolator;
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
         

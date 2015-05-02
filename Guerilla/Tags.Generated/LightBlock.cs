@@ -77,10 +77,10 @@ namespace Moonfish.Guerilla.Tags
         internal float cutoffDistance;
         internal InterpolationFlags interpolationFlags;
         internal Moonfish.Model.Range bloomBounds02;
-        internal Moonfish.Tags.ColorR8G8B8 specularLowerBound;
-        internal Moonfish.Tags.ColorR8G8B8 specularUpperBound;
-        internal Moonfish.Tags.ColorR8G8B8 diffuseLowerBound;
-        internal Moonfish.Tags.ColorR8G8B8 diffuseUpperBound;
+        internal Moonfish.Tags.ColourR8G8B8 specularLowerBound;
+        internal Moonfish.Tags.ColourR8G8B8 specularUpperBound;
+        internal Moonfish.Tags.ColourR8G8B8 diffuseLowerBound;
+        internal Moonfish.Tags.ColourR8G8B8 diffuseUpperBound;
         internal Moonfish.Model.Range brightnessBounds02;
         /// <summary>
         /// must be a cubemap for spherical light and a 2d texture for frustum light

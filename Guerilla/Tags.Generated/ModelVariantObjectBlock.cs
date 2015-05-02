@@ -22,8 +22,8 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 16, Alignment = 4)]
     public class ModelVariantObjectBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID parentMarker;
-        internal Moonfish.Tags.StringID childMarker;
+        internal Moonfish.Tags.StringIdent parentMarker;
+        internal Moonfish.Tags.StringIdent childMarker;
         [TagReference("obje")]
         internal Moonfish.Tags.TagReference childObject;
         

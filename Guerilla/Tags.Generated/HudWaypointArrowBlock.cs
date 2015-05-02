@@ -24,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Moonfish.Tags.String32 name;
         internal byte[] invalidName_;
-        internal Moonfish.Tags.RGBColor color;
+        internal Moonfish.Tags.ColourR1G1B1 color;
         internal byte[] invalidName_0;
         internal float opacity;
         internal float translucency;
@@ -45,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
         {
             name = binaryReader.ReadString32();
             invalidName_ = binaryReader.ReadBytes(8);
-            color = binaryReader.ReadRGBColor();
+            color = binaryReader.ReadColourR1G1B1();
             invalidName_0 = binaryReader.ReadBytes(1);
             opacity = binaryReader.ReadSingle();
             translucency = binaryReader.ReadSingle();
@@ -65,7 +65,7 @@ namespace Moonfish.Guerilla.Tags
         {
             name = binaryReader.ReadString32();
             invalidName_ = binaryReader.ReadBytes(8);
-            color = binaryReader.ReadRGBColor();
+            color = binaryReader.ReadColourR1G1B1();
             invalidName_0 = binaryReader.ReadBytes(1);
             opacity = binaryReader.ReadSingle();
             translucency = binaryReader.ReadSingle();

@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 16, Alignment = 4)]
     public class ScenarioPlanarFogPaletteBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         [TagReference("fog ")]
         internal Moonfish.Tags.TagReference planarFog;
         internal byte[] invalidName_;

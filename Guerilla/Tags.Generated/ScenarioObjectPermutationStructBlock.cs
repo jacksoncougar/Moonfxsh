@@ -22,12 +22,12 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class ScenarioObjectPermutationStructBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID variantName;
+        internal Moonfish.Tags.StringIdent variantName;
         internal ActiveChangeColors activeChangeColors;
-        internal Moonfish.Tags.RGBColor primaryColor;
-        internal Moonfish.Tags.RGBColor secondaryColor;
-        internal Moonfish.Tags.RGBColor tertiaryColor;
-        internal Moonfish.Tags.RGBColor quaternaryColor;
+        internal Moonfish.Tags.ColourR1G1B1 primaryColor;
+        internal Moonfish.Tags.ColourR1G1B1 secondaryColor;
+        internal Moonfish.Tags.ColourR1G1B1 tertiaryColor;
+        internal Moonfish.Tags.ColourR1G1B1 quaternaryColor;
         
         public override int SerializedSize{get { return 20; }}
         
@@ -38,10 +38,10 @@ namespace Moonfish.Guerilla.Tags
         {
             variantName = binaryReader.ReadStringID();
             activeChangeColors = (ActiveChangeColors)binaryReader.ReadInt32();
-            primaryColor = binaryReader.ReadRGBColor();
-            secondaryColor = binaryReader.ReadRGBColor();
-            tertiaryColor = binaryReader.ReadRGBColor();
-            quaternaryColor = binaryReader.ReadRGBColor();
+            primaryColor = binaryReader.ReadColourR1G1B1();
+            secondaryColor = binaryReader.ReadColourR1G1B1();
+            tertiaryColor = binaryReader.ReadColourR1G1B1();
+            quaternaryColor = binaryReader.ReadColourR1G1B1();
         }
         public  ScenarioObjectPermutationStructBlockBase(): base()
         {
@@ -51,10 +51,10 @@ namespace Moonfish.Guerilla.Tags
         {
             variantName = binaryReader.ReadStringID();
             activeChangeColors = (ActiveChangeColors)binaryReader.ReadInt32();
-            primaryColor = binaryReader.ReadRGBColor();
-            secondaryColor = binaryReader.ReadRGBColor();
-            tertiaryColor = binaryReader.ReadRGBColor();
-            quaternaryColor = binaryReader.ReadRGBColor();
+            primaryColor = binaryReader.ReadColourR1G1B1();
+            secondaryColor = binaryReader.ReadColourR1G1B1();
+            tertiaryColor = binaryReader.ReadColourR1G1B1();
+            quaternaryColor = binaryReader.ReadColourR1G1B1();
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {

@@ -22,9 +22,9 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class DamageConstraintInfoBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID physicsModelConstraintName;
-        internal Moonfish.Tags.StringID damageConstraintName;
-        internal Moonfish.Tags.StringID damageConstraintGroupName;
+        internal Moonfish.Tags.StringIdent physicsModelConstraintName;
+        internal Moonfish.Tags.StringIdent damageConstraintName;
+        internal Moonfish.Tags.StringIdent damageConstraintGroupName;
         internal float groupProbabilityScale;
         internal byte[] invalidName_;
         

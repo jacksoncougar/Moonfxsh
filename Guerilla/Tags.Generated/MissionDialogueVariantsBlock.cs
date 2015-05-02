@@ -25,10 +25,10 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// 3-letter designation for the character^
         /// </summary>
-        internal Moonfish.Tags.StringID variantDesignation;
+        internal Moonfish.Tags.StringIdent variantDesignation;
         [TagReference("snd!")]
         internal Moonfish.Tags.TagReference sound;
-        internal Moonfish.Tags.StringID soundEffect;
+        internal Moonfish.Tags.StringIdent soundEffect;
         
         public override int SerializedSize{get { return 16; }}
         

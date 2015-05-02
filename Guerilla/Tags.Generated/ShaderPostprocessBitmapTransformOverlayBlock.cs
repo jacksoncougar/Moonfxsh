@@ -25,8 +25,8 @@ namespace Moonfish.Guerilla.Tags
         internal byte parameterIndex;
         internal byte transformIndex;
         internal byte animationPropertyType;
-        internal Moonfish.Tags.StringID inputName;
-        internal Moonfish.Tags.StringID rangeName;
+        internal Moonfish.Tags.StringIdent inputName;
+        internal Moonfish.Tags.StringIdent rangeName;
         internal float timePeriodInSeconds;
         internal ScalarFunctionStructBlock function;
         

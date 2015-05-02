@@ -25,7 +25,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// name of the state
         /// </summary>
-        internal Moonfish.Tags.StringID stateName;
+        internal Moonfish.Tags.StringIdent stateName;
         internal byte[] invalidName_;
         /// <summary>
         /// first level sub-index into state

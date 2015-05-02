@@ -32,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
     public class WeaponBlockBase : GuerillaBlock
     {
         internal Flags flags;
-        internal Moonfish.Tags.StringID invalidName_;
+        internal Moonfish.Tags.StringIdent invalidName_;
         internal SecondaryTriggerMode secondaryTriggerMode;
         /// <summary>
         /// if the second trigger loads alternate ammunition, this is the maximum number of shots that can be loaded at a time
@@ -147,9 +147,9 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// the node that get's attached to the unit's hand
         /// </summary>
-        internal Moonfish.Tags.StringID handleNode;
-        internal Moonfish.Tags.StringID weaponClass;
-        internal Moonfish.Tags.StringID weaponName;
+        internal Moonfish.Tags.StringIdent handleNode;
+        internal Moonfish.Tags.StringIdent weaponClass;
+        internal Moonfish.Tags.StringIdent weaponName;
         internal MultiplayerWeaponType multiplayerWeaponType;
         internal WeaponType weaponType;
         internal WeaponTrackingStructBlock tracking;

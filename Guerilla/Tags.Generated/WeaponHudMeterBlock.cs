@@ -35,9 +35,9 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_3;
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference meterBitmap;
-        internal Moonfish.Tags.RGBColor colorAtMeterMinimum;
-        internal Moonfish.Tags.RGBColor colorAtMeterMaximum;
-        internal Moonfish.Tags.RGBColor flashColor;
+        internal Moonfish.Tags.ColourR1G1B1 colorAtMeterMinimum;
+        internal Moonfish.Tags.ColourR1G1B1 colorAtMeterMaximum;
+        internal Moonfish.Tags.ColourR1G1B1 flashColor;
         internal Moonfish.Tags.ColourA1R1G1B1 emptyColor;
         internal Flags flags;
         internal byte minumumMeterValue;
@@ -74,9 +74,9 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes(2);
             invalidName_3 = binaryReader.ReadBytes(20);
             meterBitmap = binaryReader.ReadTagReference();
-            colorAtMeterMinimum = binaryReader.ReadRGBColor();
-            colorAtMeterMaximum = binaryReader.ReadRGBColor();
-            flashColor = binaryReader.ReadRGBColor();
+            colorAtMeterMinimum = binaryReader.ReadColourR1G1B1();
+            colorAtMeterMaximum = binaryReader.ReadColourR1G1B1();
+            flashColor = binaryReader.ReadColourR1G1B1();
             emptyColor = binaryReader.ReadColourA1R1G1B1();
             flags = (Flags)binaryReader.ReadByte();
             minumumMeterValue = binaryReader.ReadByte();
@@ -109,9 +109,9 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes(2);
             invalidName_3 = binaryReader.ReadBytes(20);
             meterBitmap = binaryReader.ReadTagReference();
-            colorAtMeterMinimum = binaryReader.ReadRGBColor();
-            colorAtMeterMaximum = binaryReader.ReadRGBColor();
-            flashColor = binaryReader.ReadRGBColor();
+            colorAtMeterMinimum = binaryReader.ReadColourR1G1B1();
+            colorAtMeterMaximum = binaryReader.ReadColourR1G1B1();
+            flashColor = binaryReader.ReadColourR1G1B1();
             emptyColor = binaryReader.ReadColourA1R1G1B1();
             flags = (Flags)binaryReader.ReadByte();
             minumumMeterValue = binaryReader.ReadByte();

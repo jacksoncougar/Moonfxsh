@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class ModelVariantRegionBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID regionNameMustMatchRegionNameInRenderModel;
+        internal Moonfish.Tags.StringIdent regionNameMustMatchRegionNameInRenderModel;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
         internal Moonfish.Tags.ShortBlockIndex1 parentVariant;

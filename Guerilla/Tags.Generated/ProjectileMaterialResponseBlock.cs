@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
         internal Response response;
         [TagReference("effe")]
         internal Moonfish.Tags.TagReference dONOTUSEOLDEffect;
-        internal Moonfish.Tags.StringID materialName;
+        internal Moonfish.Tags.StringIdent materialName;
         internal byte[] invalidName_;
         internal Response response0;
         internal Flags flags0;

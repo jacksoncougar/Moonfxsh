@@ -22,10 +22,10 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 60, Alignment = 4)]
     public class SecondaryLightStructBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.ColorR8G8B8 minLightmapColor;
-        internal Moonfish.Tags.ColorR8G8B8 maxLightmapColor;
-        internal Moonfish.Tags.ColorR8G8B8 minDiffuseSample;
-        internal Moonfish.Tags.ColorR8G8B8 maxDiffuseSample;
+        internal Moonfish.Tags.ColourR8G8B8 MinLightmapColour;
+        internal Moonfish.Tags.ColourR8G8B8 MaxLightmapColour;
+        internal Moonfish.Tags.ColourR8G8B8 minDiffuseSample;
+        internal Moonfish.Tags.ColourR8G8B8 maxDiffuseSample;
         /// <summary>
         /// degrees
         /// </summary>
@@ -39,8 +39,8 @@ namespace Moonfish.Guerilla.Tags
         
         public  SecondaryLightStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            minLightmapColor = binaryReader.ReadColorR8G8B8();
-            maxLightmapColor = binaryReader.ReadColorR8G8B8();
+            MinLightmapColour = binaryReader.ReadColorR8G8B8();
+            MaxLightmapColour = binaryReader.ReadColorR8G8B8();
             minDiffuseSample = binaryReader.ReadColorR8G8B8();
             maxDiffuseSample = binaryReader.ReadColorR8G8B8();
             zAxisRotation = binaryReader.ReadSingle();
@@ -52,8 +52,8 @@ namespace Moonfish.Guerilla.Tags
         }
         public override void Read(BinaryReader binaryReader)
         {
-            minLightmapColor = binaryReader.ReadColorR8G8B8();
-            maxLightmapColor = binaryReader.ReadColorR8G8B8();
+            MinLightmapColour = binaryReader.ReadColorR8G8B8();
+            MaxLightmapColour = binaryReader.ReadColorR8G8B8();
             minDiffuseSample = binaryReader.ReadColorR8G8B8();
             maxDiffuseSample = binaryReader.ReadColorR8G8B8();
             zAxisRotation = binaryReader.ReadSingle();
@@ -63,8 +63,8 @@ namespace Moonfish.Guerilla.Tags
         {
             using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write(minLightmapColor);
-                binaryWriter.Write(maxLightmapColor);
+                binaryWriter.Write(MinLightmapColour);
+                binaryWriter.Write(MaxLightmapColour);
                 binaryWriter.Write(minDiffuseSample);
                 binaryWriter.Write(maxDiffuseSample);
                 binaryWriter.Write(zAxisRotation);

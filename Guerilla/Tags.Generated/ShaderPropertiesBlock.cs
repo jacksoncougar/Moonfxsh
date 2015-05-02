@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference diffuseMap;
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference lightmapEmissiveMap;
-        internal Moonfish.Tags.ColorR8G8B8 lightmapEmissiveColor;
+        internal Moonfish.Tags.ColourR8G8B8 LightmapEmissiveColour;
         internal float lightmapEmissivePower;
         internal float lightmapResolutionScale;
         internal float lightmapHalfLife;
@@ -35,7 +35,7 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference alphaTestMap;
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference translucentMap;
-        internal Moonfish.Tags.ColorR8G8B8 lightmapTransparentColor;
+        internal Moonfish.Tags.ColourR8G8B8 LightmapTransparentColour;
         internal float lightmapTransparentAlpha;
         internal float lightmapFoliageScale;
         
@@ -48,14 +48,14 @@ namespace Moonfish.Guerilla.Tags
         {
             diffuseMap = binaryReader.ReadTagReference();
             lightmapEmissiveMap = binaryReader.ReadTagReference();
-            lightmapEmissiveColor = binaryReader.ReadColorR8G8B8();
+            LightmapEmissiveColour = binaryReader.ReadColorR8G8B8();
             lightmapEmissivePower = binaryReader.ReadSingle();
             lightmapResolutionScale = binaryReader.ReadSingle();
             lightmapHalfLife = binaryReader.ReadSingle();
             lightmapDiffuseScale = binaryReader.ReadSingle();
             alphaTestMap = binaryReader.ReadTagReference();
             translucentMap = binaryReader.ReadTagReference();
-            lightmapTransparentColor = binaryReader.ReadColorR8G8B8();
+            LightmapTransparentColour = binaryReader.ReadColorR8G8B8();
             lightmapTransparentAlpha = binaryReader.ReadSingle();
             lightmapFoliageScale = binaryReader.ReadSingle();
         }
@@ -67,14 +67,14 @@ namespace Moonfish.Guerilla.Tags
         {
             diffuseMap = binaryReader.ReadTagReference();
             lightmapEmissiveMap = binaryReader.ReadTagReference();
-            lightmapEmissiveColor = binaryReader.ReadColorR8G8B8();
+            LightmapEmissiveColour = binaryReader.ReadColorR8G8B8();
             lightmapEmissivePower = binaryReader.ReadSingle();
             lightmapResolutionScale = binaryReader.ReadSingle();
             lightmapHalfLife = binaryReader.ReadSingle();
             lightmapDiffuseScale = binaryReader.ReadSingle();
             alphaTestMap = binaryReader.ReadTagReference();
             translucentMap = binaryReader.ReadTagReference();
-            lightmapTransparentColor = binaryReader.ReadColorR8G8B8();
+            LightmapTransparentColour = binaryReader.ReadColorR8G8B8();
             lightmapTransparentAlpha = binaryReader.ReadSingle();
             lightmapFoliageScale = binaryReader.ReadSingle();
         }
@@ -84,14 +84,14 @@ namespace Moonfish.Guerilla.Tags
             {
                 binaryWriter.Write(diffuseMap);
                 binaryWriter.Write(lightmapEmissiveMap);
-                binaryWriter.Write(lightmapEmissiveColor);
+                binaryWriter.Write(LightmapEmissiveColour);
                 binaryWriter.Write(lightmapEmissivePower);
                 binaryWriter.Write(lightmapResolutionScale);
                 binaryWriter.Write(lightmapHalfLife);
                 binaryWriter.Write(lightmapDiffuseScale);
                 binaryWriter.Write(alphaTestMap);
                 binaryWriter.Write(translucentMap);
-                binaryWriter.Write(lightmapTransparentColor);
+                binaryWriter.Write(LightmapTransparentColour);
                 binaryWriter.Write(lightmapTransparentAlpha);
                 binaryWriter.Write(lightmapFoliageScale);
                 return nextAddress;

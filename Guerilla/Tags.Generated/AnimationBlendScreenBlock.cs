@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 28, Alignment = 4)]
     public class AnimationBlendScreenBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID label;
+        internal Moonfish.Tags.StringIdent label;
         internal AnimationAimingScreenStructBlock aimingScreen;
         
         public override int SerializedSize{get { return 28; }}

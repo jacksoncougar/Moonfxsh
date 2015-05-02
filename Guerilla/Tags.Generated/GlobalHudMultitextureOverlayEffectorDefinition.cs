@@ -30,8 +30,8 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range inBoundsSourceUnits;
         internal Moonfish.Model.Range outBoundsPixels;
         internal byte[] invalidName_1;
-        internal Moonfish.Tags.ColorR8G8B8 tintColorLowerBound;
-        internal Moonfish.Tags.ColorR8G8B8 tintColorUpperBound;
+        internal Moonfish.Tags.ColourR8G8B8 TintColourLowerBound;
+        internal Moonfish.Tags.ColourR8G8B8 TintColourUpperBound;
         internal PeriodicFunction periodicFunction;
         internal byte[] invalidName_2;
         internal float functionPeriodSeconds;
@@ -53,8 +53,8 @@ namespace Moonfish.Guerilla.Tags
             inBoundsSourceUnits = binaryReader.ReadRange();
             outBoundsPixels = binaryReader.ReadRange();
             invalidName_1 = binaryReader.ReadBytes(64);
-            tintColorLowerBound = binaryReader.ReadColorR8G8B8();
-            tintColorUpperBound = binaryReader.ReadColorR8G8B8();
+            TintColourLowerBound = binaryReader.ReadColorR8G8B8();
+            TintColourUpperBound = binaryReader.ReadColorR8G8B8();
             periodicFunction = (PeriodicFunction)binaryReader.ReadInt16();
             invalidName_2 = binaryReader.ReadBytes(2);
             functionPeriodSeconds = binaryReader.ReadSingle();
@@ -75,8 +75,8 @@ namespace Moonfish.Guerilla.Tags
             inBoundsSourceUnits = binaryReader.ReadRange();
             outBoundsPixels = binaryReader.ReadRange();
             invalidName_1 = binaryReader.ReadBytes(64);
-            tintColorLowerBound = binaryReader.ReadColorR8G8B8();
-            tintColorUpperBound = binaryReader.ReadColorR8G8B8();
+            TintColourLowerBound = binaryReader.ReadColorR8G8B8();
+            TintColourUpperBound = binaryReader.ReadColorR8G8B8();
             periodicFunction = (PeriodicFunction)binaryReader.ReadInt16();
             invalidName_2 = binaryReader.ReadBytes(2);
             functionPeriodSeconds = binaryReader.ReadSingle();
@@ -95,8 +95,8 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(inBoundsSourceUnits);
                 binaryWriter.Write(outBoundsPixels);
                 binaryWriter.Write(invalidName_1, 0, 64);
-                binaryWriter.Write(tintColorLowerBound);
-                binaryWriter.Write(tintColorUpperBound);
+                binaryWriter.Write(TintColourLowerBound);
+                binaryWriter.Write(TintColourUpperBound);
                 binaryWriter.Write((Int16)periodicFunction);
                 binaryWriter.Write(invalidName_2, 0, 2);
                 binaryWriter.Write(functionPeriodSeconds);

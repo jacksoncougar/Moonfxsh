@@ -48,12 +48,12 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// Indoor ambient light color.
         /// </summary>
-        internal Moonfish.Tags.ColorR8G8B8 indoorAmbientColor;
+        internal Moonfish.Tags.ColourR8G8B8 IndoorAmbientColour;
         internal byte[] invalidName_;
         /// <summary>
         /// Indoor ambient light color.
         /// </summary>
-        internal Moonfish.Tags.ColorR8G8B8 outdoorAmbientColor;
+        internal Moonfish.Tags.ColourR8G8B8 OutdoorAmbientColour;
         internal byte[] invalidName_0;
         /// <summary>
         /// How far fog spreads into adjacent clusters.
@@ -72,7 +72,7 @@ namespace Moonfish.Guerilla.Tags
         internal SkyShaderFunctionBlock[] shaderFunctions;
         internal SkyAnimationBlock[] animations;
         internal byte[] invalidName_1;
-        internal Moonfish.Tags.ColorR8G8B8 clearColor;
+        internal Moonfish.Tags.ColourR8G8B8 ClearColour;
         
         public override int SerializedSize{get { return 172; }}
         
@@ -87,9 +87,9 @@ namespace Moonfish.Guerilla.Tags
             renderModelScale = binaryReader.ReadSingle();
             movementScale = binaryReader.ReadSingle();
             cubeMap = Guerilla.ReadBlockArray<SkyCubemapBlock>(binaryReader);
-            indoorAmbientColor = binaryReader.ReadColorR8G8B8();
+            IndoorAmbientColour = binaryReader.ReadColorR8G8B8();
             invalidName_ = binaryReader.ReadBytes(4);
-            outdoorAmbientColor = binaryReader.ReadColorR8G8B8();
+            OutdoorAmbientColour = binaryReader.ReadColorR8G8B8();
             invalidName_0 = binaryReader.ReadBytes(4);
             fogSpreadDistanceWorldUnits = binaryReader.ReadSingle();
             atmosphericFog = Guerilla.ReadBlockArray<SkyAtmosphericFogBlock>(binaryReader);
@@ -105,7 +105,7 @@ namespace Moonfish.Guerilla.Tags
             shaderFunctions = Guerilla.ReadBlockArray<SkyShaderFunctionBlock>(binaryReader);
             animations = Guerilla.ReadBlockArray<SkyAnimationBlock>(binaryReader);
             invalidName_1 = binaryReader.ReadBytes(12);
-            clearColor = binaryReader.ReadColorR8G8B8();
+            ClearColour = binaryReader.ReadColorR8G8B8();
         }
         public  SkyBlockBase(): base()
         {
@@ -119,9 +119,9 @@ namespace Moonfish.Guerilla.Tags
             renderModelScale = binaryReader.ReadSingle();
             movementScale = binaryReader.ReadSingle();
             cubeMap = Guerilla.ReadBlockArray<SkyCubemapBlock>(binaryReader);
-            indoorAmbientColor = binaryReader.ReadColorR8G8B8();
+            IndoorAmbientColour = binaryReader.ReadColorR8G8B8();
             invalidName_ = binaryReader.ReadBytes(4);
-            outdoorAmbientColor = binaryReader.ReadColorR8G8B8();
+            OutdoorAmbientColour = binaryReader.ReadColorR8G8B8();
             invalidName_0 = binaryReader.ReadBytes(4);
             fogSpreadDistanceWorldUnits = binaryReader.ReadSingle();
             atmosphericFog = Guerilla.ReadBlockArray<SkyAtmosphericFogBlock>(binaryReader);
@@ -137,7 +137,7 @@ namespace Moonfish.Guerilla.Tags
             shaderFunctions = Guerilla.ReadBlockArray<SkyShaderFunctionBlock>(binaryReader);
             animations = Guerilla.ReadBlockArray<SkyAnimationBlock>(binaryReader);
             invalidName_1 = binaryReader.ReadBytes(12);
-            clearColor = binaryReader.ReadColorR8G8B8();
+            ClearColour = binaryReader.ReadColorR8G8B8();
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
@@ -149,9 +149,9 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(renderModelScale);
                 binaryWriter.Write(movementScale);
                 nextAddress = Guerilla.WriteBlockArray<SkyCubemapBlock>(binaryWriter, cubeMap, nextAddress);
-                binaryWriter.Write(indoorAmbientColor);
+                binaryWriter.Write(IndoorAmbientColour);
                 binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write(outdoorAmbientColor);
+                binaryWriter.Write(OutdoorAmbientColour);
                 binaryWriter.Write(invalidName_0, 0, 4);
                 binaryWriter.Write(fogSpreadDistanceWorldUnits);
                 nextAddress = Guerilla.WriteBlockArray<SkyAtmosphericFogBlock>(binaryWriter, atmosphericFog, nextAddress);
@@ -167,7 +167,7 @@ namespace Moonfish.Guerilla.Tags
                 nextAddress = Guerilla.WriteBlockArray<SkyShaderFunctionBlock>(binaryWriter, shaderFunctions, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SkyAnimationBlock>(binaryWriter, animations, nextAddress);
                 binaryWriter.Write(invalidName_1, 0, 12);
-                binaryWriter.Write(clearColor);
+                binaryWriter.Write(ClearColour);
                 return nextAddress;
             }
         }

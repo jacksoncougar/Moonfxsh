@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
         internal int checksum;
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal PathfindingPolicy pathfindingPolicy;
         internal LightmappingPolicy lightmappingPolicy;
         

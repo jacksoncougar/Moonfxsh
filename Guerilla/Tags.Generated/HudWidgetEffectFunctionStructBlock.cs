@@ -22,8 +22,8 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class HudWidgetEffectFunctionStructBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID inputName;
-        internal Moonfish.Tags.StringID rangeName;
+        internal Moonfish.Tags.StringIdent inputName;
+        internal Moonfish.Tags.StringIdent rangeName;
         internal float timePeriodInSeconds;
         internal ScalarFunctionStructBlock function;
         

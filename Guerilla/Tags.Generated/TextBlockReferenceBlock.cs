@@ -29,7 +29,7 @@ namespace Moonfish.Guerilla.Tags
         internal CustomFont customFont;
         internal OpenTK.Vector4 textColor;
         internal OpenTK.Vector2 textBounds;
-        internal Moonfish.Tags.StringID stringId;
+        internal Moonfish.Tags.StringIdent StringIdent;
         internal short renderDepthBias;
         internal byte[] invalidName_0;
         
@@ -47,7 +47,7 @@ namespace Moonfish.Guerilla.Tags
             customFont = (CustomFont)binaryReader.ReadInt16();
             textColor = binaryReader.ReadVector4();
             textBounds = binaryReader.ReadVector2();
-            stringId = binaryReader.ReadStringID();
+            StringIdent = binaryReader.ReadStringID();
             renderDepthBias = binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
         }
@@ -64,7 +64,7 @@ namespace Moonfish.Guerilla.Tags
             customFont = (CustomFont)binaryReader.ReadInt16();
             textColor = binaryReader.ReadVector4();
             textBounds = binaryReader.ReadVector2();
-            stringId = binaryReader.ReadStringID();
+            StringIdent = binaryReader.ReadStringID();
             renderDepthBias = binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
         }
@@ -79,7 +79,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)customFont);
                 binaryWriter.Write(textColor);
                 binaryWriter.Write(textBounds);
-                binaryWriter.Write(stringId);
+                binaryWriter.Write(StringIdent);
                 binaryWriter.Write(renderDepthBias);
                 binaryWriter.Write(invalidName_0, 0, 2);
                 return nextAddress;

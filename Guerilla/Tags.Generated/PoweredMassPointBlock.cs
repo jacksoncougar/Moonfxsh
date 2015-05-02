@@ -30,7 +30,7 @@ namespace Moonfish.Guerilla.Tags
         internal float antigravDampFraction;
         internal float antigravNormalK1;
         internal float antigravNormalK0;
-        internal Moonfish.Tags.StringID damageSourceRegionName;
+        internal Moonfish.Tags.StringIdent damageSourceRegionName;
         internal byte[] invalidName_;
         
         public override int SerializedSize{get { return 128; }}

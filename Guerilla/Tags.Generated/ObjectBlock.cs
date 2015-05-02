@@ -51,7 +51,7 @@ namespace Moonfish.Guerilla.Tags
         /// only used if radius not 0
         /// </summary>
         internal OpenTK.Vector3 dynamicLightSphereOffset;
-        internal Moonfish.Tags.StringID defaultModelVariant;
+        internal Moonfish.Tags.StringIdent defaultModelVariant;
         [TagReference("hlmt")]
         internal Moonfish.Tags.TagReference model;
         [TagReference("bloc")]

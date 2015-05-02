@@ -24,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Property property;
         internal byte[] invalidName_;
-        internal Moonfish.Tags.StringID parameterName;
+        internal Moonfish.Tags.StringIdent parameterName;
         
         public override int SerializedSize{get { return 8; }}
         

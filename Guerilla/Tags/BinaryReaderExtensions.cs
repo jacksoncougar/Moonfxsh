@@ -14,8 +14,8 @@ namespace Moonfish.Tags
         {
             public static void Write( this BinaryWriter binaryWriter, BlamPointer blamPointer )
             {
-                binaryWriter.Write( blamPointer.elementCount );
-                binaryWriter.Write( blamPointer.elementCount > 0 ? blamPointer.startAddress : 0 );
+                binaryWriter.Write( blamPointer.ElementCount );
+                binaryWriter.Write( blamPointer.ElementCount > 0 ? blamPointer.StartAddress : 0 );
             }
 
             public static BlamPointer ReadBlamPointer( this BinaryReader binaryReader, int elementSize )
@@ -81,16 +81,16 @@ namespace Moonfish.Tags
             binaryWriter.Write( new byte[padding] );
         }
 
-        public static void Write( this BinaryWriter binaryWriter, StringID value )
+        public static void Write( this BinaryWriter binaryWriter, StringIdent value )
         {
             binaryWriter.Write( ( int ) value );
         }
 
-        public static void Write( this BinaryWriter binaryWriter, RGBColor value )
+        public static void Write( this BinaryWriter binaryWriter, ColourR1G1B1 value )
         {
-            binaryWriter.Write( value.Red );
-            binaryWriter.Write( value.Green );
-            binaryWriter.Write( value.Blue );
+            binaryWriter.Write( value.R );
+            binaryWriter.Write( value.G );
+            binaryWriter.Write( value.B );
         }
 
         public static void Write( this BinaryWriter binary, TagIdent value )
@@ -180,13 +180,13 @@ namespace Moonfish.Tags
 
         public static void Write( this BinaryWriter binaryWriter, ColourA1R1G1B1 value )
         {
-            binaryWriter.Write( value.Alpha );
-            binaryWriter.Write( value.Red );
-            binaryWriter.Write( value.Blue );
-            binaryWriter.Write( value.Green );
+            binaryWriter.Write( value.A );
+            binaryWriter.Write( value.R );
+            binaryWriter.Write( value.B );
+            binaryWriter.Write( value.G );
         }
 
-        public static void Write( this BinaryWriter binaryWriter, ColorR8G8B8 value )
+        public static void Write( this BinaryWriter binaryWriter, ColourR8G8B8 value )
         {
             binaryWriter.Write( value.R );
             binaryWriter.Write( value.G );
@@ -195,7 +195,8 @@ namespace Moonfish.Tags
 
         public static void Write( this BinaryWriter binaryWriter, Point value )
         {
-            ( value as IWriteable ).Write( binaryWriter );
+            binaryWriter.Write(value.X);
+            binaryWriter.Write(value.Y);
         }
     }
 
@@ -216,18 +217,18 @@ namespace Moonfish.Tags
             return new String256( new string( Encoding.UTF8.GetChars( binaryReader.ReadBytes( 256 ) ) ) );
         }
 
-        public static StringID ReadStringID( this BinaryReader binaryReader )
+        public static StringIdent ReadStringID( this BinaryReader binaryReader )
         {
-            return new StringID( binaryReader.ReadInt32( ) );
+            return new StringIdent( binaryReader.ReadInt32( ) );
         }
 
-        public static RGBColor ReadRGBColor( this BinaryReader binaryReader )
+        public static ColourR1G1B1 ReadColourR1G1B1(this BinaryReader binaryReader)
         {
-            var color = new RGBColor( )
+            var color = new ColourR1G1B1
             {
-                Red = binaryReader.ReadByte( ),
-                Green = binaryReader.ReadByte( ),
-                Blue = binaryReader.ReadByte( )
+                R = binaryReader.ReadByte( ),
+                G = binaryReader.ReadByte( ),
+                B = binaryReader.ReadByte( )
             };
             return color;
         }
@@ -281,9 +282,9 @@ namespace Moonfish.Tags
             return new Quaternion( l, k, j, i );
         }
 
-        public static ColorR8G8B8 ReadColorR8G8B8( this BinaryReader binaryReader )
+        public static ColourR8G8B8 ReadColorR8G8B8( this BinaryReader binaryReader )
         {
-            return new ColorR8G8B8( binaryReader.ReadSingle( ), binaryReader.ReadSingle( ), binaryReader.ReadSingle( ) );
+            return new ColourR8G8B8( binaryReader.ReadSingle( ), binaryReader.ReadSingle( ), binaryReader.ReadSingle( ) );
         }
 
         public static ColourA1R1G1B1 ReadColourA1R1G1B1( this BinaryReader binaryReader )
@@ -297,7 +298,7 @@ namespace Moonfish.Tags
 
         public static Point ReadPoint( this BinaryReader binaryReader )
         {
-            return new Point( binaryReader );
+            return new Point( binaryReader.ReadInt16(), binaryReader.ReadInt16() );
         }
     }
 }

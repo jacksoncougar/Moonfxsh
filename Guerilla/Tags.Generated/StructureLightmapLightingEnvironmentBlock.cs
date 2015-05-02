@@ -32,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 rotationAxis;
         internal float rotationSpeed;
         internal OpenTK.Vector3 bumpDirection;
-        internal Moonfish.Tags.ColorR8G8B8 colorTint;
+        internal Moonfish.Tags.ColourR8G8B8 ColourTint;
         internal ProceduralOveride proceduralOveride;
         internal Flags flags;
         internal OpenTK.Vector3 proceduralParam0;
@@ -56,7 +56,7 @@ namespace Moonfish.Guerilla.Tags
             rotationAxis = binaryReader.ReadVector3();
             rotationSpeed = binaryReader.ReadSingle();
             bumpDirection = binaryReader.ReadVector3();
-            colorTint = binaryReader.ReadColorR8G8B8();
+            ColourTint = binaryReader.ReadColorR8G8B8();
             proceduralOveride = (ProceduralOveride)binaryReader.ReadInt16();
             flags = (Flags)binaryReader.ReadInt16();
             proceduralParam0 = binaryReader.ReadVector3();
@@ -79,7 +79,7 @@ namespace Moonfish.Guerilla.Tags
             rotationAxis = binaryReader.ReadVector3();
             rotationSpeed = binaryReader.ReadSingle();
             bumpDirection = binaryReader.ReadVector3();
-            colorTint = binaryReader.ReadColorR8G8B8();
+            ColourTint = binaryReader.ReadColorR8G8B8();
             proceduralOveride = (ProceduralOveride)binaryReader.ReadInt16();
             flags = (Flags)binaryReader.ReadInt16();
             proceduralParam0 = binaryReader.ReadVector3();
@@ -124,7 +124,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(rotationAxis);
                 binaryWriter.Write(rotationSpeed);
                 binaryWriter.Write(bumpDirection);
-                binaryWriter.Write(colorTint);
+                binaryWriter.Write(ColourTint);
                 binaryWriter.Write((Int16)proceduralOveride);
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write(proceduralParam0);

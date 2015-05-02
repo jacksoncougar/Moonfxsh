@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 24, Alignment = 4)]
     public class ModelVariantStateBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID permutationName;
+        internal Moonfish.Tags.StringIdent permutationName;
         internal byte[] invalidName_;
         internal PropertyFlags propertyFlags;
         internal State state;
@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         [TagReference("effe")]
         internal Moonfish.Tags.TagReference loopingEffect;
-        internal Moonfish.Tags.StringID loopingEffectMarkerName;
+        internal Moonfish.Tags.StringIdent loopingEffectMarkerName;
         internal float initialProbability;
         
         public override int SerializedSize{get { return 24; }}

@@ -24,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Flags flags;
         internal byte[] invalidName_;
-        internal Moonfish.Tags.StringID vocalization;
+        internal Moonfish.Tags.StringIdent vocalization;
         [TagReference("snd!")]
         internal Moonfish.Tags.TagReference sound;
         

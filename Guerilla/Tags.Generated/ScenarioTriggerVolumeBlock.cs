@@ -22,10 +22,10 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 68, Alignment = 4)]
     public class ScenarioTriggerVolumeBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal Moonfish.Tags.ShortBlockIndex1 objectName;
         internal byte[] invalidName_;
-        internal Moonfish.Tags.StringID nodeName;
+        internal Moonfish.Tags.StringIdent nodeName;
         internal EMPTYSTRING[] eMPTYSTRING;
         internal OpenTK.Vector3 position;
         internal OpenTK.Vector3 extents;

@@ -25,7 +25,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// multiple markers become multiple spheres of the same radius
         /// </summary>
-        internal Moonfish.Tags.StringID markerName;
+        internal Moonfish.Tags.StringIdent markerName;
         /// <summary>
         /// sphere radius
         /// </summary>

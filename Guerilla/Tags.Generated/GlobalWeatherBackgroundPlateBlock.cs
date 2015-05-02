@@ -48,9 +48,9 @@ namespace Moonfish.Guerilla.Tags
         internal float opacity1;
         internal float opacity2;
         internal Flags flags;
-        internal Moonfish.Tags.ColorR8G8B8 tintColor0;
-        internal Moonfish.Tags.ColorR8G8B8 tintColor1;
-        internal Moonfish.Tags.ColorR8G8B8 tintColor2;
+        internal Moonfish.Tags.ColourR8G8B8 tintColor0;
+        internal Moonfish.Tags.ColourR8G8B8 tintColor1;
+        internal Moonfish.Tags.ColourR8G8B8 tintColor2;
         internal float mass1;
         internal float mass2;
         internal float mass3;

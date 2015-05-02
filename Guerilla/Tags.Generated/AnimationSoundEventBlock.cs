@@ -24,7 +24,7 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Moonfish.Tags.ShortBlockIndex1 sound;
         internal short frame;
-        internal Moonfish.Tags.StringID markerName;
+        internal Moonfish.Tags.StringIdent markerName;
         
         public override int SerializedSize{get { return 8; }}
         

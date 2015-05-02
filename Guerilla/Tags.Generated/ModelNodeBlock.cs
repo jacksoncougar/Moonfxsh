@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 92, Alignment = 4)]
     public class ModelNodeBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal Moonfish.Tags.ShortBlockIndex1 parentNode;
         internal Moonfish.Tags.ShortBlockIndex1 firstChildNode;
         internal Moonfish.Tags.ShortBlockIndex1 nextSiblingNode;

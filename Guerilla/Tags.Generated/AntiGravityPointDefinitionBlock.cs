@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 76, Alignment = 4)]
     public class AntiGravityPointDefinitionBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID markerName;
+        internal Moonfish.Tags.StringIdent markerName;
         internal Flags flags;
         internal float antigravStrength;
         internal float antigravOffset;
@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
-        internal Moonfish.Tags.StringID damageSourceRegionName;
+        internal Moonfish.Tags.StringIdent damageSourceRegionName;
         internal float defaultStateError;
         internal float minorDamageError;
         internal float mediumDamageError;

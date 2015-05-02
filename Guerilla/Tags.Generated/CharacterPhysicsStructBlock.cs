@@ -30,11 +30,11 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// collision material used when character is alive
         /// </summary>
-        internal Moonfish.Tags.StringID livingMaterialName;
+        internal Moonfish.Tags.StringIdent livingMaterialName;
         /// <summary>
         /// collision material used when character is dead
         /// </summary>
-        internal Moonfish.Tags.StringID deadMaterialName;
+        internal Moonfish.Tags.StringIdent deadMaterialName;
         internal byte[] invalidName_;
         internal SpheresBlock[] deadSphereShapes;
         internal PillsBlock[] pillShapes;

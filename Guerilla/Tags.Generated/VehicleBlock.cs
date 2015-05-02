@@ -48,7 +48,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal SpecificTypeIfYourTypeCorrespondsToSomethingInThisListChooseIt specificType;
         internal PlayerTrainingVehicleType playerTrainingVehicleType;
-        internal Moonfish.Tags.StringID flipMessage;
+        internal Moonfish.Tags.StringIdent flipMessage;
         internal float turnScale;
         internal float speedTurnPenaltyPower052;
         internal float speedTurnPenalty0None1CantTurnAtTopSpeed;

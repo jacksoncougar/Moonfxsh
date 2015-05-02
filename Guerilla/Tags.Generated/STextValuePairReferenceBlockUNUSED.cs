@@ -26,8 +26,8 @@ namespace Moonfish.Guerilla.Tags
         internal BooleanValue booleanValue;
         internal int integerValue;
         internal float fpValue;
-        internal Moonfish.Tags.StringID textValueStringId;
-        internal Moonfish.Tags.StringID textLabelStringId;
+        internal Moonfish.Tags.StringIdent TextValueStringIdent;
+        internal Moonfish.Tags.StringIdent TextLabelStringIdent;
         
         public override int SerializedSize{get { return 20; }}
         
@@ -40,8 +40,8 @@ namespace Moonfish.Guerilla.Tags
             booleanValue = (BooleanValue)binaryReader.ReadInt16();
             integerValue = binaryReader.ReadInt32();
             fpValue = binaryReader.ReadSingle();
-            textValueStringId = binaryReader.ReadStringID();
-            textLabelStringId = binaryReader.ReadStringID();
+            TextValueStringIdent = binaryReader.ReadStringID();
+            TextLabelStringIdent = binaryReader.ReadStringID();
         }
         public  STextValuePairReferenceBlockUNUSEDBase(): base()
         {
@@ -53,8 +53,8 @@ namespace Moonfish.Guerilla.Tags
             booleanValue = (BooleanValue)binaryReader.ReadInt16();
             integerValue = binaryReader.ReadInt32();
             fpValue = binaryReader.ReadSingle();
-            textValueStringId = binaryReader.ReadStringID();
-            textLabelStringId = binaryReader.ReadStringID();
+            TextValueStringIdent = binaryReader.ReadStringID();
+            TextLabelStringIdent = binaryReader.ReadStringID();
         }
         public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
@@ -64,8 +64,8 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)booleanValue);
                 binaryWriter.Write(integerValue);
                 binaryWriter.Write(fpValue);
-                binaryWriter.Write(textValueStringId);
-                binaryWriter.Write(textLabelStringId);
+                binaryWriter.Write(TextValueStringIdent);
+                binaryWriter.Write(TextLabelStringIdent);
                 return nextAddress;
             }
         }

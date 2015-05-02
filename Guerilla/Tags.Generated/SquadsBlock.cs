@@ -45,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 initialSecondaryWeapon;
         internal GrenadeType grenadeType;
         internal Moonfish.Tags.ShortBlockIndex1 initialOrder;
-        internal Moonfish.Tags.StringID vehicleVariant;
+        internal Moonfish.Tags.StringIdent vehicleVariant;
         internal ActorStartingLocationsBlock[] startingLocations;
         internal Moonfish.Tags.String32 placementScript;
         internal byte[] invalidName_1;

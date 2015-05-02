@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 12, Alignment = 4)]
     public class LocalStringIdListSectionReferenceBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID sectionName;
+        internal Moonfish.Tags.StringIdent sectionName;
         internal LocalStringIdListStringReferenceBlock[] localStringSectionReferences;
         
         public override int SerializedSize{get { return 12; }}

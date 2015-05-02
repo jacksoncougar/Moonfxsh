@@ -30,7 +30,7 @@ namespace Moonfish.Guerilla
             : base( guerillaExecutablePath )
         {
             BinaryIO.CacheMethods( );
-            var assembly = typeof ( StringID ).Assembly;
+            var assembly = typeof ( StringIdent ).Assembly;
             var query = from type in assembly.GetTypes( )
                 where type.GetCustomAttributes( typeof ( GuerillaTypeAttribute ), false ).Any( )
                 select type;

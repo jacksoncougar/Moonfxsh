@@ -30,7 +30,7 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         [TagReference("unit")]
         internal Moonfish.Tags.TagReference thirdPersonUnit;
-        internal Moonfish.Tags.StringID thirdPersonVariant;
+        internal Moonfish.Tags.StringIdent thirdPersonVariant;
         
         public override int SerializedSize{get { return 188; }}
         

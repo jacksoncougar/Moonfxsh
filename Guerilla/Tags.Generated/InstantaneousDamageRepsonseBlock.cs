@@ -32,10 +32,10 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("effe")]
         internal Moonfish.Tags.TagReference transitionEffect;
         internal InstantaneousResponseDamageEffectStructBlock damageEffect;
-        internal Moonfish.Tags.StringID region;
+        internal Moonfish.Tags.StringIdent region;
         internal NewState newState;
         internal short runtimeRegionIndex;
-        internal Moonfish.Tags.StringID effectMarkerName;
+        internal Moonfish.Tags.StringIdent effectMarkerName;
         internal InstantaneousResponseDamageEffectMarkerStructBlock damageEffectMarker;
         /// <summary>
         /// in seconds
@@ -43,11 +43,11 @@ namespace Moonfish.Guerilla.Tags
         internal float responseDelay;
         [TagReference("effe")]
         internal Moonfish.Tags.TagReference delayEffect;
-        internal Moonfish.Tags.StringID delayEffectMarkerName;
-        internal Moonfish.Tags.StringID constraintGroupName;
-        internal Moonfish.Tags.StringID ejectingSeatLabel;
+        internal Moonfish.Tags.StringIdent delayEffectMarkerName;
+        internal Moonfish.Tags.StringIdent constraintGroupName;
+        internal Moonfish.Tags.StringIdent ejectingSeatLabel;
         internal float skipFraction;
-        internal Moonfish.Tags.StringID destroyedChildObjectMarkerName;
+        internal Moonfish.Tags.StringIdent destroyedChildObjectMarkerName;
         internal float totalDamageThreshold;
         
         public override int SerializedSize{get { return 80; }}

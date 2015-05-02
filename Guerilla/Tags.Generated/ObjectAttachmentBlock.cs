@@ -24,11 +24,11 @@ namespace Moonfish.Guerilla.Tags
     {
         [TagReference("null")]
         internal Moonfish.Tags.TagReference type;
-        internal Moonfish.Tags.StringID marker;
+        internal Moonfish.Tags.StringIdent marker;
         internal ChangeColor changeColor;
         internal byte[] invalidName_;
-        internal Moonfish.Tags.StringID primaryScale;
-        internal Moonfish.Tags.StringID secondaryScale;
+        internal Moonfish.Tags.StringIdent primaryScale;
+        internal Moonfish.Tags.StringIdent secondaryScale;
         
         public override int SerializedSize{get { return 24; }}
         

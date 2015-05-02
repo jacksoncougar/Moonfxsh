@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 40, Alignment = 4)]
     public class MultilingualUnicodeStringReferenceBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID stringId;
+        internal Moonfish.Tags.StringIdent StringIdent;
         internal int englishOffset;
         internal int japaneseOffset;
         internal int germanOffset;
@@ -40,7 +40,7 @@ namespace Moonfish.Guerilla.Tags
         
         public  MultilingualUnicodeStringReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            stringId = binaryReader.ReadStringID();
+            StringIdent = binaryReader.ReadStringID();
             englishOffset = binaryReader.ReadInt32();
             japaneseOffset = binaryReader.ReadInt32();
             germanOffset = binaryReader.ReadInt32();
@@ -57,7 +57,7 @@ namespace Moonfish.Guerilla.Tags
         }
         public override void Read(BinaryReader binaryReader)
         {
-            stringId = binaryReader.ReadStringID();
+            StringIdent = binaryReader.ReadStringID();
             englishOffset = binaryReader.ReadInt32();
             japaneseOffset = binaryReader.ReadInt32();
             germanOffset = binaryReader.ReadInt32();
@@ -72,7 +72,7 @@ namespace Moonfish.Guerilla.Tags
         {
             using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write(stringId);
+                binaryWriter.Write(StringIdent);
                 binaryWriter.Write(englishOffset);
                 binaryWriter.Write(japaneseOffset);
                 binaryWriter.Write(germanOffset);

@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class ShaderStateConstantBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID sourceParameter;
+        internal Moonfish.Tags.StringIdent sourceParameter;
         internal byte[] invalidName_;
         internal Constant constant;
         

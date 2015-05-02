@@ -22,8 +22,8 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 36, Alignment = 4)]
     public class PrimaryLightStructBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.ColorR8G8B8 minLightmapColor;
-        internal Moonfish.Tags.ColorR8G8B8 maxLightmapColor;
+        internal Moonfish.Tags.ColourR8G8B8 MinLightmapColour;
+        internal Moonfish.Tags.ColourR8G8B8 MaxLightmapColour;
         /// <summary>
         /// degrees from up the direct light cannot be
         /// </summary>
@@ -37,8 +37,8 @@ namespace Moonfish.Guerilla.Tags
         
         public  PrimaryLightStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-            minLightmapColor = binaryReader.ReadColorR8G8B8();
-            maxLightmapColor = binaryReader.ReadColorR8G8B8();
+            MinLightmapColour = binaryReader.ReadColorR8G8B8();
+            MaxLightmapColour = binaryReader.ReadColorR8G8B8();
             exclusionAngleFromUp = binaryReader.ReadSingle();
             function = new MappingFunctionBlock(binaryReader);
         }
@@ -48,8 +48,8 @@ namespace Moonfish.Guerilla.Tags
         }
         public override void Read(BinaryReader binaryReader)
         {
-            minLightmapColor = binaryReader.ReadColorR8G8B8();
-            maxLightmapColor = binaryReader.ReadColorR8G8B8();
+            MinLightmapColour = binaryReader.ReadColorR8G8B8();
+            MaxLightmapColour = binaryReader.ReadColorR8G8B8();
             exclusionAngleFromUp = binaryReader.ReadSingle();
             function = new MappingFunctionBlock(binaryReader);
         }
@@ -57,8 +57,8 @@ namespace Moonfish.Guerilla.Tags
         {
             using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write(minLightmapColor);
-                binaryWriter.Write(maxLightmapColor);
+                binaryWriter.Write(MinLightmapColour);
+                binaryWriter.Write(MaxLightmapColour);
                 binaryWriter.Write(exclusionAngleFromUp);
                 function.Write(binaryWriter);
                 return nextAddress;

@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// the marker name where the antenna should be attached
         /// </summary>
-        internal Moonfish.Tags.StringID attachmentMarkerName;
+        internal Moonfish.Tags.StringIdent attachmentMarkerName;
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference bitmaps;
         [TagReference("pphy")]

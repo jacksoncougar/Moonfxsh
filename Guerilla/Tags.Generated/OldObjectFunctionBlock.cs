@@ -23,7 +23,7 @@ namespace Moonfish.Guerilla.Tags
     public class OldObjectFunctionBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
-        internal Moonfish.Tags.StringID invalidName_0;
+        internal Moonfish.Tags.StringIdent invalidName_0;
         
         public override int SerializedSize{get { return 80; }}
         

@@ -23,8 +23,8 @@ namespace Moonfish.Guerilla.Tags
     public class ShaderPostprocessColorOverlayBlockBase : GuerillaBlock
     {
         internal byte parameterIndex;
-        internal Moonfish.Tags.StringID inputName;
-        internal Moonfish.Tags.StringID rangeName;
+        internal Moonfish.Tags.StringIdent inputName;
+        internal Moonfish.Tags.StringIdent rangeName;
         internal float timePeriodInSeconds;
         internal ColorFunctionStructBlock function;
         

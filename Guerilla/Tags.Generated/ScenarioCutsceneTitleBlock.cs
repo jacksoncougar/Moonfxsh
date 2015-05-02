@@ -22,12 +22,12 @@ namespace Moonfish.Guerilla.Tags
     [LayoutAttribute(Size = 36, Alignment = 4)]
     public class ScenarioCutsceneTitleBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.StringID name;
+        internal Moonfish.Tags.StringIdent name;
         internal OpenTK.Vector2 textBoundsOnScreen;
         internal Justification justification;
         internal Font font;
-        internal Moonfish.Tags.RGBColor textColor;
-        internal Moonfish.Tags.RGBColor shadowColor;
+        internal Moonfish.Tags.ColourR1G1B1 textColor;
+        internal Moonfish.Tags.ColourR1G1B1 shadowColor;
         internal float fadeInTimeSeconds;
         internal float upTimeSeconds;
         internal float fadeOutTimeSeconds;
@@ -44,8 +44,8 @@ namespace Moonfish.Guerilla.Tags
             textBoundsOnScreen = binaryReader.ReadVector2();
             justification = (Justification)binaryReader.ReadInt16();
             font = (Font)binaryReader.ReadInt16();
-            textColor = binaryReader.ReadRGBColor();
-            shadowColor = binaryReader.ReadRGBColor();
+            textColor = binaryReader.ReadColourR1G1B1();
+            shadowColor = binaryReader.ReadColourR1G1B1();
             fadeInTimeSeconds = binaryReader.ReadSingle();
             upTimeSeconds = binaryReader.ReadSingle();
             fadeOutTimeSeconds = binaryReader.ReadSingle();
@@ -61,8 +61,8 @@ namespace Moonfish.Guerilla.Tags
             textBoundsOnScreen = binaryReader.ReadVector2();
             justification = (Justification)binaryReader.ReadInt16();
             font = (Font)binaryReader.ReadInt16();
-            textColor = binaryReader.ReadRGBColor();
-            shadowColor = binaryReader.ReadRGBColor();
+            textColor = binaryReader.ReadColourR1G1B1();
+            shadowColor = binaryReader.ReadColourR1G1B1();
             fadeInTimeSeconds = binaryReader.ReadSingle();
             upTimeSeconds = binaryReader.ReadSingle();
             fadeOutTimeSeconds = binaryReader.ReadSingle();

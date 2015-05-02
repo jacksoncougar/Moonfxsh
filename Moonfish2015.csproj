@@ -164,7 +164,10 @@
     <Compile Include="Graphics\VertexFunctions.cs" />
     <Compile Include="Guerilla\BinaryIO.cs" />
     <Compile Include="Guerilla\GuerillaBlock.cs" />
-    <Compile Include="Guerilla\ClassInfo.cs" />
+    <Compile Include="Guerilla\Reflection\AccessModifiers.cs" />
+    <Compile Include="Guerilla\Reflection\AccessModifiersExtensions.cs" />
+    <Compile Include="Guerilla\Reflection\AttributeInfo.cs" />
+    <Compile Include="Guerilla\Reflection\ClassInfo.cs" />
     <Compile Include="Guerilla\Guerilla.cs" />
     <Compile Include="Guerilla\GuerillaAttributes.cs" />
     <Compile Include="Guerilla\GuerillaBase.cs" />
@@ -173,7 +176,10 @@
     <Compile Include="Guerilla\GuerillaToEnt.cs" />
     <Compile Include="Guerilla\IGuerilla.cs" />
     <Compile Include="Guerilla\IGuerillaExtensions.cs" />
-    <Compile Include="Guerilla\MethodInfo.cs" />
+    <Compile Include="Guerilla\Reflection\EnumInfo.cs" />
+    <Compile Include="Guerilla\Reflection\FieldInfo.cs" />
+    <Compile Include="Guerilla\Reflection\GuerillaName.cs" />
+    <Compile Include="Guerilla\Reflection\MethodInfo.cs" />
     <Compile Include="Guerilla\MoonfishFieldType.cs" />
     <Compile Include="Guerilla\MoonfishTagDataDefinition.cs" />
     <Compile Include="Guerilla\MoonfishTagDefinition.cs" />
@@ -181,7 +187,8 @@
     <Compile Include="Guerilla\MoonfishTagGroup.cs" />
     <Compile Include="Guerilla\MoonfishTagReferenceDefinition.cs" />
     <Compile Include="Guerilla\MoonfishTagStruct.cs" />
-    <Compile Include="Guerilla\ParameterInfo.cs" />
+    <Compile Include="Guerilla\Reflection\NamespaceInfo.cs" />
+    <Compile Include="Guerilla\Reflection\ParameterInfo.cs" />
     <Compile Include="Guerilla\Preprocess\BitmapDataBlock.cs" />
     <Compile Include="Guerilla\Preprocess\BitmapBlock.cs" />
     <Compile Include="Guerilla\Preprocess\DecoratorPermutationsBlock.cs" />
@@ -202,6 +209,9 @@
     <Compile Include="Guerilla\Preprocess\UserInterfaceScreenWidgetDefinitionBlock.cs" />
     <Compile Include="Guerilla\Preprocess\VertexShaderBlock.cs" />
     <Compile Include="Guerilla\Preprocess\VertexShaderClassificationBlock.cs" />
+    <Compile Include="Guerilla\Reflection\PropertyInfo.cs" />
+    <Compile Include="Guerilla\Reflection\StringBuilderExtensions.cs" />
+    <Compile Include="Guerilla\Reflection\StringExtensions.cs" />
     <Compile Include="Guerilla\StaticReflection.cs" />
     <Compile Include="Guerilla\TagGroups.cs" />
     <Compile Include="Guerilla\Tags.Generated\ActorStartingLocationsBlock.cs">
@@ -2114,6 +2124,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Guerilla\GuerillaTagGroup.cs" />
+    <Compile Include="Guerilla\Reflection\TokenDictionary.cs" />
+    <Compile Include="Guerilla\Reflection\TokenInfo.cs" />
+    <Compile Include="Guerilla\Reflection\UsingInfo.cs" />
     <Compile Include="Guerilla\Validator.cs" />
     <Compile Include="Guerilla\VirtualMemoryStream.cs" />
     <Compile Include="IResource.cs" />

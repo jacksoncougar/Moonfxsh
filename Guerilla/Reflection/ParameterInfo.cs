@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Moonfish.Guerilla
+namespace Moonfish.Guerilla.Reflection
 {
     public static class ParameterModifierExtensions
     {

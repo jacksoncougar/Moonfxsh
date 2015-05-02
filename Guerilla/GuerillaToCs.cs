@@ -7,8 +7,11 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Microsoft.CSharp;
+using Moonfish.Guerilla.Reflection;
 using Moonfish.Tags;
 using OpenTK;
+using FieldInfo = Moonfish.Guerilla.Reflection.FieldInfo;
+using PropertyInfo = Moonfish.Guerilla.Reflection.PropertyInfo;
 
 namespace Moonfish.Guerilla
 {
@@ -78,7 +81,7 @@ namespace Moonfish.Guerilla
             var @class = new ClassInfo
             {
                 AccessModifiers = AccessModifiers.Public,
-                Value = className == string.Empty ? ToTypeName( block.Name ) : ToTypeName( className ),
+                Name = className == string.Empty ? ToTypeName( block.Name ) : ToTypeName( className ),
                 Attributes =
                 {
                     new AttributeInfo( typeof ( LayoutAttribute ),
@@ -117,15 +120,15 @@ namespace Moonfish.Guerilla
 
             var info = BeginProcessTagBlockDefinition( tag.Definition );
 
-            using ( var stream = new FileStream( Path.Combine( folder, info.Value.Name + ".cs" ), FileMode.Create,
+            using ( var stream = new FileStream( Path.Combine( folder, info.Name + ".cs" ), FileMode.Create,
                 FileAccess.Write, FileShare.ReadWrite ) )
             {
                 var size = tag.Definition.CalculateSizeOfFieldSet();
                 var parentTag = h2Tags.SingleOrDefault( x => x.Class == tag.ParentClass );
                 if ( parentTag != null )
                 {
-                    info.BaseClass = new ClassInfo.TokenDictionary( ).GenerateValidToken(
-                        ToTypeName( parentTag.Definition.Name ) );
+                    info.BaseClass = new ClassInfo(TokenDictionary.GenerateValidIdentifier(
+                        ToTypeName(parentTag.Definition.Name)));
 
                     // loop through all the parents summing up thier sizes
                     while ( parentTag != null )
@@ -136,7 +139,7 @@ namespace Moonfish.Guerilla
                 }
                 else
                 {
-                    info.BaseClass = "GuerillaBlock";
+                    info.BaseClass = new ClassInfo("GuerillaBlock");
                 }
 
                 var alignment = tag.Definition.Alignment;
@@ -157,7 +160,7 @@ namespace Moonfish.Guerilla
 
             foreach ( var item in localDefinitions )
             {
-                using ( var stream = new FileStream( Path.Combine( folder, item.Value.Name + ".cs" ), FileMode.Create,
+                using ( var stream = new FileStream( Path.Combine( folder, item.Name + ".cs" ), FileMode.Create,
                     FileAccess.Write, FileShare.ReadWrite ) )
                 {
                     item.Generate( );
@@ -220,9 +223,9 @@ namespace Moonfish.Guerilla
         {
             if ( !subClass )
             {
-                var wrapperClassInfo = classInfo.GenerateWrapper( classInfo.Value.Name, classInfo.Value.Name + "Base" );
-                classInfo.Value.Name += "Base";
-                classInfo.BaseClass = "GuerillaBlock";
+                var wrapperClassInfo = classInfo.GenerateWrapper( classInfo.Name, classInfo.Name + "Base" );
+                classInfo.Name += "Base";
+                classInfo.BaseClass = new ClassInfo("GuerillaBlock");
                 classInfo.Generate( );
 
                 foreach ( var item in classInfo.Usings )
@@ -253,7 +256,7 @@ namespace Moonfish.Guerilla
                 }
 
                 streamWriter.WriteLine( );
-                streamWriter.WriteLine( classInfo.NamespaceDeclaration.Tab( ref tabCount ) );
+                streamWriter.WriteLine( classInfo.Namespace.Tab( ref tabCount ) );
                 streamWriter.WriteLine( "{".Tab( ref tabCount ) );
 
                 GenerateOutputForSubclass( wrapperClassInfo, streamWriter, tabCount );
@@ -264,8 +267,8 @@ namespace Moonfish.Guerilla
 
             if ( !subClass )
             {
-                classInfo.Value.Name =
-                    classInfo.Value.Name.Remove( classInfo.Value.Name.LastIndexOf( "Base", StringComparison.Ordinal ), 4 );
+                classInfo.Name =
+                    classInfo.Name.Remove( classInfo.Name.LastIndexOf( "Base", StringComparison.Ordinal ), 4 );
             }
 
             foreach (var item in classInfo.Fields)
@@ -355,9 +358,9 @@ namespace Moonfish.Guerilla
                         StaticReflection.GetMemberName( ( LayoutAttribute layout ) => layout.Size ), size,
                         StaticReflection.GetMemberName( ( LayoutAttribute layout ) => layout.Alignment ), 1 )
                 },
-                Value = ToTypeName( fields[ 0 ].Name ),
+                Name = ToTypeName( fields[ 0 ].Name ),
                 AccessModifiers = AccessModifiers.Public,
-                BaseClass = "GuerillaBlock",
+                BaseClass = new ClassInfo("GuerillaBlock"),
                 Properties =
                 {
                     new PropertyInfo
@@ -577,7 +580,7 @@ namespace Moonfish.Guerilla
                         {
                             Value = field.Name,
                             AccessModifiers = AccessModifiers.Internal,
-                            FieldTypeName = @class.ClassDefinitions.Last( ).Value,
+                            FieldTypeName = @class.ClassDefinitions.Last( ).Name,
                             ArraySize = field.Count,
                             IsArray = true
                         };

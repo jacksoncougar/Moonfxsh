@@ -273,11 +273,15 @@ namespace Moonfish.Guerilla.Reflection
                 if (Type.GetType(item.FieldTypeName) == typeof(byte))
                 {
                     body.AppendFormatLine(
+                        "{1} = Guerilla.ReadDataByteArray(binaryReader, blamPointers[{0}])",
+                        index++, item.Value.Name);
                 }
                 // variable short array (data)
                 else if (Type.GetType(item.FieldTypeName) == typeof(short))
                 {
                     body.AppendFormatLine(
+                        "{1} = Guerilla.ReadDataShortArray(binaryReader, blamPointers[{0}])", 
+                        index++, item.Value.Name);
                 }
                 // assume a TagBlock
                 else
@@ -290,6 +294,8 @@ namespace Moonfish.Guerilla.Reflection
                     if (instance == null) continue;
 
                     body.AppendFormatLine(
+                        "{2} = Guerilla.ReadBlockArrayData<{0}>(binaryReader, blamPointers[{1}])",
+                        item.FieldTypeName, index++, item.Value.Name);
                 }
             }
             Constructors.Last().Body = body.ToString().TrimEnd();

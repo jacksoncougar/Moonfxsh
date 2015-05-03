@@ -21,13 +21,13 @@ namespace Moonfish
         private static void Main( )
         {
 
-            //GuerillaCs converter = new GuerillaCs(Local.GuerillaPath);
-            //foreach (var tag in Guerilla.Guerilla.h2Tags)
-            //{
-            //    converter.DumpTagLayout(
-            //        new MoonfishTagGroup(tag),
-            //        Path.Combine(Local.ProjectDirectory, @"\Guerilla\Tags.Generated\"));
-            //}
+            var converter = new GuerillaCs(Local.GuerillaPath);
+            foreach (var tag in Guerilla.Guerilla.h2Tags.Where(x=>x.Class == TagClass.Bitm))
+            {
+                converter.DumpTagLayout(
+                    new MoonfishTagGroup(tag),
+                    Path.Combine(Local.ProjectDirectory, @"\Guerilla\Debug\"));
+            }
 
             var map = new CacheStream(@"C:\Users\stem\Documents\modding\headlong.map");
             var item = map.Deserialize(map.Index.ScenarioIdent);

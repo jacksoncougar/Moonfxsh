@@ -23,8 +23,47 @@ namespace Moonfish.Guerilla
             var elementSize = layoutAttribute != null ? layoutAttribute.Alignment : 4;
             return elementSize;
         }
+        
+        public static BlamPointer ReadBlockArrayPointer<T>(BinaryReader binaryReader)
+            where T : GuerillaBlock, new()
+        {
+            var elementSize = new T().SerializedSize;
+            return ReadBlockArrayPointer<T>(binaryReader, elementSize);
+        }
 
-        //jesus git
+        public static BlamPointer ReadBlockArrayPointer<T>(BinaryReader binaryReader, int elementSize)
+            where T : GuerillaBlock, new()
+        {
+            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
+            return blamPointer;
+        }
+
+        public static T[] ReadBlockArrayData<T>(BinaryReader binaryReader, BlamPointer blamPointer)
+            where T : GuerillaBlock, new()
+        {
+            var array = new T[blamPointer.ElementCount];
+            binaryReader.BaseStream.Position = blamPointer.StartAddress;
+            for (var i = 0; i < blamPointer.ElementCount; ++i)
+            {
+                array[i] = (T)Activator.CreateInstance(typeof(T), binaryReader);
+            }
+            return array;
+        }
+
+        public static byte[] ReadDataByteArray(BinaryReader binaryReader, BlamPointer blamPointer)
+        {
+            binaryReader.BaseStream.Position = blamPointer.StartAddress;
+            return binaryReader.ReadBytes(blamPointer.ElementCount);
+        }
+
+        public static short[] ReadDataShortArray(BinaryReader binaryReader, BlamPointer blamPointer)
+        {
+            binaryReader.BaseStream.Position = blamPointer.StartAddress;
+            var elements = new short[blamPointer.ElementCount];
+            var buffer = binaryReader.ReadBytes(blamPointer.ElementCount*2);
+            Buffer.BlockCopy(buffer, 0, elements, 0, buffer.Length);
+            return elements;
+        }
 
         public static T[] ReadBlockArray<T>(BinaryReader binaryReader) where T : GuerillaBlock, new()
         {

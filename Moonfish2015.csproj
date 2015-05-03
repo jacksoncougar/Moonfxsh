@@ -2155,7 +2155,6 @@
     <Compile Include="Guerilla\Tags\BitmapBlock.Code.cs" />
     <Compile Include="Guerilla\Tags\BitmapDataBlock.Code.cs" />
     <Compile Include="ValueTypes\BlamPointer.cs" />
-    <Compile Include="Guerilla\Tags\Deserializer.cs" />
     <Compile Include="Guerilla\Tags\GlobalGeometryPartBlockNew.Code.cs" />
     <Compile Include="Guerilla\Tags\HierarchyModel.Code.cs" />
     <Compile Include="Guerilla\Tags\IResourceBlock.cs" />

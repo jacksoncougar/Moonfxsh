@@ -1,8 +1,11 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Fasterflect;
+using Microsoft.CSharp;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Reflection
@@ -163,30 +166,38 @@ namespace Moonfish.Guerilla.Reflection
                 {
                     new ParameterInfo(typeof (BinaryReader))
                 },
-                Wrapper = HasBaseClass
+                Wrapper = HasBaseClass,
+                Returns = typeof(List<BlamPointer>).Name()
             });
-            var stringBuilder = new StringBuilder();
+            var body = new StringBuilder();
+
+            var count =
+                Fields.Select(item => Type.GetType(item.FieldTypeName))
+                    .Count(fieldType => fieldType != null && fieldType.IsSubclassOf(typeof(GuerillaBlock)));
+
+            body.AppendFormatLine("var blamPointers = new List<BlamPointer>({0})", count);
+
             foreach (var item in Fields)
             {
                 if (item.IsArray)
                 {
                     // fixed byte array like padding or skip arrays
-                    if (item.ArraySize > 0 && Type.GetType(item.FieldTypeName) == typeof (byte))
+                    if (item.ArraySize > 0 && Type.GetType(item.FieldTypeName) == typeof(byte))
                     {
-                        stringBuilder.AppendLine(string.Format("{0} = binaryReader.ReadBytes({1});", item.Value.Name,
+                        body.AppendLine(string.Format("{0} = binaryReader.ReadBytes({1});", item.Value.Name,
                             item.ArraySize));
                     }
                     // variable byte array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof (byte))
+                    else if (Type.GetType(item.FieldTypeName) == typeof(byte))
                     {
-                        stringBuilder.AppendLine(string.Format("{0} = Guerilla.ReadData(binaryReader);",
-                            item.Value.Name));
+                        body.AppendFormatLine(
+                            "blamPointers.Add(Guerilla.ReadBlockArrayPointer<{0}>(binaryReader), 1)", item.FieldTypeName);
                     }
                     // variable short array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof (short))
+                    else if (Type.GetType(item.FieldTypeName) == typeof(short))
                     {
-                        stringBuilder.AppendLine(string.Format("{0} = Guerilla.ReadShortData(binaryReader);",
-                            item.Value.Name));
+                        body.AppendFormatLine(
+                            "blamPointers.Add(Guerilla.ReadBlockArrayPointer<{0}>(binaryReader), 2)", item.FieldTypeName);
                     }
                     // inline array
                     else if (item.ArraySize > 0)
@@ -197,14 +208,18 @@ namespace Moonfish.Guerilla.Reflection
                             initializer += string.Format("new {0}(binaryReader){1}", item.FieldTypeName,
                                 i == item.ArraySize ? "" : ", ");
                         }
-                        stringBuilder.AppendLine(string.Format("{0} = new []{{ {1} }};", item.Value.Name, initializer));
+                        body.AppendLine(string.Format("{0} = new []{{ {1} }};", item.Value.Name, initializer));
                     }
                     // assume a TagBlock
                     else
                     {
-                        var format = string.Format("{0} = Guerilla.ReadBlockArray<{1}>(binaryReader);", item.Value.Name,
-                            item.FieldTypeName);
-                        stringBuilder.AppendLine(format);
+                        var type = Type.GetType(item.FieldTypeName);
+                        if (type == null) continue;
+                        var instance = Activator.CreateInstance(type) as GuerillaBlock;
+                        if (instance == null) continue;
+
+                        body.AppendFormatLine(
+                            "blamPointers.Add(Guerilla.ReadBlockArrayPointer<{0}>(binaryReader, {1}))", item.FieldTypeName, instance.SerializedSize);
                     }
                 }
                 else
@@ -215,24 +230,71 @@ namespace Moonfish.Guerilla.Reflection
                         var type = enumDefinition.BaseType == EnumInfo.Type.Byte
                             ? "Byte"
                             : enumDefinition.BaseType == EnumInfo.Type.Short ? "Int16" : "Int32";
-                        stringBuilder.AppendLine(string.Format("{0} = ({1})binaryReader.Read{2}();", item.Value.Name,
+                        body.AppendLine(string.Format("{0} = ({1})binaryReader.Read{2}();", item.Value.Name,
                             item.FieldTypeName, type));
                     }
                     else if (Type.GetType(item.FieldTypeName) == null)
                     {
-                        stringBuilder.AppendLine(string.Format("{0} = new {1}(binaryReader);", item.Value.Name,
+                        body.AppendLine(string.Format("{0} = new {1}(binaryReader);", item.Value.Name,
                             item.FieldTypeName));
                     }
                     else
                     {
                         var value = BinaryIOReflection.GetBinaryReaderMethodName(Type.GetType(item.FieldTypeName));
-                        stringBuilder.AppendLine(string.Format("{0} = binaryReader.{1}();", item.Value.Name, value));
+                        body.AppendLine(string.Format("{0} = binaryReader.{1}();", item.Value.Name, value));
                     }
                 }
             }
-            Constructors.Last().Body = stringBuilder.ToString().TrimEnd();
+            body.AppendLine("return blamPointers;");
+            Constructors.Last().Body = body.ToString().TrimEnd();
         }
+        public void GenerateReadChildrenMethod()
+        {
+            Methods.Add(new MethodInfo
+            {
+                ClassName = "ReadChildren",
+                AccessModifiers = AccessModifiers.Public|AccessModifiers.Virtual,
+                Arguments = new List<ParameterInfo>
+                {
+                    new ParameterInfo(typeof (BinaryReader)),
+                    new ParameterInfo(typeof (List<BlamPointer>), "blamPointers"),
+                },
+                Wrapper = HasBaseClass,
+                Returns = typeof(void).Name()
+            });
+            var body = new StringBuilder();
 
+            var index = 0;
+            foreach (var item in Fields)
+            {
+                if (!item.IsArray) continue;
+
+                // variable byte array (data)
+                if (Type.GetType(item.FieldTypeName) == typeof(byte))
+                {
+                    body.AppendFormatLine(
+                }
+                // variable short array (data)
+                else if (Type.GetType(item.FieldTypeName) == typeof(short))
+                {
+                    body.AppendFormatLine(
+                }
+                // assume a TagBlock
+                else
+                {
+                    var fieldType = Type.GetType(item.FieldTypeName);
+                    if (fieldType == null || !fieldType.IsSubclassOf(typeof (GuerillaBlock))) continue;
+                    var type = Type.GetType(item.FieldTypeName);
+                    if (type == null) continue;
+                    var instance = Activator.CreateInstance(type) as GuerillaBlock;
+                    if (instance == null) continue;
+
+                    body.AppendFormatLine(
+                }
+            }
+            Constructors.Last().Body = body.ToString().TrimEnd();
+        }
+        
         public void GenerateBinaryReaderMethod()
         {
             Methods.Add(new MethodInfo

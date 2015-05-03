@@ -309,7 +309,6 @@ namespace Moonfish
             if (type == null) return null;
 
             Seek(ident);
-
             _deserializedTagCache[ ident ] = Deserialize( type );
             _tagHashDictionary[ ident ] = CalculateHash( ident );
 

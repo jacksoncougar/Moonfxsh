@@ -100,6 +100,12 @@
     <Compile Include="Compiler\Decompiler.cs" />
     <Compile Include="Debug\Memory.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Forms\ShaderViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ShaderViewer.Designer.cs">
+      <DependentUpon>ShaderViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="GlobalStrings.cs" />
     <Compile Include="Graphics\INode.cs" />
@@ -117,16 +123,16 @@
     <Compile Include="Graphics\DynamicScene.cs" />
     <Compile Include="Graphics\DynamicScene.Events.cs" />
     <Compile Include="Graphics\Interfaces.cs" />
-    <Compile Include="Graphics\Gizmo.cs">
+    <Compile Include="Forms\Gizmo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Graphics\Gizmo.Designer.cs">
+    <Compile Include="Forms\Gizmo.Designer.cs">
       <DependentUpon>Gizmo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graphics\MarkerViewer.cs">
+    <Compile Include="Forms\MarkerViewer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Graphics\MarkerViewer.Designer.cs">
+    <Compile Include="Forms\MarkerViewer.Designer.cs">
       <DependentUpon>MarkerViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\GraphicsEvents.cs" />
@@ -152,17 +158,11 @@
     <Compile Include="Graphics\Scene.cs" />
     <Compile Include="Graphics\Section.cs" />
     <Compile Include="Graphics\Shader.cs" />
-    <Compile Include="Graphics\ShaderViewer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Graphics\ShaderViewer.Designer.cs">
-      <DependentUpon>ShaderViewer.cs</DependentUpon>
-    </Compile>
     <Compile Include="Graphics\Swizzler.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\Track.cs" />
     <Compile Include="Graphics\VertexFunctions.cs" />
-    <Compile Include="Guerilla\BinaryIO.cs" />
+    <Compile Include="Guerilla\BinaryIOReflection.cs" />
     <Compile Include="Guerilla\GuerillaBlock.cs" />
     <Compile Include="Guerilla\Reflection\AccessModifiers.cs" />
     <Compile Include="Guerilla\Reflection\AccessModifiersExtensions.cs" />
@@ -2127,10 +2127,11 @@
     <Compile Include="Guerilla\Reflection\TokenDictionary.cs" />
     <Compile Include="Guerilla\Reflection\TokenInfo.cs" />
     <Compile Include="Guerilla\Reflection\UsingInfo.cs" />
-    <Compile Include="Guerilla\Tags\LayoutAttribute.cs" />
-    <Compile Include="Guerilla\Tags\TagBlockFieldAttribute.cs" />
-    <Compile Include="Guerilla\Tags\TagClassAttribute.cs" />
-    <Compile Include="Guerilla\Tags\TagStructFieldAttribute.cs" />
+    <Compile Include="ValueTypes\BinaryWriterExtensions.cs" />
+    <Compile Include="ValueTypes\LayoutAttribute.cs" />
+    <Compile Include="ValueTypes\TagBlockFieldAttribute.cs" />
+    <Compile Include="ValueTypes\TagClassAttribute.cs" />
+    <Compile Include="ValueTypes\TagStructFieldAttribute.cs" />
     <Compile Include="Guerilla\Validator.cs" />
     <Compile Include="Guerilla\VirtualMemoryStream.cs" />
     <Compile Include="IResource.cs" />
@@ -2149,8 +2150,8 @@
     <Compile Include="ResourcePointer.cs" />
     <Compile Include="ResourceStream.cs" />
     <Compile Include="StreamExtensions.cs" />
-    <Compile Include="Guerilla\Tags\TagFieldAttribute.cs" />
-    <Compile Include="Guerilla\Tags\BinaryReaderExtensions.cs" />
+    <Compile Include="ValueTypes\TagFieldAttribute.cs" />
+    <Compile Include="ValueTypes\BinaryReaderExtensions.cs" />
     <Compile Include="Guerilla\Tags\BitmapBlock.Code.cs" />
     <Compile Include="Guerilla\Tags\BitmapDataBlock.Code.cs" />
     <Compile Include="ValueTypes\BlamPointer.cs" />
@@ -2233,13 +2234,13 @@
     <Content Include="license.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Graphics\Gizmo.resx">
+    <EmbeddedResource Include="Forms\Gizmo.resx">
       <DependentUpon>Gizmo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Graphics\MarkerViewer.resx">
+    <EmbeddedResource Include="Forms\MarkerViewer.resx">
       <DependentUpon>MarkerViewer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Graphics\ShaderViewer.resx">
+    <EmbeddedResource Include="Forms\ShaderViewer.resx">
       <DependentUpon>ShaderViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -2251,7 +2252,6 @@
     <Folder Include="bin\Debug\" />
     <Folder Include="bin\Release\" />
     <Folder Include="bin\x86\Release\" />
-    <Folder Include="Forms\" />
     <Folder Include="Guerilla\Debug\" />
     <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>

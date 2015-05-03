@@ -37,7 +37,7 @@ namespace Moonfish.Graphics
                 var texture = new Texture( );
                 if ( !TagIdent.IsNull( item.bitmapGroup ) )
                 {
-                    var bitmapBlock = map.Deserialize(item.bitmapGroup) as BitmapBlock;
+                    var bitmapBlock = (BitmapBlock) map.Deserialize(item.bitmapGroup);
                     texture.Load( bitmapBlock, map );
                 }
                 Textures.Add( texture );

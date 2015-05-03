@@ -22,14 +22,14 @@ namespace Moonfish.Guerilla
 
         static GuerillaCs( )
         {
-            BinaryIO.CacheMethods( );
+            BinaryIOReflection.CacheMethods( );
             InitializeNamespaceDictionary( );
         }
 
         public GuerillaCs( string guerillaExecutablePath )
             : base( guerillaExecutablePath )
         {
-            BinaryIO.CacheMethods( );
+            BinaryIOReflection.CacheMethods();
             var assembly = typeof ( StringIdent ).Assembly;
             var query = from type in assembly.GetTypes( )
                 where type.GetCustomAttributes( typeof ( GuerillaTypeAttribute ), false ).Any( )

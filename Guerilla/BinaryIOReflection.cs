@@ -6,19 +6,18 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Fasterflect;
 using Microsoft.CSharp;
-using Moonfish.Graphics;
 
 namespace Moonfish.Guerilla
 {
-    public class BinaryIO
+    public class BinaryIOReflection
     {
-        private static Dictionary<Type, string> binaryWriterMethods;
-        private static Dictionary<Type, string> binaryReaderMethods;
-        public static Dictionary<Type, Delegate> binaryReaderMethodDelegates;
+        private static Dictionary<Type, string> _binaryWriterMethods;
+        private static Dictionary<Type, string> _binaryReaderMethods;
+        public static Dictionary<Type, Delegate> BinaryReaderMethodDelegates;
 
         public static string GetBinaryReaderMethodName( Type type )
         {
-            var method = ( from m in binaryReaderMethods
+            var method = ( from m in _binaryReaderMethods
                 where m.Key == type
                 where m.Value.ToLower( ).Contains( type.Name.Split( '.' ).Last( ).ToLower( ) )
                 select m.Value ).FirstOrDefault( );
@@ -27,7 +26,7 @@ namespace Moonfish.Guerilla
 
         public static string GetBinaryWriterMethodName( Type type )
         {
-            var method = ( from m in binaryWriterMethods
+            var method = ( from m in _binaryWriterMethods
                 where m.Key == type
                 where m.Value.ToLower( ).Contains( type.Name.Split( '.' ).Last( ).ToLower( ) )
                 select m.Value ).FirstOrDefault( );
@@ -58,7 +57,7 @@ namespace Moonfish.Guerilla
             return methodCache;
         }
 
-        private static List<System.Reflection.MethodInfo> FindAllMethods<T>( )
+        private static List<MethodInfo> FindAllMethods<T>( )
         {
             var types = Assembly.GetExecutingAssembly( ).GetTypes( );
             // get BinaryReader extension methods from the executing assembly 
@@ -98,9 +97,9 @@ namespace Moonfish.Guerilla
 
         public static void CacheMethods( )
         {
-            binaryReaderMethods = CreateMethodCache<BinaryReader>( );
-            binaryWriterMethods = CreateMethodCache<BinaryWriter>( );
-            binaryReaderMethodDelegates = CreateMethodDelegateCache<BinaryReader>( );
+            _binaryReaderMethods = CreateMethodCache<BinaryReader>( );
+            _binaryWriterMethods = CreateMethodCache<BinaryWriter>( );
+            BinaryReaderMethodDelegates = CreateMethodDelegateCache<BinaryReader>( );
         }
     }
 }

@@ -109,7 +109,7 @@ namespace Moonfish.Graphics
 
         private void Scene_OnFrameReady( object sender, EventArgs e )
         {
-            this.Text = string.Format( "{0:###0.00}ms",
+            Text = string.Format( "{0:###0.00}ms",
                 TimeSpan.FromTicks( ( long ) Scene.Performance.FrameTime ).TotalMilliseconds );
             glControl1.SwapBuffers( );
         }

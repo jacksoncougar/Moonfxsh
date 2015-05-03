@@ -13,7 +13,7 @@ namespace Moonfish.Guerilla.Tags
     {
     }
 
-    partial class RenderModelSectionBlock
+    partial class RenderModelSectionBlock : IResourceBlock
     {
         /// <summary>
         /// Loads geometry data into the tagblock from resource stream
@@ -28,8 +28,31 @@ namespace Moonfish.Guerilla.Tags
                 var geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock( binaryReader );
                 ResourceStream source = Halo2.GetResourceBlock( geometryBlockInfo );
                 BinaryReader reader = new BinaryReader( source );
-                return new[] {new RenderModelSectionDataBlock( reader )};
+                return new[] {new RenderModelSectionDataBlock(reader)};
             }
+        }
+
+        void IResourceBlock.LoadRawResources()
+        {
+            var source = Halo2.GetResourceBlock(geometryBlockInfo);
+            using (var binaryReader = new BinaryReader(source))
+            {
+                sectionData = new[] {new RenderModelSectionDataBlock(binaryReader)};
+
+                var vertexBufferResources = source.Resources.Where(
+                    x => x.type == GlobalGeometryBlockResourceBlockBase.Type.VertexBuffer).ToArray();
+
+                for (int i = 0; i < sectionData[0].section.vertexBuffers.Length; i++)
+                {
+                    sectionData[0].section.vertexBuffers[i].vertexBuffer.Data =
+                        source.GetResourceData(vertexBufferResources[i]);
+                }
+            }
+        }
+
+        byte[] IResourceBlock.GetRawResourceBytes()
+        {
+            throw new NotImplementedException();
         }
     }
 

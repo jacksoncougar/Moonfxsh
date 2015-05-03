@@ -32,7 +32,7 @@ namespace Moonfish.Guerilla
         /// <summary>
         /// Name of the h2 language library used for localizing user interface strings.
         /// </summary>
-        public const string H2LanguageLibrary = @"C:\Users\seed\Documents\Halo 2 Modding\h2alang.dll";
+        public const string H2LanguageLibrary = Local.LanguageLibraryPath;
 
         #region Imports
 

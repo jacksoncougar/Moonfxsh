@@ -75,7 +75,7 @@ namespace Moonfish.Cache
         {
             return from item in _data
                 where item.Class == tagClass
-                where item.Path == path
+                where item.Path.Contains(path)
                 select item;
         }
 

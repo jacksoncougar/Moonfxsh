@@ -100,33 +100,27 @@ namespace Moonfish
         private static GlobalStrings strings = new GlobalStrings( );
         private static Dictionary<TagClass, Type> definedTagGroupsDictionary;
 
-        static Halo2( )
+        static Halo2()
         {
-            Paths = new GlobalPaths( );
-            definedTagGroupsDictionary = new Dictionary<TagClass, Type>( 3 );
-            var assembly = typeof ( TagInfo ).Assembly;
-            if ( assembly == null ) throw new ArgumentNullException( "assembly" );
+            Paths = new GlobalPaths();
+            definedTagGroupsDictionary = new Dictionary<TagClass, Type>(3);
+            var assembly = typeof (TagClass).Assembly;
+            if (assembly == null) throw new ArgumentNullException("assembly");
             Type[] types;
             try
             {
-                types = assembly.GetTypes( );
+                types = assembly.GetTypes();
             }
-            catch ( ReflectionTypeLoadException e )
+            catch (ReflectionTypeLoadException e)
             {
-                types = e.Types.Where( t => t != null ).ToArray( );
+                types = e.Types.Where(t => t != null).ToArray();
             }
-            foreach ( var type in types )
+            foreach (var type in types.Where(x => x.IsDefined(typeof (TagClassAttribute), false)))
             {
-                //if (!type.IsNested)
-                {
-                    if ( type.IsDefined( typeof ( TagClassAttribute ), false ) )
-                    {
-                        TagClass class_of_tag =
-                            ( type.GetCustomAttributes( typeof ( TagClassAttribute ), false )[ 0 ] as
-                                TagClassAttribute ).TagClass;
-                        definedTagGroupsDictionary.Add( class_of_tag, type );
-                    }
-                }
+                var tagClassAttribute = type.GetCustomAttributes(typeof (TagClassAttribute), false)[0] as
+                    TagClassAttribute;
+                if (tagClassAttribute == null) continue;
+                definedTagGroupsDictionary.Add(tagClassAttribute.TagClass, type);
             }
         }
 

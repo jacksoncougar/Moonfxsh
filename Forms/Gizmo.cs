@@ -38,7 +38,7 @@ namespace Moonfish.Graphics
         private static bool IsApplicationIdle( )
         {
             NativeMessage result;
-            return PeekMessage( out result, IntPtr.Zero, ( uint ) 0, ( uint ) 0, ( uint ) 0 ) == 0;
+            return PeekMessage( out result, IntPtr.Zero, 0, 0, 0 ) == 0;
         }
 
         public Gizmo( )
@@ -64,14 +64,17 @@ namespace Moonfish.Graphics
             glControl1.MouseUp += Scene.OnMouseUp;
             glControl1.MouseClick += Scene.OnMouseClick;
 
-            Open( @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map" );
+            Open( Path.Combine(Local.MapsDirectory, "headlong.map") );
 
             var identifier = Map.Index.Select( TagClass.Hlmt, "banshee" ).First( ).Identifier;
 
             var @object = (ModelBlock)Map.Deserialize(identifier);
+            foreach (IResourceBlock section in  @object.RenderModel.sections)
+                section.LoadRawResources();
             var scenarioObject = new ScenarioObject( @object );
             Scene.ObjectManager.Add(identifier, scenarioObject);
             Scene.ProgramManager.LoadMaterials( @object.RenderModel.materials.Select( x => x.shader.Ident ), Map );
+            Scene.ProgramManager.Materials.First().Value.UsePass(0);
             Scene.CollisionManager.LoadScenarioObjectCollision(
                 Scene.ObjectManager[identifier].First());
 

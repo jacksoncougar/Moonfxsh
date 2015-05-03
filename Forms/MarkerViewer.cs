@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Moonfish.Graphics.Input;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using Moonfish.Tags.BlamExtension;
@@ -246,7 +245,7 @@ namespace Moonfish.Graphics
                 foreach ( var marker in markerGroup.markers )
                 {
                     glControl1.Controls.Add(
-                        new FloatingLabel( )
+                        new FloatingLabel
                         {
                             Text = name,
                             BackColor = Color.Red,
@@ -286,7 +285,7 @@ namespace Moonfish.Graphics
 
         private void openToolStripMenuItem_Click( object sender, EventArgs e )
         {
-            OpenFileDialog dialog = new OpenFileDialog( )
+            OpenFileDialog dialog = new OpenFileDialog
             {
                 DefaultExt = "(*.map)|map file",
                 Multiselect = false

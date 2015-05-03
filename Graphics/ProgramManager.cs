@@ -25,7 +25,7 @@ namespace Moonfish.Graphics
         private Vector3 lightPosition = new Vector3( 1f, 1f, 0.5f );
         private int NormalMapPaletteTexture;
 
-        private Dictionary<TagIdent, MaterialShader> Materials { get; set; }
+        public Dictionary<TagIdent, MaterialShader> Materials { get; set; }
 
         public ProgramManager( )
         {
@@ -42,7 +42,7 @@ namespace Moonfish.Graphics
             Materials.Clear( );
             foreach ( var shader in shaders )
             {
-                var shaderBlock = map.Deserialize(shader) as ShaderBlock;
+                var shaderBlock = (ShaderBlock) map.Deserialize(shader);
                 var material = new MaterialShader( shaderBlock, map );
                 material.UsePass( 0 );
                 Materials[ shader ] = material;

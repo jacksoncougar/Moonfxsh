@@ -235,7 +235,7 @@ namespace Moonfish
                 // is this address affected by the shift?
                 if (datum.Identifier == ident)
                 {
-                    var alignment = Guerilla.Guerilla.AlignmentOf(GetTagType( ident ));
+                    var alignment = Guerilla.Guerilla.AlignmentOf(Halo2.GetTypeOf(Index[ident].Class));
                     datum.VirtualAddress = binaryWriter.BaseStream.Pad(alignment);
                     binaryWriter.Write(new byte[size]);
                     datum.Length = size;
@@ -307,7 +307,7 @@ namespace Moonfish
 
             Seek( ident );
 
-            var typeQuery = GetTagType( ident );
+            var typeQuery = Halo2.GetTypeOf(Index[ident].Class);
 
             if ( typeQuery == null ) return null;
 
@@ -315,17 +315,6 @@ namespace Moonfish
             _tagHashDictionary[ ident ] = CalculateHash( ident );
 
             return _deserializedTagCache[ ident ];
-        }
-
-        private Type GetTagType( TagIdent ident )
-        {
-            var typeQuery = (
-                from types in Assembly.GetExecutingAssembly( ).GetTypes( )
-                where types.HasAttribute( typeof ( TagClassAttribute ) )
-                where types.Attribute<TagClassAttribute>( ).TagClass == Index[ ident ].Class
-                select types
-                ).FirstOrDefault( );
-            return typeQuery;
         }
 
         public long GetFilePosition( )

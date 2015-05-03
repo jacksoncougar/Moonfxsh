@@ -225,7 +225,7 @@ namespace Moonfish.Guerilla.Reflection
                     }
                     else
                     {
-                        var value = BinaryIO.GetBinaryReaderMethodName(Type.GetType(item.FieldTypeName));
+                        var value = BinaryIOReflection.GetBinaryReaderMethodName(Type.GetType(item.FieldTypeName));
                         stringBuilder.AppendLine(string.Format("{0} = binaryReader.{1}();", item.Value.Name, value));
                     }
                 }
@@ -305,7 +305,7 @@ namespace Moonfish.Guerilla.Reflection
                     }
                     else
                     {
-                        var value = BinaryIO.GetBinaryReaderMethodName(Type.GetType(item.FieldTypeName));
+                        var value = BinaryIOReflection.GetBinaryReaderMethodName(Type.GetType(item.FieldTypeName));
                         stringBuilder.AppendLine(string.Format("{0} = binaryReader.{1}();", item.Value.Name, value));
                     }
                 }

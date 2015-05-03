@@ -21,38 +21,38 @@ namespace Moonfish
         private static void Main( )
         {
 
-            GuerillaCs converter = new GuerillaCs(Local.GuerillaPath);
-            foreach (var tag in Guerilla.Guerilla.h2Tags)
-            {
-                converter.DumpTagLayout(
-                    new MoonfishTagGroup(tag),
-                    Path.Combine(Local.ProjectDirectory, @"\Guerilla\Tags.Generated\"));
-            }
+            //GuerillaCs converter = new GuerillaCs(Local.GuerillaPath);
+            //foreach (var tag in Guerilla.Guerilla.h2Tags)
+            //{
+            //    converter.DumpTagLayout(
+            //        new MoonfishTagGroup(tag),
+            //        Path.Combine(Local.ProjectDirectory, @"\Guerilla\Tags.Generated\"));
+            //}
 
-            var map = new CacheStream( @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map" );
+            //var map = new CacheStream( @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map" );
 
-            var item = map.Deserialize(map.Index.ScenarioIdent);
-            map.Add( (ScenarioBlock)item, "moonfish/moonfish" );
+            //var item = map.Deserialize(map.Index.ScenarioIdent);
+            //map.Add( (ScenarioBlock)item, "moonfish/moonfish" );
 
-            var validator = new Validator();
-            var guerilla = new GuerillaCs(Local.GuerillaPath);
-            var files = Directory.GetFiles(Local.MapsDirectory, "*.map", SearchOption.TopDirectoryOnly);
-            foreach (var tag in Guerilla.Guerilla.h2Tags)
-            {
-                if (!validator.Validate(new MoonfishTagGroup(tag),
-                    Guerilla.Guerilla.h2Tags.Select(x => new MoonfishTagGroup(x)), new[] { @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map" }))
-                {
+            //var validator = new Validator();
+            //var guerilla = new GuerillaCs(Local.GuerillaPath);
+            //var files = Directory.GetFiles(Local.MapsDirectory, "*.map", SearchOption.TopDirectoryOnly);
+            //foreach (var tag in Guerilla.Guerilla.h2Tags)
+            //{
+            //    if (!validator.Validate(new MoonfishTagGroup(tag),
+            //        Guerilla.Guerilla.h2Tags.Select(x => new MoonfishTagGroup(x)), new[] { @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map" }))
+            //    {
                    
-                }
-                else Console.WriteLine("{0} failed", tag.Class);
-                Application.DoEvents();
-            }
+            //    }
+            //    else Console.WriteLine("{0} failed", tag.Class);
+            //    Application.DoEvents();
+            //}
             
-            return;
+            //return;
 
             Application.EnableVisualStyles( );
             Application.SetCompatibleTextRenderingDefault( false );
-            // Application.Run(new Form1());
+            Application.Run(new Gizmo());
         }
     }
 }

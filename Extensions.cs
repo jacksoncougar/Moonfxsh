@@ -5,17 +5,6 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Moonfish.Core
-{
-    public static class CoreExtensions
-    {
-        public static void Write( this BinaryWriter binaryWriter, TagClass tagClass )
-        {
-            Extensions.Write( binaryWriter, tagClass );
-        }
-    }
-}
-
 namespace Moonfish
 {
     public static class Extensions

@@ -29,9 +29,11 @@ namespace Moonfish
             //        Path.Combine(Local.ProjectDirectory, @"\Guerilla\Tags.Generated\"));
             //}
 
-            //var map = new CacheStream( @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map" );
+            var map = new CacheStream(@"C:\Users\stem\Documents\modding\headlong.map");
+            var item = map.Deserialize(map.Index.ScenarioIdent);
+            map.ClearCache(map.Index.ScenarioIdent);
 
-            //var item = map.Deserialize(map.Index.ScenarioIdent);
+            item = map.Deserialize(map.Index.ScenarioIdent);
             //map.Add( (ScenarioBlock)item, "moonfish/moonfish" );
 
             //var validator = new Validator();

@@ -305,16 +305,23 @@ namespace Moonfish
             if ( _deserializedTagCache.TryGetValue( ident, out deserializedTag ) )
                 return deserializedTag;
 
-            Seek( ident );
+            var type = Halo2.GetTypeOf(Index[ident].Class);
+            if (type == null) return null;
 
-            var typeQuery = Halo2.GetTypeOf(Index[ident].Class);
+            Seek(ident);
 
-            if ( typeQuery == null ) return null;
-
-            _deserializedTagCache[ ident ] = this.Deserialize( typeQuery );
+            _deserializedTagCache[ ident ] = Deserialize( type );
             _tagHashDictionary[ ident ] = CalculateHash( ident );
 
             return _deserializedTagCache[ ident ];
+        }
+
+        private GuerillaBlock Deserialize(Type tagType)
+        {
+            var sourceReader = new BinaryReader(this);
+            var instance = (GuerillaBlock)Activator.CreateInstance(tagType);
+            instance.Read(sourceReader);
+            return instance;
         }
 
         public long GetFilePosition( )

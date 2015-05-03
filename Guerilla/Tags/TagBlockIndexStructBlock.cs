@@ -4,7 +4,7 @@
     {
         public byte Length
         {
-            get { return ( byte ) ( (blockIndexData & 0xFF00) >> 16 ); }
+            get { return ( byte ) ( (blockIndexData & 0xFF00) >> 8 ); }
         }
 
         public byte Index

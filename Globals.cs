@@ -144,7 +144,8 @@ namespace Moonfish
 
         public static Type GetTypeOf( TagClass className )
         {
-            return definedTagGroupsDictionary[ className ];
+            Type type;
+            return definedTagGroupsDictionary.TryGetValue(className, out type) ? type : null;
         }
 
 

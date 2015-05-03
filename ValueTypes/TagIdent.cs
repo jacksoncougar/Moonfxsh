@@ -78,7 +78,7 @@ namespace Moonfish.Tags
 
         public override string ToString( )
         {
-            return string.Format( @"{0}:{1} - {2}", Index, Convert.ToString( Salt, 16 ).ToUpper( ), Halo2.Paths[ Index ] );
+            return string.Format( @"{0}:{1} - {2}", Index, Salt, Halo2.Paths[ Index ] );
         }
 
         public static TagIdent NullIdentifier = ( TagIdent ) ( -1 );

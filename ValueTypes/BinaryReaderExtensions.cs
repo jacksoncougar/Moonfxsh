@@ -73,7 +73,7 @@ namespace Moonfish.Tags
             return new String256( new string( Encoding.UTF8.GetChars( binaryReader.ReadBytes( 256 ) ) ) );
         }
 
-        public static StringIdent ReadStringID( this BinaryReader binaryReader )
+        public static StringIdent ReadStringIdent( this BinaryReader binaryReader )
         {
             return new StringIdent( binaryReader.ReadInt32( ) );
         }

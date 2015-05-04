@@ -83,6 +83,7 @@ namespace Moonfish.Guerilla
 
         public virtual int Write(BinaryWriter binaryWriter, int nextAddress)
         {
+            return nextAddress;
         }
     }
 }

@@ -124,17 +124,20 @@ namespace Moonfish.Guerilla
                 FileAccess.Write, FileShare.ReadWrite ) )
             {
                 var size = tag.Definition.CalculateSizeOfFieldSet();
-                var parentTag = h2Tags.SingleOrDefault( x => x.Class == tag.ParentClass );
-                if ( parentTag != null )
+
+                var hasParent = h2Tags.Any(x => x.Class == tag.ParentClass);
+                if (hasParent)
                 {
+                    var parentTag = new MoonfishTagGroup(h2Tags.First(x => x.Class == tag.ParentClass));
                     info.BaseClass = new ClassInfo(TokenDictionary.GenerateValidIdentifier(
                         ToTypeName(parentTag.Definition.Name)));
 
                     // loop through all the parents summing up thier sizes
-                    while ( parentTag != null )
+                    while ( hasParent )
                     {
                         size += parentTag.Definition.CalculateSizeOfFieldSet( );
-                        parentTag = h2Tags.SingleOrDefault( x => x.Class == parentTag.ParentClass );
+                        hasParent = h2Tags.Any(x => x.Class == parentTag.Class);
+                        parentTag = new MoonfishTagGroup(h2Tags.First(x => x.Class == parentTag.ParentClass));
                     }
                 }
                 else
@@ -458,7 +461,7 @@ namespace Moonfish.Guerilla
                                 BeginProcessTagBlockDefinition( field.Definition.Definition );
                         }
 
-                        fieldInfo.FieldTypeName = _definitionsDictionary[ field.Definition.Name ].Value.Name;
+                        fieldInfo.FieldTypeName = _definitionsDictionary[ field.Definition.Name ].Name;
                         @class.Fields.Add( fieldInfo );
                         break;
                     }

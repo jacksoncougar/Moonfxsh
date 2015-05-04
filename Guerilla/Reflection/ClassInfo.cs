@@ -341,13 +341,13 @@ namespace Moonfish.Guerilla.Reflection
                     else if (Type.GetType(item.FieldTypeName) == typeof(byte))
                     {
                         body.AppendFormatLine(
-                            "blamPointers.Enqueue(ReadBlockArrayPointer<{0}>(binaryReader), 1);", item.FieldTypeName);
+                            "blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));", item.FieldTypeName);
                     }
                     // variable short array (data)
                     else if (Type.GetType(item.FieldTypeName) == typeof(short))
                     {
                         body.AppendFormatLine(
-                            "blamPointers.Enqueue(ReadBlockArrayPointer<{0}>(binaryReader), 2);", item.FieldTypeName);
+                            "blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 2));", item.FieldTypeName);
                     }
                     // inline array
                     else if (item.ArraySize > 0)

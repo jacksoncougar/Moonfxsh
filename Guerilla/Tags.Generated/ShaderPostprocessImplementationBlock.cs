@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPostprocessImplementationBlock : ShaderPostprocessImplementationBlockBase
     {
-        public  ShaderPostprocessImplementationBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderPostprocessImplementationBlock() : base()
         {
-            
-        }
-        public  ShaderPostprocessImplementationBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 44, Alignment = 4)]
@@ -32,45 +29,54 @@ namespace Moonfish.Guerilla.Tags
         internal TagBlockIndexStructBlock valueOverlays;
         internal TagBlockIndexStructBlock colorOverlays;
         internal TagBlockIndexStructBlock vertexShaderConstants;
-        
-        public override int SerializedSize{get { return 44; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ShaderPostprocessImplementationBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 44; } }
+        public override int Alignment { get { return 4; } }
+        public ShaderPostprocessImplementationBlockBase() : base()
         {
-            gPUConstantState = new ShaderGpuStateReferenceStructBlock(binaryReader);
-            gPUVolatileState = new ShaderGpuStateReferenceStructBlock(binaryReader);
-            bitmapParameters = new TagBlockIndexStructBlock(binaryReader);
-            bitmapTransforms = new TagBlockIndexStructBlock(binaryReader);
-            valueParameters = new TagBlockIndexStructBlock(binaryReader);
-            colorParameters = new TagBlockIndexStructBlock(binaryReader);
-            bitmapTransformOverlays = new TagBlockIndexStructBlock(binaryReader);
-            valueOverlays = new TagBlockIndexStructBlock(binaryReader);
-            colorOverlays = new TagBlockIndexStructBlock(binaryReader);
-            vertexShaderConstants = new TagBlockIndexStructBlock(binaryReader);
         }
-        public  ShaderPostprocessImplementationBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            gPUConstantState = new ShaderGpuStateReferenceStructBlock();
+            blamPointers.Concat(gPUConstantState.ReadFields(binaryReader));
+            gPUVolatileState = new ShaderGpuStateReferenceStructBlock();
+            blamPointers.Concat(gPUVolatileState.ReadFields(binaryReader));
+            bitmapParameters = new TagBlockIndexStructBlock();
+            blamPointers.Concat(bitmapParameters.ReadFields(binaryReader));
+            bitmapTransforms = new TagBlockIndexStructBlock();
+            blamPointers.Concat(bitmapTransforms.ReadFields(binaryReader));
+            valueParameters = new TagBlockIndexStructBlock();
+            blamPointers.Concat(valueParameters.ReadFields(binaryReader));
+            colorParameters = new TagBlockIndexStructBlock();
+            blamPointers.Concat(colorParameters.ReadFields(binaryReader));
+            bitmapTransformOverlays = new TagBlockIndexStructBlock();
+            blamPointers.Concat(bitmapTransformOverlays.ReadFields(binaryReader));
+            valueOverlays = new TagBlockIndexStructBlock();
+            blamPointers.Concat(valueOverlays.ReadFields(binaryReader));
+            colorOverlays = new TagBlockIndexStructBlock();
+            blamPointers.Concat(colorOverlays.ReadFields(binaryReader));
+            vertexShaderConstants = new TagBlockIndexStructBlock();
+            blamPointers.Concat(vertexShaderConstants.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            gPUConstantState = new ShaderGpuStateReferenceStructBlock(binaryReader);
-            gPUVolatileState = new ShaderGpuStateReferenceStructBlock(binaryReader);
-            bitmapParameters = new TagBlockIndexStructBlock(binaryReader);
-            bitmapTransforms = new TagBlockIndexStructBlock(binaryReader);
-            valueParameters = new TagBlockIndexStructBlock(binaryReader);
-            colorParameters = new TagBlockIndexStructBlock(binaryReader);
-            bitmapTransformOverlays = new TagBlockIndexStructBlock(binaryReader);
-            valueOverlays = new TagBlockIndexStructBlock(binaryReader);
-            colorOverlays = new TagBlockIndexStructBlock(binaryReader);
-            vertexShaderConstants = new TagBlockIndexStructBlock(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            gPUConstantState.ReadPointers(binaryReader, blamPointers);
+            gPUVolatileState.ReadPointers(binaryReader, blamPointers);
+            bitmapParameters.ReadPointers(binaryReader, blamPointers);
+            bitmapTransforms.ReadPointers(binaryReader, blamPointers);
+            valueParameters.ReadPointers(binaryReader, blamPointers);
+            colorParameters.ReadPointers(binaryReader, blamPointers);
+            bitmapTransformOverlays.ReadPointers(binaryReader, blamPointers);
+            valueOverlays.ReadPointers(binaryReader, blamPointers);
+            colorOverlays.ReadPointers(binaryReader, blamPointers);
+            vertexShaderConstants.ReadPointers(binaryReader, blamPointers);
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 gPUConstantState.Write(binaryWriter);
                 gPUVolatileState.Write(binaryWriter);

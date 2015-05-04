@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class LiquidCoreBlock : LiquidCoreBlockBase
     {
-        public  LiquidCoreBlock(BinaryReader binaryReader): base(binaryReader)
+        public LiquidCoreBlock() : base()
         {
-            
-        }
-        public  LiquidCoreBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 56, Alignment = 4)]
@@ -30,41 +27,42 @@ namespace Moonfish.Guerilla.Tags
         internal ScalarFunctionStructBlock brightnessTime;
         internal ScalarFunctionStructBlock brightnessFacing;
         internal ScalarFunctionStructBlock alongAxisScale;
-        
-        public override int SerializedSize{get { return 56; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  LiquidCoreBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 56; } }
+        public override int Alignment { get { return 4; } }
+        public LiquidCoreBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(12);
             bitmapIndex = binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
-            thickness = new ScalarFunctionStructBlock(binaryReader);
-            color = new ColorFunctionStructBlock(binaryReader);
-            brightnessTime = new ScalarFunctionStructBlock(binaryReader);
-            brightnessFacing = new ScalarFunctionStructBlock(binaryReader);
-            alongAxisScale = new ScalarFunctionStructBlock(binaryReader);
+            thickness = new ScalarFunctionStructBlock();
+            blamPointers.Concat(thickness.ReadFields(binaryReader));
+            color = new ColorFunctionStructBlock();
+            blamPointers.Concat(color.ReadFields(binaryReader));
+            brightnessTime = new ScalarFunctionStructBlock();
+            blamPointers.Concat(brightnessTime.ReadFields(binaryReader));
+            brightnessFacing = new ScalarFunctionStructBlock();
+            blamPointers.Concat(brightnessFacing.ReadFields(binaryReader));
+            alongAxisScale = new ScalarFunctionStructBlock();
+            blamPointers.Concat(alongAxisScale.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  LiquidCoreBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            thickness.ReadPointers(binaryReader, blamPointers);
+            color.ReadPointers(binaryReader, blamPointers);
+            brightnessTime.ReadPointers(binaryReader, blamPointers);
+            brightnessFacing.ReadPointers(binaryReader, blamPointers);
+            alongAxisScale.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadBytes(12);
-            bitmapIndex = binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            thickness = new ScalarFunctionStructBlock(binaryReader);
-            color = new ColorFunctionStructBlock(binaryReader);
-            brightnessTime = new ScalarFunctionStructBlock(binaryReader);
-            brightnessFacing = new ScalarFunctionStructBlock(binaryReader);
-            alongAxisScale = new ScalarFunctionStructBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 12);
                 binaryWriter.Write(bitmapIndex);

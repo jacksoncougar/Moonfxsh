@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AreasBlock : AreasBlockBase
     {
-        public  AreasBlock(BinaryReader binaryReader): base(binaryReader)
+        public AreasBlock() : base()
         {
-            
-        }
-        public  AreasBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 136, Alignment = 4)]
@@ -30,14 +27,14 @@ namespace Moonfish.Guerilla.Tags
         internal short manualReferenceFrame;
         internal byte[] invalidName_2;
         internal FlightReferenceBlock[] flightHints;
-        
-        public override int SerializedSize{get { return 136; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  AreasBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 136; } }
+        public override int Alignment { get { return 4; } }
+        public AreasBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
             areaFlags = (AreaFlags)binaryReader.ReadInt32();
             invalidName_ = binaryReader.ReadBytes(20);
@@ -45,26 +42,18 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(64);
             manualReferenceFrame = binaryReader.ReadInt16();
             invalidName_2 = binaryReader.ReadBytes(2);
-            flightHints = Guerilla.ReadBlockArray<FlightReferenceBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<FlightReferenceBlock>(binaryReader));
+            return blamPointers;
         }
-        public  AreasBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            flightHints = ReadBlockArrayData<FlightReferenceBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadString32();
-            areaFlags = (AreaFlags)binaryReader.ReadInt32();
-            invalidName_ = binaryReader.ReadBytes(20);
-            invalidName_0 = binaryReader.ReadBytes(4);
-            invalidName_1 = binaryReader.ReadBytes(64);
-            manualReferenceFrame = binaryReader.ReadInt16();
-            invalidName_2 = binaryReader.ReadBytes(2);
-            flightHints = Guerilla.ReadBlockArray<FlightReferenceBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write((Int32)areaFlags);

@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalHudScreenEffectDefinition : GlobalHudScreenEffectDefinitionBase
     {
-        public  GlobalHudScreenEffectDefinition(BinaryReader binaryReader): base(binaryReader)
+        public GlobalHudScreenEffectDefinition() : base()
         {
-            
-        }
-        public  GlobalHudScreenEffectDefinition(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 320, Alignment = 4)]
@@ -47,14 +44,14 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("egor")]
         internal Moonfish.Tags.TagReference screenEffect0;
         internal byte[] invalidName_12;
-        
-        public override int SerializedSize{get { return 320; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GlobalHudScreenEffectDefinitionBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 320; } }
+        public override int Alignment { get { return 4; } }
+        public GlobalHudScreenEffectDefinitionBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(4);
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
@@ -76,38 +73,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_11 = binaryReader.ReadBytes(32);
             screenEffect0 = binaryReader.ReadTagReference();
             invalidName_12 = binaryReader.ReadBytes(32);
+            return blamPointers;
         }
-        public  GlobalHudScreenEffectDefinitionBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadBytes(4);
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            invalidName_1 = binaryReader.ReadBytes(16);
-            maskFullscreen = binaryReader.ReadTagReference();
-            maskSplitscreen = binaryReader.ReadTagReference();
-            invalidName_2 = binaryReader.ReadBytes(8);
-            invalidName_3 = binaryReader.ReadBytes(20);
-            invalidName_4 = binaryReader.ReadBytes(24);
-            invalidName_5 = binaryReader.ReadBytes(8);
-            invalidName_6 = binaryReader.ReadBytes(24);
-            invalidName_7 = binaryReader.ReadBytes(20);
-            invalidName_8 = binaryReader.ReadBytes(24);
-            screenEffectFlags = (ScreenEffectFlags)binaryReader.ReadInt32();
-            invalidName_9 = binaryReader.ReadBytes(32);
-            screenEffect = binaryReader.ReadTagReference();
-            invalidName_10 = binaryReader.ReadBytes(32);
-            screenEffectFlags0 = (ScreenEffectFlags)binaryReader.ReadInt32();
-            invalidName_11 = binaryReader.ReadBytes(32);
-            screenEffect0 = binaryReader.ReadTagReference();
-            invalidName_12 = binaryReader.ReadBytes(32);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 4);
                 binaryWriter.Write((Int16)flags);

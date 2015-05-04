@@ -15,29 +15,14 @@ namespace Moonfish.Guerilla.Tags
 
     partial class RenderModelSectionBlock : IResourceBlock
     {
-        /// <summary>
-        /// Loads geometry data into the tagblock from resource stream
-        /// </summary>
-        /// <param name="binaryReader"></param>
-        /// <returns></returns>
-        internal RenderModelSectionDataBlock[] ReadRenderModelSectionDataBlockArray( BinaryReader binaryReader )
-        {
-            binaryReader.ReadBytes( 8 );
-            using ( binaryReader.BaseStream.Pin( ) )
-            {
-                var geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock( binaryReader );
-                ResourceStream source = Halo2.GetResourceBlock( geometryBlockInfo );
-                BinaryReader reader = new BinaryReader( source );
-                return new[] {new RenderModelSectionDataBlock(reader)};
-            }
-        }
 
         void IResourceBlock.LoadRawResources()
         {
             var source = Halo2.GetResourceBlock(geometryBlockInfo);
             using (var binaryReader = new BinaryReader(source))
             {
-                sectionData = new[] {new RenderModelSectionDataBlock(binaryReader)};
+                sectionData = new[] {new RenderModelSectionDataBlock()};
+                sectionData[0].Read(binaryReader);
 
                 var vertexBufferResources = source.Resources.Where(
                     x => x.type == GlobalGeometryBlockResourceBlockBase.Type.VertexBuffer).ToArray();

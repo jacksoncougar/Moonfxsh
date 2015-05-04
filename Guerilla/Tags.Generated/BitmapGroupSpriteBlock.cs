@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class BitmapGroupSpriteBlock : BitmapGroupSpriteBlockBase
     {
-        public  BitmapGroupSpriteBlock(BinaryReader binaryReader): base(binaryReader)
+        public BitmapGroupSpriteBlock() : base()
         {
-            
-        }
-        public  BitmapGroupSpriteBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 32, Alignment = 4)]
@@ -30,14 +27,14 @@ namespace Moonfish.Guerilla.Tags
         internal float top;
         internal float bottom;
         internal OpenTK.Vector2 registrationPoint;
-        
-        public override int SerializedSize{get { return 32; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  BitmapGroupSpriteBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 32; } }
+        public override int Alignment { get { return 4; } }
+        public BitmapGroupSpriteBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             bitmapIndex = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             invalidName_0 = binaryReader.ReadBytes(4);
@@ -46,25 +43,16 @@ namespace Moonfish.Guerilla.Tags
             top = binaryReader.ReadSingle();
             bottom = binaryReader.ReadSingle();
             registrationPoint = binaryReader.ReadVector2();
+            return blamPointers;
         }
-        public  BitmapGroupSpriteBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            bitmapIndex = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(4);
-            left = binaryReader.ReadSingle();
-            right = binaryReader.ReadSingle();
-            top = binaryReader.ReadSingle();
-            bottom = binaryReader.ReadSingle();
-            registrationPoint = binaryReader.ReadVector2();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(bitmapIndex);
                 binaryWriter.Write(invalidName_, 0, 2);

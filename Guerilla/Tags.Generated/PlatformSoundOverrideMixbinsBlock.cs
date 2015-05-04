@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PlatformSoundOverrideMixbinsBlock : PlatformSoundOverrideMixbinsBlockBase
     {
-        public  PlatformSoundOverrideMixbinsBlock(BinaryReader binaryReader): base(binaryReader)
+        public PlatformSoundOverrideMixbinsBlock() : base()
         {
-            
-        }
-        public  PlatformSoundOverrideMixbinsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
@@ -24,29 +21,26 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Mixbin mixbin;
         internal float gainDB;
-        
-        public override int SerializedSize{get { return 8; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PlatformSoundOverrideMixbinsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 8; } }
+        public override int Alignment { get { return 4; } }
+        public PlatformSoundOverrideMixbinsBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             mixbin = (Mixbin)binaryReader.ReadInt32();
             gainDB = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  PlatformSoundOverrideMixbinsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            mixbin = (Mixbin)binaryReader.ReadInt32();
-            gainDB = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)mixbin);
                 binaryWriter.Write(gainDB);

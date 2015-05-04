@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class DecoratorCacheBlockDataBlock : DecoratorCacheBlockDataBlockBase
     {
-        public  DecoratorCacheBlockDataBlock(BinaryReader binaryReader): base(binaryReader)
+        public DecoratorCacheBlockDataBlock() : base()
         {
-            
-        }
-        public  DecoratorCacheBlockDataBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 136, Alignment = 4)]
@@ -31,43 +28,38 @@ namespace Moonfish.Guerilla.Tags
         internal IndicesBlock[] spriteIndices;
         internal Moonfish.Tags.VertexBuffer spriteVertexBuffer;
         internal byte[] invalidName_0;
-        
-        public override int SerializedSize{get { return 136; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  DecoratorCacheBlockDataBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 136; } }
+        public override int Alignment { get { return 4; } }
+        public DecoratorCacheBlockDataBlockBase() : base()
         {
-            placements = Guerilla.ReadBlockArray<DecoratorPlacementBlock>(binaryReader);
-            decalVertices = Guerilla.ReadBlockArray<DecalVerticesBlock>(binaryReader);
-            decalIndices = Guerilla.ReadBlockArray<IndicesBlock>(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorPlacementBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<DecalVerticesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<IndicesBlock>(binaryReader));
             decalVertexBuffer = binaryReader.ReadVertexBuffer();
             invalidName_ = binaryReader.ReadBytes(16);
-            spriteVertices = Guerilla.ReadBlockArray<SpriteVerticesBlock>(binaryReader);
-            spriteIndices = Guerilla.ReadBlockArray<IndicesBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<SpriteVerticesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<IndicesBlock>(binaryReader));
             spriteVertexBuffer = binaryReader.ReadVertexBuffer();
             invalidName_0 = binaryReader.ReadBytes(16);
+            return blamPointers;
         }
-        public  DecoratorCacheBlockDataBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            placements = ReadBlockArrayData<DecoratorPlacementBlock>(binaryReader, blamPointers.Dequeue());
+            decalVertices = ReadBlockArrayData<DecalVerticesBlock>(binaryReader, blamPointers.Dequeue());
+            decalIndices = ReadBlockArrayData<IndicesBlock>(binaryReader, blamPointers.Dequeue());
+            spriteVertices = ReadBlockArrayData<SpriteVerticesBlock>(binaryReader, blamPointers.Dequeue());
+            spriteIndices = ReadBlockArrayData<IndicesBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            placements = Guerilla.ReadBlockArray<DecoratorPlacementBlock>(binaryReader);
-            decalVertices = Guerilla.ReadBlockArray<DecalVerticesBlock>(binaryReader);
-            decalIndices = Guerilla.ReadBlockArray<IndicesBlock>(binaryReader);
-            decalVertexBuffer = binaryReader.ReadVertexBuffer();
-            invalidName_ = binaryReader.ReadBytes(16);
-            spriteVertices = Guerilla.ReadBlockArray<SpriteVerticesBlock>(binaryReader);
-            spriteIndices = Guerilla.ReadBlockArray<IndicesBlock>(binaryReader);
-            spriteVertexBuffer = binaryReader.ReadVertexBuffer();
-            invalidName_0 = binaryReader.ReadBytes(16);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<DecoratorPlacementBlock>(binaryWriter, placements, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<DecalVerticesBlock>(binaryWriter, decalVertices, nextAddress);

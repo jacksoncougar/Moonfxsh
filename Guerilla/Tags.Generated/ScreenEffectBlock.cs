@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("egor")]
     public partial class ScreenEffectBlock : ScreenEffectBlockBase
     {
-        public  ScreenEffectBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScreenEffectBlock() : base()
         {
-            
-        }
-        public  ScreenEffectBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 144, Alignment = 4)]
@@ -36,33 +33,29 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference shader;
         internal byte[] invalidName_0;
         internal RasterizerScreenEffectPassReferenceBlock[] passReferences;
-        
-        public override int SerializedSize{get { return 144; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScreenEffectBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 144; } }
+        public override int Alignment { get { return 4; } }
+        public ScreenEffectBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(64);
             shader = binaryReader.ReadTagReference();
             invalidName_0 = binaryReader.ReadBytes(64);
-            passReferences = Guerilla.ReadBlockArray<RasterizerScreenEffectPassReferenceBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<RasterizerScreenEffectPassReferenceBlock>(binaryReader));
+            return blamPointers;
         }
-        public  ScreenEffectBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            passReferences = ReadBlockArrayData<RasterizerScreenEffectPassReferenceBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadBytes(64);
-            shader = binaryReader.ReadTagReference();
-            invalidName_0 = binaryReader.ReadBytes(64);
-            passReferences = Guerilla.ReadBlockArray<RasterizerScreenEffectPassReferenceBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 64);
                 binaryWriter.Write(shader);

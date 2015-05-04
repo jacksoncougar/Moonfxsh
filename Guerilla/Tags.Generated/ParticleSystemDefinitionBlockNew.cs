@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ParticleSystemDefinitionBlockNew : ParticleSystemDefinitionBlockNewBase
     {
-        public  ParticleSystemDefinitionBlockNew(BinaryReader binaryReader): base(binaryReader)
+        public ParticleSystemDefinitionBlockNew() : base()
         {
-            
-        }
-        public  ParticleSystemDefinitionBlockNew(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 56, Alignment = 4)]
@@ -53,14 +50,14 @@ namespace Moonfish.Guerilla.Tags
         internal float lODFeatherOutDelta;
         internal byte[] invalidName_0;
         internal ParticleSystemEmitterDefinitionBlock[] emitters;
-        
-        public override int SerializedSize{get { return 56; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ParticleSystemDefinitionBlockNewBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 56; } }
+        public override int Alignment { get { return 4; } }
+        public ParticleSystemDefinitionBlockNewBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             particle = binaryReader.ReadTagReference();
             location = binaryReader.ReadLongBlockIndex1();
             coordinateSystem = (CoordinateSystem)binaryReader.ReadInt16();
@@ -75,33 +72,18 @@ namespace Moonfish.Guerilla.Tags
             lODOutDistance = binaryReader.ReadSingle();
             lODFeatherOutDelta = binaryReader.ReadSingle();
             invalidName_0 = binaryReader.ReadBytes(4);
-            emitters = Guerilla.ReadBlockArray<ParticleSystemEmitterDefinitionBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ParticleSystemEmitterDefinitionBlock>(binaryReader));
+            return blamPointers;
         }
-        public  ParticleSystemDefinitionBlockNewBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            emitters = ReadBlockArrayData<ParticleSystemEmitterDefinitionBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            particle = binaryReader.ReadTagReference();
-            location = binaryReader.ReadLongBlockIndex1();
-            coordinateSystem = (CoordinateSystem)binaryReader.ReadInt16();
-            environment = (Environment)binaryReader.ReadInt16();
-            disposition = (Disposition)binaryReader.ReadInt16();
-            cameraMode = (CameraMode)binaryReader.ReadInt16();
-            sortBias = binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            lODInDistance = binaryReader.ReadSingle();
-            lODFeatherInDelta = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(4);
-            lODOutDistance = binaryReader.ReadSingle();
-            lODFeatherOutDelta = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            emitters = Guerilla.ReadBlockArray<ParticleSystemEmitterDefinitionBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(particle);
                 binaryWriter.Write(location);

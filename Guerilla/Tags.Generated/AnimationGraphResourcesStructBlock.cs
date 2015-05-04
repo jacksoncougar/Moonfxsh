@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AnimationGraphResourcesStructBlock : AnimationGraphResourcesStructBlockBase
     {
-        public  AnimationGraphResourcesStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public AnimationGraphResourcesStructBlock() : base()
         {
-            
-        }
-        public  AnimationGraphResourcesStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 52, Alignment = 4)]
@@ -32,43 +29,38 @@ namespace Moonfish.Guerilla.Tags
         internal AnimationGraphEffectReferenceBlock[] effectReferencesABCDCC;
         internal AnimationBlendScreenBlock[] blendScreensABCDCC;
         internal AnimationPoolBlock[] animationsABCDCC;
-        
-        public override int SerializedSize{get { return 52; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  AnimationGraphResourcesStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 52; } }
+        public override int Alignment { get { return 4; } }
+        public AnimationGraphResourcesStructBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             parentAnimationGraph = binaryReader.ReadTagReference();
             inheritanceFlags = (InheritanceFlags)binaryReader.ReadByte();
             privateFlags = (PrivateFlags)binaryReader.ReadByte();
             animationCodecPack = binaryReader.ReadInt16();
-            skeletonNodesABCDCC = Guerilla.ReadBlockArray<AnimationGraphNodeBlock>(binaryReader);
-            soundReferencesABCDCC = Guerilla.ReadBlockArray<AnimationGraphSoundReferenceBlock>(binaryReader);
-            effectReferencesABCDCC = Guerilla.ReadBlockArray<AnimationGraphEffectReferenceBlock>(binaryReader);
-            blendScreensABCDCC = Guerilla.ReadBlockArray<AnimationBlendScreenBlock>(binaryReader);
-            animationsABCDCC = Guerilla.ReadBlockArray<AnimationPoolBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<AnimationGraphNodeBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<AnimationGraphSoundReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<AnimationGraphEffectReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<AnimationBlendScreenBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<AnimationPoolBlock>(binaryReader));
+            return blamPointers;
         }
-        public  AnimationGraphResourcesStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            skeletonNodesABCDCC = ReadBlockArrayData<AnimationGraphNodeBlock>(binaryReader, blamPointers.Dequeue());
+            soundReferencesABCDCC = ReadBlockArrayData<AnimationGraphSoundReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            effectReferencesABCDCC = ReadBlockArrayData<AnimationGraphEffectReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            blendScreensABCDCC = ReadBlockArrayData<AnimationBlendScreenBlock>(binaryReader, blamPointers.Dequeue());
+            animationsABCDCC = ReadBlockArrayData<AnimationPoolBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            parentAnimationGraph = binaryReader.ReadTagReference();
-            inheritanceFlags = (InheritanceFlags)binaryReader.ReadByte();
-            privateFlags = (PrivateFlags)binaryReader.ReadByte();
-            animationCodecPack = binaryReader.ReadInt16();
-            skeletonNodesABCDCC = Guerilla.ReadBlockArray<AnimationGraphNodeBlock>(binaryReader);
-            soundReferencesABCDCC = Guerilla.ReadBlockArray<AnimationGraphSoundReferenceBlock>(binaryReader);
-            effectReferencesABCDCC = Guerilla.ReadBlockArray<AnimationGraphEffectReferenceBlock>(binaryReader);
-            blendScreensABCDCC = Guerilla.ReadBlockArray<AnimationBlendScreenBlock>(binaryReader);
-            animationsABCDCC = Guerilla.ReadBlockArray<AnimationPoolBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(parentAnimationGraph);
                 binaryWriter.Write((Byte)inheritanceFlags);

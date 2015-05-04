@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class MultiplayerConstantsBlock : MultiplayerConstantsBlockBase
     {
-        public  MultiplayerConstantsBlock(BinaryReader binaryReader): base(binaryReader)
+        public MultiplayerConstantsBlock() : base()
         {
-            
-        }
-        public  MultiplayerConstantsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 352, Alignment = 4)]
@@ -55,14 +52,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_4;
         internal byte[] invalidName_5;
         internal byte[] invalidName_6;
-        
-        public override int SerializedSize{get { return 352; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  MultiplayerConstantsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 352; } }
+        public override int Alignment { get { return 4; } }
+        public MultiplayerConstantsBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             maximumRandomSpawnBias = binaryReader.ReadSingle();
             teleporterRechargeTimeSeconds = binaryReader.ReadSingle();
             grenadeDangerWeight = binaryReader.ReadSingle();
@@ -89,43 +86,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_4 = binaryReader.ReadBytes(32);
             invalidName_5 = binaryReader.ReadBytes(32);
             invalidName_6 = binaryReader.ReadBytes(32);
+            return blamPointers;
         }
-        public  MultiplayerConstantsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            maximumRandomSpawnBias = binaryReader.ReadSingle();
-            teleporterRechargeTimeSeconds = binaryReader.ReadSingle();
-            grenadeDangerWeight = binaryReader.ReadSingle();
-            grenadeDangerInnerRadius = binaryReader.ReadSingle();
-            grenadeDangerOuterRadius = binaryReader.ReadSingle();
-            grenadeDangerLeadTimeSeconds = binaryReader.ReadSingle();
-            vehicleDangerMinSpeedWuSec = binaryReader.ReadSingle();
-            vehicleDangerWeight = binaryReader.ReadSingle();
-            vehicleDangerRadius = binaryReader.ReadSingle();
-            vehicleDangerLeadTimeSeconds = binaryReader.ReadSingle();
-            vehicleNearbyPlayerDist = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(84);
-            invalidName_0 = binaryReader.ReadBytes(32);
-            invalidName_1 = binaryReader.ReadBytes(32);
-            hillShader = binaryReader.ReadTagReference();
-            invalidName_2 = binaryReader.ReadBytes(16);
-            flagResetStopDistance = binaryReader.ReadSingle();
-            bombExplodeEffect = binaryReader.ReadTagReference();
-            bombExplodeDmgEffect = binaryReader.ReadTagReference();
-            bombDefuseEffect = binaryReader.ReadTagReference();
-            bombDefusalString = binaryReader.ReadStringID();
-            blockedTeleporterString = binaryReader.ReadStringID();
-            invalidName_3 = binaryReader.ReadBytes(4);
-            invalidName_4 = binaryReader.ReadBytes(32);
-            invalidName_5 = binaryReader.ReadBytes(32);
-            invalidName_6 = binaryReader.ReadBytes(32);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(maximumRandomSpawnBias);
                 binaryWriter.Write(teleporterRechargeTimeSeconds);

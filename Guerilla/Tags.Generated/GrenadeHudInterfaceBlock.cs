@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("grhi")]
     public partial class GrenadeHudInterfaceBlock : GrenadeHudInterfaceBlockBase
     {
-        public  GrenadeHudInterfaceBlock(BinaryReader binaryReader): base(binaryReader)
+        public GrenadeHudInterfaceBlock() : base()
         {
-            
-        }
-        public  GrenadeHudInterfaceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 464, Alignment = 4)]
@@ -135,14 +132,14 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags0;
         internal short textIndex;
         internal byte[] invalidName_18;
-        
-        public override int SerializedSize{get { return 464; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GrenadeHudInterfaceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 464; } }
+        public override int Alignment { get { return 4; } }
+        public GrenadeHudInterfaceBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             anchor = (Anchor)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             invalidName_0 = binaryReader.ReadBytes(32);
@@ -164,7 +161,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_3 = binaryReader.ReadBytes(4);
             sequenceIndex = binaryReader.ReadInt16();
             invalidName_4 = binaryReader.ReadBytes(2);
-            multitexOverlay = Guerilla.ReadBlockArray<GlobalHudMultitextureOverlayDefinition>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalHudMultitextureOverlayDefinition>(binaryReader));
             invalidName_5 = binaryReader.ReadBytes(4);
             anchorOffset0 = binaryReader.ReadPoint();
             widthScale0 = binaryReader.ReadSingle();
@@ -184,7 +181,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_8 = binaryReader.ReadBytes(4);
             sequenceIndex0 = binaryReader.ReadInt16();
             invalidName_9 = binaryReader.ReadBytes(2);
-            multitexOverlay0 = Guerilla.ReadBlockArray<GlobalHudMultitextureOverlayDefinition>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalHudMultitextureOverlayDefinition>(binaryReader));
             invalidName_10 = binaryReader.ReadBytes(4);
             anchorOffset1 = binaryReader.ReadPoint();
             widthScale1 = binaryReader.ReadSingle();
@@ -209,8 +206,8 @@ namespace Moonfish.Guerilla.Tags
             flashCutoff = binaryReader.ReadInt16();
             invalidName_16 = binaryReader.ReadBytes(2);
             overlayBitmap = binaryReader.ReadTagReference();
-            overlays = Guerilla.ReadBlockArray<GrenadeHudOverlayBlock>(binaryReader);
-            warningSounds = Guerilla.ReadBlockArray<GrenadeHudSoundBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GrenadeHudOverlayBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GrenadeHudSoundBlock>(binaryReader));
             invalidName_17 = binaryReader.ReadBytes(68);
             sequenceIndex1 = binaryReader.ReadInt16();
             widthOffset = binaryReader.ReadInt16();
@@ -220,94 +217,20 @@ namespace Moonfish.Guerilla.Tags
             flags0 = (Flags)binaryReader.ReadByte();
             textIndex = binaryReader.ReadInt16();
             invalidName_18 = binaryReader.ReadBytes(48);
+            return blamPointers;
         }
-        public  GrenadeHudInterfaceBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            multitexOverlay = ReadBlockArrayData<GlobalHudMultitextureOverlayDefinition>(binaryReader, blamPointers.Dequeue());
+            multitexOverlay0 = ReadBlockArrayData<GlobalHudMultitextureOverlayDefinition>(binaryReader, blamPointers.Dequeue());
+            overlays = ReadBlockArrayData<GrenadeHudOverlayBlock>(binaryReader, blamPointers.Dequeue());
+            warningSounds = ReadBlockArrayData<GrenadeHudSoundBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            anchor = (Anchor)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(32);
-            anchorOffset = binaryReader.ReadPoint();
-            widthScale = binaryReader.ReadSingle();
-            heightScale = binaryReader.ReadSingle();
-            scalingFlags = (ScalingFlags)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            invalidName_2 = binaryReader.ReadBytes(20);
-            interfaceBitmap = binaryReader.ReadTagReference();
-            defaultColor = binaryReader.ReadColourA1R1G1B1();
-            flashingColor = binaryReader.ReadColourA1R1G1B1();
-            flashPeriod = binaryReader.ReadSingle();
-            flashDelay = binaryReader.ReadSingle();
-            numberOfFlashes = binaryReader.ReadInt16();
-            flashFlags = (FlashFlags)binaryReader.ReadInt16();
-            flashLength = binaryReader.ReadSingle();
-            disabledColor = binaryReader.ReadColourA1R1G1B1();
-            invalidName_3 = binaryReader.ReadBytes(4);
-            sequenceIndex = binaryReader.ReadInt16();
-            invalidName_4 = binaryReader.ReadBytes(2);
-            multitexOverlay = Guerilla.ReadBlockArray<GlobalHudMultitextureOverlayDefinition>(binaryReader);
-            invalidName_5 = binaryReader.ReadBytes(4);
-            anchorOffset0 = binaryReader.ReadPoint();
-            widthScale0 = binaryReader.ReadSingle();
-            heightScale0 = binaryReader.ReadSingle();
-            scalingFlags0 = (ScalingFlags)binaryReader.ReadInt16();
-            invalidName_6 = binaryReader.ReadBytes(2);
-            invalidName_7 = binaryReader.ReadBytes(20);
-            interfaceBitmap0 = binaryReader.ReadTagReference();
-            defaultColor0 = binaryReader.ReadColourA1R1G1B1();
-            flashingColor0 = binaryReader.ReadColourA1R1G1B1();
-            flashPeriod0 = binaryReader.ReadSingle();
-            flashDelay0 = binaryReader.ReadSingle();
-            numberOfFlashes0 = binaryReader.ReadInt16();
-            flashFlags0 = (FlashFlags)binaryReader.ReadInt16();
-            flashLength0 = binaryReader.ReadSingle();
-            disabledColor0 = binaryReader.ReadColourA1R1G1B1();
-            invalidName_8 = binaryReader.ReadBytes(4);
-            sequenceIndex0 = binaryReader.ReadInt16();
-            invalidName_9 = binaryReader.ReadBytes(2);
-            multitexOverlay0 = Guerilla.ReadBlockArray<GlobalHudMultitextureOverlayDefinition>(binaryReader);
-            invalidName_10 = binaryReader.ReadBytes(4);
-            anchorOffset1 = binaryReader.ReadPoint();
-            widthScale1 = binaryReader.ReadSingle();
-            heightScale1 = binaryReader.ReadSingle();
-            scalingFlags1 = (ScalingFlags)binaryReader.ReadInt16();
-            invalidName_11 = binaryReader.ReadBytes(2);
-            invalidName_12 = binaryReader.ReadBytes(20);
-            defaultColor1 = binaryReader.ReadColourA1R1G1B1();
-            flashingColor1 = binaryReader.ReadColourA1R1G1B1();
-            flashPeriod1 = binaryReader.ReadSingle();
-            flashDelay1 = binaryReader.ReadSingle();
-            numberOfFlashes1 = binaryReader.ReadInt16();
-            flashFlags1 = (FlashFlags)binaryReader.ReadInt16();
-            flashLength1 = binaryReader.ReadSingle();
-            disabledColor1 = binaryReader.ReadColourA1R1G1B1();
-            invalidName_13 = binaryReader.ReadBytes(4);
-            maximumNumberOfDigits = binaryReader.ReadByte();
-            flags = (Flags)binaryReader.ReadByte();
-            numberOfFractionalDigits = binaryReader.ReadByte();
-            invalidName_14 = binaryReader.ReadBytes(1);
-            invalidName_15 = binaryReader.ReadBytes(12);
-            flashCutoff = binaryReader.ReadInt16();
-            invalidName_16 = binaryReader.ReadBytes(2);
-            overlayBitmap = binaryReader.ReadTagReference();
-            overlays = Guerilla.ReadBlockArray<GrenadeHudOverlayBlock>(binaryReader);
-            warningSounds = Guerilla.ReadBlockArray<GrenadeHudSoundBlock>(binaryReader);
-            invalidName_17 = binaryReader.ReadBytes(68);
-            sequenceIndex1 = binaryReader.ReadInt16();
-            widthOffset = binaryReader.ReadInt16();
-            offsetFromReferenceCorner = binaryReader.ReadPoint();
-            overrideIconColor = binaryReader.ReadColourA1R1G1B1();
-            frameRate030 = binaryReader.ReadByte();
-            flags0 = (Flags)binaryReader.ReadByte();
-            textIndex = binaryReader.ReadInt16();
-            invalidName_18 = binaryReader.ReadBytes(48);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)anchor);
                 binaryWriter.Write(invalidName_, 0, 2);

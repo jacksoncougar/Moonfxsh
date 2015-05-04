@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalScenarioLoadParametersBlock : GlobalScenarioLoadParametersBlockBase
     {
-        public  GlobalScenarioLoadParametersBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalScenarioLoadParametersBlock() : base()
         {
-            
-        }
-        public  GlobalScenarioLoadParametersBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 48, Alignment = 4)]
@@ -26,31 +23,28 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference scenario;
         internal byte[] parameters;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 48; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GlobalScenarioLoadParametersBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 48; } }
+        public override int Alignment { get { return 4; } }
+        public GlobalScenarioLoadParametersBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             scenario = binaryReader.ReadTagReference();
-            parameters = Guerilla.ReadData(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
             invalidName_ = binaryReader.ReadBytes(32);
+            return blamPointers;
         }
-        public  GlobalScenarioLoadParametersBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            parameters = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            scenario = binaryReader.ReadTagReference();
-            parameters = Guerilla.ReadData(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(32);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(scenario);
                 nextAddress = Guerilla.WriteData(binaryWriter, parameters, nextAddress);

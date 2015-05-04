@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("snmx")]
     public partial class SoundMixBlock : SoundMixBlockBase
     {
-        public  SoundMixBlock(BinaryReader binaryReader): base(binaryReader)
+        public SoundMixBlock() : base()
         {
-            
-        }
-        public  SoundMixBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 88, Alignment = 4)]
@@ -42,14 +39,14 @@ namespace Moonfish.Guerilla.Tags
         internal float frontSpeakerGainDB0;
         internal float rearSpeakerGainDB0;
         internal SoundGlobalMixStructBlock globalMix;
-        
-        public override int SerializedSize{get { return 88; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  SoundMixBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 88; } }
+        public override int Alignment { get { return 4; } }
+        public SoundMixBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             leftStereoGainDB = binaryReader.ReadSingle();
             rightStereoGainDB = binaryReader.ReadSingle();
             leftStereoGainDB0 = binaryReader.ReadSingle();
@@ -60,29 +57,19 @@ namespace Moonfish.Guerilla.Tags
             rearSpeakerGainDB = binaryReader.ReadSingle();
             frontSpeakerGainDB0 = binaryReader.ReadSingle();
             rearSpeakerGainDB0 = binaryReader.ReadSingle();
-            globalMix = new SoundGlobalMixStructBlock(binaryReader);
+            globalMix = new SoundGlobalMixStructBlock();
+            blamPointers.Concat(globalMix.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  SoundMixBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            globalMix.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            leftStereoGainDB = binaryReader.ReadSingle();
-            rightStereoGainDB = binaryReader.ReadSingle();
-            leftStereoGainDB0 = binaryReader.ReadSingle();
-            rightStereoGainDB0 = binaryReader.ReadSingle();
-            leftStereoGainDB1 = binaryReader.ReadSingle();
-            rightStereoGainDB1 = binaryReader.ReadSingle();
-            frontSpeakerGainDB = binaryReader.ReadSingle();
-            rearSpeakerGainDB = binaryReader.ReadSingle();
-            frontSpeakerGainDB0 = binaryReader.ReadSingle();
-            rearSpeakerGainDB0 = binaryReader.ReadSingle();
-            globalMix = new SoundGlobalMixStructBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(leftStereoGainDB);
                 binaryWriter.Write(rightStereoGainDB);

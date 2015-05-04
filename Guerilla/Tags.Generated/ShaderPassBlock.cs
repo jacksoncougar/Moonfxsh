@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("spas")]
     public partial class ShaderPassBlock : ShaderPassBlockBase
     {
-        public  ShaderPassBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderPassBlock() : base()
         {
-            
-        }
-        public  ShaderPassBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 36, Alignment = 4)]
@@ -37,37 +34,34 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal ShaderPassImplementationBlock[] implementations;
         internal ShaderPassPostprocessDefinitionNewBlock[] postprocessDefinition;
-        
-        public override int SerializedSize{get { return 36; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ShaderPassBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 36; } }
+        public override int Alignment { get { return 4; } }
+        public ShaderPassBlockBase() : base()
         {
-            documentation = Guerilla.ReadData(binaryReader);
-            parameters = Guerilla.ReadBlockArray<ShaderPassParameterBlock>(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPassParameterBlock>(binaryReader));
             invalidName_ = binaryReader.ReadBytes(2);
             invalidName_0 = binaryReader.ReadBytes(2);
-            implementations = Guerilla.ReadBlockArray<ShaderPassImplementationBlock>(binaryReader);
-            postprocessDefinition = Guerilla.ReadBlockArray<ShaderPassPostprocessDefinitionNewBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPassImplementationBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPassPostprocessDefinitionNewBlock>(binaryReader));
+            return blamPointers;
         }
-        public  ShaderPassBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            documentation = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            parameters = ReadBlockArrayData<ShaderPassParameterBlock>(binaryReader, blamPointers.Dequeue());
+            implementations = ReadBlockArrayData<ShaderPassImplementationBlock>(binaryReader, blamPointers.Dequeue());
+            postprocessDefinition = ReadBlockArrayData<ShaderPassPostprocessDefinitionNewBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            documentation = Guerilla.ReadData(binaryReader);
-            parameters = Guerilla.ReadBlockArray<ShaderPassParameterBlock>(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(2);
-            implementations = Guerilla.ReadBlockArray<ShaderPassImplementationBlock>(binaryReader);
-            postprocessDefinition = Guerilla.ReadBlockArray<ShaderPassPostprocessDefinitionNewBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteData(binaryWriter, documentation, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ShaderPassParameterBlock>(binaryWriter, parameters, nextAddress);

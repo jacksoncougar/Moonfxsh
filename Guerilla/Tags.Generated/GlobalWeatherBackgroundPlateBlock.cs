@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalWeatherBackgroundPlateBlock : GlobalWeatherBackgroundPlateBlockBase
     {
-        public  GlobalWeatherBackgroundPlateBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalWeatherBackgroundPlateBlock() : base()
         {
-            
-        }
-        public  GlobalWeatherBackgroundPlateBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 936, Alignment = 4)]
@@ -55,14 +52,14 @@ namespace Moonfish.Guerilla.Tags
         internal float mass2;
         internal float mass3;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 936; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GlobalWeatherBackgroundPlateBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 936; } }
+        public override int Alignment { get { return 4; } }
+        public GlobalWeatherBackgroundPlateBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             texture0 = binaryReader.ReadTagReference();
             texture1 = binaryReader.ReadTagReference();
             texture2 = binaryReader.ReadTagReference();
@@ -93,47 +90,16 @@ namespace Moonfish.Guerilla.Tags
             mass2 = binaryReader.ReadSingle();
             mass3 = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(736);
+            return blamPointers;
         }
-        public  GlobalWeatherBackgroundPlateBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            texture0 = binaryReader.ReadTagReference();
-            texture1 = binaryReader.ReadTagReference();
-            texture2 = binaryReader.ReadTagReference();
-            platePositions0 = binaryReader.ReadSingle();
-            platePositions1 = binaryReader.ReadSingle();
-            platePositions2 = binaryReader.ReadSingle();
-            moveSpeed0 = binaryReader.ReadVector3();
-            moveSpeed1 = binaryReader.ReadVector3();
-            moveSpeed2 = binaryReader.ReadVector3();
-            textureScale0 = binaryReader.ReadSingle();
-            textureScale1 = binaryReader.ReadSingle();
-            textureScale2 = binaryReader.ReadSingle();
-            jitter0 = binaryReader.ReadVector3();
-            jitter1 = binaryReader.ReadVector3();
-            jitter2 = binaryReader.ReadVector3();
-            plateZNear = binaryReader.ReadSingle();
-            plateZFar = binaryReader.ReadSingle();
-            depthBlendZNear = binaryReader.ReadSingle();
-            depthBlendZFar = binaryReader.ReadSingle();
-            opacity0 = binaryReader.ReadSingle();
-            opacity1 = binaryReader.ReadSingle();
-            opacity2 = binaryReader.ReadSingle();
-            flags = (Flags)binaryReader.ReadInt32();
-            tintColor0 = binaryReader.ReadColorR8G8B8();
-            tintColor1 = binaryReader.ReadColorR8G8B8();
-            tintColor2 = binaryReader.ReadColorR8G8B8();
-            mass1 = binaryReader.ReadSingle();
-            mass2 = binaryReader.ReadSingle();
-            mass3 = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(736);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(texture0);
                 binaryWriter.Write(texture1);

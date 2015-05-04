@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("tdtl")]
     public partial class LiquidBlock : LiquidBlockBase
     {
-        public  LiquidBlock(BinaryReader binaryReader): base(binaryReader)
+        public LiquidBlock() : base()
         {
-            
-        }
-        public  LiquidBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 112, Alignment = 4)]
@@ -39,14 +36,14 @@ namespace Moonfish.Guerilla.Tags
         internal float cutoffDistanceFromCameraWorldUnits;
         internal byte[] invalidName_1;
         internal LiquidArcBlock[] arcs;
-        
-        public override int SerializedSize{get { return 112; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  LiquidBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 112; } }
+        public override int Alignment { get { return 4; } }
+        public LiquidBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(2);
             type = (Type)binaryReader.ReadInt16();
             attachmentMarkerName = binaryReader.ReadStringID();
@@ -54,26 +51,18 @@ namespace Moonfish.Guerilla.Tags
             falloffDistanceFromCameraWorldUnits = binaryReader.ReadSingle();
             cutoffDistanceFromCameraWorldUnits = binaryReader.ReadSingle();
             invalidName_1 = binaryReader.ReadBytes(32);
-            arcs = Guerilla.ReadBlockArray<LiquidArcBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<LiquidArcBlock>(binaryReader));
+            return blamPointers;
         }
-        public  LiquidBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            arcs = ReadBlockArrayData<LiquidArcBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadBytes(2);
-            type = (Type)binaryReader.ReadInt16();
-            attachmentMarkerName = binaryReader.ReadStringID();
-            invalidName_0 = binaryReader.ReadBytes(56);
-            falloffDistanceFromCameraWorldUnits = binaryReader.ReadSingle();
-            cutoffDistanceFromCameraWorldUnits = binaryReader.ReadSingle();
-            invalidName_1 = binaryReader.ReadBytes(32);
-            arcs = Guerilla.ReadBlockArray<LiquidArcBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write((Int16)type);

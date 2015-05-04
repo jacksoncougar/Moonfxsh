@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalParticleSystemLiteBlock : GlobalParticleSystemLiteBlockBase
     {
-        public  GlobalParticleSystemLiteBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalParticleSystemLiteBlock() : base()
         {
-            
-        }
-        public  GlobalParticleSystemLiteBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 140, Alignment = 4)]
@@ -47,14 +44,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
-        
-        public override int SerializedSize{get { return 140; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GlobalParticleSystemLiteBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 140; } }
+        public override int Alignment { get { return 4; } }
+        public GlobalParticleSystemLiteBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             sprites = binaryReader.ReadTagReference();
             viewBoxWidth = binaryReader.ReadSingle();
             viewBoxHeight = binaryReader.ReadSingle();
@@ -68,8 +65,9 @@ namespace Moonfish.Guerilla.Tags
             maximumNumberOfParticles = binaryReader.ReadInt32();
             initialVelocity = binaryReader.ReadVector3();
             bitmapAnimationSpeed = binaryReader.ReadSingle();
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            particleSystemData = Guerilla.ReadBlockArray<ParticleSystemLiteDataBlock>(binaryReader);
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
+            blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ParticleSystemLiteDataBlock>(binaryReader));
             type = (Type)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             mininumOpacity = binaryReader.ReadSingle();
@@ -79,41 +77,18 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(4);
             invalidName_1 = binaryReader.ReadBytes(4);
             invalidName_2 = binaryReader.ReadBytes(4);
+            return blamPointers;
         }
-        public  GlobalParticleSystemLiteBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            geometryBlockInfo.ReadPointers(binaryReader, blamPointers);
+            particleSystemData = ReadBlockArrayData<ParticleSystemLiteDataBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            sprites = binaryReader.ReadTagReference();
-            viewBoxWidth = binaryReader.ReadSingle();
-            viewBoxHeight = binaryReader.ReadSingle();
-            viewBoxDepth = binaryReader.ReadSingle();
-            exclusionRadius = binaryReader.ReadSingle();
-            maxVelocity = binaryReader.ReadSingle();
-            minMass = binaryReader.ReadSingle();
-            maxMass = binaryReader.ReadSingle();
-            minSize = binaryReader.ReadSingle();
-            maxSize = binaryReader.ReadSingle();
-            maximumNumberOfParticles = binaryReader.ReadInt32();
-            initialVelocity = binaryReader.ReadVector3();
-            bitmapAnimationSpeed = binaryReader.ReadSingle();
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            particleSystemData = Guerilla.ReadBlockArray<ParticleSystemLiteDataBlock>(binaryReader);
-            type = (Type)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            mininumOpacity = binaryReader.ReadSingle();
-            maxinumOpacity = binaryReader.ReadSingle();
-            rainStreakScale = binaryReader.ReadSingle();
-            rainLineWidth = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            invalidName_1 = binaryReader.ReadBytes(4);
-            invalidName_2 = binaryReader.ReadBytes(4);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(sprites);
                 binaryWriter.Write(viewBoxWidth);

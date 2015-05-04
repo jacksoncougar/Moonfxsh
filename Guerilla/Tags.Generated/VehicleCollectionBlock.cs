@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("vehc")]
     public partial class VehicleCollectionBlock : VehicleCollectionBlockBase
     {
-        public  VehicleCollectionBlock(BinaryReader binaryReader): base(binaryReader)
+        public VehicleCollectionBlock() : base()
         {
-            
-        }
-        public  VehicleCollectionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 12, Alignment = 4)]
@@ -34,31 +31,28 @@ namespace Moonfish.Guerilla.Tags
         internal VehiclePermutation[] vehiclePermutations;
         internal short spawnTimeInSeconds0Default;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 12; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  VehicleCollectionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 12; } }
+        public override int Alignment { get { return 4; } }
+        public VehicleCollectionBlockBase() : base()
         {
-            vehiclePermutations = Guerilla.ReadBlockArray<VehiclePermutation>(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<VehiclePermutation>(binaryReader));
             spawnTimeInSeconds0Default = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
+            return blamPointers;
         }
-        public  VehicleCollectionBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            vehiclePermutations = ReadBlockArrayData<VehiclePermutation>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            vehiclePermutations = Guerilla.ReadBlockArray<VehiclePermutation>(binaryReader);
-            spawnTimeInSeconds0Default = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<VehiclePermutation>(binaryWriter, vehiclePermutations, nextAddress);
                 binaryWriter.Write(spawnTimeInSeconds0Default);

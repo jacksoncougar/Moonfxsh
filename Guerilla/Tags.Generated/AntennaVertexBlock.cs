@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AntennaVertexBlock : AntennaVertexBlockBase
     {
-        public  AntennaVertexBlock(BinaryReader binaryReader): base(binaryReader)
+        public AntennaVertexBlock() : base()
         {
-            
-        }
-        public  AntennaVertexBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 128, Alignment = 4)]
@@ -50,14 +47,14 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector4 lODColor;
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
-        
-        public override int SerializedSize{get { return 128; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  AntennaVertexBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 128; } }
+        public override int Alignment { get { return 4; } }
+        public AntennaVertexBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             springStrengthCoefficient = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(24);
             angles = binaryReader.ReadVector2();
@@ -68,27 +65,16 @@ namespace Moonfish.Guerilla.Tags
             lODColor = binaryReader.ReadVector4();
             invalidName_1 = binaryReader.ReadBytes(40);
             invalidName_2 = binaryReader.ReadBytes(12);
+            return blamPointers;
         }
-        public  AntennaVertexBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            springStrengthCoefficient = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(24);
-            angles = binaryReader.ReadVector2();
-            lengthWorldUnits = binaryReader.ReadSingle();
-            sequenceIndex = binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            color = binaryReader.ReadVector4();
-            lODColor = binaryReader.ReadVector4();
-            invalidName_1 = binaryReader.ReadBytes(40);
-            invalidName_2 = binaryReader.ReadBytes(12);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(springStrengthCoefficient);
                 binaryWriter.Write(invalidName_, 0, 24);

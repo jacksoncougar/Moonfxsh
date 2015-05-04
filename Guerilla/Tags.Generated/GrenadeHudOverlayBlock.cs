@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GrenadeHudOverlayBlock : GrenadeHudOverlayBlockBase
     {
-        public  GrenadeHudOverlayBlock(BinaryReader binaryReader): base(binaryReader)
+        public GrenadeHudOverlayBlock() : base()
         {
-            
-        }
-        public  GrenadeHudOverlayBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 136, Alignment = 4)]
@@ -49,14 +46,14 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal byte[] invalidName_2;
         internal byte[] invalidName_3;
-        
-        public override int SerializedSize{get { return 136; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GrenadeHudOverlayBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 136; } }
+        public override int Alignment { get { return 4; } }
+        public GrenadeHudOverlayBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             anchorOffset = binaryReader.ReadPoint();
             widthScale = binaryReader.ReadSingle();
             heightScale = binaryReader.ReadSingle();
@@ -78,38 +75,16 @@ namespace Moonfish.Guerilla.Tags
             flags = (Flags)binaryReader.ReadInt32();
             invalidName_2 = binaryReader.ReadBytes(16);
             invalidName_3 = binaryReader.ReadBytes(40);
+            return blamPointers;
         }
-        public  GrenadeHudOverlayBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            anchorOffset = binaryReader.ReadPoint();
-            widthScale = binaryReader.ReadSingle();
-            heightScale = binaryReader.ReadSingle();
-            scalingFlags = (ScalingFlags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(20);
-            defaultColor = binaryReader.ReadColourA1R1G1B1();
-            flashingColor = binaryReader.ReadColourA1R1G1B1();
-            flashPeriod = binaryReader.ReadSingle();
-            flashDelay = binaryReader.ReadSingle();
-            numberOfFlashes = binaryReader.ReadInt16();
-            flashFlags = (FlashFlags)binaryReader.ReadInt16();
-            flashLength = binaryReader.ReadSingle();
-            disabledColor = binaryReader.ReadColourA1R1G1B1();
-            invalidName_1 = binaryReader.ReadBytes(4);
-            frameRate = binaryReader.ReadSingle();
-            sequenceIndex = binaryReader.ReadInt16();
-            type = (Type)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt32();
-            invalidName_2 = binaryReader.ReadBytes(16);
-            invalidName_3 = binaryReader.ReadBytes(40);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(anchorOffset);
                 binaryWriter.Write(widthScale);

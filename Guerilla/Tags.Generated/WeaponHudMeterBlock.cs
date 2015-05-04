@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class WeaponHudMeterBlock : WeaponHudMeterBlockBase
     {
-        public  WeaponHudMeterBlock(BinaryReader binaryReader): base(binaryReader)
+        public WeaponHudMeterBlock() : base()
         {
-            
-        }
-        public  WeaponHudMeterBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 165, Alignment = 4)]
@@ -54,14 +51,14 @@ namespace Moonfish.Guerilla.Tags
         internal GNullBlock[] gNullBlock;
         internal byte[] invalidName_4;
         internal byte[] invalidName_5;
-        
-        public override int SerializedSize{get { return 165; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  WeaponHudMeterBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 165; } }
+        public override int Alignment { get { return 4; } }
+        public WeaponHudMeterBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             stateAttachedTo = (StateAttachedTo)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             canUseOnMapType = (CanUseOnMapType)binaryReader.ReadInt16();
@@ -87,48 +84,20 @@ namespace Moonfish.Guerilla.Tags
             opacity = binaryReader.ReadSingle();
             translucency = binaryReader.ReadSingle();
             disabledColor = binaryReader.ReadColourA1R1G1B1();
-            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GNullBlock>(binaryReader));
             invalidName_4 = binaryReader.ReadBytes(4);
             invalidName_5 = binaryReader.ReadBytes(40);
+            return blamPointers;
         }
-        public  WeaponHudMeterBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            gNullBlock = ReadBlockArrayData<GNullBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            stateAttachedTo = (StateAttachedTo)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            canUseOnMapType = (CanUseOnMapType)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            invalidName_1 = binaryReader.ReadBytes(28);
-            anchorOffset = binaryReader.ReadPoint();
-            widthScale = binaryReader.ReadSingle();
-            heightScale = binaryReader.ReadSingle();
-            scalingFlags = (ScalingFlags)binaryReader.ReadInt16();
-            invalidName_2 = binaryReader.ReadBytes(2);
-            invalidName_3 = binaryReader.ReadBytes(20);
-            meterBitmap = binaryReader.ReadTagReference();
-            colorAtMeterMinimum = binaryReader.ReadColourR1G1B1();
-            colorAtMeterMaximum = binaryReader.ReadColourR1G1B1();
-            flashColor = binaryReader.ReadColourR1G1B1();
-            emptyColor = binaryReader.ReadColourA1R1G1B1();
-            flags = (Flags)binaryReader.ReadByte();
-            minumumMeterValue = binaryReader.ReadByte();
-            sequenceIndex = binaryReader.ReadInt16();
-            alphaMultiplier = binaryReader.ReadByte();
-            alphaBias = binaryReader.ReadByte();
-            valueScale = binaryReader.ReadInt16();
-            opacity = binaryReader.ReadSingle();
-            translucency = binaryReader.ReadSingle();
-            disabledColor = binaryReader.ReadColourA1R1G1B1();
-            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            invalidName_4 = binaryReader.ReadBytes(4);
-            invalidName_5 = binaryReader.ReadBytes(40);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)stateAttachedTo);
                 binaryWriter.Write(invalidName_, 0, 2);

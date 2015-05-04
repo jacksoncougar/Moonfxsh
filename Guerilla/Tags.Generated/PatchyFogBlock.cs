@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("fpch")]
     public partial class PatchyFogBlock : PatchyFogBlockBase
     {
-        public  PatchyFogBlock(BinaryReader binaryReader): base(binaryReader)
+        public PatchyFogBlock() : base()
         {
-            
-        }
-        public  PatchyFogBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 80, Alignment = 4)]
@@ -65,14 +62,14 @@ namespace Moonfish.Guerilla.Tags
         internal float windConstantVelocityXWorldUnitsPerSecond;
         internal float windConstantVelocityYWorldUnitsPerSecond;
         internal float windConstantVelocityZWorldUnitsPerSecond;
-        
-        public override int SerializedSize{get { return 80; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PatchyFogBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 80; } }
+        public override int Alignment { get { return 4; } }
+        public PatchyFogBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             rotationMultiplier01 = binaryReader.ReadSingle();
@@ -91,35 +88,16 @@ namespace Moonfish.Guerilla.Tags
             windConstantVelocityXWorldUnitsPerSecond = binaryReader.ReadSingle();
             windConstantVelocityYWorldUnitsPerSecond = binaryReader.ReadSingle();
             windConstantVelocityZWorldUnitsPerSecond = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  PatchyFogBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            rotationMultiplier01 = binaryReader.ReadSingle();
-            strafingMultiplier01 = binaryReader.ReadSingle();
-            zoomMultiplier01 = binaryReader.ReadSingle();
-            noiseMapScale = binaryReader.ReadSingle();
-            noiseMap = binaryReader.ReadTagReference();
-            noiseVerticalScaleForward = binaryReader.ReadSingle();
-            noiseVerticalScaleUp = binaryReader.ReadSingle();
-            noiseOpacityScaleUp = binaryReader.ReadSingle();
-            animationPeriodSeconds = binaryReader.ReadSingle();
-            windVelocityWorldUnitsPerSecond = binaryReader.ReadRange();
-            windPeriodSeconds = binaryReader.ReadRange();
-            windAccelerationWeight01 = binaryReader.ReadSingle();
-            windPerpendicularWeight01 = binaryReader.ReadSingle();
-            windConstantVelocityXWorldUnitsPerSecond = binaryReader.ReadSingle();
-            windConstantVelocityYWorldUnitsPerSecond = binaryReader.ReadSingle();
-            windConstantVelocityZWorldUnitsPerSecond = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write(invalidName_, 0, 2);

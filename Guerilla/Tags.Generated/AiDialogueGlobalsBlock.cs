@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("adlg")]
     public partial class AiDialogueGlobalsBlock : AiDialogueGlobalsBlockBase
     {
-        public  AiDialogueGlobalsBlock(BinaryReader binaryReader): base(binaryReader)
+        public AiDialogueGlobalsBlock() : base()
         {
-            
-        }
-        public  AiDialogueGlobalsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 44, Alignment = 4)]
@@ -36,35 +33,33 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal DialogueDataBlock[] dialogueData;
         internal InvoluntaryDataBlock[] involuntaryData;
-        
-        public override int SerializedSize{get { return 44; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  AiDialogueGlobalsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 44; } }
+        public override int Alignment { get { return 4; } }
+        public AiDialogueGlobalsBlockBase() : base()
         {
-            vocalizations = Guerilla.ReadBlockArray<VocalizationDefinitionsBlock0>(binaryReader);
-            patterns = Guerilla.ReadBlockArray<VocalizationPatternsBlock>(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<VocalizationDefinitionsBlock0>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<VocalizationPatternsBlock>(binaryReader));
             invalidName_ = binaryReader.ReadBytes(12);
-            dialogueData = Guerilla.ReadBlockArray<DialogueDataBlock>(binaryReader);
-            involuntaryData = Guerilla.ReadBlockArray<InvoluntaryDataBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<DialogueDataBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<InvoluntaryDataBlock>(binaryReader));
+            return blamPointers;
         }
-        public  AiDialogueGlobalsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            vocalizations = ReadBlockArrayData<VocalizationDefinitionsBlock0>(binaryReader, blamPointers.Dequeue());
+            patterns = ReadBlockArrayData<VocalizationPatternsBlock>(binaryReader, blamPointers.Dequeue());
+            dialogueData = ReadBlockArrayData<DialogueDataBlock>(binaryReader, blamPointers.Dequeue());
+            involuntaryData = ReadBlockArrayData<InvoluntaryDataBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            vocalizations = Guerilla.ReadBlockArray<VocalizationDefinitionsBlock0>(binaryReader);
-            patterns = Guerilla.ReadBlockArray<VocalizationPatternsBlock>(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(12);
-            dialogueData = Guerilla.ReadBlockArray<DialogueDataBlock>(binaryReader);
-            involuntaryData = Guerilla.ReadBlockArray<InvoluntaryDataBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<VocalizationDefinitionsBlock0>(binaryWriter, vocalizations, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<VocalizationPatternsBlock>(binaryWriter, patterns, nextAddress);

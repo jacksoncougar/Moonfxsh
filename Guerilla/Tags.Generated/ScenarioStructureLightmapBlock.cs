@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("ltmp")]
     public partial class ScenarioStructureLightmapBlock : ScenarioStructureLightmapBlockBase
     {
-        public  ScenarioStructureLightmapBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioStructureLightmapBlock() : base()
         {
-            
-        }
-        public  ScenarioStructureLightmapBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 260, Alignment = 4)]
@@ -50,14 +47,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal GlobalErrorReportCategoriesBlock[] errors;
         internal byte[] invalidName_1;
-        
-        public override int SerializedSize{get { return 260; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioStructureLightmapBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 260; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioStructureLightmapBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             searchDistanceLowerBound = binaryReader.ReadSingle();
             searchDistanceUpperBound = binaryReader.ReadSingle();
             luminelsPerWorldUnit = binaryReader.ReadSingle();
@@ -73,40 +70,22 @@ namespace Moonfish.Guerilla.Tags
             scenarioLightScale = binaryReader.ReadSingle();
             lightprobeInterpolationOveride = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(72);
-            lightmapGroups = Guerilla.ReadBlockArray<StructureLightmapGroupBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureLightmapGroupBlock>(binaryReader));
             invalidName_0 = binaryReader.ReadBytes(12);
-            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalErrorReportCategoriesBlock>(binaryReader));
             invalidName_1 = binaryReader.ReadBytes(104);
+            return blamPointers;
         }
-        public  ScenarioStructureLightmapBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            lightmapGroups = ReadBlockArrayData<StructureLightmapGroupBlock>(binaryReader, blamPointers.Dequeue());
+            errors = ReadBlockArrayData<GlobalErrorReportCategoriesBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            searchDistanceLowerBound = binaryReader.ReadSingle();
-            searchDistanceUpperBound = binaryReader.ReadSingle();
-            luminelsPerWorldUnit = binaryReader.ReadSingle();
-            outputWhiteReference = binaryReader.ReadSingle();
-            outputBlackReference = binaryReader.ReadSingle();
-            outputSchlickParameter = binaryReader.ReadSingle();
-            diffuseMapScale = binaryReader.ReadSingle();
-            sunScale = binaryReader.ReadSingle();
-            skyScale = binaryReader.ReadSingle();
-            indirectScale = binaryReader.ReadSingle();
-            prtScale = binaryReader.ReadSingle();
-            surfaceLightScale = binaryReader.ReadSingle();
-            scenarioLightScale = binaryReader.ReadSingle();
-            lightprobeInterpolationOveride = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(72);
-            lightmapGroups = Guerilla.ReadBlockArray<StructureLightmapGroupBlock>(binaryReader);
-            invalidName_0 = binaryReader.ReadBytes(12);
-            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
-            invalidName_1 = binaryReader.ReadBytes(104);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(searchDistanceLowerBound);
                 binaryWriter.Write(searchDistanceUpperBound);

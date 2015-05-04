@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CollisionDamageBlock : CollisionDamageBlockBase
     {
-        public  CollisionDamageBlock(BinaryReader binaryReader): base(binaryReader)
+        public CollisionDamageBlock() : base()
         {
-            
-        }
-        public  CollisionDamageBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 72, Alignment = 4)]
@@ -57,14 +54,14 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float maxAbsScaleDefault;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 72; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  CollisionDamageBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 72; } }
+        public override int Alignment { get { return 4; } }
+        public CollisionDamageBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             collisionDamage = binaryReader.ReadTagReference();
             minGameAccDefault = binaryReader.ReadSingle();
             maxGameAccDefault = binaryReader.ReadSingle();
@@ -75,27 +72,16 @@ namespace Moonfish.Guerilla.Tags
             minAbsScaleDefault = binaryReader.ReadSingle();
             maxAbsScaleDefault = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(32);
+            return blamPointers;
         }
-        public  CollisionDamageBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            collisionDamage = binaryReader.ReadTagReference();
-            minGameAccDefault = binaryReader.ReadSingle();
-            maxGameAccDefault = binaryReader.ReadSingle();
-            minGameScaleDefault = binaryReader.ReadSingle();
-            maxGameScaleDefault = binaryReader.ReadSingle();
-            minAbsAccDefault = binaryReader.ReadSingle();
-            maxAbsAccDefault = binaryReader.ReadSingle();
-            minAbsScaleDefault = binaryReader.ReadSingle();
-            maxAbsScaleDefault = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(32);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(collisionDamage);
                 binaryWriter.Write(minGameAccDefault);

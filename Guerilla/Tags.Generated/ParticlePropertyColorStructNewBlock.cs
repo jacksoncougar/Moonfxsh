@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ParticlePropertyColorStructNewBlock : ParticlePropertyColorStructNewBlockBase
     {
-        public  ParticlePropertyColorStructNewBlock(BinaryReader binaryReader): base(binaryReader)
+        public ParticlePropertyColorStructNewBlock() : base()
         {
-            
-        }
-        public  ParticlePropertyColorStructNewBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -27,35 +24,31 @@ namespace Moonfish.Guerilla.Tags
         internal OutputModifier outputModifier;
         internal OutputModifierInput outputModifierInput;
         internal MappingFunctionBlock mapping;
-        
-        public override int SerializedSize{get { return 16; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ParticlePropertyColorStructNewBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 16; } }
+        public override int Alignment { get { return 4; } }
+        public ParticlePropertyColorStructNewBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             inputVariable = (InputVariable)binaryReader.ReadInt16();
             rangeVariable = (RangeVariable)binaryReader.ReadInt16();
             outputModifier = (OutputModifier)binaryReader.ReadInt16();
             outputModifierInput = (OutputModifierInput)binaryReader.ReadInt16();
-            mapping = new MappingFunctionBlock(binaryReader);
+            mapping = new MappingFunctionBlock();
+            blamPointers.Concat(mapping.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  ParticlePropertyColorStructNewBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            mapping.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            inputVariable = (InputVariable)binaryReader.ReadInt16();
-            rangeVariable = (RangeVariable)binaryReader.ReadInt16();
-            outputModifier = (OutputModifier)binaryReader.ReadInt16();
-            outputModifierInput = (OutputModifierInput)binaryReader.ReadInt16();
-            mapping = new MappingFunctionBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)inputVariable);
                 binaryWriter.Write((Int16)rangeVariable);

@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ModelVariantBlock : ModelVariantBlockBase
     {
-        public  ModelVariantBlock(BinaryReader binaryReader): base(binaryReader)
+        public ModelVariantBlock() : base()
         {
-            
-        }
-        public  ModelVariantBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 56, Alignment = 4)]
@@ -30,39 +27,33 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent dialogueSoundEffect;
         [TagReference("udlg")]
         internal Moonfish.Tags.TagReference dialogue;
-        
-        public override int SerializedSize{get { return 56; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ModelVariantBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 56; } }
+        public override int Alignment { get { return 4; } }
+        public ModelVariantBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(16);
-            regions = Guerilla.ReadBlockArray<ModelVariantRegionBlock>(binaryReader);
-            objects = Guerilla.ReadBlockArray<ModelVariantObjectBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ModelVariantRegionBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ModelVariantObjectBlock>(binaryReader));
             invalidName_0 = binaryReader.ReadBytes(8);
             dialogueSoundEffect = binaryReader.ReadStringID();
             dialogue = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  ModelVariantBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            regions = ReadBlockArrayData<ModelVariantRegionBlock>(binaryReader, blamPointers.Dequeue());
+            objects = ReadBlockArrayData<ModelVariantObjectBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(16);
-            regions = Guerilla.ReadBlockArray<ModelVariantRegionBlock>(binaryReader);
-            objects = Guerilla.ReadBlockArray<ModelVariantObjectBlock>(binaryReader);
-            invalidName_0 = binaryReader.ReadBytes(8);
-            dialogueSoundEffect = binaryReader.ReadStringID();
-            dialogue = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(invalidName_, 0, 16);

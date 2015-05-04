@@ -5,45 +5,42 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SoundGestaltScaleBlock : SoundGestaltScaleBlockBase
     {
-        public  SoundGestaltScaleBlock(BinaryReader binaryReader): base(binaryReader)
+        public SoundGestaltScaleBlock() : base()
         {
-            
-        }
-        public  SoundGestaltScaleBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class SoundGestaltScaleBlockBase : GuerillaBlock
     {
         internal SoundScaleModifiersStructBlock soundScaleModifiersStruct;
-        
-        public override int SerializedSize{get { return 20; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  SoundGestaltScaleBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 20; } }
+        public override int Alignment { get { return 4; } }
+        public SoundGestaltScaleBlockBase() : base()
         {
-            soundScaleModifiersStruct = new SoundScaleModifiersStructBlock(binaryReader);
         }
-        public  SoundGestaltScaleBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            soundScaleModifiersStruct = new SoundScaleModifiersStructBlock();
+            blamPointers.Concat(soundScaleModifiersStruct.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            soundScaleModifiersStruct = new SoundScaleModifiersStructBlock(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            soundScaleModifiersStruct.ReadPointers(binaryReader, blamPointers);
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 soundScaleModifiersStruct.Write(binaryWriter);
                 return nextAddress;

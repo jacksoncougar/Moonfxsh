@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class RasterizerScreenEffectPassReferenceBlock : RasterizerScreenEffectPassReferenceBlockBase
     {
-        public  RasterizerScreenEffectPassReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public RasterizerScreenEffectPassReferenceBlock() : base()
         {
-            
-        }
-        public  RasterizerScreenEffectPassReferenceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 172, Alignment = 4)]
@@ -39,15 +36,15 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
         internal RasterizerScreenEffectConvolutionBlock[] convolution;
-        
-        public override int SerializedSize{get { return 172; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  RasterizerScreenEffectPassReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 172; } }
+        public override int Alignment { get { return 4; } }
+        public RasterizerScreenEffectPassReferenceBlockBase() : base()
         {
-            explanation = Guerilla.ReadData(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
             layerPassIndexLeaveAs1UnlessDebugging = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             primary0AndSecondary0ImplementationIndex = binaryReader.ReadByte();
@@ -59,39 +56,24 @@ namespace Moonfish.Guerilla.Tags
             stage1Mode = (Stage1Mode)binaryReader.ReadInt16();
             stage2Mode = (Stage2Mode)binaryReader.ReadInt16();
             stage3Mode = (Stage3Mode)binaryReader.ReadInt16();
-            advancedControl = Guerilla.ReadBlockArray<RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock>(binaryReader));
             target = (Target)binaryReader.ReadInt16();
             invalidName_1 = binaryReader.ReadBytes(2);
             invalidName_2 = binaryReader.ReadBytes(64);
-            convolution = Guerilla.ReadBlockArray<RasterizerScreenEffectConvolutionBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<RasterizerScreenEffectConvolutionBlock>(binaryReader));
+            return blamPointers;
         }
-        public  RasterizerScreenEffectPassReferenceBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            explanation = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            advancedControl = ReadBlockArrayData<RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock>(binaryReader, blamPointers.Dequeue());
+            convolution = ReadBlockArrayData<RasterizerScreenEffectConvolutionBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            explanation = Guerilla.ReadData(binaryReader);
-            layerPassIndexLeaveAs1UnlessDebugging = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            primary0AndSecondary0ImplementationIndex = binaryReader.ReadByte();
-            primary0AndSecondary0ImplementationIndex0 = binaryReader.ReadByte();
-            primary0AndSecondary0ImplementationIndex1 = binaryReader.ReadByte();
-            primary0AndSecondary0ImplementationIndex2 = binaryReader.ReadByte();
-            invalidName_0 = binaryReader.ReadBytes(64);
-            stage0Mode = (Stage0Mode)binaryReader.ReadInt16();
-            stage1Mode = (Stage1Mode)binaryReader.ReadInt16();
-            stage2Mode = (Stage2Mode)binaryReader.ReadInt16();
-            stage3Mode = (Stage3Mode)binaryReader.ReadInt16();
-            advancedControl = Guerilla.ReadBlockArray<RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock>(binaryReader);
-            target = (Target)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            invalidName_2 = binaryReader.ReadBytes(64);
-            convolution = Guerilla.ReadBlockArray<RasterizerScreenEffectConvolutionBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteData(binaryWriter, explanation, nextAddress);
                 binaryWriter.Write(layerPassIndexLeaveAs1UnlessDebugging);

@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalUiMultiplayerLevelBlock : GlobalUiMultiplayerLevelBlockBase
     {
-        public  GlobalUiMultiplayerLevelBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalUiMultiplayerLevelBlock() : base()
         {
-            
-        }
-        public  GlobalUiMultiplayerLevelBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 3172, Alignment = 4)]
@@ -47,14 +44,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte maxTeamsStub13;
         internal byte maxTeamsStub14;
         internal byte maxTeamsStub15;
-        
-        public override int SerializedSize{get { return 3172; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GlobalUiMultiplayerLevelBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 3172; } }
+        public override int Alignment { get { return 4; } }
+        public GlobalUiMultiplayerLevelBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             mapID = binaryReader.ReadInt32();
             bitmap = binaryReader.ReadTagReference();
             invalidName_ = binaryReader.ReadBytes(576);
@@ -79,41 +76,16 @@ namespace Moonfish.Guerilla.Tags
             maxTeamsStub13 = binaryReader.ReadByte();
             maxTeamsStub14 = binaryReader.ReadByte();
             maxTeamsStub15 = binaryReader.ReadByte();
+            return blamPointers;
         }
-        public  GlobalUiMultiplayerLevelBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            mapID = binaryReader.ReadInt32();
-            bitmap = binaryReader.ReadTagReference();
-            invalidName_ = binaryReader.ReadBytes(576);
-            invalidName_0 = binaryReader.ReadBytes(2304);
-            path = binaryReader.ReadString256();
-            sortOrder = binaryReader.ReadInt32();
-            flags = (Flags)binaryReader.ReadByte();
-            invalidName_1 = binaryReader.ReadBytes(3);
-            maxTeamsNone = binaryReader.ReadByte();
-            maxTeamsCTF = binaryReader.ReadByte();
-            maxTeamsSlayer = binaryReader.ReadByte();
-            maxTeamsOddball = binaryReader.ReadByte();
-            maxTeamsKOTH = binaryReader.ReadByte();
-            maxTeamsRace = binaryReader.ReadByte();
-            maxTeamsHeadhunter = binaryReader.ReadByte();
-            maxTeamsJuggernaut = binaryReader.ReadByte();
-            maxTeamsTerritories = binaryReader.ReadByte();
-            maxTeamsAssault = binaryReader.ReadByte();
-            maxTeamsStub10 = binaryReader.ReadByte();
-            maxTeamsStub11 = binaryReader.ReadByte();
-            maxTeamsStub12 = binaryReader.ReadByte();
-            maxTeamsStub13 = binaryReader.ReadByte();
-            maxTeamsStub14 = binaryReader.ReadByte();
-            maxTeamsStub15 = binaryReader.ReadByte();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(mapID);
                 binaryWriter.Write(bitmap);

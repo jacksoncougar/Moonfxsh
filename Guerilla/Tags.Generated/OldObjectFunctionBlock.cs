@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class OldObjectFunctionBlock : OldObjectFunctionBlockBase
     {
-        public  OldObjectFunctionBlock(BinaryReader binaryReader): base(binaryReader)
+        public OldObjectFunctionBlock() : base()
         {
-            
-        }
-        public  OldObjectFunctionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 80, Alignment = 4)]
@@ -24,29 +21,26 @@ namespace Moonfish.Guerilla.Tags
     {
         internal byte[] invalidName_;
         internal Moonfish.Tags.StringIdent invalidName_0;
-        
-        public override int SerializedSize{get { return 80; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  OldObjectFunctionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 80; } }
+        public override int Alignment { get { return 4; } }
+        public OldObjectFunctionBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(76);
             invalidName_0 = binaryReader.ReadStringID();
+            return blamPointers;
         }
-        public  OldObjectFunctionBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadBytes(76);
-            invalidName_0 = binaryReader.ReadStringID();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 76);
                 binaryWriter.Write(invalidName_0);

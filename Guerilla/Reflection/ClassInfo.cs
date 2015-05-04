@@ -276,7 +276,7 @@ namespace Moonfish.Guerilla.Reflection
                     {
                         for (var i = 0; i < item.ArraySize; i++)
                         {
-                            body.AppendFormatLine("{0}[{1}].ReadPointers(binaryReader, blamPointers);", item.Value.Name, i);
+                            //body.AppendFormatLine("{0}[{1}].ReadPointers(binaryReader, blamPointers);", item.Value.Name, i);
                         }
                     }
                     // variable byte array (data)

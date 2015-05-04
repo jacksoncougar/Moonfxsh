@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioStartingEquipmentBlock : ScenarioStartingEquipmentBlockBase
     {
-        public  ScenarioStartingEquipmentBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioStartingEquipmentBlock() : base()
         {
-            
-        }
-        public  ScenarioStartingEquipmentBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 156, Alignment = 4)]
@@ -41,14 +38,14 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("itmc")]
         internal Moonfish.Tags.TagReference itemCollection6;
         internal byte[] invalidName_0;
-        
-        public override int SerializedSize{get { return 156; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioStartingEquipmentBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 156; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioStartingEquipmentBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             gameType1 = (GameType1)binaryReader.ReadInt16();
             gameType2 = (GameType2)binaryReader.ReadInt16();
@@ -62,30 +59,16 @@ namespace Moonfish.Guerilla.Tags
             itemCollection5 = binaryReader.ReadTagReference();
             itemCollection6 = binaryReader.ReadTagReference();
             invalidName_0 = binaryReader.ReadBytes(48);
+            return blamPointers;
         }
-        public  ScenarioStartingEquipmentBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            gameType1 = (GameType1)binaryReader.ReadInt16();
-            gameType2 = (GameType2)binaryReader.ReadInt16();
-            gameType3 = (GameType3)binaryReader.ReadInt16();
-            gameType4 = (GameType4)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(48);
-            itemCollection1 = binaryReader.ReadTagReference();
-            itemCollection2 = binaryReader.ReadTagReference();
-            itemCollection3 = binaryReader.ReadTagReference();
-            itemCollection4 = binaryReader.ReadTagReference();
-            itemCollection5 = binaryReader.ReadTagReference();
-            itemCollection6 = binaryReader.ReadTagReference();
-            invalidName_0 = binaryReader.ReadBytes(48);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write((Int16)gameType1);

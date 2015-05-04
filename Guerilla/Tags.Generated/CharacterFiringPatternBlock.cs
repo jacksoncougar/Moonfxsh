@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterFiringPatternBlock : CharacterFiringPatternBlockBase
     {
-        public  CharacterFiringPatternBlock(BinaryReader binaryReader): base(binaryReader)
+        public CharacterFiringPatternBlock() : base()
         {
-            
-        }
-        public  CharacterFiringPatternBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 64, Alignment = 4)]
@@ -74,14 +71,14 @@ namespace Moonfish.Guerilla.Tags
         /// cap on the maximum angle by which we will miss target (restriction on burst origin radius
         /// </summary>
         internal float maximumErrorAngleDegrees;
-        
-        public override int SerializedSize{get { return 64; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  CharacterFiringPatternBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 64; } }
+        public override int Alignment { get { return 4; } }
+        public CharacterFiringPatternBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             rateOfFire = binaryReader.ReadSingle();
             targetTracking01 = binaryReader.ReadSingle();
             targetLeading01 = binaryReader.ReadSingle();
@@ -95,30 +92,16 @@ namespace Moonfish.Guerilla.Tags
             projectileErrorDegrees = binaryReader.ReadSingle();
             burstAngularVelocityDegreesPerSecond = binaryReader.ReadSingle();
             maximumErrorAngleDegrees = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  CharacterFiringPatternBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            rateOfFire = binaryReader.ReadSingle();
-            targetTracking01 = binaryReader.ReadSingle();
-            targetLeading01 = binaryReader.ReadSingle();
-            burstOriginRadiusWorldUnits = binaryReader.ReadSingle();
-            burstOriginAngleDegrees = binaryReader.ReadSingle();
-            burstReturnLengthWorldUnits = binaryReader.ReadRange();
-            burstReturnAngleDegrees = binaryReader.ReadSingle();
-            burstDurationSeconds = binaryReader.ReadRange();
-            burstSeparationSeconds = binaryReader.ReadRange();
-            weaponDamageModifier = binaryReader.ReadSingle();
-            projectileErrorDegrees = binaryReader.ReadSingle();
-            burstAngularVelocityDegreesPerSecond = binaryReader.ReadSingle();
-            maximumErrorAngleDegrees = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(rateOfFire);
                 binaryWriter.Write(targetTracking01);

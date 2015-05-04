@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPostprocessDefinitionNewBlock : ShaderPostprocessDefinitionNewBlockBase
     {
-        public  ShaderPostprocessDefinitionNewBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderPostprocessDefinitionNewBlock() : base()
         {
-            
-        }
-        public  ShaderPostprocessDefinitionNewBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 124, Alignment = 4)]
@@ -38,57 +35,55 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderPostprocessColorPropertyBlock[] colorProperties;
         internal ShaderPostprocessValuePropertyBlock[] valueProperties;
         internal ShaderPostprocessLevelOfDetailBlock[] oldLevelsOfDetail;
-        
-        public override int SerializedSize{get { return 124; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ShaderPostprocessDefinitionNewBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 124; } }
+        public override int Alignment { get { return 4; } }
+        public ShaderPostprocessDefinitionNewBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             shaderTemplateIndex = binaryReader.ReadInt32();
-            bitmaps = Guerilla.ReadBlockArray<ShaderPostprocessBitmapNewBlock>(binaryReader);
-            pixelConstants = Guerilla.ReadBlockArray<Pixel32Block>(binaryReader);
-            vertexConstants = Guerilla.ReadBlockArray<RealVector4dBlock>(binaryReader);
-            levelsOfDetail = Guerilla.ReadBlockArray<ShaderPostprocessLevelOfDetailNewBlock>(binaryReader);
-            layers = Guerilla.ReadBlockArray<TagBlockIndexBlock>(binaryReader);
-            passes = Guerilla.ReadBlockArray<TagBlockIndexBlock>(binaryReader);
-            implementations = Guerilla.ReadBlockArray<ShaderPostprocessImplementationNewBlock>(binaryReader);
-            overlays = Guerilla.ReadBlockArray<ShaderPostprocessOverlayNewBlock>(binaryReader);
-            overlayReferences = Guerilla.ReadBlockArray<ShaderPostprocessOverlayReferenceNewBlock>(binaryReader);
-            animatedParameters = Guerilla.ReadBlockArray<ShaderPostprocessAnimatedParameterNewBlock>(binaryReader);
-            animatedParameterReferences = Guerilla.ReadBlockArray<ShaderPostprocessAnimatedParameterReferenceNewBlock>(binaryReader);
-            bitmapProperties = Guerilla.ReadBlockArray<ShaderPostprocessBitmapPropertyBlock>(binaryReader);
-            colorProperties = Guerilla.ReadBlockArray<ShaderPostprocessColorPropertyBlock>(binaryReader);
-            valueProperties = Guerilla.ReadBlockArray<ShaderPostprocessValuePropertyBlock>(binaryReader);
-            oldLevelsOfDetail = Guerilla.ReadBlockArray<ShaderPostprocessLevelOfDetailBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPostprocessBitmapNewBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<Pixel32Block>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<RealVector4dBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPostprocessLevelOfDetailNewBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<TagBlockIndexBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<TagBlockIndexBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPostprocessImplementationNewBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPostprocessOverlayNewBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPostprocessOverlayReferenceNewBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPostprocessAnimatedParameterNewBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPostprocessAnimatedParameterReferenceNewBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPostprocessBitmapPropertyBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPostprocessColorPropertyBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPostprocessValuePropertyBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPostprocessLevelOfDetailBlock>(binaryReader));
+            return blamPointers;
         }
-        public  ShaderPostprocessDefinitionNewBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            bitmaps = ReadBlockArrayData<ShaderPostprocessBitmapNewBlock>(binaryReader, blamPointers.Dequeue());
+            pixelConstants = ReadBlockArrayData<Pixel32Block>(binaryReader, blamPointers.Dequeue());
+            vertexConstants = ReadBlockArrayData<RealVector4dBlock>(binaryReader, blamPointers.Dequeue());
+            levelsOfDetail = ReadBlockArrayData<ShaderPostprocessLevelOfDetailNewBlock>(binaryReader, blamPointers.Dequeue());
+            layers = ReadBlockArrayData<TagBlockIndexBlock>(binaryReader, blamPointers.Dequeue());
+            passes = ReadBlockArrayData<TagBlockIndexBlock>(binaryReader, blamPointers.Dequeue());
+            implementations = ReadBlockArrayData<ShaderPostprocessImplementationNewBlock>(binaryReader, blamPointers.Dequeue());
+            overlays = ReadBlockArrayData<ShaderPostprocessOverlayNewBlock>(binaryReader, blamPointers.Dequeue());
+            overlayReferences = ReadBlockArrayData<ShaderPostprocessOverlayReferenceNewBlock>(binaryReader, blamPointers.Dequeue());
+            animatedParameters = ReadBlockArrayData<ShaderPostprocessAnimatedParameterNewBlock>(binaryReader, blamPointers.Dequeue());
+            animatedParameterReferences = ReadBlockArrayData<ShaderPostprocessAnimatedParameterReferenceNewBlock>(binaryReader, blamPointers.Dequeue());
+            bitmapProperties = ReadBlockArrayData<ShaderPostprocessBitmapPropertyBlock>(binaryReader, blamPointers.Dequeue());
+            colorProperties = ReadBlockArrayData<ShaderPostprocessColorPropertyBlock>(binaryReader, blamPointers.Dequeue());
+            valueProperties = ReadBlockArrayData<ShaderPostprocessValuePropertyBlock>(binaryReader, blamPointers.Dequeue());
+            oldLevelsOfDetail = ReadBlockArrayData<ShaderPostprocessLevelOfDetailBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            shaderTemplateIndex = binaryReader.ReadInt32();
-            bitmaps = Guerilla.ReadBlockArray<ShaderPostprocessBitmapNewBlock>(binaryReader);
-            pixelConstants = Guerilla.ReadBlockArray<Pixel32Block>(binaryReader);
-            vertexConstants = Guerilla.ReadBlockArray<RealVector4dBlock>(binaryReader);
-            levelsOfDetail = Guerilla.ReadBlockArray<ShaderPostprocessLevelOfDetailNewBlock>(binaryReader);
-            layers = Guerilla.ReadBlockArray<TagBlockIndexBlock>(binaryReader);
-            passes = Guerilla.ReadBlockArray<TagBlockIndexBlock>(binaryReader);
-            implementations = Guerilla.ReadBlockArray<ShaderPostprocessImplementationNewBlock>(binaryReader);
-            overlays = Guerilla.ReadBlockArray<ShaderPostprocessOverlayNewBlock>(binaryReader);
-            overlayReferences = Guerilla.ReadBlockArray<ShaderPostprocessOverlayReferenceNewBlock>(binaryReader);
-            animatedParameters = Guerilla.ReadBlockArray<ShaderPostprocessAnimatedParameterNewBlock>(binaryReader);
-            animatedParameterReferences = Guerilla.ReadBlockArray<ShaderPostprocessAnimatedParameterReferenceNewBlock>(binaryReader);
-            bitmapProperties = Guerilla.ReadBlockArray<ShaderPostprocessBitmapPropertyBlock>(binaryReader);
-            colorProperties = Guerilla.ReadBlockArray<ShaderPostprocessColorPropertyBlock>(binaryReader);
-            valueProperties = Guerilla.ReadBlockArray<ShaderPostprocessValuePropertyBlock>(binaryReader);
-            oldLevelsOfDetail = Guerilla.ReadBlockArray<ShaderPostprocessLevelOfDetailBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(shaderTemplateIndex);
                 nextAddress = Guerilla.WriteBlockArray<ShaderPostprocessBitmapNewBlock>(binaryWriter, bitmaps, nextAddress);

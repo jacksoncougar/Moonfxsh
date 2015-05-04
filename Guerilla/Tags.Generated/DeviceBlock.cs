@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("devi")]
     public partial class DeviceBlock : DeviceBlockBase
     {
-        public  DeviceBlock(BinaryReader binaryReader): base(binaryReader)
+        public DeviceBlock() : base()
         {
-            
-        }
-        public  DeviceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 96, Alignment = 4)]
@@ -56,14 +53,14 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("null")]
         internal Moonfish.Tags.TagReference delayEffect;
         internal float automaticActivationRadiusWorldUnits;
-        
-        public override int SerializedSize{get { return 96; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  DeviceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 284; } }
+        public override int Alignment { get { return 4; } }
+        public DeviceBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             powerTransitionTimeSeconds = binaryReader.ReadSingle();
             powerAccelerationTimeSeconds = binaryReader.ReadSingle();
@@ -82,35 +79,16 @@ namespace Moonfish.Guerilla.Tags
             delayTimeSeconds = binaryReader.ReadSingle();
             delayEffect = binaryReader.ReadTagReference();
             automaticActivationRadiusWorldUnits = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  DeviceBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            powerTransitionTimeSeconds = binaryReader.ReadSingle();
-            powerAccelerationTimeSeconds = binaryReader.ReadSingle();
-            positionTransitionTimeSeconds = binaryReader.ReadSingle();
-            positionAccelerationTimeSeconds = binaryReader.ReadSingle();
-            depoweredPositionTransitionTimeSeconds = binaryReader.ReadSingle();
-            depoweredPositionAccelerationTimeSeconds = binaryReader.ReadSingle();
-            lightmapFlags = (LightmapFlags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            openUp = binaryReader.ReadTagReference();
-            closeDown = binaryReader.ReadTagReference();
-            opened = binaryReader.ReadTagReference();
-            closed = binaryReader.ReadTagReference();
-            depowered = binaryReader.ReadTagReference();
-            repowered = binaryReader.ReadTagReference();
-            delayTimeSeconds = binaryReader.ReadSingle();
-            delayEffect = binaryReader.ReadTagReference();
-            automaticActivationRadiusWorldUnits = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(powerTransitionTimeSeconds);

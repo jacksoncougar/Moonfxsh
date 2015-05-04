@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderTemplatePostprocessLevelOfDetailNewBlock : ShaderTemplatePostprocessLevelOfDetailNewBlockBase
     {
-        public  ShaderTemplatePostprocessLevelOfDetailNewBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderTemplatePostprocessLevelOfDetailNewBlock() : base()
         {
-            
-        }
-        public  ShaderTemplatePostprocessLevelOfDetailNewBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 10, Alignment = 4)]
@@ -25,31 +22,29 @@ namespace Moonfish.Guerilla.Tags
         internal TagBlockIndexStructBlock layers;
         internal int availableLayers;
         internal float projectedHeightPercentage;
-        
-        public override int SerializedSize{get { return 10; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ShaderTemplatePostprocessLevelOfDetailNewBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 10; } }
+        public override int Alignment { get { return 4; } }
+        public ShaderTemplatePostprocessLevelOfDetailNewBlockBase() : base()
         {
-            layers = new TagBlockIndexStructBlock(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            layers = new TagBlockIndexStructBlock();
+            blamPointers.Concat(layers.ReadFields(binaryReader));
             availableLayers = binaryReader.ReadInt32();
             projectedHeightPercentage = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  ShaderTemplatePostprocessLevelOfDetailNewBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            layers.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            layers = new TagBlockIndexStructBlock(binaryReader);
-            availableLayers = binaryReader.ReadInt32();
-            projectedHeightPercentage = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 layers.Write(binaryWriter);
                 binaryWriter.Write(availableLayers);

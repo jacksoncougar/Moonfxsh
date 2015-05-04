@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class MaterialsSweetenersStructBlock : MaterialsSweetenersStructBlockBase
     {
-        public  MaterialsSweetenersStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public MaterialsSweetenersStructBlock() : base()
         {
-            
-        }
-        public  MaterialsSweetenersStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 116, Alignment = 4)]
@@ -51,14 +48,14 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("null")]
         internal Moonfish.Tags.TagReference invalidName_0;
         internal SweetenerInheritanceFlags sweetenerInheritanceFlags;
-        
-        public override int SerializedSize{get { return 116; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  MaterialsSweetenersStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 116; } }
+        public override int Alignment { get { return 4; } }
+        public MaterialsSweetenersStructBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             soundSweetenerSmall = binaryReader.ReadTagReference();
             soundSweetenerMedium = binaryReader.ReadTagReference();
             soundSweetenerLarge = binaryReader.ReadTagReference();
@@ -74,32 +71,16 @@ namespace Moonfish.Guerilla.Tags
             effectSweetenerMelee = binaryReader.ReadTagReference();
             invalidName_0 = binaryReader.ReadTagReference();
             sweetenerInheritanceFlags = (SweetenerInheritanceFlags)binaryReader.ReadInt32();
+            return blamPointers;
         }
-        public  MaterialsSweetenersStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            soundSweetenerSmall = binaryReader.ReadTagReference();
-            soundSweetenerMedium = binaryReader.ReadTagReference();
-            soundSweetenerLarge = binaryReader.ReadTagReference();
-            soundSweetenerRolling = binaryReader.ReadTagReference();
-            soundSweetenerGrinding = binaryReader.ReadTagReference();
-            soundSweetenerMelee = binaryReader.ReadTagReference();
-            invalidName_ = binaryReader.ReadTagReference();
-            effectSweetenerSmall = binaryReader.ReadTagReference();
-            effectSweetenerMedium = binaryReader.ReadTagReference();
-            effectSweetenerLarge = binaryReader.ReadTagReference();
-            effectSweetenerRolling = binaryReader.ReadTagReference();
-            effectSweetenerGrinding = binaryReader.ReadTagReference();
-            effectSweetenerMelee = binaryReader.ReadTagReference();
-            invalidName_0 = binaryReader.ReadTagReference();
-            sweetenerInheritanceFlags = (SweetenerInheritanceFlags)binaryReader.ReadInt32();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(soundSweetenerSmall);
                 binaryWriter.Write(soundSweetenerMedium);

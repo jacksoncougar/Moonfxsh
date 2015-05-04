@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class FlightReferenceBlock : FlightReferenceBlockBase
     {
-        public  FlightReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public FlightReferenceBlock() : base()
         {
-            
-        }
-        public  FlightReferenceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 4, Alignment = 4)]
@@ -24,29 +21,26 @@ namespace Moonfish.Guerilla.Tags
     {
         internal short flightHintIndex;
         internal short poitIndex;
-        
-        public override int SerializedSize{get { return 4; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  FlightReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 4; } }
+        public override int Alignment { get { return 4; } }
+        public FlightReferenceBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flightHintIndex = binaryReader.ReadInt16();
             poitIndex = binaryReader.ReadInt16();
+            return blamPointers;
         }
-        public  FlightReferenceBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flightHintIndex = binaryReader.ReadInt16();
-            poitIndex = binaryReader.ReadInt16();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(flightHintIndex);
                 binaryWriter.Write(poitIndex);

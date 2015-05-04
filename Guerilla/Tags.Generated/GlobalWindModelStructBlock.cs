@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalWindModelStructBlock : GlobalWindModelStructBlockBase
     {
-        public  GlobalWindModelStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalWindModelStructBlock() : base()
         {
-            
-        }
-        public  GlobalWindModelStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 156, Alignment = 4)]
@@ -44,14 +41,14 @@ namespace Moonfish.Guerilla.Tags
         internal float gravityConstant;
         internal GloalWindPrimitivesBlock[] windPirmitives;
         internal byte[] invalidName_8;
-        
-        public override int SerializedSize{get { return 156; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GlobalWindModelStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 156; } }
+        public override int Alignment { get { return 4; } }
+        public GlobalWindModelStructBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             windTilingScale = binaryReader.ReadSingle();
             windPrimaryHeadingPitchStrength = binaryReader.ReadVector3();
             primaryRateOfChange = binaryReader.ReadSingle();
@@ -72,41 +69,19 @@ namespace Moonfish.Guerilla.Tags
             turbulanceRateOfChange = binaryReader.ReadSingle();
             turbulenceScaleXYZ = binaryReader.ReadVector3();
             gravityConstant = binaryReader.ReadSingle();
-            windPirmitives = Guerilla.ReadBlockArray<GloalWindPrimitivesBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GloalWindPrimitivesBlock>(binaryReader));
             invalidName_8 = binaryReader.ReadBytes(4);
+            return blamPointers;
         }
-        public  GlobalWindModelStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            windPirmitives = ReadBlockArrayData<GloalWindPrimitivesBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            windTilingScale = binaryReader.ReadSingle();
-            windPrimaryHeadingPitchStrength = binaryReader.ReadVector3();
-            primaryRateOfChange = binaryReader.ReadSingle();
-            primaryMinStrength = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(4);
-            invalidName_0 = binaryReader.ReadBytes(4);
-            invalidName_1 = binaryReader.ReadBytes(12);
-            windGustingHeadingPitchStrength = binaryReader.ReadVector3();
-            gustDiretionalRateOfChange = binaryReader.ReadSingle();
-            gustStrengthRateOfChange = binaryReader.ReadSingle();
-            gustConeAngle = binaryReader.ReadSingle();
-            invalidName_2 = binaryReader.ReadBytes(4);
-            invalidName_3 = binaryReader.ReadBytes(4);
-            invalidName_4 = binaryReader.ReadBytes(12);
-            invalidName_5 = binaryReader.ReadBytes(12);
-            invalidName_6 = binaryReader.ReadBytes(12);
-            invalidName_7 = binaryReader.ReadBytes(12);
-            turbulanceRateOfChange = binaryReader.ReadSingle();
-            turbulenceScaleXYZ = binaryReader.ReadVector3();
-            gravityConstant = binaryReader.ReadSingle();
-            windPirmitives = Guerilla.ReadBlockArray<GloalWindPrimitivesBlock>(binaryReader);
-            invalidName_8 = binaryReader.ReadBytes(4);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(windTilingScale);
                 binaryWriter.Write(windPrimaryHeadingPitchStrength);

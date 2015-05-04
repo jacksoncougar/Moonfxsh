@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("hmt ")]
     public partial class HudMessageTextBlock : HudMessageTextBlockBase
     {
-        public  HudMessageTextBlock(BinaryReader binaryReader): base(binaryReader)
+        public HudMessageTextBlock() : base()
         {
-            
-        }
-        public  HudMessageTextBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 108, Alignment = 4)]
@@ -35,33 +32,31 @@ namespace Moonfish.Guerilla.Tags
         internal HudMessageElementsBlock[] messageElements;
         internal HudMessagesBlock[] messages;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 108; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  HudMessageTextBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 108; } }
+        public override int Alignment { get { return 4; } }
+        public HudMessageTextBlockBase() : base()
         {
-            textData = Guerilla.ReadData(binaryReader);
-            messageElements = Guerilla.ReadBlockArray<HudMessageElementsBlock>(binaryReader);
-            messages = Guerilla.ReadBlockArray<HudMessagesBlock>(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
+            blamPointers.Enqueue(ReadBlockArrayPointer<HudMessageElementsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<HudMessagesBlock>(binaryReader));
             invalidName_ = binaryReader.ReadBytes(84);
+            return blamPointers;
         }
-        public  HudMessageTextBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            textData = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            messageElements = ReadBlockArrayData<HudMessageElementsBlock>(binaryReader, blamPointers.Dequeue());
+            messages = ReadBlockArrayData<HudMessagesBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            textData = Guerilla.ReadData(binaryReader);
-            messageElements = Guerilla.ReadBlockArray<HudMessageElementsBlock>(binaryReader);
-            messages = Guerilla.ReadBlockArray<HudMessagesBlock>(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(84);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteData(binaryWriter, textData, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<HudMessageElementsBlock>(binaryWriter, messageElements, nextAddress);

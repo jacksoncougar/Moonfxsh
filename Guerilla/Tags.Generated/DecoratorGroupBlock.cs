@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class DecoratorGroupBlock : DecoratorGroupBlockBase
     {
-        public  DecoratorGroupBlock(BinaryReader binaryReader): base(binaryReader)
+        public DecoratorGroupBlock() : base()
         {
-            
-        }
-        public  DecoratorGroupBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -35,14 +32,14 @@ namespace Moonfish.Guerilla.Tags
         internal short indexStartOffset;
         internal short indexCount;
         internal int compressedBoundingCenter;
-        
-        public override int SerializedSize{get { return 24; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  DecoratorGroupBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 24; } }
+        public override int Alignment { get { return 4; } }
+        public DecoratorGroupBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             decoratorSet = binaryReader.ReadByteBlockIndex1();
             decoratorType = (DecoratorType)binaryReader.ReadByte();
             shaderIndex = binaryReader.ReadByte();
@@ -56,30 +53,16 @@ namespace Moonfish.Guerilla.Tags
             indexStartOffset = binaryReader.ReadInt16();
             indexCount = binaryReader.ReadInt16();
             compressedBoundingCenter = binaryReader.ReadInt32();
+            return blamPointers;
         }
-        public  DecoratorGroupBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            decoratorSet = binaryReader.ReadByteBlockIndex1();
-            decoratorType = (DecoratorType)binaryReader.ReadByte();
-            shaderIndex = binaryReader.ReadByte();
-            compressedRadius = binaryReader.ReadByte();
-            cluster = binaryReader.ReadInt16();
-            cacheBlock = binaryReader.ReadShortBlockIndex1();
-            decoratorStartIndex = binaryReader.ReadInt16();
-            decoratorCount = binaryReader.ReadInt16();
-            vertexStartOffset = binaryReader.ReadInt16();
-            vertexCount = binaryReader.ReadInt16();
-            indexStartOffset = binaryReader.ReadInt16();
-            indexCount = binaryReader.ReadInt16();
-            compressedBoundingCenter = binaryReader.ReadInt32();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(decoratorSet);
                 binaryWriter.Write((Byte)decoratorType);

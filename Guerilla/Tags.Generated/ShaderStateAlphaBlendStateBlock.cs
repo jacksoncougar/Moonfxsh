@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderStateAlphaBlendStateBlock : ShaderStateAlphaBlendStateBlockBase
     {
-        public  ShaderStateAlphaBlendStateBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderStateAlphaBlendStateBlock() : base()
         {
-            
-        }
-        public  ShaderStateAlphaBlendStateBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -29,14 +26,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ColourA1R1G1B1 blendColor;
         internal LogicOpFlags logicOpFlags;
         internal byte[] invalidName_0;
-        
-        public override int SerializedSize{get { return 16; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ShaderStateAlphaBlendStateBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 16; } }
+        public override int Alignment { get { return 4; } }
+        public ShaderStateAlphaBlendStateBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             blendFunction = (BlendFunction)binaryReader.ReadInt16();
             blendSrcFactor = (BlendSrcFactor)binaryReader.ReadInt16();
             blendDstFactor = (BlendDstFactor)binaryReader.ReadInt16();
@@ -44,24 +41,16 @@ namespace Moonfish.Guerilla.Tags
             blendColor = binaryReader.ReadColourA1R1G1B1();
             logicOpFlags = (LogicOpFlags)binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
+            return blamPointers;
         }
-        public  ShaderStateAlphaBlendStateBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            blendFunction = (BlendFunction)binaryReader.ReadInt16();
-            blendSrcFactor = (BlendSrcFactor)binaryReader.ReadInt16();
-            blendDstFactor = (BlendDstFactor)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            blendColor = binaryReader.ReadColourA1R1G1B1();
-            logicOpFlags = (LogicOpFlags)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)blendFunction);
                 binaryWriter.Write((Int16)blendSrcFactor);

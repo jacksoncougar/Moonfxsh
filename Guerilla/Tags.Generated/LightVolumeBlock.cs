@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("MGS2")]
     public partial class LightVolumeBlock : LightVolumeBlockBase
     {
-        public  LightVolumeBlock(BinaryReader binaryReader): base(binaryReader)
+        public LightVolumeBlock() : base()
         {
-            
-        }
-        public  LightVolumeBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -34,31 +31,28 @@ namespace Moonfish.Guerilla.Tags
         internal float falloffDistanceFromCameraWorldUnits;
         internal float cutoffDistanceFromCameraWorldUnits;
         internal LightVolumeVolumeBlock[] volumes;
-        
-        public override int SerializedSize{get { return 16; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  LightVolumeBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 16; } }
+        public override int Alignment { get { return 4; } }
+        public LightVolumeBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             falloffDistanceFromCameraWorldUnits = binaryReader.ReadSingle();
             cutoffDistanceFromCameraWorldUnits = binaryReader.ReadSingle();
-            volumes = Guerilla.ReadBlockArray<LightVolumeVolumeBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightVolumeVolumeBlock>(binaryReader));
+            return blamPointers;
         }
-        public  LightVolumeBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            volumes = ReadBlockArrayData<LightVolumeVolumeBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            falloffDistanceFromCameraWorldUnits = binaryReader.ReadSingle();
-            cutoffDistanceFromCameraWorldUnits = binaryReader.ReadSingle();
-            volumes = Guerilla.ReadBlockArray<LightVolumeVolumeBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(falloffDistanceFromCameraWorldUnits);
                 binaryWriter.Write(cutoffDistanceFromCameraWorldUnits);

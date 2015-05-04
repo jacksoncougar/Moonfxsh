@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioEquipmentBlock : ScenarioEquipmentBlockBase
     {
-        public  ScenarioEquipmentBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioEquipmentBlock() : base()
         {
-            
-        }
-        public  ScenarioEquipmentBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 56, Alignment = 4)]
@@ -26,33 +23,32 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 name;
         internal ScenarioObjectDatumStructBlock objectData;
         internal ScenarioEquipmentDatumStructBlock equipmentData;
-        
-        public override int SerializedSize{get { return 56; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioEquipmentBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 56; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioEquipmentBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             type = binaryReader.ReadShortBlockIndex1();
             name = binaryReader.ReadShortBlockIndex1();
-            objectData = new ScenarioObjectDatumStructBlock(binaryReader);
-            equipmentData = new ScenarioEquipmentDatumStructBlock(binaryReader);
+            objectData = new ScenarioObjectDatumStructBlock();
+            blamPointers.Concat(objectData.ReadFields(binaryReader));
+            equipmentData = new ScenarioEquipmentDatumStructBlock();
+            blamPointers.Concat(equipmentData.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  ScenarioEquipmentBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            objectData.ReadPointers(binaryReader, blamPointers);
+            equipmentData.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            type = binaryReader.ReadShortBlockIndex1();
-            name = binaryReader.ReadShortBlockIndex1();
-            objectData = new ScenarioObjectDatumStructBlock(binaryReader);
-            equipmentData = new ScenarioEquipmentDatumStructBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(type);
                 binaryWriter.Write(name);

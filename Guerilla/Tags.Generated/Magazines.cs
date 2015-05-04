@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class Magazines : MagazinesBase
     {
-        public  Magazines(BinaryReader binaryReader): base(binaryReader)
+        public Magazines() : base()
         {
-            
-        }
-        public  Magazines(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 92, Alignment = 4)]
@@ -49,14 +46,14 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("jpt!")]
         internal Moonfish.Tags.TagReference chamberingDamageEffect;
         internal MagazineObjects[] magazines;
-        
-        public override int SerializedSize{get { return 92; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  MagazinesBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 92; } }
+        public override int Alignment { get { return 4; } }
+        public MagazinesBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             roundsRechargedPerSecond = binaryReader.ReadInt16();
             roundsTotalInitial = binaryReader.ReadInt16();
@@ -73,35 +70,18 @@ namespace Moonfish.Guerilla.Tags
             reloadingDamageEffect = binaryReader.ReadTagReference();
             chamberingEffect = binaryReader.ReadTagReference();
             chamberingDamageEffect = binaryReader.ReadTagReference();
-            magazines = Guerilla.ReadBlockArray<MagazineObjects>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<MagazineObjects>(binaryReader));
+            return blamPointers;
         }
-        public  MagazinesBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            magazines = ReadBlockArrayData<MagazineObjects>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            roundsRechargedPerSecond = binaryReader.ReadInt16();
-            roundsTotalInitial = binaryReader.ReadInt16();
-            roundsTotalMaximum = binaryReader.ReadInt16();
-            roundsLoadedMaximum = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(4);
-            reloadTimeSeconds = binaryReader.ReadSingle();
-            roundsReloaded = binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            chamberTimeSeconds = binaryReader.ReadSingle();
-            invalidName_1 = binaryReader.ReadBytes(8);
-            invalidName_2 = binaryReader.ReadBytes(16);
-            reloadingEffect = binaryReader.ReadTagReference();
-            reloadingDamageEffect = binaryReader.ReadTagReference();
-            chamberingEffect = binaryReader.ReadTagReference();
-            chamberingDamageEffect = binaryReader.ReadTagReference();
-            magazines = Guerilla.ReadBlockArray<MagazineObjects>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(roundsRechargedPerSecond);

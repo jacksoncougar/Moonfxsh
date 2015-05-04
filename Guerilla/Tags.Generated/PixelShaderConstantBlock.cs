@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PixelShaderConstantBlock : PixelShaderConstantBlockBase
     {
-        public  PixelShaderConstantBlock(BinaryReader binaryReader): base(binaryReader)
+        public PixelShaderConstantBlock() : base()
         {
-            
-        }
-        public  PixelShaderConstantBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 6, Alignment = 4)]
@@ -28,37 +25,30 @@ namespace Moonfish.Guerilla.Tags
         internal ComponentMask componentMask;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
-        
-        public override int SerializedSize{get { return 6; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PixelShaderConstantBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 6; } }
+        public override int Alignment { get { return 4; } }
+        public PixelShaderConstantBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             parameterType = (ParameterType)binaryReader.ReadByte();
             combinerIndex = binaryReader.ReadByte();
             registerIndex = binaryReader.ReadByte();
             componentMask = (ComponentMask)binaryReader.ReadByte();
             invalidName_ = binaryReader.ReadBytes(1);
             invalidName_0 = binaryReader.ReadBytes(1);
+            return blamPointers;
         }
-        public  PixelShaderConstantBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            parameterType = (ParameterType)binaryReader.ReadByte();
-            combinerIndex = binaryReader.ReadByte();
-            registerIndex = binaryReader.ReadByte();
-            componentMask = (ComponentMask)binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(1);
-            invalidName_0 = binaryReader.ReadBytes(1);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Byte)parameterType);
                 binaryWriter.Write(combinerIndex);

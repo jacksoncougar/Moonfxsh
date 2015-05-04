@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class DifficultyBlock : DifficultyBlockBase
     {
-        public  DifficultyBlock(BinaryReader binaryReader): base(binaryReader)
+        public DifficultyBlock() : base()
         {
-            
-        }
-        public  DifficultyBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 644, Alignment = 4)]
@@ -463,14 +460,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_5;
         internal byte[] invalidName_6;
         internal byte[] invalidName_7;
-        
-        public override int SerializedSize{get { return 644; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  DifficultyBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 644; } }
+        public override int Alignment { get { return 4; } }
+        public DifficultyBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             easyEnemyDamage = binaryReader.ReadSingle();
             normalEnemyDamage = binaryReader.ReadSingle();
             hardEnemyDamage = binaryReader.ReadSingle();
@@ -588,134 +585,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_5 = binaryReader.ReadBytes(16);
             invalidName_6 = binaryReader.ReadBytes(16);
             invalidName_7 = binaryReader.ReadBytes(84);
+            return blamPointers;
         }
-        public  DifficultyBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            easyEnemyDamage = binaryReader.ReadSingle();
-            normalEnemyDamage = binaryReader.ReadSingle();
-            hardEnemyDamage = binaryReader.ReadSingle();
-            impossEnemyDamage = binaryReader.ReadSingle();
-            easyEnemyVitality = binaryReader.ReadSingle();
-            normalEnemyVitality = binaryReader.ReadSingle();
-            hardEnemyVitality = binaryReader.ReadSingle();
-            impossEnemyVitality = binaryReader.ReadSingle();
-            easyEnemyShield = binaryReader.ReadSingle();
-            normalEnemyShield = binaryReader.ReadSingle();
-            hardEnemyShield = binaryReader.ReadSingle();
-            impossEnemyShield = binaryReader.ReadSingle();
-            easyEnemyRecharge = binaryReader.ReadSingle();
-            normalEnemyRecharge = binaryReader.ReadSingle();
-            hardEnemyRecharge = binaryReader.ReadSingle();
-            impossEnemyRecharge = binaryReader.ReadSingle();
-            easyFriendDamage = binaryReader.ReadSingle();
-            normalFriendDamage = binaryReader.ReadSingle();
-            hardFriendDamage = binaryReader.ReadSingle();
-            impossFriendDamage = binaryReader.ReadSingle();
-            easyFriendVitality = binaryReader.ReadSingle();
-            normalFriendVitality = binaryReader.ReadSingle();
-            hardFriendVitality = binaryReader.ReadSingle();
-            impossFriendVitality = binaryReader.ReadSingle();
-            easyFriendShield = binaryReader.ReadSingle();
-            normalFriendShield = binaryReader.ReadSingle();
-            hardFriendShield = binaryReader.ReadSingle();
-            impossFriendShield = binaryReader.ReadSingle();
-            easyFriendRecharge = binaryReader.ReadSingle();
-            normalFriendRecharge = binaryReader.ReadSingle();
-            hardFriendRecharge = binaryReader.ReadSingle();
-            impossFriendRecharge = binaryReader.ReadSingle();
-            easyInfectionForms = binaryReader.ReadSingle();
-            normalInfectionForms = binaryReader.ReadSingle();
-            hardInfectionForms = binaryReader.ReadSingle();
-            impossInfectionForms = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(16);
-            easyRateOfFire = binaryReader.ReadSingle();
-            normalRateOfFire = binaryReader.ReadSingle();
-            hardRateOfFire = binaryReader.ReadSingle();
-            impossRateOfFire = binaryReader.ReadSingle();
-            easyProjectileError = binaryReader.ReadSingle();
-            normalProjectileError = binaryReader.ReadSingle();
-            hardProjectileError = binaryReader.ReadSingle();
-            impossProjectileError = binaryReader.ReadSingle();
-            easyBurstError = binaryReader.ReadSingle();
-            normalBurstError = binaryReader.ReadSingle();
-            hardBurstError = binaryReader.ReadSingle();
-            impossBurstError = binaryReader.ReadSingle();
-            easyNewTargetDelay = binaryReader.ReadSingle();
-            normalNewTargetDelay = binaryReader.ReadSingle();
-            hardNewTargetDelay = binaryReader.ReadSingle();
-            impossNewTargetDelay = binaryReader.ReadSingle();
-            easyBurstSeparation = binaryReader.ReadSingle();
-            normalBurstSeparation = binaryReader.ReadSingle();
-            hardBurstSeparation = binaryReader.ReadSingle();
-            impossBurstSeparation = binaryReader.ReadSingle();
-            easyTargetTracking = binaryReader.ReadSingle();
-            normalTargetTracking = binaryReader.ReadSingle();
-            hardTargetTracking = binaryReader.ReadSingle();
-            impossTargetTracking = binaryReader.ReadSingle();
-            easyTargetLeading = binaryReader.ReadSingle();
-            normalTargetLeading = binaryReader.ReadSingle();
-            hardTargetLeading = binaryReader.ReadSingle();
-            impossTargetLeading = binaryReader.ReadSingle();
-            easyOverchargeChance = binaryReader.ReadSingle();
-            normalOverchargeChance = binaryReader.ReadSingle();
-            hardOverchargeChance = binaryReader.ReadSingle();
-            impossOverchargeChance = binaryReader.ReadSingle();
-            easySpecialFireDelay = binaryReader.ReadSingle();
-            normalSpecialFireDelay = binaryReader.ReadSingle();
-            hardSpecialFireDelay = binaryReader.ReadSingle();
-            impossSpecialFireDelay = binaryReader.ReadSingle();
-            easyGuidanceVsPlayer = binaryReader.ReadSingle();
-            normalGuidanceVsPlayer = binaryReader.ReadSingle();
-            hardGuidanceVsPlayer = binaryReader.ReadSingle();
-            impossGuidanceVsPlayer = binaryReader.ReadSingle();
-            easyMeleeDelayBase = binaryReader.ReadSingle();
-            normalMeleeDelayBase = binaryReader.ReadSingle();
-            hardMeleeDelayBase = binaryReader.ReadSingle();
-            impossMeleeDelayBase = binaryReader.ReadSingle();
-            easyMeleeDelayScale = binaryReader.ReadSingle();
-            normalMeleeDelayScale = binaryReader.ReadSingle();
-            hardMeleeDelayScale = binaryReader.ReadSingle();
-            impossMeleeDelayScale = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(16);
-            easyGrenadeChanceScale = binaryReader.ReadSingle();
-            normalGrenadeChanceScale = binaryReader.ReadSingle();
-            hardGrenadeChanceScale = binaryReader.ReadSingle();
-            impossGrenadeChanceScale = binaryReader.ReadSingle();
-            easyGrenadeTimerScale = binaryReader.ReadSingle();
-            normalGrenadeTimerScale = binaryReader.ReadSingle();
-            hardGrenadeTimerScale = binaryReader.ReadSingle();
-            impossGrenadeTimerScale = binaryReader.ReadSingle();
-            invalidName_1 = binaryReader.ReadBytes(16);
-            invalidName_2 = binaryReader.ReadBytes(16);
-            invalidName_3 = binaryReader.ReadBytes(16);
-            easyMajorUpgradeNormal = binaryReader.ReadSingle();
-            normalMajorUpgradeNormal = binaryReader.ReadSingle();
-            hardMajorUpgradeNormal = binaryReader.ReadSingle();
-            impossMajorUpgradeNormal = binaryReader.ReadSingle();
-            easyMajorUpgradeFew = binaryReader.ReadSingle();
-            normalMajorUpgradeFew = binaryReader.ReadSingle();
-            hardMajorUpgradeFew = binaryReader.ReadSingle();
-            impossMajorUpgradeFew = binaryReader.ReadSingle();
-            easyMajorUpgradeMany = binaryReader.ReadSingle();
-            normalMajorUpgradeMany = binaryReader.ReadSingle();
-            hardMajorUpgradeMany = binaryReader.ReadSingle();
-            impossMajorUpgradeMany = binaryReader.ReadSingle();
-            easyPlayerVehicleRamChance = binaryReader.ReadSingle();
-            normalPlayerVehicleRamChance = binaryReader.ReadSingle();
-            hardPlayerVehicleRamChance = binaryReader.ReadSingle();
-            impossPlayerVehicleRamChance = binaryReader.ReadSingle();
-            invalidName_4 = binaryReader.ReadBytes(16);
-            invalidName_5 = binaryReader.ReadBytes(16);
-            invalidName_6 = binaryReader.ReadBytes(16);
-            invalidName_7 = binaryReader.ReadBytes(84);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(easyEnemyDamage);
                 binaryWriter.Write(normalEnemyDamage);

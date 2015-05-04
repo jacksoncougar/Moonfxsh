@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class BitmapDataBlock : BitmapDataBlockBase
     {
-        public  BitmapDataBlock(BinaryReader binaryReader): base(binaryReader)
+        public BitmapDataBlock() : base()
         {
-            
-        }
-        public  BitmapDataBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 116, Alignment = 4)]
@@ -51,14 +48,14 @@ namespace Moonfish.Guerilla.Tags
         internal int lOD2TextureDataLength;
         internal int lOD3TextureDataLength;
         internal byte[] invalidName_0;
-        
-        public override int SerializedSize{get { return 116; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  BitmapDataBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 116; } }
+        public override int Alignment { get { return 4; } }
+        public BitmapDataBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             signature = binaryReader.ReadTagClass();
             widthPixels = binaryReader.ReadInt16();
             heightPixels = binaryReader.ReadInt16();
@@ -79,37 +76,16 @@ namespace Moonfish.Guerilla.Tags
             lOD2TextureDataLength = binaryReader.ReadInt32();
             lOD3TextureDataLength = binaryReader.ReadInt32();
             invalidName_0 = binaryReader.ReadBytes(52);
+            return blamPointers;
         }
-        public  BitmapDataBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            signature = binaryReader.ReadTagClass();
-            widthPixels = binaryReader.ReadInt16();
-            heightPixels = binaryReader.ReadInt16();
-            depthPixels = binaryReader.ReadByte();
-            moreFlags = (MoreFlags)binaryReader.ReadByte();
-            type = (TypeDeterminesBitmapGeometry)binaryReader.ReadInt16();
-            format = (FormatDeterminesHowPixelsAreRepresentedInternally)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            registrationPoint = binaryReader.ReadPoint();
-            mipmapCount = binaryReader.ReadInt16();
-            lowDetailMipmapCount = binaryReader.ReadInt16();
-            pixelsOffset = binaryReader.ReadInt32();
-            lOD1TextureDataOffset = binaryReader.ReadInt32();
-            lOD2TextureDataOffset = binaryReader.ReadInt32();
-            lOD3TextureDataOffset = binaryReader.ReadInt32();
-            invalidName_ = binaryReader.ReadBytes(12);
-            lOD1TextureDataLength = binaryReader.ReadInt32();
-            lOD2TextureDataLength = binaryReader.ReadInt32();
-            lOD3TextureDataLength = binaryReader.ReadInt32();
-            invalidName_0 = binaryReader.ReadBytes(52);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(signature);
                 binaryWriter.Write(widthPixels);

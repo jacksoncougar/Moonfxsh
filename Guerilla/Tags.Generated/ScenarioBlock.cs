@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("scnr")]
     public partial class ScenarioBlock : ScenarioBlockBase
     {
-        public  ScenarioBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioBlock() : base()
         {
-            
-        }
-        public  ScenarioBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 992, Alignment = 4)]
@@ -151,247 +148,265 @@ namespace Moonfish.Guerilla.Tags
         internal HsReferencesBlock[] sharedReferences;
         internal ScenarioScreenEffectReferenceBlock[] screenEffectReferences;
         internal ScenarioSimulationDefinitionTableBlock[] simulationDefinitionTable;
-        
-        public override int SerializedSize{get { return 992; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 992; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             doNotUse = binaryReader.ReadTagReference();
-            skies = Guerilla.ReadBlockArray<ScenarioSkyReferenceBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioSkyReferenceBlock>(binaryReader));
             type = (Type)binaryReader.ReadInt16();
             flags = (Flags)binaryReader.ReadInt16();
-            childScenarios = Guerilla.ReadBlockArray<ScenarioChildScenarioBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioChildScenarioBlock>(binaryReader));
             localNorth = binaryReader.ReadSingle();
-            predictedResources = Guerilla.ReadBlockArray<PredictedResourceBlock>(binaryReader);
-            functions = Guerilla.ReadBlockArray<ScenarioFunctionBlock>(binaryReader);
-            editorScenarioData = Guerilla.ReadData(binaryReader);
-            comments = Guerilla.ReadBlockArray<EditorCommentBlock>(binaryReader);
-            invalidName_ = Guerilla.ReadBlockArray<DontUseMeScenarioEnvironmentObjectBlock>(binaryReader);
-            objectNames = Guerilla.ReadBlockArray<ScenarioObjectNamesBlock>(binaryReader);
-            scenery = Guerilla.ReadBlockArray<ScenarioSceneryBlock>(binaryReader);
-            sceneryPalette = Guerilla.ReadBlockArray<ScenarioSceneryPaletteBlock>(binaryReader);
-            bipeds = Guerilla.ReadBlockArray<ScenarioBipedBlock>(binaryReader);
-            bipedPalette = Guerilla.ReadBlockArray<ScenarioBipedPaletteBlock>(binaryReader);
-            vehicles = Guerilla.ReadBlockArray<ScenarioVehicleBlock>(binaryReader);
-            vehiclePalette = Guerilla.ReadBlockArray<ScenarioVehiclePaletteBlock>(binaryReader);
-            equipment = Guerilla.ReadBlockArray<ScenarioEquipmentBlock>(binaryReader);
-            equipmentPalette = Guerilla.ReadBlockArray<ScenarioEquipmentPaletteBlock>(binaryReader);
-            weapons = Guerilla.ReadBlockArray<ScenarioWeaponBlock>(binaryReader);
-            weaponPalette = Guerilla.ReadBlockArray<ScenarioWeaponPaletteBlock>(binaryReader);
-            deviceGroups = Guerilla.ReadBlockArray<DeviceGroupBlock>(binaryReader);
-            machines = Guerilla.ReadBlockArray<ScenarioMachineBlock>(binaryReader);
-            machinePalette = Guerilla.ReadBlockArray<ScenarioMachinePaletteBlock>(binaryReader);
-            controls = Guerilla.ReadBlockArray<ScenarioControlBlock>(binaryReader);
-            controlPalette = Guerilla.ReadBlockArray<ScenarioControlPaletteBlock>(binaryReader);
-            lightFixtures = Guerilla.ReadBlockArray<ScenarioLightFixtureBlock>(binaryReader);
-            lightFixturesPalette = Guerilla.ReadBlockArray<ScenarioLightFixturePaletteBlock>(binaryReader);
-            soundScenery = Guerilla.ReadBlockArray<ScenarioSoundSceneryBlock>(binaryReader);
-            soundSceneryPalette = Guerilla.ReadBlockArray<ScenarioSoundSceneryPaletteBlock>(binaryReader);
-            lightVolumes = Guerilla.ReadBlockArray<ScenarioLightBlock>(binaryReader);
-            lightVolumesPalette = Guerilla.ReadBlockArray<ScenarioLightPaletteBlock>(binaryReader);
-            playerStartingProfile = Guerilla.ReadBlockArray<ScenarioProfilesBlock>(binaryReader);
-            playerStartingLocations = Guerilla.ReadBlockArray<ScenarioPlayersBlock>(binaryReader);
-            killTriggerVolumes = Guerilla.ReadBlockArray<ScenarioTriggerVolumeBlock>(binaryReader);
-            recordedAnimations = Guerilla.ReadBlockArray<RecordedAnimationBlock>(binaryReader);
-            netgameFlags = Guerilla.ReadBlockArray<ScenarioNetpointsBlock>(binaryReader);
-            netgameEquipment = Guerilla.ReadBlockArray<ScenarioNetgameEquipmentBlock>(binaryReader);
-            startingEquipment = Guerilla.ReadBlockArray<ScenarioStartingEquipmentBlock>(binaryReader);
-            bSPSwitchTriggerVolumes = Guerilla.ReadBlockArray<ScenarioBspSwitchTriggerVolumeBlock>(binaryReader);
-            decals = Guerilla.ReadBlockArray<ScenarioDecalsBlock>(binaryReader);
-            decalsPalette = Guerilla.ReadBlockArray<ScenarioDecalPaletteBlock>(binaryReader);
-            detailObjectCollectionPalette = Guerilla.ReadBlockArray<ScenarioDetailObjectCollectionPaletteBlock>(binaryReader);
-            stylePalette = Guerilla.ReadBlockArray<StylePaletteBlock>(binaryReader);
-            squadGroups = Guerilla.ReadBlockArray<SquadGroupsBlock>(binaryReader);
-            squads = Guerilla.ReadBlockArray<SquadsBlock>(binaryReader);
-            zones = Guerilla.ReadBlockArray<ZoneBlock>(binaryReader);
-            missionScenes = Guerilla.ReadBlockArray<AiSceneBlock>(binaryReader);
-            characterPalette = Guerilla.ReadBlockArray<CharacterPaletteBlock>(binaryReader);
-            aIPathfindingData = Guerilla.ReadBlockArray<PathfindingDataBlock>(binaryReader);
-            aIAnimationReferences = Guerilla.ReadBlockArray<AiAnimationReferenceBlock>(binaryReader);
-            aIScriptReferences = Guerilla.ReadBlockArray<AiScriptReferenceBlock>(binaryReader);
-            aIRecordingReferences = Guerilla.ReadBlockArray<AiRecordingReferenceBlock>(binaryReader);
-            aIConversations = Guerilla.ReadBlockArray<AiConversationBlock>(binaryReader);
-            scriptSyntaxData = Guerilla.ReadData(binaryReader);
-            scriptStringData = Guerilla.ReadData(binaryReader);
-            scripts = Guerilla.ReadBlockArray<HsScriptsBlock>(binaryReader);
-            globals = Guerilla.ReadBlockArray<HsGlobalsBlock>(binaryReader);
-            references = Guerilla.ReadBlockArray<HsReferencesBlock>(binaryReader);
-            sourceFiles = Guerilla.ReadBlockArray<HsSourceFilesBlock>(binaryReader);
-            scriptingData = Guerilla.ReadBlockArray<CsScriptDataBlock>(binaryReader);
-            cutsceneFlags = Guerilla.ReadBlockArray<ScenarioCutsceneFlagBlock>(binaryReader);
-            cutsceneCameraPoints = Guerilla.ReadBlockArray<ScenarioCutsceneCameraPointBlock>(binaryReader);
-            cutsceneTitles = Guerilla.ReadBlockArray<ScenarioCutsceneTitleBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<PredictedResourceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioFunctionBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
+            blamPointers.Enqueue(ReadBlockArrayPointer<EditorCommentBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<DontUseMeScenarioEnvironmentObjectBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioObjectNamesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioSceneryBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioSceneryPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioBipedBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioBipedPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioVehicleBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioVehiclePaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioEquipmentBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioEquipmentPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioWeaponBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioWeaponPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<DeviceGroupBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioMachineBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioMachinePaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioControlBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioControlPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioLightFixtureBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioLightFixturePaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioSoundSceneryBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioSoundSceneryPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioLightBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioLightPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioProfilesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioPlayersBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioTriggerVolumeBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<RecordedAnimationBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioNetpointsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioNetgameEquipmentBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioStartingEquipmentBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioBspSwitchTriggerVolumeBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioDecalsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioDecalPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioDetailObjectCollectionPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StylePaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SquadGroupsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SquadsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ZoneBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<AiSceneBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PathfindingDataBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<AiAnimationReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<AiScriptReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<AiRecordingReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<AiConversationBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
+            blamPointers.Enqueue(ReadBlockArrayPointer<HsScriptsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<HsGlobalsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<HsReferencesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<HsSourceFilesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<CsScriptDataBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioCutsceneFlagBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioCutsceneCameraPointBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioCutsceneTitleBlock>(binaryReader));
             customObjectNames = binaryReader.ReadTagReference();
             chapterTitleText = binaryReader.ReadTagReference();
             hUDMessages = binaryReader.ReadTagReference();
-            structureBSPs = Guerilla.ReadBlockArray<ScenarioStructureBspReferenceBlock>(binaryReader);
-            scenarioResources = Guerilla.ReadBlockArray<ScenarioResourcesBlock>(binaryReader);
-            scenarioResources0 = Guerilla.ReadBlockArray<OldUnusedStrucurePhysicsBlock>(binaryReader);
-            hsUnitSeats = Guerilla.ReadBlockArray<HsUnitSeatBlock>(binaryReader);
-            scenarioKillTriggers = Guerilla.ReadBlockArray<ScenarioKillTriggerVolumesBlock>(binaryReader);
-            hsSyntaxDatums = Guerilla.ReadBlockArray<SyntaxDatumBlock>(binaryReader);
-            orders = Guerilla.ReadBlockArray<OrdersBlock>(binaryReader);
-            triggers = Guerilla.ReadBlockArray<TriggersBlock>(binaryReader);
-            backgroundSoundPalette = Guerilla.ReadBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryReader);
-            soundEnvironmentPalette = Guerilla.ReadBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryReader);
-            weatherPalette = Guerilla.ReadBlockArray<StructureBspWeatherPaletteBlock>(binaryReader);
-            eMPTYSTRING = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            eMPTYSTRING0 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            eMPTYSTRING1 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            eMPTYSTRING2 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            eMPTYSTRING3 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            scenarioClusterData = Guerilla.ReadBlockArray<ScenarioClusterDataBlock>(binaryReader);
-            objectSalts = new []{ new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader),  };
-            spawnData = Guerilla.ReadBlockArray<ScenarioSpawnDataBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioStructureBspReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioResourcesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<OldUnusedStrucurePhysicsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<HsUnitSeatBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioKillTriggerVolumesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SyntaxDatumBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<OrdersBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<TriggersBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspBackgroundSoundPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspSoundEnvironmentPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspWeatherPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GNullBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GNullBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GNullBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GNullBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GNullBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioClusterDataBlock>(binaryReader));
+            objectSalts = new []{ new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts() };
+            blamPointers.Concat(objectSalts[0].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[1].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[2].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[3].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[4].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[5].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[6].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[7].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[8].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[9].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[10].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[11].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[12].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[13].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[14].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[15].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[16].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[17].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[18].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[19].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[20].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[21].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[22].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[23].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[24].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[25].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[26].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[27].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[28].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[29].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[30].ReadFields(binaryReader));
+            blamPointers.Concat(objectSalts[31].ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioSpawnDataBlock>(binaryReader));
             soundEffectCollection = binaryReader.ReadTagReference();
-            crates = Guerilla.ReadBlockArray<ScenarioCrateBlock>(binaryReader);
-            cratesPalette = Guerilla.ReadBlockArray<ScenarioCratePaletteBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioCrateBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioCratePaletteBlock>(binaryReader));
             globalLighting = binaryReader.ReadTagReference();
-            atmosphericFogPalette = Guerilla.ReadBlockArray<ScenarioAtmosphericFogPalette>(binaryReader);
-            planarFogPalette = Guerilla.ReadBlockArray<ScenarioPlanarFogPalette>(binaryReader);
-            flocks = Guerilla.ReadBlockArray<FlockDefinitionBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioAtmosphericFogPalette>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioPlanarFogPalette>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<FlockDefinitionBlock>(binaryReader));
             subtitles = binaryReader.ReadTagReference();
-            decorators = Guerilla.ReadBlockArray<DecoratorPlacementDefinitionBlock>(binaryReader);
-            creatures = Guerilla.ReadBlockArray<ScenarioCreatureBlock>(binaryReader);
-            creaturesPalette = Guerilla.ReadBlockArray<ScenarioCreaturePaletteBlock>(binaryReader);
-            decoratorsPalette = Guerilla.ReadBlockArray<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader);
-            bSPTransitionVolumes = Guerilla.ReadBlockArray<ScenarioBspSwitchTransitionVolumeBlock>(binaryReader);
-            structureBSPLighting = Guerilla.ReadBlockArray<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryReader);
-            editorFolders = Guerilla.ReadBlockArray<GScenarioEditorFolderBlock>(binaryReader);
-            levelData = Guerilla.ReadBlockArray<ScenarioLevelDataBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorPlacementDefinitionBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioCreatureBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioCreaturePaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioBspSwitchTransitionVolumeBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GScenarioEditorFolderBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioLevelDataBlock>(binaryReader));
             territoryLocationNames = binaryReader.ReadTagReference();
             invalidName_0 = binaryReader.ReadBytes(8);
-            missionDialogue = Guerilla.ReadBlockArray<AiScenarioMissionDialogueBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<AiScenarioMissionDialogueBlock>(binaryReader));
             objectives = binaryReader.ReadTagReference();
-            interpolators = Guerilla.ReadBlockArray<ScenarioInterpolatorBlock>(binaryReader);
-            sharedReferences = Guerilla.ReadBlockArray<HsReferencesBlock>(binaryReader);
-            screenEffectReferences = Guerilla.ReadBlockArray<ScenarioScreenEffectReferenceBlock>(binaryReader);
-            simulationDefinitionTable = Guerilla.ReadBlockArray<ScenarioSimulationDefinitionTableBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioInterpolatorBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<HsReferencesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioScreenEffectReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioSimulationDefinitionTableBlock>(binaryReader));
+            return blamPointers;
         }
-        public  ScenarioBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            skies = ReadBlockArrayData<ScenarioSkyReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            childScenarios = ReadBlockArrayData<ScenarioChildScenarioBlock>(binaryReader, blamPointers.Dequeue());
+            predictedResources = ReadBlockArrayData<PredictedResourceBlock>(binaryReader, blamPointers.Dequeue());
+            functions = ReadBlockArrayData<ScenarioFunctionBlock>(binaryReader, blamPointers.Dequeue());
+            editorScenarioData = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            comments = ReadBlockArrayData<EditorCommentBlock>(binaryReader, blamPointers.Dequeue());
+            invalidName_ = ReadBlockArrayData<DontUseMeScenarioEnvironmentObjectBlock>(binaryReader, blamPointers.Dequeue());
+            objectNames = ReadBlockArrayData<ScenarioObjectNamesBlock>(binaryReader, blamPointers.Dequeue());
+            scenery = ReadBlockArrayData<ScenarioSceneryBlock>(binaryReader, blamPointers.Dequeue());
+            sceneryPalette = ReadBlockArrayData<ScenarioSceneryPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            bipeds = ReadBlockArrayData<ScenarioBipedBlock>(binaryReader, blamPointers.Dequeue());
+            bipedPalette = ReadBlockArrayData<ScenarioBipedPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            vehicles = ReadBlockArrayData<ScenarioVehicleBlock>(binaryReader, blamPointers.Dequeue());
+            vehiclePalette = ReadBlockArrayData<ScenarioVehiclePaletteBlock>(binaryReader, blamPointers.Dequeue());
+            equipment = ReadBlockArrayData<ScenarioEquipmentBlock>(binaryReader, blamPointers.Dequeue());
+            equipmentPalette = ReadBlockArrayData<ScenarioEquipmentPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            weapons = ReadBlockArrayData<ScenarioWeaponBlock>(binaryReader, blamPointers.Dequeue());
+            weaponPalette = ReadBlockArrayData<ScenarioWeaponPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            deviceGroups = ReadBlockArrayData<DeviceGroupBlock>(binaryReader, blamPointers.Dequeue());
+            machines = ReadBlockArrayData<ScenarioMachineBlock>(binaryReader, blamPointers.Dequeue());
+            machinePalette = ReadBlockArrayData<ScenarioMachinePaletteBlock>(binaryReader, blamPointers.Dequeue());
+            controls = ReadBlockArrayData<ScenarioControlBlock>(binaryReader, blamPointers.Dequeue());
+            controlPalette = ReadBlockArrayData<ScenarioControlPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            lightFixtures = ReadBlockArrayData<ScenarioLightFixtureBlock>(binaryReader, blamPointers.Dequeue());
+            lightFixturesPalette = ReadBlockArrayData<ScenarioLightFixturePaletteBlock>(binaryReader, blamPointers.Dequeue());
+            soundScenery = ReadBlockArrayData<ScenarioSoundSceneryBlock>(binaryReader, blamPointers.Dequeue());
+            soundSceneryPalette = ReadBlockArrayData<ScenarioSoundSceneryPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            lightVolumes = ReadBlockArrayData<ScenarioLightBlock>(binaryReader, blamPointers.Dequeue());
+            lightVolumesPalette = ReadBlockArrayData<ScenarioLightPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            playerStartingProfile = ReadBlockArrayData<ScenarioProfilesBlock>(binaryReader, blamPointers.Dequeue());
+            playerStartingLocations = ReadBlockArrayData<ScenarioPlayersBlock>(binaryReader, blamPointers.Dequeue());
+            killTriggerVolumes = ReadBlockArrayData<ScenarioTriggerVolumeBlock>(binaryReader, blamPointers.Dequeue());
+            recordedAnimations = ReadBlockArrayData<RecordedAnimationBlock>(binaryReader, blamPointers.Dequeue());
+            netgameFlags = ReadBlockArrayData<ScenarioNetpointsBlock>(binaryReader, blamPointers.Dequeue());
+            netgameEquipment = ReadBlockArrayData<ScenarioNetgameEquipmentBlock>(binaryReader, blamPointers.Dequeue());
+            startingEquipment = ReadBlockArrayData<ScenarioStartingEquipmentBlock>(binaryReader, blamPointers.Dequeue());
+            bSPSwitchTriggerVolumes = ReadBlockArrayData<ScenarioBspSwitchTriggerVolumeBlock>(binaryReader, blamPointers.Dequeue());
+            decals = ReadBlockArrayData<ScenarioDecalsBlock>(binaryReader, blamPointers.Dequeue());
+            decalsPalette = ReadBlockArrayData<ScenarioDecalPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            detailObjectCollectionPalette = ReadBlockArrayData<ScenarioDetailObjectCollectionPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            stylePalette = ReadBlockArrayData<StylePaletteBlock>(binaryReader, blamPointers.Dequeue());
+            squadGroups = ReadBlockArrayData<SquadGroupsBlock>(binaryReader, blamPointers.Dequeue());
+            squads = ReadBlockArrayData<SquadsBlock>(binaryReader, blamPointers.Dequeue());
+            zones = ReadBlockArrayData<ZoneBlock>(binaryReader, blamPointers.Dequeue());
+            missionScenes = ReadBlockArrayData<AiSceneBlock>(binaryReader, blamPointers.Dequeue());
+            characterPalette = ReadBlockArrayData<CharacterPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            aIPathfindingData = ReadBlockArrayData<PathfindingDataBlock>(binaryReader, blamPointers.Dequeue());
+            aIAnimationReferences = ReadBlockArrayData<AiAnimationReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            aIScriptReferences = ReadBlockArrayData<AiScriptReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            aIRecordingReferences = ReadBlockArrayData<AiRecordingReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            aIConversations = ReadBlockArrayData<AiConversationBlock>(binaryReader, blamPointers.Dequeue());
+            scriptSyntaxData = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            scriptStringData = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            scripts = ReadBlockArrayData<HsScriptsBlock>(binaryReader, blamPointers.Dequeue());
+            globals = ReadBlockArrayData<HsGlobalsBlock>(binaryReader, blamPointers.Dequeue());
+            references = ReadBlockArrayData<HsReferencesBlock>(binaryReader, blamPointers.Dequeue());
+            sourceFiles = ReadBlockArrayData<HsSourceFilesBlock>(binaryReader, blamPointers.Dequeue());
+            scriptingData = ReadBlockArrayData<CsScriptDataBlock>(binaryReader, blamPointers.Dequeue());
+            cutsceneFlags = ReadBlockArrayData<ScenarioCutsceneFlagBlock>(binaryReader, blamPointers.Dequeue());
+            cutsceneCameraPoints = ReadBlockArrayData<ScenarioCutsceneCameraPointBlock>(binaryReader, blamPointers.Dequeue());
+            cutsceneTitles = ReadBlockArrayData<ScenarioCutsceneTitleBlock>(binaryReader, blamPointers.Dequeue());
+            structureBSPs = ReadBlockArrayData<ScenarioStructureBspReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            scenarioResources = ReadBlockArrayData<ScenarioResourcesBlock>(binaryReader, blamPointers.Dequeue());
+            scenarioResources0 = ReadBlockArrayData<OldUnusedStrucurePhysicsBlock>(binaryReader, blamPointers.Dequeue());
+            hsUnitSeats = ReadBlockArrayData<HsUnitSeatBlock>(binaryReader, blamPointers.Dequeue());
+            scenarioKillTriggers = ReadBlockArrayData<ScenarioKillTriggerVolumesBlock>(binaryReader, blamPointers.Dequeue());
+            hsSyntaxDatums = ReadBlockArrayData<SyntaxDatumBlock>(binaryReader, blamPointers.Dequeue());
+            orders = ReadBlockArrayData<OrdersBlock>(binaryReader, blamPointers.Dequeue());
+            triggers = ReadBlockArrayData<TriggersBlock>(binaryReader, blamPointers.Dequeue());
+            backgroundSoundPalette = ReadBlockArrayData<StructureBspBackgroundSoundPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            soundEnvironmentPalette = ReadBlockArrayData<StructureBspSoundEnvironmentPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            weatherPalette = ReadBlockArrayData<StructureBspWeatherPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            eMPTYSTRING = ReadBlockArrayData<GNullBlock>(binaryReader, blamPointers.Dequeue());
+            eMPTYSTRING0 = ReadBlockArrayData<GNullBlock>(binaryReader, blamPointers.Dequeue());
+            eMPTYSTRING1 = ReadBlockArrayData<GNullBlock>(binaryReader, blamPointers.Dequeue());
+            eMPTYSTRING2 = ReadBlockArrayData<GNullBlock>(binaryReader, blamPointers.Dequeue());
+            eMPTYSTRING3 = ReadBlockArrayData<GNullBlock>(binaryReader, blamPointers.Dequeue());
+            scenarioClusterData = ReadBlockArrayData<ScenarioClusterDataBlock>(binaryReader, blamPointers.Dequeue());
+            objectSalts = ReadBlockArrayData<ObjectSalts>(binaryReader, blamPointers.Dequeue());
+            spawnData = ReadBlockArrayData<ScenarioSpawnDataBlock>(binaryReader, blamPointers.Dequeue());
+            crates = ReadBlockArrayData<ScenarioCrateBlock>(binaryReader, blamPointers.Dequeue());
+            cratesPalette = ReadBlockArrayData<ScenarioCratePaletteBlock>(binaryReader, blamPointers.Dequeue());
+            atmosphericFogPalette = ReadBlockArrayData<ScenarioAtmosphericFogPalette>(binaryReader, blamPointers.Dequeue());
+            planarFogPalette = ReadBlockArrayData<ScenarioPlanarFogPalette>(binaryReader, blamPointers.Dequeue());
+            flocks = ReadBlockArrayData<FlockDefinitionBlock>(binaryReader, blamPointers.Dequeue());
+            decorators = ReadBlockArrayData<DecoratorPlacementDefinitionBlock>(binaryReader, blamPointers.Dequeue());
+            creatures = ReadBlockArrayData<ScenarioCreatureBlock>(binaryReader, blamPointers.Dequeue());
+            creaturesPalette = ReadBlockArrayData<ScenarioCreaturePaletteBlock>(binaryReader, blamPointers.Dequeue());
+            decoratorsPalette = ReadBlockArrayData<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader, blamPointers.Dequeue());
+            bSPTransitionVolumes = ReadBlockArrayData<ScenarioBspSwitchTransitionVolumeBlock>(binaryReader, blamPointers.Dequeue());
+            structureBSPLighting = ReadBlockArrayData<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryReader, blamPointers.Dequeue());
+            editorFolders = ReadBlockArrayData<GScenarioEditorFolderBlock>(binaryReader, blamPointers.Dequeue());
+            levelData = ReadBlockArrayData<ScenarioLevelDataBlock>(binaryReader, blamPointers.Dequeue());
+            missionDialogue = ReadBlockArrayData<AiScenarioMissionDialogueBlock>(binaryReader, blamPointers.Dequeue());
+            interpolators = ReadBlockArrayData<ScenarioInterpolatorBlock>(binaryReader, blamPointers.Dequeue());
+            sharedReferences = ReadBlockArrayData<HsReferencesBlock>(binaryReader, blamPointers.Dequeue());
+            screenEffectReferences = ReadBlockArrayData<ScenarioScreenEffectReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            simulationDefinitionTable = ReadBlockArrayData<ScenarioSimulationDefinitionTableBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            doNotUse = binaryReader.ReadTagReference();
-            skies = Guerilla.ReadBlockArray<ScenarioSkyReferenceBlock>(binaryReader);
-            type = (Type)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            childScenarios = Guerilla.ReadBlockArray<ScenarioChildScenarioBlock>(binaryReader);
-            localNorth = binaryReader.ReadSingle();
-            predictedResources = Guerilla.ReadBlockArray<PredictedResourceBlock>(binaryReader);
-            functions = Guerilla.ReadBlockArray<ScenarioFunctionBlock>(binaryReader);
-            editorScenarioData = Guerilla.ReadData(binaryReader);
-            comments = Guerilla.ReadBlockArray<EditorCommentBlock>(binaryReader);
-            invalidName_ = Guerilla.ReadBlockArray<DontUseMeScenarioEnvironmentObjectBlock>(binaryReader);
-            objectNames = Guerilla.ReadBlockArray<ScenarioObjectNamesBlock>(binaryReader);
-            scenery = Guerilla.ReadBlockArray<ScenarioSceneryBlock>(binaryReader);
-            sceneryPalette = Guerilla.ReadBlockArray<ScenarioSceneryPaletteBlock>(binaryReader);
-            bipeds = Guerilla.ReadBlockArray<ScenarioBipedBlock>(binaryReader);
-            bipedPalette = Guerilla.ReadBlockArray<ScenarioBipedPaletteBlock>(binaryReader);
-            vehicles = Guerilla.ReadBlockArray<ScenarioVehicleBlock>(binaryReader);
-            vehiclePalette = Guerilla.ReadBlockArray<ScenarioVehiclePaletteBlock>(binaryReader);
-            equipment = Guerilla.ReadBlockArray<ScenarioEquipmentBlock>(binaryReader);
-            equipmentPalette = Guerilla.ReadBlockArray<ScenarioEquipmentPaletteBlock>(binaryReader);
-            weapons = Guerilla.ReadBlockArray<ScenarioWeaponBlock>(binaryReader);
-            weaponPalette = Guerilla.ReadBlockArray<ScenarioWeaponPaletteBlock>(binaryReader);
-            deviceGroups = Guerilla.ReadBlockArray<DeviceGroupBlock>(binaryReader);
-            machines = Guerilla.ReadBlockArray<ScenarioMachineBlock>(binaryReader);
-            machinePalette = Guerilla.ReadBlockArray<ScenarioMachinePaletteBlock>(binaryReader);
-            controls = Guerilla.ReadBlockArray<ScenarioControlBlock>(binaryReader);
-            controlPalette = Guerilla.ReadBlockArray<ScenarioControlPaletteBlock>(binaryReader);
-            lightFixtures = Guerilla.ReadBlockArray<ScenarioLightFixtureBlock>(binaryReader);
-            lightFixturesPalette = Guerilla.ReadBlockArray<ScenarioLightFixturePaletteBlock>(binaryReader);
-            soundScenery = Guerilla.ReadBlockArray<ScenarioSoundSceneryBlock>(binaryReader);
-            soundSceneryPalette = Guerilla.ReadBlockArray<ScenarioSoundSceneryPaletteBlock>(binaryReader);
-            lightVolumes = Guerilla.ReadBlockArray<ScenarioLightBlock>(binaryReader);
-            lightVolumesPalette = Guerilla.ReadBlockArray<ScenarioLightPaletteBlock>(binaryReader);
-            playerStartingProfile = Guerilla.ReadBlockArray<ScenarioProfilesBlock>(binaryReader);
-            playerStartingLocations = Guerilla.ReadBlockArray<ScenarioPlayersBlock>(binaryReader);
-            killTriggerVolumes = Guerilla.ReadBlockArray<ScenarioTriggerVolumeBlock>(binaryReader);
-            recordedAnimations = Guerilla.ReadBlockArray<RecordedAnimationBlock>(binaryReader);
-            netgameFlags = Guerilla.ReadBlockArray<ScenarioNetpointsBlock>(binaryReader);
-            netgameEquipment = Guerilla.ReadBlockArray<ScenarioNetgameEquipmentBlock>(binaryReader);
-            startingEquipment = Guerilla.ReadBlockArray<ScenarioStartingEquipmentBlock>(binaryReader);
-            bSPSwitchTriggerVolumes = Guerilla.ReadBlockArray<ScenarioBspSwitchTriggerVolumeBlock>(binaryReader);
-            decals = Guerilla.ReadBlockArray<ScenarioDecalsBlock>(binaryReader);
-            decalsPalette = Guerilla.ReadBlockArray<ScenarioDecalPaletteBlock>(binaryReader);
-            detailObjectCollectionPalette = Guerilla.ReadBlockArray<ScenarioDetailObjectCollectionPaletteBlock>(binaryReader);
-            stylePalette = Guerilla.ReadBlockArray<StylePaletteBlock>(binaryReader);
-            squadGroups = Guerilla.ReadBlockArray<SquadGroupsBlock>(binaryReader);
-            squads = Guerilla.ReadBlockArray<SquadsBlock>(binaryReader);
-            zones = Guerilla.ReadBlockArray<ZoneBlock>(binaryReader);
-            missionScenes = Guerilla.ReadBlockArray<AiSceneBlock>(binaryReader);
-            characterPalette = Guerilla.ReadBlockArray<CharacterPaletteBlock>(binaryReader);
-            aIPathfindingData = Guerilla.ReadBlockArray<PathfindingDataBlock>(binaryReader);
-            aIAnimationReferences = Guerilla.ReadBlockArray<AiAnimationReferenceBlock>(binaryReader);
-            aIScriptReferences = Guerilla.ReadBlockArray<AiScriptReferenceBlock>(binaryReader);
-            aIRecordingReferences = Guerilla.ReadBlockArray<AiRecordingReferenceBlock>(binaryReader);
-            aIConversations = Guerilla.ReadBlockArray<AiConversationBlock>(binaryReader);
-            scriptSyntaxData = Guerilla.ReadData(binaryReader);
-            scriptStringData = Guerilla.ReadData(binaryReader);
-            scripts = Guerilla.ReadBlockArray<HsScriptsBlock>(binaryReader);
-            globals = Guerilla.ReadBlockArray<HsGlobalsBlock>(binaryReader);
-            references = Guerilla.ReadBlockArray<HsReferencesBlock>(binaryReader);
-            sourceFiles = Guerilla.ReadBlockArray<HsSourceFilesBlock>(binaryReader);
-            scriptingData = Guerilla.ReadBlockArray<CsScriptDataBlock>(binaryReader);
-            cutsceneFlags = Guerilla.ReadBlockArray<ScenarioCutsceneFlagBlock>(binaryReader);
-            cutsceneCameraPoints = Guerilla.ReadBlockArray<ScenarioCutsceneCameraPointBlock>(binaryReader);
-            cutsceneTitles = Guerilla.ReadBlockArray<ScenarioCutsceneTitleBlock>(binaryReader);
-            customObjectNames = binaryReader.ReadTagReference();
-            chapterTitleText = binaryReader.ReadTagReference();
-            hUDMessages = binaryReader.ReadTagReference();
-            structureBSPs = Guerilla.ReadBlockArray<ScenarioStructureBspReferenceBlock>(binaryReader);
-            scenarioResources = Guerilla.ReadBlockArray<ScenarioResourcesBlock>(binaryReader);
-            scenarioResources0 = Guerilla.ReadBlockArray<OldUnusedStrucurePhysicsBlock>(binaryReader);
-            hsUnitSeats = Guerilla.ReadBlockArray<HsUnitSeatBlock>(binaryReader);
-            scenarioKillTriggers = Guerilla.ReadBlockArray<ScenarioKillTriggerVolumesBlock>(binaryReader);
-            hsSyntaxDatums = Guerilla.ReadBlockArray<SyntaxDatumBlock>(binaryReader);
-            orders = Guerilla.ReadBlockArray<OrdersBlock>(binaryReader);
-            triggers = Guerilla.ReadBlockArray<TriggersBlock>(binaryReader);
-            backgroundSoundPalette = Guerilla.ReadBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryReader);
-            soundEnvironmentPalette = Guerilla.ReadBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryReader);
-            weatherPalette = Guerilla.ReadBlockArray<StructureBspWeatherPaletteBlock>(binaryReader);
-            eMPTYSTRING = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            eMPTYSTRING0 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            eMPTYSTRING1 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            eMPTYSTRING2 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            eMPTYSTRING3 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            scenarioClusterData = Guerilla.ReadBlockArray<ScenarioClusterDataBlock>(binaryReader);
-            objectSalts = new []{ new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader), new ObjectSalts(binaryReader),  };
-            spawnData = Guerilla.ReadBlockArray<ScenarioSpawnDataBlock>(binaryReader);
-            soundEffectCollection = binaryReader.ReadTagReference();
-            crates = Guerilla.ReadBlockArray<ScenarioCrateBlock>(binaryReader);
-            cratesPalette = Guerilla.ReadBlockArray<ScenarioCratePaletteBlock>(binaryReader);
-            globalLighting = binaryReader.ReadTagReference();
-            atmosphericFogPalette = Guerilla.ReadBlockArray<ScenarioAtmosphericFogPalette>(binaryReader);
-            planarFogPalette = Guerilla.ReadBlockArray<ScenarioPlanarFogPalette>(binaryReader);
-            flocks = Guerilla.ReadBlockArray<FlockDefinitionBlock>(binaryReader);
-            subtitles = binaryReader.ReadTagReference();
-            decorators = Guerilla.ReadBlockArray<DecoratorPlacementDefinitionBlock>(binaryReader);
-            creatures = Guerilla.ReadBlockArray<ScenarioCreatureBlock>(binaryReader);
-            creaturesPalette = Guerilla.ReadBlockArray<ScenarioCreaturePaletteBlock>(binaryReader);
-            decoratorsPalette = Guerilla.ReadBlockArray<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader);
-            bSPTransitionVolumes = Guerilla.ReadBlockArray<ScenarioBspSwitchTransitionVolumeBlock>(binaryReader);
-            structureBSPLighting = Guerilla.ReadBlockArray<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryReader);
-            editorFolders = Guerilla.ReadBlockArray<GScenarioEditorFolderBlock>(binaryReader);
-            levelData = Guerilla.ReadBlockArray<ScenarioLevelDataBlock>(binaryReader);
-            territoryLocationNames = binaryReader.ReadTagReference();
-            invalidName_0 = binaryReader.ReadBytes(8);
-            missionDialogue = Guerilla.ReadBlockArray<AiScenarioMissionDialogueBlock>(binaryReader);
-            objectives = binaryReader.ReadTagReference();
-            interpolators = Guerilla.ReadBlockArray<ScenarioInterpolatorBlock>(binaryReader);
-            sharedReferences = Guerilla.ReadBlockArray<HsReferencesBlock>(binaryReader);
-            screenEffectReferences = Guerilla.ReadBlockArray<ScenarioScreenEffectReferenceBlock>(binaryReader);
-            simulationDefinitionTable = Guerilla.ReadBlockArray<ScenarioSimulationDefinitionTableBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(doNotUse);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioSkyReferenceBlock>(binaryWriter, skies, nextAddress);
@@ -562,27 +577,25 @@ namespace Moonfish.Guerilla.Tags
         public class ObjectSalts : GuerillaBlock
         {
             internal int eMPTYSTRING;
-            
-            public override int SerializedSize{get { return 4; }}
-            
-            
-            public override int Alignment{get { return 1; }}
-            
-            public  ObjectSalts(BinaryReader binaryReader): base(binaryReader)
+            public override int SerializedSize { get { return 4; } }
+            public override int Alignment { get { return 1; } }
+            public ObjectSalts() : base()
             {
+            }
+            public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+            {
+                var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
                 eMPTYSTRING = binaryReader.ReadInt32();
+                return blamPointers;
             }
-            public  ObjectSalts(): base()
+            public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
             {
-                
+                base.ReadPointers(binaryReader, blamPointers);
             }
-            public override void Read(BinaryReader binaryReader)
+            public override int Write(BinaryWriter binaryWriter, int nextAddress)
             {
-                eMPTYSTRING = binaryReader.ReadInt32();
-            }
-            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-            {
-                using(binaryWriter.BaseStream.Pin())
+                base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(eMPTYSTRING);
                     return nextAddress;

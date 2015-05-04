@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalShaderParameterBlock : GlobalShaderParameterBlockBase
     {
-        public  GlobalShaderParameterBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalShaderParameterBlock() : base()
         {
-            
-        }
-        public  GlobalShaderParameterBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -28,48 +25,41 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference bitmap;
         internal float constValue;
-        internal Moonfish.Tags.ColourR8G8B8 ConstColour;
+        internal Moonfish.Tags.ColourR8G8B8 constColor;
         internal ShaderAnimationPropertyBlock[] animationProperties;
-        
-        public override int SerializedSize{get { return 40; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GlobalShaderParameterBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 40; } }
+        public override int Alignment { get { return 4; } }
+        public GlobalShaderParameterBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             type = (Type)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             bitmap = binaryReader.ReadTagReference();
             constValue = binaryReader.ReadSingle();
-            ConstColour = binaryReader.ReadColorR8G8B8();
-            animationProperties = Guerilla.ReadBlockArray<ShaderAnimationPropertyBlock>(binaryReader);
+            constColor = binaryReader.ReadColorR8G8B8();
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderAnimationPropertyBlock>(binaryReader));
+            return blamPointers;
         }
-        public  GlobalShaderParameterBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            animationProperties = ReadBlockArrayData<ShaderAnimationPropertyBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadStringID();
-            type = (Type)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            bitmap = binaryReader.ReadTagReference();
-            constValue = binaryReader.ReadSingle();
-            ConstColour = binaryReader.ReadColorR8G8B8();
-            animationProperties = Guerilla.ReadBlockArray<ShaderAnimationPropertyBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write((Int16)type);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(bitmap);
                 binaryWriter.Write(constValue);
-                binaryWriter.Write(ConstColour);
+                binaryWriter.Write(constColor);
                 nextAddress = Guerilla.WriteBlockArray<ShaderAnimationPropertyBlock>(binaryWriter, animationProperties, nextAddress);
                 return nextAddress;
             }

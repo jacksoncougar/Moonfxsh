@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PillsBlock : PillsBlockBase
     {
-        public  PillsBlock(BinaryReader binaryReader): base(binaryReader)
+        public PillsBlock() : base()
         {
-            
-        }
-        public  PillsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 80, Alignment = 16)]
@@ -41,14 +38,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal OpenTK.Vector3 top;
         internal byte[] invalidName_3;
-        
-        public override int SerializedSize{get { return 80; }}
-        
-        
-        public override int Alignment{get { return 16; }}
-        
-        public  PillsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 80; } }
+        public override int Alignment { get { return 16; } }
+        public PillsBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             material = binaryReader.ReadShortBlockIndex1();
             flags = (Flags)binaryReader.ReadInt16();
@@ -68,36 +65,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes(4);
             top = binaryReader.ReadVector3();
             invalidName_3 = binaryReader.ReadBytes(4);
+            return blamPointers;
         }
-        public  PillsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadStringID();
-            material = binaryReader.ReadShortBlockIndex1();
-            flags = (Flags)binaryReader.ReadInt16();
-            relativeMassScale = binaryReader.ReadSingle();
-            friction = binaryReader.ReadSingle();
-            restitution = binaryReader.ReadSingle();
-            volume = binaryReader.ReadSingle();
-            mass = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(2);
-            phantom = binaryReader.ReadShortBlockIndex1();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            size = binaryReader.ReadInt16();
-            count = binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(4);
-            radius = binaryReader.ReadSingle();
-            bottom = binaryReader.ReadVector3();
-            invalidName_2 = binaryReader.ReadBytes(4);
-            top = binaryReader.ReadVector3();
-            invalidName_3 = binaryReader.ReadBytes(4);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(material);

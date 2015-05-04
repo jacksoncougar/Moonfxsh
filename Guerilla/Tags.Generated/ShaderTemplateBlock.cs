@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("stem")]
     public partial class ShaderTemplateBlock : ShaderTemplateBlockBase
     {
-        public  ShaderTemplateBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderTemplateBlock() : base()
         {
-            
-        }
-        public  ShaderTemplateBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 96, Alignment = 4)]
@@ -51,59 +48,48 @@ namespace Moonfish.Guerilla.Tags
         internal Aux2Layer aux2Layer;
         internal byte[] invalidName_1;
         internal ShaderTemplatePostprocessDefinitionNewBlock[] postprocessDefinition;
-        
-        public override int SerializedSize{get { return 96; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ShaderTemplateBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 96; } }
+        public override int Alignment { get { return 4; } }
+        public ShaderTemplateBlockBase() : base()
         {
-            documentation = Guerilla.ReadData(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
             defaultMaterialName = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(2);
             flags = (Flags)binaryReader.ReadInt16();
-            properties = Guerilla.ReadBlockArray<ShaderTemplatePropertyBlock>(binaryReader);
-            categories = Guerilla.ReadBlockArray<ShaderTemplateCategoryBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderTemplatePropertyBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderTemplateCategoryBlock>(binaryReader));
             lightResponse = binaryReader.ReadTagReference();
-            lODs = Guerilla.ReadBlockArray<ShaderTemplateLevelOfDetailBlock>(binaryReader);
-            eMPTYSTRING = Guerilla.ReadBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader);
-            eMPTYSTRING0 = Guerilla.ReadBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderTemplateLevelOfDetailBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader));
             aux1Shader = binaryReader.ReadTagReference();
             aux1Layer = (Aux1Layer)binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
             aux2Shader = binaryReader.ReadTagReference();
             aux2Layer = (Aux2Layer)binaryReader.ReadInt16();
             invalidName_1 = binaryReader.ReadBytes(2);
-            postprocessDefinition = Guerilla.ReadBlockArray<ShaderTemplatePostprocessDefinitionNewBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderTemplatePostprocessDefinitionNewBlock>(binaryReader));
+            return blamPointers;
         }
-        public  ShaderTemplateBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            documentation = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            properties = ReadBlockArrayData<ShaderTemplatePropertyBlock>(binaryReader, blamPointers.Dequeue());
+            categories = ReadBlockArrayData<ShaderTemplateCategoryBlock>(binaryReader, blamPointers.Dequeue());
+            lODs = ReadBlockArrayData<ShaderTemplateLevelOfDetailBlock>(binaryReader, blamPointers.Dequeue());
+            eMPTYSTRING = ReadBlockArrayData<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader, blamPointers.Dequeue());
+            eMPTYSTRING0 = ReadBlockArrayData<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader, blamPointers.Dequeue());
+            postprocessDefinition = ReadBlockArrayData<ShaderTemplatePostprocessDefinitionNewBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            documentation = Guerilla.ReadData(binaryReader);
-            defaultMaterialName = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(2);
-            flags = (Flags)binaryReader.ReadInt16();
-            properties = Guerilla.ReadBlockArray<ShaderTemplatePropertyBlock>(binaryReader);
-            categories = Guerilla.ReadBlockArray<ShaderTemplateCategoryBlock>(binaryReader);
-            lightResponse = binaryReader.ReadTagReference();
-            lODs = Guerilla.ReadBlockArray<ShaderTemplateLevelOfDetailBlock>(binaryReader);
-            eMPTYSTRING = Guerilla.ReadBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader);
-            eMPTYSTRING0 = Guerilla.ReadBlockArray<ShaderTemplateRuntimeExternalLightResponseIndexBlock>(binaryReader);
-            aux1Shader = binaryReader.ReadTagReference();
-            aux1Layer = (Aux1Layer)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            aux2Shader = binaryReader.ReadTagReference();
-            aux2Layer = (Aux2Layer)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            postprocessDefinition = Guerilla.ReadBlockArray<ShaderTemplatePostprocessDefinitionNewBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteData(binaryWriter, documentation, nextAddress);
                 binaryWriter.Write(defaultMaterialName);

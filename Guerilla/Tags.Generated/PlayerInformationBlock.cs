@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PlayerInformationBlock : PlayerInformationBlockBase
     {
-        public  PlayerInformationBlock(BinaryReader binaryReader): base(binaryReader)
+        public PlayerInformationBlock() : base()
         {
-            
-        }
-        public  PlayerInformationBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 284, Alignment = 4)]
@@ -86,14 +83,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference flashlightOff;
         [TagReference("snd!")]
         internal Moonfish.Tags.TagReference iceCream;
-        
-        public override int SerializedSize{get { return 284; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PlayerInformationBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 284; } }
+        public override int Alignment { get { return 4; } }
+        public PlayerInformationBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             unused = binaryReader.ReadTagReference();
             invalidName_ = binaryReader.ReadBytes(28);
             walkingSpeedWorldUnitsPerSecond = binaryReader.ReadSingle();
@@ -132,55 +129,16 @@ namespace Moonfish.Guerilla.Tags
             flashlightOn = binaryReader.ReadTagReference();
             flashlightOff = binaryReader.ReadTagReference();
             iceCream = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  PlayerInformationBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            unused = binaryReader.ReadTagReference();
-            invalidName_ = binaryReader.ReadBytes(28);
-            walkingSpeedWorldUnitsPerSecond = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            runForwardWorldUnitsPerSecond = binaryReader.ReadSingle();
-            runBackwardWorldUnitsPerSecond = binaryReader.ReadSingle();
-            runSidewaysWorldUnitsPerSecond = binaryReader.ReadSingle();
-            runAccelerationWorldUnitsPerSecondSquared = binaryReader.ReadSingle();
-            sneakForwardWorldUnitsPerSecond = binaryReader.ReadSingle();
-            sneakBackwardWorldUnitsPerSecond = binaryReader.ReadSingle();
-            sneakSidewaysWorldUnitsPerSecond = binaryReader.ReadSingle();
-            sneakAccelerationWorldUnitsPerSecondSquared = binaryReader.ReadSingle();
-            airborneAccelerationWorldUnitsPerSecondSquared = binaryReader.ReadSingle();
-            invalidName_1 = binaryReader.ReadBytes(16);
-            grenadeOrigin = binaryReader.ReadVector3();
-            invalidName_2 = binaryReader.ReadBytes(12);
-            stunMovementPenalty01 = binaryReader.ReadSingle();
-            stunTurningPenalty01 = binaryReader.ReadSingle();
-            stunJumpingPenalty01 = binaryReader.ReadSingle();
-            minimumStunTimeSeconds = binaryReader.ReadSingle();
-            maximumStunTimeSeconds = binaryReader.ReadSingle();
-            invalidName_3 = binaryReader.ReadBytes(8);
-            firstPersonIdleTimeSeconds = binaryReader.ReadRange();
-            firstPersonSkipFraction01 = binaryReader.ReadSingle();
-            invalidName_4 = binaryReader.ReadBytes(16);
-            coopRespawnEffect = binaryReader.ReadTagReference();
-            binocularsZoomCount = binaryReader.ReadInt32();
-            binocularsZoomRange = binaryReader.ReadRange();
-            binocularsZoomInSound = binaryReader.ReadTagReference();
-            binocularsZoomOutSound = binaryReader.ReadTagReference();
-            invalidName_5 = binaryReader.ReadBytes(16);
-            activeCamouflageOn = binaryReader.ReadTagReference();
-            activeCamouflageOff = binaryReader.ReadTagReference();
-            activeCamouflageError = binaryReader.ReadTagReference();
-            activeCamouflageReady = binaryReader.ReadTagReference();
-            flashlightOn = binaryReader.ReadTagReference();
-            flashlightOff = binaryReader.ReadTagReference();
-            iceCream = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(unused);
                 binaryWriter.Write(invalidName_, 0, 28);

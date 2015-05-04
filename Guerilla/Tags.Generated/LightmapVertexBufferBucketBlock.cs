@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class LightmapVertexBufferBucketBlock : LightmapVertexBufferBucketBlockBase
     {
-        public  LightmapVertexBufferBucketBlock(BinaryReader binaryReader): base(binaryReader)
+        public LightmapVertexBufferBucketBlock() : base()
         {
-            
-        }
-        public  LightmapVertexBufferBucketBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 56, Alignment = 4)]
@@ -27,35 +24,33 @@ namespace Moonfish.Guerilla.Tags
         internal LightmapBucketRawVertexBlock[] rawVertices;
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
         internal LightmapVertexBufferBucketCacheDataBlock[] cacheData;
-        
-        public override int SerializedSize{get { return 56; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  LightmapVertexBufferBucketBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 56; } }
+        public override int Alignment { get { return 4; } }
+        public LightmapVertexBufferBucketBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            rawVertices = Guerilla.ReadBlockArray<LightmapBucketRawVertexBlock>(binaryReader);
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            cacheData = Guerilla.ReadBlockArray<LightmapVertexBufferBucketCacheDataBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightmapBucketRawVertexBlock>(binaryReader));
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
+            blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightmapVertexBufferBucketCacheDataBlock>(binaryReader));
+            return blamPointers;
         }
-        public  LightmapVertexBufferBucketBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            rawVertices = ReadBlockArrayData<LightmapBucketRawVertexBlock>(binaryReader, blamPointers.Dequeue());
+            geometryBlockInfo.ReadPointers(binaryReader, blamPointers);
+            cacheData = ReadBlockArrayData<LightmapVertexBufferBucketCacheDataBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            rawVertices = Guerilla.ReadBlockArray<LightmapBucketRawVertexBlock>(binaryReader);
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            cacheData = Guerilla.ReadBlockArray<LightmapVertexBufferBucketCacheDataBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write(invalidName_, 0, 2);

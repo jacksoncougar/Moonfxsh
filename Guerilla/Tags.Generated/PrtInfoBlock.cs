@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PrtInfoBlock : PrtInfoBlockBase
     {
-        public  PrtInfoBlock(BinaryReader binaryReader): base(binaryReader)
+        public PrtInfoBlock() : base()
         {
-            
-        }
-        public  PrtInfoBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 88, Alignment = 4)]
@@ -36,14 +33,14 @@ namespace Moonfish.Guerilla.Tags
         internal PrtRawPcaDataBlock[] rawPcaData;
         internal PrtVertexBuffersBlock[] vertexBuffers;
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
-        
-        public override int SerializedSize{get { return 88; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PrtInfoBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 88; } }
+        public override int Alignment { get { return 4; } }
+        public PrtInfoBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             sHOrder = binaryReader.ReadInt16();
             numOfClusters = binaryReader.ReadInt16();
             pcaVectorsPerCluster = binaryReader.ReadInt16();
@@ -53,36 +50,27 @@ namespace Moonfish.Guerilla.Tags
             lengthScale = binaryReader.ReadSingle();
             numberOfLodsInModel = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            lodInfo = Guerilla.ReadBlockArray<PrtLodInfoBlock>(binaryReader);
-            clusterBasis = Guerilla.ReadBlockArray<PrtClusterBasisBlock>(binaryReader);
-            rawPcaData = Guerilla.ReadBlockArray<PrtRawPcaDataBlock>(binaryReader);
-            vertexBuffers = Guerilla.ReadBlockArray<PrtVertexBuffersBlock>(binaryReader);
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<PrtLodInfoBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PrtClusterBasisBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PrtRawPcaDataBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PrtVertexBuffersBlock>(binaryReader));
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
+            blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  PrtInfoBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            lodInfo = ReadBlockArrayData<PrtLodInfoBlock>(binaryReader, blamPointers.Dequeue());
+            clusterBasis = ReadBlockArrayData<PrtClusterBasisBlock>(binaryReader, blamPointers.Dequeue());
+            rawPcaData = ReadBlockArrayData<PrtRawPcaDataBlock>(binaryReader, blamPointers.Dequeue());
+            vertexBuffers = ReadBlockArrayData<PrtVertexBuffersBlock>(binaryReader, blamPointers.Dequeue());
+            geometryBlockInfo.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            sHOrder = binaryReader.ReadInt16();
-            numOfClusters = binaryReader.ReadInt16();
-            pcaVectorsPerCluster = binaryReader.ReadInt16();
-            numberOfRays = binaryReader.ReadInt16();
-            numberOfBounces = binaryReader.ReadInt16();
-            matIndexForSbsfcScattering = binaryReader.ReadInt16();
-            lengthScale = binaryReader.ReadSingle();
-            numberOfLodsInModel = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            lodInfo = Guerilla.ReadBlockArray<PrtLodInfoBlock>(binaryReader);
-            clusterBasis = Guerilla.ReadBlockArray<PrtClusterBasisBlock>(binaryReader);
-            rawPcaData = Guerilla.ReadBlockArray<PrtRawPcaDataBlock>(binaryReader);
-            vertexBuffers = Guerilla.ReadBlockArray<PrtVertexBuffersBlock>(binaryReader);
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(sHOrder);
                 binaryWriter.Write(numOfClusters);

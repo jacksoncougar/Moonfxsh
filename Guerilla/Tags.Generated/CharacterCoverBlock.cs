@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterCoverBlock : CharacterCoverBlockBase
     {
-        public  CharacterCoverBlock(BinaryReader binaryReader): base(binaryReader)
+        public CharacterCoverBlock() : base()
         {
-            
-        }
-        public  CharacterCoverBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 64, Alignment = 4)]
@@ -75,14 +72,14 @@ namespace Moonfish.Guerilla.Tags
         /// When target is aware of me and surpasses the given scariness, self-preserve (scary_target_cover_impulse)
         /// </summary>
         internal float scaryTargetThreshold;
-        
-        public override int SerializedSize{get { return 64; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  CharacterCoverBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 64; } }
+        public override int Alignment { get { return 4; } }
+        public CharacterCoverBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             coverFlags = (CoverFlags)binaryReader.ReadInt32();
             hideBehindCoverTimeSeconds = binaryReader.ReadRange();
             coverVitalityThreshold = binaryReader.ReadSingle();
@@ -97,31 +94,16 @@ namespace Moonfish.Guerilla.Tags
             proximityMeleeDistance = binaryReader.ReadSingle();
             unreachableEnemyDangerThreshold = binaryReader.ReadSingle();
             scaryTargetThreshold = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  CharacterCoverBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            coverFlags = (CoverFlags)binaryReader.ReadInt32();
-            hideBehindCoverTimeSeconds = binaryReader.ReadRange();
-            coverVitalityThreshold = binaryReader.ReadSingle();
-            coverShieldFraction = binaryReader.ReadSingle();
-            coverCheckDelay = binaryReader.ReadSingle();
-            emergeFromCoverWhenShieldFractionReachesThreshold = binaryReader.ReadSingle();
-            coverDangerThreshold = binaryReader.ReadSingle();
-            dangerUpperThreshold = binaryReader.ReadSingle();
-            coverChance = binaryReader.ReadRange();
-            proximitySelfPreserveWus = binaryReader.ReadSingle();
-            disallowCoverDistanceWorldUnits = binaryReader.ReadSingle();
-            proximityMeleeDistance = binaryReader.ReadSingle();
-            unreachableEnemyDangerThreshold = binaryReader.ReadSingle();
-            scaryTargetThreshold = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)coverFlags);
                 binaryWriter.Write(hideBehindCoverTimeSeconds);

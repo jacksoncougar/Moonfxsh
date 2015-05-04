@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("prt3")]
     public partial class ParticleBlock : ParticleBlockBase
     {
-        public  ParticleBlock(BinaryReader binaryReader): base(binaryReader)
+        public ParticleBlock() : base()
         {
-            
-        }
-        public  ParticleBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 188, Alignment = 4)]
@@ -60,65 +57,58 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
-        
-        public override int SerializedSize{get { return 188; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ParticleBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 188; } }
+        public override int Alignment { get { return 4; } }
+        public ParticleBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             particleBillboardStyle = (ParticleBillboardStyle)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             firstSequenceIndex = binaryReader.ReadInt16();
             sequenceCount = binaryReader.ReadInt16();
             shaderTemplate = binaryReader.ReadTagReference();
-            shaderParameters = Guerilla.ReadBlockArray<GlobalShaderParameterBlock>(binaryReader);
-            color = new ParticlePropertyColorStructNewBlock(binaryReader);
-            alpha = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            scale = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            rotation = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            frameIndex = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalShaderParameterBlock>(binaryReader));
+            color = new ParticlePropertyColorStructNewBlock();
+            blamPointers.Concat(color.ReadFields(binaryReader));
+            alpha = new ParticlePropertyScalarStructNewBlock();
+            blamPointers.Concat(alpha.ReadFields(binaryReader));
+            scale = new ParticlePropertyScalarStructNewBlock();
+            blamPointers.Concat(scale.ReadFields(binaryReader));
+            rotation = new ParticlePropertyScalarStructNewBlock();
+            blamPointers.Concat(rotation.ReadFields(binaryReader));
+            frameIndex = new ParticlePropertyScalarStructNewBlock();
+            blamPointers.Concat(frameIndex.ReadFields(binaryReader));
             collisionEffect = binaryReader.ReadTagReference();
             deathEffect = binaryReader.ReadTagReference();
-            locations = Guerilla.ReadBlockArray<EffectLocationsBlock>(binaryReader);
-            attachedParticleSystems = Guerilla.ReadBlockArray<ParticleSystemDefinitionBlockNew>(binaryReader);
-            shaderPostprocessDefinitionNewBlock = Guerilla.ReadBlockArray<ShaderPostprocessDefinitionNewBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<EffectLocationsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ParticleSystemDefinitionBlockNew>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPostprocessDefinitionNewBlock>(binaryReader));
             invalidName_0 = binaryReader.ReadBytes(8);
             invalidName_1 = binaryReader.ReadBytes(16);
             invalidName_2 = binaryReader.ReadBytes(16);
+            return blamPointers;
         }
-        public  ParticleBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            shaderParameters = ReadBlockArrayData<GlobalShaderParameterBlock>(binaryReader, blamPointers.Dequeue());
+            color.ReadPointers(binaryReader, blamPointers);
+            alpha.ReadPointers(binaryReader, blamPointers);
+            scale.ReadPointers(binaryReader, blamPointers);
+            rotation.ReadPointers(binaryReader, blamPointers);
+            frameIndex.ReadPointers(binaryReader, blamPointers);
+            locations = ReadBlockArrayData<EffectLocationsBlock>(binaryReader, blamPointers.Dequeue());
+            attachedParticleSystems = ReadBlockArrayData<ParticleSystemDefinitionBlockNew>(binaryReader, blamPointers.Dequeue());
+            shaderPostprocessDefinitionNewBlock = ReadBlockArrayData<ShaderPostprocessDefinitionNewBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            particleBillboardStyle = (ParticleBillboardStyle)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            firstSequenceIndex = binaryReader.ReadInt16();
-            sequenceCount = binaryReader.ReadInt16();
-            shaderTemplate = binaryReader.ReadTagReference();
-            shaderParameters = Guerilla.ReadBlockArray<GlobalShaderParameterBlock>(binaryReader);
-            color = new ParticlePropertyColorStructNewBlock(binaryReader);
-            alpha = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            scale = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            rotation = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            frameIndex = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            collisionEffect = binaryReader.ReadTagReference();
-            deathEffect = binaryReader.ReadTagReference();
-            locations = Guerilla.ReadBlockArray<EffectLocationsBlock>(binaryReader);
-            attachedParticleSystems = Guerilla.ReadBlockArray<ParticleSystemDefinitionBlockNew>(binaryReader);
-            shaderPostprocessDefinitionNewBlock = Guerilla.ReadBlockArray<ShaderPostprocessDefinitionNewBlock>(binaryReader);
-            invalidName_0 = binaryReader.ReadBytes(8);
-            invalidName_1 = binaryReader.ReadBytes(16);
-            invalidName_2 = binaryReader.ReadBytes(16);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write((Int16)particleBillboardStyle);

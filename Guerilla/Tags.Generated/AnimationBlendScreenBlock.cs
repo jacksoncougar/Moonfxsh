@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AnimationBlendScreenBlock : AnimationBlendScreenBlockBase
     {
-        public  AnimationBlendScreenBlock(BinaryReader binaryReader): base(binaryReader)
+        public AnimationBlendScreenBlock() : base()
         {
-            
-        }
-        public  AnimationBlendScreenBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 28, Alignment = 4)]
@@ -24,29 +21,28 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Moonfish.Tags.StringIdent label;
         internal AnimationAimingScreenStructBlock aimingScreen;
-        
-        public override int SerializedSize{get { return 28; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  AnimationBlendScreenBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 28; } }
+        public override int Alignment { get { return 4; } }
+        public AnimationBlendScreenBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             label = binaryReader.ReadStringID();
-            aimingScreen = new AnimationAimingScreenStructBlock(binaryReader);
+            aimingScreen = new AnimationAimingScreenStructBlock();
+            blamPointers.Concat(aimingScreen.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  AnimationBlendScreenBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            aimingScreen.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            label = binaryReader.ReadStringID();
-            aimingScreen = new AnimationAimingScreenStructBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(label);
                 aimingScreen.Write(binaryWriter);

@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PixelShaderCombinerBlock : PixelShaderCombinerBlockBase
     {
-        public  PixelShaderCombinerBlock(BinaryReader binaryReader): base(binaryReader)
+        public PixelShaderCombinerBlock() : base()
         {
-            
-        }
-        public  PixelShaderCombinerBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 32, Alignment = 4)]
@@ -33,14 +30,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte alphaBRegisterPtrIndex;
         internal byte alphaCRegisterPtrIndex;
         internal byte alphaDRegisterPtrIndex;
-        
-        public override int SerializedSize{get { return 32; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PixelShaderCombinerBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 32; } }
+        public override int Alignment { get { return 4; } }
+        public PixelShaderCombinerBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(16);
             constantColor0 = binaryReader.ReadColourA1R1G1B1();
             constantColor1 = binaryReader.ReadColourA1R1G1B1();
@@ -52,28 +49,16 @@ namespace Moonfish.Guerilla.Tags
             alphaBRegisterPtrIndex = binaryReader.ReadByte();
             alphaCRegisterPtrIndex = binaryReader.ReadByte();
             alphaDRegisterPtrIndex = binaryReader.ReadByte();
+            return blamPointers;
         }
-        public  PixelShaderCombinerBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadBytes(16);
-            constantColor0 = binaryReader.ReadColourA1R1G1B1();
-            constantColor1 = binaryReader.ReadColourA1R1G1B1();
-            colorARegisterPtrIndex = binaryReader.ReadByte();
-            colorBRegisterPtrIndex = binaryReader.ReadByte();
-            colorCRegisterPtrIndex = binaryReader.ReadByte();
-            colorDRegisterPtrIndex = binaryReader.ReadByte();
-            alphaARegisterPtrIndex = binaryReader.ReadByte();
-            alphaBRegisterPtrIndex = binaryReader.ReadByte();
-            alphaCRegisterPtrIndex = binaryReader.ReadByte();
-            alphaDRegisterPtrIndex = binaryReader.ReadByte();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 16);
                 binaryWriter.Write(constantColor0);

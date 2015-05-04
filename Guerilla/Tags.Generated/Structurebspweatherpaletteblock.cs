@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureBspWeatherPaletteBlock : StructureBspWeatherPaletteBlockBase
     {
-        public  StructureBspWeatherPaletteBlock(BinaryReader binaryReader): base(binaryReader)
+        public StructureBspWeatherPaletteBlock() : base()
         {
-            
-        }
-        public  StructureBspWeatherPaletteBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 136, Alignment = 4)]
@@ -34,14 +31,14 @@ namespace Moonfish.Guerilla.Tags
         internal float windMagnitude;
         internal byte[] invalidName_2;
         internal Moonfish.Tags.String32 windScaleFunction;
-        
-        public override int SerializedSize{get { return 136; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  StructureBspWeatherPaletteBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 136; } }
+        public override int Alignment { get { return 4; } }
+        public StructureBspWeatherPaletteBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
             weatherSystem = binaryReader.ReadTagReference();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -52,27 +49,16 @@ namespace Moonfish.Guerilla.Tags
             windMagnitude = binaryReader.ReadSingle();
             invalidName_2 = binaryReader.ReadBytes(4);
             windScaleFunction = binaryReader.ReadString32();
+            return blamPointers;
         }
-        public  StructureBspWeatherPaletteBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadString32();
-            weatherSystem = binaryReader.ReadTagReference();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(2);
-            invalidName_1 = binaryReader.ReadBytes(32);
-            wind = binaryReader.ReadTagReference();
-            windDirection = binaryReader.ReadVector3();
-            windMagnitude = binaryReader.ReadSingle();
-            invalidName_2 = binaryReader.ReadBytes(4);
-            windScaleFunction = binaryReader.ReadString32();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(weatherSystem);

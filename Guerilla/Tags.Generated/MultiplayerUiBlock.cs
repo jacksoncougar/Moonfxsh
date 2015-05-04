@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class MultiplayerUiBlock : MultiplayerUiBlockBase
     {
-        public  MultiplayerUiBlock(BinaryReader binaryReader): base(binaryReader)
+        public MultiplayerUiBlock() : base()
         {
-            
-        }
-        public  MultiplayerUiBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 32, Alignment = 4)]
@@ -28,33 +25,30 @@ namespace Moonfish.Guerilla.Tags
         internal MultiplayerColorBlock[] teamColors;
         [TagReference("unic")]
         internal Moonfish.Tags.TagReference teamNames;
-        
-        public override int SerializedSize{get { return 32; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  MultiplayerUiBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 32; } }
+        public override int Alignment { get { return 4; } }
+        public MultiplayerUiBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             randomPlayerNames = binaryReader.ReadTagReference();
-            obsoleteProfileColors = Guerilla.ReadBlockArray<MultiplayerColorBlock>(binaryReader);
-            teamColors = Guerilla.ReadBlockArray<MultiplayerColorBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<MultiplayerColorBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<MultiplayerColorBlock>(binaryReader));
             teamNames = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  MultiplayerUiBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            obsoleteProfileColors = ReadBlockArrayData<MultiplayerColorBlock>(binaryReader, blamPointers.Dequeue());
+            teamColors = ReadBlockArrayData<MultiplayerColorBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            randomPlayerNames = binaryReader.ReadTagReference();
-            obsoleteProfileColors = Guerilla.ReadBlockArray<MultiplayerColorBlock>(binaryReader);
-            teamColors = Guerilla.ReadBlockArray<MultiplayerColorBlock>(binaryReader);
-            teamNames = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(randomPlayerNames);
                 nextAddress = Guerilla.WriteBlockArray<MultiplayerColorBlock>(binaryWriter, obsoleteProfileColors, nextAddress);

@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("vehi")]
     public partial class VehicleBlock : VehicleBlockBase
     {
-        public  VehicleBlock(BinaryReader binaryReader): base(binaryReader)
+        public VehicleBlock() : base()
         {
-            
-        }
-        public  VehicleBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 276, Alignment = 4)]
@@ -109,14 +106,14 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("effe")]
         internal Moonfish.Tags.TagReference unusedEffect;
         internal HavokVehiclePhysicsStructBlock havokVehiclePhysics;
-        
-        public override int SerializedSize{get { return 276; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  VehicleBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 768; } }
+        public override int Alignment { get { return 4; } }
+        public VehicleBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             type = (Type)binaryReader.ReadInt16();
             control = (Control)binaryReader.ReadInt16();
@@ -151,7 +148,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(4);
             engineMoment = binaryReader.ReadSingle();
             engineMaxAngularVelocity = binaryReader.ReadSingle();
-            gears = Guerilla.ReadBlockArray<GearBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GearBlock>(binaryReader));
             flyingTorqueScale = binaryReader.ReadSingle();
             seatEnteranceAccelerationScale = binaryReader.ReadSingle();
             seatExitAccelersationScale = binaryReader.ReadSingle();
@@ -162,64 +159,20 @@ namespace Moonfish.Guerilla.Tags
             uNUSED = binaryReader.ReadTagReference();
             specialEffect = binaryReader.ReadTagReference();
             unusedEffect = binaryReader.ReadTagReference();
-            havokVehiclePhysics = new HavokVehiclePhysicsStructBlock(binaryReader);
+            havokVehiclePhysics = new HavokVehiclePhysicsStructBlock();
+            blamPointers.Concat(havokVehiclePhysics.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  VehicleBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            gears = ReadBlockArrayData<GearBlock>(binaryReader, blamPointers.Dequeue());
+            havokVehiclePhysics.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            type = (Type)binaryReader.ReadInt16();
-            control = (Control)binaryReader.ReadInt16();
-            maximumForwardSpeed = binaryReader.ReadSingle();
-            maximumReverseSpeed = binaryReader.ReadSingle();
-            speedAcceleration = binaryReader.ReadSingle();
-            speedDeceleration = binaryReader.ReadSingle();
-            maximumLeftTurn = binaryReader.ReadSingle();
-            maximumRightTurnNegative = binaryReader.ReadSingle();
-            wheelCircumference = binaryReader.ReadSingle();
-            turnRate = binaryReader.ReadSingle();
-            blurSpeed = binaryReader.ReadSingle();
-            specificType = (SpecificTypeIfYourTypeCorrespondsToSomethingInThisListChooseIt)binaryReader.ReadInt16();
-            playerTrainingVehicleType = (PlayerTrainingVehicleType)binaryReader.ReadInt16();
-            flipMessage = binaryReader.ReadStringID();
-            turnScale = binaryReader.ReadSingle();
-            speedTurnPenaltyPower052 = binaryReader.ReadSingle();
-            speedTurnPenalty0None1CantTurnAtTopSpeed = binaryReader.ReadSingle();
-            maximumLeftSlide = binaryReader.ReadSingle();
-            maximumRightSlide = binaryReader.ReadSingle();
-            slideAcceleration = binaryReader.ReadSingle();
-            slideDeceleration = binaryReader.ReadSingle();
-            minimumFlippingAngularVelocity = binaryReader.ReadSingle();
-            maximumFlippingAngularVelocity = binaryReader.ReadSingle();
-            vehicleSize = (VehicleSizeTheSizeDetermineWhatKindOfSeatsInLargerVehiclesItMayOccupyIESmallOrLargeCargoSeats)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            fixedGunYaw = binaryReader.ReadSingle();
-            fixedGunPitch = binaryReader.ReadSingle();
-            overdampenCuspAngleDegrees = binaryReader.ReadSingle();
-            overdampenExponent = binaryReader.ReadSingle();
-            crouchTransitionTimeSeconds = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            engineMoment = binaryReader.ReadSingle();
-            engineMaxAngularVelocity = binaryReader.ReadSingle();
-            gears = Guerilla.ReadBlockArray<GearBlock>(binaryReader);
-            flyingTorqueScale = binaryReader.ReadSingle();
-            seatEnteranceAccelerationScale = binaryReader.ReadSingle();
-            seatExitAccelersationScale = binaryReader.ReadSingle();
-            airFrictionDeceleration = binaryReader.ReadSingle();
-            thrustScale = binaryReader.ReadSingle();
-            suspensionSound = binaryReader.ReadTagReference();
-            crashSound = binaryReader.ReadTagReference();
-            uNUSED = binaryReader.ReadTagReference();
-            specialEffect = binaryReader.ReadTagReference();
-            unusedEffect = binaryReader.ReadTagReference();
-            havokVehiclePhysics = new HavokVehiclePhysicsStructBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write((Int16)type);

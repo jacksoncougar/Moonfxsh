@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioNetpointsBlock : ScenarioNetpointsBlockBase
     {
-        public  ScenarioNetpointsBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioNetpointsBlock() : base()
         {
-            
-        }
-        public  ScenarioNetpointsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 32, Alignment = 4)]
@@ -30,14 +27,14 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal Moonfish.Tags.StringIdent eMPTYSTRING;
         internal Moonfish.Tags.StringIdent eMPTYSTRING0;
-        
-        public override int SerializedSize{get { return 32; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioNetpointsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 32; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioNetpointsBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             position = binaryReader.ReadVector3();
             facingDegrees = binaryReader.ReadSingle();
             type = (Type)binaryReader.ReadInt16();
@@ -46,25 +43,16 @@ namespace Moonfish.Guerilla.Tags
             flags = (Flags)binaryReader.ReadInt16();
             eMPTYSTRING = binaryReader.ReadStringID();
             eMPTYSTRING0 = binaryReader.ReadStringID();
+            return blamPointers;
         }
-        public  ScenarioNetpointsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            position = binaryReader.ReadVector3();
-            facingDegrees = binaryReader.ReadSingle();
-            type = (Type)binaryReader.ReadInt16();
-            teamDesignator = (TeamDesignator)binaryReader.ReadInt16();
-            identifier = binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            eMPTYSTRING = binaryReader.ReadStringID();
-            eMPTYSTRING0 = binaryReader.ReadStringID();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(position);
                 binaryWriter.Write(facingDegrees);

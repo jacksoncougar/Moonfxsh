@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("metr")]
     public partial class MeterBlock : MeterBlockBase
     {
-        public  MeterBlock(BinaryReader binaryReader): base(binaryReader)
+        public MeterBlock() : base()
         {
-            
-        }
-        public  MeterBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 144, Alignment = 4)]
@@ -62,14 +59,14 @@ namespace Moonfish.Guerilla.Tags
         internal float maskDistanceMeterUnits;
         internal byte[] invalidName_3;
         internal byte[] encodedStencil;
-        
-        public override int SerializedSize{get { return 144; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  MeterBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 144; } }
+        public override int Alignment { get { return 4; } }
+        public MeterBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             stencilBitmaps = binaryReader.ReadTagReference();
             sourceBitmap = binaryReader.ReadTagReference();
@@ -86,35 +83,18 @@ namespace Moonfish.Guerilla.Tags
             unmaskDistanceMeterUnits = binaryReader.ReadSingle();
             maskDistanceMeterUnits = binaryReader.ReadSingle();
             invalidName_3 = binaryReader.ReadBytes(20);
-            encodedStencil = Guerilla.ReadData(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
+            return blamPointers;
         }
-        public  MeterBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            encodedStencil = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            stencilBitmaps = binaryReader.ReadTagReference();
-            sourceBitmap = binaryReader.ReadTagReference();
-            stencilSequenceIndex = binaryReader.ReadInt16();
-            sourceSequenceIndex = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(16);
-            invalidName_0 = binaryReader.ReadBytes(4);
-            interpolateColors = (InterpolateColors)binaryReader.ReadInt16();
-            anchorColors = (AnchorColors)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(8);
-            emptyColor = binaryReader.ReadVector4();
-            fullColor = binaryReader.ReadVector4();
-            invalidName_2 = binaryReader.ReadBytes(20);
-            unmaskDistanceMeterUnits = binaryReader.ReadSingle();
-            maskDistanceMeterUnits = binaryReader.ReadSingle();
-            invalidName_3 = binaryReader.ReadBytes(20);
-            encodedStencil = Guerilla.ReadData(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(stencilBitmaps);

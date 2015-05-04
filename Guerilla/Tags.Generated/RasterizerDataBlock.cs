@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class RasterizerDataBlock : RasterizerDataBlockBase
     {
-        public  RasterizerDataBlock(BinaryReader binaryReader): base(binaryReader)
+        public RasterizerDataBlock() : base()
         {
-            
-        }
-        public  RasterizerDataBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 264, Alignment = 4)]
@@ -67,20 +64,20 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal float refractionAmountPixels;
         internal float distanceFalloff;
-        internal Moonfish.Tags.ColourR8G8B8 TintColour;
+        internal Moonfish.Tags.ColourR8G8B8 tintColor;
         internal float hyperStealthRefractionPixels;
         internal float hyperStealthDistanceFalloff;
-        internal Moonfish.Tags.ColourR8G8B8 HyperStealthTintColour;
+        internal Moonfish.Tags.ColourR8G8B8 hyperStealthTintColor;
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference uNUSED10;
-        
-        public override int SerializedSize{get { return 264; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  RasterizerDataBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 264; } }
+        public override int Alignment { get { return 4; } }
+        public RasterizerDataBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             distanceAttenuation = binaryReader.ReadTagReference();
             vectorNormalization = binaryReader.ReadTagReference();
             gradients = binaryReader.ReadTagReference();
@@ -91,7 +88,7 @@ namespace Moonfish.Guerilla.Tags
             uNUSED2 = binaryReader.ReadTagReference();
             uNUSED3 = binaryReader.ReadTagReference();
             invalidName_ = binaryReader.ReadBytes(16);
-            globalVertexShaders = Guerilla.ReadBlockArray<VertexShaderReferenceBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<VertexShaderReferenceBlock>(binaryReader));
             default2D = binaryReader.ReadTagReference();
             default3D = binaryReader.ReadTagReference();
             defaultCubeMap = binaryReader.ReadTagReference();
@@ -107,53 +104,22 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(2);
             refractionAmountPixels = binaryReader.ReadSingle();
             distanceFalloff = binaryReader.ReadSingle();
-            TintColour = binaryReader.ReadColorR8G8B8();
+            tintColor = binaryReader.ReadColorR8G8B8();
             hyperStealthRefractionPixels = binaryReader.ReadSingle();
             hyperStealthDistanceFalloff = binaryReader.ReadSingle();
-            HyperStealthTintColour = binaryReader.ReadColorR8G8B8();
+            hyperStealthTintColor = binaryReader.ReadColorR8G8B8();
             uNUSED10 = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  RasterizerDataBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            globalVertexShaders = ReadBlockArrayData<VertexShaderReferenceBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            distanceAttenuation = binaryReader.ReadTagReference();
-            vectorNormalization = binaryReader.ReadTagReference();
-            gradients = binaryReader.ReadTagReference();
-            uNUSED = binaryReader.ReadTagReference();
-            uNUSED0 = binaryReader.ReadTagReference();
-            uNUSED1 = binaryReader.ReadTagReference();
-            glow = binaryReader.ReadTagReference();
-            uNUSED2 = binaryReader.ReadTagReference();
-            uNUSED3 = binaryReader.ReadTagReference();
-            invalidName_ = binaryReader.ReadBytes(16);
-            globalVertexShaders = Guerilla.ReadBlockArray<VertexShaderReferenceBlock>(binaryReader);
-            default2D = binaryReader.ReadTagReference();
-            default3D = binaryReader.ReadTagReference();
-            defaultCubeMap = binaryReader.ReadTagReference();
-            uNUSED4 = binaryReader.ReadTagReference();
-            uNUSED5 = binaryReader.ReadTagReference();
-            uNUSED6 = binaryReader.ReadTagReference();
-            uNUSED7 = binaryReader.ReadTagReference();
-            uNUSED8 = binaryReader.ReadTagReference();
-            uNUSED9 = binaryReader.ReadTagReference();
-            invalidName_0 = binaryReader.ReadBytes(36);
-            globalShader = binaryReader.ReadTagReference();
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            refractionAmountPixels = binaryReader.ReadSingle();
-            distanceFalloff = binaryReader.ReadSingle();
-            TintColour = binaryReader.ReadColorR8G8B8();
-            hyperStealthRefractionPixels = binaryReader.ReadSingle();
-            hyperStealthDistanceFalloff = binaryReader.ReadSingle();
-            HyperStealthTintColour = binaryReader.ReadColorR8G8B8();
-            uNUSED10 = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(distanceAttenuation);
                 binaryWriter.Write(vectorNormalization);
@@ -181,10 +147,10 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_1, 0, 2);
                 binaryWriter.Write(refractionAmountPixels);
                 binaryWriter.Write(distanceFalloff);
-                binaryWriter.Write(TintColour);
+                binaryWriter.Write(tintColor);
                 binaryWriter.Write(hyperStealthRefractionPixels);
                 binaryWriter.Write(hyperStealthDistanceFalloff);
-                binaryWriter.Write(HyperStealthTintColour);
+                binaryWriter.Write(hyperStealthTintColor);
                 binaryWriter.Write(uNUSED10);
                 return nextAddress;
             }

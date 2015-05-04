@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock : RasterizerScreenEffectTexcoordGenerationAdvancedControlBlockBase
     {
-        public  RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock(BinaryReader binaryReader): base(binaryReader)
+        public RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock() : base()
         {
-            
-        }
-        public  RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 72, Alignment = 4)]
@@ -30,14 +27,14 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector4 stage1Offset;
         internal OpenTK.Vector4 stage2Offset;
         internal OpenTK.Vector4 stage3Offset;
-        
-        public override int SerializedSize{get { return 72; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  RasterizerScreenEffectTexcoordGenerationAdvancedControlBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 72; } }
+        public override int Alignment { get { return 4; } }
+        public RasterizerScreenEffectTexcoordGenerationAdvancedControlBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             stage0Flags = (Stage0Flags)binaryReader.ReadInt16();
             stage1Flags = (Stage1Flags)binaryReader.ReadInt16();
             stage2Flags = (Stage2Flags)binaryReader.ReadInt16();
@@ -46,25 +43,16 @@ namespace Moonfish.Guerilla.Tags
             stage1Offset = binaryReader.ReadVector4();
             stage2Offset = binaryReader.ReadVector4();
             stage3Offset = binaryReader.ReadVector4();
+            return blamPointers;
         }
-        public  RasterizerScreenEffectTexcoordGenerationAdvancedControlBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            stage0Flags = (Stage0Flags)binaryReader.ReadInt16();
-            stage1Flags = (Stage1Flags)binaryReader.ReadInt16();
-            stage2Flags = (Stage2Flags)binaryReader.ReadInt16();
-            stage3Flags = (Stage3Flags)binaryReader.ReadInt16();
-            stage0Offset = binaryReader.ReadVector4();
-            stage1Offset = binaryReader.ReadVector4();
-            stage2Offset = binaryReader.ReadVector4();
-            stage3Offset = binaryReader.ReadVector4();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)stage0Flags);
                 binaryWriter.Write((Int16)stage1Flags);

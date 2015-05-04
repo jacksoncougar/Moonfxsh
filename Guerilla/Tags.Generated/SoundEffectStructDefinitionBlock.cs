@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SoundEffectStructDefinitionBlock : SoundEffectStructDefinitionBlockBase
     {
-        public  SoundEffectStructDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
+        public SoundEffectStructDefinitionBlock() : base()
         {
-            
-        }
-        public  SoundEffectStructDefinitionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -28,35 +25,33 @@ namespace Moonfish.Guerilla.Tags
         internal SoundEffectOverridesBlock[] soundEffectOverridesBlock;
         internal byte[] invalidName_0;
         internal PlatformSoundEffectCollectionBlock[] platformSoundEffectCollectionBlock;
-        
-        public override int SerializedSize{get { return 40; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  SoundEffectStructDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 40; } }
+        public override int Alignment { get { return 4; } }
+        public SoundEffectStructDefinitionBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadTagReference();
-            components = Guerilla.ReadBlockArray<SoundEffectComponentBlock>(binaryReader);
-            soundEffectOverridesBlock = Guerilla.ReadBlockArray<SoundEffectOverridesBlock>(binaryReader);
-            invalidName_0 = Guerilla.ReadData(binaryReader);
-            platformSoundEffectCollectionBlock = Guerilla.ReadBlockArray<PlatformSoundEffectCollectionBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundEffectComponentBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundEffectOverridesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PlatformSoundEffectCollectionBlock>(binaryReader));
+            return blamPointers;
         }
-        public  SoundEffectStructDefinitionBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            components = ReadBlockArrayData<SoundEffectComponentBlock>(binaryReader, blamPointers.Dequeue());
+            soundEffectOverridesBlock = ReadBlockArrayData<SoundEffectOverridesBlock>(binaryReader, blamPointers.Dequeue());
+            invalidName_0 = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            platformSoundEffectCollectionBlock = ReadBlockArrayData<PlatformSoundEffectCollectionBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadTagReference();
-            components = Guerilla.ReadBlockArray<SoundEffectComponentBlock>(binaryReader);
-            soundEffectOverridesBlock = Guerilla.ReadBlockArray<SoundEffectOverridesBlock>(binaryReader);
-            invalidName_0 = Guerilla.ReadData(binaryReader);
-            platformSoundEffectCollectionBlock = Guerilla.ReadBlockArray<PlatformSoundEffectCollectionBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_);
                 nextAddress = Guerilla.WriteBlockArray<SoundEffectComponentBlock>(binaryWriter, components, nextAddress);

@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SoundGestaltPromotionsBlock : SoundGestaltPromotionsBlockBase
     {
-        public  SoundGestaltPromotionsBlock(BinaryReader binaryReader): base(binaryReader)
+        public SoundGestaltPromotionsBlock() : base()
         {
-            
-        }
-        public  SoundGestaltPromotionsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 28, Alignment = 4)]
@@ -25,31 +22,29 @@ namespace Moonfish.Guerilla.Tags
         internal SoundPromotionRuleBlock[] soundPromotionRules;
         internal SoundPromotionRuntimeTimerBlock[] soundPromotionRuntimeTimers;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 28; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  SoundGestaltPromotionsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 28; } }
+        public override int Alignment { get { return 4; } }
+        public SoundGestaltPromotionsBlockBase() : base()
         {
-            soundPromotionRules = Guerilla.ReadBlockArray<SoundPromotionRuleBlock>(binaryReader);
-            soundPromotionRuntimeTimers = Guerilla.ReadBlockArray<SoundPromotionRuntimeTimerBlock>(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundPromotionRuleBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundPromotionRuntimeTimerBlock>(binaryReader));
             invalidName_ = binaryReader.ReadBytes(12);
+            return blamPointers;
         }
-        public  SoundGestaltPromotionsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            soundPromotionRules = ReadBlockArrayData<SoundPromotionRuleBlock>(binaryReader, blamPointers.Dequeue());
+            soundPromotionRuntimeTimers = ReadBlockArrayData<SoundPromotionRuntimeTimerBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            soundPromotionRules = Guerilla.ReadBlockArray<SoundPromotionRuleBlock>(binaryReader);
-            soundPromotionRuntimeTimers = Guerilla.ReadBlockArray<SoundPromotionRuntimeTimerBlock>(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(12);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<SoundPromotionRuleBlock>(binaryWriter, soundPromotionRules, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SoundPromotionRuntimeTimerBlock>(binaryWriter, soundPromotionRuntimeTimers, nextAddress);

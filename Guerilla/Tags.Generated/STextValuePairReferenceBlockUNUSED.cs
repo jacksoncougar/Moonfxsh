@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class STextValuePairReferenceBlockUNUSED : STextValuePairReferenceBlockUNUSEDBase
     {
-        public  STextValuePairReferenceBlockUNUSED(BinaryReader binaryReader): base(binaryReader)
+        public STextValuePairReferenceBlockUNUSED() : base()
         {
-            
-        }
-        public  STextValuePairReferenceBlockUNUSED(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -26,46 +23,39 @@ namespace Moonfish.Guerilla.Tags
         internal BooleanValue booleanValue;
         internal int integerValue;
         internal float fpValue;
-        internal Moonfish.Tags.StringIdent TextValueStringIdent;
-        internal Moonfish.Tags.StringIdent TextLabelStringIdent;
-        
-        public override int SerializedSize{get { return 20; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  STextValuePairReferenceBlockUNUSEDBase(BinaryReader binaryReader): base(binaryReader)
+        internal Moonfish.Tags.StringIdent textValueStringId;
+        internal Moonfish.Tags.StringIdent textLabelStringId;
+        public override int SerializedSize { get { return 20; } }
+        public override int Alignment { get { return 4; } }
+        public STextValuePairReferenceBlockUNUSEDBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             valueType = (ValueType)binaryReader.ReadInt16();
             booleanValue = (BooleanValue)binaryReader.ReadInt16();
             integerValue = binaryReader.ReadInt32();
             fpValue = binaryReader.ReadSingle();
-            TextValueStringIdent = binaryReader.ReadStringID();
-            TextLabelStringIdent = binaryReader.ReadStringID();
+            textValueStringId = binaryReader.ReadStringID();
+            textLabelStringId = binaryReader.ReadStringID();
+            return blamPointers;
         }
-        public  STextValuePairReferenceBlockUNUSEDBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            valueType = (ValueType)binaryReader.ReadInt16();
-            booleanValue = (BooleanValue)binaryReader.ReadInt16();
-            integerValue = binaryReader.ReadInt32();
-            fpValue = binaryReader.ReadSingle();
-            TextValueStringIdent = binaryReader.ReadStringID();
-            TextLabelStringIdent = binaryReader.ReadStringID();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)valueType);
                 binaryWriter.Write((Int16)booleanValue);
                 binaryWriter.Write(integerValue);
                 binaryWriter.Write(fpValue);
-                binaryWriter.Write(TextValueStringIdent);
-                binaryWriter.Write(TextLabelStringIdent);
+                binaryWriter.Write(textValueStringId);
+                binaryWriter.Write(textLabelStringId);
                 return nextAddress;
             }
         }

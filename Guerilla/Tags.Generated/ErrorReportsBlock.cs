@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ErrorReportsBlock : ErrorReportsBlockBase
     {
-        public  ErrorReportsBlock(BinaryReader binaryReader): base(binaryReader)
+        public ErrorReportsBlock() : base()
         {
-            
-        }
-        public  ErrorReportsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 608, Alignment = 4)]
@@ -41,25 +38,25 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range boundsZ;
         internal OpenTK.Vector4 color;
         internal byte[] invalidName_0;
-        
-        public override int SerializedSize{get { return 608; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ErrorReportsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 608; } }
+        public override int Alignment { get { return 4; } }
+        public ErrorReportsBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             type = (Type)binaryReader.ReadInt16();
             flags = (Flags)binaryReader.ReadInt16();
-            text = Guerilla.ReadData(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
             sourceFilename = binaryReader.ReadString32();
             sourceLineNumber = binaryReader.ReadInt32();
-            vertices = Guerilla.ReadBlockArray<ErrorReportVerticesBlock>(binaryReader);
-            vectors = Guerilla.ReadBlockArray<ErrorReportVectorsBlock>(binaryReader);
-            lines = Guerilla.ReadBlockArray<ErrorReportLinesBlock>(binaryReader);
-            triangles = Guerilla.ReadBlockArray<ErrorReportTrianglesBlock>(binaryReader);
-            quads = Guerilla.ReadBlockArray<ErrorReportQuadsBlock>(binaryReader);
-            comments = Guerilla.ReadBlockArray<ErrorReportCommentsBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ErrorReportVerticesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ErrorReportVectorsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ErrorReportLinesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ErrorReportTrianglesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ErrorReportQuadsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ErrorReportCommentsBlock>(binaryReader));
             invalidName_ = binaryReader.ReadBytes(380);
             reportKey = binaryReader.ReadInt32();
             nodeIndex = binaryReader.ReadInt32();
@@ -68,36 +65,23 @@ namespace Moonfish.Guerilla.Tags
             boundsZ = binaryReader.ReadRange();
             color = binaryReader.ReadVector4();
             invalidName_0 = binaryReader.ReadBytes(84);
+            return blamPointers;
         }
-        public  ErrorReportsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            text = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            vertices = ReadBlockArrayData<ErrorReportVerticesBlock>(binaryReader, blamPointers.Dequeue());
+            vectors = ReadBlockArrayData<ErrorReportVectorsBlock>(binaryReader, blamPointers.Dequeue());
+            lines = ReadBlockArrayData<ErrorReportLinesBlock>(binaryReader, blamPointers.Dequeue());
+            triangles = ReadBlockArrayData<ErrorReportTrianglesBlock>(binaryReader, blamPointers.Dequeue());
+            quads = ReadBlockArrayData<ErrorReportQuadsBlock>(binaryReader, blamPointers.Dequeue());
+            comments = ReadBlockArrayData<ErrorReportCommentsBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            type = (Type)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            text = Guerilla.ReadData(binaryReader);
-            sourceFilename = binaryReader.ReadString32();
-            sourceLineNumber = binaryReader.ReadInt32();
-            vertices = Guerilla.ReadBlockArray<ErrorReportVerticesBlock>(binaryReader);
-            vectors = Guerilla.ReadBlockArray<ErrorReportVectorsBlock>(binaryReader);
-            lines = Guerilla.ReadBlockArray<ErrorReportLinesBlock>(binaryReader);
-            triangles = Guerilla.ReadBlockArray<ErrorReportTrianglesBlock>(binaryReader);
-            quads = Guerilla.ReadBlockArray<ErrorReportQuadsBlock>(binaryReader);
-            comments = Guerilla.ReadBlockArray<ErrorReportCommentsBlock>(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(380);
-            reportKey = binaryReader.ReadInt32();
-            nodeIndex = binaryReader.ReadInt32();
-            boundsX = binaryReader.ReadRange();
-            boundsY = binaryReader.ReadRange();
-            boundsZ = binaryReader.ReadRange();
-            color = binaryReader.ReadVector4();
-            invalidName_0 = binaryReader.ReadBytes(84);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)type);
                 binaryWriter.Write((Int16)flags);

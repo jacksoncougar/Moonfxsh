@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class DamageConstraintInfoBlock : DamageConstraintInfoBlockBase
     {
-        public  DamageConstraintInfoBlock(BinaryReader binaryReader): base(binaryReader)
+        public DamageConstraintInfoBlock() : base()
         {
-            
-        }
-        public  DamageConstraintInfoBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -27,35 +24,29 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent damageConstraintGroupName;
         internal float groupProbabilityScale;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 20; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  DamageConstraintInfoBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 20; } }
+        public override int Alignment { get { return 4; } }
+        public DamageConstraintInfoBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             physicsModelConstraintName = binaryReader.ReadStringID();
             damageConstraintName = binaryReader.ReadStringID();
             damageConstraintGroupName = binaryReader.ReadStringID();
             groupProbabilityScale = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(4);
+            return blamPointers;
         }
-        public  DamageConstraintInfoBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            physicsModelConstraintName = binaryReader.ReadStringID();
-            damageConstraintName = binaryReader.ReadStringID();
-            damageConstraintGroupName = binaryReader.ReadStringID();
-            groupProbabilityScale = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(4);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(physicsModelConstraintName);
                 binaryWriter.Write(damageConstraintName);

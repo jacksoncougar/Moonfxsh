@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("wind")]
     public partial class WindBlock : WindBlockBase
     {
-        public  WindBlock(BinaryReader binaryReader): base(binaryReader)
+        public WindBlock() : base()
         {
-            
-        }
-        public  WindBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 64, Alignment = 4)]
@@ -43,37 +40,30 @@ namespace Moonfish.Guerilla.Tags
         internal float localVariationRate;
         internal float damping;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 64; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  WindBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 64; } }
+        public override int Alignment { get { return 4; } }
+        public WindBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             velocityWorldUnits = binaryReader.ReadRange();
             variationArea = binaryReader.ReadVector2();
             localVariationWeight = binaryReader.ReadSingle();
             localVariationRate = binaryReader.ReadSingle();
             damping = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(36);
+            return blamPointers;
         }
-        public  WindBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            velocityWorldUnits = binaryReader.ReadRange();
-            variationArea = binaryReader.ReadVector2();
-            localVariationWeight = binaryReader.ReadSingle();
-            localVariationRate = binaryReader.ReadSingle();
-            damping = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(36);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(velocityWorldUnits);
                 binaryWriter.Write(variationArea);

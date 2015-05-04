@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class MoonfishXboxAnimationUnknownBlock : MoonfishXboxAnimationUnknownBlockBase
     {
-        public  MoonfishXboxAnimationUnknownBlock(BinaryReader binaryReader): base(binaryReader)
+        public MoonfishXboxAnimationUnknownBlock() : base()
         {
-            
-        }
-        public  MoonfishXboxAnimationUnknownBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -28,37 +25,30 @@ namespace Moonfish.Guerilla.Tags
         internal int unknown4;
         internal int unknown5;
         internal int unknown6;
-        
-        public override int SerializedSize{get { return 24; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  MoonfishXboxAnimationUnknownBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 24; } }
+        public override int Alignment { get { return 4; } }
+        public MoonfishXboxAnimationUnknownBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             unknown1 = binaryReader.ReadInt32();
             unknown2 = binaryReader.ReadInt32();
             unknown3 = binaryReader.ReadInt32();
             unknown4 = binaryReader.ReadInt32();
             unknown5 = binaryReader.ReadInt32();
             unknown6 = binaryReader.ReadInt32();
+            return blamPointers;
         }
-        public  MoonfishXboxAnimationUnknownBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            unknown1 = binaryReader.ReadInt32();
-            unknown2 = binaryReader.ReadInt32();
-            unknown3 = binaryReader.ReadInt32();
-            unknown4 = binaryReader.ReadInt32();
-            unknown5 = binaryReader.ReadInt32();
-            unknown6 = binaryReader.ReadInt32();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(unknown1);
                 binaryWriter.Write(unknown2);

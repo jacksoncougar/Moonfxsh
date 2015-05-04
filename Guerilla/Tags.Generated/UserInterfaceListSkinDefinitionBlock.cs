@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("skin")]
     public partial class UserInterfaceListSkinDefinitionBlock : UserInterfaceListSkinDefinitionBlockBase
     {
-        public  UserInterfaceListSkinDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
+        public UserInterfaceListSkinDefinitionBlock() : base()
         {
-            
-        }
-        public  UserInterfaceListSkinDefinitionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 60, Alignment = 4)]
@@ -41,43 +38,38 @@ namespace Moonfish.Guerilla.Tags
         internal BitmapBlockReferenceBlock[] bitmapBlocks;
         internal HudBlockReferenceBlock[] hudBlocks;
         internal PlayerBlockReferenceBlock[] playerBlocks;
-        
-        public override int SerializedSize{get { return 60; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  UserInterfaceListSkinDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 60; } }
+        public override int Alignment { get { return 4; } }
+        public UserInterfaceListSkinDefinitionBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             listFlags = (ListFlags)binaryReader.ReadInt32();
             arrowsBitmap = binaryReader.ReadTagReference();
             upArrowsOffsetFromBotLeftOf1StItem = binaryReader.ReadPoint();
             downArrowsOffsetFromBotLeftOf1StItem = binaryReader.ReadPoint();
-            itemAnimations = Guerilla.ReadBlockArray<SingleAnimationReferenceBlock>(binaryReader);
-            textBlocks = Guerilla.ReadBlockArray<TextBlockReferenceBlock>(binaryReader);
-            bitmapBlocks = Guerilla.ReadBlockArray<BitmapBlockReferenceBlock>(binaryReader);
-            hudBlocks = Guerilla.ReadBlockArray<HudBlockReferenceBlock>(binaryReader);
-            playerBlocks = Guerilla.ReadBlockArray<PlayerBlockReferenceBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<SingleAnimationReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<TextBlockReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<BitmapBlockReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<HudBlockReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PlayerBlockReferenceBlock>(binaryReader));
+            return blamPointers;
         }
-        public  UserInterfaceListSkinDefinitionBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            itemAnimations = ReadBlockArrayData<SingleAnimationReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            textBlocks = ReadBlockArrayData<TextBlockReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            bitmapBlocks = ReadBlockArrayData<BitmapBlockReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            hudBlocks = ReadBlockArrayData<HudBlockReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            playerBlocks = ReadBlockArrayData<PlayerBlockReferenceBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            listFlags = (ListFlags)binaryReader.ReadInt32();
-            arrowsBitmap = binaryReader.ReadTagReference();
-            upArrowsOffsetFromBotLeftOf1StItem = binaryReader.ReadPoint();
-            downArrowsOffsetFromBotLeftOf1StItem = binaryReader.ReadPoint();
-            itemAnimations = Guerilla.ReadBlockArray<SingleAnimationReferenceBlock>(binaryReader);
-            textBlocks = Guerilla.ReadBlockArray<TextBlockReferenceBlock>(binaryReader);
-            bitmapBlocks = Guerilla.ReadBlockArray<BitmapBlockReferenceBlock>(binaryReader);
-            hudBlocks = Guerilla.ReadBlockArray<HudBlockReferenceBlock>(binaryReader);
-            playerBlocks = Guerilla.ReadBlockArray<PlayerBlockReferenceBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)listFlags);
                 binaryWriter.Write(arrowsBitmap);

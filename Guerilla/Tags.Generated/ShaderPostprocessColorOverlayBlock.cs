@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPostprocessColorOverlayBlock : ShaderPostprocessColorOverlayBlockBase
     {
-        public  ShaderPostprocessColorOverlayBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderPostprocessColorOverlayBlock() : base()
         {
-            
-        }
-        public  ShaderPostprocessColorOverlayBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 21, Alignment = 4)]
@@ -27,35 +24,31 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent rangeName;
         internal float timePeriodInSeconds;
         internal ColorFunctionStructBlock function;
-        
-        public override int SerializedSize{get { return 21; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ShaderPostprocessColorOverlayBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 21; } }
+        public override int Alignment { get { return 4; } }
+        public ShaderPostprocessColorOverlayBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             parameterIndex = binaryReader.ReadByte();
             inputName = binaryReader.ReadStringID();
             rangeName = binaryReader.ReadStringID();
             timePeriodInSeconds = binaryReader.ReadSingle();
-            function = new ColorFunctionStructBlock(binaryReader);
+            function = new ColorFunctionStructBlock();
+            blamPointers.Concat(function.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  ShaderPostprocessColorOverlayBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            function.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            parameterIndex = binaryReader.ReadByte();
-            inputName = binaryReader.ReadStringID();
-            rangeName = binaryReader.ReadStringID();
-            timePeriodInSeconds = binaryReader.ReadSingle();
-            function = new ColorFunctionStructBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(parameterIndex);
                 binaryWriter.Write(inputName);

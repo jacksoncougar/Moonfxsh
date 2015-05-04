@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderTemplateParameterBlock : ShaderTemplateParameterBlockBase
     {
-        public  ShaderTemplateParameterBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderTemplateParameterBlock() : base()
         {
-            
-        }
-        public  ShaderTemplateParameterBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 52, Alignment = 4)]
@@ -29,55 +26,43 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference defaultBitmap;
         internal float defaultConstValue;
-        internal Moonfish.Tags.ColourR8G8B8 DefaultConstColour;
+        internal Moonfish.Tags.ColourR8G8B8 defaultConstColor;
         internal BitmapType bitmapType;
         internal byte[] invalidName_;
         internal BitmapAnimationFlags bitmapAnimationFlags;
         internal byte[] invalidName_0;
         internal float bitmapScale;
-        
-        public override int SerializedSize{get { return 52; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ShaderTemplateParameterBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 52; } }
+        public override int Alignment { get { return 4; } }
+        public ShaderTemplateParameterBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
-            explanation = Guerilla.ReadData(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
             type = (Type)binaryReader.ReadInt16();
             flags = (Flags)binaryReader.ReadInt16();
             defaultBitmap = binaryReader.ReadTagReference();
             defaultConstValue = binaryReader.ReadSingle();
-            DefaultConstColour = binaryReader.ReadColorR8G8B8();
+            defaultConstColor = binaryReader.ReadColorR8G8B8();
             bitmapType = (BitmapType)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             bitmapAnimationFlags = (BitmapAnimationFlags)binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
             bitmapScale = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  ShaderTemplateParameterBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            explanation = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadStringID();
-            explanation = Guerilla.ReadData(binaryReader);
-            type = (Type)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            defaultBitmap = binaryReader.ReadTagReference();
-            defaultConstValue = binaryReader.ReadSingle();
-            DefaultConstColour = binaryReader.ReadColorR8G8B8();
-            bitmapType = (BitmapType)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            bitmapAnimationFlags = (BitmapAnimationFlags)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            bitmapScale = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 nextAddress = Guerilla.WriteData(binaryWriter, explanation, nextAddress);
@@ -85,7 +70,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write(defaultBitmap);
                 binaryWriter.Write(defaultConstValue);
-                binaryWriter.Write(DefaultConstColour);
+                binaryWriter.Write(defaultConstColor);
                 binaryWriter.Write((Int16)bitmapType);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write((Int16)bitmapAnimationFlags);

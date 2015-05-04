@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class LiquidArcBlock : LiquidArcBlockBase
     {
-        public  LiquidArcBlock(BinaryReader binaryReader): base(binaryReader)
+        public LiquidArcBlock() : base()
         {
-            
-        }
-        public  LiquidArcBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 236, Alignment = 4)]
@@ -55,14 +52,14 @@ namespace Moonfish.Guerilla.Tags
         internal LiquidCoreBlock[] cores;
         internal ScalarFunctionStructBlock rangeScale;
         internal ScalarFunctionStructBlock brightnessScale;
-        
-        public override int SerializedSize{get { return 236; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  LiquidArcBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 236; } }
+        public override int Alignment { get { return 4; } }
+        public LiquidArcBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             spriteCount = (SpriteCount)binaryReader.ReadInt16();
             naturalLengthWorldUnits = binaryReader.ReadSingle();
@@ -74,10 +71,13 @@ namespace Moonfish.Guerilla.Tags
             materialEffects = binaryReader.ReadTagReference();
             bitmap = binaryReader.ReadTagReference();
             invalidName_1 = binaryReader.ReadBytes(8);
-            horizontalRange = new ScalarFunctionStructBlock(binaryReader);
-            verticalRange = new ScalarFunctionStructBlock(binaryReader);
+            horizontalRange = new ScalarFunctionStructBlock();
+            blamPointers.Concat(horizontalRange.ReadFields(binaryReader));
+            verticalRange = new ScalarFunctionStructBlock();
+            blamPointers.Concat(verticalRange.ReadFields(binaryReader));
             verticalNegativeScale01 = binaryReader.ReadSingle();
-            roughness = new ScalarFunctionStructBlock(binaryReader);
+            roughness = new ScalarFunctionStructBlock();
+            blamPointers.Concat(roughness.ReadFields(binaryReader));
             invalidName_2 = binaryReader.ReadBytes(64);
             octave1FrequencyCyclesSecond = binaryReader.ReadSingle();
             octave2FrequencyCyclesSecond = binaryReader.ReadSingle();
@@ -91,51 +91,27 @@ namespace Moonfish.Guerilla.Tags
             invalidName_3 = binaryReader.ReadBytes(28);
             octaveFlags = (OctaveFlags)binaryReader.ReadInt16();
             invalidName_4 = binaryReader.ReadBytes(2);
-            cores = Guerilla.ReadBlockArray<LiquidCoreBlock>(binaryReader);
-            rangeScale = new ScalarFunctionStructBlock(binaryReader);
-            brightnessScale = new ScalarFunctionStructBlock(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<LiquidCoreBlock>(binaryReader));
+            rangeScale = new ScalarFunctionStructBlock();
+            blamPointers.Concat(rangeScale.ReadFields(binaryReader));
+            brightnessScale = new ScalarFunctionStructBlock();
+            blamPointers.Concat(brightnessScale.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  LiquidArcBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            horizontalRange.ReadPointers(binaryReader, blamPointers);
+            verticalRange.ReadPointers(binaryReader, blamPointers);
+            roughness.ReadPointers(binaryReader, blamPointers);
+            cores = ReadBlockArrayData<LiquidCoreBlock>(binaryReader, blamPointers.Dequeue());
+            rangeScale.ReadPointers(binaryReader, blamPointers);
+            brightnessScale.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            spriteCount = (SpriteCount)binaryReader.ReadInt16();
-            naturalLengthWorldUnits = binaryReader.ReadSingle();
-            instances = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            instanceSpreadAngleDegrees = binaryReader.ReadSingle();
-            instanceRotationPeriodSeconds = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(8);
-            materialEffects = binaryReader.ReadTagReference();
-            bitmap = binaryReader.ReadTagReference();
-            invalidName_1 = binaryReader.ReadBytes(8);
-            horizontalRange = new ScalarFunctionStructBlock(binaryReader);
-            verticalRange = new ScalarFunctionStructBlock(binaryReader);
-            verticalNegativeScale01 = binaryReader.ReadSingle();
-            roughness = new ScalarFunctionStructBlock(binaryReader);
-            invalidName_2 = binaryReader.ReadBytes(64);
-            octave1FrequencyCyclesSecond = binaryReader.ReadSingle();
-            octave2FrequencyCyclesSecond = binaryReader.ReadSingle();
-            octave3FrequencyCyclesSecond = binaryReader.ReadSingle();
-            octave4FrequencyCyclesSecond = binaryReader.ReadSingle();
-            octave5FrequencyCyclesSecond = binaryReader.ReadSingle();
-            octave6FrequencyCyclesSecond = binaryReader.ReadSingle();
-            octave7FrequencyCyclesSecond = binaryReader.ReadSingle();
-            octave8FrequencyCyclesSecond = binaryReader.ReadSingle();
-            octave9FrequencyCyclesSecond = binaryReader.ReadSingle();
-            invalidName_3 = binaryReader.ReadBytes(28);
-            octaveFlags = (OctaveFlags)binaryReader.ReadInt16();
-            invalidName_4 = binaryReader.ReadBytes(2);
-            cores = Guerilla.ReadBlockArray<LiquidCoreBlock>(binaryReader);
-            rangeScale = new ScalarFunctionStructBlock(binaryReader);
-            brightnessScale = new ScalarFunctionStructBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write((Int16)spriteCount);

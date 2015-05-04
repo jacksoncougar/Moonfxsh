@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AiScriptReferenceBlock : AiScriptReferenceBlockBase
     {
-        public  AiScriptReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public AiScriptReferenceBlock() : base()
         {
-            
-        }
-        public  AiScriptReferenceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -24,29 +21,26 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Moonfish.Tags.String32 scriptName;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 40; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  AiScriptReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 40; } }
+        public override int Alignment { get { return 4; } }
+        public AiScriptReferenceBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             scriptName = binaryReader.ReadString32();
             invalidName_ = binaryReader.ReadBytes(8);
+            return blamPointers;
         }
-        public  AiScriptReferenceBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            scriptName = binaryReader.ReadString32();
-            invalidName_ = binaryReader.ReadBytes(8);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(scriptName);
                 binaryWriter.Write(invalidName_, 0, 8);

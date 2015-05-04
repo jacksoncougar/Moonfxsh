@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PrismaticConstraintsBlock : PrismaticConstraintsBlockBase
     {
-        public  PrismaticConstraintsBlock(BinaryReader binaryReader): base(binaryReader)
+        public PrismaticConstraintsBlock() : base()
         {
-            
-        }
-        public  PrismaticConstraintsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 132, Alignment = 4)]
@@ -27,35 +24,31 @@ namespace Moonfish.Guerilla.Tags
         internal float minLimit;
         internal float maxLimit;
         internal float maxFrictionForce;
-        
-        public override int SerializedSize{get { return 132; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PrismaticConstraintsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 132; } }
+        public override int Alignment { get { return 4; } }
+        public PrismaticConstraintsBlockBase() : base()
         {
-            constraintBodies = new ConstraintBodiesStructBlock(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            constraintBodies = new ConstraintBodiesStructBlock();
+            blamPointers.Concat(constraintBodies.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(4);
             minLimit = binaryReader.ReadSingle();
             maxLimit = binaryReader.ReadSingle();
             maxFrictionForce = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  PrismaticConstraintsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            constraintBodies.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            constraintBodies = new ConstraintBodiesStructBlock(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(4);
-            minLimit = binaryReader.ReadSingle();
-            maxLimit = binaryReader.ReadSingle();
-            maxFrictionForce = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 constraintBodies.Write(binaryWriter);
                 binaryWriter.Write(invalidName_, 0, 4);

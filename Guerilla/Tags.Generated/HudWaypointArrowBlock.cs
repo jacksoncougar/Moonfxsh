@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class HudWaypointArrowBlock : HudWaypointArrowBlockBase
     {
-        public  HudWaypointArrowBlock(BinaryReader binaryReader): base(binaryReader)
+        public HudWaypointArrowBlock() : base()
         {
-            
-        }
-        public  HudWaypointArrowBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 104, Alignment = 4)]
@@ -35,14 +32,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal Flags flags;
         internal byte[] invalidName_3;
-        
-        public override int SerializedSize{get { return 104; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  HudWaypointArrowBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 104; } }
+        public override int Alignment { get { return 4; } }
+        public HudWaypointArrowBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
             invalidName_ = binaryReader.ReadBytes(8);
             color = binaryReader.ReadColourR1G1B1();
@@ -56,30 +53,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes(16);
             flags = (Flags)binaryReader.ReadInt32();
             invalidName_3 = binaryReader.ReadBytes(24);
+            return blamPointers;
         }
-        public  HudWaypointArrowBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadString32();
-            invalidName_ = binaryReader.ReadBytes(8);
-            color = binaryReader.ReadColourR1G1B1();
-            invalidName_0 = binaryReader.ReadBytes(1);
-            opacity = binaryReader.ReadSingle();
-            translucency = binaryReader.ReadSingle();
-            onScreenSequenceIndex = binaryReader.ReadInt16();
-            offScreenSequenceIndex = binaryReader.ReadInt16();
-            occludedSequenceIndex = binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            invalidName_2 = binaryReader.ReadBytes(16);
-            flags = (Flags)binaryReader.ReadInt32();
-            invalidName_3 = binaryReader.ReadBytes(24);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(invalidName_, 0, 8);

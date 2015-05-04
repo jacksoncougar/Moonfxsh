@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioLightFixtureBlock : ScenarioLightFixtureBlockBase
     {
-        public  ScenarioLightFixtureBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioLightFixtureBlock() : base()
         {
-            
-        }
-        public  ScenarioLightFixtureBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 84, Alignment = 4)]
@@ -27,35 +24,35 @@ namespace Moonfish.Guerilla.Tags
         internal ScenarioObjectDatumStructBlock objectData;
         internal ScenarioDeviceStructBlock deviceData;
         internal ScenarioLightFixtureStructBlock lightFixtureData;
-        
-        public override int SerializedSize{get { return 84; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioLightFixtureBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 84; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioLightFixtureBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             type = binaryReader.ReadShortBlockIndex1();
             name = binaryReader.ReadShortBlockIndex1();
-            objectData = new ScenarioObjectDatumStructBlock(binaryReader);
-            deviceData = new ScenarioDeviceStructBlock(binaryReader);
-            lightFixtureData = new ScenarioLightFixtureStructBlock(binaryReader);
+            objectData = new ScenarioObjectDatumStructBlock();
+            blamPointers.Concat(objectData.ReadFields(binaryReader));
+            deviceData = new ScenarioDeviceStructBlock();
+            blamPointers.Concat(deviceData.ReadFields(binaryReader));
+            lightFixtureData = new ScenarioLightFixtureStructBlock();
+            blamPointers.Concat(lightFixtureData.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  ScenarioLightFixtureBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            objectData.ReadPointers(binaryReader, blamPointers);
+            deviceData.ReadPointers(binaryReader, blamPointers);
+            lightFixtureData.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            type = binaryReader.ReadShortBlockIndex1();
-            name = binaryReader.ReadShortBlockIndex1();
-            objectData = new ScenarioObjectDatumStructBlock(binaryReader);
-            deviceData = new ScenarioDeviceStructBlock(binaryReader);
-            lightFixtureData = new ScenarioLightFixtureStructBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(type);
                 binaryWriter.Write(name);

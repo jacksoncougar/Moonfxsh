@@ -5,45 +5,40 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ByteBlock : ByteBlockBase
     {
-        public  ByteBlock(BinaryReader binaryReader): base(binaryReader)
+        public ByteBlock() : base()
         {
-            
-        }
-        public  ByteBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 1, Alignment = 4)]
     public class ByteBlockBase : GuerillaBlock
     {
         internal byte value;
-        
-        public override int SerializedSize{get { return 1; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ByteBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 1; } }
+        public override int Alignment { get { return 4; } }
+        public ByteBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             value = binaryReader.ReadByte();
+            return blamPointers;
         }
-        public  ByteBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            value = binaryReader.ReadByte();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(value);
                 return nextAddress;

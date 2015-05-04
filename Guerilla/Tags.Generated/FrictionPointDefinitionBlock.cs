@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class FrictionPointDefinitionBlock : FrictionPointDefinitionBlockBase
     {
-        public  FrictionPointDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
+        public FrictionPointDefinitionBlock() : base()
         {
-            
-        }
-        public  FrictionPointDefinitionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 76, Alignment = 4)]
@@ -51,14 +48,14 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal Moonfish.Tags.StringIdent regionName;
         internal byte[] invalidName_2;
-        
-        public override int SerializedSize{get { return 76; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  FrictionPointDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 76; } }
+        public override int Alignment { get { return 4; } }
+        public FrictionPointDefinitionBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             markerName = binaryReader.ReadStringID();
             flags = (Flags)binaryReader.ReadInt32();
             fractionOfTotalMass = binaryReader.ReadSingle();
@@ -76,34 +73,16 @@ namespace Moonfish.Guerilla.Tags
             modelStateDestroyed = (ModelStateDestroyedOnlyNeedPointCanDestroyFlagSet)binaryReader.ReadInt16();
             regionName = binaryReader.ReadStringID();
             invalidName_2 = binaryReader.ReadBytes(4);
+            return blamPointers;
         }
-        public  FrictionPointDefinitionBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            markerName = binaryReader.ReadStringID();
-            flags = (Flags)binaryReader.ReadInt32();
-            fractionOfTotalMass = binaryReader.ReadSingle();
-            radius = binaryReader.ReadSingle();
-            damagedRadius = binaryReader.ReadSingle();
-            frictionType = (FrictionType)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            movingFrictionVelocityDiff = binaryReader.ReadSingle();
-            eBrakeMovingFriction = binaryReader.ReadSingle();
-            eBrakeFriction = binaryReader.ReadSingle();
-            eBrakeMovingFrictionVelDiff = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(20);
-            collisionGlobalMaterialName = binaryReader.ReadStringID();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            modelStateDestroyed = (ModelStateDestroyedOnlyNeedPointCanDestroyFlagSet)binaryReader.ReadInt16();
-            regionName = binaryReader.ReadStringID();
-            invalidName_2 = binaryReader.ReadBytes(4);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(markerName);
                 binaryWriter.Write((Int32)flags);

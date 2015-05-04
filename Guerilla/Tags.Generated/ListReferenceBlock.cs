@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ListReferenceBlock : ListReferenceBlockBase
     {
-        public  ListReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public ListReferenceBlock() : base()
         {
-            
-        }
-        public  ListReferenceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -29,39 +26,32 @@ namespace Moonfish.Guerilla.Tags
         internal AnimationIndex animationIndex;
         internal short introAnimationDelayMilliseconds;
         internal STextValuePairReferenceBlockUNUSED[] uNUSED;
-        
-        public override int SerializedSize{get { return 24; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ListReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 24; } }
+        public override int Alignment { get { return 4; } }
+        public ListReferenceBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             skinIndex = (SkinIndex)binaryReader.ReadInt16();
             numVisibleItems = binaryReader.ReadInt16();
             bottomLeft = binaryReader.ReadPoint();
             animationIndex = (AnimationIndex)binaryReader.ReadInt16();
             introAnimationDelayMilliseconds = binaryReader.ReadInt16();
-            uNUSED = Guerilla.ReadBlockArray<STextValuePairReferenceBlockUNUSED>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<STextValuePairReferenceBlockUNUSED>(binaryReader));
+            return blamPointers;
         }
-        public  ListReferenceBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            uNUSED = ReadBlockArrayData<STextValuePairReferenceBlockUNUSED>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            skinIndex = (SkinIndex)binaryReader.ReadInt16();
-            numVisibleItems = binaryReader.ReadInt16();
-            bottomLeft = binaryReader.ReadPoint();
-            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
-            uNUSED = Guerilla.ReadBlockArray<STextValuePairReferenceBlockUNUSED>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write((Int16)skinIndex);

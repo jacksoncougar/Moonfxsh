@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("ligh")]
     public partial class LightBlock : LightBlockBase
     {
-        public  LightBlock(BinaryReader binaryReader): base(binaryReader)
+        public LightBlock() : base()
         {
-            
-        }
-        public  LightBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 228, Alignment = 4)]
@@ -125,14 +122,14 @@ namespace Moonfish.Guerilla.Tags
         internal LightGelAnimationBlock[] gelAnimation;
         [TagReference("shad")]
         internal Moonfish.Tags.TagReference shader;
-        
-        public override int SerializedSize{get { return 228; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  LightBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 228; } }
+        public override int Alignment { get { return 4; } }
+        public LightBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             type = (Type)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -177,69 +174,23 @@ namespace Moonfish.Guerilla.Tags
             specularFade = (SpecularFade)binaryReader.ReadInt16();
             invalidName_5 = binaryReader.ReadBytes(2);
             flags0 = (Flags)binaryReader.ReadInt32();
-            brightnessAnimation = Guerilla.ReadBlockArray<LightBrightnessAnimationBlock>(binaryReader);
-            colorAnimation = Guerilla.ReadBlockArray<LightColorAnimationBlock>(binaryReader);
-            gelAnimation = Guerilla.ReadBlockArray<LightGelAnimationBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightBrightnessAnimationBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightColorAnimationBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightGelAnimationBlock>(binaryReader));
             shader = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  LightBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            brightnessAnimation = ReadBlockArrayData<LightBrightnessAnimationBlock>(binaryReader, blamPointers.Dequeue());
+            colorAnimation = ReadBlockArrayData<LightColorAnimationBlock>(binaryReader, blamPointers.Dequeue());
+            gelAnimation = ReadBlockArrayData<LightGelAnimationBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            type = (Type)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            sizeModifer = binaryReader.ReadRange();
-            shadowQualityBias = binaryReader.ReadSingle();
-            shadowTapBias = (ShadowTapBiasTheLessTapsYouUseTheFasterTheLightButEdgesCanLookWorse)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            radiusWorldUnits = binaryReader.ReadSingle();
-            specularRadiusWorldUnits = binaryReader.ReadSingle();
-            nearWidthWorldUnits = binaryReader.ReadSingle();
-            heightStretch = binaryReader.ReadSingle();
-            fieldOfViewDegrees = binaryReader.ReadSingle();
-            falloffDistance = binaryReader.ReadSingle();
-            cutoffDistance = binaryReader.ReadSingle();
-            interpolationFlags = (InterpolationFlags)binaryReader.ReadInt32();
-            bloomBounds02 = binaryReader.ReadRange();
-            specularLowerBound = binaryReader.ReadColorR8G8B8();
-            specularUpperBound = binaryReader.ReadColorR8G8B8();
-            diffuseLowerBound = binaryReader.ReadColorR8G8B8();
-            diffuseUpperBound = binaryReader.ReadColorR8G8B8();
-            brightnessBounds02 = binaryReader.ReadRange();
-            gelMap = binaryReader.ReadTagReference();
-            specularMask = (SpecularMask)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            invalidName_2 = binaryReader.ReadBytes(4);
-            falloffFunction = (FalloffFunction)binaryReader.ReadInt16();
-            diffuseContrast = (DiffuseContrast)binaryReader.ReadInt16();
-            specularContrast = (SpecularContrast)binaryReader.ReadInt16();
-            falloffGeometry = (FalloffGeometry)binaryReader.ReadInt16();
-            lensFlare = binaryReader.ReadTagReference();
-            boundingRadiusWorldUnits = binaryReader.ReadSingle();
-            lightVolume = binaryReader.ReadTagReference();
-            defaultLightmapSetting = (DefaultLightmapSetting)binaryReader.ReadInt16();
-            invalidName_3 = binaryReader.ReadBytes(2);
-            lightmapHalfLife = binaryReader.ReadSingle();
-            lightmapLightScale = binaryReader.ReadSingle();
-            durationSeconds = binaryReader.ReadSingle();
-            invalidName_4 = binaryReader.ReadBytes(2);
-            falloffFunction0 = (FalloffFunctionTheScaleOfTheLightWillDiminishOverTimeAccordingToThisFunction)binaryReader.ReadInt16();
-            illuminationFade = (IlluminationFade)binaryReader.ReadInt16();
-            shadowFade = (ShadowFade)binaryReader.ReadInt16();
-            specularFade = (SpecularFade)binaryReader.ReadInt16();
-            invalidName_5 = binaryReader.ReadBytes(2);
-            flags0 = (Flags)binaryReader.ReadInt32();
-            brightnessAnimation = Guerilla.ReadBlockArray<LightBrightnessAnimationBlock>(binaryReader);
-            colorAnimation = Guerilla.ReadBlockArray<LightColorAnimationBlock>(binaryReader);
-            gelAnimation = Guerilla.ReadBlockArray<LightGelAnimationBlock>(binaryReader);
-            shader = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write((Int16)type);

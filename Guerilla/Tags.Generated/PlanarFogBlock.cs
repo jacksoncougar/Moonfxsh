@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("fog ")]
     public partial class PlanarFogBlock : PlanarFogBlockBase
     {
-        public  PlanarFogBlock(BinaryReader binaryReader): base(binaryReader)
+        public PlanarFogBlock() : base()
         {
-            
-        }
-        public  PlanarFogBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 96, Alignment = 4)]
@@ -56,7 +53,7 @@ namespace Moonfish.Guerilla.Tags
         /// negative numbers are bad, mmmkay?
         /// </summary>
         internal float eyeOffsetScale11;
-        internal Moonfish.Tags.ColourR8G8B8 Colour;
+        internal Moonfish.Tags.ColourR8G8B8 color;
         internal PlanarFogPatchyFogBlock[] patchyFog;
         [TagReference("lsnd")]
         internal Moonfish.Tags.TagReference backgroundSound;
@@ -74,14 +71,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference enterSound;
         [TagReference("snd!")]
         internal Moonfish.Tags.TagReference exitSound;
-        
-        public override int SerializedSize{get { return 96; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PlanarFogBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 96; } }
+        public override int Alignment { get { return 4; } }
+        public PlanarFogBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             priority = binaryReader.ReadInt16();
             globalMaterialName = binaryReader.ReadStringID();
@@ -92,43 +89,25 @@ namespace Moonfish.Guerilla.Tags
             opaqueDepthWorldUnits = binaryReader.ReadSingle();
             atmosphericPlanarDepthWorldUnits = binaryReader.ReadRange();
             eyeOffsetScale11 = binaryReader.ReadSingle();
-            Colour = binaryReader.ReadColorR8G8B8();
-            patchyFog = Guerilla.ReadBlockArray<PlanarFogPatchyFogBlock>(binaryReader);
+            color = binaryReader.ReadColorR8G8B8();
+            blamPointers.Enqueue(ReadBlockArrayPointer<PlanarFogPatchyFogBlock>(binaryReader));
             backgroundSound = binaryReader.ReadTagReference();
             soundEnvironment = binaryReader.ReadTagReference();
             environmentDampingFactor = binaryReader.ReadSingle();
             backgroundSoundGain = binaryReader.ReadSingle();
             enterSound = binaryReader.ReadTagReference();
             exitSound = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  PlanarFogBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            patchyFog = ReadBlockArrayData<PlanarFogPatchyFogBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            priority = binaryReader.ReadInt16();
-            globalMaterialName = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(2);
-            maximumDensity01 = binaryReader.ReadSingle();
-            opaqueDistanceWorldUnits = binaryReader.ReadSingle();
-            opaqueDepthWorldUnits = binaryReader.ReadSingle();
-            atmosphericPlanarDepthWorldUnits = binaryReader.ReadRange();
-            eyeOffsetScale11 = binaryReader.ReadSingle();
-            Colour = binaryReader.ReadColorR8G8B8();
-            patchyFog = Guerilla.ReadBlockArray<PlanarFogPatchyFogBlock>(binaryReader);
-            backgroundSound = binaryReader.ReadTagReference();
-            soundEnvironment = binaryReader.ReadTagReference();
-            environmentDampingFactor = binaryReader.ReadSingle();
-            backgroundSoundGain = binaryReader.ReadSingle();
-            enterSound = binaryReader.ReadTagReference();
-            exitSound = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write(priority);
@@ -140,7 +119,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(opaqueDepthWorldUnits);
                 binaryWriter.Write(atmosphericPlanarDepthWorldUnits);
                 binaryWriter.Write(eyeOffsetScale11);
-                binaryWriter.Write(Colour);
+                binaryWriter.Write(color);
                 nextAddress = Guerilla.WriteBlockArray<PlanarFogPatchyFogBlock>(binaryWriter, patchyFog, nextAddress);
                 binaryWriter.Write(backgroundSound);
                 binaryWriter.Write(soundEnvironment);

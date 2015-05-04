@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterGrenadesBlock : CharacterGrenadesBlockBase
     {
-        public  CharacterGrenadesBlock(BinaryReader binaryReader): base(binaryReader)
+        public CharacterGrenadesBlock() : base()
         {
-            
-        }
-        public  CharacterGrenadesBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 60, Alignment = 4)]
@@ -80,14 +77,14 @@ namespace Moonfish.Guerilla.Tags
         /// how likely we are not to drop any grenades when we die, even if we still have some
         /// </summary>
         internal float dontDropGrenadesChance01;
-        
-        public override int SerializedSize{get { return 60; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  CharacterGrenadesBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 60; } }
+        public override int Alignment { get { return 4; } }
+        public CharacterGrenadesBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             grenadesFlags = (GrenadesFlags)binaryReader.ReadInt32();
             grenadeType = (GrenadeTypeTypeOfGrenadesThatWeThrow)binaryReader.ReadInt16();
             trajectoryType = (TrajectoryTypeHowWeThrowOurGrenades)binaryReader.ReadInt16();
@@ -104,33 +101,16 @@ namespace Moonfish.Guerilla.Tags
             antiVehicleGrenadeChance01 = binaryReader.ReadSingle();
             grenadeCount = binaryReader.ReadInt32();
             dontDropGrenadesChance01 = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  CharacterGrenadesBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            grenadesFlags = (GrenadesFlags)binaryReader.ReadInt32();
-            grenadeType = (GrenadeTypeTypeOfGrenadesThatWeThrow)binaryReader.ReadInt16();
-            trajectoryType = (TrajectoryTypeHowWeThrowOurGrenades)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            minimumEnemyCount = binaryReader.ReadInt16();
-            enemyRadiusWorldUnits = binaryReader.ReadSingle();
-            grenadeIdealVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            grenadeVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            grenadeRangesWorldUnits = binaryReader.ReadRange();
-            collateralDamageRadiusWorldUnits = binaryReader.ReadSingle();
-            grenadeChance01 = binaryReader.ReadSingle();
-            grenadeThrowDelaySeconds = binaryReader.ReadSingle();
-            grenadeUncoverChance01 = binaryReader.ReadSingle();
-            antiVehicleGrenadeChance01 = binaryReader.ReadSingle();
-            grenadeCount = binaryReader.ReadInt32();
-            dontDropGrenadesChance01 = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)grenadesFlags);
                 binaryWriter.Write((Int16)grenadeType);

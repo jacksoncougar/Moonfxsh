@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalDamageInfoBlock : GlobalDamageInfoBlockBase
     {
-        public  GlobalDamageInfoBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalDamageInfoBlock() : base()
         {
-            
-        }
-        public  GlobalDamageInfoBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 248, Alignment = 4)]
@@ -95,14 +92,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference overshieldFirstPersonShader;
         [TagReference("shad")]
         internal Moonfish.Tags.TagReference overshieldShader;
-        
-        public override int SerializedSize{get { return 248; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GlobalDamageInfoBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 248; } }
+        public override int Alignment { get { return 4; } }
+        public GlobalDamageInfoBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             globalIndirectMaterialName = binaryReader.ReadStringID();
             indirectDamageSection = binaryReader.ReadShortBlockIndex2();
@@ -129,63 +126,30 @@ namespace Moonfish.Guerilla.Tags
             shieldDamagedEffect = binaryReader.ReadTagReference();
             shieldDepletedEffect = binaryReader.ReadTagReference();
             shieldRechargingEffect = binaryReader.ReadTagReference();
-            damageSections = Guerilla.ReadBlockArray<GlobalDamageSectionBlock>(binaryReader);
-            nodes = Guerilla.ReadBlockArray<GlobalDamageNodesBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalDamageSectionBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalDamageNodesBlock>(binaryReader));
             invalidName_4 = binaryReader.ReadBytes(2);
             invalidName_5 = binaryReader.ReadBytes(2);
             invalidName_6 = binaryReader.ReadBytes(4);
             invalidName_7 = binaryReader.ReadBytes(4);
-            damageSeats = Guerilla.ReadBlockArray<DamageSeatInfoBlock>(binaryReader);
-            damageConstraints = Guerilla.ReadBlockArray<DamageConstraintInfoBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<DamageSeatInfoBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<DamageConstraintInfoBlock>(binaryReader));
             overshieldFirstPersonShader = binaryReader.ReadTagReference();
             overshieldShader = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  GlobalDamageInfoBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            damageSections = ReadBlockArrayData<GlobalDamageSectionBlock>(binaryReader, blamPointers.Dequeue());
+            nodes = ReadBlockArrayData<GlobalDamageNodesBlock>(binaryReader, blamPointers.Dequeue());
+            damageSeats = ReadBlockArrayData<DamageSeatInfoBlock>(binaryReader, blamPointers.Dequeue());
+            damageConstraints = ReadBlockArrayData<DamageConstraintInfoBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            globalIndirectMaterialName = binaryReader.ReadStringID();
-            indirectDamageSection = binaryReader.ReadShortBlockIndex2();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(4);
-            collisionDamageReportingType = (CollisionDamageReportingType)binaryReader.ReadByte();
-            responseDamageReportingType = (ResponseDamageReportingType)binaryReader.ReadByte();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            invalidName_2 = binaryReader.ReadBytes(20);
-            maximumVitality = binaryReader.ReadSingle();
-            minimumStunDamage = binaryReader.ReadSingle();
-            stunTimeSeconds = binaryReader.ReadSingle();
-            rechargeTimeSeconds = binaryReader.ReadSingle();
-            rechargeFraction = binaryReader.ReadSingle();
-            invalidName_3 = binaryReader.ReadBytes(64);
-            shieldDamagedFirstPersonShader = binaryReader.ReadTagReference();
-            shieldDamagedShader = binaryReader.ReadTagReference();
-            maximumShieldVitality = binaryReader.ReadSingle();
-            globalShieldMaterialName = binaryReader.ReadStringID();
-            minimumStunDamage0 = binaryReader.ReadSingle();
-            stunTimeSeconds0 = binaryReader.ReadSingle();
-            rechargeTimeSeconds0 = binaryReader.ReadSingle();
-            shieldDamagedThreshold = binaryReader.ReadSingle();
-            shieldDamagedEffect = binaryReader.ReadTagReference();
-            shieldDepletedEffect = binaryReader.ReadTagReference();
-            shieldRechargingEffect = binaryReader.ReadTagReference();
-            damageSections = Guerilla.ReadBlockArray<GlobalDamageSectionBlock>(binaryReader);
-            nodes = Guerilla.ReadBlockArray<GlobalDamageNodesBlock>(binaryReader);
-            invalidName_4 = binaryReader.ReadBytes(2);
-            invalidName_5 = binaryReader.ReadBytes(2);
-            invalidName_6 = binaryReader.ReadBytes(4);
-            invalidName_7 = binaryReader.ReadBytes(4);
-            damageSeats = Guerilla.ReadBlockArray<DamageSeatInfoBlock>(binaryReader);
-            damageConstraints = Guerilla.ReadBlockArray<DamageConstraintInfoBlock>(binaryReader);
-            overshieldFirstPersonShader = binaryReader.ReadTagReference();
-            overshieldShader = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(globalIndirectMaterialName);

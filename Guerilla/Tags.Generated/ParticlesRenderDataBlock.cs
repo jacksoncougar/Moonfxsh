@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ParticlesRenderDataBlock : ParticlesRenderDataBlockBase
     {
-        public  ParticlesRenderDataBlock(BinaryReader binaryReader): base(binaryReader)
+        public ParticlesRenderDataBlock() : base()
         {
-            
-        }
-        public  ParticlesRenderDataBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 19, Alignment = 4)]
@@ -27,35 +24,29 @@ namespace Moonfish.Guerilla.Tags
         internal float positionZ;
         internal float size;
         internal Moonfish.Tags.ColourR1G1B1 color;
-        
-        public override int SerializedSize{get { return 19; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ParticlesRenderDataBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 19; } }
+        public override int Alignment { get { return 4; } }
+        public ParticlesRenderDataBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             positionX = binaryReader.ReadSingle();
             positionY = binaryReader.ReadSingle();
             positionZ = binaryReader.ReadSingle();
             size = binaryReader.ReadSingle();
             color = binaryReader.ReadColourR1G1B1();
+            return blamPointers;
         }
-        public  ParticlesRenderDataBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            positionX = binaryReader.ReadSingle();
-            positionY = binaryReader.ReadSingle();
-            positionZ = binaryReader.ReadSingle();
-            size = binaryReader.ReadSingle();
-            color = binaryReader.ReadColourR1G1B1();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(positionX);
                 binaryWriter.Write(positionY);

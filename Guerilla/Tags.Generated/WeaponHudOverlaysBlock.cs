@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class WeaponHudOverlaysBlock : WeaponHudOverlaysBlockBase
     {
-        public  WeaponHudOverlaysBlock(BinaryReader binaryReader): base(binaryReader)
+        public WeaponHudOverlaysBlock() : base()
         {
-            
-        }
-        public  WeaponHudOverlaysBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 92, Alignment = 4)]
@@ -31,41 +28,33 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference overlayBitmap;
         internal WeaponHudOverlayBlock[] overlays;
         internal byte[] invalidName_2;
-        
-        public override int SerializedSize{get { return 92; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  WeaponHudOverlaysBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 92; } }
+        public override int Alignment { get { return 4; } }
+        public WeaponHudOverlaysBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             stateAttachedTo = (StateAttachedTo)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             canUseOnMapType = (CanUseOnMapType)binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
             invalidName_1 = binaryReader.ReadBytes(28);
             overlayBitmap = binaryReader.ReadTagReference();
-            overlays = Guerilla.ReadBlockArray<WeaponHudOverlayBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<WeaponHudOverlayBlock>(binaryReader));
             invalidName_2 = binaryReader.ReadBytes(40);
+            return blamPointers;
         }
-        public  WeaponHudOverlaysBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            overlays = ReadBlockArrayData<WeaponHudOverlayBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            stateAttachedTo = (StateAttachedTo)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            canUseOnMapType = (CanUseOnMapType)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            invalidName_1 = binaryReader.ReadBytes(28);
-            overlayBitmap = binaryReader.ReadTagReference();
-            overlays = Guerilla.ReadBlockArray<WeaponHudOverlayBlock>(binaryReader);
-            invalidName_2 = binaryReader.ReadBytes(40);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)stateAttachedTo);
                 binaryWriter.Write(invalidName_, 0, 2);

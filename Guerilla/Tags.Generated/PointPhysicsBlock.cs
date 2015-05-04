@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("pphy")]
     public partial class PointPhysicsBlock : PointPhysicsBlockBase
     {
-        public  PointPhysicsBlock(BinaryReader binaryReader): base(binaryReader)
+        public PointPhysicsBlock() : base()
         {
-            
-        }
-        public  PointPhysicsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 64, Alignment = 4)]
@@ -45,14 +42,14 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float elasticity;
         internal byte[] invalidName_0;
-        
-        public override int SerializedSize{get { return 64; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PointPhysicsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 64; } }
+        public override int Alignment { get { return 4; } }
+        public PointPhysicsBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             invalidName_ = binaryReader.ReadBytes(28);
             densityGML = binaryReader.ReadSingle();
@@ -61,25 +58,16 @@ namespace Moonfish.Guerilla.Tags
             surfaceFriction = binaryReader.ReadSingle();
             elasticity = binaryReader.ReadSingle();
             invalidName_0 = binaryReader.ReadBytes(12);
+            return blamPointers;
         }
-        public  PointPhysicsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            invalidName_ = binaryReader.ReadBytes(28);
-            densityGML = binaryReader.ReadSingle();
-            airFriction = binaryReader.ReadSingle();
-            waterFriction = binaryReader.ReadSingle();
-            surfaceFriction = binaryReader.ReadSingle();
-            elasticity = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(12);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(invalidName_, 0, 28);

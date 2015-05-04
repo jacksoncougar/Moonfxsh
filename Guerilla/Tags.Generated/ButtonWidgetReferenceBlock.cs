@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ButtonWidgetReferenceBlock : ButtonWidgetReferenceBlockBase
     {
-        public  ButtonWidgetReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public ButtonWidgetReferenceBlock() : base()
         {
-            
-        }
-        public  ButtonWidgetReferenceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 60, Alignment = 4)]
@@ -35,18 +32,18 @@ namespace Moonfish.Guerilla.Tags
         /// from top-left
         /// </summary>
         internal Moonfish.Tags.Point bitmapOffset;
-        internal Moonfish.Tags.StringIdent StringIdent;
+        internal Moonfish.Tags.StringIdent stringId;
         internal short renderDepthBias;
         internal short mouseRegionTopOffset;
         internal ButtonFlags buttonFlags;
-        
-        public override int SerializedSize{get { return 60; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ButtonWidgetReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 60; } }
+        public override int Alignment { get { return 4; } }
+        public ButtonWidgetReferenceBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             textFlags = (TextFlags)binaryReader.ReadInt32();
             animationIndex = (AnimationIndex)binaryReader.ReadInt16();
             introAnimationDelayMilliseconds = binaryReader.ReadInt16();
@@ -56,34 +53,20 @@ namespace Moonfish.Guerilla.Tags
             bounds = binaryReader.ReadVector2();
             bitmap = binaryReader.ReadTagReference();
             bitmapOffset = binaryReader.ReadPoint();
-            StringIdent = binaryReader.ReadStringID();
+            stringId = binaryReader.ReadStringID();
             renderDepthBias = binaryReader.ReadInt16();
             mouseRegionTopOffset = binaryReader.ReadInt16();
             buttonFlags = (ButtonFlags)binaryReader.ReadInt32();
+            return blamPointers;
         }
-        public  ButtonWidgetReferenceBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            textFlags = (TextFlags)binaryReader.ReadInt32();
-            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            customFont = (CustomFont)binaryReader.ReadInt16();
-            textColor = binaryReader.ReadVector4();
-            bounds = binaryReader.ReadVector2();
-            bitmap = binaryReader.ReadTagReference();
-            bitmapOffset = binaryReader.ReadPoint();
-            StringIdent = binaryReader.ReadStringID();
-            renderDepthBias = binaryReader.ReadInt16();
-            mouseRegionTopOffset = binaryReader.ReadInt16();
-            buttonFlags = (ButtonFlags)binaryReader.ReadInt32();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)textFlags);
                 binaryWriter.Write((Int16)animationIndex);
@@ -94,7 +77,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(bounds);
                 binaryWriter.Write(bitmap);
                 binaryWriter.Write(bitmapOffset);
-                binaryWriter.Write(StringIdent);
+                binaryWriter.Write(stringId);
                 binaryWriter.Write(renderDepthBias);
                 binaryWriter.Write(mouseRegionTopOffset);
                 binaryWriter.Write((Int32)buttonFlags);

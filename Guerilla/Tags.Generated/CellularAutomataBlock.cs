@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("devo")]
     public partial class CellularAutomataBlock : CellularAutomataBlockBase
     {
-        public  CellularAutomataBlock(BinaryReader binaryReader): base(binaryReader)
+        public CellularAutomataBlock() : base()
         {
-            
-        }
-        public  CellularAutomataBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 548, Alignment = 4)]
@@ -76,14 +73,14 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference maskBitmap;
         internal byte[] invalidName_8;
-        
-        public override int SerializedSize{get { return 548; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  CellularAutomataBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 548; } }
+        public override int Alignment { get { return 4; } }
+        public CellularAutomataBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             updatesPerSecondHz = binaryReader.ReadInt16();
             xWidthCells = binaryReader.ReadInt16();
             yDepthCells = binaryReader.ReadInt16();
@@ -115,48 +112,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_7 = binaryReader.ReadBytes(32);
             maskBitmap = binaryReader.ReadTagReference();
             invalidName_8 = binaryReader.ReadBytes(240);
+            return blamPointers;
         }
-        public  CellularAutomataBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            updatesPerSecondHz = binaryReader.ReadInt16();
-            xWidthCells = binaryReader.ReadInt16();
-            yDepthCells = binaryReader.ReadInt16();
-            zHeightCells = binaryReader.ReadInt16();
-            xWidthWorldUnits = binaryReader.ReadSingle();
-            yDepthWorldUnits = binaryReader.ReadSingle();
-            zHeightWorldUnits = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(32);
-            marker = binaryReader.ReadStringID();
-            cellBirthChance01 = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(32);
-            cellGeneMutates1InTimes = binaryReader.ReadInt32();
-            virusGeneMutations1InTimes = binaryReader.ReadInt32();
-            invalidName_1 = binaryReader.ReadBytes(32);
-            infectedCellLifespanUpdates = binaryReader.ReadInt32();
-            minimumInfectionAgeUpdates = binaryReader.ReadInt16();
-            invalidName_2 = binaryReader.ReadBytes(2);
-            cellInfectionChance01 = binaryReader.ReadSingle();
-            infectionThreshold01 = binaryReader.ReadSingle();
-            invalidName_3 = binaryReader.ReadBytes(32);
-            newCellFilledChance01 = binaryReader.ReadSingle();
-            newCellInfectedChance01 = binaryReader.ReadSingle();
-            invalidName_4 = binaryReader.ReadBytes(32);
-            detailTextureChangeChance01 = binaryReader.ReadSingle();
-            invalidName_5 = binaryReader.ReadBytes(32);
-            detailTextureWidthCells = binaryReader.ReadInt16();
-            invalidName_6 = binaryReader.ReadBytes(2);
-            detailTexture = binaryReader.ReadTagReference();
-            invalidName_7 = binaryReader.ReadBytes(32);
-            maskBitmap = binaryReader.ReadTagReference();
-            invalidName_8 = binaryReader.ReadBytes(240);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(updatesPerSecondHz);
                 binaryWriter.Write(xWidthCells);

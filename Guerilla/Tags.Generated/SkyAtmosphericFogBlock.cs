@@ -5,24 +5,21 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SkyAtmosphericFogBlock : SkyAtmosphericFogBlockBase
     {
-        public  SkyAtmosphericFogBlock(BinaryReader binaryReader): base(binaryReader)
+        public SkyAtmosphericFogBlock() : base()
         {
-            
-        }
-        public  SkyAtmosphericFogBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
     public class SkyAtmosphericFogBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.ColourR8G8B8 Colour;
+        internal Moonfish.Tags.ColourR8G8B8 color;
         /// <summary>
         /// Fog density is clamped to this value.
         /// </summary>
@@ -35,35 +32,30 @@ namespace Moonfish.Guerilla.Tags
         /// Fog becomes opaque (maximum density) at this distance from the viewer.
         /// </summary>
         internal float opaqueDistanceWorldUnits;
-        
-        public override int SerializedSize{get { return 24; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  SkyAtmosphericFogBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 24; } }
+        public override int Alignment { get { return 4; } }
+        public SkyAtmosphericFogBlockBase() : base()
         {
-            Colour = binaryReader.ReadColorR8G8B8();
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            color = binaryReader.ReadColorR8G8B8();
             maximumDensity01 = binaryReader.ReadSingle();
             startDistanceWorldUnits = binaryReader.ReadSingle();
             opaqueDistanceWorldUnits = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  SkyAtmosphericFogBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            Colour = binaryReader.ReadColorR8G8B8();
-            maximumDensity01 = binaryReader.ReadSingle();
-            startDistanceWorldUnits = binaryReader.ReadSingle();
-            opaqueDistanceWorldUnits = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write(Colour);
+                binaryWriter.Write(color);
                 binaryWriter.Write(maximumDensity01);
                 binaryWriter.Write(startDistanceWorldUnits);
                 binaryWriter.Write(opaqueDistanceWorldUnits);

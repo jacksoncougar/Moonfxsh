@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class TextBlockReferenceBlock : TextBlockReferenceBlockBase
     {
-        public  TextBlockReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public TextBlockReferenceBlock() : base()
         {
-            
-        }
-        public  TextBlockReferenceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 44, Alignment = 4)]
@@ -29,17 +26,17 @@ namespace Moonfish.Guerilla.Tags
         internal CustomFont customFont;
         internal OpenTK.Vector4 textColor;
         internal OpenTK.Vector2 textBounds;
-        internal Moonfish.Tags.StringIdent StringIdent;
+        internal Moonfish.Tags.StringIdent stringId;
         internal short renderDepthBias;
         internal byte[] invalidName_0;
-        
-        public override int SerializedSize{get { return 44; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  TextBlockReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 44; } }
+        public override int Alignment { get { return 4; } }
+        public TextBlockReferenceBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             textFlags = (TextFlags)binaryReader.ReadInt32();
             animationIndex = (AnimationIndex)binaryReader.ReadInt16();
             introAnimationDelayMilliseconds = binaryReader.ReadInt16();
@@ -47,30 +44,19 @@ namespace Moonfish.Guerilla.Tags
             customFont = (CustomFont)binaryReader.ReadInt16();
             textColor = binaryReader.ReadVector4();
             textBounds = binaryReader.ReadVector2();
-            StringIdent = binaryReader.ReadStringID();
+            stringId = binaryReader.ReadStringID();
             renderDepthBias = binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
+            return blamPointers;
         }
-        public  TextBlockReferenceBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            textFlags = (TextFlags)binaryReader.ReadInt32();
-            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            customFont = (CustomFont)binaryReader.ReadInt16();
-            textColor = binaryReader.ReadVector4();
-            textBounds = binaryReader.ReadVector2();
-            StringIdent = binaryReader.ReadStringID();
-            renderDepthBias = binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)textFlags);
                 binaryWriter.Write((Int16)animationIndex);
@@ -79,7 +65,7 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write((Int16)customFont);
                 binaryWriter.Write(textColor);
                 binaryWriter.Write(textBounds);
-                binaryWriter.Write(StringIdent);
+                binaryWriter.Write(stringId);
                 binaryWriter.Write(renderDepthBias);
                 binaryWriter.Write(invalidName_0, 0, 2);
                 return nextAddress;

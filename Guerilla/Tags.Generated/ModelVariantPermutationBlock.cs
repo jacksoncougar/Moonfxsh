@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ModelVariantPermutationBlock : ModelVariantPermutationBlockBase
     {
-        public  ModelVariantPermutationBlock(BinaryReader binaryReader): base(binaryReader)
+        public ModelVariantPermutationBlock() : base()
         {
-            
-        }
-        public  ModelVariantPermutationBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 32, Alignment = 4)]
@@ -30,41 +27,33 @@ namespace Moonfish.Guerilla.Tags
         internal ModelVariantStateBlock[] states;
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
-        
-        public override int SerializedSize{get { return 32; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ModelVariantPermutationBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 32; } }
+        public override int Alignment { get { return 4; } }
+        public ModelVariantPermutationBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             permutationName = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(1);
             flags = (Flags)binaryReader.ReadByte();
             invalidName_0 = binaryReader.ReadBytes(2);
             probability0Inf = binaryReader.ReadSingle();
-            states = Guerilla.ReadBlockArray<ModelVariantStateBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ModelVariantStateBlock>(binaryReader));
             invalidName_1 = binaryReader.ReadBytes(5);
             invalidName_2 = binaryReader.ReadBytes(7);
+            return blamPointers;
         }
-        public  ModelVariantPermutationBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            states = ReadBlockArrayData<ModelVariantStateBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            permutationName = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(1);
-            flags = (Flags)binaryReader.ReadByte();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            probability0Inf = binaryReader.ReadSingle();
-            states = Guerilla.ReadBlockArray<ModelVariantStateBlock>(binaryReader);
-            invalidName_1 = binaryReader.ReadBytes(5);
-            invalidName_2 = binaryReader.ReadBytes(7);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(permutationName);
                 binaryWriter.Write(invalidName_, 0, 1);

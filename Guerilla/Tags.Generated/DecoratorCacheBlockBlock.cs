@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class DecoratorCacheBlockBlock : DecoratorCacheBlockBlockBase
     {
-        public  DecoratorCacheBlockBlock(BinaryReader binaryReader): base(binaryReader)
+        public DecoratorCacheBlockBlock() : base()
         {
-            
-        }
-        public  DecoratorCacheBlockBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 44, Alignment = 4)]
@@ -24,29 +21,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
         internal DecoratorCacheBlockDataBlock[] cacheBlockData;
-        
-        public override int SerializedSize{get { return 44; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  DecoratorCacheBlockBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 44; } }
+        public override int Alignment { get { return 4; } }
+        public DecoratorCacheBlockBlockBase() : base()
         {
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            cacheBlockData = Guerilla.ReadBlockArray<DecoratorCacheBlockDataBlock>(binaryReader);
         }
-        public  DecoratorCacheBlockBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
+            blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorCacheBlockDataBlock>(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            cacheBlockData = Guerilla.ReadBlockArray<DecoratorCacheBlockDataBlock>(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            geometryBlockInfo.ReadPointers(binaryReader, blamPointers);
+            cacheBlockData = ReadBlockArrayData<DecoratorCacheBlockDataBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 geometryBlockInfo.Write(binaryWriter);
                 nextAddress = Guerilla.WriteBlockArray<DecoratorCacheBlockDataBlock>(binaryWriter, cacheBlockData, nextAddress);

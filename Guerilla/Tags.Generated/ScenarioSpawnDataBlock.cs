@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioSpawnDataBlock : ScenarioSpawnDataBlockBase
     {
-        public  ScenarioSpawnDataBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioSpawnDataBlock() : base()
         {
-            
-        }
-        public  ScenarioSpawnDataBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 96, Alignment = 4)]
@@ -29,39 +26,34 @@ namespace Moonfish.Guerilla.Tags
         internal DynamicSpawnZoneOverloadBlock[] dynamicSpawnOverloads;
         internal StaticSpawnZoneBlock[] staticRespawnZones;
         internal StaticSpawnZoneBlock[] staticInitialSpawnZones;
-        
-        public override int SerializedSize{get { return 96; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioSpawnDataBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 96; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioSpawnDataBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             dynamicSpawnLowerHeight = binaryReader.ReadSingle();
             dynamicSpawnUpperHeight = binaryReader.ReadSingle();
             gameObjectResetHeight = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(60);
-            dynamicSpawnOverloads = Guerilla.ReadBlockArray<DynamicSpawnZoneOverloadBlock>(binaryReader);
-            staticRespawnZones = Guerilla.ReadBlockArray<StaticSpawnZoneBlock>(binaryReader);
-            staticInitialSpawnZones = Guerilla.ReadBlockArray<StaticSpawnZoneBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<DynamicSpawnZoneOverloadBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StaticSpawnZoneBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StaticSpawnZoneBlock>(binaryReader));
+            return blamPointers;
         }
-        public  ScenarioSpawnDataBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            dynamicSpawnOverloads = ReadBlockArrayData<DynamicSpawnZoneOverloadBlock>(binaryReader, blamPointers.Dequeue());
+            staticRespawnZones = ReadBlockArrayData<StaticSpawnZoneBlock>(binaryReader, blamPointers.Dequeue());
+            staticInitialSpawnZones = ReadBlockArrayData<StaticSpawnZoneBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            dynamicSpawnLowerHeight = binaryReader.ReadSingle();
-            dynamicSpawnUpperHeight = binaryReader.ReadSingle();
-            gameObjectResetHeight = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(60);
-            dynamicSpawnOverloads = Guerilla.ReadBlockArray<DynamicSpawnZoneOverloadBlock>(binaryReader);
-            staticRespawnZones = Guerilla.ReadBlockArray<StaticSpawnZoneBlock>(binaryReader);
-            staticInitialSpawnZones = Guerilla.ReadBlockArray<StaticSpawnZoneBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(dynamicSpawnLowerHeight);
                 binaryWriter.Write(dynamicSpawnUpperHeight);

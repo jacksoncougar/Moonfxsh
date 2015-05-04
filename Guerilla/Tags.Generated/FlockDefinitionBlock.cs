@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class FlockDefinitionBlock : FlockDefinitionBlockBase
     {
-        public  FlockDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
+        public FlockDefinitionBlock() : base()
         {
-            
-        }
-        public  FlockDefinitionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 132, Alignment = 4)]
@@ -110,21 +107,21 @@ namespace Moonfish.Guerilla.Tags
         internal float randomOffsetScale01;
         internal Moonfish.Model.Range randomOffsetPeriodSeconds;
         internal Moonfish.Tags.StringIdent flockName;
-        
-        public override int SerializedSize{get { return 132; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  FlockDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 132; } }
+        public override int Alignment { get { return 4; } }
+        public FlockDefinitionBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             bsp = binaryReader.ReadShortBlockIndex1();
             invalidName_ = binaryReader.ReadBytes(2);
             boundingVolume = binaryReader.ReadShortBlockIndex1();
             flags = (Flags)binaryReader.ReadInt16();
             ecologyMarginWus = binaryReader.ReadSingle();
-            sources = Guerilla.ReadBlockArray<FlockSourceBlock>(binaryReader);
-            sinks = Guerilla.ReadBlockArray<FlockSinkBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<FlockSourceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<FlockSinkBlock>(binaryReader));
             productionFrequencyBoidsSec = binaryReader.ReadSingle();
             scale = binaryReader.ReadRange();
             creature = binaryReader.ReadTagReference();
@@ -148,47 +145,18 @@ namespace Moonfish.Guerilla.Tags
             randomOffsetScale01 = binaryReader.ReadSingle();
             randomOffsetPeriodSeconds = binaryReader.ReadRange();
             flockName = binaryReader.ReadStringID();
+            return blamPointers;
         }
-        public  FlockDefinitionBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            sources = ReadBlockArrayData<FlockSourceBlock>(binaryReader, blamPointers.Dequeue());
+            sinks = ReadBlockArrayData<FlockSinkBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            bsp = binaryReader.ReadShortBlockIndex1();
-            invalidName_ = binaryReader.ReadBytes(2);
-            boundingVolume = binaryReader.ReadShortBlockIndex1();
-            flags = (Flags)binaryReader.ReadInt16();
-            ecologyMarginWus = binaryReader.ReadSingle();
-            sources = Guerilla.ReadBlockArray<FlockSourceBlock>(binaryReader);
-            sinks = Guerilla.ReadBlockArray<FlockSinkBlock>(binaryReader);
-            productionFrequencyBoidsSec = binaryReader.ReadSingle();
-            scale = binaryReader.ReadRange();
-            creature = binaryReader.ReadTagReference();
-            boidCount = binaryReader.ReadInt32();
-            neighborhoodRadiusWorldUnits = binaryReader.ReadSingle();
-            avoidanceRadiusWorldUnits = binaryReader.ReadSingle();
-            forwardScale01 = binaryReader.ReadSingle();
-            alignmentScale01 = binaryReader.ReadSingle();
-            avoidanceScale01 = binaryReader.ReadSingle();
-            levelingForceScale01 = binaryReader.ReadSingle();
-            sinkScale01 = binaryReader.ReadSingle();
-            perceptionAngleDegrees = binaryReader.ReadSingle();
-            averageThrottle01 = binaryReader.ReadSingle();
-            maximumThrottle01 = binaryReader.ReadSingle();
-            positionScale01 = binaryReader.ReadSingle();
-            positionMinRadiusWus = binaryReader.ReadSingle();
-            positionMaxRadiusWus = binaryReader.ReadSingle();
-            movementWeightThreshold = binaryReader.ReadSingle();
-            dangerRadiusWus = binaryReader.ReadSingle();
-            dangerScale = binaryReader.ReadSingle();
-            randomOffsetScale01 = binaryReader.ReadSingle();
-            randomOffsetPeriodSeconds = binaryReader.ReadRange();
-            flockName = binaryReader.ReadStringID();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(bsp);
                 binaryWriter.Write(invalidName_, 0, 2);

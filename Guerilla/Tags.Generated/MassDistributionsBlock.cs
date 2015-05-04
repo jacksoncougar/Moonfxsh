@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class MassDistributionsBlock : MassDistributionsBlockBase
     {
-        public  MassDistributionsBlock(BinaryReader binaryReader): base(binaryReader)
+        public MassDistributionsBlock() : base()
         {
-            
-        }
-        public  MassDistributionsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 64, Alignment = 16)]
@@ -30,14 +27,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal OpenTK.Vector3 inertiaTensorK;
         internal byte[] invalidName_2;
-        
-        public override int SerializedSize{get { return 64; }}
-        
-        
-        public override int Alignment{get { return 16; }}
-        
-        public  MassDistributionsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 64; } }
+        public override int Alignment { get { return 16; } }
+        public MassDistributionsBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             centerOfMass = binaryReader.ReadVector3();
             invalidName_ = binaryReader.ReadBytes(4);
             inertiaTensorI = binaryReader.ReadVector3();
@@ -46,25 +43,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(4);
             inertiaTensorK = binaryReader.ReadVector3();
             invalidName_2 = binaryReader.ReadBytes(4);
+            return blamPointers;
         }
-        public  MassDistributionsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            centerOfMass = binaryReader.ReadVector3();
-            invalidName_ = binaryReader.ReadBytes(4);
-            inertiaTensorI = binaryReader.ReadVector3();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            inertiaTensorJ = binaryReader.ReadVector3();
-            invalidName_1 = binaryReader.ReadBytes(4);
-            inertiaTensorK = binaryReader.ReadVector3();
-            invalidName_2 = binaryReader.ReadBytes(4);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(centerOfMass);
                 binaryWriter.Write(invalidName_, 0, 4);

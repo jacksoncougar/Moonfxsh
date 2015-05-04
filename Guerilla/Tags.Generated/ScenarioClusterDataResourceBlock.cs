@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("clu*")]
     public partial class ScenarioClusterDataResourceBlock : ScenarioClusterDataResourceBlockBase
     {
-        public  ScenarioClusterDataResourceBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioClusterDataResourceBlock() : base()
         {
-            
-        }
-        public  ScenarioClusterDataResourceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -36,35 +33,34 @@ namespace Moonfish.Guerilla.Tags
         internal StructureBspSoundEnvironmentPaletteBlock[] soundEnvironmentPalette;
         internal StructureBspWeatherPaletteBlock[] weatherPalette;
         internal ScenarioAtmosphericFogPalette[] atmosphericFogPalette;
-        
-        public override int SerializedSize{get { return 40; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioClusterDataResourceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 40; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioClusterDataResourceBlockBase() : base()
         {
-            clusterData = Guerilla.ReadBlockArray<ScenarioClusterDataBlock>(binaryReader);
-            backgroundSoundPalette = Guerilla.ReadBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryReader);
-            soundEnvironmentPalette = Guerilla.ReadBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryReader);
-            weatherPalette = Guerilla.ReadBlockArray<StructureBspWeatherPaletteBlock>(binaryReader);
-            atmosphericFogPalette = Guerilla.ReadBlockArray<ScenarioAtmosphericFogPalette>(binaryReader);
         }
-        public  ScenarioClusterDataResourceBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioClusterDataBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspBackgroundSoundPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspSoundEnvironmentPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspWeatherPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioAtmosphericFogPalette>(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            clusterData = Guerilla.ReadBlockArray<ScenarioClusterDataBlock>(binaryReader);
-            backgroundSoundPalette = Guerilla.ReadBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryReader);
-            soundEnvironmentPalette = Guerilla.ReadBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryReader);
-            weatherPalette = Guerilla.ReadBlockArray<StructureBspWeatherPaletteBlock>(binaryReader);
-            atmosphericFogPalette = Guerilla.ReadBlockArray<ScenarioAtmosphericFogPalette>(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            clusterData = ReadBlockArrayData<ScenarioClusterDataBlock>(binaryReader, blamPointers.Dequeue());
+            backgroundSoundPalette = ReadBlockArrayData<StructureBspBackgroundSoundPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            soundEnvironmentPalette = ReadBlockArrayData<StructureBspSoundEnvironmentPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            weatherPalette = ReadBlockArrayData<StructureBspWeatherPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            atmosphericFogPalette = ReadBlockArrayData<ScenarioAtmosphericFogPalette>(binaryReader, blamPointers.Dequeue());
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<ScenarioClusterDataBlock>(binaryWriter, clusterData, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryWriter, backgroundSoundPalette, nextAddress);

@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ModelVariantRegionBlock : ModelVariantRegionBlockBase
     {
-        public  ModelVariantRegionBlock(BinaryReader binaryReader): base(binaryReader)
+        public ModelVariantRegionBlock() : base()
         {
-            
-        }
-        public  ModelVariantRegionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -32,39 +29,32 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal SortOrderNegativeValuesMeanCloserToTheCamera sortOrder;
         internal byte[] invalidName_1;
-        
-        public override int SerializedSize{get { return 20; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ModelVariantRegionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 20; } }
+        public override int Alignment { get { return 4; } }
+        public ModelVariantRegionBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             regionNameMustMatchRegionNameInRenderModel = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(1);
             invalidName_0 = binaryReader.ReadBytes(1);
             parentVariant = binaryReader.ReadShortBlockIndex1();
-            permutations = Guerilla.ReadBlockArray<ModelVariantPermutationBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ModelVariantPermutationBlock>(binaryReader));
             sortOrder = (SortOrderNegativeValuesMeanCloserToTheCamera)binaryReader.ReadInt16();
             invalidName_1 = binaryReader.ReadBytes(2);
+            return blamPointers;
         }
-        public  ModelVariantRegionBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            permutations = ReadBlockArrayData<ModelVariantPermutationBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            regionNameMustMatchRegionNameInRenderModel = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(1);
-            invalidName_0 = binaryReader.ReadBytes(1);
-            parentVariant = binaryReader.ReadShortBlockIndex1();
-            permutations = Guerilla.ReadBlockArray<ModelVariantPermutationBlock>(binaryReader);
-            sortOrder = (SortOrderNegativeValuesMeanCloserToTheCamera)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(regionNameMustMatchRegionNameInRenderModel);
                 binaryWriter.Write(invalidName_, 0, 1);

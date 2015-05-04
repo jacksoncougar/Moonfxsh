@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalGeometryCompressionInfoBlock : GlobalGeometryCompressionInfoBlockBase
     {
-        public  GlobalGeometryCompressionInfoBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalGeometryCompressionInfoBlock() : base()
         {
-            
-        }
-        public  GlobalGeometryCompressionInfoBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 56, Alignment = 4)]
@@ -29,14 +26,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range texcoordBoundsY;
         internal Moonfish.Model.Range secondaryTexcoordBoundsX;
         internal Moonfish.Model.Range secondaryTexcoordBoundsY;
-        
-        public override int SerializedSize{get { return 56; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GlobalGeometryCompressionInfoBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 56; } }
+        public override int Alignment { get { return 4; } }
+        public GlobalGeometryCompressionInfoBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             positionBoundsX = binaryReader.ReadRange();
             positionBoundsY = binaryReader.ReadRange();
             positionBoundsZ = binaryReader.ReadRange();
@@ -44,24 +41,16 @@ namespace Moonfish.Guerilla.Tags
             texcoordBoundsY = binaryReader.ReadRange();
             secondaryTexcoordBoundsX = binaryReader.ReadRange();
             secondaryTexcoordBoundsY = binaryReader.ReadRange();
+            return blamPointers;
         }
-        public  GlobalGeometryCompressionInfoBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            positionBoundsX = binaryReader.ReadRange();
-            positionBoundsY = binaryReader.ReadRange();
-            positionBoundsZ = binaryReader.ReadRange();
-            texcoordBoundsX = binaryReader.ReadRange();
-            texcoordBoundsY = binaryReader.ReadRange();
-            secondaryTexcoordBoundsX = binaryReader.ReadRange();
-            secondaryTexcoordBoundsY = binaryReader.ReadRange();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(positionBoundsX);
                 binaryWriter.Write(positionBoundsY);

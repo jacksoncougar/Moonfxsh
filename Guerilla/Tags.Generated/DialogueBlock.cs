@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("udlg")]
     public partial class DialogueBlock : DialogueBlockBase
     {
-        public  DialogueBlock(BinaryReader binaryReader): base(binaryReader)
+        public DialogueBlock() : base()
         {
-            
-        }
-        public  DialogueBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -39,33 +36,29 @@ namespace Moonfish.Guerilla.Tags
         /// 3-letter missionDialogueDesignator name
         /// </summary>
         internal Moonfish.Tags.StringIdent missionDialogueDesignator;
-        
-        public override int SerializedSize{get { return 24; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  DialogueBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 24; } }
+        public override int Alignment { get { return 4; } }
+        public DialogueBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             globalDialogueInfo = binaryReader.ReadTagReference();
             flags = (Flags)binaryReader.ReadInt32();
-            vocalizations = Guerilla.ReadBlockArray<SoundReferencesBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundReferencesBlock>(binaryReader));
             missionDialogueDesignator = binaryReader.ReadStringID();
+            return blamPointers;
         }
-        public  DialogueBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            vocalizations = ReadBlockArrayData<SoundReferencesBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            globalDialogueInfo = binaryReader.ReadTagReference();
-            flags = (Flags)binaryReader.ReadInt32();
-            vocalizations = Guerilla.ReadBlockArray<SoundReferencesBlock>(binaryReader);
-            missionDialogueDesignator = binaryReader.ReadStringID();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(globalDialogueInfo);
                 binaryWriter.Write((Int32)flags);

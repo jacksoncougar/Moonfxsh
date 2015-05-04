@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class InterfaceTagReferences : InterfaceTagReferencesBase
     {
-        public  InterfaceTagReferences(BinaryReader binaryReader): base(binaryReader)
+        public InterfaceTagReferences() : base()
         {
-            
-        }
-        public  InterfaceTagReferences(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 152, Alignment = 4)]
@@ -60,14 +57,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference singleplayerUiGlobals;
         [TagReference("wgtz")]
         internal Moonfish.Tags.TagReference multiplayerUiGlobals;
-        
-        public override int SerializedSize{get { return 152; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  InterfaceTagReferencesBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 152; } }
+        public override int Alignment { get { return 4; } }
+        public InterfaceTagReferencesBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             obsolete1 = binaryReader.ReadTagReference();
             obsolete2 = binaryReader.ReadTagReference();
             screenColorTable = binaryReader.ReadTagReference();
@@ -87,36 +84,16 @@ namespace Moonfish.Guerilla.Tags
             mainmenuUiGlobals = binaryReader.ReadTagReference();
             singleplayerUiGlobals = binaryReader.ReadTagReference();
             multiplayerUiGlobals = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  InterfaceTagReferencesBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            obsolete1 = binaryReader.ReadTagReference();
-            obsolete2 = binaryReader.ReadTagReference();
-            screenColorTable = binaryReader.ReadTagReference();
-            hudColorTable = binaryReader.ReadTagReference();
-            editorColorTable = binaryReader.ReadTagReference();
-            dialogColorTable = binaryReader.ReadTagReference();
-            hudGlobals = binaryReader.ReadTagReference();
-            motionSensorSweepBitmap = binaryReader.ReadTagReference();
-            motionSensorSweepBitmapMask = binaryReader.ReadTagReference();
-            multiplayerHudBitmap = binaryReader.ReadTagReference();
-            invalidName_ = binaryReader.ReadTagReference();
-            hudDigitsDefinition = binaryReader.ReadTagReference();
-            motionSensorBlipBitmap = binaryReader.ReadTagReference();
-            interfaceGooMap1 = binaryReader.ReadTagReference();
-            interfaceGooMap2 = binaryReader.ReadTagReference();
-            interfaceGooMap3 = binaryReader.ReadTagReference();
-            mainmenuUiGlobals = binaryReader.ReadTagReference();
-            singleplayerUiGlobals = binaryReader.ReadTagReference();
-            multiplayerUiGlobals = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(obsolete1);
                 binaryWriter.Write(obsolete2);

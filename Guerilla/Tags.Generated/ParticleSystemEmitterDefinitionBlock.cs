@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ParticleSystemEmitterDefinitionBlock : ParticleSystemEmitterDefinitionBlockBase
     {
-        public  ParticleSystemEmitterDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
+        public ParticleSystemEmitterDefinitionBlock() : base()
         {
-            
-        }
-        public  ParticleSystemEmitterDefinitionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 184, Alignment = 4)]
@@ -40,53 +37,56 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal OpenTK.Vector2 relativeDirection;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 184; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ParticleSystemEmitterDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 184; } }
+        public override int Alignment { get { return 4; } }
+        public ParticleSystemEmitterDefinitionBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             particlePhysics = binaryReader.ReadTagReference();
-            particleEmissionRate = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            particleLifespan = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            particleVelocity = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            particleAngularVelocity = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            particleSize = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            particleTint = new ParticlePropertyColorStructNewBlock(binaryReader);
-            particleAlpha = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            particleEmissionRate = new ParticlePropertyScalarStructNewBlock();
+            blamPointers.Concat(particleEmissionRate.ReadFields(binaryReader));
+            particleLifespan = new ParticlePropertyScalarStructNewBlock();
+            blamPointers.Concat(particleLifespan.ReadFields(binaryReader));
+            particleVelocity = new ParticlePropertyScalarStructNewBlock();
+            blamPointers.Concat(particleVelocity.ReadFields(binaryReader));
+            particleAngularVelocity = new ParticlePropertyScalarStructNewBlock();
+            blamPointers.Concat(particleAngularVelocity.ReadFields(binaryReader));
+            particleSize = new ParticlePropertyScalarStructNewBlock();
+            blamPointers.Concat(particleSize.ReadFields(binaryReader));
+            particleTint = new ParticlePropertyColorStructNewBlock();
+            blamPointers.Concat(particleTint.ReadFields(binaryReader));
+            particleAlpha = new ParticlePropertyScalarStructNewBlock();
+            blamPointers.Concat(particleAlpha.ReadFields(binaryReader));
             emissionShape = (EmissionShape)binaryReader.ReadInt32();
-            emissionRadius = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            emissionAngle = new ParticlePropertyScalarStructNewBlock(binaryReader);
+            emissionRadius = new ParticlePropertyScalarStructNewBlock();
+            blamPointers.Concat(emissionRadius.ReadFields(binaryReader));
+            emissionAngle = new ParticlePropertyScalarStructNewBlock();
+            blamPointers.Concat(emissionAngle.ReadFields(binaryReader));
             translationalOffset = binaryReader.ReadVector3();
             relativeDirection = binaryReader.ReadVector2();
             invalidName_ = binaryReader.ReadBytes(8);
+            return blamPointers;
         }
-        public  ParticleSystemEmitterDefinitionBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            particleEmissionRate.ReadPointers(binaryReader, blamPointers);
+            particleLifespan.ReadPointers(binaryReader, blamPointers);
+            particleVelocity.ReadPointers(binaryReader, blamPointers);
+            particleAngularVelocity.ReadPointers(binaryReader, blamPointers);
+            particleSize.ReadPointers(binaryReader, blamPointers);
+            particleTint.ReadPointers(binaryReader, blamPointers);
+            particleAlpha.ReadPointers(binaryReader, blamPointers);
+            emissionRadius.ReadPointers(binaryReader, blamPointers);
+            emissionAngle.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            particlePhysics = binaryReader.ReadTagReference();
-            particleEmissionRate = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            particleLifespan = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            particleVelocity = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            particleAngularVelocity = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            particleSize = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            particleTint = new ParticlePropertyColorStructNewBlock(binaryReader);
-            particleAlpha = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            emissionShape = (EmissionShape)binaryReader.ReadInt32();
-            emissionRadius = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            emissionAngle = new ParticlePropertyScalarStructNewBlock(binaryReader);
-            translationalOffset = binaryReader.ReadVector3();
-            relativeDirection = binaryReader.ReadVector2();
-            invalidName_ = binaryReader.ReadBytes(8);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(particlePhysics);
                 particleEmissionRate.Write(binaryWriter);

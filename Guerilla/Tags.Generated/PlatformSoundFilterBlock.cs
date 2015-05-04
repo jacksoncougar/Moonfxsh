@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PlatformSoundFilterBlock : PlatformSoundFilterBlockBase
     {
-        public  PlatformSoundFilterBlock(BinaryReader binaryReader): base(binaryReader)
+        public PlatformSoundFilterBlock() : base()
         {
-            
-        }
-        public  PlatformSoundFilterBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 72, Alignment = 4)]
@@ -28,37 +25,38 @@ namespace Moonfish.Guerilla.Tags
         internal SoundPlaybackParameterDefinitionBlock leftFilterGain;
         internal SoundPlaybackParameterDefinitionBlock rightFilterFrequency;
         internal SoundPlaybackParameterDefinitionBlock rightFilterGain;
-        
-        public override int SerializedSize{get { return 72; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PlatformSoundFilterBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 72; } }
+        public override int Alignment { get { return 4; } }
+        public PlatformSoundFilterBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             filterType = (FilterType)binaryReader.ReadInt32();
             filterWidth07 = binaryReader.ReadInt32();
-            leftFilterFrequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            leftFilterGain = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            rightFilterFrequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            rightFilterGain = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            leftFilterFrequency = new SoundPlaybackParameterDefinitionBlock();
+            blamPointers.Concat(leftFilterFrequency.ReadFields(binaryReader));
+            leftFilterGain = new SoundPlaybackParameterDefinitionBlock();
+            blamPointers.Concat(leftFilterGain.ReadFields(binaryReader));
+            rightFilterFrequency = new SoundPlaybackParameterDefinitionBlock();
+            blamPointers.Concat(rightFilterFrequency.ReadFields(binaryReader));
+            rightFilterGain = new SoundPlaybackParameterDefinitionBlock();
+            blamPointers.Concat(rightFilterGain.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  PlatformSoundFilterBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            leftFilterFrequency.ReadPointers(binaryReader, blamPointers);
+            leftFilterGain.ReadPointers(binaryReader, blamPointers);
+            rightFilterFrequency.ReadPointers(binaryReader, blamPointers);
+            rightFilterGain.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            filterType = (FilterType)binaryReader.ReadInt32();
-            filterWidth07 = binaryReader.ReadInt32();
-            leftFilterFrequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            leftFilterGain = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            rightFilterFrequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            rightFilterGain = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)filterType);
                 binaryWriter.Write(filterWidth07);

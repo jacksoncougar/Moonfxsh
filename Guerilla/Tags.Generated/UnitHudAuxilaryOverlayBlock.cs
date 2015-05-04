@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class UnitHudAuxilaryOverlayBlock : UnitHudAuxilaryOverlayBlockBase
     {
-        public  UnitHudAuxilaryOverlayBlock(BinaryReader binaryReader): base(binaryReader)
+        public UnitHudAuxilaryOverlayBlock() : base()
         {
-            
-        }
-        public  UnitHudAuxilaryOverlayBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 120, Alignment = 4)]
@@ -52,14 +49,14 @@ namespace Moonfish.Guerilla.Tags
         internal Type type;
         internal Flags flags;
         internal byte[] invalidName_4;
-        
-        public override int SerializedSize{get { return 120; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  UnitHudAuxilaryOverlayBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 120; } }
+        public override int Alignment { get { return 4; } }
+        public UnitHudAuxilaryOverlayBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             anchorOffset = binaryReader.ReadPoint();
             widthScale = binaryReader.ReadSingle();
             heightScale = binaryReader.ReadSingle();
@@ -78,45 +75,22 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(4);
             sequenceIndex = binaryReader.ReadInt16();
             invalidName_2 = binaryReader.ReadBytes(2);
-            multitexOverlay = Guerilla.ReadBlockArray<GlobalHudMultitextureOverlayDefinition>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalHudMultitextureOverlayDefinition>(binaryReader));
             invalidName_3 = binaryReader.ReadBytes(4);
             type = (Type)binaryReader.ReadInt16();
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_4 = binaryReader.ReadBytes(24);
+            return blamPointers;
         }
-        public  UnitHudAuxilaryOverlayBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            multitexOverlay = ReadBlockArrayData<GlobalHudMultitextureOverlayDefinition>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            anchorOffset = binaryReader.ReadPoint();
-            widthScale = binaryReader.ReadSingle();
-            heightScale = binaryReader.ReadSingle();
-            scalingFlags = (ScalingFlags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(20);
-            interfaceBitmap = binaryReader.ReadTagReference();
-            defaultColor = binaryReader.ReadColourA1R1G1B1();
-            flashingColor = binaryReader.ReadColourA1R1G1B1();
-            flashPeriod = binaryReader.ReadSingle();
-            flashDelay = binaryReader.ReadSingle();
-            numberOfFlashes = binaryReader.ReadInt16();
-            flashFlags = (FlashFlags)binaryReader.ReadInt16();
-            flashLength = binaryReader.ReadSingle();
-            disabledColor = binaryReader.ReadColourA1R1G1B1();
-            invalidName_1 = binaryReader.ReadBytes(4);
-            sequenceIndex = binaryReader.ReadInt16();
-            invalidName_2 = binaryReader.ReadBytes(2);
-            multitexOverlay = Guerilla.ReadBlockArray<GlobalHudMultitextureOverlayDefinition>(binaryReader);
-            invalidName_3 = binaryReader.ReadBytes(4);
-            type = (Type)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_4 = binaryReader.ReadBytes(24);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(anchorOffset);
                 binaryWriter.Write(widthScale);

@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("wphi")]
     public partial class WeaponHudInterfaceBlock : WeaponHudInterfaceBlockBase
     {
-        public  WeaponHudInterfaceBlock(BinaryReader binaryReader): base(binaryReader)
+        public WeaponHudInterfaceBlock() : base()
         {
-            
-        }
-        public  WeaponHudInterfaceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 344, Alignment = 4)]
@@ -66,14 +63,14 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags0;
         internal short textIndex;
         internal byte[] invalidName_5;
-        
-        public override int SerializedSize{get { return 344; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  WeaponHudInterfaceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 344; } }
+        public override int Alignment { get { return 4; } }
+        public WeaponHudInterfaceBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             childHud = binaryReader.ReadTagReference();
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -85,14 +82,14 @@ namespace Moonfish.Guerilla.Tags
             anchor = (Anchor)binaryReader.ReadInt16();
             invalidName_1 = binaryReader.ReadBytes(2);
             invalidName_2 = binaryReader.ReadBytes(32);
-            staticElements = Guerilla.ReadBlockArray<WeaponHudStaticBlock>(binaryReader);
-            meterElements = Guerilla.ReadBlockArray<WeaponHudMeterBlock>(binaryReader);
-            numberElements = Guerilla.ReadBlockArray<WeaponHudNumberBlock>(binaryReader);
-            crosshairs = Guerilla.ReadBlockArray<WeaponHudCrosshairBlock>(binaryReader);
-            overlayElements = Guerilla.ReadBlockArray<WeaponHudOverlaysBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<WeaponHudStaticBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<WeaponHudMeterBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<WeaponHudNumberBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<WeaponHudCrosshairBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<WeaponHudOverlaysBlock>(binaryReader));
             invalidName_3 = binaryReader.ReadBytes(4);
-            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            screenEffect = Guerilla.ReadBlockArray<GlobalHudScreenEffectDefinition>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GNullBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalHudScreenEffectDefinition>(binaryReader));
             invalidName_4 = binaryReader.ReadBytes(132);
             sequenceIndex = binaryReader.ReadInt16();
             widthOffset = binaryReader.ReadInt16();
@@ -102,45 +99,23 @@ namespace Moonfish.Guerilla.Tags
             flags0 = (Flags)binaryReader.ReadInt16();
             textIndex = binaryReader.ReadInt16();
             invalidName_5 = binaryReader.ReadBytes(48);
+            return blamPointers;
         }
-        public  WeaponHudInterfaceBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            staticElements = ReadBlockArrayData<WeaponHudStaticBlock>(binaryReader, blamPointers.Dequeue());
+            meterElements = ReadBlockArrayData<WeaponHudMeterBlock>(binaryReader, blamPointers.Dequeue());
+            numberElements = ReadBlockArrayData<WeaponHudNumberBlock>(binaryReader, blamPointers.Dequeue());
+            crosshairs = ReadBlockArrayData<WeaponHudCrosshairBlock>(binaryReader, blamPointers.Dequeue());
+            overlayElements = ReadBlockArrayData<WeaponHudOverlaysBlock>(binaryReader, blamPointers.Dequeue());
+            gNullBlock = ReadBlockArrayData<GNullBlock>(binaryReader, blamPointers.Dequeue());
+            screenEffect = ReadBlockArrayData<GlobalHudScreenEffectDefinition>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            childHud = binaryReader.ReadTagReference();
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            inventoryAmmoCutoff = binaryReader.ReadInt16();
-            loadedAmmoCutoff = binaryReader.ReadInt16();
-            heatCutoff = binaryReader.ReadInt16();
-            ageCutoff = binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(32);
-            anchor = (Anchor)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            invalidName_2 = binaryReader.ReadBytes(32);
-            staticElements = Guerilla.ReadBlockArray<WeaponHudStaticBlock>(binaryReader);
-            meterElements = Guerilla.ReadBlockArray<WeaponHudMeterBlock>(binaryReader);
-            numberElements = Guerilla.ReadBlockArray<WeaponHudNumberBlock>(binaryReader);
-            crosshairs = Guerilla.ReadBlockArray<WeaponHudCrosshairBlock>(binaryReader);
-            overlayElements = Guerilla.ReadBlockArray<WeaponHudOverlaysBlock>(binaryReader);
-            invalidName_3 = binaryReader.ReadBytes(4);
-            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            screenEffect = Guerilla.ReadBlockArray<GlobalHudScreenEffectDefinition>(binaryReader);
-            invalidName_4 = binaryReader.ReadBytes(132);
-            sequenceIndex = binaryReader.ReadInt16();
-            widthOffset = binaryReader.ReadInt16();
-            offsetFromReferenceCorner = binaryReader.ReadPoint();
-            overrideIconColor = binaryReader.ReadColourA1R1G1B1();
-            frameRate030 = binaryReader.ReadByte();
-            flags0 = (Flags)binaryReader.ReadInt16();
-            textIndex = binaryReader.ReadInt16();
-            invalidName_5 = binaryReader.ReadBytes(48);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(childHud);
                 binaryWriter.Write((Int16)flags);

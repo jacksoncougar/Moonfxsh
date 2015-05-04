@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SkyLightBlock : SkyLightBlockBase
     {
-        public  SkyLightBlock(BinaryReader binaryReader): base(binaryReader)
+        public SkyLightBlock() : base()
         {
-            
-        }
-        public  SkyLightBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 52, Alignment = 4)]
@@ -29,37 +26,33 @@ namespace Moonfish.Guerilla.Tags
         internal SkyLightFogBlock[] fog;
         internal SkyLightFogBlock[] fogOpposite;
         internal SkyRadiosityLightBlock[] radiosity;
-        
-        public override int SerializedSize{get { return 52; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  SkyLightBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 52; } }
+        public override int Alignment { get { return 4; } }
+        public SkyLightBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             directionVector = binaryReader.ReadVector3();
             direction = binaryReader.ReadVector2();
             lensFlare = binaryReader.ReadTagReference();
-            fog = Guerilla.ReadBlockArray<SkyLightFogBlock>(binaryReader);
-            fogOpposite = Guerilla.ReadBlockArray<SkyLightFogBlock>(binaryReader);
-            radiosity = Guerilla.ReadBlockArray<SkyRadiosityLightBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<SkyLightFogBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SkyLightFogBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SkyRadiosityLightBlock>(binaryReader));
+            return blamPointers;
         }
-        public  SkyLightBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            fog = ReadBlockArrayData<SkyLightFogBlock>(binaryReader, blamPointers.Dequeue());
+            fogOpposite = ReadBlockArrayData<SkyLightFogBlock>(binaryReader, blamPointers.Dequeue());
+            radiosity = ReadBlockArrayData<SkyRadiosityLightBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            directionVector = binaryReader.ReadVector3();
-            direction = binaryReader.ReadVector2();
-            lensFlare = binaryReader.ReadTagReference();
-            fog = Guerilla.ReadBlockArray<SkyLightFogBlock>(binaryReader);
-            fogOpposite = Guerilla.ReadBlockArray<SkyLightFogBlock>(binaryReader);
-            radiosity = Guerilla.ReadBlockArray<SkyRadiosityLightBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(directionVector);
                 binaryWriter.Write(direction);

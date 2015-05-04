@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class RigidBodiesBlock : RigidBodiesBlockBase
     {
-        public  RigidBodiesBlock(BinaryReader binaryReader): base(binaryReader)
+        public RigidBodiesBlock() : base()
         {
-            
-        }
-        public  RigidBodiesBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 144, Alignment = 16)]
@@ -61,14 +58,14 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float boundingSpherePad;
         internal byte[] invalidName_4;
-        
-        public override int SerializedSize{get { return 144; }}
-        
-        
-        public override int Alignment{get { return 16; }}
-        
-        public  RigidBodiesBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 144; } }
+        public override int Alignment { get { return 16; } }
+        public RigidBodiesBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             node = binaryReader.ReadShortBlockIndex1();
             region = binaryReader.ReadShortBlockIndex1();
             permutattion = binaryReader.ReadShortBlockIndex2();
@@ -96,44 +93,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_3 = binaryReader.ReadBytes(4);
             boundingSpherePad = binaryReader.ReadSingle();
             invalidName_4 = binaryReader.ReadBytes(12);
+            return blamPointers;
         }
-        public  RigidBodiesBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            node = binaryReader.ReadShortBlockIndex1();
-            region = binaryReader.ReadShortBlockIndex1();
-            permutattion = binaryReader.ReadShortBlockIndex2();
-            invalidName_ = binaryReader.ReadBytes(2);
-            boudingSphereOffset = binaryReader.ReadVector3();
-            boundingSphereRadius = binaryReader.ReadSingle();
-            flags = (Flags)binaryReader.ReadInt16();
-            motionType = (MotionType)binaryReader.ReadInt16();
-            noPhantomPowerAlt = binaryReader.ReadShortBlockIndex1();
-            size = (Size)binaryReader.ReadInt16();
-            inertiaTensorScale = binaryReader.ReadSingle();
-            linearDamping = binaryReader.ReadSingle();
-            angularDamping = binaryReader.ReadSingle();
-            centerOffMassOffset = binaryReader.ReadVector3();
-            shapeType = (ShapeType)binaryReader.ReadInt16();
-            shape = binaryReader.ReadShortBlockIndex2();
-            massKg = binaryReader.ReadSingle();
-            centerOfMass = binaryReader.ReadVector3();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            intertiaTensorX = binaryReader.ReadVector3();
-            invalidName_1 = binaryReader.ReadBytes(4);
-            intertiaTensorY = binaryReader.ReadVector3();
-            invalidName_2 = binaryReader.ReadBytes(4);
-            intertiaTensorZ = binaryReader.ReadVector3();
-            invalidName_3 = binaryReader.ReadBytes(4);
-            boundingSpherePad = binaryReader.ReadSingle();
-            invalidName_4 = binaryReader.ReadBytes(12);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(node);
                 binaryWriter.Write(region);

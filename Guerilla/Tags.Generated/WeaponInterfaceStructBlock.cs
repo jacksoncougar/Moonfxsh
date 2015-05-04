@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class WeaponInterfaceStructBlock : WeaponInterfaceStructBlockBase
     {
-        public  WeaponInterfaceStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public WeaponInterfaceStructBlock() : base()
         {
-            
-        }
-        public  WeaponInterfaceStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 32, Alignment = 4)]
@@ -26,31 +23,30 @@ namespace Moonfish.Guerilla.Tags
         internal WeaponFirstPersonInterfaceBlock[] firstPerson;
         [TagReference("nhdt")]
         internal Moonfish.Tags.TagReference newHudInterface;
-        
-        public override int SerializedSize{get { return 32; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  WeaponInterfaceStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 32; } }
+        public override int Alignment { get { return 4; } }
+        public WeaponInterfaceStructBlockBase() : base()
         {
-            sharedInterface = new WeaponSharedInterfaceStructBlock(binaryReader);
-            firstPerson = Guerilla.ReadBlockArray<WeaponFirstPersonInterfaceBlock>(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            sharedInterface = new WeaponSharedInterfaceStructBlock();
+            blamPointers.Concat(sharedInterface.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<WeaponFirstPersonInterfaceBlock>(binaryReader));
             newHudInterface = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  WeaponInterfaceStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            sharedInterface.ReadPointers(binaryReader, blamPointers);
+            firstPerson = ReadBlockArrayData<WeaponFirstPersonInterfaceBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            sharedInterface = new WeaponSharedInterfaceStructBlock(binaryReader);
-            firstPerson = Guerilla.ReadBlockArray<WeaponFirstPersonInterfaceBlock>(binaryReader);
-            newHudInterface = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 sharedInterface.Write(binaryWriter);
                 nextAddress = Guerilla.WriteBlockArray<WeaponFirstPersonInterfaceBlock>(binaryWriter, firstPerson, nextAddress);

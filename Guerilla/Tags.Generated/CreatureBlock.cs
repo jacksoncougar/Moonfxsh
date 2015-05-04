@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("crea")]
     public partial class CreatureBlock : CreatureBlockBase
     {
-        public  CreatureBlock(BinaryReader binaryReader): base(binaryReader)
+        public CreatureBlock() : base()
         {
-            
-        }
-        public  CreatureBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 196, Alignment = 4)]
@@ -50,14 +47,14 @@ namespace Moonfish.Guerilla.Tags
         /// if non-zero, the creature will destroy itself upon death after this much time
         /// </summary>
         internal Moonfish.Model.Range destroyAfterDeathTimeSeconds;
-        
-        public override int SerializedSize{get { return 196; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  CreatureBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 384; } }
+        public override int Alignment { get { return 4; } }
+        public CreatureBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             defaultTeam = (DefaultTeam)binaryReader.ReadInt16();
             motionSensorBlipSize = (MotionSensorBlipSize)binaryReader.ReadInt16();
@@ -65,32 +62,22 @@ namespace Moonfish.Guerilla.Tags
             turningAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
             casualTurningModifier01 = binaryReader.ReadSingle();
             autoaimWidthWorldUnits = binaryReader.ReadSingle();
-            physics = new CharacterPhysicsStructBlock(binaryReader);
+            physics = new CharacterPhysicsStructBlock();
+            blamPointers.Concat(physics.ReadFields(binaryReader));
             impactDamage = binaryReader.ReadTagReference();
             impactShieldDamage = binaryReader.ReadTagReference();
             destroyAfterDeathTimeSeconds = binaryReader.ReadRange();
+            return blamPointers;
         }
-        public  CreatureBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            physics.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            defaultTeam = (DefaultTeam)binaryReader.ReadInt16();
-            motionSensorBlipSize = (MotionSensorBlipSize)binaryReader.ReadInt16();
-            turningVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
-            turningAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
-            casualTurningModifier01 = binaryReader.ReadSingle();
-            autoaimWidthWorldUnits = binaryReader.ReadSingle();
-            physics = new CharacterPhysicsStructBlock(binaryReader);
-            impactDamage = binaryReader.ReadTagReference();
-            impactShieldDamage = binaryReader.ReadTagReference();
-            destroyAfterDeathTimeSeconds = binaryReader.ReadRange();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write((Int16)defaultTeam);

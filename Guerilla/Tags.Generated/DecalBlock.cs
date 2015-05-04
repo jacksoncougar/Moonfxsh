@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("deca")]
     public partial class DecalBlock : DecalBlockBase
     {
-        public  DecalBlock(BinaryReader binaryReader): base(binaryReader)
+        public DecalBlock() : base()
         {
-            
-        }
-        public  DecalBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 172, Alignment = 4)]
@@ -45,8 +42,8 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal Moonfish.Model.Range radiusWorldUnits;
         internal float radiusOverlapRejectionMuliplier;
-        internal Moonfish.Tags.ColourR8G8B8 ColourLowerBounds;
-        internal Moonfish.Tags.ColourR8G8B8 ColourUpperBounds;
+        internal Moonfish.Tags.ColourR8G8B8 colorLowerBounds;
+        internal Moonfish.Tags.ColourR8G8B8 colorUpperBounds;
         internal Moonfish.Model.Range lifetimeSeconds;
         internal Moonfish.Model.Range decayTimeSeconds;
         internal byte[] invalidName_;
@@ -60,14 +57,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_5;
         internal float maximumSpriteExtentPixels;
         internal byte[] invalidName_6;
-        
-        public override int SerializedSize{get { return 172; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  DecalBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 172; } }
+        public override int Alignment { get { return 4; } }
+        public DecalBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             type = (TypeControlsHowTheDecalWrapsOntoSurfaceGeometry)binaryReader.ReadInt16();
             layer = (Layer)binaryReader.ReadInt16();
@@ -75,8 +72,8 @@ namespace Moonfish.Guerilla.Tags
             nextDecalInChain = binaryReader.ReadTagReference();
             radiusWorldUnits = binaryReader.ReadRange();
             radiusOverlapRejectionMuliplier = binaryReader.ReadSingle();
-            ColourLowerBounds = binaryReader.ReadColorR8G8B8();
-            ColourUpperBounds = binaryReader.ReadColorR8G8B8();
+            colorLowerBounds = binaryReader.ReadColorR8G8B8();
+            colorUpperBounds = binaryReader.ReadColorR8G8B8();
             lifetimeSeconds = binaryReader.ReadRange();
             decayTimeSeconds = binaryReader.ReadRange();
             invalidName_ = binaryReader.ReadBytes(40);
@@ -89,38 +86,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_5 = binaryReader.ReadBytes(20);
             maximumSpriteExtentPixels = binaryReader.ReadSingle();
             invalidName_6 = binaryReader.ReadBytes(4);
+            return blamPointers;
         }
-        public  DecalBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            type = (TypeControlsHowTheDecalWrapsOntoSurfaceGeometry)binaryReader.ReadInt16();
-            layer = (Layer)binaryReader.ReadInt16();
-            maxOverlappingCount = binaryReader.ReadInt16();
-            nextDecalInChain = binaryReader.ReadTagReference();
-            radiusWorldUnits = binaryReader.ReadRange();
-            radiusOverlapRejectionMuliplier = binaryReader.ReadSingle();
-            ColourLowerBounds = binaryReader.ReadColorR8G8B8();
-            ColourUpperBounds = binaryReader.ReadColorR8G8B8();
-            lifetimeSeconds = binaryReader.ReadRange();
-            decayTimeSeconds = binaryReader.ReadRange();
-            invalidName_ = binaryReader.ReadBytes(40);
-            invalidName_0 = binaryReader.ReadBytes(2);
-            invalidName_1 = binaryReader.ReadBytes(2);
-            invalidName_2 = binaryReader.ReadBytes(2);
-            invalidName_3 = binaryReader.ReadBytes(2);
-            invalidName_4 = binaryReader.ReadBytes(20);
-            bitmap = binaryReader.ReadTagReference();
-            invalidName_5 = binaryReader.ReadBytes(20);
-            maximumSpriteExtentPixels = binaryReader.ReadSingle();
-            invalidName_6 = binaryReader.ReadBytes(4);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write((Int16)type);
@@ -129,8 +104,8 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(nextDecalInChain);
                 binaryWriter.Write(radiusWorldUnits);
                 binaryWriter.Write(radiusOverlapRejectionMuliplier);
-                binaryWriter.Write(ColourLowerBounds);
-                binaryWriter.Write(ColourUpperBounds);
+                binaryWriter.Write(colorLowerBounds);
+                binaryWriter.Write(colorUpperBounds);
                 binaryWriter.Write(lifetimeSeconds);
                 binaryWriter.Write(decayTimeSeconds);
                 binaryWriter.Write(invalidName_, 0, 40);

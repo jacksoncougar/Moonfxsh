@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GearBlock : GearBlockBase
     {
-        public  GearBlock(BinaryReader binaryReader): base(binaryReader)
+        public GearBlock() : base()
         {
-            
-        }
-        public  GearBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 68, Alignment = 4)]
@@ -41,39 +38,35 @@ namespace Moonfish.Guerilla.Tags
         /// 0-1
         /// </summary>
         internal float engineDownShiftScale;
-        
-        public override int SerializedSize{get { return 68; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GearBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 68; } }
+        public override int Alignment { get { return 4; } }
+        public GearBlockBase() : base()
         {
-            loadedTorqueCurve = new TorqueCurveStructBlock(binaryReader);
-            cruisingTorqueCurve = new TorqueCurveStructBlock(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            loadedTorqueCurve = new TorqueCurveStructBlock();
+            blamPointers.Concat(loadedTorqueCurve.ReadFields(binaryReader));
+            cruisingTorqueCurve = new TorqueCurveStructBlock();
+            blamPointers.Concat(cruisingTorqueCurve.ReadFields(binaryReader));
             minTimeToUpshift = binaryReader.ReadSingle();
             engineUpShiftScale = binaryReader.ReadSingle();
             gearRatio = binaryReader.ReadSingle();
             minTimeToDownshift = binaryReader.ReadSingle();
             engineDownShiftScale = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  GearBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            loadedTorqueCurve.ReadPointers(binaryReader, blamPointers);
+            cruisingTorqueCurve.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            loadedTorqueCurve = new TorqueCurveStructBlock(binaryReader);
-            cruisingTorqueCurve = new TorqueCurveStructBlock(binaryReader);
-            minTimeToUpshift = binaryReader.ReadSingle();
-            engineUpShiftScale = binaryReader.ReadSingle();
-            gearRatio = binaryReader.ReadSingle();
-            minTimeToDownshift = binaryReader.ReadSingle();
-            engineDownShiftScale = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 loadedTorqueCurve.Write(binaryWriter);
                 cruisingTorqueCurve.Write(binaryWriter);

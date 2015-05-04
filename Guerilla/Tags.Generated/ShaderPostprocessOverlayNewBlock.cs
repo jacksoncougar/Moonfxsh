@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPostprocessOverlayNewBlock : ShaderPostprocessOverlayNewBlockBase
     {
-        public  ShaderPostprocessOverlayNewBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderPostprocessOverlayNewBlock() : base()
         {
-            
-        }
-        public  ShaderPostprocessOverlayNewBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -26,33 +23,30 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent rangeName;
         internal float timePeriodInSeconds;
         internal ScalarFunctionStructBlock function;
-        
-        public override int SerializedSize{get { return 20; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ShaderPostprocessOverlayNewBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 20; } }
+        public override int Alignment { get { return 4; } }
+        public ShaderPostprocessOverlayNewBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             inputName = binaryReader.ReadStringID();
             rangeName = binaryReader.ReadStringID();
             timePeriodInSeconds = binaryReader.ReadSingle();
-            function = new ScalarFunctionStructBlock(binaryReader);
+            function = new ScalarFunctionStructBlock();
+            blamPointers.Concat(function.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  ShaderPostprocessOverlayNewBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            function.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            inputName = binaryReader.ReadStringID();
-            rangeName = binaryReader.ReadStringID();
-            timePeriodInSeconds = binaryReader.ReadSingle();
-            function = new ScalarFunctionStructBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(inputName);
                 binaryWriter.Write(rangeName);

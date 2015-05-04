@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ParticleSystemLiteDataBlock : ParticleSystemLiteDataBlockBase
     {
-        public  ParticleSystemLiteDataBlock(BinaryReader binaryReader): base(binaryReader)
+        public ParticleSystemLiteDataBlock() : base()
         {
-            
-        }
-        public  ParticleSystemLiteDataBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 48, Alignment = 4)]
@@ -25,31 +22,29 @@ namespace Moonfish.Guerilla.Tags
         internal ParticlesRenderDataBlock[] particlesRenderData;
         internal ParticlesUpdateDataBlock[] particlesOtherData;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 48; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ParticleSystemLiteDataBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 48; } }
+        public override int Alignment { get { return 4; } }
+        public ParticleSystemLiteDataBlockBase() : base()
         {
-            particlesRenderData = Guerilla.ReadBlockArray<ParticlesRenderDataBlock>(binaryReader);
-            particlesOtherData = Guerilla.ReadBlockArray<ParticlesUpdateDataBlock>(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ParticlesRenderDataBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ParticlesUpdateDataBlock>(binaryReader));
             invalidName_ = binaryReader.ReadBytes(32);
+            return blamPointers;
         }
-        public  ParticleSystemLiteDataBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            particlesRenderData = ReadBlockArrayData<ParticlesRenderDataBlock>(binaryReader, blamPointers.Dequeue());
+            particlesOtherData = ReadBlockArrayData<ParticlesUpdateDataBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            particlesRenderData = Guerilla.ReadBlockArray<ParticlesRenderDataBlock>(binaryReader);
-            particlesOtherData = Guerilla.ReadBlockArray<ParticlesUpdateDataBlock>(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(32);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<ParticlesRenderDataBlock>(binaryWriter, particlesRenderData, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ParticlesUpdateDataBlock>(binaryWriter, particlesOtherData, nextAddress);

@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GrenadesBlock : GrenadesBlockBase
     {
-        public  GrenadesBlock(BinaryReader binaryReader): base(binaryReader)
+        public GrenadesBlock() : base()
         {
-            
-        }
-        public  GrenadesBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 44, Alignment = 4)]
@@ -31,37 +28,30 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference equipment;
         [TagReference("proj")]
         internal Moonfish.Tags.TagReference projectile;
-        
-        public override int SerializedSize{get { return 44; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GrenadesBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 44; } }
+        public override int Alignment { get { return 4; } }
+        public GrenadesBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             maximumCount = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             throwingEffect = binaryReader.ReadTagReference();
             invalidName_0 = binaryReader.ReadBytes(16);
             equipment = binaryReader.ReadTagReference();
             projectile = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  GrenadesBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            maximumCount = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            throwingEffect = binaryReader.ReadTagReference();
-            invalidName_0 = binaryReader.ReadBytes(16);
-            equipment = binaryReader.ReadTagReference();
-            projectile = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(maximumCount);
                 binaryWriter.Write(invalidName_, 0, 2);

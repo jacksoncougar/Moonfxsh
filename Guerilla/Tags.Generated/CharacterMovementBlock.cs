@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterMovementBlock : CharacterMovementBlockBase
     {
-        public  CharacterMovementBlock(BinaryReader binaryReader): base(binaryReader)
+        public CharacterMovementBlock() : base()
         {
-            
-        }
-        public  CharacterMovementBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 36, Alignment = 4)]
@@ -34,14 +31,14 @@ namespace Moonfish.Guerilla.Tags
         internal JumpHeight jumpHeight;
         internal MovementHints movementHints;
         internal float throttleScale;
-        
-        public override int SerializedSize{get { return 36; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  CharacterMovementBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 36; } }
+        public override int Alignment { get { return 4; } }
+        public CharacterMovementBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             movementFlags = (MovementFlags)binaryReader.ReadInt32();
             pathfindingRadius = binaryReader.ReadSingle();
             destinationRadius = binaryReader.ReadSingle();
@@ -54,29 +51,16 @@ namespace Moonfish.Guerilla.Tags
             jumpHeight = (JumpHeight)binaryReader.ReadInt16();
             movementHints = (MovementHints)binaryReader.ReadInt32();
             throttleScale = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  CharacterMovementBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            movementFlags = (MovementFlags)binaryReader.ReadInt32();
-            pathfindingRadius = binaryReader.ReadSingle();
-            destinationRadius = binaryReader.ReadSingle();
-            diveGrenadeChance = binaryReader.ReadSingle();
-            obstacleLeapMinSize = (ObstacleLeapMinSize)binaryReader.ReadInt16();
-            obstacleLeapMaxSize = (ObstacleLeapMaxSize)binaryReader.ReadInt16();
-            obstacleIgnoreSize = (ObstacleIgnoreSize)binaryReader.ReadInt16();
-            obstacleSmashableSize = (ObstacleSmashableSize)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            jumpHeight = (JumpHeight)binaryReader.ReadInt16();
-            movementHints = (MovementHints)binaryReader.ReadInt32();
-            throttleScale = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)movementFlags);
                 binaryWriter.Write(pathfindingRadius);

@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("clwd")]
     public partial class ClothBlock : ClothBlockBase
     {
-        public  ClothBlock(BinaryReader binaryReader): base(binaryReader)
+        public ClothBlock() : base()
         {
-            
-        }
-        public  ClothBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 108, Alignment = 4)]
@@ -44,14 +41,14 @@ namespace Moonfish.Guerilla.Tags
         internal ClothIndicesBlock[] indices;
         internal ClothIndicesBlock[] stripIndices;
         internal ClothLinksBlock[] links;
-        
-        public override int SerializedSize{get { return 108; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ClothBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 108; } }
+        public override int Alignment { get { return 4; } }
+        public ClothBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             markerAttachmentName = binaryReader.ReadStringID();
             shader = binaryReader.ReadTagReference();
@@ -59,34 +56,27 @@ namespace Moonfish.Guerilla.Tags
             gridYDimension = binaryReader.ReadInt16();
             gridSpacingX = binaryReader.ReadSingle();
             gridSpacingY = binaryReader.ReadSingle();
-            properties = new ClothPropertiesBlock(binaryReader);
-            vertices = Guerilla.ReadBlockArray<ClothVerticesBlock>(binaryReader);
-            indices = Guerilla.ReadBlockArray<ClothIndicesBlock>(binaryReader);
-            stripIndices = Guerilla.ReadBlockArray<ClothIndicesBlock>(binaryReader);
-            links = Guerilla.ReadBlockArray<ClothLinksBlock>(binaryReader);
+            properties = new ClothPropertiesBlock();
+            blamPointers.Concat(properties.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ClothVerticesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ClothIndicesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ClothIndicesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ClothLinksBlock>(binaryReader));
+            return blamPointers;
         }
-        public  ClothBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            properties.ReadPointers(binaryReader, blamPointers);
+            vertices = ReadBlockArrayData<ClothVerticesBlock>(binaryReader, blamPointers.Dequeue());
+            indices = ReadBlockArrayData<ClothIndicesBlock>(binaryReader, blamPointers.Dequeue());
+            stripIndices = ReadBlockArrayData<ClothIndicesBlock>(binaryReader, blamPointers.Dequeue());
+            links = ReadBlockArrayData<ClothLinksBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            markerAttachmentName = binaryReader.ReadStringID();
-            shader = binaryReader.ReadTagReference();
-            gridXDimension = binaryReader.ReadInt16();
-            gridYDimension = binaryReader.ReadInt16();
-            gridSpacingX = binaryReader.ReadSingle();
-            gridSpacingY = binaryReader.ReadSingle();
-            properties = new ClothPropertiesBlock(binaryReader);
-            vertices = Guerilla.ReadBlockArray<ClothVerticesBlock>(binaryReader);
-            indices = Guerilla.ReadBlockArray<ClothIndicesBlock>(binaryReader);
-            stripIndices = Guerilla.ReadBlockArray<ClothIndicesBlock>(binaryReader);
-            links = Guerilla.ReadBlockArray<ClothLinksBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(markerAttachmentName);

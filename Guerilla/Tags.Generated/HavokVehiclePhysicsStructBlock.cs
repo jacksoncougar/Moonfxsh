@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class HavokVehiclePhysicsStructBlock : HavokVehiclePhysicsStructBlockBase
     {
-        public  HavokVehiclePhysicsStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public HavokVehiclePhysicsStructBlock() : base()
         {
-            
-        }
-        public  HavokVehiclePhysicsStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 84, Alignment = 4)]
@@ -53,7 +50,7 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float antiGravityBankLift;
         /// <summary>
-        /// how quickly we bank when we steer
+        /// how quickly we bank when we steer 
         /// </summary>
         internal float steeringBankReactionScale;
         /// <summary>
@@ -67,14 +64,14 @@ namespace Moonfish.Guerilla.Tags
         internal AntiGravityPointDefinitionBlock[] antiGravityPoints;
         internal FrictionPointDefinitionBlock[] frictionPoints;
         internal VehiclePhantomShapeBlock[] shapePhantomShape;
-        
-        public override int SerializedSize{get { return 84; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  HavokVehiclePhysicsStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 84; } }
+        public override int Alignment { get { return 4; } }
+        public HavokVehiclePhysicsStructBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             groundFriction = binaryReader.ReadSingle();
             groundDepth = binaryReader.ReadSingle();
@@ -87,35 +84,22 @@ namespace Moonfish.Guerilla.Tags
             steeringBankReactionScale = binaryReader.ReadSingle();
             gravityScale = binaryReader.ReadSingle();
             radius = binaryReader.ReadSingle();
-            antiGravityPoints = Guerilla.ReadBlockArray<AntiGravityPointDefinitionBlock>(binaryReader);
-            frictionPoints = Guerilla.ReadBlockArray<FrictionPointDefinitionBlock>(binaryReader);
-            shapePhantomShape = Guerilla.ReadBlockArray<VehiclePhantomShapeBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<AntiGravityPointDefinitionBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<FrictionPointDefinitionBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<VehiclePhantomShapeBlock>(binaryReader));
+            return blamPointers;
         }
-        public  HavokVehiclePhysicsStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            antiGravityPoints = ReadBlockArrayData<AntiGravityPointDefinitionBlock>(binaryReader, blamPointers.Dequeue());
+            frictionPoints = ReadBlockArrayData<FrictionPointDefinitionBlock>(binaryReader, blamPointers.Dequeue());
+            shapePhantomShape = ReadBlockArrayData<VehiclePhantomShapeBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            groundFriction = binaryReader.ReadSingle();
-            groundDepth = binaryReader.ReadSingle();
-            groundDampFactor = binaryReader.ReadSingle();
-            groundMovingFriction = binaryReader.ReadSingle();
-            groundMaximumSlope0 = binaryReader.ReadSingle();
-            groundMaximumSlope1 = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(16);
-            antiGravityBankLift = binaryReader.ReadSingle();
-            steeringBankReactionScale = binaryReader.ReadSingle();
-            gravityScale = binaryReader.ReadSingle();
-            radius = binaryReader.ReadSingle();
-            antiGravityPoints = Guerilla.ReadBlockArray<AntiGravityPointDefinitionBlock>(binaryReader);
-            frictionPoints = Guerilla.ReadBlockArray<FrictionPointDefinitionBlock>(binaryReader);
-            shapePhantomShape = Guerilla.ReadBlockArray<VehiclePhantomShapeBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(groundFriction);

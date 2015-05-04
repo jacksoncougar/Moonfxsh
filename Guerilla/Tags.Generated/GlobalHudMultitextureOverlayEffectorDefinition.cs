@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalHudMultitextureOverlayEffectorDefinition : GlobalHudMultitextureOverlayEffectorDefinitionBase
     {
-        public  GlobalHudMultitextureOverlayEffectorDefinition(BinaryReader binaryReader): base(binaryReader)
+        public GlobalHudMultitextureOverlayEffectorDefinition() : base()
         {
-            
-        }
-        public  GlobalHudMultitextureOverlayEffectorDefinition(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 220, Alignment = 4)]
@@ -30,21 +27,21 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range inBoundsSourceUnits;
         internal Moonfish.Model.Range outBoundsPixels;
         internal byte[] invalidName_1;
-        internal Moonfish.Tags.ColourR8G8B8 TintColourLowerBound;
-        internal Moonfish.Tags.ColourR8G8B8 TintColourUpperBound;
+        internal Moonfish.Tags.ColourR8G8B8 tintColorLowerBound;
+        internal Moonfish.Tags.ColourR8G8B8 tintColorUpperBound;
         internal PeriodicFunction periodicFunction;
         internal byte[] invalidName_2;
         internal float functionPeriodSeconds;
         internal float functionPhaseSeconds;
         internal byte[] invalidName_3;
-        
-        public override int SerializedSize{get { return 220; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GlobalHudMultitextureOverlayEffectorDefinitionBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 220; } }
+        public override int Alignment { get { return 4; } }
+        public GlobalHudMultitextureOverlayEffectorDefinitionBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(64);
             destinationType = (DestinationType)binaryReader.ReadInt16();
             destination = (Destination)binaryReader.ReadInt16();
@@ -53,39 +50,23 @@ namespace Moonfish.Guerilla.Tags
             inBoundsSourceUnits = binaryReader.ReadRange();
             outBoundsPixels = binaryReader.ReadRange();
             invalidName_1 = binaryReader.ReadBytes(64);
-            TintColourLowerBound = binaryReader.ReadColorR8G8B8();
-            TintColourUpperBound = binaryReader.ReadColorR8G8B8();
+            tintColorLowerBound = binaryReader.ReadColorR8G8B8();
+            tintColorUpperBound = binaryReader.ReadColorR8G8B8();
             periodicFunction = (PeriodicFunction)binaryReader.ReadInt16();
             invalidName_2 = binaryReader.ReadBytes(2);
             functionPeriodSeconds = binaryReader.ReadSingle();
             functionPhaseSeconds = binaryReader.ReadSingle();
             invalidName_3 = binaryReader.ReadBytes(32);
+            return blamPointers;
         }
-        public  GlobalHudMultitextureOverlayEffectorDefinitionBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadBytes(64);
-            destinationType = (DestinationType)binaryReader.ReadInt16();
-            destination = (Destination)binaryReader.ReadInt16();
-            source = (Source)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            inBoundsSourceUnits = binaryReader.ReadRange();
-            outBoundsPixels = binaryReader.ReadRange();
-            invalidName_1 = binaryReader.ReadBytes(64);
-            TintColourLowerBound = binaryReader.ReadColorR8G8B8();
-            TintColourUpperBound = binaryReader.ReadColorR8G8B8();
-            periodicFunction = (PeriodicFunction)binaryReader.ReadInt16();
-            invalidName_2 = binaryReader.ReadBytes(2);
-            functionPeriodSeconds = binaryReader.ReadSingle();
-            functionPhaseSeconds = binaryReader.ReadSingle();
-            invalidName_3 = binaryReader.ReadBytes(32);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 64);
                 binaryWriter.Write((Int16)destinationType);
@@ -95,8 +76,8 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(inBoundsSourceUnits);
                 binaryWriter.Write(outBoundsPixels);
                 binaryWriter.Write(invalidName_1, 0, 64);
-                binaryWriter.Write(TintColourLowerBound);
-                binaryWriter.Write(TintColourUpperBound);
+                binaryWriter.Write(tintColorLowerBound);
+                binaryWriter.Write(tintColorUpperBound);
                 binaryWriter.Write((Int16)periodicFunction);
                 binaryWriter.Write(invalidName_2, 0, 2);
                 binaryWriter.Write(functionPeriodSeconds);

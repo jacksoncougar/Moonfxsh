@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterPhysicsFlyingStructBlock : CharacterPhysicsFlyingStructBlockBase
     {
-        public  CharacterPhysicsFlyingStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public CharacterPhysicsFlyingStructBlock() : base()
         {
-            
-        }
-        public  CharacterPhysicsFlyingStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 44, Alignment = 4)]
@@ -60,14 +57,14 @@ namespace Moonfish.Guerilla.Tags
         /// how much slower we fly if crouching (zero = same speed)
         /// </summary>
         internal float crouchVelocityModifier01;
-        
-        public override int SerializedSize{get { return 44; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  CharacterPhysicsFlyingStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 44; } }
+        public override int Alignment { get { return 4; } }
+        public CharacterPhysicsFlyingStructBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             bankAngleDegrees = binaryReader.ReadSingle();
             bankApplyTimeSeconds = binaryReader.ReadSingle();
             bankDecayTimeSeconds = binaryReader.ReadSingle();
@@ -79,28 +76,16 @@ namespace Moonfish.Guerilla.Tags
             angularVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
             angularAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
             crouchVelocityModifier01 = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  CharacterPhysicsFlyingStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            bankAngleDegrees = binaryReader.ReadSingle();
-            bankApplyTimeSeconds = binaryReader.ReadSingle();
-            bankDecayTimeSeconds = binaryReader.ReadSingle();
-            pitchRatio = binaryReader.ReadSingle();
-            maxVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            maxSidestepVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            accelerationWorldUnitsPerSecondSquared = binaryReader.ReadSingle();
-            decelerationWorldUnitsPerSecondSquared = binaryReader.ReadSingle();
-            angularVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
-            angularAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
-            crouchVelocityModifier01 = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(bankAngleDegrees);
                 binaryWriter.Write(bankApplyTimeSeconds);

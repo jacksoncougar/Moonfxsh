@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AiGlobalsBlock : AiGlobalsBlockBase
     {
-        public  AiGlobalsBlock(BinaryReader binaryReader): base(binaryReader)
+        public AiGlobalsBlock() : base()
         {
-            
-        }
-        public  AiGlobalsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 360, Alignment = 4)]
@@ -70,14 +67,14 @@ namespace Moonfish.Guerilla.Tags
         internal float scaryWeaponThrehold;
         internal float playerScariness;
         internal float berserkingActorScariness;
-        
-        public override int SerializedSize{get { return 360; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  AiGlobalsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 360; } }
+        public override int Alignment { get { return 4; } }
+        public AiGlobalsBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             dangerBroadlyFacing = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(4);
             dangerShootingNear = binaryReader.ReadSingle();
@@ -113,64 +110,23 @@ namespace Moonfish.Guerilla.Tags
             vaultStepWus = binaryReader.ReadRange();
             vaultCrouchWus = binaryReader.ReadRange();
             invalidName_6 = binaryReader.ReadBytes(48);
-            gravemindProperties = Guerilla.ReadBlockArray<AiGlobalsGravemindBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<AiGlobalsGravemindBlock>(binaryReader));
             invalidName_7 = binaryReader.ReadBytes(48);
             scaryTargetThrehold = binaryReader.ReadSingle();
             scaryWeaponThrehold = binaryReader.ReadSingle();
             playerScariness = binaryReader.ReadSingle();
             berserkingActorScariness = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  AiGlobalsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            gravemindProperties = ReadBlockArrayData<AiGlobalsGravemindBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            dangerBroadlyFacing = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(4);
-            dangerShootingNear = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            dangerShootingAt = binaryReader.ReadSingle();
-            invalidName_1 = binaryReader.ReadBytes(4);
-            dangerExtremelyClose = binaryReader.ReadSingle();
-            invalidName_2 = binaryReader.ReadBytes(4);
-            dangerShieldDamage = binaryReader.ReadSingle();
-            dangerExetendedShieldDamage = binaryReader.ReadSingle();
-            dangerBodyDamage = binaryReader.ReadSingle();
-            dangerExtendedBodyDamage = binaryReader.ReadSingle();
-            invalidName_3 = binaryReader.ReadBytes(48);
-            globalDialogueTag = binaryReader.ReadTagReference();
-            defaultMissionDialogueSoundEffect = binaryReader.ReadStringID();
-            invalidName_4 = binaryReader.ReadBytes(20);
-            jumpDownWuTick = binaryReader.ReadSingle();
-            jumpStepWuTick = binaryReader.ReadSingle();
-            jumpCrouchWuTick = binaryReader.ReadSingle();
-            jumpStandWuTick = binaryReader.ReadSingle();
-            jumpStoreyWuTick = binaryReader.ReadSingle();
-            jumpTowerWuTick = binaryReader.ReadSingle();
-            maxJumpDownHeightDownWu = binaryReader.ReadSingle();
-            maxJumpDownHeightStepWu = binaryReader.ReadSingle();
-            maxJumpDownHeightCrouchWu = binaryReader.ReadSingle();
-            maxJumpDownHeightStandWu = binaryReader.ReadSingle();
-            maxJumpDownHeightStoreyWu = binaryReader.ReadSingle();
-            maxJumpDownHeightTowerWu = binaryReader.ReadSingle();
-            hoistStepWus = binaryReader.ReadRange();
-            hoistCrouchWus = binaryReader.ReadRange();
-            hoistStandWus = binaryReader.ReadRange();
-            invalidName_5 = binaryReader.ReadBytes(24);
-            vaultStepWus = binaryReader.ReadRange();
-            vaultCrouchWus = binaryReader.ReadRange();
-            invalidName_6 = binaryReader.ReadBytes(48);
-            gravemindProperties = Guerilla.ReadBlockArray<AiGlobalsGravemindBlock>(binaryReader);
-            invalidName_7 = binaryReader.ReadBytes(48);
-            scaryTargetThrehold = binaryReader.ReadSingle();
-            scaryWeaponThrehold = binaryReader.ReadSingle();
-            playerScariness = binaryReader.ReadSingle();
-            berserkingActorScariness = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(dangerBroadlyFacing);
                 binaryWriter.Write(invalidName_, 0, 4);

@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderTextureStateMiscStateBlock : ShaderTextureStateMiscStateBlockBase
     {
-        public  ShaderTextureStateMiscStateBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderTextureStateMiscStateBlock() : base()
         {
-            
-        }
-        public  ShaderTextureStateMiscStateBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
@@ -25,31 +22,27 @@ namespace Moonfish.Guerilla.Tags
         internal ComponentSignFlags componentSignFlags;
         internal byte[] invalidName_;
         internal Moonfish.Tags.ColourA1R1G1B1 borderColor;
-        
-        public override int SerializedSize{get { return 8; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ShaderTextureStateMiscStateBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 8; } }
+        public override int Alignment { get { return 4; } }
+        public ShaderTextureStateMiscStateBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             componentSignFlags = (ComponentSignFlags)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             borderColor = binaryReader.ReadColourA1R1G1B1();
+            return blamPointers;
         }
-        public  ShaderTextureStateMiscStateBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            componentSignFlags = (ComponentSignFlags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            borderColor = binaryReader.ReadColourA1R1G1B1();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)componentSignFlags);
                 binaryWriter.Write(invalidName_, 0, 2);

@@ -48,29 +48,13 @@ namespace Moonfish.Tags
 
     #endregion
 
-    partial class ScenarioStructureBSP : ScenarioStructureBspBlock
-    {
-        public ScenarioStructureBSP( BinaryReader binaryReader )
-            : base( binaryReader )
-        {
-        }
-    }
 }
 
 namespace Moonfish.Guerilla.Tags
 {
     partial class StructureBspClusterBlock
     {
-        internal StructureBspClusterDataBlockNew[] ReadStructureBspClusterDataBlockNewArray( BinaryReader binaryReader )
-        {
-            binaryReader.ReadBytes( 8 );
-            using ( binaryReader.BaseStream.Pin( ) )
-            {
-                ResourceStream source = Halo2.GetResourceBlock( this.geometryBlockInfo );
-                BinaryReader reader = new BinaryReader( source );
-                return new[] {new StructureBspClusterDataBlockNew( reader )};
-            }
-        }
+        
     }
 
     public partial class GlobalGeometryBlockInfoStructBlock

@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("phmo")]
     public partial class PhysicsModelBlock : PhysicsModelBlockBase
     {
-        public  PhysicsModelBlock(BinaryReader binaryReader): base(binaryReader)
+        public PhysicsModelBlock() : base()
         {
-            
-        }
-        public  PhysicsModelBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 272, Alignment = 4)]
@@ -71,93 +68,87 @@ namespace Moonfish.Guerilla.Tags
         internal StiffSpringConstraintsBlock[] stiffSpringConstraints;
         internal PrismaticConstraintsBlock[] prismaticConstraints;
         internal PhantomsBlock[] phantoms;
-        
-        public override int SerializedSize{get { return 272; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PhysicsModelBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 272; } }
+        public override int Alignment { get { return 4; } }
+        public PhysicsModelBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             mass = binaryReader.ReadSingle();
             lowFreqDeactivationScale = binaryReader.ReadSingle();
             highFreqDeactivationScale = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(24);
-            phantomTypes = Guerilla.ReadBlockArray<PhantomTypesBlock>(binaryReader);
-            nodeEdges = Guerilla.ReadBlockArray<PhysicsModelNodeConstraintEdgeBlock>(binaryReader);
-            rigidBodies = Guerilla.ReadBlockArray<RigidBodiesBlock>(binaryReader);
-            materials = Guerilla.ReadBlockArray<MaterialsBlock>(binaryReader);
-            spheres = Guerilla.ReadBlockArray<SpheresBlock>(binaryReader);
-            multiSpheres = Guerilla.ReadBlockArray<MultiSpheresBlock>(binaryReader);
-            pills = Guerilla.ReadBlockArray<PillsBlock>(binaryReader);
-            boxes = Guerilla.ReadBlockArray<BoxesBlock>(binaryReader);
-            triangles = Guerilla.ReadBlockArray<TrianglesBlock>(binaryReader);
-            polyhedra = Guerilla.ReadBlockArray<PolyhedraBlock>(binaryReader);
-            polyhedronFourVectors = Guerilla.ReadBlockArray<PolyhedronFourVectorsBlock>(binaryReader);
-            polyhedronPlaneEquations = Guerilla.ReadBlockArray<PolyhedronPlaneEquationsBlock>(binaryReader);
-            massDistributions = Guerilla.ReadBlockArray<MassDistributionsBlock>(binaryReader);
-            lists = Guerilla.ReadBlockArray<ListsBlock>(binaryReader);
-            listShapes = Guerilla.ReadBlockArray<ListShapesBlock>(binaryReader);
-            mopps = Guerilla.ReadBlockArray<MoppsBlock>(binaryReader);
-            moppCodes = Guerilla.ReadData(binaryReader);
-            hingeConstraints = Guerilla.ReadBlockArray<HingeConstraintsBlock>(binaryReader);
-            ragdollConstraints = Guerilla.ReadBlockArray<RagdollConstraintsBlock>(binaryReader);
-            regions = Guerilla.ReadBlockArray<RegionsBlock>(binaryReader);
-            nodes = Guerilla.ReadBlockArray<NodesBlock>(binaryReader);
-            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>(binaryReader);
-            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
-            pointToPathCurves = Guerilla.ReadBlockArray<PointToPathCurveBlock>(binaryReader);
-            limitedHingeConstraints = Guerilla.ReadBlockArray<LimitedHingeConstraintsBlock>(binaryReader);
-            ballAndSocketConstraints = Guerilla.ReadBlockArray<BallAndSocketConstraintsBlock>(binaryReader);
-            stiffSpringConstraints = Guerilla.ReadBlockArray<StiffSpringConstraintsBlock>(binaryReader);
-            prismaticConstraints = Guerilla.ReadBlockArray<PrismaticConstraintsBlock>(binaryReader);
-            phantoms = Guerilla.ReadBlockArray<PhantomsBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<PhantomTypesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PhysicsModelNodeConstraintEdgeBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<RigidBodiesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<MaterialsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SpheresBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<MultiSpheresBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PillsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<BoxesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<TrianglesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PolyhedraBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PolyhedronFourVectorsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PolyhedronPlaneEquationsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<MassDistributionsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ListsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ListShapesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<MoppsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
+            blamPointers.Enqueue(ReadBlockArrayPointer<HingeConstraintsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<RagdollConstraintsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<RegionsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<NodesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalTagImportInfoBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalErrorReportCategoriesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PointToPathCurveBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<LimitedHingeConstraintsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<BallAndSocketConstraintsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StiffSpringConstraintsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PrismaticConstraintsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PhantomsBlock>(binaryReader));
+            return blamPointers;
         }
-        public  PhysicsModelBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            phantomTypes = ReadBlockArrayData<PhantomTypesBlock>(binaryReader, blamPointers.Dequeue());
+            nodeEdges = ReadBlockArrayData<PhysicsModelNodeConstraintEdgeBlock>(binaryReader, blamPointers.Dequeue());
+            rigidBodies = ReadBlockArrayData<RigidBodiesBlock>(binaryReader, blamPointers.Dequeue());
+            materials = ReadBlockArrayData<MaterialsBlock>(binaryReader, blamPointers.Dequeue());
+            spheres = ReadBlockArrayData<SpheresBlock>(binaryReader, blamPointers.Dequeue());
+            multiSpheres = ReadBlockArrayData<MultiSpheresBlock>(binaryReader, blamPointers.Dequeue());
+            pills = ReadBlockArrayData<PillsBlock>(binaryReader, blamPointers.Dequeue());
+            boxes = ReadBlockArrayData<BoxesBlock>(binaryReader, blamPointers.Dequeue());
+            triangles = ReadBlockArrayData<TrianglesBlock>(binaryReader, blamPointers.Dequeue());
+            polyhedra = ReadBlockArrayData<PolyhedraBlock>(binaryReader, blamPointers.Dequeue());
+            polyhedronFourVectors = ReadBlockArrayData<PolyhedronFourVectorsBlock>(binaryReader, blamPointers.Dequeue());
+            polyhedronPlaneEquations = ReadBlockArrayData<PolyhedronPlaneEquationsBlock>(binaryReader, blamPointers.Dequeue());
+            massDistributions = ReadBlockArrayData<MassDistributionsBlock>(binaryReader, blamPointers.Dequeue());
+            lists = ReadBlockArrayData<ListsBlock>(binaryReader, blamPointers.Dequeue());
+            listShapes = ReadBlockArrayData<ListShapesBlock>(binaryReader, blamPointers.Dequeue());
+            mopps = ReadBlockArrayData<MoppsBlock>(binaryReader, blamPointers.Dequeue());
+            moppCodes = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            hingeConstraints = ReadBlockArrayData<HingeConstraintsBlock>(binaryReader, blamPointers.Dequeue());
+            ragdollConstraints = ReadBlockArrayData<RagdollConstraintsBlock>(binaryReader, blamPointers.Dequeue());
+            regions = ReadBlockArrayData<RegionsBlock>(binaryReader, blamPointers.Dequeue());
+            nodes = ReadBlockArrayData<NodesBlock>(binaryReader, blamPointers.Dequeue());
+            importInfo = ReadBlockArrayData<GlobalTagImportInfoBlock>(binaryReader, blamPointers.Dequeue());
+            errors = ReadBlockArrayData<GlobalErrorReportCategoriesBlock>(binaryReader, blamPointers.Dequeue());
+            pointToPathCurves = ReadBlockArrayData<PointToPathCurveBlock>(binaryReader, blamPointers.Dequeue());
+            limitedHingeConstraints = ReadBlockArrayData<LimitedHingeConstraintsBlock>(binaryReader, blamPointers.Dequeue());
+            ballAndSocketConstraints = ReadBlockArrayData<BallAndSocketConstraintsBlock>(binaryReader, blamPointers.Dequeue());
+            stiffSpringConstraints = ReadBlockArrayData<StiffSpringConstraintsBlock>(binaryReader, blamPointers.Dequeue());
+            prismaticConstraints = ReadBlockArrayData<PrismaticConstraintsBlock>(binaryReader, blamPointers.Dequeue());
+            phantoms = ReadBlockArrayData<PhantomsBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            mass = binaryReader.ReadSingle();
-            lowFreqDeactivationScale = binaryReader.ReadSingle();
-            highFreqDeactivationScale = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(24);
-            phantomTypes = Guerilla.ReadBlockArray<PhantomTypesBlock>(binaryReader);
-            nodeEdges = Guerilla.ReadBlockArray<PhysicsModelNodeConstraintEdgeBlock>(binaryReader);
-            rigidBodies = Guerilla.ReadBlockArray<RigidBodiesBlock>(binaryReader);
-            materials = Guerilla.ReadBlockArray<MaterialsBlock>(binaryReader);
-            spheres = Guerilla.ReadBlockArray<SpheresBlock>(binaryReader);
-            multiSpheres = Guerilla.ReadBlockArray<MultiSpheresBlock>(binaryReader);
-            pills = Guerilla.ReadBlockArray<PillsBlock>(binaryReader);
-            boxes = Guerilla.ReadBlockArray<BoxesBlock>(binaryReader);
-            triangles = Guerilla.ReadBlockArray<TrianglesBlock>(binaryReader);
-            polyhedra = Guerilla.ReadBlockArray<PolyhedraBlock>(binaryReader);
-            polyhedronFourVectors = Guerilla.ReadBlockArray<PolyhedronFourVectorsBlock>(binaryReader);
-            polyhedronPlaneEquations = Guerilla.ReadBlockArray<PolyhedronPlaneEquationsBlock>(binaryReader);
-            massDistributions = Guerilla.ReadBlockArray<MassDistributionsBlock>(binaryReader);
-            lists = Guerilla.ReadBlockArray<ListsBlock>(binaryReader);
-            listShapes = Guerilla.ReadBlockArray<ListShapesBlock>(binaryReader);
-            mopps = Guerilla.ReadBlockArray<MoppsBlock>(binaryReader);
-            moppCodes = Guerilla.ReadData(binaryReader);
-            hingeConstraints = Guerilla.ReadBlockArray<HingeConstraintsBlock>(binaryReader);
-            ragdollConstraints = Guerilla.ReadBlockArray<RagdollConstraintsBlock>(binaryReader);
-            regions = Guerilla.ReadBlockArray<RegionsBlock>(binaryReader);
-            nodes = Guerilla.ReadBlockArray<NodesBlock>(binaryReader);
-            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>(binaryReader);
-            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
-            pointToPathCurves = Guerilla.ReadBlockArray<PointToPathCurveBlock>(binaryReader);
-            limitedHingeConstraints = Guerilla.ReadBlockArray<LimitedHingeConstraintsBlock>(binaryReader);
-            ballAndSocketConstraints = Guerilla.ReadBlockArray<BallAndSocketConstraintsBlock>(binaryReader);
-            stiffSpringConstraints = Guerilla.ReadBlockArray<StiffSpringConstraintsBlock>(binaryReader);
-            prismaticConstraints = Guerilla.ReadBlockArray<PrismaticConstraintsBlock>(binaryReader);
-            phantoms = Guerilla.ReadBlockArray<PhantomsBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(mass);

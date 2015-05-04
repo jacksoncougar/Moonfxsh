@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPassPostprocessImplementationNewBlock : ShaderPassPostprocessImplementationNewBlockBase
     {
-        public  ShaderPassPostprocessImplementationNewBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderPassPostprocessImplementationNewBlock() : base()
         {
-            
-        }
-        public  ShaderPassPostprocessImplementationNewBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 306, Alignment = 4)]
@@ -46,71 +43,81 @@ namespace Moonfish.Guerilla.Tags
         internal TagBlockIndexStructBlock vertexConstantInfo;
         internal TagBlockIndexStructBlock renderStateInfo;
         internal TagBlockIndexStructBlock textureStateInfo;
-        
-        public override int SerializedSize{get { return 306; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ShaderPassPostprocessImplementationNewBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 306; } }
+        public override int Alignment { get { return 4; } }
+        public ShaderPassPostprocessImplementationNewBlockBase() : base()
         {
-            textures = new TagBlockIndexStructBlock(binaryReader);
-            renderStates = new TagBlockIndexStructBlock(binaryReader);
-            textureStates = new TagBlockIndexStructBlock(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            textures = new TagBlockIndexStructBlock();
+            blamPointers.Concat(textures.ReadFields(binaryReader));
+            renderStates = new TagBlockIndexStructBlock();
+            blamPointers.Concat(renderStates.ReadFields(binaryReader));
+            textureStates = new TagBlockIndexStructBlock();
+            blamPointers.Concat(textureStates.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(240);
-            psFragments = new TagBlockIndexStructBlock(binaryReader);
-            psPermutations = new TagBlockIndexStructBlock(binaryReader);
-            psCombiners = new TagBlockIndexStructBlock(binaryReader);
+            psFragments = new TagBlockIndexStructBlock();
+            blamPointers.Concat(psFragments.ReadFields(binaryReader));
+            psPermutations = new TagBlockIndexStructBlock();
+            blamPointers.Concat(psPermutations.ReadFields(binaryReader));
+            psCombiners = new TagBlockIndexStructBlock();
+            blamPointers.Concat(psCombiners.ReadFields(binaryReader));
             vertexShader = binaryReader.ReadTagReference();
             invalidName_0 = binaryReader.ReadBytes(8);
             invalidName_1 = binaryReader.ReadBytes(8);
             invalidName_2 = binaryReader.ReadBytes(4);
             invalidName_3 = binaryReader.ReadBytes(4);
-            defaultRenderStates = new TagBlockIndexStructBlock(binaryReader);
-            renderStateExterns = new TagBlockIndexStructBlock(binaryReader);
-            textureStateExterns = new TagBlockIndexStructBlock(binaryReader);
-            pixelConstantExterns = new TagBlockIndexStructBlock(binaryReader);
-            vertexConstantExterns = new TagBlockIndexStructBlock(binaryReader);
-            psConstants = new TagBlockIndexStructBlock(binaryReader);
-            vsConstants = new TagBlockIndexStructBlock(binaryReader);
-            pixelConstantInfo = new TagBlockIndexStructBlock(binaryReader);
-            vertexConstantInfo = new TagBlockIndexStructBlock(binaryReader);
-            renderStateInfo = new TagBlockIndexStructBlock(binaryReader);
-            textureStateInfo = new TagBlockIndexStructBlock(binaryReader);
+            defaultRenderStates = new TagBlockIndexStructBlock();
+            blamPointers.Concat(defaultRenderStates.ReadFields(binaryReader));
+            renderStateExterns = new TagBlockIndexStructBlock();
+            blamPointers.Concat(renderStateExterns.ReadFields(binaryReader));
+            textureStateExterns = new TagBlockIndexStructBlock();
+            blamPointers.Concat(textureStateExterns.ReadFields(binaryReader));
+            pixelConstantExterns = new TagBlockIndexStructBlock();
+            blamPointers.Concat(pixelConstantExterns.ReadFields(binaryReader));
+            vertexConstantExterns = new TagBlockIndexStructBlock();
+            blamPointers.Concat(vertexConstantExterns.ReadFields(binaryReader));
+            psConstants = new TagBlockIndexStructBlock();
+            blamPointers.Concat(psConstants.ReadFields(binaryReader));
+            vsConstants = new TagBlockIndexStructBlock();
+            blamPointers.Concat(vsConstants.ReadFields(binaryReader));
+            pixelConstantInfo = new TagBlockIndexStructBlock();
+            blamPointers.Concat(pixelConstantInfo.ReadFields(binaryReader));
+            vertexConstantInfo = new TagBlockIndexStructBlock();
+            blamPointers.Concat(vertexConstantInfo.ReadFields(binaryReader));
+            renderStateInfo = new TagBlockIndexStructBlock();
+            blamPointers.Concat(renderStateInfo.ReadFields(binaryReader));
+            textureStateInfo = new TagBlockIndexStructBlock();
+            blamPointers.Concat(textureStateInfo.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  ShaderPassPostprocessImplementationNewBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            textures.ReadPointers(binaryReader, blamPointers);
+            renderStates.ReadPointers(binaryReader, blamPointers);
+            textureStates.ReadPointers(binaryReader, blamPointers);
+            psFragments.ReadPointers(binaryReader, blamPointers);
+            psPermutations.ReadPointers(binaryReader, blamPointers);
+            psCombiners.ReadPointers(binaryReader, blamPointers);
+            defaultRenderStates.ReadPointers(binaryReader, blamPointers);
+            renderStateExterns.ReadPointers(binaryReader, blamPointers);
+            textureStateExterns.ReadPointers(binaryReader, blamPointers);
+            pixelConstantExterns.ReadPointers(binaryReader, blamPointers);
+            vertexConstantExterns.ReadPointers(binaryReader, blamPointers);
+            psConstants.ReadPointers(binaryReader, blamPointers);
+            vsConstants.ReadPointers(binaryReader, blamPointers);
+            pixelConstantInfo.ReadPointers(binaryReader, blamPointers);
+            vertexConstantInfo.ReadPointers(binaryReader, blamPointers);
+            renderStateInfo.ReadPointers(binaryReader, blamPointers);
+            textureStateInfo.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            textures = new TagBlockIndexStructBlock(binaryReader);
-            renderStates = new TagBlockIndexStructBlock(binaryReader);
-            textureStates = new TagBlockIndexStructBlock(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(240);
-            psFragments = new TagBlockIndexStructBlock(binaryReader);
-            psPermutations = new TagBlockIndexStructBlock(binaryReader);
-            psCombiners = new TagBlockIndexStructBlock(binaryReader);
-            vertexShader = binaryReader.ReadTagReference();
-            invalidName_0 = binaryReader.ReadBytes(8);
-            invalidName_1 = binaryReader.ReadBytes(8);
-            invalidName_2 = binaryReader.ReadBytes(4);
-            invalidName_3 = binaryReader.ReadBytes(4);
-            defaultRenderStates = new TagBlockIndexStructBlock(binaryReader);
-            renderStateExterns = new TagBlockIndexStructBlock(binaryReader);
-            textureStateExterns = new TagBlockIndexStructBlock(binaryReader);
-            pixelConstantExterns = new TagBlockIndexStructBlock(binaryReader);
-            vertexConstantExterns = new TagBlockIndexStructBlock(binaryReader);
-            psConstants = new TagBlockIndexStructBlock(binaryReader);
-            vsConstants = new TagBlockIndexStructBlock(binaryReader);
-            pixelConstantInfo = new TagBlockIndexStructBlock(binaryReader);
-            vertexConstantInfo = new TagBlockIndexStructBlock(binaryReader);
-            renderStateInfo = new TagBlockIndexStructBlock(binaryReader);
-            textureStateInfo = new TagBlockIndexStructBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 textures.Write(binaryWriter);
                 renderStates.Write(binaryWriter);

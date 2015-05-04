@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalHudMultitextureOverlayDefinition : GlobalHudMultitextureOverlayDefinitionBase
     {
-        public  GlobalHudMultitextureOverlayDefinition(BinaryReader binaryReader): base(binaryReader)
+        public GlobalHudMultitextureOverlayDefinition() : base()
         {
-            
-        }
-        public  GlobalHudMultitextureOverlayDefinition(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 452, Alignment = 4)]
@@ -52,14 +49,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_4;
         internal GlobalHudMultitextureOverlayEffectorDefinition[] effectors;
         internal byte[] invalidName_5;
-        
-        public override int SerializedSize{get { return 452; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GlobalHudMultitextureOverlayDefinitionBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 452; } }
+        public override int Alignment { get { return 4; } }
+        public GlobalHudMultitextureOverlayDefinitionBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(2);
             type = binaryReader.ReadInt16();
             framebufferBlendFunc = (FramebufferBlendFunc)binaryReader.ReadInt16();
@@ -85,46 +82,19 @@ namespace Moonfish.Guerilla.Tags
             tertiaryWrapMode = (TertiaryWrapMode)binaryReader.ReadInt16();
             invalidName_3 = binaryReader.ReadBytes(2);
             invalidName_4 = binaryReader.ReadBytes(184);
-            effectors = Guerilla.ReadBlockArray<GlobalHudMultitextureOverlayEffectorDefinition>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalHudMultitextureOverlayEffectorDefinition>(binaryReader));
             invalidName_5 = binaryReader.ReadBytes(128);
+            return blamPointers;
         }
-        public  GlobalHudMultitextureOverlayDefinitionBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            effectors = ReadBlockArrayData<GlobalHudMultitextureOverlayEffectorDefinition>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadBytes(2);
-            type = binaryReader.ReadInt16();
-            framebufferBlendFunc = (FramebufferBlendFunc)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            invalidName_1 = binaryReader.ReadBytes(32);
-            primaryAnchor = (PrimaryAnchor)binaryReader.ReadInt16();
-            secondaryAnchor = (SecondaryAnchor)binaryReader.ReadInt16();
-            tertiaryAnchor = (TertiaryAnchor)binaryReader.ReadInt16();
-            invalidName_0To1BlendFunc = (InvalidName0To1BlendFunc)binaryReader.ReadInt16();
-            invalidName_1To2BlendFunc = (InvalidName1To2BlendFunc)binaryReader.ReadInt16();
-            invalidName_2 = binaryReader.ReadBytes(2);
-            primaryScale = binaryReader.ReadVector2();
-            secondaryScale = binaryReader.ReadVector2();
-            tertiaryScale = binaryReader.ReadVector2();
-            primaryOffset = binaryReader.ReadVector2();
-            secondaryOffset = binaryReader.ReadVector2();
-            tertiaryOffset = binaryReader.ReadVector2();
-            primary = binaryReader.ReadTagReference();
-            secondary = binaryReader.ReadTagReference();
-            tertiary = binaryReader.ReadTagReference();
-            primaryWrapMode = (PrimaryWrapMode)binaryReader.ReadInt16();
-            secondaryWrapMode = (SecondaryWrapMode)binaryReader.ReadInt16();
-            tertiaryWrapMode = (TertiaryWrapMode)binaryReader.ReadInt16();
-            invalidName_3 = binaryReader.ReadBytes(2);
-            invalidName_4 = binaryReader.ReadBytes(184);
-            effectors = Guerilla.ReadBlockArray<GlobalHudMultitextureOverlayEffectorDefinition>(binaryReader);
-            invalidName_5 = binaryReader.ReadBytes(128);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(type);

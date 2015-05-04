@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("whip")]
     public partial class CellularAutomata2dBlock : CellularAutomata2dBlockBase
     {
-        public  CellularAutomata2dBlock(BinaryReader binaryReader): base(binaryReader)
+        public CellularAutomata2dBlock() : base()
         {
-            
-        }
-        public  CellularAutomata2dBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 544, Alignment = 4)]
@@ -44,8 +41,8 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal Moonfish.Tags.StringIdent marker;
         internal InterpolationFlags interpolationFlags;
-        internal Moonfish.Tags.ColourR8G8B8 BaseColour;
-        internal Moonfish.Tags.ColourR8G8B8 PeakColour;
+        internal Moonfish.Tags.ColourR8G8B8 baseColor;
+        internal Moonfish.Tags.ColourR8G8B8 peakColor;
         internal byte[] invalidName_2;
         internal short widthCells0;
         internal short heightCells0;
@@ -60,14 +57,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference texture;
         internal byte[] invalidName_6;
         internal RulesBlock[] rules;
-        
-        public override int SerializedSize{get { return 544; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  CellularAutomata2dBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 544; } }
+        public override int Alignment { get { return 4; } }
+        public CellularAutomata2dBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             updatesPerSecondHz = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             deadCellPenalty = binaryReader.ReadSingle();
@@ -81,8 +78,8 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(28);
             marker = binaryReader.ReadStringID();
             interpolationFlags = (InterpolationFlags)binaryReader.ReadInt32();
-            BaseColour = binaryReader.ReadColorR8G8B8();
-            PeakColour = binaryReader.ReadColorR8G8B8();
+            baseColor = binaryReader.ReadColorR8G8B8();
+            peakColor = binaryReader.ReadColorR8G8B8();
             invalidName_2 = binaryReader.ReadBytes(76);
             widthCells0 = binaryReader.ReadInt16();
             heightCells0 = binaryReader.ReadInt16();
@@ -95,46 +92,18 @@ namespace Moonfish.Guerilla.Tags
             invalidName_5 = binaryReader.ReadBytes(48);
             texture = binaryReader.ReadTagReference();
             invalidName_6 = binaryReader.ReadBytes(160);
-            rules = Guerilla.ReadBlockArray<RulesBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<RulesBlock>(binaryReader));
+            return blamPointers;
         }
-        public  CellularAutomata2dBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            rules = ReadBlockArrayData<RulesBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            updatesPerSecondHz = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            deadCellPenalty = binaryReader.ReadSingle();
-            liveCellBonus = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(80);
-            widthCells = binaryReader.ReadInt16();
-            heightCells = binaryReader.ReadInt16();
-            cellWidthWorldUnits = binaryReader.ReadSingle();
-            heightWorldUnits = binaryReader.ReadSingle();
-            velocityCellsUpdate = binaryReader.ReadVector2();
-            invalidName_1 = binaryReader.ReadBytes(28);
-            marker = binaryReader.ReadStringID();
-            interpolationFlags = (InterpolationFlags)binaryReader.ReadInt32();
-            BaseColour = binaryReader.ReadColorR8G8B8();
-            PeakColour = binaryReader.ReadColorR8G8B8();
-            invalidName_2 = binaryReader.ReadBytes(76);
-            widthCells0 = binaryReader.ReadInt16();
-            heightCells0 = binaryReader.ReadInt16();
-            cellWidthWorldUnits0 = binaryReader.ReadSingle();
-            velocityCellsUpdate0 = binaryReader.ReadVector2();
-            invalidName_3 = binaryReader.ReadBytes(48);
-            marker0 = binaryReader.ReadStringID();
-            textureWidthCells = binaryReader.ReadInt16();
-            invalidName_4 = binaryReader.ReadBytes(2);
-            invalidName_5 = binaryReader.ReadBytes(48);
-            texture = binaryReader.ReadTagReference();
-            invalidName_6 = binaryReader.ReadBytes(160);
-            rules = Guerilla.ReadBlockArray<RulesBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(updatesPerSecondHz);
                 binaryWriter.Write(invalidName_, 0, 2);
@@ -149,8 +118,8 @@ namespace Moonfish.Guerilla.Tags
                 binaryWriter.Write(invalidName_1, 0, 28);
                 binaryWriter.Write(marker);
                 binaryWriter.Write((Int32)interpolationFlags);
-                binaryWriter.Write(BaseColour);
-                binaryWriter.Write(PeakColour);
+                binaryWriter.Write(baseColor);
+                binaryWriter.Write(peakColor);
                 binaryWriter.Write(invalidName_2, 0, 76);
                 binaryWriter.Write(widthCells0);
                 binaryWriter.Write(heightCells0);

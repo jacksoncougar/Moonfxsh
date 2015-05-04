@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("dc*s")]
     public partial class ScenarioDecoratorsResourceBlock : ScenarioDecoratorsResourceBlockBase
     {
-        public  ScenarioDecoratorsResourceBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioDecoratorsResourceBlock() : base()
         {
-            
-        }
-        public  ScenarioDecoratorsResourceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -33,29 +30,28 @@ namespace Moonfish.Guerilla.Tags
     {
         internal DecoratorPlacementDefinitionBlock[] decorator;
         internal ScenarioDecoratorSetPaletteEntryBlock[] decoratorPalette;
-        
-        public override int SerializedSize{get { return 16; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioDecoratorsResourceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 16; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioDecoratorsResourceBlockBase() : base()
         {
-            decorator = Guerilla.ReadBlockArray<DecoratorPlacementDefinitionBlock>(binaryReader);
-            decoratorPalette = Guerilla.ReadBlockArray<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader);
         }
-        public  ScenarioDecoratorsResourceBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorPlacementDefinitionBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            decorator = Guerilla.ReadBlockArray<DecoratorPlacementDefinitionBlock>(binaryReader);
-            decoratorPalette = Guerilla.ReadBlockArray<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            decorator = ReadBlockArrayData<DecoratorPlacementDefinitionBlock>(binaryReader, blamPointers.Dequeue());
+            decoratorPalette = ReadBlockArrayData<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<DecoratorPlacementDefinitionBlock>(binaryWriter, decorator, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioDecoratorSetPaletteEntryBlock>(binaryWriter, decoratorPalette, nextAddress);

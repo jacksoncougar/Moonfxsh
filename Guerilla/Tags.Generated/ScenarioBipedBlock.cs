@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioBipedBlock : ScenarioBipedBlockBase
     {
-        public  ScenarioBipedBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioBipedBlock() : base()
         {
-            
-        }
-        public  ScenarioBipedBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 84, Alignment = 4)]
@@ -28,37 +25,36 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] indexer;
         internal ScenarioObjectPermutationStructBlock permutationData;
         internal ScenarioUnitStructBlock unitData;
-        
-        public override int SerializedSize{get { return 84; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioBipedBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 84; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioBipedBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             type = binaryReader.ReadShortBlockIndex1();
             name = binaryReader.ReadShortBlockIndex1();
-            objectData = new ScenarioObjectDatumStructBlock(binaryReader);
+            objectData = new ScenarioObjectDatumStructBlock();
+            blamPointers.Concat(objectData.ReadFields(binaryReader));
             indexer = binaryReader.ReadBytes(4);
-            permutationData = new ScenarioObjectPermutationStructBlock(binaryReader);
-            unitData = new ScenarioUnitStructBlock(binaryReader);
+            permutationData = new ScenarioObjectPermutationStructBlock();
+            blamPointers.Concat(permutationData.ReadFields(binaryReader));
+            unitData = new ScenarioUnitStructBlock();
+            blamPointers.Concat(unitData.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  ScenarioBipedBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            objectData.ReadPointers(binaryReader, blamPointers);
+            permutationData.ReadPointers(binaryReader, blamPointers);
+            unitData.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            type = binaryReader.ReadShortBlockIndex1();
-            name = binaryReader.ReadShortBlockIndex1();
-            objectData = new ScenarioObjectDatumStructBlock(binaryReader);
-            indexer = binaryReader.ReadBytes(4);
-            permutationData = new ScenarioObjectPermutationStructBlock(binaryReader);
-            unitData = new ScenarioUnitStructBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(type);
                 binaryWriter.Write(name);

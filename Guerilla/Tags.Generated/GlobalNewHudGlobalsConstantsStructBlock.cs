@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalNewHudGlobalsConstantsStructBlock : GlobalNewHudGlobalsConstantsStructBlockBase
     {
-        public  GlobalNewHudGlobalsConstantsStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalNewHudGlobalsConstantsStructBlock() : base()
         {
-            
-        }
-        public  GlobalNewHudGlobalsConstantsStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 96, Alignment = 4)]
@@ -46,14 +43,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference eliteTrainingTopLeft;
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference eliteTrainingMiddle;
-        
-        public override int SerializedSize{get { return 96; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GlobalNewHudGlobalsConstantsStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 96; } }
+        public override int Alignment { get { return 4; } }
+        public GlobalNewHudGlobalsConstantsStructBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             primaryMessageSound = binaryReader.ReadTagReference();
             secondaryMessageSound = binaryReader.ReadTagReference();
             bootGrieferString = binaryReader.ReadStringID();
@@ -67,30 +64,16 @@ namespace Moonfish.Guerilla.Tags
             eliteTrainingTopCenter = binaryReader.ReadTagReference();
             eliteTrainingTopLeft = binaryReader.ReadTagReference();
             eliteTrainingMiddle = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  GlobalNewHudGlobalsConstantsStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            primaryMessageSound = binaryReader.ReadTagReference();
-            secondaryMessageSound = binaryReader.ReadTagReference();
-            bootGrieferString = binaryReader.ReadStringID();
-            cannotBootGrieferString = binaryReader.ReadStringID();
-            trainingShader = binaryReader.ReadTagReference();
-            humanTrainingTopRight = binaryReader.ReadTagReference();
-            humanTrainingTopCenter = binaryReader.ReadTagReference();
-            humanTrainingTopLeft = binaryReader.ReadTagReference();
-            humanTrainingMiddle = binaryReader.ReadTagReference();
-            eliteTrainingTopRight = binaryReader.ReadTagReference();
-            eliteTrainingTopCenter = binaryReader.ReadTagReference();
-            eliteTrainingTopLeft = binaryReader.ReadTagReference();
-            eliteTrainingMiddle = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(primaryMessageSound);
                 binaryWriter.Write(secondaryMessageSound);

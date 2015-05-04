@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class OldMaterialEffectMaterialBlock : OldMaterialEffectMaterialBlockBase
     {
-        public  OldMaterialEffectMaterialBlock(BinaryReader binaryReader): base(binaryReader)
+        public OldMaterialEffectMaterialBlock() : base()
         {
-            
-        }
-        public  OldMaterialEffectMaterialBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 28, Alignment = 4)]
@@ -30,37 +27,30 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal SweetenerMode sweetenerMode;
         internal byte[] invalidName_0;
-        
-        public override int SerializedSize{get { return 28; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  OldMaterialEffectMaterialBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 28; } }
+        public override int Alignment { get { return 4; } }
+        public OldMaterialEffectMaterialBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             effect = binaryReader.ReadTagReference();
             sound = binaryReader.ReadTagReference();
             materialName = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(4);
             sweetenerMode = (SweetenerMode)binaryReader.ReadByte();
             invalidName_0 = binaryReader.ReadBytes(3);
+            return blamPointers;
         }
-        public  OldMaterialEffectMaterialBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            effect = binaryReader.ReadTagReference();
-            sound = binaryReader.ReadTagReference();
-            materialName = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(4);
-            sweetenerMode = (SweetenerMode)binaryReader.ReadByte();
-            invalidName_0 = binaryReader.ReadBytes(3);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(effect);
                 binaryWriter.Write(sound);

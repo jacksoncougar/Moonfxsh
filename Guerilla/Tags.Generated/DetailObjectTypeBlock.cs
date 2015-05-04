@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class DetailObjectTypeBlock : DetailObjectTypeBlockBase
     {
-        public  DetailObjectTypeBlock(BinaryReader binaryReader): base(binaryReader)
+        public DetailObjectTypeBlock() : base()
         {
-            
-        }
-        public  DetailObjectTypeBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 96, Alignment = 4)]
@@ -39,14 +36,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ColourR8G8B8 maximumColor01;
         internal Moonfish.Tags.ColourA1R1G1B1 ambientColor0255;
         internal byte[] invalidName_2;
-        
-        public override int SerializedSize{get { return 96; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  DetailObjectTypeBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 96; } }
+        public override int Alignment { get { return 4; } }
+        public DetailObjectTypeBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
             sequenceIndex015 = binaryReader.ReadByte();
             typeFlags = (TypeFlags)binaryReader.ReadByte();
@@ -61,31 +58,16 @@ namespace Moonfish.Guerilla.Tags
             maximumColor01 = binaryReader.ReadColorR8G8B8();
             ambientColor0255 = binaryReader.ReadColourA1R1G1B1();
             invalidName_2 = binaryReader.ReadBytes(4);
+            return blamPointers;
         }
-        public  DetailObjectTypeBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadString32();
-            sequenceIndex015 = binaryReader.ReadByte();
-            typeFlags = (TypeFlags)binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(2);
-            colorOverrideFactor = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(8);
-            nearFadeDistanceWorldUnits = binaryReader.ReadSingle();
-            farFadeDistanceWorldUnits = binaryReader.ReadSingle();
-            sizeWorldUnitsPerPixel = binaryReader.ReadSingle();
-            invalidName_1 = binaryReader.ReadBytes(4);
-            minimumColor01 = binaryReader.ReadColorR8G8B8();
-            maximumColor01 = binaryReader.ReadColorR8G8B8();
-            ambientColor0255 = binaryReader.ReadColourA1R1G1B1();
-            invalidName_2 = binaryReader.ReadBytes(4);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(sequenceIndex015);

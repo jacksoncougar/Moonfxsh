@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AnimationPoolBlock : AnimationPoolBlockBase
     {
-        public  AnimationPoolBlock(BinaryReader binaryReader): base(binaryReader)
+        public AnimationPoolBlock() : base()
         {
-            
-        }
-        public  AnimationPoolBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 108, Alignment = 4)]
@@ -50,14 +47,14 @@ namespace Moonfish.Guerilla.Tags
         internal AnimationSoundEventBlock[] soundEventsABCDCC;
         internal AnimationEffectEventBlock[] effectEventsABCDCC;
         internal ObjectSpaceNodeDataBlock[] objectSpaceParentNodesABCDCC;
-        
-        public override int SerializedSize{get { return 108; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  AnimationPoolBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 108; } }
+        public override int Alignment { get { return 4; } }
+        public AnimationPoolBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             nodeListChecksum = binaryReader.ReadInt32();
             productionChecksum = binaryReader.ReadInt32();
@@ -80,51 +77,29 @@ namespace Moonfish.Guerilla.Tags
             loopFrameIndex = binaryReader.ReadInt16();
             parentAnimation = binaryReader.ReadShortBlockIndex1();
             nextAnimation = binaryReader.ReadShortBlockIndex1();
-            animationData = Guerilla.ReadData(binaryReader);
-            dataSizes = new PackedDataSizesStructBlock(binaryReader);
-            frameEventsABCDCC = Guerilla.ReadBlockArray<AnimationFrameEventBlock>(binaryReader);
-            soundEventsABCDCC = Guerilla.ReadBlockArray<AnimationSoundEventBlock>(binaryReader);
-            effectEventsABCDCC = Guerilla.ReadBlockArray<AnimationEffectEventBlock>(binaryReader);
-            objectSpaceParentNodesABCDCC = Guerilla.ReadBlockArray<ObjectSpaceNodeDataBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
+            dataSizes = new PackedDataSizesStructBlock();
+            blamPointers.Concat(dataSizes.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<AnimationFrameEventBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<AnimationSoundEventBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<AnimationEffectEventBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ObjectSpaceNodeDataBlock>(binaryReader));
+            return blamPointers;
         }
-        public  AnimationPoolBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            animationData = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            dataSizes.ReadPointers(binaryReader, blamPointers);
+            frameEventsABCDCC = ReadBlockArrayData<AnimationFrameEventBlock>(binaryReader, blamPointers.Dequeue());
+            soundEventsABCDCC = ReadBlockArrayData<AnimationSoundEventBlock>(binaryReader, blamPointers.Dequeue());
+            effectEventsABCDCC = ReadBlockArrayData<AnimationEffectEventBlock>(binaryReader, blamPointers.Dequeue());
+            objectSpaceParentNodesABCDCC = ReadBlockArrayData<ObjectSpaceNodeDataBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadStringID();
-            nodeListChecksum = binaryReader.ReadInt32();
-            productionChecksum = binaryReader.ReadInt32();
-            importChecksum = binaryReader.ReadInt32();
-            type = (Type)binaryReader.ReadByte();
-            frameInfoType = (FrameInfoType)binaryReader.ReadByte();
-            blendScreen = binaryReader.ReadByteBlockIndex1();
-            nodeCount = binaryReader.ReadByte();
-            frameCount = binaryReader.ReadInt16();
-            internalFlags = (InternalFlags)binaryReader.ReadByte();
-            productionFlags = (ProductionFlags)binaryReader.ReadByte();
-            playbackFlags = (PlaybackFlags)binaryReader.ReadInt16();
-            desiredCompression = (DesiredCompression)binaryReader.ReadByte();
-            currentCompression = (CurrentCompression)binaryReader.ReadByte();
-            weight = binaryReader.ReadSingle();
-            parentGraphIndex = binaryReader.ReadInt32();
-            parentGraphBlockIndex = binaryReader.ReadInt32();
-            parentGraphBlockOffset = binaryReader.ReadInt32();
-            parentGraphStartingPointIndex = binaryReader.ReadInt16();
-            loopFrameIndex = binaryReader.ReadInt16();
-            parentAnimation = binaryReader.ReadShortBlockIndex1();
-            nextAnimation = binaryReader.ReadShortBlockIndex1();
-            animationData = Guerilla.ReadData(binaryReader);
-            dataSizes = new PackedDataSizesStructBlock(binaryReader);
-            frameEventsABCDCC = Guerilla.ReadBlockArray<AnimationFrameEventBlock>(binaryReader);
-            soundEventsABCDCC = Guerilla.ReadBlockArray<AnimationSoundEventBlock>(binaryReader);
-            effectEventsABCDCC = Guerilla.ReadBlockArray<AnimationEffectEventBlock>(binaryReader);
-            objectSpaceParentNodesABCDCC = Guerilla.ReadBlockArray<ObjectSpaceNodeDataBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(nodeListChecksum);

@@ -5,45 +5,42 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class WaterGeometrySectionBlock : WaterGeometrySectionBlockBase
     {
-        public  WaterGeometrySectionBlock(BinaryReader binaryReader): base(binaryReader)
+        public WaterGeometrySectionBlock() : base()
         {
-            
-        }
-        public  WaterGeometrySectionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 68, Alignment = 4)]
     public class WaterGeometrySectionBlockBase : GuerillaBlock
     {
         internal GlobalGeometrySectionStructBlock section;
-        
-        public override int SerializedSize{get { return 68; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  WaterGeometrySectionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 68; } }
+        public override int Alignment { get { return 4; } }
+        public WaterGeometrySectionBlockBase() : base()
         {
-            section = new GlobalGeometrySectionStructBlock(binaryReader);
         }
-        public  WaterGeometrySectionBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            section = new GlobalGeometrySectionStructBlock();
+            blamPointers.Concat(section.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            section = new GlobalGeometrySectionStructBlock(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            section.ReadPointers(binaryReader, blamPointers);
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 section.Write(binaryWriter);
                 return nextAddress;

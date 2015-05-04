@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StiffSpringConstraintsBlock : StiffSpringConstraintsBlockBase
     {
-        public  StiffSpringConstraintsBlock(BinaryReader binaryReader): base(binaryReader)
+        public StiffSpringConstraintsBlock() : base()
         {
-            
-        }
-        public  StiffSpringConstraintsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 124, Alignment = 4)]
@@ -25,31 +22,29 @@ namespace Moonfish.Guerilla.Tags
         internal ConstraintBodiesStructBlock constraintBodies;
         internal byte[] invalidName_;
         internal float springLength;
-        
-        public override int SerializedSize{get { return 124; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  StiffSpringConstraintsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 124; } }
+        public override int Alignment { get { return 4; } }
+        public StiffSpringConstraintsBlockBase() : base()
         {
-            constraintBodies = new ConstraintBodiesStructBlock(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            constraintBodies = new ConstraintBodiesStructBlock();
+            blamPointers.Concat(constraintBodies.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(4);
             springLength = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  StiffSpringConstraintsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            constraintBodies.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            constraintBodies = new ConstraintBodiesStructBlock(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(4);
-            springLength = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 constraintBodies.Write(binaryWriter);
                 binaryWriter.Write(invalidName_, 0, 4);

@@ -5,45 +5,42 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SoundGestaltPlaybackBlock : SoundGestaltPlaybackBlockBase
     {
-        public  SoundGestaltPlaybackBlock(BinaryReader binaryReader): base(binaryReader)
+        public SoundGestaltPlaybackBlock() : base()
         {
-            
-        }
-        public  SoundGestaltPlaybackBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 56, Alignment = 4)]
     public class SoundGestaltPlaybackBlockBase : GuerillaBlock
     {
         internal SoundPlaybackParametersStructBlock soundPlaybackParametersStruct;
-        
-        public override int SerializedSize{get { return 56; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  SoundGestaltPlaybackBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 56; } }
+        public override int Alignment { get { return 4; } }
+        public SoundGestaltPlaybackBlockBase() : base()
         {
-            soundPlaybackParametersStruct = new SoundPlaybackParametersStructBlock(binaryReader);
         }
-        public  SoundGestaltPlaybackBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            soundPlaybackParametersStruct = new SoundPlaybackParametersStructBlock();
+            blamPointers.Concat(soundPlaybackParametersStruct.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            soundPlaybackParametersStruct = new SoundPlaybackParametersStructBlock(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            soundPlaybackParametersStruct.ReadPointers(binaryReader, blamPointers);
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 soundPlaybackParametersStruct.Write(binaryWriter);
                 return nextAddress;

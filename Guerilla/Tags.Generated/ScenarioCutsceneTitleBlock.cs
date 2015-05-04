@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 36, Alignment = 4)]
     public class ScenarioCutsceneTitleBlockBase : GuerillaBlock
     {
@@ -29,18 +31,28 @@ namespace Moonfish.Guerilla.Tags
         internal float upTimeSeconds;
         internal float fadeOutTimeSeconds;
         internal byte[] padding;
-        public override int SerializedSize { get { return 36; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 36; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ScenarioCutsceneTitleBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             textBoundsOnScreen = binaryReader.ReadVector2();
-            justification = (Justification)binaryReader.ReadInt16();
-            font = (Font)binaryReader.ReadInt16();
+            justification = (Justification) binaryReader.ReadInt16();
+            font = (Font) binaryReader.ReadInt16();
             textColor = binaryReader.ReadColourR1G1B1();
             shadowColor = binaryReader.ReadColourR1G1B1();
             fadeInTimeSeconds = binaryReader.ReadSingle();
@@ -49,19 +61,21 @@ namespace Moonfish.Guerilla.Tags
             padding = binaryReader.ReadBytes(2);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(textBoundsOnScreen);
-                binaryWriter.Write((Int16)justification);
-                binaryWriter.Write((Int16)font);
+                binaryWriter.Write((Int16) justification);
+                binaryWriter.Write((Int16) font);
                 binaryWriter.Write(textColor);
                 binaryWriter.Write(shadowColor);
                 binaryWriter.Write(fadeInTimeSeconds);
@@ -71,6 +85,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         internal enum Justification : short
         {
             Left = 0,
@@ -78,6 +93,7 @@ using(binaryWriter.BaseStream.Pin())
             Center = 2,
             CustomTextEntry = 3,
         };
+
         internal enum Font : short
         {
             TerminalFont = 0,

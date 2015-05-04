@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 32, Alignment = 4)]
     public class AnimationGraphNodeBlockBase : GuerillaBlock
     {
@@ -28,11 +30,21 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 baseVector;
         internal float vectorRange;
         internal float zPos;
-        public override int SerializedSize { get { return 32; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 32; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public AnimationGraphNodeBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -40,34 +52,37 @@ namespace Moonfish.Guerilla.Tags
             nextSiblingNodeIndex = binaryReader.ReadShortBlockIndex1();
             firstChildNodeIndex = binaryReader.ReadShortBlockIndex1();
             parentNodeIndex = binaryReader.ReadShortBlockIndex1();
-            modelFlags = (ModelFlags)binaryReader.ReadByte();
-            nodeJointFlags = (NodeJointFlags)binaryReader.ReadByte();
+            modelFlags = (ModelFlags) binaryReader.ReadByte();
+            nodeJointFlags = (NodeJointFlags) binaryReader.ReadByte();
             baseVector = binaryReader.ReadVector3();
             vectorRange = binaryReader.ReadSingle();
             zPos = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(nextSiblingNodeIndex);
                 binaryWriter.Write(firstChildNodeIndex);
                 binaryWriter.Write(parentNodeIndex);
-                binaryWriter.Write((Byte)modelFlags);
-                binaryWriter.Write((Byte)nodeJointFlags);
+                binaryWriter.Write((Byte) modelFlags);
+                binaryWriter.Write((Byte) nodeJointFlags);
                 binaryWriter.Write(baseVector);
                 binaryWriter.Write(vectorRange);
                 binaryWriter.Write(zPos);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum ModelFlags : byte
         {
@@ -78,6 +93,7 @@ using(binaryWriter.BaseStream.Pin())
             RightHand = 16,
             LeftArmMember = 32,
         };
+
         [FlagsAttribute]
         internal enum NodeJointFlags : byte
         {

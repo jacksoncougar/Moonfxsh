@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class ObjectAnimationBlockBase : GuerillaBlock
     {
@@ -25,11 +27,21 @@ namespace Moonfish.Guerilla.Tags
         internal FunctionControls functionControls;
         internal Moonfish.Tags.StringIdent function;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ObjectAnimationBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -37,30 +49,33 @@ namespace Moonfish.Guerilla.Tags
             animation = new AnimationIndexStructBlock();
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(animation.ReadFields(binaryReader)));
             invalidName_ = binaryReader.ReadBytes(2);
-            functionControls = (FunctionControls)binaryReader.ReadInt16();
+            functionControls = (FunctionControls) binaryReader.ReadInt16();
             function = binaryReader.ReadStringID();
             invalidName_0 = binaryReader.ReadBytes(4);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             animation.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(label);
                 animation.Write(binaryWriter);
                 binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int16)functionControls);
+                binaryWriter.Write((Int16) functionControls);
                 binaryWriter.Write(function);
                 binaryWriter.Write(invalidName_0, 0, 4);
                 return nextAddress;
             }
         }
+
         internal enum FunctionControls : short
         {
             Frame = 0,

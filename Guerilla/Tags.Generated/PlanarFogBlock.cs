@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Fog = (TagClass)"fog ";
+        public static readonly TagClass Fog = (TagClass) "fog ";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 96, Alignment = 4)]
     public class PlanarFogBlockBase : GuerillaBlock
     {
@@ -33,53 +35,68 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent globalMaterialName;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
+
         /// <summary>
         /// planar fog density is clamped to this value
         /// </summary>
         internal float maximumDensity01;
+
         /// <summary>
         /// the fog becomes opaque (maximum density) at this distance from the viewer
         /// </summary>
         internal float opaqueDistanceWorldUnits;
+
         /// <summary>
         /// the fog becomes opaque at this distance below fog plane
         /// </summary>
         internal float opaqueDepthWorldUnits;
+
         /// <summary>
         /// distances above fog plane where atmospheric fog supercedes planar fog and visa-versa
         /// </summary>
         internal Moonfish.Model.Range atmosphericPlanarDepthWorldUnits;
+
         /// <summary>
         /// negative numbers are bad, mmmkay?
         /// </summary>
         internal float eyeOffsetScale11;
+
         internal Moonfish.Tags.ColourR8G8B8 color;
         internal PlanarFogPatchyFogBlock[] patchyFog;
-        [TagReference("lsnd")]
-        internal Moonfish.Tags.TagReference backgroundSound;
-        [TagReference("snde")]
-        internal Moonfish.Tags.TagReference soundEnvironment;
+        [TagReference("lsnd")] internal Moonfish.Tags.TagReference backgroundSound;
+        [TagReference("snde")] internal Moonfish.Tags.TagReference soundEnvironment;
+
         /// <summary>
         /// scales the surrounding background sound by this much
         /// </summary>
         internal float environmentDampingFactor;
+
         /// <summary>
         /// scale for fog background sound
         /// </summary>
         internal float backgroundSoundGain;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference enterSound;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference exitSound;
-        public override int SerializedSize { get { return 96; } }
-        public override int Alignment { get { return 4; } }
+
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference enterSound;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference exitSound;
+
+        public override int SerializedSize
+        {
+            get { return 96; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public PlanarFogBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
             priority = binaryReader.ReadInt16();
             globalMaterialName = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -99,17 +116,19 @@ namespace Moonfish.Guerilla.Tags
             exitSound = binaryReader.ReadTagReference();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             patchyFog = ReadBlockArrayData<PlanarFogPatchyFogBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16) flags);
                 binaryWriter.Write(priority);
                 binaryWriter.Write(globalMaterialName);
                 binaryWriter.Write(invalidName_, 0, 2);
@@ -130,6 +149,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {

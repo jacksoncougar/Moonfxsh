@@ -3,9 +3,9 @@ using Moonfish.Guerilla;
 
 namespace Moonfish.Tags
 {
-    [GuerillaType( MoonfishFieldType.FieldStringId )]
-    [GuerillaType( MoonfishFieldType.FieldOldStringId )]
-    [StructLayout( LayoutKind.Explicit, Size = 4)]
+    [GuerillaType(MoonfishFieldType.FieldStringId)]
+    [GuerillaType(MoonfishFieldType.FieldOldStringId)]
+    [StructLayout(LayoutKind.Explicit, Size = 4)]
     public struct StringIdent
     {
         public bool Equals(StringIdent other)
@@ -27,49 +27,49 @@ namespace Moonfish.Tags
             }
         }
 
-        [FieldOffset( 0 )] public readonly sbyte Length;
-        [FieldOffset( 2 )] public readonly short Index;
+        [FieldOffset(0)] public readonly sbyte Length;
+        [FieldOffset(2)] public readonly short Index;
 
-        public StringIdent( int interleavedValue )
+        public StringIdent(int interleavedValue)
         {
-            Length = ( sbyte ) ( interleavedValue >> 24 );
-            Index = ( short ) ( interleavedValue & 0x0000FFFF );
+            Length = (sbyte) (interleavedValue >> 24);
+            Index = (short) (interleavedValue & 0x0000FFFF);
         }
 
-        public StringIdent( short index, sbyte length )
+        public StringIdent(short index, sbyte length)
         {
             Index = index;
             Length = length;
         }
 
-        public static explicit operator int( StringIdent StringIdent )
+        public static explicit operator int(StringIdent StringIdent)
         {
-            return ( StringIdent.Length << 24 ) | byte.MinValue | ( ushort ) StringIdent.Index;
+            return (StringIdent.Length << 24) | byte.MinValue | (ushort) StringIdent.Index;
         }
 
-        public static explicit operator StringIdent( int i )
+        public static explicit operator StringIdent(int i)
         {
-            return new StringIdent( i );
+            return new StringIdent(i);
         }
 
-        public static bool operator ==( StringIdent first, StringIdent second )
+        public static bool operator ==(StringIdent first, StringIdent second)
         {
             return first.Index == second.Index && first.Length == second.Length;
         }
 
-        public static bool operator !=( StringIdent first, StringIdent second )
+        public static bool operator !=(StringIdent first, StringIdent second)
         {
-            return !( first == second );
+            return !(first == second);
         }
 
         public static StringIdent Zero
         {
-            get { return new StringIdent( 0, 0 ); }
+            get { return new StringIdent(0, 0); }
         }
 
-        public override string ToString( )
+        public override string ToString()
         {
-            var value = Halo2.Strings[ this ];
+            var value = Halo2.Strings[this];
             return value;
         }
     }

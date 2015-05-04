@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 44, Alignment = 4)]
     public class ShaderPassParameterBlockBase : GuerillaBlock
     {
@@ -23,53 +25,65 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] explanation;
         internal Type type;
         internal Flags flags;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference defaultBitmap;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference defaultBitmap;
         internal float defaultConstValue;
         internal Moonfish.Tags.ColourR8G8B8 defaultConstColor;
         internal SourceExtern sourceExtern;
         internal byte[] invalidName_;
-        public override int SerializedSize { get { return 44; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 44; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ShaderPassParameterBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
-            type = (Type)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
+            type = (Type) binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
             defaultBitmap = binaryReader.ReadTagReference();
             defaultConstValue = binaryReader.ReadSingle();
             defaultConstColor = binaryReader.ReadColorR8G8B8();
-            sourceExtern = (SourceExtern)binaryReader.ReadInt16();
+            sourceExtern = (SourceExtern) binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             explanation = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 nextAddress = Guerilla.WriteData(binaryWriter, explanation, nextAddress);
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16) type);
+                binaryWriter.Write((Int16) flags);
                 binaryWriter.Write(defaultBitmap);
                 binaryWriter.Write(defaultConstValue);
                 binaryWriter.Write(defaultConstColor);
-                binaryWriter.Write((Int16)sourceExtern);
+                binaryWriter.Write((Int16) sourceExtern);
                 binaryWriter.Write(invalidName_, 0, 2);
                 return nextAddress;
             }
         }
+
         internal enum Type : short
         {
             Bitmap = 0,
@@ -77,12 +91,14 @@ using(binaryWriter.BaseStream.Pin())
             Color = 2,
             Switch = 3,
         };
+
         [FlagsAttribute]
         internal enum Flags : short
         {
             NoBitmapLOD = 1,
             RequiredParameter = 2,
         };
+
         internal enum SourceExtern : short
         {
             None = 0,

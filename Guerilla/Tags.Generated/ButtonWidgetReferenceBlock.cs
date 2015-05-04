@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 60, Alignment = 4)]
     public class ButtonWidgetReferenceBlockBase : GuerillaBlock
     {
@@ -26,29 +28,40 @@ namespace Moonfish.Guerilla.Tags
         internal CustomFont customFont;
         internal OpenTK.Vector4 textColor;
         internal OpenTK.Vector2 bounds;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference bitmap;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference bitmap;
+
         /// <summary>
         /// from top-left
         /// </summary>
         internal Moonfish.Tags.Point bitmapOffset;
+
         internal Moonfish.Tags.StringIdent stringId;
         internal short renderDepthBias;
         internal short mouseRegionTopOffset;
         internal ButtonFlags buttonFlags;
-        public override int SerializedSize { get { return 60; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 60; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ButtonWidgetReferenceBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            textFlags = (TextFlags)binaryReader.ReadInt32();
-            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            textFlags = (TextFlags) binaryReader.ReadInt32();
+            animationIndex = (AnimationIndex) binaryReader.ReadInt16();
             introAnimationDelayMilliseconds = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            customFont = (CustomFont)binaryReader.ReadInt16();
+            customFont = (CustomFont) binaryReader.ReadInt16();
             textColor = binaryReader.ReadVector4();
             bounds = binaryReader.ReadVector2();
             bitmap = binaryReader.ReadTagReference();
@@ -56,23 +69,25 @@ namespace Moonfish.Guerilla.Tags
             stringId = binaryReader.ReadStringID();
             renderDepthBias = binaryReader.ReadInt16();
             mouseRegionTopOffset = binaryReader.ReadInt16();
-            buttonFlags = (ButtonFlags)binaryReader.ReadInt32();
+            buttonFlags = (ButtonFlags) binaryReader.ReadInt32();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)textFlags);
-                binaryWriter.Write((Int16)animationIndex);
+                binaryWriter.Write((Int32) textFlags);
+                binaryWriter.Write((Int16) animationIndex);
                 binaryWriter.Write(introAnimationDelayMilliseconds);
                 binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int16)customFont);
+                binaryWriter.Write((Int16) customFont);
                 binaryWriter.Write(textColor);
                 binaryWriter.Write(bounds);
                 binaryWriter.Write(bitmap);
@@ -80,10 +95,11 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(stringId);
                 binaryWriter.Write(renderDepthBias);
                 binaryWriter.Write(mouseRegionTopOffset);
-                binaryWriter.Write((Int32)buttonFlags);
+                binaryWriter.Write((Int32) buttonFlags);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum TextFlags : int
         {
@@ -93,6 +109,7 @@ using(binaryWriter.BaseStream.Pin())
             CalloutText = 8,
             Small31CharBuffer = 16,
         };
+
         internal enum AnimationIndex : short
         {
             NONE = 0,
@@ -161,6 +178,7 @@ using(binaryWriter.BaseStream.Pin())
             InvalidName62 = 63,
             InvalidName63 = 64,
         };
+
         internal enum CustomFont : short
         {
             Terminal = 0,
@@ -176,6 +194,7 @@ using(binaryWriter.BaseStream.Pin())
             MainMenuFont = 10,
             TextChatFont = 11,
         };
+
         [FlagsAttribute]
         internal enum ButtonFlags : int
         {

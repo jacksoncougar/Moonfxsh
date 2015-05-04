@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Whip = (TagClass)"whip";
+        public static readonly TagClass Whip = (TagClass) "whip";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 544, Alignment = 4)]
     public class CellularAutomata2dBlockBase : GuerillaBlock
     {
@@ -53,15 +55,24 @@ namespace Moonfish.Guerilla.Tags
         internal short textureWidthCells;
         internal byte[] invalidName_4;
         internal byte[] invalidName_5;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference texture;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference texture;
         internal byte[] invalidName_6;
         internal RulesBlock[] rules;
-        public override int SerializedSize { get { return 544; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 544; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public CellularAutomata2dBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -77,7 +88,7 @@ namespace Moonfish.Guerilla.Tags
             velocityCellsUpdate = binaryReader.ReadVector2();
             invalidName_1 = binaryReader.ReadBytes(28);
             marker = binaryReader.ReadStringID();
-            interpolationFlags = (InterpolationFlags)binaryReader.ReadInt32();
+            interpolationFlags = (InterpolationFlags) binaryReader.ReadInt32();
             baseColor = binaryReader.ReadColorR8G8B8();
             peakColor = binaryReader.ReadColorR8G8B8();
             invalidName_2 = binaryReader.ReadBytes(76);
@@ -95,15 +106,17 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<RulesBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             rules = ReadBlockArrayData<RulesBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(updatesPerSecondHz);
                 binaryWriter.Write(invalidName_, 0, 2);
@@ -117,7 +130,7 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(velocityCellsUpdate);
                 binaryWriter.Write(invalidName_1, 0, 28);
                 binaryWriter.Write(marker);
-                binaryWriter.Write((Int32)interpolationFlags);
+                binaryWriter.Write((Int32) interpolationFlags);
                 binaryWriter.Write(baseColor);
                 binaryWriter.Write(peakColor);
                 binaryWriter.Write(invalidName_2, 0, 76);
@@ -136,6 +149,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum InterpolationFlags : int
         {

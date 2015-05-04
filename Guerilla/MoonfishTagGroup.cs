@@ -9,12 +9,12 @@ namespace Moonfish.Guerilla
         public TagClass ParentClass { get; private set; }
         public MoonfishTagDefinition Definition { get; private set; }
 
-        public MoonfishTagGroup( GuerillaTagGroup guerillaTag )
+        public MoonfishTagGroup(GuerillaTagGroup guerillaTag)
         {
             Name = guerillaTag.Name;
             Class = guerillaTag.Class;
             ParentClass = guerillaTag.ParentClass;
-            Definition = new MoonfishTagDefinition( guerillaTag.Definition );
+            Definition = new MoonfishTagDefinition(guerillaTag.Definition);
         }
     }
 }

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 24, Alignment = 4)]
     public class ModelVariantStateBlockBase : GuerillaBlock
     {
@@ -23,49 +25,63 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal PropertyFlags propertyFlags;
         internal State state;
+
         /// <summary>
         /// played while the model is in this state
         /// </summary>
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference loopingEffect;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference loopingEffect;
+
         internal Moonfish.Tags.StringIdent loopingEffectMarkerName;
         internal float initialProbability;
-        public override int SerializedSize { get { return 24; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ModelVariantStateBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             permutationName = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(1);
-            propertyFlags = (PropertyFlags)binaryReader.ReadByte();
-            state = (State)binaryReader.ReadInt16();
+            propertyFlags = (PropertyFlags) binaryReader.ReadByte();
+            state = (State) binaryReader.ReadInt16();
             loopingEffect = binaryReader.ReadTagReference();
             loopingEffectMarkerName = binaryReader.ReadStringID();
             initialProbability = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(permutationName);
                 binaryWriter.Write(invalidName_, 0, 1);
-                binaryWriter.Write((Byte)propertyFlags);
-                binaryWriter.Write((Int16)state);
+                binaryWriter.Write((Byte) propertyFlags);
+                binaryWriter.Write((Int16) state);
                 binaryWriter.Write(loopingEffect);
                 binaryWriter.Write(loopingEffectMarkerName);
                 binaryWriter.Write(initialProbability);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum PropertyFlags : byte
         {
@@ -73,6 +89,7 @@ using(binaryWriter.BaseStream.Pin())
             HellaBlurred = 2,
             Shielded = 4,
         };
+
         internal enum State : short
         {
             Default = 0,

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 40, Alignment = 4)]
     public class UiErrorCategoryBlockBase : GuerillaBlock
     {
@@ -23,24 +25,33 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal DefaultButton defaultButton;
         internal byte[] invalidName_;
-        [TagReference("unic")]
-        internal Moonfish.Tags.TagReference stringTag;
+        [TagReference("unic")] internal Moonfish.Tags.TagReference stringTag;
         internal Moonfish.Tags.StringIdent defaultTitle;
         internal Moonfish.Tags.StringIdent defaultMessage;
         internal Moonfish.Tags.StringIdent defaultOk;
         internal Moonfish.Tags.StringIdent defaultCancel;
         internal UiErrorBlock[] errorBlock;
-        public override int SerializedSize { get { return 40; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 40; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public UiErrorCategoryBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             categoryName = binaryReader.ReadStringID();
-            flags = (Flags)binaryReader.ReadInt16();
-            defaultButton = (DefaultButton)binaryReader.ReadByte();
+            flags = (Flags) binaryReader.ReadInt16();
+            defaultButton = (DefaultButton) binaryReader.ReadByte();
             invalidName_ = binaryReader.ReadBytes(1);
             stringTag = binaryReader.ReadTagReference();
             defaultTitle = binaryReader.ReadStringID();
@@ -50,19 +61,21 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<UiErrorBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             errorBlock = ReadBlockArrayData<UiErrorBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(categoryName);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Byte)defaultButton);
+                binaryWriter.Write((Int16) flags);
+                binaryWriter.Write((Byte) defaultButton);
                 binaryWriter.Write(invalidName_, 0, 1);
                 binaryWriter.Write(stringTag);
                 binaryWriter.Write(defaultTitle);
@@ -73,11 +86,13 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {
             UseLargeDialog = 1,
         };
+
         internal enum DefaultButton : byte
         {
             NoDefault = 0,

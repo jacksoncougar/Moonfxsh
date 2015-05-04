@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 180, Alignment = 4)]
     public class MaterialsBlockBase : GuerillaBlock
     {
@@ -28,26 +30,33 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent generalArmor;
         internal Moonfish.Tags.StringIdent specificArmor;
         internal MaterialPhysicsPropertiesStructBlock physicsProperties;
-        [TagReference("mpdt")]
-        internal Moonfish.Tags.TagReference oldMaterialPhysics;
-        [TagReference("bsdt")]
-        internal Moonfish.Tags.TagReference breakableSurface;
+        [TagReference("mpdt")] internal Moonfish.Tags.TagReference oldMaterialPhysics;
+        [TagReference("bsdt")] internal Moonfish.Tags.TagReference breakableSurface;
         internal MaterialsSweetenersStructBlock sweeteners;
-        [TagReference("foot")]
-        internal Moonfish.Tags.TagReference materialEffects;
-        public override int SerializedSize { get { return 180; } }
-        public override int Alignment { get { return 4; } }
+        [TagReference("foot")] internal Moonfish.Tags.TagReference materialEffects;
+
+        public override int SerializedSize
+        {
+            get { return 180; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public MaterialsBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             parentName = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(2);
-            flags = (Flags)binaryReader.ReadInt16();
-            oldMaterialType = (OldMaterialType)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
+            oldMaterialType = (OldMaterialType) binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
             generalArmor = binaryReader.ReadStringID();
             specificArmor = binaryReader.ReadStringID();
@@ -60,22 +69,24 @@ namespace Moonfish.Guerilla.Tags
             materialEffects = binaryReader.ReadTagReference();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             physicsProperties.ReadPointers(binaryReader, blamPointers);
             sweeteners.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(parentName);
                 binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Int16)oldMaterialType);
+                binaryWriter.Write((Int16) flags);
+                binaryWriter.Write((Int16) oldMaterialType);
                 binaryWriter.Write(invalidName_0, 0, 2);
                 binaryWriter.Write(generalArmor);
                 binaryWriter.Write(specificArmor);
@@ -87,12 +98,14 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {
             Flammable = 1,
             Biomass = 2,
         };
+
         internal enum OldMaterialType : short
         {
             Dirt = 0,

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 24, Alignment = 4)]
     public class DecoratorCellCollectionBlockBase : GuerillaBlock
     {
@@ -23,15 +25,29 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 cacheBlockIndex;
         internal short groupCount;
         internal int groupStartIndex;
-        public override int SerializedSize { get { return 24; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public DecoratorCellCollectionBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            childIndices = new []{ new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices() };
+            childIndices = new[]
+            {
+                new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices(),
+                new ChildIndices(), new ChildIndices(), new ChildIndices()
+            };
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childIndices[0].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childIndices[1].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childIndices[2].ReadFields(binaryReader)));
@@ -45,6 +61,7 @@ namespace Moonfish.Guerilla.Tags
             groupStartIndex = binaryReader.ReadInt32();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -57,10 +74,11 @@ namespace Moonfish.Guerilla.Tags
             childIndices[6].ReadPointers(binaryReader, blamPointers);
             childIndices[7].ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 childIndices[0].Write(binaryWriter);
                 childIndices[1].Write(binaryWriter);
@@ -76,29 +94,42 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [LayoutAttribute(Size = 2, Alignment = 1)]
         public class ChildIndices : GuerillaBlock
         {
             internal short childIndex;
-            public override int SerializedSize { get { return 2; } }
-            public override int Alignment { get { return 1; } }
+
+            public override int SerializedSize
+            {
+                get { return 2; }
+            }
+
+            public override int Alignment
+            {
+                get { return 1; }
+            }
+
             public ChildIndices() : base()
             {
             }
+
             public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
             {
                 var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
                 childIndex = binaryReader.ReadInt16();
                 return blamPointers;
             }
+
             public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
             {
                 base.ReadPointers(binaryReader, blamPointers);
             }
+
             public override int Write(BinaryWriter binaryWriter, int nextAddress)
             {
                 base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+                using (binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(childIndex);
                     return nextAddress;

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 104, Alignment = 4)]
     public class PhantomTypesBlockBase : GuerillaBlock
     {
@@ -23,23 +25,29 @@ namespace Moonfish.Guerilla.Tags
         internal MinimumSize minimumSize;
         internal MaximumSize maximumSize;
         internal byte[] invalidName_;
+
         /// <summary>
         /// you don't need this if you're just generating effects.  If empty it defaults to the up of the object
         /// </summary>
         internal Moonfish.Tags.StringIdent markerName;
+
         /// <summary>
         /// you don't need this if you're just generating effects.  If empty it defaults to "marker name"
         /// </summary>
         internal Moonfish.Tags.StringIdent alignmentMarkerName;
+
         internal byte[] invalidName_0;
+
         /// <summary>
         /// 0 if you don't want this to behave like spring.  1 is a good starting point if you do.
         /// </summary>
         internal float hookesLawE;
+
         /// <summary>
         /// radius from linear motion origin in which acceleration is dead.
         /// </summary>
         internal float linearDeadRadius;
+
         internal float centerAcc;
         internal float centerMaxVel;
         internal float axisAcc;
@@ -47,24 +55,36 @@ namespace Moonfish.Guerilla.Tags
         internal float directionAcc;
         internal float directionMaxVel;
         internal byte[] invalidName_1;
+
         /// <summary>
         /// 0 if you don't want this to behave like spring.  1 is a good starting point if you do.
         /// </summary>
         internal float alignmentHookesLawE;
+
         internal float alignmentAcc;
         internal float alignmentMaxVel;
         internal byte[] invalidName_2;
-        public override int SerializedSize { get { return 104; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 104; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public PhantomTypesBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
-            minimumSize = (MinimumSize)binaryReader.ReadByte();
-            maximumSize = (MaximumSize)binaryReader.ReadByte();
+            flags = (Flags) binaryReader.ReadInt32();
+            minimumSize = (MinimumSize) binaryReader.ReadByte();
+            maximumSize = (MaximumSize) binaryReader.ReadByte();
             invalidName_ = binaryReader.ReadBytes(2);
             markerName = binaryReader.ReadStringID();
             alignmentMarkerName = binaryReader.ReadStringID();
@@ -84,18 +104,20 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes(8);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Byte)minimumSize);
-                binaryWriter.Write((Byte)maximumSize);
+                binaryWriter.Write((Int32) flags);
+                binaryWriter.Write((Byte) minimumSize);
+                binaryWriter.Write((Byte) maximumSize);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(markerName);
                 binaryWriter.Write(alignmentMarkerName);
@@ -116,6 +138,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -148,6 +171,7 @@ using(binaryWriter.BaseStream.Pin())
             DisableAngularDamping = 67108864,
             IgnoresDeadBipeds = 134217728,
         };
+
         internal enum MinimumSize : byte
         {
             Default = 0,
@@ -158,6 +182,7 @@ using(binaryWriter.BaseStream.Pin())
             Huge = 5,
             ExtraHuge = 6,
         };
+
         internal enum MaximumSize : byte
         {
             Default = 0,

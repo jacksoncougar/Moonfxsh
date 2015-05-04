@@ -4,9 +4,9 @@
     {
         void IResourceBlock.LoadRawResources()
         {
-            foreach ( var bitmapDataBlock in bitmaps )
+            foreach (var bitmapDataBlock in bitmaps)
             {
-                bitmapDataBlock.LoadRawResources(  );
+                bitmapDataBlock.LoadRawResources();
             }
         }
 

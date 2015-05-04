@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 76, Alignment = 4)]
     public class UiModelSceneReferenceBlockBase : GuerillaBlock
     {
@@ -33,16 +35,26 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent uNUSEDIntroAnim;
         internal Moonfish.Tags.StringIdent uNUSEDOutroAnim;
         internal Moonfish.Tags.StringIdent uNUSEDAmbientAnim;
-        public override int SerializedSize { get { return 76; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 76; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public UiModelSceneReferenceBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
-            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt32();
+            animationIndex = (AnimationIndex) binaryReader.ReadInt16();
             introAnimationDelayMilliseconds = binaryReader.ReadInt16();
             renderDepthBias = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -57,19 +69,21 @@ namespace Moonfish.Guerilla.Tags
             uNUSEDAmbientAnim = binaryReader.ReadStringID();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             objects = ReadBlockArrayData<UiObjectReferenceBlock>(binaryReader, blamPointers.Dequeue());
             lights = ReadBlockArrayData<UiLightReferenceBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)animationIndex);
+                binaryWriter.Write((Int32) flags);
+                binaryWriter.Write((Int16) animationIndex);
                 binaryWriter.Write(introAnimationDelayMilliseconds);
                 binaryWriter.Write(renderDepthBias);
                 binaryWriter.Write(invalidName_, 0, 2);
@@ -85,11 +99,13 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
             Unused = 1,
         };
+
         internal enum AnimationIndex : short
         {
             NONE = 0,

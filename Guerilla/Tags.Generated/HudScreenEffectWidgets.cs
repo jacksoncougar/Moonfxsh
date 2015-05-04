@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 80, Alignment = 4)]
     public class HudScreenEffectWidgetsBase : GuerillaBlock
     {
@@ -24,10 +26,8 @@ namespace Moonfish.Guerilla.Tags
         internal HudWidgetStateDefinitionStructBlock hudWidgetStateDefinitionStruct;
         internal Anchor anchor;
         internal Flags flags;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference bitmap;
-        [TagReference("egor")]
-        internal Moonfish.Tags.TagReference fullscreenScreenEffect;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference bitmap;
+        [TagReference("egor")] internal Moonfish.Tags.TagReference fullscreenScreenEffect;
         internal ScreenEffectBonusStructBlock waa;
         internal byte fullscreenSequenceIndex;
         internal byte halfscreenSequenceIndex;
@@ -36,11 +36,21 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.Point fullscreenOffset;
         internal Moonfish.Tags.Point halfscreenOffset;
         internal Moonfish.Tags.Point quarterscreenOffset;
-        public override int SerializedSize { get { return 80; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 80; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public HudScreenEffectWidgetsBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -48,9 +58,10 @@ namespace Moonfish.Guerilla.Tags
             hudWidgetInputsStruct = new HudWidgetInputsStructBlock();
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(hudWidgetInputsStruct.ReadFields(binaryReader)));
             hudWidgetStateDefinitionStruct = new HudWidgetStateDefinitionStructBlock();
-            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(hudWidgetStateDefinitionStruct.ReadFields(binaryReader)));
-            anchor = (Anchor)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
+            blamPointers =
+                new Queue<BlamPointer>(blamPointers.Concat(hudWidgetStateDefinitionStruct.ReadFields(binaryReader)));
+            anchor = (Anchor) binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
             bitmap = binaryReader.ReadTagReference();
             fullscreenScreenEffect = binaryReader.ReadTagReference();
             waa = new ScreenEffectBonusStructBlock();
@@ -64,6 +75,7 @@ namespace Moonfish.Guerilla.Tags
             quarterscreenOffset = binaryReader.ReadPoint();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -71,16 +83,17 @@ namespace Moonfish.Guerilla.Tags
             hudWidgetStateDefinitionStruct.ReadPointers(binaryReader, blamPointers);
             waa.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 hudWidgetInputsStruct.Write(binaryWriter);
                 hudWidgetStateDefinitionStruct.Write(binaryWriter);
-                binaryWriter.Write((Int16)anchor);
-                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16) anchor);
+                binaryWriter.Write((Int16) flags);
                 binaryWriter.Write(bitmap);
                 binaryWriter.Write(fullscreenScreenEffect);
                 waa.Write(binaryWriter);
@@ -94,6 +107,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         internal enum Anchor : short
         {
             HealthAndShield = 0,
@@ -103,6 +117,7 @@ using(binaryWriter.BaseStream.Pin())
             Crosshair = 4,
             LockOnTarget = 5,
         };
+
         [FlagsAttribute]
         internal enum Flags : short
         {

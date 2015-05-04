@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 52, Alignment = 4)]
     public class ScenarioPlayersBlockBase : GuerillaBlock
     {
@@ -35,60 +37,73 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent eMPTYSTRING0;
         internal CampaignPlayerType campaignPlayerType;
         internal byte[] invalidName_;
-        public override int SerializedSize { get { return 52; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 52; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ScenarioPlayersBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             position = binaryReader.ReadVector3();
             facingDegrees = binaryReader.ReadSingle();
-            teamDesignator = (TeamDesignator)binaryReader.ReadInt16();
+            teamDesignator = (TeamDesignator) binaryReader.ReadInt16();
             bSPIndex = binaryReader.ReadInt16();
-            gameType1 = (GameType1)binaryReader.ReadInt16();
-            gameType2 = (GameType2)binaryReader.ReadInt16();
-            gameType3 = (GameType3)binaryReader.ReadInt16();
-            gameType4 = (GameType4)binaryReader.ReadInt16();
-            spawnType0 = (SpawnType0)binaryReader.ReadInt16();
-            spawnType1 = (SpawnType1)binaryReader.ReadInt16();
-            spawnType2 = (SpawnType2)binaryReader.ReadInt16();
-            spawnType3 = (SpawnType3)binaryReader.ReadInt16();
+            gameType1 = (GameType1) binaryReader.ReadInt16();
+            gameType2 = (GameType2) binaryReader.ReadInt16();
+            gameType3 = (GameType3) binaryReader.ReadInt16();
+            gameType4 = (GameType4) binaryReader.ReadInt16();
+            spawnType0 = (SpawnType0) binaryReader.ReadInt16();
+            spawnType1 = (SpawnType1) binaryReader.ReadInt16();
+            spawnType2 = (SpawnType2) binaryReader.ReadInt16();
+            spawnType3 = (SpawnType3) binaryReader.ReadInt16();
             eMPTYSTRING = binaryReader.ReadStringID();
             eMPTYSTRING0 = binaryReader.ReadStringID();
-            campaignPlayerType = (CampaignPlayerType)binaryReader.ReadInt16();
+            campaignPlayerType = (CampaignPlayerType) binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(6);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(position);
                 binaryWriter.Write(facingDegrees);
-                binaryWriter.Write((Int16)teamDesignator);
+                binaryWriter.Write((Int16) teamDesignator);
                 binaryWriter.Write(bSPIndex);
-                binaryWriter.Write((Int16)gameType1);
-                binaryWriter.Write((Int16)gameType2);
-                binaryWriter.Write((Int16)gameType3);
-                binaryWriter.Write((Int16)gameType4);
-                binaryWriter.Write((Int16)spawnType0);
-                binaryWriter.Write((Int16)spawnType1);
-                binaryWriter.Write((Int16)spawnType2);
-                binaryWriter.Write((Int16)spawnType3);
+                binaryWriter.Write((Int16) gameType1);
+                binaryWriter.Write((Int16) gameType2);
+                binaryWriter.Write((Int16) gameType3);
+                binaryWriter.Write((Int16) gameType4);
+                binaryWriter.Write((Int16) spawnType0);
+                binaryWriter.Write((Int16) spawnType1);
+                binaryWriter.Write((Int16) spawnType2);
+                binaryWriter.Write((Int16) spawnType3);
                 binaryWriter.Write(eMPTYSTRING);
                 binaryWriter.Write(eMPTYSTRING0);
-                binaryWriter.Write((Int16)campaignPlayerType);
+                binaryWriter.Write((Int16) campaignPlayerType);
                 binaryWriter.Write(invalidName_, 0, 6);
                 return nextAddress;
             }
         }
+
         internal enum TeamDesignator : short
         {
             RedAlpha = 0,
@@ -101,6 +116,7 @@ using(binaryWriter.BaseStream.Pin())
             PinkHotel = 7,
             NEUTRAL = 8,
         };
+
         internal enum GameType1 : short
         {
             NONE = 0,
@@ -119,6 +135,7 @@ using(binaryWriter.BaseStream.Pin())
             AllExceptCTF = 13,
             AllExceptCTFRace = 14,
         };
+
         internal enum GameType2 : short
         {
             NONE = 0,
@@ -137,6 +154,7 @@ using(binaryWriter.BaseStream.Pin())
             AllExceptCTF = 13,
             AllExceptCTFRace = 14,
         };
+
         internal enum GameType3 : short
         {
             NONE = 0,
@@ -155,6 +173,7 @@ using(binaryWriter.BaseStream.Pin())
             AllExceptCTF = 13,
             AllExceptCTFRace = 14,
         };
+
         internal enum GameType4 : short
         {
             NONE = 0,
@@ -173,30 +192,35 @@ using(binaryWriter.BaseStream.Pin())
             AllExceptCTF = 13,
             AllExceptCTFRace = 14,
         };
+
         internal enum SpawnType0 : short
         {
             Both = 0,
             InitialSpawnOnly = 1,
             RespawnOnly = 2,
         };
+
         internal enum SpawnType1 : short
         {
             Both = 0,
             InitialSpawnOnly = 1,
             RespawnOnly = 2,
         };
+
         internal enum SpawnType2 : short
         {
             Both = 0,
             InitialSpawnOnly = 1,
             RespawnOnly = 2,
         };
+
         internal enum SpawnType3 : short
         {
             Both = 0,
             InitialSpawnOnly = 1,
             RespawnOnly = 2,
         };
+
         internal enum CampaignPlayerType : short
         {
             Masterchief = 0,

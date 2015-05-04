@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Wgit = (TagClass)"wgit";
+        public static readonly TagClass Wgit = (TagClass) "wgit";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 104, Alignment = 4)]
     public class UserInterfaceScreenWidgetDefinitionBlockBase : GuerillaBlock
     {
@@ -32,8 +34,7 @@ namespace Moonfish.Guerilla.Tags
         internal ScreenID screenID;
         internal ButtonKeyType buttonKeyType;
         internal OpenTK.Vector4 textColor;
-        [TagReference("unic")]
-        internal Moonfish.Tags.TagReference stringListTag;
+        [TagReference("unic")] internal Moonfish.Tags.TagReference stringListTag;
         internal WindowPaneReferenceBlock[] panes;
         internal ShapeGroup shapeGroup;
         internal byte[] invalidName_;
@@ -46,21 +47,31 @@ namespace Moonfish.Guerilla.Tags
         internal float accumulateZoomScaleY;
         internal float refractionScaleX;
         internal float refractionScaleY;
-        public override int SerializedSize { get { return 104; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 104; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public UserInterfaceScreenWidgetDefinitionBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
-            screenID = (ScreenID)binaryReader.ReadInt16();
-            buttonKeyType = (ButtonKeyType)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt32();
+            screenID = (ScreenID) binaryReader.ReadInt16();
+            buttonKeyType = (ButtonKeyType) binaryReader.ReadInt16();
             textColor = binaryReader.ReadVector4();
             stringListTag = binaryReader.ReadTagReference();
             blamPointers.Enqueue(ReadBlockArrayPointer<WindowPaneReferenceBlock>(binaryReader));
-            shapeGroup = (ShapeGroup)binaryReader.ReadInt16();
+            shapeGroup = (ShapeGroup) binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             headerStringId = binaryReader.ReadStringID();
             blamPointers.Enqueue(ReadBlockArrayPointer<LocalStringIdListSectionReferenceBlock>(binaryReader));
@@ -73,29 +84,34 @@ namespace Moonfish.Guerilla.Tags
             refractionScaleY = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             panes = ReadBlockArrayData<WindowPaneReferenceBlock>(binaryReader, blamPointers.Dequeue());
-            localStrings = ReadBlockArrayData<LocalStringIdListSectionReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            localStrings = ReadBlockArrayData<LocalStringIdListSectionReferenceBlock>(binaryReader,
+                blamPointers.Dequeue());
             localBitmaps = ReadBlockArrayData<LocalBitmapReferenceBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)screenID);
-                binaryWriter.Write((Int16)buttonKeyType);
+                binaryWriter.Write((Int32) flags);
+                binaryWriter.Write((Int16) screenID);
+                binaryWriter.Write((Int16) buttonKeyType);
                 binaryWriter.Write(textColor);
                 binaryWriter.Write(stringListTag);
                 nextAddress = Guerilla.WriteBlockArray<WindowPaneReferenceBlock>(binaryWriter, panes, nextAddress);
-                binaryWriter.Write((Int16)shapeGroup);
+                binaryWriter.Write((Int16) shapeGroup);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(headerStringId);
-                nextAddress = Guerilla.WriteBlockArray<LocalStringIdListSectionReferenceBlock>(binaryWriter, localStrings, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<LocalBitmapReferenceBlock>(binaryWriter, localBitmaps, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<LocalStringIdListSectionReferenceBlock>(binaryWriter,
+                    localStrings, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<LocalBitmapReferenceBlock>(binaryWriter, localBitmaps,
+                    nextAddress);
                 binaryWriter.Write(sourceColor);
                 binaryWriter.Write(destinationColor);
                 binaryWriter.Write(accumulateZoomScaleX);
@@ -105,6 +121,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -115,6 +132,7 @@ using(binaryWriter.BaseStream.Pin())
             LargeDialog = 16,
             DisableOverlayEffect = 32,
         };
+
         internal enum ScreenID : short
         {
             Test1 = 0,
@@ -374,6 +392,7 @@ using(binaryWriter.BaseStream.Pin())
             PPAdvancedKeyboardSettingsQtr = 254,
             NetworkAdapterSettings = 255,
         };
+
         internal enum ButtonKeyType : short
         {
             NONE = 0,
@@ -400,6 +419,7 @@ using(binaryWriter.BaseStream.Pin())
             XDELETEASELECTBBACK = 21,
             AOK = 22,
         };
+
         internal enum ShapeGroup : short
         {
             NONE = 0,

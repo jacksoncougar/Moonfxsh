@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 132, Alignment = 4)]
     public class FlockDefinitionBlockBase : GuerillaBlock
     {
@@ -23,102 +25,133 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal Moonfish.Tags.ShortBlockIndex1 boundingVolume;
         internal Flags flags;
+
         /// <summary>
         /// distance from ecology boundary that creature begins to be repulsed
         /// </summary>
         internal float ecologyMarginWus;
+
         internal FlockSourceBlock[] sources;
         internal FlockSinkBlock[] sinks;
+
         /// <summary>
         /// How frequently boids are produced at one of the sources (limited by the max boid count)
         /// </summary>
         internal float productionFrequencyBoidsSec;
+
         internal Moonfish.Model.Range scale;
-        [TagReference("crea")]
-        internal Moonfish.Tags.TagReference creature;
+        [TagReference("crea")] internal Moonfish.Tags.TagReference creature;
         internal int boidCount;
+
         /// <summary>
         /// distance within which one boid is affected by another
         /// </summary>
         internal float neighborhoodRadiusWorldUnits;
+
         /// <summary>
         /// distance that a boid tries to maintain from another
         /// </summary>
         internal float avoidanceRadiusWorldUnits;
+
         /// <summary>
         /// weight given to boid's desire to fly straight ahead
         /// </summary>
         internal float forwardScale01;
+
         /// <summary>
         /// weight given to boid's desire to align itself with neighboring boids
         /// </summary>
         internal float alignmentScale01;
+
         /// <summary>
         /// weight given to boid's desire to avoid collisions with other boids, when within the avoidance radius
         /// </summary>
         internal float avoidanceScale01;
+
         /// <summary>
         /// weight given to boids desire to fly level
         /// </summary>
         internal float levelingForceScale01;
+
         /// <summary>
         /// weight given to boid's desire to fly towards its sinks
         /// </summary>
         internal float sinkScale01;
+
         /// <summary>
         /// angle-from-forward within which one boid can perceive and react to another
         /// </summary>
         internal float perceptionAngleDegrees;
+
         /// <summary>
         /// throttle at which boids will naturally fly
         /// </summary>
         internal float averageThrottle01;
+
         /// <summary>
         /// maximum throttle applicable
         /// </summary>
         internal float maximumThrottle01;
+
         /// <summary>
         /// weight given to boid's desire to be near flock center
         /// </summary>
         internal float positionScale01;
+
         /// <summary>
         /// distance to flock center beyond which an attracting force is applied
         /// </summary>
         internal float positionMinRadiusWus;
+
         /// <summary>
         /// distance to flock center at which the maximum attracting force is applied
         /// </summary>
         internal float positionMaxRadiusWus;
+
         /// <summary>
         /// The threshold of accumulated weight over which movement occurs
         /// </summary>
         internal float movementWeightThreshold;
+
         /// <summary>
         /// distance within which boids will avoid a dangerous object (e.g. the player)
         /// </summary>
         internal float dangerRadiusWus;
+
         /// <summary>
         /// weight given to boid's desire to avoid danger
         /// </summary>
         internal float dangerScale;
+
         /// <summary>
         /// weight given to boid's random heading offset
         /// </summary>
         internal float randomOffsetScale01;
+
         internal Moonfish.Model.Range randomOffsetPeriodSeconds;
         internal Moonfish.Tags.StringIdent flockName;
-        public override int SerializedSize { get { return 132; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 132; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public FlockDefinitionBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             bsp = binaryReader.ReadShortBlockIndex1();
             invalidName_ = binaryReader.ReadBytes(2);
             boundingVolume = binaryReader.ReadShortBlockIndex1();
-            flags = (Flags)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
             ecologyMarginWus = binaryReader.ReadSingle();
             blamPointers.Enqueue(ReadBlockArrayPointer<FlockSourceBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<FlockSinkBlock>(binaryReader));
@@ -147,21 +180,23 @@ namespace Moonfish.Guerilla.Tags
             flockName = binaryReader.ReadStringID();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             sources = ReadBlockArrayData<FlockSourceBlock>(binaryReader, blamPointers.Dequeue());
             sinks = ReadBlockArrayData<FlockSinkBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(bsp);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(boundingVolume);
-                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16) flags);
                 binaryWriter.Write(ecologyMarginWus);
                 nextAddress = Guerilla.WriteBlockArray<FlockSourceBlock>(binaryWriter, sources, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<FlockSinkBlock>(binaryWriter, sinks, nextAddress);
@@ -191,6 +226,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {

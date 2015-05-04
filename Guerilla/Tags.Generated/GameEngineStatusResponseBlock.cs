@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 28, Alignment = 4)]
     public class GameEngineStatusResponseBlockBase : GuerillaBlock
     {
@@ -25,20 +27,29 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal Moonfish.Tags.StringIdent ffaMessage;
         internal Moonfish.Tags.StringIdent teamMessage;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference invalidName_1;
+        [TagReference("null")] internal Moonfish.Tags.TagReference invalidName_1;
         internal byte[] invalidName_2;
-        public override int SerializedSize { get { return 28; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 28; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public GameEngineStatusResponseBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            state = (State)binaryReader.ReadInt16();
+            state = (State) binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
             ffaMessage = binaryReader.ReadStringID();
             teamMessage = binaryReader.ReadStringID();
@@ -46,18 +57,20 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes(4);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16) flags);
                 binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int16)state);
+                binaryWriter.Write((Int16) state);
                 binaryWriter.Write(invalidName_0, 0, 2);
                 binaryWriter.Write(ffaMessage);
                 binaryWriter.Write(teamMessage);
@@ -66,11 +79,13 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {
             Unused = 1,
         };
+
         internal enum State : short
         {
             WaitingForSpaceToClear = 0,

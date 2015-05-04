@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 24, Alignment = 4)]
     public class UiErrorBlockBase : GuerillaBlock
     {
@@ -27,17 +29,27 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent message;
         internal Moonfish.Tags.StringIdent ok;
         internal Moonfish.Tags.StringIdent cancel;
-        public override int SerializedSize { get { return 24; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public UiErrorBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            error = (Error)binaryReader.ReadInt32();
-            flags = (Flags)binaryReader.ReadInt16();
-            defaultButton = (DefaultButton)binaryReader.ReadByte();
+            error = (Error) binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt16();
+            defaultButton = (DefaultButton) binaryReader.ReadByte();
             invalidName_ = binaryReader.ReadBytes(1);
             title = binaryReader.ReadStringID();
             message = binaryReader.ReadStringID();
@@ -45,18 +57,20 @@ namespace Moonfish.Guerilla.Tags
             cancel = binaryReader.ReadStringID();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)error);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Byte)defaultButton);
+                binaryWriter.Write((Int32) error);
+                binaryWriter.Write((Int16) flags);
+                binaryWriter.Write((Byte) defaultButton);
                 binaryWriter.Write(invalidName_, 0, 1);
                 binaryWriter.Write(title);
                 binaryWriter.Write(message);
@@ -65,6 +79,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         internal enum Error : int
         {
             ErrorUnknown = 0,
@@ -322,11 +337,13 @@ using(binaryWriter.BaseStream.Pin())
             ChooseNewCheckpointLocationCheckpointsExistLocally = 252,
             Xxx = 253,
         };
+
         [FlagsAttribute]
         internal enum Flags : short
         {
             UseLargeDialog = 1,
         };
+
         internal enum DefaultButton : byte
         {
             NoDefault = 0,

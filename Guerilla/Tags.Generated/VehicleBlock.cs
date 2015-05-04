@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Vehi = (TagClass)"vehi";
+        public static readonly TagClass Vehi = (TagClass) "vehi";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 276, Alignment = 4)]
     public class VehicleBlockBase : GuerillaBlock
     {
@@ -40,10 +42,12 @@ namespace Moonfish.Guerilla.Tags
         internal float wheelCircumference;
         internal float turnRate;
         internal float blurSpeed;
+
         /// <summary>
         /// if your type corresponds to something in this list choose it
         /// </summary>
         internal SpecificTypeIfYourTypeCorrespondsToSomethingInThisListChooseIt specificType;
+
         internal PlayerTrainingVehicleType playerTrainingVehicleType;
         internal Moonfish.Tags.StringIdent flipMessage;
         internal float turnScale;
@@ -55,10 +59,13 @@ namespace Moonfish.Guerilla.Tags
         internal float slideDeceleration;
         internal float minimumFlippingAngularVelocity;
         internal float maximumFlippingAngularVelocity;
+
         /// <summary>
         /// The size determine what kind of seats in larger vehicles it may occupy (i.e. small or large cargo seats)
         /// </summary>
-        internal VehicleSizeTheSizeDetermineWhatKindOfSeatsInLargerVehiclesItMayOccupyIESmallOrLargeCargoSeats vehicleSize;
+        internal VehicleSizeTheSizeDetermineWhatKindOfSeatsInLargerVehiclesItMayOccupyIESmallOrLargeCargoSeats
+            vehicleSize;
+
         internal byte[] invalidName_;
         internal float fixedGunYaw;
         internal float fixedGunPitch;
@@ -66,57 +73,71 @@ namespace Moonfish.Guerilla.Tags
         internal float overdampenExponent;
         internal float crouchTransitionTimeSeconds;
         internal byte[] invalidName_0;
+
         /// <summary>
         /// higher moments make engine spin up slower
         /// </summary>
         internal float engineMoment;
+
         /// <summary>
         /// higher moments make engine spin up slower
         /// </summary>
         internal float engineMaxAngularVelocity;
+
         internal GearBlock[] gears;
+
         /// <summary>
         /// big vehicles need to scale this down.  0 defaults to 1, which is generally a good value.  This is used with alien fighter physics
         /// </summary>
         internal float flyingTorqueScale;
+
         /// <summary>
         /// how much do we scale the force the biped the applies down on the seat when he enters. 0 == no acceleration
         /// </summary>
         internal float seatEnteranceAccelerationScale;
+
         /// <summary>
         /// how much do we scale the force the biped the applies down on the seat when he exits. 0 == no acceleration
         /// </summary>
         internal float seatExitAccelersationScale;
+
         /// <summary>
         /// human plane physics only. 0 is nothing.  1 is like thowing the engine to full reverse
         /// </summary>
         internal float airFrictionDeceleration;
+
         /// <summary>
         /// human plane physics only. 0 is default (1)
         /// </summary>
         internal float thrustScale;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference suspensionSound;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference crashSound;
-        [TagReference("foot")]
-        internal Moonfish.Tags.TagReference uNUSED;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference specialEffect;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference unusedEffect;
+
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference suspensionSound;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference crashSound;
+        [TagReference("foot")] internal Moonfish.Tags.TagReference uNUSED;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference specialEffect;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference unusedEffect;
         internal HavokVehiclePhysicsStructBlock havokVehiclePhysics;
-        public override int SerializedSize { get { return 768; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 768; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public VehicleBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
-            type = (Type)binaryReader.ReadInt16();
-            control = (Control)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt32();
+            type = (Type) binaryReader.ReadInt16();
+            control = (Control) binaryReader.ReadInt16();
             maximumForwardSpeed = binaryReader.ReadSingle();
             maximumReverseSpeed = binaryReader.ReadSingle();
             speedAcceleration = binaryReader.ReadSingle();
@@ -126,8 +147,8 @@ namespace Moonfish.Guerilla.Tags
             wheelCircumference = binaryReader.ReadSingle();
             turnRate = binaryReader.ReadSingle();
             blurSpeed = binaryReader.ReadSingle();
-            specificType = (SpecificTypeIfYourTypeCorrespondsToSomethingInThisListChooseIt)binaryReader.ReadInt16();
-            playerTrainingVehicleType = (PlayerTrainingVehicleType)binaryReader.ReadInt16();
+            specificType = (SpecificTypeIfYourTypeCorrespondsToSomethingInThisListChooseIt) binaryReader.ReadInt16();
+            playerTrainingVehicleType = (PlayerTrainingVehicleType) binaryReader.ReadInt16();
             flipMessage = binaryReader.ReadStringID();
             turnScale = binaryReader.ReadSingle();
             speedTurnPenaltyPower052 = binaryReader.ReadSingle();
@@ -138,7 +159,9 @@ namespace Moonfish.Guerilla.Tags
             slideDeceleration = binaryReader.ReadSingle();
             minimumFlippingAngularVelocity = binaryReader.ReadSingle();
             maximumFlippingAngularVelocity = binaryReader.ReadSingle();
-            vehicleSize = (VehicleSizeTheSizeDetermineWhatKindOfSeatsInLargerVehiclesItMayOccupyIESmallOrLargeCargoSeats)binaryReader.ReadInt16();
+            vehicleSize =
+                (VehicleSizeTheSizeDetermineWhatKindOfSeatsInLargerVehiclesItMayOccupyIESmallOrLargeCargoSeats)
+                    binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             fixedGunYaw = binaryReader.ReadSingle();
             fixedGunPitch = binaryReader.ReadSingle();
@@ -163,20 +186,22 @@ namespace Moonfish.Guerilla.Tags
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(havokVehiclePhysics.ReadFields(binaryReader)));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             gears = ReadBlockArrayData<GearBlock>(binaryReader, blamPointers.Dequeue());
             havokVehiclePhysics.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write((Int16)control);
+                binaryWriter.Write((Int32) flags);
+                binaryWriter.Write((Int16) type);
+                binaryWriter.Write((Int16) control);
                 binaryWriter.Write(maximumForwardSpeed);
                 binaryWriter.Write(maximumReverseSpeed);
                 binaryWriter.Write(speedAcceleration);
@@ -186,8 +211,8 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(wheelCircumference);
                 binaryWriter.Write(turnRate);
                 binaryWriter.Write(blurSpeed);
-                binaryWriter.Write((Int16)specificType);
-                binaryWriter.Write((Int16)playerTrainingVehicleType);
+                binaryWriter.Write((Int16) specificType);
+                binaryWriter.Write((Int16) playerTrainingVehicleType);
                 binaryWriter.Write(flipMessage);
                 binaryWriter.Write(turnScale);
                 binaryWriter.Write(speedTurnPenaltyPower052);
@@ -198,7 +223,7 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(slideDeceleration);
                 binaryWriter.Write(minimumFlippingAngularVelocity);
                 binaryWriter.Write(maximumFlippingAngularVelocity);
-                binaryWriter.Write((Int16)vehicleSize);
+                binaryWriter.Write((Int16) vehicleSize);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(fixedGunYaw);
                 binaryWriter.Write(fixedGunPitch);
@@ -223,6 +248,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -249,6 +275,7 @@ using(binaryWriter.BaseStream.Pin())
             CanTriggerAutomaticOpeningDoors = 1048576,
             AutoaimWhenTeamless = 2097152,
         };
+
         internal enum Type : short
         {
             HumanTank = 0,
@@ -259,12 +286,14 @@ using(binaryWriter.BaseStream.Pin())
             AlienFighter = 5,
             Turret = 6,
         };
+
         internal enum Control : short
         {
             VehicleControlNormal = 0,
             VehicleControlUnused = 1,
             VehicleControlTank = 2,
         };
+
         internal enum SpecificTypeIfYourTypeCorrespondsToSomethingInThisListChooseIt : short
         {
             None = 0,
@@ -273,6 +302,7 @@ using(binaryWriter.BaseStream.Pin())
             Spectre = 3,
             SentinelEnforcer = 4,
         };
+
         internal enum PlayerTrainingVehicleType : short
         {
             None = 0,
@@ -283,7 +313,9 @@ using(binaryWriter.BaseStream.Pin())
             Tank = 5,
             Wraith = 6,
         };
-        internal enum VehicleSizeTheSizeDetermineWhatKindOfSeatsInLargerVehiclesItMayOccupyIESmallOrLargeCargoSeats : short
+
+        internal enum VehicleSizeTheSizeDetermineWhatKindOfSeatsInLargerVehiclesItMayOccupyIESmallOrLargeCargoSeats
+            : short
         {
             Small = 0,
             Large = 1,

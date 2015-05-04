@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Jpt = (TagClass)"jpt!";
+        public static readonly TagClass Jpt = (TagClass) "jpt!";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 200, Alignment = 4)]
     public class DamageEffectBlockBase : GuerillaBlock
     {
@@ -34,30 +36,37 @@ namespace Moonfish.Guerilla.Tags
         internal SideEffect sideEffect;
         internal Category category;
         internal Flags flags0;
+
         /// <summary>
         /// if this is area of effect damage
         /// </summary>
         internal float aOECoreRadiusWorldUnits;
+
         internal float damageLowerBound;
         internal Moonfish.Model.Range damageUpperBound;
         internal float dmgInnerConeAngle;
         internal DamageOuterConeAngleStructBlock blah;
+
         /// <summary>
         /// how much more visible this damage makes a player who is active camouflaged
         /// </summary>
         internal float activeCamouflageDamage01;
+
         /// <summary>
         /// amount of stun added to damaged unit
         /// </summary>
         internal float stun01;
+
         /// <summary>
         /// damaged unit's stun will never exceed this amount
         /// </summary>
         internal float maximumStun01;
+
         /// <summary>
         /// duration of stun due to this damage
         /// </summary>
         internal float stunTimeSeconds;
+
         internal float instantaneousAcceleration0Inf;
         internal float riderDirectDamageScale;
         internal float riderMaximumTransferDamageScale;
@@ -75,55 +84,73 @@ namespace Moonfish.Guerilla.Tags
         internal float rotationDegrees;
         internal float pushbackWorldUnits;
         internal Moonfish.Model.Range jitterWorldUnits;
+
         /// <summary>
         /// the effect will last for this duration.
         /// </summary>
         internal float durationSeconds0;
+
         /// <summary>
         /// a function to envelope the effect's magnitude over time
         /// </summary>
         internal FalloffFunctionAFunctionToEnvelopeTheEffectsMagnitudeOverTime falloffFunction;
+
         internal byte[] invalidName_0;
+
         /// <summary>
         /// random translation in all directions
         /// </summary>
         internal float randomTranslationWorldUnits;
+
         /// <summary>
         /// random rotation in all directions
         /// </summary>
         internal float randomRotationDegrees;
+
         /// <summary>
         /// a function to perturb the effect's behavior over time
         /// </summary>
         internal WobbleFunctionAFunctionToPerturbTheEffectsBehaviorOverTime wobbleFunction;
+
         internal byte[] invalidName_1;
         internal float wobbleFunctionPeriodSeconds;
+
         /// <summary>
         /// a value of 0.0 signifies that the wobble function has no effect; a value of 1.0 signifies that the effect will not be felt when the wobble function's value is zero.
         /// </summary>
         internal float wobbleWeight;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference sound;
+
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference sound;
         internal float forwardVelocityWorldUnitsPerSecond;
         internal float forwardRadiusWorldUnits;
         internal float forwardExponent;
         internal float outwardVelocityWorldUnitsPerSecond;
         internal float outwardRadiusWorldUnits;
         internal float outwardExponent;
-        public override int SerializedSize { get { return 200; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 200; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public DamageEffectBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             radiusWorldUnits = binaryReader.ReadRange();
             cutoffScale01 = binaryReader.ReadSingle();
-            flags = (Flags)binaryReader.ReadInt32();
-            sideEffect = (SideEffect)binaryReader.ReadInt16();
-            category = (Category)binaryReader.ReadInt16();
-            flags0 = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
+            sideEffect = (SideEffect) binaryReader.ReadInt16();
+            category = (Category) binaryReader.ReadInt16();
+            flags0 = (Flags) binaryReader.ReadInt32();
             aOECoreRadiusWorldUnits = binaryReader.ReadSingle();
             damageLowerBound = binaryReader.ReadSingle();
             damageUpperBound = binaryReader.ReadRange();
@@ -146,17 +173,17 @@ namespace Moonfish.Guerilla.Tags
             eMPRadius = binaryReader.ReadSingle();
             blamPointers.Enqueue(ReadBlockArrayPointer<DamageEffectPlayerResponseBlock>(binaryReader));
             durationSeconds = binaryReader.ReadSingle();
-            fadeFunction = (FadeFunction)binaryReader.ReadInt16();
+            fadeFunction = (FadeFunction) binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             rotationDegrees = binaryReader.ReadSingle();
             pushbackWorldUnits = binaryReader.ReadSingle();
             jitterWorldUnits = binaryReader.ReadRange();
             durationSeconds0 = binaryReader.ReadSingle();
-            falloffFunction = (FalloffFunctionAFunctionToEnvelopeTheEffectsMagnitudeOverTime)binaryReader.ReadInt16();
+            falloffFunction = (FalloffFunctionAFunctionToEnvelopeTheEffectsMagnitudeOverTime) binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
             randomTranslationWorldUnits = binaryReader.ReadSingle();
             randomRotationDegrees = binaryReader.ReadSingle();
-            wobbleFunction = (WobbleFunctionAFunctionToPerturbTheEffectsBehaviorOverTime)binaryReader.ReadInt16();
+            wobbleFunction = (WobbleFunctionAFunctionToPerturbTheEffectsBehaviorOverTime) binaryReader.ReadInt16();
             invalidName_1 = binaryReader.ReadBytes(2);
             wobbleFunctionPeriodSeconds = binaryReader.ReadSingle();
             wobbleWeight = binaryReader.ReadSingle();
@@ -169,23 +196,25 @@ namespace Moonfish.Guerilla.Tags
             outwardExponent = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             blah.ReadPointers(binaryReader, blamPointers);
             playerResponses = ReadBlockArrayData<DamageEffectPlayerResponseBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(radiusWorldUnits);
                 binaryWriter.Write(cutoffScale01);
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)sideEffect);
-                binaryWriter.Write((Int16)category);
-                binaryWriter.Write((Int32)flags0);
+                binaryWriter.Write((Int32) flags);
+                binaryWriter.Write((Int16) sideEffect);
+                binaryWriter.Write((Int16) category);
+                binaryWriter.Write((Int32) flags0);
                 binaryWriter.Write(aOECoreRadiusWorldUnits);
                 binaryWriter.Write(damageLowerBound);
                 binaryWriter.Write(damageUpperBound);
@@ -205,19 +234,20 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(aIStunBounds01);
                 binaryWriter.Write(shakeRadius);
                 binaryWriter.Write(eMPRadius);
-                nextAddress = Guerilla.WriteBlockArray<DamageEffectPlayerResponseBlock>(binaryWriter, playerResponses, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<DamageEffectPlayerResponseBlock>(binaryWriter, playerResponses,
+                    nextAddress);
                 binaryWriter.Write(durationSeconds);
-                binaryWriter.Write((Int16)fadeFunction);
+                binaryWriter.Write((Int16) fadeFunction);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(rotationDegrees);
                 binaryWriter.Write(pushbackWorldUnits);
                 binaryWriter.Write(jitterWorldUnits);
                 binaryWriter.Write(durationSeconds0);
-                binaryWriter.Write((Int16)falloffFunction);
+                binaryWriter.Write((Int16) falloffFunction);
                 binaryWriter.Write(invalidName_0, 0, 2);
                 binaryWriter.Write(randomTranslationWorldUnits);
                 binaryWriter.Write(randomRotationDegrees);
-                binaryWriter.Write((Int16)wobbleFunction);
+                binaryWriter.Write((Int16) wobbleFunction);
                 binaryWriter.Write(invalidName_1, 0, 2);
                 binaryWriter.Write(wobbleFunctionPeriodSeconds);
                 binaryWriter.Write(wobbleWeight);
@@ -231,12 +261,14 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
             DontScaleDamageByDistance = 1,
             AreaDamagePlayersOnlyAreaOfEffectDamageOnlyAffectsPlayers = 2,
         };
+
         internal enum SideEffect : short
         {
             None = 0,
@@ -244,6 +276,7 @@ using(binaryWriter.BaseStream.Pin())
             LethalToTheUnsuspecting = 2,
             Emp = 3,
         };
+
         internal enum Category : short
         {
             None = 0,
@@ -260,6 +293,7 @@ using(binaryWriter.BaseStream.Pin())
             Needle = 11,
             Shotgun = 12,
         };
+
         [FlagsAttribute]
         internal enum Flags0 : int
         {
@@ -280,6 +314,7 @@ using(binaryWriter.BaseStream.Pin())
             ForcesHardPing = 16384,
             DoesNotHurtPlayers = 32768,
         };
+
         internal enum FadeFunction : short
         {
             Linear = 0,
@@ -291,6 +326,7 @@ using(binaryWriter.BaseStream.Pin())
             Zero = 6,
             One = 7,
         };
+
         internal enum FalloffFunctionAFunctionToEnvelopeTheEffectsMagnitudeOverTime : short
         {
             Linear = 0,
@@ -302,6 +338,7 @@ using(binaryWriter.BaseStream.Pin())
             Zero = 6,
             One = 7,
         };
+
         internal enum WobbleFunctionAFunctionToPerturbTheEffectsBehaviorOverTime : short
         {
             One = 0,

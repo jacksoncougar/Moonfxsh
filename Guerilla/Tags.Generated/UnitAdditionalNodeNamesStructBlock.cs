@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 4, Alignment = 4)]
     public class UnitAdditionalNodeNamesStructBlockBase : GuerillaBlock
     {
@@ -23,25 +25,37 @@ namespace Moonfish.Guerilla.Tags
         /// if found, use this gun marker
         /// </summary>
         internal Moonfish.Tags.StringIdent preferredGunNode;
-        public override int SerializedSize { get { return 4; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public UnitAdditionalNodeNamesStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             preferredGunNode = binaryReader.ReadStringID();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(preferredGunNode);
                 return nextAddress;

@@ -110,7 +110,7 @@ namespace Moonfish.Guerilla.Reflection
         public TokenDictionary Format()
         {
             var tokenDictionary = HasBaseClass ? new TokenDictionary(BaseClass.Format()) : new TokenDictionary();
-            
+
             string name, @namespace;
             if (GuerillaCs.SplitNamespaceFromFieldName(_value.Name, out name, out @namespace))
             {
@@ -175,28 +175,29 @@ namespace Moonfish.Guerilla.Reflection
             var body = new StringBuilder();
             var count =
                 Fields.Select(item => Type.GetType(item.FieldTypeName))
-                    .Count(fieldType => fieldType != null && fieldType.IsSubclassOf(typeof(GuerillaBlock)));
+                    .Count(fieldType => fieldType != null && fieldType.IsSubclassOf(typeof (GuerillaBlock)));
 
-            body.AppendFormatLine("var blamPointers = new Queue<BlamPointer>(base.{0});", Methods.Last().GetMethodCallSignature());
+            body.AppendFormatLine("var blamPointers = new Queue<BlamPointer>(base.{0});",
+                Methods.Last().GetMethodCallSignature());
 
             foreach (var item in Fields)
             {
                 if (item.IsArray)
                 {
                     // fixed byte array like padding or skip arrays
-                    if (item.ArraySize > 0 && Type.GetType(item.FieldTypeName) == typeof(byte))
+                    if (item.ArraySize > 0 && Type.GetType(item.FieldTypeName) == typeof (byte))
                     {
                         body.AppendLine(string.Format("{0} = binaryReader.ReadBytes({1});", item.Value.Name,
                             item.ArraySize));
                     }
                     // variable byte array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof(byte))
+                    else if (Type.GetType(item.FieldTypeName) == typeof (byte))
                     {
                         body.AppendLine(
                             "blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));");
                     }
                     // variable short array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof(short))
+                    else if (Type.GetType(item.FieldTypeName) == typeof (short))
                     {
                         body.AppendLine(
                             "blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 2));");
@@ -260,7 +261,7 @@ namespace Moonfish.Guerilla.Reflection
                     new ParameterInfo(typeof (BinaryReader)),
                     new ParameterInfo(typeof (Queue<BlamPointer>), "blamPointers"),
                 },
-                Returns = typeof(void).Name()
+                Returns = typeof (void).Name()
             });
 
             var body = new StringBuilder();
@@ -291,18 +292,18 @@ namespace Moonfish.Guerilla.Reflection
                         body.AppendFormatLine(
                             "{0} = ReadDataShortArray(binaryReader, blamPointers.Dequeue());", item.Value.Name);
                     }
-                        // inline array
+                    // inline array
                     else if (item.ArraySize > 0)
                     {
                         for (var i = 0; i < item.ArraySize; i++)
                         {
-                            body.AppendFormatLine("{0}[{1}].ReadPointers(binaryReader, blamPointers);", item.Value.Name, i);
+                            body.AppendFormatLine("{0}[{1}].ReadPointers(binaryReader, blamPointers);", item.Value.Name,
+                                i);
                         }
                     }
                     // assume a TagBlock
                     else
                     {
-
                         body.AppendFormatLine(
                             "{1} = ReadBlockArrayData<{0}>(binaryReader, blamPointers.Dequeue());",
                             item.FieldTypeName, item.Value.Name);
@@ -310,7 +311,8 @@ namespace Moonfish.Guerilla.Reflection
                 }
                 else
                 {
-                    if (Type.GetType(item.FieldTypeName) == null && EnumDefinitions.All(x => x.Value.Name != item.FieldTypeName))
+                    if (Type.GetType(item.FieldTypeName) == null &&
+                        EnumDefinitions.All(x => x.Value.Name != item.FieldTypeName))
                     {
                         body.AppendFormatLine("{0}.ReadPointers(binaryReader, blamPointers);", item.Value.Name);
                     }
@@ -318,7 +320,7 @@ namespace Moonfish.Guerilla.Reflection
             }
             Methods.Last().Body = body.ToString().TrimEnd();
         }
-        
+
         public void GenerateBinaryReaderMethod()
         {
             Methods.Add(new MethodInfo
@@ -333,26 +335,27 @@ namespace Moonfish.Guerilla.Reflection
             });
             var body = new StringBuilder();
 
-            body.AppendFormatLine("var blamPointers = new Queue<BlamPointer>(base.{0});", Methods.Last().GetMethodCallSignature());
+            body.AppendFormatLine("var blamPointers = new Queue<BlamPointer>(base.{0});",
+                Methods.Last().GetMethodCallSignature());
 
             foreach (var item in Fields)
             {
                 if (item.IsArray)
                 {
                     // fixed byte array like padding or skip arrays
-                    if (item.ArraySize > 0 && Type.GetType(item.FieldTypeName) == typeof(byte))
+                    if (item.ArraySize > 0 && Type.GetType(item.FieldTypeName) == typeof (byte))
                     {
                         body.AppendLine(string.Format("{0} = binaryReader.ReadBytes({1});", item.Value.Name,
                             item.ArraySize));
                     }
                     // variable byte array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof(byte))
+                    else if (Type.GetType(item.FieldTypeName) == typeof (byte))
                     {
                         body.AppendFormatLine(
                             "blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));", item.FieldTypeName);
                     }
                     // variable short array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof(short))
+                    else if (Type.GetType(item.FieldTypeName) == typeof (short))
                     {
                         body.AppendFormatLine(
                             "blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 2));", item.FieldTypeName);
@@ -370,7 +373,9 @@ namespace Moonfish.Guerilla.Reflection
 
                         for (var i = 0; i < item.ArraySize; i++)
                         {
-                            body.AppendFormatLine("blamPointers = new Queue<BlamPointer>(blamPointers.Concat({0}[{1}].ReadFields(binaryReader)));", item.Value.Name, i);
+                            body.AppendFormatLine(
+                                "blamPointers = new Queue<BlamPointer>(blamPointers.Concat({0}[{1}].ReadFields(binaryReader)));",
+                                item.Value.Name, i);
                         }
                     }
                     // assume a TagBlock
@@ -395,7 +400,9 @@ namespace Moonfish.Guerilla.Reflection
                     {
                         body.AppendFormatLine("{0} = new {1}();", item.Value.Name,
                             item.FieldTypeName);
-                        body.AppendFormatLine("blamPointers = new Queue<BlamPointer>(blamPointers.Concat({0}.ReadFields(binaryReader)));", item.Value.Name);
+                        body.AppendFormatLine(
+                            "blamPointers = new Queue<BlamPointer>(blamPointers.Concat({0}.ReadFields(binaryReader)));",
+                            item.Value.Name);
                     }
                     else
                     {

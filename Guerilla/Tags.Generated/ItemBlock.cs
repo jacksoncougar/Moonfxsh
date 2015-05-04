@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Item = (TagClass)"item";
+        public static readonly TagClass Item = (TagClass) "item";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 112, Alignment = 4)]
     public class ItemBlockBase : GuerillaBlock
     {
@@ -43,27 +45,32 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent pluralQuantityMsg;
         internal Moonfish.Tags.StringIdent switchToMsg;
         internal Moonfish.Tags.StringIdent switchToFromAiMsg;
-        [TagReference("foot")]
-        internal Moonfish.Tags.TagReference uNUSED;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference collisionSound;
+        [TagReference("foot")] internal Moonfish.Tags.TagReference uNUSED;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference collisionSound;
         internal PredictedBitmapsBlock[] predictedBitmaps;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference detonationDamageEffect;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference detonationDamageEffect;
         internal Moonfish.Model.Range detonationDelaySeconds;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference detonatingEffect;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference detonationEffect;
-        public override int SerializedSize { get { return 300; } }
-        public override int Alignment { get { return 4; } }
+        [TagReference("effe")] internal Moonfish.Tags.TagReference detonatingEffect;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference detonationEffect;
+
+        public override int SerializedSize
+        {
+            get { return 300; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ItemBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             oLDMessageIndex = binaryReader.ReadInt16();
             sortOrder = binaryReader.ReadInt16();
             multiplayerOnGroundScale = binaryReader.ReadSingle();
@@ -87,17 +94,19 @@ namespace Moonfish.Guerilla.Tags
             detonationEffect = binaryReader.ReadTagReference();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             predictedBitmaps = ReadBlockArrayData<PredictedBitmapsBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int32) flags);
                 binaryWriter.Write(oLDMessageIndex);
                 binaryWriter.Write(sortOrder);
                 binaryWriter.Write(multiplayerOnGroundScale);
@@ -114,7 +123,8 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(switchToFromAiMsg);
                 binaryWriter.Write(uNUSED);
                 binaryWriter.Write(collisionSound);
-                nextAddress = Guerilla.WriteBlockArray<PredictedBitmapsBlock>(binaryWriter, predictedBitmaps, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PredictedBitmapsBlock>(binaryWriter, predictedBitmaps,
+                    nextAddress);
                 binaryWriter.Write(detonationDamageEffect);
                 binaryWriter.Write(detonationDelaySeconds);
                 binaryWriter.Write(detonatingEffect);
@@ -122,6 +132,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

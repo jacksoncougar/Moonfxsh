@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,49 +17,65 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 16, Alignment = 4)]
     public class ObjectAiPropertiesBlockBase : GuerillaBlock
     {
         internal AiFlags aiFlags;
+
         /// <summary>
         /// used for combat dialogue, etc.
         /// </summary>
         internal Moonfish.Tags.StringIdent aiTypeName;
+
         internal byte[] invalidName_;
         internal AiSize aiSize;
         internal LeapJumpSpeed leapJumpSpeed;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ObjectAiPropertiesBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            aiFlags = (AiFlags)binaryReader.ReadInt32();
+            aiFlags = (AiFlags) binaryReader.ReadInt32();
             aiTypeName = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(4);
-            aiSize = (AiSize)binaryReader.ReadInt16();
-            leapJumpSpeed = (LeapJumpSpeed)binaryReader.ReadInt16();
+            aiSize = (AiSize) binaryReader.ReadInt16();
+            leapJumpSpeed = (LeapJumpSpeed) binaryReader.ReadInt16();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)aiFlags);
+                binaryWriter.Write((Int32) aiFlags);
                 binaryWriter.Write(aiTypeName);
                 binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write((Int16)aiSize);
-                binaryWriter.Write((Int16)leapJumpSpeed);
+                binaryWriter.Write((Int16) aiSize);
+                binaryWriter.Write((Int16) leapJumpSpeed);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum AiFlags : int
         {
@@ -66,6 +83,7 @@ using(binaryWriter.BaseStream.Pin())
             PathfindingIgnoreWhenDead = 2,
             DynamicCover = 4,
         };
+
         internal enum AiSize : short
         {
             Default = 0,
@@ -76,6 +94,7 @@ using(binaryWriter.BaseStream.Pin())
             Huge = 5,
             Immobile = 6,
         };
+
         internal enum LeapJumpSpeed : short
         {
             NONE = 0,

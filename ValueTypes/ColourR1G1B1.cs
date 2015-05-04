@@ -4,8 +4,8 @@ using Moonfish.Guerilla;
 
 namespace Moonfish.Tags
 {
-    [GuerillaType( MoonfishFieldType.FieldRgbColor )]
-    [StructLayout( LayoutKind.Sequential, Size = 3 )]
+    [GuerillaType(MoonfishFieldType.FieldRgbColor)]
+    [StructLayout(LayoutKind.Sequential, Size = 3)]
     public struct ColourR1G1B1
     {
         public byte R;

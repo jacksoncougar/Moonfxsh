@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class AnimationTransitionBlockBase : GuerillaBlock
     {
@@ -23,13 +25,24 @@ namespace Moonfish.Guerilla.Tags
         /// name of the mode & state of the source
         /// </summary>
         internal Moonfish.Tags.StringIdent fullName;
+
         internal AnimationTransitionStateStructBlock stateInfo;
         internal AnimationTransitionDestinationBlock[] destinationsAABBCC;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public AnimationTransitionBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -39,20 +52,24 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<AnimationTransitionDestinationBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             stateInfo.ReadPointers(binaryReader, blamPointers);
-            destinationsAABBCC = ReadBlockArrayData<AnimationTransitionDestinationBlock>(binaryReader, blamPointers.Dequeue());
+            destinationsAABBCC = ReadBlockArrayData<AnimationTransitionDestinationBlock>(binaryReader,
+                blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(fullName);
                 stateInfo.Write(binaryWriter);
-                nextAddress = Guerilla.WriteBlockArray<AnimationTransitionDestinationBlock>(binaryWriter, destinationsAABBCC, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AnimationTransitionDestinationBlock>(binaryWriter,
+                    destinationsAABBCC, nextAddress);
                 return nextAddress;
             }
         }

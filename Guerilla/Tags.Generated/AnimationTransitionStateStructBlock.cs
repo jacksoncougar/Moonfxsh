@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class AnimationTransitionStateStructBlockBase : GuerillaBlock
     {
@@ -23,20 +25,33 @@ namespace Moonfish.Guerilla.Tags
         /// name of the state
         /// </summary>
         internal Moonfish.Tags.StringIdent stateName;
+
         internal byte[] invalidName_;
+
         /// <summary>
         /// first level sub-index into state
         /// </summary>
         internal byte indexA;
+
         /// <summary>
         /// second level sub-index into state
         /// </summary>
         internal byte indexB;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public AnimationTransitionStateStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -46,14 +61,16 @@ namespace Moonfish.Guerilla.Tags
             indexB = binaryReader.ReadByte();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(stateName);
                 binaryWriter.Write(invalidName_, 0, 2);

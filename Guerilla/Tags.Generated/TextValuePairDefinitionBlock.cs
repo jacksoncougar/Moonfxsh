@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Sily = (TagClass)"sily";
+        public static readonly TagClass Sily = (TagClass) "sily";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,26 +26,36 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 36, Alignment = 4)]
     public class TextValuePairDefinitionBlockBase : GuerillaBlock
     {
         internal Parameter parameter;
         internal byte[] invalidName_;
-        [TagReference("unic")]
-        internal Moonfish.Tags.TagReference stringList;
+        [TagReference("unic")] internal Moonfish.Tags.TagReference stringList;
         internal Moonfish.Tags.StringIdent titleText;
         internal Moonfish.Tags.StringIdent headerText;
         internal Moonfish.Tags.StringIdent descriptionText;
         internal TextValuePairReferenceBlock[] textValuePairs;
-        public override int SerializedSize { get { return 36; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 36; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public TextValuePairDefinitionBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            parameter = (Parameter)binaryReader.ReadInt32();
+            parameter = (Parameter) binaryReader.ReadInt32();
             invalidName_ = binaryReader.ReadBytes(4);
             stringList = binaryReader.ReadTagReference();
             titleText = binaryReader.ReadStringID();
@@ -53,26 +64,30 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<TextValuePairReferenceBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             textValuePairs = ReadBlockArrayData<TextValuePairReferenceBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)parameter);
+                binaryWriter.Write((Int32) parameter);
                 binaryWriter.Write(invalidName_, 0, 4);
                 binaryWriter.Write(stringList);
                 binaryWriter.Write(titleText);
                 binaryWriter.Write(headerText);
                 binaryWriter.Write(descriptionText);
-                nextAddress = Guerilla.WriteBlockArray<TextValuePairReferenceBlock>(binaryWriter, textValuePairs, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<TextValuePairReferenceBlock>(binaryWriter, textValuePairs,
+                    nextAddress);
                 return nextAddress;
             }
         }
+
         internal enum Parameter : int
         {
             MatchRoundSetting = 0,

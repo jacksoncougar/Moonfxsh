@@ -14,11 +14,11 @@ public class GlobalStrings : IEnumerable<string>, IEnumerable<StringIdent>
     private IList<string> localStrings;
 
 
-    static GlobalStrings( )
+    static GlobalStrings()
     {
         #region Strings
 
-        globalStrings = new List<string>( new string[]
+        globalStrings = new List<string>(new string[]
         {
             "",
             "default",
@@ -2000,47 +2000,47 @@ public class GlobalStrings : IEnumerable<string>, IEnumerable<StringIdent>
             "test_unranked_small_team_description",
             "warthog_chaingun_illumination",
             "precaching_failed_locally",
-        } );
+        });
 
         #endregion
 
         globalStringIDs = new StringIdent[globalStrings.Count];
-        for ( short i = 0; i < globalStrings.Count; i++ )
+        for (short i = 0; i < globalStrings.Count; i++)
         {
-            globalStringIDs[ i ] = new StringIdent( i, ( sbyte ) Encoding.UTF8.GetByteCount( globalStrings[ i ] ) );
+            globalStringIDs[i] = new StringIdent(i, (sbyte) Encoding.UTF8.GetByteCount(globalStrings[i]));
         }
     }
 
-    public string this[ StringIdent value ]
+    public string this[StringIdent value]
     {
         get
         {
             return value.Index < GlobalStrings.globalStrings.Count
-                ? GlobalStrings.globalStrings[ value.Index ]
-                : localStrings[ value.Index - GlobalStrings.globalStrings.Count ];
+                ? GlobalStrings.globalStrings[value.Index]
+                : localStrings[value.Index - GlobalStrings.globalStrings.Count];
         }
     }
 
-    public void Assign( List<string> values, bool trimGlobalStrings = true )
+    public void Assign(List<string> values, bool trimGlobalStrings = true)
     {
         this.localStrings = trimGlobalStrings
-            ? values.GetRange( globalStrings.Count, values.Count - globalStrings.Count )
+            ? values.GetRange(globalStrings.Count, values.Count - globalStrings.Count)
             : values;
     }
 
-    IEnumerator<string> IEnumerable<string>.GetEnumerator( )
+    IEnumerator<string> IEnumerable<string>.GetEnumerator()
     {
-        foreach ( var str in globalStrings ) yield return str;
+        foreach (var str in globalStrings) yield return str;
     }
 
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator( )
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
     {
-        return globalStrings.GetEnumerator( );
+        return globalStrings.GetEnumerator();
     }
 
-    IEnumerator<StringIdent> IEnumerable<StringIdent>.GetEnumerator( )
+    IEnumerator<StringIdent> IEnumerable<StringIdent>.GetEnumerator()
     {
-        foreach ( var string_id in globalStringIDs ) yield return string_id;
+        foreach (var string_id in globalStringIDs) yield return string_id;
     }
 }
 
@@ -2048,23 +2048,23 @@ public class GlobalPaths : IEnumerable<string>
 {
     private List<string> localPaths;
 
-    public string this[ int index ]
+    public string this[int index]
     {
-        get { return localPaths[ index ]; }
+        get { return localPaths[index]; }
     }
 
-    public void Assign( IEnumerable<string> values )
+    public void Assign(IEnumerable<string> values)
     {
-        this.localPaths = new List<string>( values );
+        this.localPaths = new List<string>(values);
     }
 
-    IEnumerator<string> IEnumerable<string>.GetEnumerator( )
+    IEnumerator<string> IEnumerable<string>.GetEnumerator()
     {
-        foreach ( var path in localPaths ) yield return path;
+        foreach (var path in localPaths) yield return path;
     }
 
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator( )
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
     {
-        return localPaths.GetEnumerator( );
+        return localPaths.GetEnumerator();
     }
 }

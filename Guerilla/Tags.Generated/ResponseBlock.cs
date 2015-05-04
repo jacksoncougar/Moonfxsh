@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 12, Alignment = 4)]
     public class ResponseBlockBase : GuerillaBlock
     {
@@ -24,44 +26,58 @@ namespace Moonfish.Guerilla.Tags
         internal short vocalizationIndexPostProcess;
         internal ResponseType responseType;
         internal short dialogueIndexImport;
-        public override int SerializedSize { get { return 12; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 12; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ResponseBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             vocalizationName = binaryReader.ReadStringID();
-            flags = (Flags)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
             vocalizationIndexPostProcess = binaryReader.ReadInt16();
-            responseType = (ResponseType)binaryReader.ReadInt16();
+            responseType = (ResponseType) binaryReader.ReadInt16();
             dialogueIndexImport = binaryReader.ReadInt16();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(vocalizationName);
-                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16) flags);
                 binaryWriter.Write(vocalizationIndexPostProcess);
-                binaryWriter.Write((Int16)responseType);
+                binaryWriter.Write((Int16) responseType);
                 binaryWriter.Write(dialogueIndexImport);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {
             Nonexclusive = 1,
             TriggerResponse = 2,
         };
+
         internal enum ResponseType : short
         {
             Friend = 0,

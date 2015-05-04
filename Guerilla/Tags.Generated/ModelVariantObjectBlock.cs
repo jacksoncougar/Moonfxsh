@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,18 +17,28 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 16, Alignment = 4)]
     public class ModelVariantObjectBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringIdent parentMarker;
         internal Moonfish.Tags.StringIdent childMarker;
-        [TagReference("obje")]
-        internal Moonfish.Tags.TagReference childObject;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
+        [TagReference("obje")] internal Moonfish.Tags.TagReference childObject;
+
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ModelVariantObjectBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -36,14 +47,16 @@ namespace Moonfish.Guerilla.Tags
             childObject = binaryReader.ReadTagReference();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(parentMarker);
                 binaryWriter.Write(childMarker);

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,16 +17,27 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 12, Alignment = 4)]
     public class LocalStringIdListSectionReferenceBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringIdent sectionName;
         internal LocalStringIdListStringReferenceBlock[] localStringSectionReferences;
-        public override int SerializedSize { get { return 12; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 12; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public LocalStringIdListSectionReferenceBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -33,18 +45,22 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<LocalStringIdListStringReferenceBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
-            localStringSectionReferences = ReadBlockArrayData<LocalStringIdListStringReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            localStringSectionReferences = ReadBlockArrayData<LocalStringIdListStringReferenceBlock>(binaryReader,
+                blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(sectionName);
-                nextAddress = Guerilla.WriteBlockArray<LocalStringIdListStringReferenceBlock>(binaryWriter, localStringSectionReferences, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<LocalStringIdListStringReferenceBlock>(binaryWriter,
+                    localStringSectionReferences, nextAddress);
                 return nextAddress;
             }
         }

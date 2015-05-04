@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 60, Alignment = 4)]
     public class ShaderPassTextureBlockBase : GuerillaBlock
     {
@@ -33,21 +35,31 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderTextureStateKillStateBlock[] killState;
         internal ShaderTextureStateMiscStateBlock[] miscState;
         internal ShaderTextureStateConstantBlock[] constants;
-        public override int SerializedSize { get { return 60; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 60; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ShaderPassTextureBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             sourceParameter = binaryReader.ReadStringID();
-            sourceExtern = (SourceExtern)binaryReader.ReadInt16();
+            sourceExtern = (SourceExtern) binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             invalidName_0 = binaryReader.ReadBytes(2);
-            mode = (Mode)binaryReader.ReadInt16();
+            mode = (Mode) binaryReader.ReadInt16();
             invalidName_1 = binaryReader.ReadBytes(2);
-            dotMapping = (DotMapping)binaryReader.ReadInt16();
+            dotMapping = (DotMapping) binaryReader.ReadInt16();
             inputStage03 = binaryReader.ReadInt16();
             invalidName_2 = binaryReader.ReadBytes(2);
             blamPointers.Enqueue(ReadBlockArrayPointer<ShaderTextureStateAddressStateBlock>(binaryReader));
@@ -57,6 +69,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<ShaderTextureStateConstantBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -66,28 +79,35 @@ namespace Moonfish.Guerilla.Tags
             miscState = ReadBlockArrayData<ShaderTextureStateMiscStateBlock>(binaryReader, blamPointers.Dequeue());
             constants = ReadBlockArrayData<ShaderTextureStateConstantBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(sourceParameter);
-                binaryWriter.Write((Int16)sourceExtern);
+                binaryWriter.Write((Int16) sourceExtern);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(invalidName_0, 0, 2);
-                binaryWriter.Write((Int16)mode);
+                binaryWriter.Write((Int16) mode);
                 binaryWriter.Write(invalidName_1, 0, 2);
-                binaryWriter.Write((Int16)dotMapping);
+                binaryWriter.Write((Int16) dotMapping);
                 binaryWriter.Write(inputStage03);
                 binaryWriter.Write(invalidName_2, 0, 2);
-                nextAddress = Guerilla.WriteBlockArray<ShaderTextureStateAddressStateBlock>(binaryWriter, addressState, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ShaderTextureStateFilterStateBlock>(binaryWriter, filterState, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ShaderTextureStateKillStateBlock>(binaryWriter, killState, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ShaderTextureStateMiscStateBlock>(binaryWriter, miscState, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ShaderTextureStateConstantBlock>(binaryWriter, constants, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderTextureStateAddressStateBlock>(binaryWriter, addressState,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderTextureStateFilterStateBlock>(binaryWriter, filterState,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderTextureStateKillStateBlock>(binaryWriter, killState,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderTextureStateMiscStateBlock>(binaryWriter, miscState,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderTextureStateConstantBlock>(binaryWriter, constants,
+                    nextAddress);
                 return nextAddress;
             }
         }
+
         internal enum SourceExtern : short
         {
             None = 0,
@@ -119,6 +139,7 @@ using(binaryWriter.BaseStream.Pin())
             SHADERActiveCamoBump = 26,
             FIRSTPERSONScope = 27,
         };
+
         internal enum Mode : short
         {
             InvalidName2D = 0,
@@ -141,6 +162,7 @@ using(binaryWriter.BaseStream.Pin())
             DotReflectSpecularConst = 17,
             None = 18,
         };
+
         internal enum DotMapping : short
         {
             InvalidName0To1 = 0,

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 48, Alignment = 4)]
     public class ScenarioObjectDatumStructBlockBase : GuerillaBlock
     {
@@ -29,50 +31,63 @@ namespace Moonfish.Guerilla.Tags
         internal BSPPolicy bSPPolicy;
         internal byte[] invalidName_;
         internal Moonfish.Tags.ShortBlockIndex1 editorFolder;
-        public override int SerializedSize { get { return 48; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 48; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ScenarioObjectDatumStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            placementFlags = (PlacementFlags)binaryReader.ReadInt32();
+            placementFlags = (PlacementFlags) binaryReader.ReadInt32();
             position = binaryReader.ReadVector3();
             rotation = binaryReader.ReadVector3();
             scale = binaryReader.ReadSingle();
-            transformFlags = (TransformFlags)binaryReader.ReadInt16();
+            transformFlags = (TransformFlags) binaryReader.ReadInt16();
             manualBSPFlags = binaryReader.ReadBlockFlags16();
             objectID = new ScenarioObjectIdStructBlock();
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(objectID.ReadFields(binaryReader)));
-            bSPPolicy = (BSPPolicy)binaryReader.ReadByte();
+            bSPPolicy = (BSPPolicy) binaryReader.ReadByte();
             invalidName_ = binaryReader.ReadBytes(1);
             editorFolder = binaryReader.ReadShortBlockIndex1();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             objectID.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)placementFlags);
+                binaryWriter.Write((Int32) placementFlags);
                 binaryWriter.Write(position);
                 binaryWriter.Write(rotation);
                 binaryWriter.Write(scale);
-                binaryWriter.Write((Int16)transformFlags);
+                binaryWriter.Write((Int16) transformFlags);
                 binaryWriter.Write(manualBSPFlags);
                 objectID.Write(binaryWriter);
-                binaryWriter.Write((Byte)bSPPolicy);
+                binaryWriter.Write((Byte) bSPPolicy);
                 binaryWriter.Write(invalidName_, 0, 1);
                 binaryWriter.Write(editorFolder);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum PlacementFlags : int
         {
@@ -86,11 +101,13 @@ using(binaryWriter.BaseStream.Pin())
             LockNameToEnvObject = 128,
             CreateAtRest = 256,
         };
+
         [FlagsAttribute]
         internal enum TransformFlags : short
         {
             Mirrored = 1,
         };
+
         internal enum BSPPolicy : byte
         {
             Default = 0,

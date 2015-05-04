@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 360, Alignment = 4)]
     public class AiGlobalsBlockBase : GuerillaBlock
     {
@@ -32,8 +34,7 @@ namespace Moonfish.Guerilla.Tags
         internal float dangerBodyDamage;
         internal float dangerExtendedBodyDamage;
         internal byte[] invalidName_3;
-        [TagReference("adlg")]
-        internal Moonfish.Tags.TagReference globalDialogueTag;
+        [TagReference("adlg")] internal Moonfish.Tags.TagReference globalDialogueTag;
         internal Moonfish.Tags.StringIdent defaultMissionDialogueSoundEffect;
         internal byte[] invalidName_4;
         internal float jumpDownWuTick;
@@ -57,21 +58,34 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_6;
         internal AiGlobalsGravemindBlock[] gravemindProperties;
         internal byte[] invalidName_7;
+
         /// <summary>
         /// A target of this scariness is offically considered scary (by combat dialogue, etc.)
         /// </summary>
         internal float scaryTargetThrehold;
+
         /// <summary>
         /// A weapon of this scariness is offically considered scary (by combat dialogue, etc.)
         /// </summary>
         internal float scaryWeaponThrehold;
+
         internal float playerScariness;
         internal float berserkingActorScariness;
-        public override int SerializedSize { get { return 360; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 360; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public AiGlobalsBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -118,15 +132,17 @@ namespace Moonfish.Guerilla.Tags
             berserkingActorScariness = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             gravemindProperties = ReadBlockArrayData<AiGlobalsGravemindBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(dangerBroadlyFacing);
                 binaryWriter.Write(invalidName_, 0, 4);
@@ -163,7 +179,8 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(vaultStepWus);
                 binaryWriter.Write(vaultCrouchWus);
                 binaryWriter.Write(invalidName_6, 0, 48);
-                nextAddress = Guerilla.WriteBlockArray<AiGlobalsGravemindBlock>(binaryWriter, gravemindProperties, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AiGlobalsGravemindBlock>(binaryWriter, gravemindProperties,
+                    nextAddress);
                 binaryWriter.Write(invalidName_7, 0, 48);
                 binaryWriter.Write(scaryTargetThrehold);
                 binaryWriter.Write(scaryWeaponThrehold);

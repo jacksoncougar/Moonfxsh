@@ -64,7 +64,7 @@ namespace Moonfish.Guerilla
         {
             binaryReader.BaseStream.Position = blamPointer.StartAddress;
             var elements = new short[blamPointer.ElementCount];
-            var buffer = binaryReader.ReadBytes(blamPointer.ElementCount * 2);
+            var buffer = binaryReader.ReadBytes(blamPointer.ElementCount*2);
             Buffer.BlockCopy(buffer, 0, elements, 0, buffer.Length);
             return elements;
         }

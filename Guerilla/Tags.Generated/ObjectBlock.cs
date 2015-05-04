@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Obje = (TagClass)"obje";
+        public static readonly TagClass Obje = (TagClass) "obje";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 188, Alignment = 4)]
     public class ObjectBlockBase : GuerillaBlock
     {
@@ -32,71 +34,81 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal float boundingRadiusWorldUnits;
         internal OpenTK.Vector3 boundingOffset;
+
         /// <summary>
         /// marine 1.0, grunt 1.4, elite 0.9, hunter 0.5, etc.
         /// </summary>
         internal float accelerationScale0Inf;
+
         internal LightmapShadowMode lightmapShadowMode;
         internal SweetenerSize sweetenerSize;
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
+
         /// <summary>
         /// sphere to use for dynamic lights and shadows. only used if not 0
         /// </summary>
         internal float dynamicLightSphereRadius;
+
         /// <summary>
         /// only used if radius not 0
         /// </summary>
         internal OpenTK.Vector3 dynamicLightSphereOffset;
+
         internal Moonfish.Tags.StringIdent defaultModelVariant;
-        [TagReference("hlmt")]
-        internal Moonfish.Tags.TagReference model;
-        [TagReference("bloc")]
-        internal Moonfish.Tags.TagReference crateObject;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference modifierShader;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference creationEffect;
-        [TagReference("foot")]
-        internal Moonfish.Tags.TagReference materialEffects;
+        [TagReference("hlmt")] internal Moonfish.Tags.TagReference model;
+        [TagReference("bloc")] internal Moonfish.Tags.TagReference crateObject;
+        [TagReference("shad")] internal Moonfish.Tags.TagReference modifierShader;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference creationEffect;
+        [TagReference("foot")] internal Moonfish.Tags.TagReference materialEffects;
         internal ObjectAiPropertiesBlock[] aiProperties;
         internal ObjectFunctionBlock[] functions;
+
         /// <summary>
         /// 0 means 1.  1 is standard scale.  Some things may want to apply more damage
         /// </summary>
         internal float applyCollisionDamageScale;
+
         /// <summary>
         /// 0-oo
         /// </summary>
         internal float minGameAccDefault;
+
         /// <summary>
         /// 0-oo
         /// </summary>
         internal float maxGameAccDefault;
+
         /// <summary>
         /// 0-1
         /// </summary>
         internal float minGameScaleDefault;
+
         /// <summary>
         /// 0-1
         /// </summary>
         internal float maxGameScaleDefault;
+
         /// <summary>
         /// 0-oo
         /// </summary>
         internal float minAbsAccDefault;
+
         /// <summary>
         /// 0-oo
         /// </summary>
         internal float maxAbsAccDefault;
+
         /// <summary>
         /// 0-1
         /// </summary>
         internal float minAbsScaleDefault;
+
         /// <summary>
         /// 0-1
         /// </summary>
         internal float maxAbsScaleDefault;
+
         internal short hudTextMessageIndex;
         internal byte[] invalidName_2;
         internal ObjectAttachmentBlock[] attachments;
@@ -104,21 +116,31 @@ namespace Moonfish.Guerilla.Tags
         internal OldObjectFunctionBlock[] oldFunctions;
         internal ObjectChangeColors[] changeColors;
         internal PredictedResourceBlock[] predictedResources;
-        public override int SerializedSize { get { return 188; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 188; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ObjectBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(2);
-            flags = (Flags)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
             boundingRadiusWorldUnits = binaryReader.ReadSingle();
             boundingOffset = binaryReader.ReadVector3();
             accelerationScale0Inf = binaryReader.ReadSingle();
-            lightmapShadowMode = (LightmapShadowMode)binaryReader.ReadInt16();
-            sweetenerSize = (SweetenerSize)binaryReader.ReadByte();
+            lightmapShadowMode = (LightmapShadowMode) binaryReader.ReadInt16();
+            sweetenerSize = (SweetenerSize) binaryReader.ReadByte();
             invalidName_0 = binaryReader.ReadBytes(1);
             invalidName_1 = binaryReader.ReadBytes(4);
             dynamicLightSphereRadius = binaryReader.ReadSingle();
@@ -149,6 +171,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<PredictedResourceBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -160,18 +183,19 @@ namespace Moonfish.Guerilla.Tags
             changeColors = ReadBlockArrayData<ObjectChangeColors>(binaryReader, blamPointers.Dequeue());
             predictedResources = ReadBlockArrayData<PredictedResourceBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16) flags);
                 binaryWriter.Write(boundingRadiusWorldUnits);
                 binaryWriter.Write(boundingOffset);
                 binaryWriter.Write(accelerationScale0Inf);
-                binaryWriter.Write((Int16)lightmapShadowMode);
-                binaryWriter.Write((Byte)sweetenerSize);
+                binaryWriter.Write((Int16) lightmapShadowMode);
+                binaryWriter.Write((Byte) sweetenerSize);
                 binaryWriter.Write(invalidName_0, 0, 1);
                 binaryWriter.Write(invalidName_1, 0, 4);
                 binaryWriter.Write(dynamicLightSphereRadius);
@@ -199,10 +223,12 @@ using(binaryWriter.BaseStream.Pin())
                 nextAddress = Guerilla.WriteBlockArray<ObjectWidgetBlock>(binaryWriter, widgets, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<OldObjectFunctionBlock>(binaryWriter, oldFunctions, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ObjectChangeColors>(binaryWriter, changeColors, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PredictedResourceBlock>(binaryWriter, predictedResources, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PredictedResourceBlock>(binaryWriter, predictedResources,
+                    nextAddress);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {
@@ -221,12 +247,14 @@ using(binaryWriter.BaseStream.Pin())
             AttachToClustersByDynamicSphereUseThisForTheMacGunOnSpacestation = 4096,
             EffectsCreatedByThisObjectDoNotSpawnObjectsInMultiplayer = 8192,
         };
+
         internal enum LightmapShadowMode : short
         {
             Default = 0,
             Never = 1,
             Always = 2,
         };
+
         internal enum SweetenerSize : byte
         {
             Small = 0,

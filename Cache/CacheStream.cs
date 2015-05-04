@@ -41,78 +41,78 @@ namespace Moonfish
         public readonly MapType Type;
         private readonly int tagCacheLength;
 
-        public CacheStream( string filename )
-            : base( filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite, 1024 )
+        public CacheStream(string filename)
+            : base(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite, 1024)
         {
             //HEADER
-            var binaryReader = new BinaryReader( this, Encoding.UTF8 );
+            var binaryReader = new BinaryReader(this, Encoding.UTF8);
 
-            base.Seek( 0, SeekOrigin.Begin );
-            if ( binaryReader.ReadTagClass( ) != ( TagClass ) "head" )
-                throw new InvalidDataException( "Not a halo-map file" );
+            base.Seek(0, SeekOrigin.Begin);
+            if (binaryReader.ReadTagClass() != (TagClass) "head")
+                throw new InvalidDataException("Not a halo-map file");
 
-            base.Seek( 42, SeekOrigin.Begin );
-            BuildVersion = ( HaloVersion ) binaryReader.ReadInt32( );
+            base.Seek(42, SeekOrigin.Begin);
+            BuildVersion = (HaloVersion) binaryReader.ReadInt32();
 
-            base.Seek( 16, SeekOrigin.Begin );
-            var indexAddress = binaryReader.ReadInt32( );
-            var indexLength = binaryReader.ReadInt32( );
-            tagCacheLength = binaryReader.ReadInt32( );
+            base.Seek(16, SeekOrigin.Begin);
+            var indexAddress = binaryReader.ReadInt32();
+            var indexLength = binaryReader.ReadInt32();
+            tagCacheLength = binaryReader.ReadInt32();
 
 
-            if ( BuildVersion == HaloVersion.PC_RETAIL )
-                base.Seek( 12, SeekOrigin.Current );
+            if (BuildVersion == HaloVersion.PC_RETAIL)
+                base.Seek(12, SeekOrigin.Current);
 
             // Read maptype
-            using ( this.Pin( ) )
+            using (this.Pin())
             {
-                base.Seek( 320, SeekOrigin.Begin );
-                Type = ( MapType ) binaryReader.ReadInt32( );
+                base.Seek(320, SeekOrigin.Begin);
+                Type = (MapType) binaryReader.ReadInt32();
             }
 
-            base.Seek( 332, SeekOrigin.Current );
+            base.Seek(332, SeekOrigin.Current);
 
-            var stringTableLength = binaryReader.ReadInt32( );
-            base.Seek( 4, SeekOrigin.Current );
-            var stringTableAddress = binaryReader.ReadInt32( );
+            var stringTableLength = binaryReader.ReadInt32();
+            base.Seek(4, SeekOrigin.Current);
+            var stringTableAddress = binaryReader.ReadInt32();
 
-            base.Seek( 36, SeekOrigin.Current );
+            base.Seek(36, SeekOrigin.Current);
 
-            MapName = binaryReader.ReadFixedString( 32 );
+            MapName = binaryReader.ReadFixedString(32);
 
-            base.Seek( 4, SeekOrigin.Current );
+            base.Seek(4, SeekOrigin.Current);
 
-            Scenario = binaryReader.ReadFixedString( 256 );
+            Scenario = binaryReader.ReadFixedString(256);
 
-            base.Seek( 4, SeekOrigin.Current );
-            var pathsCount = binaryReader.ReadInt32( );
-            var pathsTableAddress = binaryReader.ReadInt32( );
-            var pathsTableLength = binaryReader.ReadInt32( );
+            base.Seek(4, SeekOrigin.Current);
+            var pathsCount = binaryReader.ReadInt32();
+            var pathsTableAddress = binaryReader.ReadInt32();
+            var pathsTableLength = binaryReader.ReadInt32();
 
 
-            base.Seek( pathsTableAddress, SeekOrigin.Begin );
-            var paths = Encoding.UTF8.GetString( binaryReader.ReadBytes( pathsTableLength - 1 ) ).Split( char.MinValue );
+            base.Seek(pathsTableAddress, SeekOrigin.Begin);
+            var paths = Encoding.UTF8.GetString(binaryReader.ReadBytes(pathsTableLength - 1)).Split(char.MinValue);
 
-            Halo2.Paths.Assign( paths );
+            Halo2.Paths.Assign(paths);
 
             //STRINGS
 
-            Seek( stringTableAddress, SeekOrigin.Begin );
-            Strings = Encoding.UTF8.GetString( binaryReader.ReadBytes( stringTableLength - 1 ) ).Split( char.MinValue );
+            Seek(stringTableAddress, SeekOrigin.Begin);
+            Strings = Encoding.UTF8.GetString(binaryReader.ReadBytes(stringTableLength - 1)).Split(char.MinValue);
 
-            Halo2.Strings.Assign( new List<string>( Strings ) );
+            Halo2.Strings.Assign(new List<string>(Strings));
 
             //  INDEX
-            base.Seek( indexAddress, SeekOrigin.Begin );
+            base.Seek(indexAddress, SeekOrigin.Begin);
 
-            Index = new TagIndex( this, paths );
+            Index = new TagIndex(this, paths);
 
             // Calculate File-pointer magic
-            var secondaryMagic = Index[ Index.GlobalsIdent ].VirtualAddress - ( indexAddress + indexLength );
+            var secondaryMagic = Index[Index.GlobalsIdent].VirtualAddress - (indexAddress + indexLength);
 
             DefaultMemoryBlock = new VirtualMappedAddress
             {
-                Address = Index[ 0 ].VirtualAddress,
+                Address = Index[0].VirtualAddress,
                 Length = tagCacheLength,
                 Magic = secondaryMagic
             };
@@ -120,34 +120,34 @@ namespace Moonfish
             /* Intent: read the sbsp and lightmap address and lengths from the scenario tag 
              * and store them in the Tags array.
              */
-            if ( BuildVersion == HaloVersion.XBOX_RETAIL )
+            if (BuildVersion == HaloVersion.XBOX_RETAIL)
             {
-                base.Seek( Index[ Index.ScenarioIdent ].VirtualAddress - secondaryMagic + 528, SeekOrigin.Begin );
-                var count = binaryReader.ReadInt32( );
-                var address = binaryReader.ReadInt32( );
+                base.Seek(Index[Index.ScenarioIdent].VirtualAddress - secondaryMagic + 528, SeekOrigin.Begin);
+                var count = binaryReader.ReadInt32();
+                var address = binaryReader.ReadInt32();
 
-                StructureMemoryBlockBindings = new Dictionary<TagIdent, int>( count * 2 );
-                StructureMemoryBlocks = new List<VirtualMappedAddress>( count );
-                for ( var i = 0; i < count; ++i )
+                StructureMemoryBlockBindings = new Dictionary<TagIdent, int>(count*2);
+                StructureMemoryBlocks = new List<VirtualMappedAddress>(count);
+                for (var i = 0; i < count; ++i)
                 {
-                    base.Seek( address - secondaryMagic + i * 68, SeekOrigin.Begin );
-                    var structureBlockOffset = binaryReader.ReadInt32( );
-                    var structureBlockLength = binaryReader.ReadInt32( );
-                    var structureBlockAddress = binaryReader.ReadInt32( );
-                    base.Seek( 8, SeekOrigin.Current );
-                    var sbspIdentifier = binaryReader.ReadTagIdent( );
-                    base.Seek( 4, SeekOrigin.Current );
-                    var ltmpIdentifier = binaryReader.ReadTagIdent( );
+                    base.Seek(address - secondaryMagic + i*68, SeekOrigin.Begin);
+                    var structureBlockOffset = binaryReader.ReadInt32();
+                    var structureBlockLength = binaryReader.ReadInt32();
+                    var structureBlockAddress = binaryReader.ReadInt32();
+                    base.Seek(8, SeekOrigin.Current);
+                    var sbspIdentifier = binaryReader.ReadTagIdent();
+                    base.Seek(4, SeekOrigin.Current);
+                    var ltmpIdentifier = binaryReader.ReadTagIdent();
 
-                    base.Seek( structureBlockOffset, SeekOrigin.Begin );
+                    base.Seek(structureBlockOffset, SeekOrigin.Begin);
 
 
-                    var blockLength = binaryReader.ReadInt32( );
-                    var sbspVirtualAddress = binaryReader.ReadInt32( );
-                    var ltmpVirtualAddress = binaryReader.ReadInt32( );
-                    var sbsp = binaryReader.ReadTagClass( );
+                    var blockLength = binaryReader.ReadInt32();
+                    var sbspVirtualAddress = binaryReader.ReadInt32();
+                    var ltmpVirtualAddress = binaryReader.ReadInt32();
+                    var sbsp = binaryReader.ReadTagClass();
 
-                    var hasLightmapData = !TagIdent.IsNull( ltmpIdentifier );
+                    var hasLightmapData = !TagIdent.IsNull(ltmpIdentifier);
 
                     var sbspLength = hasLightmapData ? ltmpVirtualAddress - sbspVirtualAddress : blockLength;
 
@@ -160,30 +160,30 @@ namespace Moonfish
                         Magic = structureBlockAddress - structureBlockOffset
                     };
 
-                    var sbspDatum = Index[ sbspIdentifier ];
+                    var sbspDatum = Index[sbspIdentifier];
                     sbspDatum.VirtualAddress = sbspVirtualAddress;
                     sbspDatum.Length = sbspLength;
-                    Index.Update( sbspIdentifier, sbspDatum );
+                    Index.Update(sbspIdentifier, sbspDatum);
 
-                    StructureMemoryBlocks.Add( block );
+                    StructureMemoryBlocks.Add(block);
                     var index = StructureMemoryBlocks.Count - 1;
-                    StructureMemoryBlockBindings[ sbspIdentifier ] = index;
+                    StructureMemoryBlockBindings[sbspIdentifier] = index;
 
-                    if ( hasLightmapData )
+                    if (hasLightmapData)
                     {
-                        var ltmpDatum = Index[ ltmpIdentifier ];
+                        var ltmpDatum = Index[ltmpIdentifier];
                         ltmpDatum.VirtualAddress = ltmpVirtualAddress;
                         ltmpDatum.Length = ltmpLength;
                         Index.Update(ltmpIdentifier, ltmpDatum);
-                        StructureMemoryBlockBindings[ ltmpIdentifier ] = index;
+                        StructureMemoryBlockBindings[ltmpIdentifier] = index;
                     }
                 }
-                ActiveAllocation( StructureCache.VirtualStructureCache0 );
+                ActiveAllocation(StructureCache.VirtualStructureCache0);
             }
 
-            _deserializedTagCache = new Dictionary<TagIdent, dynamic>( Index.Count );
-            _tagHashDictionary = new Dictionary<TagIdent, string>( Index.Count );
-            Halo2.ActiveMap( this );
+            _deserializedTagCache = new Dictionary<TagIdent, dynamic>(Index.Count);
+            _tagHashDictionary = new Dictionary<TagIdent, string>(Index.Count);
+            Halo2.ActiveMap(this);
         }
 
         public TagIndex Index { get; private set; }
@@ -192,46 +192,46 @@ namespace Moonfish
         {
             get
             {
-                var value = ( int ) base.Position;
-                return TryConvertOffsetToPointer( ref value ) ? value : base.Position;
+                var value = (int) base.Position;
+                return TryConvertOffsetToPointer(ref value) ? value : base.Position;
             }
-            set { base.Position = CheckOffset( value ); }
+            set { base.Position = CheckOffset(value); }
         }
 
         private VirtualMappedAddress ActiveStructureMemoryAllocation { get; set; }
 
-        public void Add<T>(T item, string tagName ) where T : GuerillaBlock
+        public void Add<T>(T item, string tagName) where T : GuerillaBlock
         {
-            var lastDatum = Index.Last( );
+            var lastDatum = Index.Last();
 
-            var stream = new VirtualStream( lastDatum.VirtualAddress);
-            var binaryWriter = new BinaryWriter( stream );
+            var stream = new VirtualStream(lastDatum.VirtualAddress);
+            var binaryWriter = new BinaryWriter(stream);
 
-            binaryWriter.Write( item );
-            var serializedTagData = stream.ToArray( );
-            
-            var attribute = (TagClassAttribute)typeof ( T ).Attribute( typeof ( TagClassAttribute ) );
+            binaryWriter.Write(item);
+            var serializedTagData = stream.ToArray();
+
+            var attribute = (TagClassAttribute) typeof (T).Attribute(typeof (TagClassAttribute));
             var tagDatum = Index.Add(attribute.TagClass, tagName, serializedTagData.Length, lastDatum.VirtualAddress);
 
 #if DEBUG
-            var v = new Validator(  );
-            v.Validate( tagDatum, stream );
+            var v = new Validator();
+            v.Validate(tagDatum, stream);
 #endif
 
-            Allocate( tagDatum.Identifier, serializedTagData.Length );
+            Allocate(tagDatum.Identifier, serializedTagData.Length);
         }
 
-        void Allocate( TagIdent ident, int size )
+        private void Allocate(TagIdent ident, int size)
         {
             //create virtual stream to write into
-            var tagCacheStream = new VirtualStream( Index[ Index.GlobalsIdent ].VirtualAddress );
+            var tagCacheStream = new VirtualStream(Index[Index.GlobalsIdent].VirtualAddress);
 
             var binaryWriter = new BinaryWriter(tagCacheStream);
 
-            for ( var i = 0; i < Index.Count; ++i )
+            for (var i = 0; i < Index.Count; ++i)
             {
-                var datum = Index[ i ];
-                
+                var datum = Index[i];
+
                 // is this address affected by the shift?
                 if (datum.Identifier == ident)
                 {
@@ -254,152 +254,152 @@ namespace Moonfish
                     //Index.Update(datum.Identifier, datum);
                 }
             }
-            binaryWriter.WritePadding( 512 );
+            binaryWriter.WritePadding(512);
         }
 
-        private static void ProcessFields( List<MoonfishTagField> fields, BinaryReader binaryReader , BinaryWriter binaryWriter, int address )
+        private static void ProcessFields(List<MoonfishTagField> fields, BinaryReader binaryReader,
+            BinaryWriter binaryWriter, int address)
         {
             foreach (var field in fields)
             {
-                if ( field.Type == MoonfishFieldType.FieldBlock )
+                if (field.Type == MoonfishFieldType.FieldBlock)
                 {
                     // move the stream to the field
                     var offsetOfField = MoonfishTagDefinition.CalculateOffsetOfField(fields, field);
                     binaryReader.BaseStream.Position = address + offsetOfField;
 
-                    var elementSize = ( ( MoonfishTagDefinition ) field.Definition ).CalculateSizeOfFieldSet( );
-                    var pointer = binaryReader.ReadBlamPointer( elementSize );
-
+                    var elementSize = ((MoonfishTagDefinition) field.Definition).CalculateSizeOfFieldSet();
+                    var pointer = binaryReader.ReadBlamPointer(elementSize);
                 }
-                if ( field.Type == MoonfishFieldType.FieldData )
+                if (field.Type == MoonfishFieldType.FieldData)
                 {
                 }
             }
         }
 
 
-        public void ActiveAllocation( StructureCache activeAllocation )
+        public void ActiveAllocation(StructureCache activeAllocation)
         {
-            var index = ( int ) activeAllocation;
-            ActiveStructureMemoryAllocation = StructureMemoryBlocks[ index ];
+            var index = (int) activeAllocation;
+            ActiveStructureMemoryAllocation = StructureMemoryBlocks[index];
         }
 
-        public string CalculateHash( TagIdent ident )
+        public string CalculateHash(TagIdent ident)
         {
-            using ( var sha1 = new SHA1CryptoServiceProvider( ) )
+            using (var sha1 = new SHA1CryptoServiceProvider())
             {
-                var hash = Convert.ToBase64String( sha1.ComputeHash( GetInternalTagMeta( ident ) ) );
+                var hash = Convert.ToBase64String(sha1.ComputeHash(GetInternalTagMeta(ident)));
                 //Console.WriteLine(hash);
                 return hash;
             }
         }
 
-        public bool ContainsPointer( BlamPointer blamPointer )
+        public bool ContainsPointer(BlamPointer blamPointer)
         {
-            return DefaultMemoryBlock.Contains( blamPointer ) || ActiveStructureMemoryAllocation.Contains( blamPointer );
+            return DefaultMemoryBlock.Contains(blamPointer) || ActiveStructureMemoryAllocation.Contains(blamPointer);
         }
 
-        public object Deserialize( TagIdent ident )
+        public object Deserialize(TagIdent ident)
         {
             object deserializedTag;
-            if ( _deserializedTagCache.TryGetValue( ident, out deserializedTag ) )
+            if (_deserializedTagCache.TryGetValue(ident, out deserializedTag))
                 return deserializedTag;
 
             var type = Halo2.GetTypeOf(Index[ident].Class);
             if (type == null) return null;
 
             Seek(ident);
-            _deserializedTagCache[ ident ] = Deserialize( type );
-            _tagHashDictionary[ ident ] = CalculateHash( ident );
+            _deserializedTagCache[ident] = Deserialize(type);
+            _tagHashDictionary[ident] = CalculateHash(ident);
 
-            return _deserializedTagCache[ ident ];
+            return _deserializedTagCache[ident];
         }
 
         private GuerillaBlock Deserialize(Type tagType)
         {
             var sourceReader = new BinaryReader(this);
-            var instance = (GuerillaBlock)Activator.CreateInstance(tagType);
+            var instance = (GuerillaBlock) Activator.CreateInstance(tagType);
             instance.Read(sourceReader);
             return instance;
         }
 
-        public long GetFilePosition( )
+        public long GetFilePosition()
         {
             return base.Position;
         }
 
-        public string GetTagHash( TagIdent ident )
+        public string GetTagHash(TagIdent ident)
         {
-            return _tagHashDictionary.ContainsKey( ident ) ? _tagHashDictionary[ ident ] : null;
+            return _tagHashDictionary.ContainsKey(ident) ? _tagHashDictionary[ident] : null;
         }
 
-        public void ClearCache( TagIdent ident )
+        public void ClearCache(TagIdent ident)
         {
-            _deserializedTagCache.Remove( ident );
+            _deserializedTagCache.Remove(ident);
         }
 
-        public long Seek( TagIdent tagident )
+        public long Seek(TagIdent tagident)
         {
-            return Seek( Index[ tagident ].VirtualAddress, SeekOrigin.Begin );
+            return Seek(Index[tagident].VirtualAddress, SeekOrigin.Begin);
         }
 
-        public override long Seek( long offset, SeekOrigin origin )
+        public override long Seek(long offset, SeekOrigin origin)
         {
-            offset = CheckOffset( offset );
-            base.Seek( offset, origin );
+            offset = CheckOffset(offset);
+            base.Seek(offset, origin);
             return Position;
         }
 
-        public bool Sign( )
+        public bool Sign()
         {
-            if ( !CanWrite ) return false;
-            var checksum = CalculateChecksum( );
+            if (!CanWrite) return false;
+            var checksum = CalculateChecksum();
 
-            var writer = new BinaryWriter( this );
+            var writer = new BinaryWriter(this);
             writer.BaseStream.Position = 0x000002F0;
-            writer.Write( checksum );
+            writer.Write(checksum);
             return true;
         }
 
-        private int CalculateChecksum( )
+        private int CalculateChecksum()
         {
             const int blockSize = 512;
             var buffer = new byte[blockSize];
 
-            var word_count = ( ( int ) Length - 2048 ) / sizeof ( uint );
-            var pass_count = word_count / ( blockSize / 4 );
-            var remainder = word_count % pass_count;
+            var word_count = ((int) Length - 2048)/sizeof (uint);
+            var pass_count = word_count/(blockSize/4);
+            var remainder = word_count%pass_count;
 
             Position = 2048;
             var checksum = 0;
-            for ( var pass = 0; pass < pass_count; pass++ )
+            for (var pass = 0; pass < pass_count; pass++)
             {
-                Read( buffer, 0, blockSize );
-                for ( var index = 0; index < blockSize / sizeof ( uint ); index += 4 )
+                Read(buffer, 0, blockSize);
+                for (var index = 0; index < blockSize/sizeof (uint); index += 4)
                 {
-                    checksum ^= BitConverter.ToInt32( buffer, ( index + 0 ) * sizeof ( uint ) );
-                    checksum ^= BitConverter.ToInt32( buffer, ( index + 1 ) * sizeof ( uint ) );
-                    checksum ^= BitConverter.ToInt32( buffer, ( index + 2 ) * sizeof ( uint ) );
-                    checksum ^= BitConverter.ToInt32( buffer, ( index + 3 ) * sizeof ( uint ) );
+                    checksum ^= BitConverter.ToInt32(buffer, (index + 0)*sizeof (uint));
+                    checksum ^= BitConverter.ToInt32(buffer, (index + 1)*sizeof (uint));
+                    checksum ^= BitConverter.ToInt32(buffer, (index + 2)*sizeof (uint));
+                    checksum ^= BitConverter.ToInt32(buffer, (index + 3)*sizeof (uint));
                 }
             }
-            Read( buffer, 0, remainder );
-            for ( var index = 0; index < remainder / sizeof ( uint ); index += 4 )
+            Read(buffer, 0, remainder);
+            for (var index = 0; index < remainder/sizeof (uint); index += 4)
             {
-                checksum ^= BitConverter.ToInt32( buffer, ( index + 0 ) * sizeof ( uint ) );
-                checksum ^= BitConverter.ToInt32( buffer, ( index + 1 ) * sizeof ( uint ) );
-                checksum ^= BitConverter.ToInt32( buffer, ( index + 2 ) * sizeof ( uint ) );
-                checksum ^= BitConverter.ToInt32( buffer, ( index + 3 ) * sizeof ( uint ) );
+                checksum ^= BitConverter.ToInt32(buffer, (index + 0)*sizeof (uint));
+                checksum ^= BitConverter.ToInt32(buffer, (index + 1)*sizeof (uint));
+                checksum ^= BitConverter.ToInt32(buffer, (index + 2)*sizeof (uint));
+                checksum ^= BitConverter.ToInt32(buffer, (index + 3)*sizeof (uint));
             }
             return checksum;
         }
 
-        private long CheckOffset( long value )
+        private long CheckOffset(long value)
         {
             // if 'value' is a Pointer
-            if ( value < 0 || value > Length )
+            if (value < 0 || value > Length)
             {
-                return VirtualAddressToFileOffset( ( int ) value );
+                return VirtualAddressToFileOffset((int) value);
             }
             return value;
         }
@@ -409,44 +409,44 @@ namespace Moonfish
         /// </summary>
         /// <param name="ident"></param>
         /// <returns></returns>
-        private byte[] GetInternalTagMeta( TagIdent ident )
+        private byte[] GetInternalTagMeta(TagIdent ident)
         {
-            using ( this.Pin( ) )
+            using (this.Pin())
             {
-                Seek( ident );
-                var tag = Index[ ident ];
+                Seek(ident);
+                var tag = Index[ident];
                 var buffer = new byte[tag.Length];
-                Read( buffer, 0, tag.Length );
+                Read(buffer, 0, tag.Length);
                 return buffer;
             }
         }
 
-        private bool TryConvertOffsetToPointer( ref int value )
+        private bool TryConvertOffsetToPointer(ref int value)
         {
-            if ( DefaultMemoryBlock.ContainsFileOffset( value ) )
+            if (DefaultMemoryBlock.ContainsFileOffset(value))
             {
-                value = DefaultMemoryBlock.GetOffset( value, false, true );
+                value = DefaultMemoryBlock.GetOffset(value, false, true);
                 return true;
             }
-            if ( ActiveStructureMemoryAllocation.ContainsFileOffset( value ) )
+            if (ActiveStructureMemoryAllocation.ContainsFileOffset(value))
             {
-                value = ActiveStructureMemoryAllocation.GetOffset( value, false, true );
+                value = ActiveStructureMemoryAllocation.GetOffset(value, false, true);
                 return true;
             }
             return false;
         }
 
-        private int VirtualAddressToFileOffset( int value )
+        private int VirtualAddressToFileOffset(int value)
         {
-            if ( DefaultMemoryBlock.ContainsVirtualOffset( value ) )
+            if (DefaultMemoryBlock.ContainsVirtualOffset(value))
             {
-                return DefaultMemoryBlock.GetOffset( value );
+                return DefaultMemoryBlock.GetOffset(value);
             }
-            if ( ActiveStructureMemoryAllocation.ContainsVirtualOffset( value ) )
+            if (ActiveStructureMemoryAllocation.ContainsVirtualOffset(value))
             {
-                return ActiveStructureMemoryAllocation.GetOffset( value );
+                return ActiveStructureMemoryAllocation.GetOffset(value);
             }
-            throw new InvalidOperationException( );
+            throw new InvalidOperationException();
         }
     }
 }

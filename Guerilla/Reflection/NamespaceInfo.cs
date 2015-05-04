@@ -4,7 +4,7 @@ namespace Moonfish.Guerilla.Reflection
     {
         public const string NamespaceBase = "Moonfish.Guerilla.Tags";
 
-        public NamespaceInfo():this(null)
+        public NamespaceInfo() : this(null)
         {
         }
 

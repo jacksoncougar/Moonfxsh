@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 68, Alignment = 4)]
     public class ScenarioTriggerVolumeBlockBase : GuerillaBlock
     {
@@ -29,11 +31,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal Moonfish.Tags.ShortBlockIndex1 killTriggerVolume;
         internal byte[] invalidName_1;
-        public override int SerializedSize { get { return 68; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 68; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ScenarioTriggerVolumeBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -41,7 +53,11 @@ namespace Moonfish.Guerilla.Tags
             objectName = binaryReader.ReadShortBlockIndex1();
             invalidName_ = binaryReader.ReadBytes(2);
             nodeName = binaryReader.ReadStringID();
-            eMPTYSTRING = new []{ new EMPTYSTRING(), new EMPTYSTRING(), new EMPTYSTRING(), new EMPTYSTRING(), new EMPTYSTRING(), new EMPTYSTRING() };
+            eMPTYSTRING = new[]
+            {
+                new EMPTYSTRING(), new EMPTYSTRING(), new EMPTYSTRING(), new EMPTYSTRING(), new EMPTYSTRING(),
+                new EMPTYSTRING()
+            };
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(eMPTYSTRING[0].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(eMPTYSTRING[1].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(eMPTYSTRING[2].ReadFields(binaryReader)));
@@ -55,6 +71,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(2);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -65,10 +82,11 @@ namespace Moonfish.Guerilla.Tags
             eMPTYSTRING[4].ReadPointers(binaryReader, blamPointers);
             eMPTYSTRING[5].ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(objectName);
@@ -88,29 +106,42 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [LayoutAttribute(Size = 4, Alignment = 1)]
         public class EMPTYSTRING : GuerillaBlock
         {
             internal float eMPTYSTRING;
-            public override int SerializedSize { get { return 4; } }
-            public override int Alignment { get { return 1; } }
+
+            public override int SerializedSize
+            {
+                get { return 4; }
+            }
+
+            public override int Alignment
+            {
+                get { return 1; }
+            }
+
             public EMPTYSTRING() : base()
             {
             }
+
             public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
             {
                 var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
                 eMPTYSTRING = binaryReader.ReadSingle();
                 return blamPointers;
             }
+
             public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
             {
                 base.ReadPointers(binaryReader, blamPointers);
             }
+
             public override int Write(BinaryWriter binaryWriter, int nextAddress)
             {
                 base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+                using (binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(eMPTYSTRING);
                     return nextAddress;

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,18 +17,22 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 248, Alignment = 4)]
     public class GlobalDamageInfoBlockBase : GuerillaBlock
     {
         internal Flags flags;
+
         /// <summary>
         /// absorbes AOE or child damage
         /// </summary>
         internal Moonfish.Tags.StringIdent globalIndirectMaterialName;
+
         /// <summary>
         /// absorbes AOE or child damage
         /// </summary>
         internal Moonfish.Tags.ShortBlockIndex2 indirectDamageSection;
+
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
         internal CollisionDamageReportingType collisionDamageReportingType;
@@ -35,51 +40,57 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
         internal float maximumVitality;
+
         /// <summary>
         /// the minimum damage required to stun this object's health
         /// </summary>
         internal float minimumStunDamage;
+
         /// <summary>
         /// the length of time the health stay stunned (do not recharge) after taking damage
         /// </summary>
         internal float stunTimeSeconds;
+
         /// <summary>
         /// the length of time it would take for the shields to fully recharge after being completely depleted
         /// </summary>
         internal float rechargeTimeSeconds;
+
         /// <summary>
         /// 0 defaults to 1 - to what maximum level the body health will be allowed to recharge
         /// </summary>
         internal float rechargeFraction;
+
         internal byte[] invalidName_3;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference shieldDamagedFirstPersonShader;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference shieldDamagedShader;
+        [TagReference("shad")] internal Moonfish.Tags.TagReference shieldDamagedFirstPersonShader;
+        [TagReference("shad")] internal Moonfish.Tags.TagReference shieldDamagedShader;
+
         /// <summary>
         /// the default initial and maximumShieldVitality of this object
         /// </summary>
         internal float maximumShieldVitality;
+
         internal Moonfish.Tags.StringIdent globalShieldMaterialName;
+
         /// <summary>
         /// the minimum damage required to stun this object's shields
         /// </summary>
         internal float minimumStunDamage0;
+
         /// <summary>
         /// the length of time the shields stay stunned (do not recharge) after taking damage
         /// </summary>
         internal float stunTimeSeconds0;
+
         /// <summary>
         /// the length of time it would take for the shields to fully recharge after being completely depleted
         /// </summary>
         internal float rechargeTimeSeconds0;
+
         internal float shieldDamagedThreshold;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference shieldDamagedEffect;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference shieldDepletedEffect;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference shieldRechargingEffect;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference shieldDamagedEffect;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference shieldDepletedEffect;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference shieldRechargingEffect;
         internal GlobalDamageSectionBlock[] damageSections;
         internal GlobalDamageNodesBlock[] nodes;
         internal byte[] invalidName_4;
@@ -88,25 +99,33 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_7;
         internal DamageSeatInfoBlock[] damageSeats;
         internal DamageConstraintInfoBlock[] damageConstraints;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference overshieldFirstPersonShader;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference overshieldShader;
-        public override int SerializedSize { get { return 248; } }
-        public override int Alignment { get { return 4; } }
+        [TagReference("shad")] internal Moonfish.Tags.TagReference overshieldFirstPersonShader;
+        [TagReference("shad")] internal Moonfish.Tags.TagReference overshieldShader;
+
+        public override int SerializedSize
+        {
+            get { return 248; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public GlobalDamageInfoBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             globalIndirectMaterialName = binaryReader.ReadStringID();
             indirectDamageSection = binaryReader.ReadShortBlockIndex2();
             invalidName_ = binaryReader.ReadBytes(2);
             invalidName_0 = binaryReader.ReadBytes(4);
-            collisionDamageReportingType = (CollisionDamageReportingType)binaryReader.ReadByte();
-            responseDamageReportingType = (ResponseDamageReportingType)binaryReader.ReadByte();
+            collisionDamageReportingType = (CollisionDamageReportingType) binaryReader.ReadByte();
+            responseDamageReportingType = (ResponseDamageReportingType) binaryReader.ReadByte();
             invalidName_1 = binaryReader.ReadBytes(2);
             invalidName_2 = binaryReader.ReadBytes(20);
             maximumVitality = binaryReader.ReadSingle();
@@ -138,6 +157,7 @@ namespace Moonfish.Guerilla.Tags
             overshieldShader = binaryReader.ReadTagReference();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -146,18 +166,19 @@ namespace Moonfish.Guerilla.Tags
             damageSeats = ReadBlockArrayData<DamageSeatInfoBlock>(binaryReader, blamPointers.Dequeue());
             damageConstraints = ReadBlockArrayData<DamageConstraintInfoBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int32) flags);
                 binaryWriter.Write(globalIndirectMaterialName);
                 binaryWriter.Write(indirectDamageSection);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(invalidName_0, 0, 4);
-                binaryWriter.Write((Byte)collisionDamageReportingType);
-                binaryWriter.Write((Byte)responseDamageReportingType);
+                binaryWriter.Write((Byte) collisionDamageReportingType);
+                binaryWriter.Write((Byte) responseDamageReportingType);
                 binaryWriter.Write(invalidName_1, 0, 2);
                 binaryWriter.Write(invalidName_2, 0, 20);
                 binaryWriter.Write(maximumVitality);
@@ -177,19 +198,22 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(shieldDamagedEffect);
                 binaryWriter.Write(shieldDepletedEffect);
                 binaryWriter.Write(shieldRechargingEffect);
-                nextAddress = Guerilla.WriteBlockArray<GlobalDamageSectionBlock>(binaryWriter, damageSections, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GlobalDamageSectionBlock>(binaryWriter, damageSections,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GlobalDamageNodesBlock>(binaryWriter, nodes, nextAddress);
                 binaryWriter.Write(invalidName_4, 0, 2);
                 binaryWriter.Write(invalidName_5, 0, 2);
                 binaryWriter.Write(invalidName_6, 0, 4);
                 binaryWriter.Write(invalidName_7, 0, 4);
                 nextAddress = Guerilla.WriteBlockArray<DamageSeatInfoBlock>(binaryWriter, damageSeats, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<DamageConstraintInfoBlock>(binaryWriter, damageConstraints, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<DamageConstraintInfoBlock>(binaryWriter, damageConstraints,
+                    nextAddress);
                 binaryWriter.Write(overshieldFirstPersonShader);
                 binaryWriter.Write(overshieldShader);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -203,6 +227,7 @@ using(binaryWriter.BaseStream.Pin())
             CannotDieFromDamage = 128,
             PassesAttachedDamageToRiders = 256,
         };
+
         internal enum CollisionDamageReportingType : byte
         {
             TehGuardians11 = 0,
@@ -248,6 +273,7 @@ using(binaryWriter.BaseStream.Pin())
             SentinelRpg = 40,
             Teleporter = 41,
         };
+
         internal enum ResponseDamageReportingType : byte
         {
             TehGuardians11 = 0,

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 56, Alignment = 4)]
     public class BitmapBlockReferenceBlockBase : GuerillaBlock
     {
@@ -27,26 +29,35 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.Point topLeft;
         internal float horizTextureWrapsSecond;
         internal float vertTextureWrapsSecond;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference bitmapTag;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference bitmapTag;
         internal short renderDepthBias;
         internal byte[] invalidName_;
         internal float spriteAnimationSpeedFps;
         internal Moonfish.Tags.Point progressBottomLeft;
         internal Moonfish.Tags.StringIdent stringIdentifier;
         internal OpenTK.Vector2 progressScale;
-        public override int SerializedSize { get { return 56; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 56; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public BitmapBlockReferenceBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
-            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt32();
+            animationIndex = (AnimationIndex) binaryReader.ReadInt16();
             introAnimationDelayMilliseconds = binaryReader.ReadInt16();
-            bitmapBlendMethod = (BitmapBlendMethod)binaryReader.ReadInt16();
+            bitmapBlendMethod = (BitmapBlendMethod) binaryReader.ReadInt16();
             initialSpriteFrame = binaryReader.ReadInt16();
             topLeft = binaryReader.ReadPoint();
             horizTextureWrapsSecond = binaryReader.ReadSingle();
@@ -60,19 +71,21 @@ namespace Moonfish.Guerilla.Tags
             progressScale = binaryReader.ReadVector2();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)animationIndex);
+                binaryWriter.Write((Int32) flags);
+                binaryWriter.Write((Int16) animationIndex);
                 binaryWriter.Write(introAnimationDelayMilliseconds);
-                binaryWriter.Write((Int16)bitmapBlendMethod);
+                binaryWriter.Write((Int16) bitmapBlendMethod);
                 binaryWriter.Write(initialSpriteFrame);
                 binaryWriter.Write(topLeft);
                 binaryWriter.Write(horizTextureWrapsSecond);
@@ -87,6 +100,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -94,6 +108,7 @@ using(binaryWriter.BaseStream.Pin())
             SwapOnRelativeListPosition = 2,
             RenderAsProgressBar = 4,
         };
+
         internal enum AnimationIndex : short
         {
             NONE = 0,
@@ -162,6 +177,7 @@ using(binaryWriter.BaseStream.Pin())
             InvalidName62 = 63,
             InvalidName63 = 64,
         };
+
         internal enum BitmapBlendMethod : short
         {
             Standard = 0,

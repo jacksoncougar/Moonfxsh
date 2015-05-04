@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class ModelMaterialBlockBase : GuerillaBlock
     {
@@ -26,16 +28,26 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal Moonfish.Tags.StringIdent globalMaterialName;
         internal byte[] invalidName_1;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ModelMaterialBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             materialName = binaryReader.ReadStringID();
-            materialType = (MaterialType)binaryReader.ReadInt16();
+            materialType = (MaterialType) binaryReader.ReadInt16();
             damageSection = binaryReader.ReadShortBlockIndex2();
             invalidName_ = binaryReader.ReadBytes(2);
             invalidName_0 = binaryReader.ReadBytes(2);
@@ -43,17 +55,19 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(4);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(materialName);
-                binaryWriter.Write((Int16)materialType);
+                binaryWriter.Write((Int16) materialType);
                 binaryWriter.Write(damageSection);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(invalidName_0, 0, 2);
@@ -62,6 +76,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         internal enum MaterialType : short
         {
             Dirt = 0,

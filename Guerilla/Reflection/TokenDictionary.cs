@@ -9,6 +9,7 @@ namespace Moonfish.Guerilla.Reflection
         {
             Tokens = new HashSet<string>(other.Tokens);
         }
+
         public TokenDictionary()
         {
             Tokens = new HashSet<string>();

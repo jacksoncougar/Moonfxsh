@@ -5,11 +5,11 @@ namespace Moonfish.Guerilla.Reflection
 {
     public static class StringBuilderExtensions
     {
-        public static void AppendSummary( this StringBuilder stringBuilder, string value )
+        public static void AppendSummary(this StringBuilder stringBuilder, string value)
         {
-            stringBuilder.AppendLine( "/// <summary>" );
-            stringBuilder.AppendLine( string.Format( "/// {0}", value ) );
-            stringBuilder.AppendLine( "/// </summary>" );
+            stringBuilder.AppendLine("/// <summary>");
+            stringBuilder.AppendLine(string.Format("/// {0}", value));
+            stringBuilder.AppendLine("/// </summary>");
         }
 
         [StringFormatMethod("value")]
@@ -27,7 +27,8 @@ namespace Moonfish.Guerilla.Reflection
         }
 
         [StringFormatMethod("value")]
-        public static void AppendFormatLine(this StringBuilder stringBuilder, string value, object arg0, object arg1, object arg2)
+        public static void AppendFormatLine(this StringBuilder stringBuilder, string value, object arg0, object arg1,
+            object arg2)
         {
             stringBuilder.AppendFormat(value, arg0, arg1, arg2);
             stringBuilder.AppendLine();

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 352, Alignment = 4)]
     public class MultiplayerConstantsBlockBase : GuerillaBlock
     {
@@ -29,34 +31,42 @@ namespace Moonfish.Guerilla.Tags
         internal float vehicleDangerWeight;
         internal float vehicleDangerRadius;
         internal float vehicleDangerLeadTimeSeconds;
+
         /// <summary>
         /// how nearby a player is to count a vehicle as 'occupied'
         /// </summary>
         internal float vehicleNearbyPlayerDist;
+
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference hillShader;
+        [TagReference("shad")] internal Moonfish.Tags.TagReference hillShader;
         internal byte[] invalidName_2;
         internal float flagResetStopDistance;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference bombExplodeEffect;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference bombExplodeDmgEffect;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference bombDefuseEffect;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference bombExplodeEffect;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference bombExplodeDmgEffect;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference bombDefuseEffect;
         internal Moonfish.Tags.StringIdent bombDefusalString;
         internal Moonfish.Tags.StringIdent blockedTeleporterString;
         internal byte[] invalidName_3;
         internal byte[] invalidName_4;
         internal byte[] invalidName_5;
         internal byte[] invalidName_6;
-        public override int SerializedSize { get { return 352; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 352; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public MultiplayerConstantsBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -88,14 +98,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_6 = binaryReader.ReadBytes(32);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(maximumRandomSpawnBias);
                 binaryWriter.Write(teleporterRechargeTimeSeconds);

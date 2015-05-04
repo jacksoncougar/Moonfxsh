@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class ScenarioObjectPermutationStructBlockBase : GuerillaBlock
     {
@@ -25,33 +27,45 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ColourR1G1B1 secondaryColor;
         internal Moonfish.Tags.ColourR1G1B1 tertiaryColor;
         internal Moonfish.Tags.ColourR1G1B1 quaternaryColor;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ScenarioObjectPermutationStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             variantName = binaryReader.ReadStringID();
-            activeChangeColors = (ActiveChangeColors)binaryReader.ReadInt32();
+            activeChangeColors = (ActiveChangeColors) binaryReader.ReadInt32();
             primaryColor = binaryReader.ReadColourR1G1B1();
             secondaryColor = binaryReader.ReadColourR1G1B1();
             tertiaryColor = binaryReader.ReadColourR1G1B1();
             quaternaryColor = binaryReader.ReadColourR1G1B1();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(variantName);
-                binaryWriter.Write((Int32)activeChangeColors);
+                binaryWriter.Write((Int32) activeChangeColors);
                 binaryWriter.Write(primaryColor);
                 binaryWriter.Write(secondaryColor);
                 binaryWriter.Write(tertiaryColor);
@@ -59,6 +73,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum ActiveChangeColors : int
         {

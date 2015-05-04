@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,25 +17,31 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 116, Alignment = 4)]
     public class BitmapDataBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.TagClass signature;
         internal short widthPixels;
         internal short heightPixels;
+
         /// <summary>
         /// Depth is 1 for 2D textures and cube maps.
         /// </summary>
         internal byte depthPixels;
+
         internal MoreFlags moreFlags;
+
         /// <summary>
         /// Determines bitmap "geometry."
         /// </summary>
         internal TypeDeterminesBitmapGeometry type;
+
         /// <summary>
         /// Determines how pixels are represented internally.
         /// </summary>
         internal FormatDeterminesHowPixelsAreRepresentedInternally format;
+
         internal Flags flags;
         internal Moonfish.Tags.Point registrationPoint;
         internal short mipmapCount;
@@ -48,11 +55,21 @@ namespace Moonfish.Guerilla.Tags
         internal int lOD2TextureDataLength;
         internal int lOD3TextureDataLength;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 116; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 116; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public BitmapDataBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -60,10 +77,10 @@ namespace Moonfish.Guerilla.Tags
             widthPixels = binaryReader.ReadInt16();
             heightPixels = binaryReader.ReadInt16();
             depthPixels = binaryReader.ReadByte();
-            moreFlags = (MoreFlags)binaryReader.ReadByte();
-            type = (TypeDeterminesBitmapGeometry)binaryReader.ReadInt16();
-            format = (FormatDeterminesHowPixelsAreRepresentedInternally)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
+            moreFlags = (MoreFlags) binaryReader.ReadByte();
+            type = (TypeDeterminesBitmapGeometry) binaryReader.ReadInt16();
+            format = (FormatDeterminesHowPixelsAreRepresentedInternally) binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
             registrationPoint = binaryReader.ReadPoint();
             mipmapCount = binaryReader.ReadInt16();
             lowDetailMipmapCount = binaryReader.ReadInt16();
@@ -78,23 +95,25 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(52);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(signature);
                 binaryWriter.Write(widthPixels);
                 binaryWriter.Write(heightPixels);
                 binaryWriter.Write(depthPixels);
-                binaryWriter.Write((Byte)moreFlags);
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write((Int16)format);
-                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Byte) moreFlags);
+                binaryWriter.Write((Int16) type);
+                binaryWriter.Write((Int16) format);
+                binaryWriter.Write((Int16) flags);
                 binaryWriter.Write(registrationPoint);
                 binaryWriter.Write(mipmapCount);
                 binaryWriter.Write(lowDetailMipmapCount);
@@ -110,6 +129,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum MoreFlags : byte
         {
@@ -117,12 +137,14 @@ using(binaryWriter.BaseStream.Pin())
             BitmapCreateAttempted = 2,
             InvalidName = 4,
         };
+
         internal enum TypeDeterminesBitmapGeometry : short
         {
             Texture2D = 0,
             Texture3D = 1,
             Cubemap = 2,
         };
+
         internal enum FormatDeterminesHowPixelsAreRepresentedInternally : short
         {
             A8 = 0,
@@ -150,6 +172,7 @@ using(binaryWriter.BaseStream.Pin())
             V8u8 = 22,
             G8b8 = 23,
         };
+
         [FlagsAttribute]
         internal enum Flags : short
         {

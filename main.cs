@@ -18,21 +18,25 @@ namespace Moonfish
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main( )
+        private static void Main()
         {
-            var converter = new GuerillaCs(Local.GuerillaPath);
-            foreach (var tag in Guerilla.Guerilla.h2Tags)
-            {
-                converter.DumpTagLayout(
-                    new MoonfishTagGroup(tag),
-                    Path.Combine(Local.ProjectDirectory, @"Guerilla\Tags.Generated\"));
-            }
-            Application.Exit();
-            var map = new CacheStream(@"C:\Users\stem\Documents\modding\headlong.map");
-            var item = map.Deserialize(map.Index.ScenarioIdent);
-            map.ClearCache(map.Index.ScenarioIdent);
+            //var converter = new GuerillaCs(Local.GuerillaPath);
+            //foreach (var tag in Guerilla.Guerilla.h2Tags)
+            //{
+            //    converter.DumpTagLayout(
+            //        new MoonfishTagGroup(tag),
+            //        Path.Combine(Local.ProjectDirectory, @"Guerilla\Tags.Generated\"));
+            //}
+            //Application.Exit();
+            //var map = new CacheStream(@"C:\Users\stem\Documents\modding\headlong.map");
 
-            item = map.Deserialize(map.Index.ScenarioIdent);
+            //var item = map.Deserialize(map.Index.ScenarioIdent);
+            //map.ClearCache(map.Index.ScenarioIdent);
+            //StaticBenchmark.Begin();
+
+            //item = map.Deserialize(map.Index.ScenarioIdent);
+            //StaticBenchmark.End();
+            //var v = StaticBenchmark.Result;
             //map.Add( (ScenarioBlock)item, "moonfish/moonfish" );
 
             //var validator = new Validator();
@@ -43,16 +47,16 @@ namespace Moonfish
             //    if (!validator.Validate(new MoonfishTagGroup(tag),
             //        Guerilla.Guerilla.h2Tags.Select(x => new MoonfishTagGroup(x)), new[] { @"C:\Users\seed\Documents\Halo 2 Modding\headlong.map" }))
             //    {
-                   
+
             //    }
             //    else Console.WriteLine("{0} failed", tag.Class);
             //    Application.DoEvents();
             //}
-            
+
             //return;
 
-            Application.EnableVisualStyles( );
-            Application.SetCompatibleTextRenderingDefault( false );
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Gizmo());
         }
     }

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Scnr = (TagClass)"scnr";
+        public static readonly TagClass Scnr = (TagClass) "scnr";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,11 +26,11 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 992, Alignment = 4)]
     public class ScenarioBlockBase : GuerillaBlock
     {
-        [TagReference("sbsp")]
-        internal Moonfish.Tags.TagReference doNotUse;
+        [TagReference("sbsp")] internal Moonfish.Tags.TagReference doNotUse;
         internal ScenarioSkyReferenceBlock[] skies;
         internal Type type;
         internal Flags flags;
@@ -94,12 +95,9 @@ namespace Moonfish.Guerilla.Tags
         internal ScenarioCutsceneFlagBlock[] cutsceneFlags;
         internal ScenarioCutsceneCameraPointBlock[] cutsceneCameraPoints;
         internal ScenarioCutsceneTitleBlock[] cutsceneTitles;
-        [TagReference("unic")]
-        internal Moonfish.Tags.TagReference customObjectNames;
-        [TagReference("unic")]
-        internal Moonfish.Tags.TagReference chapterTitleText;
-        [TagReference("hmt ")]
-        internal Moonfish.Tags.TagReference hUDMessages;
+        [TagReference("unic")] internal Moonfish.Tags.TagReference customObjectNames;
+        [TagReference("unic")] internal Moonfish.Tags.TagReference chapterTitleText;
+        [TagReference("hmt ")] internal Moonfish.Tags.TagReference hUDMessages;
         internal ScenarioStructureBspReferenceBlock[] structureBSPs;
         internal ScenarioResourcesBlock[] scenarioResources;
         internal OldUnusedStrucurePhysicsBlock[] scenarioResources0;
@@ -119,17 +117,14 @@ namespace Moonfish.Guerilla.Tags
         internal ScenarioClusterDataBlock[] scenarioClusterData;
         internal ObjectSalts[] objectSalts;
         internal ScenarioSpawnDataBlock[] spawnData;
-        [TagReference("sfx+")]
-        internal Moonfish.Tags.TagReference soundEffectCollection;
+        [TagReference("sfx+")] internal Moonfish.Tags.TagReference soundEffectCollection;
         internal ScenarioCrateBlock[] crates;
         internal ScenarioCratePaletteBlock[] cratesPalette;
-        [TagReference("gldf")]
-        internal Moonfish.Tags.TagReference globalLighting;
+        [TagReference("gldf")] internal Moonfish.Tags.TagReference globalLighting;
         internal ScenarioAtmosphericFogPalette[] atmosphericFogPalette;
         internal ScenarioPlanarFogPalette[] planarFogPalette;
         internal FlockDefinitionBlock[] flocks;
-        [TagReference("unic")]
-        internal Moonfish.Tags.TagReference subtitles;
+        [TagReference("unic")] internal Moonfish.Tags.TagReference subtitles;
         internal DecoratorPlacementDefinitionBlock[] decorators;
         internal ScenarioCreatureBlock[] creatures;
         internal ScenarioCreaturePaletteBlock[] creaturesPalette;
@@ -138,28 +133,36 @@ namespace Moonfish.Guerilla.Tags
         internal ScenarioStructureBspSphericalHarmonicLightingBlock[] structureBSPLighting;
         internal GScenarioEditorFolderBlock[] editorFolders;
         internal ScenarioLevelDataBlock[] levelData;
-        [TagReference("unic")]
-        internal Moonfish.Tags.TagReference territoryLocationNames;
+        [TagReference("unic")] internal Moonfish.Tags.TagReference territoryLocationNames;
         internal byte[] invalidName_0;
         internal AiScenarioMissionDialogueBlock[] missionDialogue;
-        [TagReference("unic")]
-        internal Moonfish.Tags.TagReference objectives;
+        [TagReference("unic")] internal Moonfish.Tags.TagReference objectives;
         internal ScenarioInterpolatorBlock[] interpolators;
         internal HsReferencesBlock[] sharedReferences;
         internal ScenarioScreenEffectReferenceBlock[] screenEffectReferences;
         internal ScenarioSimulationDefinitionTableBlock[] simulationDefinitionTable;
-        public override int SerializedSize { get { return 992; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 992; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ScenarioBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             doNotUse = binaryReader.ReadTagReference();
             blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioSkyReferenceBlock>(binaryReader));
-            type = (Type)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
+            type = (Type) binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
             blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioChildScenarioBlock>(binaryReader));
             localNorth = binaryReader.ReadSingle();
             blamPointers.Enqueue(ReadBlockArrayPointer<PredictedResourceBlock>(binaryReader));
@@ -241,7 +244,16 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<GNullBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<GNullBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioClusterDataBlock>(binaryReader));
-            objectSalts = new []{ new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts() };
+            objectSalts = new[]
+            {
+                new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(),
+                new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(),
+                new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(),
+                new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(),
+                new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(),
+                new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(), new ObjectSalts(),
+                new ObjectSalts(), new ObjectSalts()
+            };
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(objectSalts[0].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(objectSalts[1].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(objectSalts[2].ReadFields(binaryReader)));
@@ -301,6 +313,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioSimulationDefinitionTableBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -310,7 +323,8 @@ namespace Moonfish.Guerilla.Tags
             functions = ReadBlockArrayData<ScenarioFunctionBlock>(binaryReader, blamPointers.Dequeue());
             editorScenarioData = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
             comments = ReadBlockArrayData<EditorCommentBlock>(binaryReader, blamPointers.Dequeue());
-            invalidName_ = ReadBlockArrayData<DontUseMeScenarioEnvironmentObjectBlock>(binaryReader, blamPointers.Dequeue());
+            invalidName_ = ReadBlockArrayData<DontUseMeScenarioEnvironmentObjectBlock>(binaryReader,
+                blamPointers.Dequeue());
             objectNames = ReadBlockArrayData<ScenarioObjectNamesBlock>(binaryReader, blamPointers.Dequeue());
             scenery = ReadBlockArrayData<ScenarioSceneryBlock>(binaryReader, blamPointers.Dequeue());
             sceneryPalette = ReadBlockArrayData<ScenarioSceneryPaletteBlock>(binaryReader, blamPointers.Dequeue());
@@ -328,9 +342,11 @@ namespace Moonfish.Guerilla.Tags
             controls = ReadBlockArrayData<ScenarioControlBlock>(binaryReader, blamPointers.Dequeue());
             controlPalette = ReadBlockArrayData<ScenarioControlPaletteBlock>(binaryReader, blamPointers.Dequeue());
             lightFixtures = ReadBlockArrayData<ScenarioLightFixtureBlock>(binaryReader, blamPointers.Dequeue());
-            lightFixturesPalette = ReadBlockArrayData<ScenarioLightFixturePaletteBlock>(binaryReader, blamPointers.Dequeue());
+            lightFixturesPalette = ReadBlockArrayData<ScenarioLightFixturePaletteBlock>(binaryReader,
+                blamPointers.Dequeue());
             soundScenery = ReadBlockArrayData<ScenarioSoundSceneryBlock>(binaryReader, blamPointers.Dequeue());
-            soundSceneryPalette = ReadBlockArrayData<ScenarioSoundSceneryPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            soundSceneryPalette = ReadBlockArrayData<ScenarioSoundSceneryPaletteBlock>(binaryReader,
+                blamPointers.Dequeue());
             lightVolumes = ReadBlockArrayData<ScenarioLightBlock>(binaryReader, blamPointers.Dequeue());
             lightVolumesPalette = ReadBlockArrayData<ScenarioLightPaletteBlock>(binaryReader, blamPointers.Dequeue());
             playerStartingProfile = ReadBlockArrayData<ScenarioProfilesBlock>(binaryReader, blamPointers.Dequeue());
@@ -340,10 +356,12 @@ namespace Moonfish.Guerilla.Tags
             netgameFlags = ReadBlockArrayData<ScenarioNetpointsBlock>(binaryReader, blamPointers.Dequeue());
             netgameEquipment = ReadBlockArrayData<ScenarioNetgameEquipmentBlock>(binaryReader, blamPointers.Dequeue());
             startingEquipment = ReadBlockArrayData<ScenarioStartingEquipmentBlock>(binaryReader, blamPointers.Dequeue());
-            bSPSwitchTriggerVolumes = ReadBlockArrayData<ScenarioBspSwitchTriggerVolumeBlock>(binaryReader, blamPointers.Dequeue());
+            bSPSwitchTriggerVolumes = ReadBlockArrayData<ScenarioBspSwitchTriggerVolumeBlock>(binaryReader,
+                blamPointers.Dequeue());
             decals = ReadBlockArrayData<ScenarioDecalsBlock>(binaryReader, blamPointers.Dequeue());
             decalsPalette = ReadBlockArrayData<ScenarioDecalPaletteBlock>(binaryReader, blamPointers.Dequeue());
-            detailObjectCollectionPalette = ReadBlockArrayData<ScenarioDetailObjectCollectionPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            detailObjectCollectionPalette = ReadBlockArrayData<ScenarioDetailObjectCollectionPaletteBlock>(
+                binaryReader, blamPointers.Dequeue());
             stylePalette = ReadBlockArrayData<StylePaletteBlock>(binaryReader, blamPointers.Dequeue());
             squadGroups = ReadBlockArrayData<SquadGroupsBlock>(binaryReader, blamPointers.Dequeue());
             squads = ReadBlockArrayData<SquadsBlock>(binaryReader, blamPointers.Dequeue());
@@ -363,18 +381,22 @@ namespace Moonfish.Guerilla.Tags
             sourceFiles = ReadBlockArrayData<HsSourceFilesBlock>(binaryReader, blamPointers.Dequeue());
             scriptingData = ReadBlockArrayData<CsScriptDataBlock>(binaryReader, blamPointers.Dequeue());
             cutsceneFlags = ReadBlockArrayData<ScenarioCutsceneFlagBlock>(binaryReader, blamPointers.Dequeue());
-            cutsceneCameraPoints = ReadBlockArrayData<ScenarioCutsceneCameraPointBlock>(binaryReader, blamPointers.Dequeue());
+            cutsceneCameraPoints = ReadBlockArrayData<ScenarioCutsceneCameraPointBlock>(binaryReader,
+                blamPointers.Dequeue());
             cutsceneTitles = ReadBlockArrayData<ScenarioCutsceneTitleBlock>(binaryReader, blamPointers.Dequeue());
             structureBSPs = ReadBlockArrayData<ScenarioStructureBspReferenceBlock>(binaryReader, blamPointers.Dequeue());
             scenarioResources = ReadBlockArrayData<ScenarioResourcesBlock>(binaryReader, blamPointers.Dequeue());
             scenarioResources0 = ReadBlockArrayData<OldUnusedStrucurePhysicsBlock>(binaryReader, blamPointers.Dequeue());
             hsUnitSeats = ReadBlockArrayData<HsUnitSeatBlock>(binaryReader, blamPointers.Dequeue());
-            scenarioKillTriggers = ReadBlockArrayData<ScenarioKillTriggerVolumesBlock>(binaryReader, blamPointers.Dequeue());
+            scenarioKillTriggers = ReadBlockArrayData<ScenarioKillTriggerVolumesBlock>(binaryReader,
+                blamPointers.Dequeue());
             hsSyntaxDatums = ReadBlockArrayData<SyntaxDatumBlock>(binaryReader, blamPointers.Dequeue());
             orders = ReadBlockArrayData<OrdersBlock>(binaryReader, blamPointers.Dequeue());
             triggers = ReadBlockArrayData<TriggersBlock>(binaryReader, blamPointers.Dequeue());
-            backgroundSoundPalette = ReadBlockArrayData<StructureBspBackgroundSoundPaletteBlock>(binaryReader, blamPointers.Dequeue());
-            soundEnvironmentPalette = ReadBlockArrayData<StructureBspSoundEnvironmentPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            backgroundSoundPalette = ReadBlockArrayData<StructureBspBackgroundSoundPaletteBlock>(binaryReader,
+                blamPointers.Dequeue());
+            soundEnvironmentPalette = ReadBlockArrayData<StructureBspSoundEnvironmentPaletteBlock>(binaryReader,
+                blamPointers.Dequeue());
             weatherPalette = ReadBlockArrayData<StructureBspWeatherPaletteBlock>(binaryReader, blamPointers.Dequeue());
             eMPTYSTRING = ReadBlockArrayData<GNullBlock>(binaryReader, blamPointers.Dequeue());
             eMPTYSTRING0 = ReadBlockArrayData<GNullBlock>(binaryReader, blamPointers.Dequeue());
@@ -417,82 +439,118 @@ namespace Moonfish.Guerilla.Tags
             spawnData = ReadBlockArrayData<ScenarioSpawnDataBlock>(binaryReader, blamPointers.Dequeue());
             crates = ReadBlockArrayData<ScenarioCrateBlock>(binaryReader, blamPointers.Dequeue());
             cratesPalette = ReadBlockArrayData<ScenarioCratePaletteBlock>(binaryReader, blamPointers.Dequeue());
-            atmosphericFogPalette = ReadBlockArrayData<ScenarioAtmosphericFogPalette>(binaryReader, blamPointers.Dequeue());
+            atmosphericFogPalette = ReadBlockArrayData<ScenarioAtmosphericFogPalette>(binaryReader,
+                blamPointers.Dequeue());
             planarFogPalette = ReadBlockArrayData<ScenarioPlanarFogPalette>(binaryReader, blamPointers.Dequeue());
             flocks = ReadBlockArrayData<FlockDefinitionBlock>(binaryReader, blamPointers.Dequeue());
             decorators = ReadBlockArrayData<DecoratorPlacementDefinitionBlock>(binaryReader, blamPointers.Dequeue());
             creatures = ReadBlockArrayData<ScenarioCreatureBlock>(binaryReader, blamPointers.Dequeue());
             creaturesPalette = ReadBlockArrayData<ScenarioCreaturePaletteBlock>(binaryReader, blamPointers.Dequeue());
-            decoratorsPalette = ReadBlockArrayData<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader, blamPointers.Dequeue());
-            bSPTransitionVolumes = ReadBlockArrayData<ScenarioBspSwitchTransitionVolumeBlock>(binaryReader, blamPointers.Dequeue());
-            structureBSPLighting = ReadBlockArrayData<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryReader, blamPointers.Dequeue());
+            decoratorsPalette = ReadBlockArrayData<ScenarioDecoratorSetPaletteEntryBlock>(binaryReader,
+                blamPointers.Dequeue());
+            bSPTransitionVolumes = ReadBlockArrayData<ScenarioBspSwitchTransitionVolumeBlock>(binaryReader,
+                blamPointers.Dequeue());
+            structureBSPLighting = ReadBlockArrayData<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryReader,
+                blamPointers.Dequeue());
             editorFolders = ReadBlockArrayData<GScenarioEditorFolderBlock>(binaryReader, blamPointers.Dequeue());
             levelData = ReadBlockArrayData<ScenarioLevelDataBlock>(binaryReader, blamPointers.Dequeue());
             missionDialogue = ReadBlockArrayData<AiScenarioMissionDialogueBlock>(binaryReader, blamPointers.Dequeue());
             interpolators = ReadBlockArrayData<ScenarioInterpolatorBlock>(binaryReader, blamPointers.Dequeue());
             sharedReferences = ReadBlockArrayData<HsReferencesBlock>(binaryReader, blamPointers.Dequeue());
-            screenEffectReferences = ReadBlockArrayData<ScenarioScreenEffectReferenceBlock>(binaryReader, blamPointers.Dequeue());
-            simulationDefinitionTable = ReadBlockArrayData<ScenarioSimulationDefinitionTableBlock>(binaryReader, blamPointers.Dequeue());
+            screenEffectReferences = ReadBlockArrayData<ScenarioScreenEffectReferenceBlock>(binaryReader,
+                blamPointers.Dequeue());
+            simulationDefinitionTable = ReadBlockArrayData<ScenarioSimulationDefinitionTableBlock>(binaryReader,
+                blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(doNotUse);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioSkyReferenceBlock>(binaryWriter, skies, nextAddress);
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write((Int16)flags);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioChildScenarioBlock>(binaryWriter, childScenarios, nextAddress);
+                binaryWriter.Write((Int16) type);
+                binaryWriter.Write((Int16) flags);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioChildScenarioBlock>(binaryWriter, childScenarios,
+                    nextAddress);
                 binaryWriter.Write(localNorth);
-                nextAddress = Guerilla.WriteBlockArray<PredictedResourceBlock>(binaryWriter, predictedResources, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PredictedResourceBlock>(binaryWriter, predictedResources,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioFunctionBlock>(binaryWriter, functions, nextAddress);
                 nextAddress = Guerilla.WriteData(binaryWriter, editorScenarioData, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<EditorCommentBlock>(binaryWriter, comments, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<DontUseMeScenarioEnvironmentObjectBlock>(binaryWriter, invalidName_, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<DontUseMeScenarioEnvironmentObjectBlock>(binaryWriter,
+                    invalidName_, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioObjectNamesBlock>(binaryWriter, objectNames, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioSceneryBlock>(binaryWriter, scenery, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioSceneryPaletteBlock>(binaryWriter, sceneryPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioSceneryPaletteBlock>(binaryWriter, sceneryPalette,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioBipedBlock>(binaryWriter, bipeds, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioBipedPaletteBlock>(binaryWriter, bipedPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioBipedPaletteBlock>(binaryWriter, bipedPalette,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioVehicleBlock>(binaryWriter, vehicles, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioVehiclePaletteBlock>(binaryWriter, vehiclePalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioVehiclePaletteBlock>(binaryWriter, vehiclePalette,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioEquipmentBlock>(binaryWriter, equipment, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioEquipmentPaletteBlock>(binaryWriter, equipmentPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioEquipmentPaletteBlock>(binaryWriter, equipmentPalette,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioWeaponBlock>(binaryWriter, weapons, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioWeaponPaletteBlock>(binaryWriter, weaponPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioWeaponPaletteBlock>(binaryWriter, weaponPalette,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<DeviceGroupBlock>(binaryWriter, deviceGroups, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioMachineBlock>(binaryWriter, machines, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioMachinePaletteBlock>(binaryWriter, machinePalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioMachinePaletteBlock>(binaryWriter, machinePalette,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioControlBlock>(binaryWriter, controls, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioControlPaletteBlock>(binaryWriter, controlPalette, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioLightFixtureBlock>(binaryWriter, lightFixtures, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioLightFixturePaletteBlock>(binaryWriter, lightFixturesPalette, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioSoundSceneryBlock>(binaryWriter, soundScenery, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioSoundSceneryPaletteBlock>(binaryWriter, soundSceneryPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioControlPaletteBlock>(binaryWriter, controlPalette,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioLightFixtureBlock>(binaryWriter, lightFixtures,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioLightFixturePaletteBlock>(binaryWriter,
+                    lightFixturesPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioSoundSceneryBlock>(binaryWriter, soundScenery,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioSoundSceneryPaletteBlock>(binaryWriter,
+                    soundSceneryPalette, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioLightBlock>(binaryWriter, lightVolumes, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioLightPaletteBlock>(binaryWriter, lightVolumesPalette, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioProfilesBlock>(binaryWriter, playerStartingProfile, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioPlayersBlock>(binaryWriter, playerStartingLocations, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioTriggerVolumeBlock>(binaryWriter, killTriggerVolumes, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<RecordedAnimationBlock>(binaryWriter, recordedAnimations, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioLightPaletteBlock>(binaryWriter, lightVolumesPalette,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioProfilesBlock>(binaryWriter, playerStartingProfile,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioPlayersBlock>(binaryWriter, playerStartingLocations,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioTriggerVolumeBlock>(binaryWriter, killTriggerVolumes,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<RecordedAnimationBlock>(binaryWriter, recordedAnimations,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioNetpointsBlock>(binaryWriter, netgameFlags, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioNetgameEquipmentBlock>(binaryWriter, netgameEquipment, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioStartingEquipmentBlock>(binaryWriter, startingEquipment, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioBspSwitchTriggerVolumeBlock>(binaryWriter, bSPSwitchTriggerVolumes, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioNetgameEquipmentBlock>(binaryWriter, netgameEquipment,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioStartingEquipmentBlock>(binaryWriter, startingEquipment,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioBspSwitchTriggerVolumeBlock>(binaryWriter,
+                    bSPSwitchTriggerVolumes, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioDecalsBlock>(binaryWriter, decals, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioDecalPaletteBlock>(binaryWriter, decalsPalette, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioDetailObjectCollectionPaletteBlock>(binaryWriter, detailObjectCollectionPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioDecalPaletteBlock>(binaryWriter, decalsPalette,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioDetailObjectCollectionPaletteBlock>(binaryWriter,
+                    detailObjectCollectionPalette, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<StylePaletteBlock>(binaryWriter, stylePalette, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SquadGroupsBlock>(binaryWriter, squadGroups, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SquadsBlock>(binaryWriter, squads, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ZoneBlock>(binaryWriter, zones, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<AiSceneBlock>(binaryWriter, missionScenes, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CharacterPaletteBlock>(binaryWriter, characterPalette, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PathfindingDataBlock>(binaryWriter, aIPathfindingData, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<AiAnimationReferenceBlock>(binaryWriter, aIAnimationReferences, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<AiScriptReferenceBlock>(binaryWriter, aIScriptReferences, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<AiRecordingReferenceBlock>(binaryWriter, aIRecordingReferences, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterPaletteBlock>(binaryWriter, characterPalette,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PathfindingDataBlock>(binaryWriter, aIPathfindingData,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AiAnimationReferenceBlock>(binaryWriter, aIAnimationReferences,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AiScriptReferenceBlock>(binaryWriter, aIScriptReferences,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AiRecordingReferenceBlock>(binaryWriter, aIRecordingReferences,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<AiConversationBlock>(binaryWriter, aIConversations, nextAddress);
                 nextAddress = Guerilla.WriteData(binaryWriter, scriptSyntaxData, nextAddress);
                 nextAddress = Guerilla.WriteData(binaryWriter, scriptStringData, nextAddress);
@@ -501,29 +559,40 @@ using(binaryWriter.BaseStream.Pin())
                 nextAddress = Guerilla.WriteBlockArray<HsReferencesBlock>(binaryWriter, references, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<HsSourceFilesBlock>(binaryWriter, sourceFiles, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CsScriptDataBlock>(binaryWriter, scriptingData, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioCutsceneFlagBlock>(binaryWriter, cutsceneFlags, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioCutsceneCameraPointBlock>(binaryWriter, cutsceneCameraPoints, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioCutsceneTitleBlock>(binaryWriter, cutsceneTitles, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioCutsceneFlagBlock>(binaryWriter, cutsceneFlags,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioCutsceneCameraPointBlock>(binaryWriter,
+                    cutsceneCameraPoints, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioCutsceneTitleBlock>(binaryWriter, cutsceneTitles,
+                    nextAddress);
                 binaryWriter.Write(customObjectNames);
                 binaryWriter.Write(chapterTitleText);
                 binaryWriter.Write(hUDMessages);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioStructureBspReferenceBlock>(binaryWriter, structureBSPs, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioResourcesBlock>(binaryWriter, scenarioResources, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<OldUnusedStrucurePhysicsBlock>(binaryWriter, scenarioResources0, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioStructureBspReferenceBlock>(binaryWriter, structureBSPs,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioResourcesBlock>(binaryWriter, scenarioResources,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<OldUnusedStrucurePhysicsBlock>(binaryWriter, scenarioResources0,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<HsUnitSeatBlock>(binaryWriter, hsUnitSeats, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioKillTriggerVolumesBlock>(binaryWriter, scenarioKillTriggers, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioKillTriggerVolumesBlock>(binaryWriter,
+                    scenarioKillTriggers, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SyntaxDatumBlock>(binaryWriter, hsSyntaxDatums, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<OrdersBlock>(binaryWriter, orders, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<TriggersBlock>(binaryWriter, triggers, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryWriter, backgroundSoundPalette, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryWriter, soundEnvironmentPalette, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<StructureBspWeatherPaletteBlock>(binaryWriter, weatherPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryWriter,
+                    backgroundSoundPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryWriter,
+                    soundEnvironmentPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspWeatherPaletteBlock>(binaryWriter, weatherPalette,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, eMPTYSTRING, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, eMPTYSTRING0, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, eMPTYSTRING1, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, eMPTYSTRING2, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, eMPTYSTRING3, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioClusterDataBlock>(binaryWriter, scenarioClusterData, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioClusterDataBlock>(binaryWriter, scenarioClusterData,
+                    nextAddress);
                 objectSalts[0].Write(binaryWriter);
                 objectSalts[1].Write(binaryWriter);
                 objectSalts[2].Write(binaryWriter);
@@ -559,31 +628,45 @@ using(binaryWriter.BaseStream.Pin())
                 nextAddress = Guerilla.WriteBlockArray<ScenarioSpawnDataBlock>(binaryWriter, spawnData, nextAddress);
                 binaryWriter.Write(soundEffectCollection);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioCrateBlock>(binaryWriter, crates, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioCratePaletteBlock>(binaryWriter, cratesPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioCratePaletteBlock>(binaryWriter, cratesPalette,
+                    nextAddress);
                 binaryWriter.Write(globalLighting);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioAtmosphericFogPalette>(binaryWriter, atmosphericFogPalette, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioPlanarFogPalette>(binaryWriter, planarFogPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioAtmosphericFogPalette>(binaryWriter,
+                    atmosphericFogPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioPlanarFogPalette>(binaryWriter, planarFogPalette,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<FlockDefinitionBlock>(binaryWriter, flocks, nextAddress);
                 binaryWriter.Write(subtitles);
-                nextAddress = Guerilla.WriteBlockArray<DecoratorPlacementDefinitionBlock>(binaryWriter, decorators, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<DecoratorPlacementDefinitionBlock>(binaryWriter, decorators,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioCreatureBlock>(binaryWriter, creatures, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioCreaturePaletteBlock>(binaryWriter, creaturesPalette, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioDecoratorSetPaletteEntryBlock>(binaryWriter, decoratorsPalette, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioBspSwitchTransitionVolumeBlock>(binaryWriter, bSPTransitionVolumes, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryWriter, structureBSPLighting, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GScenarioEditorFolderBlock>(binaryWriter, editorFolders, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioCreaturePaletteBlock>(binaryWriter, creaturesPalette,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioDecoratorSetPaletteEntryBlock>(binaryWriter,
+                    decoratorsPalette, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioBspSwitchTransitionVolumeBlock>(binaryWriter,
+                    bSPTransitionVolumes, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioStructureBspSphericalHarmonicLightingBlock>(
+                    binaryWriter, structureBSPLighting, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GScenarioEditorFolderBlock>(binaryWriter, editorFolders,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioLevelDataBlock>(binaryWriter, levelData, nextAddress);
                 binaryWriter.Write(territoryLocationNames);
                 binaryWriter.Write(invalidName_0, 0, 8);
-                nextAddress = Guerilla.WriteBlockArray<AiScenarioMissionDialogueBlock>(binaryWriter, missionDialogue, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AiScenarioMissionDialogueBlock>(binaryWriter, missionDialogue,
+                    nextAddress);
                 binaryWriter.Write(objectives);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioInterpolatorBlock>(binaryWriter, interpolators, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioInterpolatorBlock>(binaryWriter, interpolators,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<HsReferencesBlock>(binaryWriter, sharedReferences, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioScreenEffectReferenceBlock>(binaryWriter, screenEffectReferences, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ScenarioSimulationDefinitionTableBlock>(binaryWriter, simulationDefinitionTable, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioScreenEffectReferenceBlock>(binaryWriter,
+                    screenEffectReferences, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ScenarioSimulationDefinitionTableBlock>(binaryWriter,
+                    simulationDefinitionTable, nextAddress);
                 return nextAddress;
             }
         }
+
         internal enum Type : short
         {
             InvalidName = 0,
@@ -592,6 +675,7 @@ using(binaryWriter.BaseStream.Pin())
             InvalidName1 = 3,
             InvalidName2 = 4,
         };
+
         [FlagsAttribute]
         internal enum Flags : short
         {
@@ -604,29 +688,42 @@ using(binaryWriter.BaseStream.Pin())
             LightmapsSmoothPalettesWithNeighbors = 64,
             SnapToWhiteAtStart = 128,
         };
+
         [LayoutAttribute(Size = 4, Alignment = 1)]
         public class ObjectSalts : GuerillaBlock
         {
             internal int eMPTYSTRING;
-            public override int SerializedSize { get { return 4; } }
-            public override int Alignment { get { return 1; } }
+
+            public override int SerializedSize
+            {
+                get { return 4; }
+            }
+
+            public override int Alignment
+            {
+                get { return 1; }
+            }
+
             public ObjectSalts() : base()
             {
             }
+
             public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
             {
                 var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
                 eMPTYSTRING = binaryReader.ReadInt32();
                 return blamPointers;
             }
+
             public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
             {
                 base.ReadPointers(binaryReader, blamPointers);
             }
+
             public override int Write(BinaryWriter binaryWriter, int nextAddress)
             {
                 base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+                using (binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(eMPTYSTRING);
                     return nextAddress;

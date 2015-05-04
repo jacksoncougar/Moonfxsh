@@ -11,22 +11,22 @@ namespace Moonfish.Tags
 
         private readonly int _endAddress;
 
-        public int this[ int index ]
+        public int this[int index]
         {
-            get { return StartAddress + ElementSize * index; }
+            get { return StartAddress + ElementSize*index; }
         }
 
-        public BlamPointer( int count, int address, int elementsize, int alignment = 4 )
+        public BlamPointer(int count, int address, int elementsize, int alignment = 4)
         {
             ElementCount = count;
-            StartAddress = Padding.Pad( address, alignment );
+            StartAddress = Padding.Pad(address, alignment);
             ElementSize = elementsize;
-            _endAddress = address + ElementSize * ElementCount;
+            _endAddress = address + ElementSize*ElementCount;
         }
 
         public int PointedSize
         {
-            get { return ElementCount * ElementSize; }
+            get { return ElementCount*ElementSize; }
         }
 
         public int EndAddress
@@ -34,48 +34,48 @@ namespace Moonfish.Tags
             get { return _endAddress; }
         }
 
-        public IEnumerator<int> GetEnumerator( )
+        public IEnumerator<int> GetEnumerator()
         {
-            for ( var i = 0; i < ElementCount; ++i )
+            for (var i = 0; i < ElementCount; ++i)
             {
-                yield return StartAddress + ElementSize * i;
+                yield return StartAddress + ElementSize*i;
             }
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator( )
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return GetEnumerator( );
+            return GetEnumerator();
         }
 
-        public bool Intersects( BlamPointer other )
+        public bool Intersects(BlamPointer other)
         {
-            return !( StartAddress + PointedSize <= other.StartAddress
-                      || other.StartAddress + other.PointedSize <= StartAddress );
+            return !(StartAddress + PointedSize <= other.StartAddress
+                     || other.StartAddress + other.PointedSize <= StartAddress);
         }
 
-        public override bool Equals( object obj )
+        public override bool Equals(object obj)
         {
-            if ( obj is BlamPointer )
+            if (obj is BlamPointer)
             {
-                return ( this as IEquatable<BlamPointer> ).Equals( ( BlamPointer ) obj );
+                return (this as IEquatable<BlamPointer>).Equals((BlamPointer) obj);
             }
-            return base.Equals( obj );
+            return base.Equals(obj);
         }
 
-        public override int GetHashCode( )
+        public override int GetHashCode()
         {
-            return StartAddress.GetHashCode( );
+            return StartAddress.GetHashCode();
         }
 
-        bool IEquatable<BlamPointer>.Equals( BlamPointer other )
+        bool IEquatable<BlamPointer>.Equals(BlamPointer other)
         {
             return StartAddress == other.StartAddress && ElementCount == other.ElementCount &&
                    ElementSize == other.ElementSize;
         }
 
-        public override string ToString( )
+        public override string ToString()
         {
-            return string.Format( "{0}:{1}", StartAddress, ElementCount );
+            return string.Format("{0}:{1}", StartAddress, ElementCount);
         }
     }
 }

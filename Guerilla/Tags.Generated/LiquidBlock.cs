@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Tdtl = (TagClass)"tdtl";
+        public static readonly TagClass Tdtl = (TagClass) "tdtl";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 112, Alignment = 4)]
     public class LiquidBlockBase : GuerillaBlock
     {
@@ -36,16 +38,26 @@ namespace Moonfish.Guerilla.Tags
         internal float cutoffDistanceFromCameraWorldUnits;
         internal byte[] invalidName_1;
         internal LiquidArcBlock[] arcs;
-        public override int SerializedSize { get { return 112; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 112; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public LiquidBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(2);
-            type = (Type)binaryReader.ReadInt16();
+            type = (Type) binaryReader.ReadInt16();
             attachmentMarkerName = binaryReader.ReadStringID();
             invalidName_0 = binaryReader.ReadBytes(56);
             falloffDistanceFromCameraWorldUnits = binaryReader.ReadSingle();
@@ -54,18 +66,20 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<LiquidArcBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             arcs = ReadBlockArrayData<LiquidArcBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int16)type);
+                binaryWriter.Write((Int16) type);
                 binaryWriter.Write(attachmentMarkerName);
                 binaryWriter.Write(invalidName_0, 0, 56);
                 binaryWriter.Write(falloffDistanceFromCameraWorldUnits);
@@ -75,6 +89,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         internal enum Type : short
         {
             Standard = 0,

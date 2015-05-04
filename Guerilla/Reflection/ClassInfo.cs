@@ -291,6 +291,14 @@ namespace Moonfish.Guerilla.Reflection
                         body.AppendFormatLine(
                             "{0} = ReadDataShortArray(binaryReader, blamPointers.Dequeue());", item.Value.Name);
                     }
+                        // inline array
+                    else if (item.ArraySize > 0)
+                    {
+                        for (var i = 0; i < item.ArraySize; i++)
+                        {
+                            body.AppendFormatLine("{0}[{1}].ReadPointers(binaryReader, blamPointers)));", item.Value.Name, i);
+                        }
+                    }
                     // assume a TagBlock
                     else
                     {

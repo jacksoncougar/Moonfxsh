@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AiSceneBlock : AiSceneBlockBase
     {
-        public AiSceneBlock() : base()
+        public  AiSceneBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AiSceneBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -23,30 +26,33 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal AiSceneTriggerBlock[] triggerConditions;
         internal AiSceneRoleBlock[] roles;
-        public override int SerializedSize { get { return 24; } }
-        public override int Alignment { get { return 4; } }
-        public AiSceneBlockBase() : base()
+        
+        public override int SerializedSize{get { return 24; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AiSceneBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             flags = (Flags)binaryReader.ReadInt32();
-            blamPointers.Enqueue(ReadBlockArrayPointer<AiSceneTriggerBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<AiSceneRoleBlock>(binaryReader));
-            return blamPointers;
+            triggerConditions = Guerilla.ReadBlockArray<AiSceneTriggerBlock>(binaryReader);
+            roles = Guerilla.ReadBlockArray<AiSceneRoleBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  AiSceneBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            triggerConditions = ReadBlockArrayData<AiSceneTriggerBlock>(binaryReader, blamPointers.Dequeue());
-            roles = ReadBlockArrayData<AiSceneRoleBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadStringID();
+            flags = (Flags)binaryReader.ReadInt32();
+            triggerConditions = Guerilla.ReadBlockArray<AiSceneTriggerBlock>(binaryReader);
+            roles = Guerilla.ReadBlockArray<AiSceneRoleBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write((Int32)flags);

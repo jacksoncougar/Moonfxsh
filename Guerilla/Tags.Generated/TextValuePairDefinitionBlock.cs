@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("sily")]
     public partial class TextValuePairDefinitionBlock : TextValuePairDefinitionBlockBase
     {
-        public TextValuePairDefinitionBlock() : base()
+        public  TextValuePairDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  TextValuePairDefinitionBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 36, Alignment = 4)]
@@ -36,36 +39,39 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent headerText;
         internal Moonfish.Tags.StringIdent descriptionText;
         internal TextValuePairReferenceBlock[] textValuePairs;
-        public override int SerializedSize { get { return 36; } }
-        public override int Alignment { get { return 4; } }
-        public TextValuePairDefinitionBlockBase() : base()
+        
+        public override int SerializedSize{get { return 36; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  TextValuePairDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             parameter = (Parameter)binaryReader.ReadInt32();
             invalidName_ = binaryReader.ReadBytes(4);
             stringList = binaryReader.ReadTagReference();
             titleText = binaryReader.ReadStringID();
             headerText = binaryReader.ReadStringID();
             descriptionText = binaryReader.ReadStringID();
-            blamPointers.Enqueue(ReadBlockArrayPointer<TextValuePairReferenceBlock>(binaryReader));
-            return blamPointers;
+            textValuePairs = Guerilla.ReadBlockArray<TextValuePairReferenceBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  TextValuePairDefinitionBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
-            textValuePairs = ReadBlockArrayData<TextValuePairReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            parameter = (Parameter)binaryReader.ReadInt32();
+            invalidName_ = binaryReader.ReadBytes(4);
+            stringList = binaryReader.ReadTagReference();
+            titleText = binaryReader.ReadStringID();
+            headerText = binaryReader.ReadStringID();
+            descriptionText = binaryReader.ReadStringID();
+            textValuePairs = Guerilla.ReadBlockArray<TextValuePairReferenceBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)parameter);
                 binaryWriter.Write(invalidName_, 0, 4);

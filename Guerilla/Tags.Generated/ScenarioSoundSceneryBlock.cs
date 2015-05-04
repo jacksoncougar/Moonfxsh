@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioSoundSceneryBlock : ScenarioSoundSceneryBlockBase
     {
-        public ScenarioSoundSceneryBlock() : base()
+        public  ScenarioSoundSceneryBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioSoundSceneryBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 80, Alignment = 4)]
@@ -23,32 +26,33 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 name;
         internal ScenarioObjectDatumStructBlock objectData;
         internal SoundSceneryDatumStructBlock soundScenery;
-        public override int SerializedSize { get { return 80; } }
-        public override int Alignment { get { return 4; } }
-        public ScenarioSoundSceneryBlockBase() : base()
+        
+        public override int SerializedSize{get { return 80; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioSoundSceneryBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             type = binaryReader.ReadShortBlockIndex1();
             name = binaryReader.ReadShortBlockIndex1();
-            objectData = new ScenarioObjectDatumStructBlock();
-            blamPointers.Concat(objectData.ReadFields(binaryReader));
-            soundScenery = new SoundSceneryDatumStructBlock();
-            blamPointers.Concat(soundScenery.ReadFields(binaryReader));
-            return blamPointers;
+            objectData = new ScenarioObjectDatumStructBlock(binaryReader);
+            soundScenery = new SoundSceneryDatumStructBlock(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ScenarioSoundSceneryBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            objectData.ReadPointers(binaryReader, blamPointers);
-            soundScenery.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            type = binaryReader.ReadShortBlockIndex1();
+            name = binaryReader.ReadShortBlockIndex1();
+            objectData = new ScenarioObjectDatumStructBlock(binaryReader);
+            soundScenery = new SoundSceneryDatumStructBlock(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(type);
                 binaryWriter.Write(name);

@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class RenderModelMarkerGroupBlock : RenderModelMarkerGroupBlockBase
     {
-        public RenderModelMarkerGroupBlock() : base()
+        public  RenderModelMarkerGroupBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  RenderModelMarkerGroupBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 12, Alignment = 4)]
@@ -21,27 +24,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Moonfish.Tags.StringIdent name;
         internal RenderModelMarkerBlock[] markers;
-        public override int SerializedSize { get { return 12; } }
-        public override int Alignment { get { return 4; } }
-        public RenderModelMarkerGroupBlockBase() : base()
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  RenderModelMarkerGroupBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
-            blamPointers.Enqueue(ReadBlockArrayPointer<RenderModelMarkerBlock>(binaryReader));
-            return blamPointers;
+            markers = Guerilla.ReadBlockArray<RenderModelMarkerBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  RenderModelMarkerGroupBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            markers = ReadBlockArrayData<RenderModelMarkerBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadStringID();
+            markers = Guerilla.ReadBlockArray<RenderModelMarkerBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 nextAddress = Guerilla.WriteBlockArray<RenderModelMarkerBlock>(binaryWriter, markers, nextAddress);

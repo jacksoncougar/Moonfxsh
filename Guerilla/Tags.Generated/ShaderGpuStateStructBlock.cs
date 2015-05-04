@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderGpuStateStructBlock : ShaderGpuStateStructBlockBase
     {
-        public ShaderGpuStateStructBlock() : base()
+        public  ShaderGpuStateStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderGpuStateStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 56, Alignment = 4)]
@@ -26,38 +29,39 @@ namespace Moonfish.Guerilla.Tags
         internal TextureBlock[] textures;
         internal VertexShaderConstantBlock[] vnConstants;
         internal VertexShaderConstantBlock[] cnConstants;
-        public override int SerializedSize { get { return 56; } }
-        public override int Alignment { get { return 4; } }
-        public ShaderGpuStateStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 56; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderGpuStateStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            renderStates = Guerilla.ReadBlockArray<RenderStateBlock>(binaryReader);
+            textureStageStates = Guerilla.ReadBlockArray<TextureStageStateBlock>(binaryReader);
+            renderStateParameters = Guerilla.ReadBlockArray<RenderStateParameterBlock>(binaryReader);
+            textureStageParameters = Guerilla.ReadBlockArray<TextureStageStateParameterBlock>(binaryReader);
+            textures = Guerilla.ReadBlockArray<TextureBlock>(binaryReader);
+            vnConstants = Guerilla.ReadBlockArray<VertexShaderConstantBlock>(binaryReader);
+            cnConstants = Guerilla.ReadBlockArray<VertexShaderConstantBlock>(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  ShaderGpuStateStructBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<RenderStateBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<TextureStageStateBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<RenderStateParameterBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<TextureStageStateParameterBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<TextureBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<VertexShaderConstantBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<VertexShaderConstantBlock>(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            renderStates = ReadBlockArrayData<RenderStateBlock>(binaryReader, blamPointers.Dequeue());
-            textureStageStates = ReadBlockArrayData<TextureStageStateBlock>(binaryReader, blamPointers.Dequeue());
-            renderStateParameters = ReadBlockArrayData<RenderStateParameterBlock>(binaryReader, blamPointers.Dequeue());
-            textureStageParameters = ReadBlockArrayData<TextureStageStateParameterBlock>(binaryReader, blamPointers.Dequeue());
-            textures = ReadBlockArrayData<TextureBlock>(binaryReader, blamPointers.Dequeue());
-            vnConstants = ReadBlockArrayData<VertexShaderConstantBlock>(binaryReader, blamPointers.Dequeue());
-            cnConstants = ReadBlockArrayData<VertexShaderConstantBlock>(binaryReader, blamPointers.Dequeue());
+            renderStates = Guerilla.ReadBlockArray<RenderStateBlock>(binaryReader);
+            textureStageStates = Guerilla.ReadBlockArray<TextureStageStateBlock>(binaryReader);
+            renderStateParameters = Guerilla.ReadBlockArray<RenderStateParameterBlock>(binaryReader);
+            textureStageParameters = Guerilla.ReadBlockArray<TextureStageStateParameterBlock>(binaryReader);
+            textures = Guerilla.ReadBlockArray<TextureBlock>(binaryReader);
+            vnConstants = Guerilla.ReadBlockArray<VertexShaderConstantBlock>(binaryReader);
+            cnConstants = Guerilla.ReadBlockArray<VertexShaderConstantBlock>(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<RenderStateBlock>(binaryWriter, renderStates, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<TextureStageStateBlock>(binaryWriter, textureStageStates, nextAddress);

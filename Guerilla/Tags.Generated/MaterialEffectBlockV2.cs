@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class MaterialEffectBlockV2 : MaterialEffectBlockV2Base
     {
-        public MaterialEffectBlockV2() : base()
+        public  MaterialEffectBlockV2(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  MaterialEffectBlockV2(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -22,30 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal OldMaterialEffectMaterialBlock[] oldMaterialsDONOTUSE;
         internal MaterialEffectMaterialBlock[] sounds;
         internal MaterialEffectMaterialBlock[] effects;
-        public override int SerializedSize { get { return 24; } }
-        public override int Alignment { get { return 4; } }
-        public MaterialEffectBlockV2Base() : base()
+        
+        public override int SerializedSize{get { return 24; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  MaterialEffectBlockV2Base(BinaryReader binaryReader): base(binaryReader)
         {
+            oldMaterialsDONOTUSE = Guerilla.ReadBlockArray<OldMaterialEffectMaterialBlock>(binaryReader);
+            sounds = Guerilla.ReadBlockArray<MaterialEffectMaterialBlock>(binaryReader);
+            effects = Guerilla.ReadBlockArray<MaterialEffectMaterialBlock>(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  MaterialEffectBlockV2Base(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<OldMaterialEffectMaterialBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<MaterialEffectMaterialBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<MaterialEffectMaterialBlock>(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            oldMaterialsDONOTUSE = ReadBlockArrayData<OldMaterialEffectMaterialBlock>(binaryReader, blamPointers.Dequeue());
-            sounds = ReadBlockArrayData<MaterialEffectMaterialBlock>(binaryReader, blamPointers.Dequeue());
-            effects = ReadBlockArrayData<MaterialEffectMaterialBlock>(binaryReader, blamPointers.Dequeue());
+            oldMaterialsDONOTUSE = Guerilla.ReadBlockArray<OldMaterialEffectMaterialBlock>(binaryReader);
+            sounds = Guerilla.ReadBlockArray<MaterialEffectMaterialBlock>(binaryReader);
+            effects = Guerilla.ReadBlockArray<MaterialEffectMaterialBlock>(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<OldMaterialEffectMaterialBlock>(binaryWriter, oldMaterialsDONOTUSE, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<MaterialEffectMaterialBlock>(binaryWriter, sounds, nextAddress);

@@ -5,40 +5,45 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureSoundClusterPortalDesignators : StructureSoundClusterPortalDesignatorsBase
     {
-        public StructureSoundClusterPortalDesignators() : base()
+        public  StructureSoundClusterPortalDesignators(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StructureSoundClusterPortalDesignators(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 2, Alignment = 4)]
     public class StructureSoundClusterPortalDesignatorsBase : GuerillaBlock
     {
         internal short portalDesignator;
-        public override int SerializedSize { get { return 2; } }
-        public override int Alignment { get { return 4; } }
-        public StructureSoundClusterPortalDesignatorsBase() : base()
+        
+        public override int SerializedSize{get { return 2; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StructureSoundClusterPortalDesignatorsBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             portalDesignator = binaryReader.ReadInt16();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  StructureSoundClusterPortalDesignatorsBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            portalDesignator = binaryReader.ReadInt16();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(portalDesignator);
                 return nextAddress;

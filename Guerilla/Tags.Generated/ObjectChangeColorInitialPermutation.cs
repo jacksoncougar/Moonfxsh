@@ -5,53 +5,61 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ObjectChangeColorInitialPermutation : ObjectChangeColorInitialPermutationBase
     {
-        public ObjectChangeColorInitialPermutation() : base()
+        public  ObjectChangeColorInitialPermutation(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ObjectChangeColorInitialPermutation(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 32, Alignment = 4)]
     public class ObjectChangeColorInitialPermutationBase : GuerillaBlock
     {
         internal float weight;
-        internal Moonfish.Tags.ColourR8G8B8 colorLowerBound;
-        internal Moonfish.Tags.ColourR8G8B8 colorUpperBound;
+        internal Moonfish.Tags.ColourR8G8B8 ColourLowerBound;
+        internal Moonfish.Tags.ColourR8G8B8 ColourUpperBound;
         /// <summary>
         /// if empty, may be used by any model variant
         /// </summary>
         internal Moonfish.Tags.StringIdent variantName;
-        public override int SerializedSize { get { return 32; } }
-        public override int Alignment { get { return 4; } }
-        public ObjectChangeColorInitialPermutationBase() : base()
+        
+        public override int SerializedSize{get { return 32; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ObjectChangeColorInitialPermutationBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             weight = binaryReader.ReadSingle();
-            colorLowerBound = binaryReader.ReadColorR8G8B8();
-            colorUpperBound = binaryReader.ReadColorR8G8B8();
+            ColourLowerBound = binaryReader.ReadColorR8G8B8();
+            ColourUpperBound = binaryReader.ReadColorR8G8B8();
             variantName = binaryReader.ReadStringID();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ObjectChangeColorInitialPermutationBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            weight = binaryReader.ReadSingle();
+            ColourLowerBound = binaryReader.ReadColorR8G8B8();
+            ColourUpperBound = binaryReader.ReadColorR8G8B8();
+            variantName = binaryReader.ReadStringID();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(weight);
-                binaryWriter.Write(colorLowerBound);
-                binaryWriter.Write(colorUpperBound);
+                binaryWriter.Write(ColourLowerBound);
+                binaryWriter.Write(ColourUpperBound);
                 binaryWriter.Write(variantName);
                 return nextAddress;
             }

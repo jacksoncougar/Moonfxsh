@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("mode")]
     public partial class RenderModelBlock : RenderModelBlockBase
     {
-        public RenderModelBlock() : base()
+        public  RenderModelBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  RenderModelBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 132, Alignment = 4)]
@@ -57,24 +60,24 @@ namespace Moonfish.Guerilla.Tags
         internal float dontDrawOverCameraCosineAngle;
         internal PrtInfoBlock[] pRTInfo;
         internal SectionRenderLeavesBlock[] sectionRenderLeaves;
-        public override int SerializedSize { get { return 132; } }
-        public override int Alignment { get { return 4; } }
-        public RenderModelBlockBase() : base()
+        
+        public override int SerializedSize{get { return 132; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  RenderModelBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             invalidName_0 = binaryReader.ReadBytes(4);
-            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalTagImportInfoBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometryCompressionInfoBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<RenderModelRegionBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<RenderModelSectionBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<RenderModelInvalidSectionPairsBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<RenderModelSectionGroupBlock>(binaryReader));
+            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>(binaryReader);
+            compressionInfo = Guerilla.ReadBlockArray<GlobalGeometryCompressionInfoBlock>(binaryReader);
+            regions = Guerilla.ReadBlockArray<RenderModelRegionBlock>(binaryReader);
+            sections = Guerilla.ReadBlockArray<RenderModelSectionBlock>(binaryReader);
+            invalidSectionPairBits = Guerilla.ReadBlockArray<RenderModelInvalidSectionPairsBlock>(binaryReader);
+            sectionGroups = Guerilla.ReadBlockArray<RenderModelSectionGroupBlock>(binaryReader);
             l1SectionGroupIndexSuperLow = binaryReader.ReadByte();
             l2SectionGroupIndexLow = binaryReader.ReadByte();
             l3SectionGroupIndexMedium = binaryReader.ReadByte();
@@ -83,45 +86,51 @@ namespace Moonfish.Guerilla.Tags
             l6SectionGroupIndexHollywood = binaryReader.ReadByte();
             invalidName_1 = binaryReader.ReadBytes(2);
             nodeListChecksum = binaryReader.ReadInt32();
-            blamPointers.Enqueue(ReadBlockArrayPointer<RenderModelNodeBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<RenderModelNodeMapBlockOLD>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<RenderModelMarkerGroupBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometryMaterialBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalErrorReportCategoriesBlock>(binaryReader));
+            nodes = Guerilla.ReadBlockArray<RenderModelNodeBlock>(binaryReader);
+            nodeMapOLD = Guerilla.ReadBlockArray<RenderModelNodeMapBlockOLD>(binaryReader);
+            markerGroups = Guerilla.ReadBlockArray<RenderModelMarkerGroupBlock>(binaryReader);
+            materials = Guerilla.ReadBlockArray<GlobalGeometryMaterialBlock>(binaryReader);
+            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
             dontDrawOverCameraCosineAngle = binaryReader.ReadSingle();
-            blamPointers.Enqueue(ReadBlockArrayPointer<PrtInfoBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<SectionRenderLeavesBlock>(binaryReader));
-            return blamPointers;
+            pRTInfo = Guerilla.ReadBlockArray<PrtInfoBlock>(binaryReader);
+            sectionRenderLeaves = Guerilla.ReadBlockArray<SectionRenderLeavesBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  RenderModelBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
-            importInfo = ReadBlockArrayData<GlobalTagImportInfoBlock>(binaryReader, blamPointers.Dequeue());
-            compressionInfo = ReadBlockArrayData<GlobalGeometryCompressionInfoBlock>(binaryReader, blamPointers.Dequeue());
-            regions = ReadBlockArrayData<RenderModelRegionBlock>(binaryReader, blamPointers.Dequeue());
-            sections = ReadBlockArrayData<RenderModelSectionBlock>(binaryReader, blamPointers.Dequeue());
-            invalidSectionPairBits = ReadBlockArrayData<RenderModelInvalidSectionPairsBlock>(binaryReader, blamPointers.Dequeue());
-            sectionGroups = ReadBlockArrayData<RenderModelSectionGroupBlock>(binaryReader, blamPointers.Dequeue());
-            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
-            nodes = ReadBlockArrayData<RenderModelNodeBlock>(binaryReader, blamPointers.Dequeue());
-            nodeMapOLD = ReadBlockArrayData<RenderModelNodeMapBlockOLD>(binaryReader, blamPointers.Dequeue());
-            markerGroups = ReadBlockArrayData<RenderModelMarkerGroupBlock>(binaryReader, blamPointers.Dequeue());
-            materials = ReadBlockArrayData<GlobalGeometryMaterialBlock>(binaryReader, blamPointers.Dequeue());
-            errors = ReadBlockArrayData<GlobalErrorReportCategoriesBlock>(binaryReader, blamPointers.Dequeue());
-            pRTInfo = ReadBlockArrayData<PrtInfoBlock>(binaryReader, blamPointers.Dequeue());
-            sectionRenderLeaves = ReadBlockArrayData<SectionRenderLeavesBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadStringID();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(4);
+            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>(binaryReader);
+            compressionInfo = Guerilla.ReadBlockArray<GlobalGeometryCompressionInfoBlock>(binaryReader);
+            regions = Guerilla.ReadBlockArray<RenderModelRegionBlock>(binaryReader);
+            sections = Guerilla.ReadBlockArray<RenderModelSectionBlock>(binaryReader);
+            invalidSectionPairBits = Guerilla.ReadBlockArray<RenderModelInvalidSectionPairsBlock>(binaryReader);
+            sectionGroups = Guerilla.ReadBlockArray<RenderModelSectionGroupBlock>(binaryReader);
+            l1SectionGroupIndexSuperLow = binaryReader.ReadByte();
+            l2SectionGroupIndexLow = binaryReader.ReadByte();
+            l3SectionGroupIndexMedium = binaryReader.ReadByte();
+            l4SectionGroupIndexHigh = binaryReader.ReadByte();
+            l5SectionGroupIndexSuperHigh = binaryReader.ReadByte();
+            l6SectionGroupIndexHollywood = binaryReader.ReadByte();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            nodeListChecksum = binaryReader.ReadInt32();
+            nodes = Guerilla.ReadBlockArray<RenderModelNodeBlock>(binaryReader);
+            nodeMapOLD = Guerilla.ReadBlockArray<RenderModelNodeMapBlockOLD>(binaryReader);
+            markerGroups = Guerilla.ReadBlockArray<RenderModelMarkerGroupBlock>(binaryReader);
+            materials = Guerilla.ReadBlockArray<GlobalGeometryMaterialBlock>(binaryReader);
+            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
+            dontDrawOverCameraCosineAngle = binaryReader.ReadSingle();
+            pRTInfo = Guerilla.ReadBlockArray<PrtInfoBlock>(binaryReader);
+            sectionRenderLeaves = Guerilla.ReadBlockArray<SectionRenderLeavesBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write((Int16)flags);

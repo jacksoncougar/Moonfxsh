@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class HudButtonIconBlock : HudButtonIconBlockBase
     {
-        public HudButtonIconBlock() : base()
+        public  HudButtonIconBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  HudButtonIconBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -32,14 +35,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte frameRate030;
         internal Flags flags;
         internal short textIndex;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
-        public HudButtonIconBlockBase() : base()
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  HudButtonIconBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             sequenceIndex = binaryReader.ReadInt16();
             widthOffset = binaryReader.ReadInt16();
             offsetFromReferenceCorner = binaryReader.ReadPoint();
@@ -47,16 +50,24 @@ namespace Moonfish.Guerilla.Tags
             frameRate030 = binaryReader.ReadByte();
             flags = (Flags)binaryReader.ReadByte();
             textIndex = binaryReader.ReadInt16();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  HudButtonIconBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            sequenceIndex = binaryReader.ReadInt16();
+            widthOffset = binaryReader.ReadInt16();
+            offsetFromReferenceCorner = binaryReader.ReadPoint();
+            overrideIconColor = binaryReader.ReadColourA1R1G1B1();
+            frameRate030 = binaryReader.ReadByte();
+            flags = (Flags)binaryReader.ReadByte();
+            textIndex = binaryReader.ReadInt16();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(sequenceIndex);
                 binaryWriter.Write(widthOffset);

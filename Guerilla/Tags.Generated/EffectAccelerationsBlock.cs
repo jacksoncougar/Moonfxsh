@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class EffectAccelerationsBlock : EffectAccelerationsBlockBase
     {
-        public EffectAccelerationsBlock() : base()
+        public  EffectAccelerationsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  EffectAccelerationsBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -26,14 +29,14 @@ namespace Moonfish.Guerilla.Tags
         internal float acceleration;
         internal float innerConeAngleDegrees;
         internal float outerConeAngleDegrees;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
-        public EffectAccelerationsBlockBase() : base()
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  EffectAccelerationsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             createIn = (CreateIn)binaryReader.ReadInt16();
             createIn0 = (CreateIn)binaryReader.ReadInt16();
             location = binaryReader.ReadShortBlockIndex1();
@@ -41,18 +44,24 @@ namespace Moonfish.Guerilla.Tags
             acceleration = binaryReader.ReadSingle();
             innerConeAngleDegrees = binaryReader.ReadSingle();
             outerConeAngleDegrees = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  EffectAccelerationsBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            createIn = (CreateIn)binaryReader.ReadInt16();
+            createIn0 = (CreateIn)binaryReader.ReadInt16();
+            location = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
+            acceleration = binaryReader.ReadSingle();
+            innerConeAngleDegrees = binaryReader.ReadSingle();
+            outerConeAngleDegrees = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)createIn);
                 binaryWriter.Write((Int16)createIn0);

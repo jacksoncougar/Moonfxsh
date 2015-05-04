@@ -5,41 +5,45 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class LightmapVertexBufferBucketCacheDataBlock : LightmapVertexBufferBucketCacheDataBlockBase
     {
-        public LightmapVertexBufferBucketCacheDataBlock() : base()
+        public  LightmapVertexBufferBucketCacheDataBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  LightmapVertexBufferBucketCacheDataBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class LightmapVertexBufferBucketCacheDataBlockBase : GuerillaBlock
     {
         internal GlobalGeometrySectionVertexBufferBlock[] vertexBuffers;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
-        public LightmapVertexBufferBucketCacheDataBlockBase() : base()
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  LightmapVertexBufferBucketCacheDataBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            vertexBuffers = Guerilla.ReadBlockArray<GlobalGeometrySectionVertexBufferBlock>(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  LightmapVertexBufferBucketCacheDataBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometrySectionVertexBufferBlock>(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            vertexBuffers = ReadBlockArrayData<GlobalGeometrySectionVertexBufferBlock>(binaryReader, blamPointers.Dequeue());
+            vertexBuffers = Guerilla.ReadBlockArray<GlobalGeometrySectionVertexBufferBlock>(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<GlobalGeometrySectionVertexBufferBlock>(binaryWriter, vertexBuffers, nextAddress);
                 return nextAddress;

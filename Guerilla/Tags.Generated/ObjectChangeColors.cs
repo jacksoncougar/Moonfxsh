@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ObjectChangeColors : ObjectChangeColorsBase
     {
-        public ObjectChangeColors() : base()
+        public  ObjectChangeColors(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ObjectChangeColors(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -21,28 +24,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal ObjectChangeColorInitialPermutation[] initialPermutations;
         internal ObjectChangeColorFunction[] functions;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
-        public ObjectChangeColorsBase() : base()
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ObjectChangeColorsBase(BinaryReader binaryReader): base(binaryReader)
         {
+            initialPermutations = Guerilla.ReadBlockArray<ObjectChangeColorInitialPermutation>(binaryReader);
+            functions = Guerilla.ReadBlockArray<ObjectChangeColorFunction>(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  ObjectChangeColorsBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ObjectChangeColorInitialPermutation>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ObjectChangeColorFunction>(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            initialPermutations = ReadBlockArrayData<ObjectChangeColorInitialPermutation>(binaryReader, blamPointers.Dequeue());
-            functions = ReadBlockArrayData<ObjectChangeColorFunction>(binaryReader, blamPointers.Dequeue());
+            initialPermutations = Guerilla.ReadBlockArray<ObjectChangeColorInitialPermutation>(binaryReader);
+            functions = Guerilla.ReadBlockArray<ObjectChangeColorFunction>(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<ObjectChangeColorInitialPermutation>(binaryWriter, initialPermutations, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ObjectChangeColorFunction>(binaryWriter, functions, nextAddress);

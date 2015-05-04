@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SoundEffectOverrideParametersBlock : SoundEffectOverrideParametersBlockBase
     {
-        public SoundEffectOverrideParametersBlock() : base()
+        public  SoundEffectOverrideParametersBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SoundEffectOverrideParametersBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 32, Alignment = 4)]
@@ -26,33 +29,39 @@ namespace Moonfish.Guerilla.Tags
         internal int integerValue;
         internal float realValue;
         internal MappingFunctionBlock functionValue;
-        public override int SerializedSize { get { return 32; } }
-        public override int Alignment { get { return 4; } }
-        public SoundEffectOverrideParametersBlockBase() : base()
+        
+        public override int SerializedSize{get { return 32; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundEffectOverrideParametersBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             input = binaryReader.ReadStringID();
             range = binaryReader.ReadStringID();
             timePeriodSeconds = binaryReader.ReadSingle();
             integerValue = binaryReader.ReadInt32();
             realValue = binaryReader.ReadSingle();
-            functionValue = new MappingFunctionBlock();
-            blamPointers.Concat(functionValue.ReadFields(binaryReader));
-            return blamPointers;
+            functionValue = new MappingFunctionBlock(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  SoundEffectOverrideParametersBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            functionValue.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadStringID();
+            input = binaryReader.ReadStringID();
+            range = binaryReader.ReadStringID();
+            timePeriodSeconds = binaryReader.ReadSingle();
+            integerValue = binaryReader.ReadInt32();
+            realValue = binaryReader.ReadSingle();
+            functionValue = new MappingFunctionBlock(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(input);

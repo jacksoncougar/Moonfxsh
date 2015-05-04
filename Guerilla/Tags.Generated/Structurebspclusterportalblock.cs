@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureBspClusterPortalBlock : StructureBspClusterPortalBlockBase
     {
-        public StructureBspClusterPortalBlock() : base()
+        public  StructureBspClusterPortalBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StructureBspClusterPortalBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 36, Alignment = 4)]
@@ -26,32 +29,39 @@ namespace Moonfish.Guerilla.Tags
         internal float boundingRadius;
         internal Flags flags;
         internal StructureBspClusterPortalVertexBlock[] vertices;
-        public override int SerializedSize { get { return 36; } }
-        public override int Alignment { get { return 4; } }
-        public StructureBspClusterPortalBlockBase() : base()
+        
+        public override int SerializedSize{get { return 36; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StructureBspClusterPortalBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             backCluster = binaryReader.ReadInt16();
             frontCluster = binaryReader.ReadInt16();
             planeIndex = binaryReader.ReadInt32();
             centroid = binaryReader.ReadVector3();
             boundingRadius = binaryReader.ReadSingle();
             flags = (Flags)binaryReader.ReadInt32();
-            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspClusterPortalVertexBlock>(binaryReader));
-            return blamPointers;
+            vertices = Guerilla.ReadBlockArray<StructureBspClusterPortalVertexBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  StructureBspClusterPortalBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            vertices = ReadBlockArrayData<StructureBspClusterPortalVertexBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            backCluster = binaryReader.ReadInt16();
+            frontCluster = binaryReader.ReadInt16();
+            planeIndex = binaryReader.ReadInt32();
+            centroid = binaryReader.ReadVector3();
+            boundingRadius = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt32();
+            vertices = Guerilla.ReadBlockArray<StructureBspClusterPortalVertexBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(backCluster);
                 binaryWriter.Write(frontCluster);

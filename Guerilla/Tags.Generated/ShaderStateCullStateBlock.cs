@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderStateCullStateBlock : ShaderStateCullStateBlockBase
     {
-        public ShaderStateCullStateBlock() : base()
+        public  ShaderStateCullStateBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderStateCullStateBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 4, Alignment = 4)]
@@ -21,26 +24,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Mode mode;
         internal FrontFace frontFace;
-        public override int SerializedSize { get { return 4; } }
-        public override int Alignment { get { return 4; } }
-        public ShaderStateCullStateBlockBase() : base()
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderStateCullStateBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             mode = (Mode)binaryReader.ReadInt16();
             frontFace = (FrontFace)binaryReader.ReadInt16();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ShaderStateCullStateBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            mode = (Mode)binaryReader.ReadInt16();
+            frontFace = (FrontFace)binaryReader.ReadInt16();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)mode);
                 binaryWriter.Write((Int16)frontFace);

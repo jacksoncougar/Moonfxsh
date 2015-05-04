@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class EnvironmentObjectRefs : EnvironmentObjectRefsBase
     {
-        public EnvironmentObjectRefs() : base()
+        public  EnvironmentObjectRefs(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  EnvironmentObjectRefs(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 28, Alignment = 4)]
@@ -25,34 +28,37 @@ namespace Moonfish.Guerilla.Tags
         internal int lastSector;
         internal EnvironmentObjectBspRefs[] bsps;
         internal EnvironmentObjectNodes[] nodes;
-        public override int SerializedSize { get { return 28; } }
-        public override int Alignment { get { return 4; } }
-        public EnvironmentObjectRefsBase() : base()
+        
+        public override int SerializedSize{get { return 28; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  EnvironmentObjectRefsBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             firstSector = binaryReader.ReadInt32();
             lastSector = binaryReader.ReadInt32();
-            blamPointers.Enqueue(ReadBlockArrayPointer<EnvironmentObjectBspRefs>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<EnvironmentObjectNodes>(binaryReader));
-            return blamPointers;
+            bsps = Guerilla.ReadBlockArray<EnvironmentObjectBspRefs>(binaryReader);
+            nodes = Guerilla.ReadBlockArray<EnvironmentObjectNodes>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  EnvironmentObjectRefsBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            bsps = ReadBlockArrayData<EnvironmentObjectBspRefs>(binaryReader, blamPointers.Dequeue());
-            nodes = ReadBlockArrayData<EnvironmentObjectNodes>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            firstSector = binaryReader.ReadInt32();
+            lastSector = binaryReader.ReadInt32();
+            bsps = Guerilla.ReadBlockArray<EnvironmentObjectBspRefs>(binaryReader);
+            nodes = Guerilla.ReadBlockArray<EnvironmentObjectNodes>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write(invalidName_, 0, 2);

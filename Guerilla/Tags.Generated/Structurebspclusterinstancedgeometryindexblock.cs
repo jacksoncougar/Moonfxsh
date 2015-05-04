@@ -5,40 +5,45 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureBspClusterInstancedGeometryIndexBlock : StructureBspClusterInstancedGeometryIndexBlockBase
     {
-        public StructureBspClusterInstancedGeometryIndexBlock() : base()
+        public  StructureBspClusterInstancedGeometryIndexBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StructureBspClusterInstancedGeometryIndexBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 2, Alignment = 4)]
     public class StructureBspClusterInstancedGeometryIndexBlockBase : GuerillaBlock
     {
         internal short instancedGeometryIndex;
-        public override int SerializedSize { get { return 2; } }
-        public override int Alignment { get { return 4; } }
-        public StructureBspClusterInstancedGeometryIndexBlockBase() : base()
+        
+        public override int SerializedSize{get { return 2; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StructureBspClusterInstancedGeometryIndexBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             instancedGeometryIndex = binaryReader.ReadInt16();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  StructureBspClusterInstancedGeometryIndexBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            instancedGeometryIndex = binaryReader.ReadInt16();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(instancedGeometryIndex);
                 return nextAddress;

@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioControlStructBlock : ScenarioControlStructBlockBase
     {
-        public ScenarioControlStructBlock() : base()
+        public  ScenarioControlStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioControlStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
@@ -22,29 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal short dONTTOUCHTHIS;
         internal byte[] invalidName_;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
-        public ScenarioControlStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioControlStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             dONTTOUCHTHIS = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ScenarioControlStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt32();
+            dONTTOUCHTHIS = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(dONTTOUCHTHIS);

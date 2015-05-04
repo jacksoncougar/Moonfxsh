@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class OrderEndingBlock : OrderEndingBlockBase
     {
-        public OrderEndingBlock() : base()
+        public  OrderEndingBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  OrderEndingBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -28,33 +31,37 @@ namespace Moonfish.Guerilla.Tags
         internal DialogueTypeWhenThisEndingIsTriggeredLaunchADialogueEventOfTheGivenType dialogueType;
         internal byte[] invalidName_;
         internal TriggerReferences[] triggers;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
-        public OrderEndingBlockBase() : base()
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  OrderEndingBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             nextOrder = binaryReader.ReadShortBlockIndex1();
             combinationRule = (CombinationRule)binaryReader.ReadInt16();
             delayTime = binaryReader.ReadSingle();
             dialogueType = (DialogueTypeWhenThisEndingIsTriggeredLaunchADialogueEventOfTheGivenType)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            blamPointers.Enqueue(ReadBlockArrayPointer<TriggerReferences>(binaryReader));
-            return blamPointers;
+            triggers = Guerilla.ReadBlockArray<TriggerReferences>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  OrderEndingBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            triggers = ReadBlockArrayData<TriggerReferences>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            nextOrder = binaryReader.ReadShortBlockIndex1();
+            combinationRule = (CombinationRule)binaryReader.ReadInt16();
+            delayTime = binaryReader.ReadSingle();
+            dialogueType = (DialogueTypeWhenThisEndingIsTriggeredLaunchADialogueEventOfTheGivenType)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            triggers = Guerilla.ReadBlockArray<TriggerReferences>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(nextOrder);
                 binaryWriter.Write((Int16)combinationRule);

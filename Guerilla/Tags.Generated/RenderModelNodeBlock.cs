@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class RenderModelNodeBlock : RenderModelNodeBlockBase
     {
-        public RenderModelNodeBlock() : base()
+        public  RenderModelNodeBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  RenderModelNodeBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 96, Alignment = 4)]
@@ -32,14 +35,14 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 inversePosition;
         internal float inverseScale;
         internal float distanceFromParent;
-        public override int SerializedSize { get { return 96; } }
-        public override int Alignment { get { return 4; } }
-        public RenderModelNodeBlockBase() : base()
+        
+        public override int SerializedSize{get { return 96; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  RenderModelNodeBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             parentNode = binaryReader.ReadShortBlockIndex1();
             firstChildNode = binaryReader.ReadShortBlockIndex1();
@@ -53,16 +56,30 @@ namespace Moonfish.Guerilla.Tags
             inversePosition = binaryReader.ReadVector3();
             inverseScale = binaryReader.ReadSingle();
             distanceFromParent = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  RenderModelNodeBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadStringID();
+            parentNode = binaryReader.ReadShortBlockIndex1();
+            firstChildNode = binaryReader.ReadShortBlockIndex1();
+            nextSiblingNode = binaryReader.ReadShortBlockIndex1();
+            importNodeIndex = binaryReader.ReadInt16();
+            defaultTranslation = binaryReader.ReadVector3();
+            defaultRotation = binaryReader.ReadQuaternion();
+            inverseForward = binaryReader.ReadVector3();
+            inverseLeft = binaryReader.ReadVector3();
+            inverseUp = binaryReader.ReadVector3();
+            inversePosition = binaryReader.ReadVector3();
+            inverseScale = binaryReader.ReadSingle();
+            distanceFromParent = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(parentNode);

@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("ai**")]
     public partial class ScenarioAiResourceBlock : ScenarioAiResourceBlockBase
     {
-        public ScenarioAiResourceBlock() : base()
+        public  ScenarioAiResourceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioAiResourceBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 152, Alignment = 4)]
@@ -47,62 +50,63 @@ namespace Moonfish.Guerilla.Tags
         internal AiSceneBlock[] missionDialogueScenes;
         internal FlockDefinitionBlock[] flocks;
         internal ScenarioTriggerVolumeBlock[] triggerVolumeReferences;
-        public override int SerializedSize { get { return 152; } }
-        public override int Alignment { get { return 4; } }
-        public ScenarioAiResourceBlockBase() : base()
+        
+        public override int SerializedSize{get { return 152; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioAiResourceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            stylePalette = Guerilla.ReadBlockArray<StylePaletteBlock>(binaryReader);
+            squadGroups = Guerilla.ReadBlockArray<SquadGroupsBlock>(binaryReader);
+            squads = Guerilla.ReadBlockArray<SquadsBlock>(binaryReader);
+            zones = Guerilla.ReadBlockArray<ZoneBlock>(binaryReader);
+            characterPalette = Guerilla.ReadBlockArray<CharacterPaletteBlock>(binaryReader);
+            aIAnimationReferences = Guerilla.ReadBlockArray<AiAnimationReferenceBlock>(binaryReader);
+            aIScriptReferences = Guerilla.ReadBlockArray<AiScriptReferenceBlock>(binaryReader);
+            aIRecordingReferences = Guerilla.ReadBlockArray<AiRecordingReferenceBlock>(binaryReader);
+            aIConversations = Guerilla.ReadBlockArray<AiConversationBlock>(binaryReader);
+            scriptingData = Guerilla.ReadBlockArray<CsScriptDataBlock>(binaryReader);
+            orders = Guerilla.ReadBlockArray<OrdersBlock>(binaryReader);
+            triggers = Guerilla.ReadBlockArray<TriggersBlock>(binaryReader);
+            bSPPreferences = Guerilla.ReadBlockArray<ScenarioStructureBspReferenceBlock>(binaryReader);
+            weaponReferences = Guerilla.ReadBlockArray<ScenarioWeaponPaletteBlock>(binaryReader);
+            vehicleReferences = Guerilla.ReadBlockArray<ScenarioVehiclePaletteBlock>(binaryReader);
+            vehicleDatumReferences = Guerilla.ReadBlockArray<ScenarioVehicleBlock>(binaryReader);
+            missionDialogueScenes = Guerilla.ReadBlockArray<AiSceneBlock>(binaryReader);
+            flocks = Guerilla.ReadBlockArray<FlockDefinitionBlock>(binaryReader);
+            triggerVolumeReferences = Guerilla.ReadBlockArray<ScenarioTriggerVolumeBlock>(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  ScenarioAiResourceBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<StylePaletteBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<SquadGroupsBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<SquadsBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ZoneBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterPaletteBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<AiAnimationReferenceBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<AiScriptReferenceBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<AiRecordingReferenceBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<AiConversationBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CsScriptDataBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<OrdersBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<TriggersBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioStructureBspReferenceBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioWeaponPaletteBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioVehiclePaletteBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioVehicleBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<AiSceneBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<FlockDefinitionBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioTriggerVolumeBlock>(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            stylePalette = ReadBlockArrayData<StylePaletteBlock>(binaryReader, blamPointers.Dequeue());
-            squadGroups = ReadBlockArrayData<SquadGroupsBlock>(binaryReader, blamPointers.Dequeue());
-            squads = ReadBlockArrayData<SquadsBlock>(binaryReader, blamPointers.Dequeue());
-            zones = ReadBlockArrayData<ZoneBlock>(binaryReader, blamPointers.Dequeue());
-            characterPalette = ReadBlockArrayData<CharacterPaletteBlock>(binaryReader, blamPointers.Dequeue());
-            aIAnimationReferences = ReadBlockArrayData<AiAnimationReferenceBlock>(binaryReader, blamPointers.Dequeue());
-            aIScriptReferences = ReadBlockArrayData<AiScriptReferenceBlock>(binaryReader, blamPointers.Dequeue());
-            aIRecordingReferences = ReadBlockArrayData<AiRecordingReferenceBlock>(binaryReader, blamPointers.Dequeue());
-            aIConversations = ReadBlockArrayData<AiConversationBlock>(binaryReader, blamPointers.Dequeue());
-            scriptingData = ReadBlockArrayData<CsScriptDataBlock>(binaryReader, blamPointers.Dequeue());
-            orders = ReadBlockArrayData<OrdersBlock>(binaryReader, blamPointers.Dequeue());
-            triggers = ReadBlockArrayData<TriggersBlock>(binaryReader, blamPointers.Dequeue());
-            bSPPreferences = ReadBlockArrayData<ScenarioStructureBspReferenceBlock>(binaryReader, blamPointers.Dequeue());
-            weaponReferences = ReadBlockArrayData<ScenarioWeaponPaletteBlock>(binaryReader, blamPointers.Dequeue());
-            vehicleReferences = ReadBlockArrayData<ScenarioVehiclePaletteBlock>(binaryReader, blamPointers.Dequeue());
-            vehicleDatumReferences = ReadBlockArrayData<ScenarioVehicleBlock>(binaryReader, blamPointers.Dequeue());
-            missionDialogueScenes = ReadBlockArrayData<AiSceneBlock>(binaryReader, blamPointers.Dequeue());
-            flocks = ReadBlockArrayData<FlockDefinitionBlock>(binaryReader, blamPointers.Dequeue());
-            triggerVolumeReferences = ReadBlockArrayData<ScenarioTriggerVolumeBlock>(binaryReader, blamPointers.Dequeue());
+            stylePalette = Guerilla.ReadBlockArray<StylePaletteBlock>(binaryReader);
+            squadGroups = Guerilla.ReadBlockArray<SquadGroupsBlock>(binaryReader);
+            squads = Guerilla.ReadBlockArray<SquadsBlock>(binaryReader);
+            zones = Guerilla.ReadBlockArray<ZoneBlock>(binaryReader);
+            characterPalette = Guerilla.ReadBlockArray<CharacterPaletteBlock>(binaryReader);
+            aIAnimationReferences = Guerilla.ReadBlockArray<AiAnimationReferenceBlock>(binaryReader);
+            aIScriptReferences = Guerilla.ReadBlockArray<AiScriptReferenceBlock>(binaryReader);
+            aIRecordingReferences = Guerilla.ReadBlockArray<AiRecordingReferenceBlock>(binaryReader);
+            aIConversations = Guerilla.ReadBlockArray<AiConversationBlock>(binaryReader);
+            scriptingData = Guerilla.ReadBlockArray<CsScriptDataBlock>(binaryReader);
+            orders = Guerilla.ReadBlockArray<OrdersBlock>(binaryReader);
+            triggers = Guerilla.ReadBlockArray<TriggersBlock>(binaryReader);
+            bSPPreferences = Guerilla.ReadBlockArray<ScenarioStructureBspReferenceBlock>(binaryReader);
+            weaponReferences = Guerilla.ReadBlockArray<ScenarioWeaponPaletteBlock>(binaryReader);
+            vehicleReferences = Guerilla.ReadBlockArray<ScenarioVehiclePaletteBlock>(binaryReader);
+            vehicleDatumReferences = Guerilla.ReadBlockArray<ScenarioVehicleBlock>(binaryReader);
+            missionDialogueScenes = Guerilla.ReadBlockArray<AiSceneBlock>(binaryReader);
+            flocks = Guerilla.ReadBlockArray<FlockDefinitionBlock>(binaryReader);
+            triggerVolumeReferences = Guerilla.ReadBlockArray<ScenarioTriggerVolumeBlock>(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<StylePaletteBlock>(binaryWriter, stylePalette, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SquadGroupsBlock>(binaryWriter, squadGroups, nextAddress);

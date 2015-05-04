@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class OldMaterialsBlock : OldMaterialsBlockBase
     {
-        public OldMaterialsBlock() : base()
+        public  OldMaterialsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  OldMaterialsBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 36, Alignment = 4)]
@@ -43,14 +46,14 @@ namespace Moonfish.Guerilla.Tags
         internal float groundDampFractionScale;
         [TagReference("snd!")]
         internal Moonfish.Tags.TagReference meleeHitSound;
-        public override int SerializedSize { get { return 36; } }
-        public override int Alignment { get { return 4; } }
-        public OldMaterialsBlockBase() : base()
+        
+        public override int SerializedSize{get { return 36; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  OldMaterialsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             newMaterialName = binaryReader.ReadStringID();
             newGeneralMaterialName = binaryReader.ReadStringID();
             groundFrictionScale = binaryReader.ReadSingle();
@@ -59,16 +62,25 @@ namespace Moonfish.Guerilla.Tags
             groundDepthScale = binaryReader.ReadSingle();
             groundDampFractionScale = binaryReader.ReadSingle();
             meleeHitSound = binaryReader.ReadTagReference();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  OldMaterialsBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            newMaterialName = binaryReader.ReadStringID();
+            newGeneralMaterialName = binaryReader.ReadStringID();
+            groundFrictionScale = binaryReader.ReadSingle();
+            groundFrictionNormalK1Scale = binaryReader.ReadSingle();
+            groundFrictionNormalK0Scale = binaryReader.ReadSingle();
+            groundDepthScale = binaryReader.ReadSingle();
+            groundDampFractionScale = binaryReader.ReadSingle();
+            meleeHitSound = binaryReader.ReadTagReference();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(newMaterialName);
                 binaryWriter.Write(newGeneralMaterialName);

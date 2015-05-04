@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SoundGestaltExtraInfoBlock : SoundGestaltExtraInfoBlockBase
     {
-        public SoundGestaltExtraInfoBlock() : base()
+        public  SoundGestaltExtraInfoBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SoundGestaltExtraInfoBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 44, Alignment = 4)]
@@ -21,29 +24,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal SoundEncodedDialogueSectionBlock[] encodedPermutationSection;
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
-        public override int SerializedSize { get { return 44; } }
-        public override int Alignment { get { return 4; } }
-        public SoundGestaltExtraInfoBlockBase() : base()
+        
+        public override int SerializedSize{get { return 44; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundGestaltExtraInfoBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            encodedPermutationSection = Guerilla.ReadBlockArray<SoundEncodedDialogueSectionBlock>(binaryReader);
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  SoundGestaltExtraInfoBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<SoundEncodedDialogueSectionBlock>(binaryReader));
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
-            blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            encodedPermutationSection = ReadBlockArrayData<SoundEncodedDialogueSectionBlock>(binaryReader, blamPointers.Dequeue());
-            geometryBlockInfo.ReadPointers(binaryReader, blamPointers);
+            encodedPermutationSection = Guerilla.ReadBlockArray<SoundEncodedDialogueSectionBlock>(binaryReader);
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<SoundEncodedDialogueSectionBlock>(binaryWriter, encodedPermutationSection, nextAddress);
                 geometryBlockInfo.Write(binaryWriter);

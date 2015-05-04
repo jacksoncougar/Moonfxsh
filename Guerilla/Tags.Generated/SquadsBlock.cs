@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SquadsBlock : SquadsBlockBase
     {
-        public SquadsBlock() : base()
+        public  SquadsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SquadsBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 116, Alignment = 4)]
@@ -47,14 +50,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.String32 placementScript;
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
-        public override int SerializedSize { get { return 116; } }
-        public override int Alignment { get { return 4; } }
-        public SquadsBlockBase() : base()
+        
+        public override int SerializedSize{get { return 116; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SquadsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
             flags = (Flags)binaryReader.ReadInt32();
             team = (Team)binaryReader.ReadInt16();
@@ -73,29 +76,43 @@ namespace Moonfish.Guerilla.Tags
             grenadeType = (GrenadeType)binaryReader.ReadInt16();
             initialOrder = binaryReader.ReadShortBlockIndex1();
             vehicleVariant = binaryReader.ReadStringID();
-            blamPointers.Enqueue(ReadBlockArrayPointer<ActorStartingLocationsBlock>(binaryReader));
+            startingLocations = Guerilla.ReadBlockArray<ActorStartingLocationsBlock>(binaryReader);
             placementScript = binaryReader.ReadString32();
             invalidName_1 = binaryReader.ReadBytes(2);
             invalidName_2 = binaryReader.ReadBytes(2);
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  SquadsBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            startingLocations = ReadBlockArrayData<ActorStartingLocationsBlock>(binaryReader, blamPointers.Dequeue());
-            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadString32();
+            flags = (Flags)binaryReader.ReadInt32();
+            team = (Team)binaryReader.ReadInt16();
+            parent = binaryReader.ReadShortBlockIndex1();
+            squadDelayTimeSeconds = binaryReader.ReadSingle();
+            normalDiffCount = binaryReader.ReadInt16();
+            insaneDiffCount = binaryReader.ReadInt16();
+            majorUpgrade = (MajorUpgrade)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            vehicleType = binaryReader.ReadShortBlockIndex1();
+            characterType = binaryReader.ReadShortBlockIndex1();
+            initialZone = binaryReader.ReadShortBlockIndex1();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            initialWeapon = binaryReader.ReadShortBlockIndex1();
+            initialSecondaryWeapon = binaryReader.ReadShortBlockIndex1();
+            grenadeType = (GrenadeType)binaryReader.ReadInt16();
+            initialOrder = binaryReader.ReadShortBlockIndex1();
+            vehicleVariant = binaryReader.ReadStringID();
+            startingLocations = Guerilla.ReadBlockArray<ActorStartingLocationsBlock>(binaryReader);
+            placementScript = binaryReader.ReadString32();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            invalidName_2 = binaryReader.ReadBytes(2);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write((Int32)flags);

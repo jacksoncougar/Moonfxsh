@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,34 +19,40 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("mdlg")]
     public partial class AiMissionDialogueBlock : AiMissionDialogueBlockBase
     {
-        public AiMissionDialogueBlock() : base()
+        public  AiMissionDialogueBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AiMissionDialogueBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class AiMissionDialogueBlockBase : GuerillaBlock
     {
         internal MissionDialogueLinesBlock[] lines;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
-        public AiMissionDialogueBlockBase() : base()
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AiMissionDialogueBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            lines = Guerilla.ReadBlockArray<MissionDialogueLinesBlock>(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  AiMissionDialogueBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<MissionDialogueLinesBlock>(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            lines = ReadBlockArrayData<MissionDialogueLinesBlock>(binaryReader, blamPointers.Dequeue());
+            lines = Guerilla.ReadBlockArray<MissionDialogueLinesBlock>(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<MissionDialogueLinesBlock>(binaryWriter, lines, nextAddress);
                 return nextAddress;

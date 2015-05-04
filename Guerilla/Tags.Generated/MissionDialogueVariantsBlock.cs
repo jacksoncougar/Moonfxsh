@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class MissionDialogueVariantsBlock : MissionDialogueVariantsBlockBase
     {
-        public MissionDialogueVariantsBlock() : base()
+        public  MissionDialogueVariantsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  MissionDialogueVariantsBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -26,27 +29,31 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("snd!")]
         internal Moonfish.Tags.TagReference sound;
         internal Moonfish.Tags.StringIdent soundEffect;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
-        public MissionDialogueVariantsBlockBase() : base()
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  MissionDialogueVariantsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             variantDesignation = binaryReader.ReadStringID();
             sound = binaryReader.ReadTagReference();
             soundEffect = binaryReader.ReadStringID();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  MissionDialogueVariantsBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            variantDesignation = binaryReader.ReadStringID();
+            sound = binaryReader.ReadTagReference();
+            soundEffect = binaryReader.ReadStringID();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(variantDesignation);
                 binaryWriter.Write(sound);

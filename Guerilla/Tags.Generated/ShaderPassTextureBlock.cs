@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPassTextureBlock : ShaderPassTextureBlockBase
     {
-        public ShaderPassTextureBlock() : base()
+        public  ShaderPassTextureBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderPassTextureBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 60, Alignment = 4)]
@@ -33,14 +36,14 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderTextureStateKillStateBlock[] killState;
         internal ShaderTextureStateMiscStateBlock[] miscState;
         internal ShaderTextureStateConstantBlock[] constants;
-        public override int SerializedSize { get { return 60; } }
-        public override int Alignment { get { return 4; } }
-        public ShaderPassTextureBlockBase() : base()
+        
+        public override int SerializedSize{get { return 60; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderPassTextureBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             sourceParameter = binaryReader.ReadStringID();
             sourceExtern = (SourceExtern)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -50,34 +53,36 @@ namespace Moonfish.Guerilla.Tags
             dotMapping = (DotMapping)binaryReader.ReadInt16();
             inputStage03 = binaryReader.ReadInt16();
             invalidName_2 = binaryReader.ReadBytes(2);
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderTextureStateAddressStateBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderTextureStateFilterStateBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderTextureStateKillStateBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderTextureStateMiscStateBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderTextureStateConstantBlock>(binaryReader));
-            return blamPointers;
+            addressState = Guerilla.ReadBlockArray<ShaderTextureStateAddressStateBlock>(binaryReader);
+            filterState = Guerilla.ReadBlockArray<ShaderTextureStateFilterStateBlock>(binaryReader);
+            killState = Guerilla.ReadBlockArray<ShaderTextureStateKillStateBlock>(binaryReader);
+            miscState = Guerilla.ReadBlockArray<ShaderTextureStateMiscStateBlock>(binaryReader);
+            constants = Guerilla.ReadBlockArray<ShaderTextureStateConstantBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ShaderPassTextureBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
-            addressState = ReadBlockArrayData<ShaderTextureStateAddressStateBlock>(binaryReader, blamPointers.Dequeue());
-            filterState = ReadBlockArrayData<ShaderTextureStateFilterStateBlock>(binaryReader, blamPointers.Dequeue());
-            killState = ReadBlockArrayData<ShaderTextureStateKillStateBlock>(binaryReader, blamPointers.Dequeue());
-            miscState = ReadBlockArrayData<ShaderTextureStateMiscStateBlock>(binaryReader, blamPointers.Dequeue());
-            constants = ReadBlockArrayData<ShaderTextureStateConstantBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            sourceParameter = binaryReader.ReadStringID();
+            sourceExtern = (SourceExtern)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(2);
+            mode = (Mode)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            dotMapping = (DotMapping)binaryReader.ReadInt16();
+            inputStage03 = binaryReader.ReadInt16();
+            invalidName_2 = binaryReader.ReadBytes(2);
+            addressState = Guerilla.ReadBlockArray<ShaderTextureStateAddressStateBlock>(binaryReader);
+            filterState = Guerilla.ReadBlockArray<ShaderTextureStateFilterStateBlock>(binaryReader);
+            killState = Guerilla.ReadBlockArray<ShaderTextureStateKillStateBlock>(binaryReader);
+            miscState = Guerilla.ReadBlockArray<ShaderTextureStateMiscStateBlock>(binaryReader);
+            constants = Guerilla.ReadBlockArray<ShaderTextureStateConstantBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(sourceParameter);
                 binaryWriter.Write((Int16)sourceExtern);

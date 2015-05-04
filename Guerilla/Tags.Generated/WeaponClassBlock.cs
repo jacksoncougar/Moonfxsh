@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class WeaponClassBlock : WeaponClassBlockBase
     {
-        public WeaponClassBlock() : base()
+        public  WeaponClassBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  WeaponClassBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -22,29 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent label;
         internal WeaponTypeBlock[] weaponTypeAABBCC;
         internal AnimationIkBlock[] weaponIkAABBCC;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
-        public WeaponClassBlockBase() : base()
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  WeaponClassBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             label = binaryReader.ReadStringID();
-            blamPointers.Enqueue(ReadBlockArrayPointer<WeaponTypeBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<AnimationIkBlock>(binaryReader));
-            return blamPointers;
+            weaponTypeAABBCC = Guerilla.ReadBlockArray<WeaponTypeBlock>(binaryReader);
+            weaponIkAABBCC = Guerilla.ReadBlockArray<AnimationIkBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  WeaponClassBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            weaponTypeAABBCC = ReadBlockArrayData<WeaponTypeBlock>(binaryReader, blamPointers.Dequeue());
-            weaponIkAABBCC = ReadBlockArrayData<AnimationIkBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            label = binaryReader.ReadStringID();
+            weaponTypeAABBCC = Guerilla.ReadBlockArray<WeaponTypeBlock>(binaryReader);
+            weaponIkAABBCC = Guerilla.ReadBlockArray<AnimationIkBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(label);
                 nextAddress = Guerilla.WriteBlockArray<WeaponTypeBlock>(binaryWriter, weaponTypeAABBCC, nextAddress);

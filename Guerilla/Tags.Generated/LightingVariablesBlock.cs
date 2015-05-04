@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class LightingVariablesBlock : LightingVariablesBlockBase
     {
-        public LightingVariablesBlock() : base()
+        public  LightingVariablesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  LightingVariablesBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 144, Alignment = 4)]
@@ -25,38 +28,37 @@ namespace Moonfish.Guerilla.Tags
         internal SecondaryLightStructBlock secondaryLight;
         internal AmbientLightStructBlock ambientLight;
         internal LightmapShadowsStructBlock lightmapShadows;
-        public override int SerializedSize { get { return 144; } }
-        public override int Alignment { get { return 4; } }
-        public LightingVariablesBlockBase() : base()
+        
+        public override int SerializedSize{get { return 144; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  LightingVariablesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             objectAffected = (ObjectAffected)binaryReader.ReadInt32();
             lightmapBrightnessOffset = binaryReader.ReadSingle();
-            primaryLight = new PrimaryLightStructBlock();
-            blamPointers.Concat(primaryLight.ReadFields(binaryReader));
-            secondaryLight = new SecondaryLightStructBlock();
-            blamPointers.Concat(secondaryLight.ReadFields(binaryReader));
-            ambientLight = new AmbientLightStructBlock();
-            blamPointers.Concat(ambientLight.ReadFields(binaryReader));
-            lightmapShadows = new LightmapShadowsStructBlock();
-            blamPointers.Concat(lightmapShadows.ReadFields(binaryReader));
-            return blamPointers;
+            primaryLight = new PrimaryLightStructBlock(binaryReader);
+            secondaryLight = new SecondaryLightStructBlock(binaryReader);
+            ambientLight = new AmbientLightStructBlock(binaryReader);
+            lightmapShadows = new LightmapShadowsStructBlock(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  LightingVariablesBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            primaryLight.ReadPointers(binaryReader, blamPointers);
-            secondaryLight.ReadPointers(binaryReader, blamPointers);
-            ambientLight.ReadPointers(binaryReader, blamPointers);
-            lightmapShadows.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            objectAffected = (ObjectAffected)binaryReader.ReadInt32();
+            lightmapBrightnessOffset = binaryReader.ReadSingle();
+            primaryLight = new PrimaryLightStructBlock(binaryReader);
+            secondaryLight = new SecondaryLightStructBlock(binaryReader);
+            ambientLight = new AmbientLightStructBlock(binaryReader);
+            lightmapShadows = new LightmapShadowsStructBlock(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)objectAffected);
                 binaryWriter.Write(lightmapBrightnessOffset);

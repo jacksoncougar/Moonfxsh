@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterPlacementBlock : CharacterPlacementBlockBase
     {
-        public CharacterPlacementBlock() : base()
+        public  CharacterPlacementBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CharacterPlacementBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 52, Alignment = 4)]
@@ -32,14 +35,14 @@ namespace Moonfish.Guerilla.Tags
         internal float manyUpgradeChanceNormal;
         internal float manyUpgradeChanceHeroic;
         internal float manyUpgradeChanceLegendary;
-        public override int SerializedSize { get { return 52; } }
-        public override int Alignment { get { return 4; } }
-        public CharacterPlacementBlockBase() : base()
+        
+        public override int SerializedSize{get { return 52; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CharacterPlacementBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(4);
             fewUpgradeChanceEasy = binaryReader.ReadSingle();
             fewUpgradeChanceNormal = binaryReader.ReadSingle();
@@ -53,20 +56,30 @@ namespace Moonfish.Guerilla.Tags
             manyUpgradeChanceNormal = binaryReader.ReadSingle();
             manyUpgradeChanceHeroic = binaryReader.ReadSingle();
             manyUpgradeChanceLegendary = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  CharacterPlacementBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            invalidName_ = binaryReader.ReadBytes(4);
+            fewUpgradeChanceEasy = binaryReader.ReadSingle();
+            fewUpgradeChanceNormal = binaryReader.ReadSingle();
+            fewUpgradeChanceHeroic = binaryReader.ReadSingle();
+            fewUpgradeChanceLegendary = binaryReader.ReadSingle();
+            normalUpgradeChanceEasy = binaryReader.ReadSingle();
+            normalUpgradeChanceNormal = binaryReader.ReadSingle();
+            normalUpgradeChanceHeroic = binaryReader.ReadSingle();
+            normalUpgradeChanceLegendary = binaryReader.ReadSingle();
+            manyUpgradeChanceEasy = binaryReader.ReadSingle();
+            manyUpgradeChanceNormal = binaryReader.ReadSingle();
+            manyUpgradeChanceHeroic = binaryReader.ReadSingle();
+            manyUpgradeChanceLegendary = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 4);
                 binaryWriter.Write(fewUpgradeChanceEasy);

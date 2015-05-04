@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("pixl")]
     public partial class PixelShaderBlock : PixelShaderBlockBase
     {
-        public PixelShaderBlock() : base()
+        public  PixelShaderBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PixelShaderBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 12, Alignment = 4)]
@@ -30,31 +33,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal byte[] invalidName_;
         internal byte[] compiledShader;
-        public override int SerializedSize { get { return 12; } }
-        public override int Alignment { get { return 4; } }
-        public PixelShaderBlockBase() : base()
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PixelShaderBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(4);
-            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
-            return blamPointers;
+            compiledShader = Guerilla.ReadData(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  PixelShaderBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
-            compiledShader = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            invalidName_ = binaryReader.ReadBytes(4);
+            compiledShader = Guerilla.ReadData(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 4);
                 nextAddress = Guerilla.WriteData(binaryWriter, compiledShader, nextAddress);

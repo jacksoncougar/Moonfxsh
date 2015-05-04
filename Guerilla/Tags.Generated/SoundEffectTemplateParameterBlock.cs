@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SoundEffectTemplateParameterBlock : SoundEffectTemplateParameterBlockBase
     {
-        public SoundEffectTemplateParameterBlock() : base()
+        public  SoundEffectTemplateParameterBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SoundEffectTemplateParameterBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 36, Alignment = 4)]
@@ -28,35 +31,43 @@ namespace Moonfish.Guerilla.Tags
         internal MappingFunctionBlock defaultFunction;
         internal float minimumScalarValue;
         internal float maximumScalarValue;
-        public override int SerializedSize { get { return 36; } }
-        public override int Alignment { get { return 4; } }
-        public SoundEffectTemplateParameterBlockBase() : base()
+        
+        public override int SerializedSize{get { return 36; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundEffectTemplateParameterBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             type = (Type)binaryReader.ReadInt16();
             flags = (Flags)binaryReader.ReadInt16();
             hardwareOffset = binaryReader.ReadInt32();
             defaultEnumIntegerValue = binaryReader.ReadInt32();
             defaultScalarValue = binaryReader.ReadSingle();
-            defaultFunction = new MappingFunctionBlock();
-            blamPointers.Concat(defaultFunction.ReadFields(binaryReader));
+            defaultFunction = new MappingFunctionBlock(binaryReader);
             minimumScalarValue = binaryReader.ReadSingle();
             maximumScalarValue = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  SoundEffectTemplateParameterBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            defaultFunction.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadStringID();
+            type = (Type)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            hardwareOffset = binaryReader.ReadInt32();
+            defaultEnumIntegerValue = binaryReader.ReadInt32();
+            defaultScalarValue = binaryReader.ReadSingle();
+            defaultFunction = new MappingFunctionBlock(binaryReader);
+            minimumScalarValue = binaryReader.ReadSingle();
+            maximumScalarValue = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write((Int16)type);

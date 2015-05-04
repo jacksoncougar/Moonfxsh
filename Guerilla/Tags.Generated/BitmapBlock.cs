@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("bitm")]
     public partial class BitmapBlock : BitmapBlockBase
     {
-        public BitmapBlock() : base()
+        public  BitmapBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  BitmapBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 76, Alignment = 4)]
@@ -67,14 +70,14 @@ namespace Moonfish.Guerilla.Tags
         internal ForceFormat forceFormat;
         internal BitmapGroupSequenceBlock[] sequences;
         internal BitmapDataBlock[] bitmaps;
-        public override int SerializedSize { get { return 76; } }
-        public override int Alignment { get { return 4; } }
-        public BitmapBlockBase() : base()
+        
+        public override int SerializedSize{get { return 76; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  BitmapBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             type = (Type)binaryReader.ReadInt16();
             format = (Format)binaryReader.ReadInt16();
             usage = (Usage)binaryReader.ReadInt16();
@@ -94,36 +97,40 @@ namespace Moonfish.Guerilla.Tags
             spriteUsage = (SpriteUsage)binaryReader.ReadInt16();
             spriteSpacing = binaryReader.ReadInt16();
             forceFormat = (ForceFormat)binaryReader.ReadInt16();
-            blamPointers.Enqueue(ReadBlockArrayPointer<BitmapGroupSequenceBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<BitmapDataBlock>(binaryReader));
-            return blamPointers;
+            sequences = Guerilla.ReadBlockArray<BitmapGroupSequenceBlock>(binaryReader);
+            bitmaps = Guerilla.ReadBlockArray<BitmapDataBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  BitmapBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            data[0].ReadPointers(binaryReader, blamPointers);
-            data[1].ReadPointers(binaryReader, blamPointers);
-            data[2].ReadPointers(binaryReader, blamPointers);
-            data[3].ReadPointers(binaryReader, blamPointers);
-            data[4].ReadPointers(binaryReader, blamPointers);
-            data[5].ReadPointers(binaryReader, blamPointers);
-            data[6].ReadPointers(binaryReader, blamPointers);
-            data[7].ReadPointers(binaryReader, blamPointers);
-            data0[0].ReadPointers(binaryReader, blamPointers);
-            data0[1].ReadPointers(binaryReader, blamPointers);
-            data0[2].ReadPointers(binaryReader, blamPointers);
-            data0[3].ReadPointers(binaryReader, blamPointers);
-            data0[4].ReadPointers(binaryReader, blamPointers);
-            data0[5].ReadPointers(binaryReader, blamPointers);
-            data0[6].ReadPointers(binaryReader, blamPointers);
-            data0[7].ReadPointers(binaryReader, blamPointers);
-            sequences = ReadBlockArrayData<BitmapGroupSequenceBlock>(binaryReader, blamPointers.Dequeue());
-            bitmaps = ReadBlockArrayData<BitmapDataBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            type = (Type)binaryReader.ReadInt16();
+            format = (Format)binaryReader.ReadInt16();
+            usage = (Usage)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            detailFadeFactor01 = binaryReader.ReadSingle();
+            sharpenAmount01 = binaryReader.ReadSingle();
+            bumpHeightRepeats = binaryReader.ReadSingle();
+            spriteSize = (SpriteSize)binaryReader.ReadInt16();
+            eMPTYSTRING = binaryReader.ReadInt16();
+            colorPlateWidthPixels = binaryReader.ReadInt16();
+            colorPlateHeightPixels = binaryReader.ReadInt16();
+            data = binaryReader.ReadBytes(8);
+            data0 = binaryReader.ReadBytes(8);
+            blurFilterSize010Pixels = binaryReader.ReadSingle();
+            alphaBias11 = binaryReader.ReadSingle();
+            mipmapCountLevels = binaryReader.ReadInt16();
+            spriteUsage = (SpriteUsage)binaryReader.ReadInt16();
+            spriteSpacing = binaryReader.ReadInt16();
+            forceFormat = (ForceFormat)binaryReader.ReadInt16();
+            sequences = Guerilla.ReadBlockArray<BitmapGroupSequenceBlock>(binaryReader);
+            bitmaps = Guerilla.ReadBlockArray<BitmapDataBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)type);
                 binaryWriter.Write((Int16)format);

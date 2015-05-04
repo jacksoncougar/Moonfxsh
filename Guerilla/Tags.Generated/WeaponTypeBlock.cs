@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class WeaponTypeBlock : WeaponTypeBlockBase
     {
-        public WeaponTypeBlock() : base()
+        public  WeaponTypeBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  WeaponTypeBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 52, Alignment = 4)]
@@ -26,37 +29,39 @@ namespace Moonfish.Guerilla.Tags
         internal AnimationTransitionBlock[] transitionsAABBCC;
         internal PrecacheListBlock[] highPrecacheCCCCC;
         internal PrecacheListBlock[] lowPrecacheCCCCC;
-        public override int SerializedSize { get { return 52; } }
-        public override int Alignment { get { return 4; } }
-        public WeaponTypeBlockBase() : base()
+        
+        public override int SerializedSize{get { return 52; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  WeaponTypeBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             label = binaryReader.ReadStringID();
-            blamPointers.Enqueue(ReadBlockArrayPointer<AnimationEntryBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<AnimationEntryBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<DamageAnimationBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<AnimationTransitionBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<PrecacheListBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<PrecacheListBlock>(binaryReader));
-            return blamPointers;
+            actionsAABBCC = Guerilla.ReadBlockArray<AnimationEntryBlock>(binaryReader);
+            overlaysAABBCC = Guerilla.ReadBlockArray<AnimationEntryBlock>(binaryReader);
+            deathAndDamageAABBCC = Guerilla.ReadBlockArray<DamageAnimationBlock>(binaryReader);
+            transitionsAABBCC = Guerilla.ReadBlockArray<AnimationTransitionBlock>(binaryReader);
+            highPrecacheCCCCC = Guerilla.ReadBlockArray<PrecacheListBlock>(binaryReader);
+            lowPrecacheCCCCC = Guerilla.ReadBlockArray<PrecacheListBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  WeaponTypeBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            actionsAABBCC = ReadBlockArrayData<AnimationEntryBlock>(binaryReader, blamPointers.Dequeue());
-            overlaysAABBCC = ReadBlockArrayData<AnimationEntryBlock>(binaryReader, blamPointers.Dequeue());
-            deathAndDamageAABBCC = ReadBlockArrayData<DamageAnimationBlock>(binaryReader, blamPointers.Dequeue());
-            transitionsAABBCC = ReadBlockArrayData<AnimationTransitionBlock>(binaryReader, blamPointers.Dequeue());
-            highPrecacheCCCCC = ReadBlockArrayData<PrecacheListBlock>(binaryReader, blamPointers.Dequeue());
-            lowPrecacheCCCCC = ReadBlockArrayData<PrecacheListBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            label = binaryReader.ReadStringID();
+            actionsAABBCC = Guerilla.ReadBlockArray<AnimationEntryBlock>(binaryReader);
+            overlaysAABBCC = Guerilla.ReadBlockArray<AnimationEntryBlock>(binaryReader);
+            deathAndDamageAABBCC = Guerilla.ReadBlockArray<DamageAnimationBlock>(binaryReader);
+            transitionsAABBCC = Guerilla.ReadBlockArray<AnimationTransitionBlock>(binaryReader);
+            highPrecacheCCCCC = Guerilla.ReadBlockArray<PrecacheListBlock>(binaryReader);
+            lowPrecacheCCCCC = Guerilla.ReadBlockArray<PrecacheListBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(label);
                 nextAddress = Guerilla.WriteBlockArray<AnimationEntryBlock>(binaryWriter, actionsAABBCC, nextAddress);

@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalGeometryRawPointBlock : GlobalGeometryRawPointBlockBase
     {
-        public GlobalGeometryRawPointBlock() : base()
+        public  GlobalGeometryRawPointBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  GlobalGeometryRawPointBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 68, Alignment = 4)]
@@ -25,45 +28,37 @@ namespace Moonfish.Guerilla.Tags
         internal NodeIndicesNEW[] nodeIndicesNEW;
         internal int useNewNodeIndices;
         internal int adjustedCompoundNodeIndex;
-        public override int SerializedSize { get { return 68; } }
-        public override int Alignment { get { return 4; } }
-        public GlobalGeometryRawPointBlockBase() : base()
+        
+        public override int SerializedSize{get { return 68; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  GlobalGeometryRawPointBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             position = binaryReader.ReadVector3();
-            nodeIndicesOLD = new []{ new NodeIndicesOLD(), new NodeIndicesOLD(), new NodeIndicesOLD(), new NodeIndicesOLD() };
-            blamPointers.Concat(nodeIndicesOLD[0].ReadFields(binaryReader));
-            blamPointers.Concat(nodeIndicesOLD[1].ReadFields(binaryReader));
-            blamPointers.Concat(nodeIndicesOLD[2].ReadFields(binaryReader));
-            blamPointers.Concat(nodeIndicesOLD[3].ReadFields(binaryReader));
-            nodeWeights = new []{ new NodeWeights(), new NodeWeights(), new NodeWeights(), new NodeWeights() };
-            blamPointers.Concat(nodeWeights[0].ReadFields(binaryReader));
-            blamPointers.Concat(nodeWeights[1].ReadFields(binaryReader));
-            blamPointers.Concat(nodeWeights[2].ReadFields(binaryReader));
-            blamPointers.Concat(nodeWeights[3].ReadFields(binaryReader));
-            nodeIndicesNEW = new []{ new NodeIndicesNEW(), new NodeIndicesNEW(), new NodeIndicesNEW(), new NodeIndicesNEW() };
-            blamPointers.Concat(nodeIndicesNEW[0].ReadFields(binaryReader));
-            blamPointers.Concat(nodeIndicesNEW[1].ReadFields(binaryReader));
-            blamPointers.Concat(nodeIndicesNEW[2].ReadFields(binaryReader));
-            blamPointers.Concat(nodeIndicesNEW[3].ReadFields(binaryReader));
+            nodeIndicesOLD = new []{ new NodeIndicesOLD(binaryReader), new NodeIndicesOLD(binaryReader), new NodeIndicesOLD(binaryReader), new NodeIndicesOLD(binaryReader),  };
+            nodeWeights = new []{ new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader),  };
+            nodeIndicesNEW = new []{ new NodeIndicesNEW(binaryReader), new NodeIndicesNEW(binaryReader), new NodeIndicesNEW(binaryReader), new NodeIndicesNEW(binaryReader),  };
             useNewNodeIndices = binaryReader.ReadInt32();
             adjustedCompoundNodeIndex = binaryReader.ReadInt32();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  GlobalGeometryRawPointBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            nodeIndicesOLD = ReadBlockArrayData<NodeIndicesOLD>(binaryReader, blamPointers.Dequeue());
-            nodeWeights = ReadBlockArrayData<NodeWeights>(binaryReader, blamPointers.Dequeue());
-            nodeIndicesNEW = ReadBlockArrayData<NodeIndicesNEW>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            position = binaryReader.ReadVector3();
+            nodeIndicesOLD = new []{ new NodeIndicesOLD(binaryReader), new NodeIndicesOLD(binaryReader), new NodeIndicesOLD(binaryReader), new NodeIndicesOLD(binaryReader),  };
+            nodeWeights = new []{ new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader), new NodeWeights(binaryReader),  };
+            nodeIndicesNEW = new []{ new NodeIndicesNEW(binaryReader), new NodeIndicesNEW(binaryReader), new NodeIndicesNEW(binaryReader), new NodeIndicesNEW(binaryReader),  };
+            useNewNodeIndices = binaryReader.ReadInt32();
+            adjustedCompoundNodeIndex = binaryReader.ReadInt32();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(position);
                 nodeIndicesOLD[0].Write(binaryWriter);
@@ -87,25 +82,27 @@ using(binaryWriter.BaseStream.Pin())
         public class NodeIndicesOLD : GuerillaBlock
         {
             internal int nodeIndexOLD;
-            public override int SerializedSize { get { return 4; } }
-            public override int Alignment { get { return 1; } }
-            public NodeIndicesOLD() : base()
+            
+            public override int SerializedSize{get { return 4; }}
+            
+            
+            public override int Alignment{get { return 1; }}
+            
+            public  NodeIndicesOLD(BinaryReader binaryReader): base(binaryReader)
             {
-            }
-            public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-            {
-                var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
                 nodeIndexOLD = binaryReader.ReadInt32();
-                return blamPointers;
             }
-            public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+            public  NodeIndicesOLD(): base()
             {
-                base.ReadPointers(binaryReader, blamPointers);
+                
             }
-            public override int Write(BinaryWriter binaryWriter, int nextAddress)
+            public override void Read(BinaryReader binaryReader)
             {
-                base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+                nodeIndexOLD = binaryReader.ReadInt32();
+            }
+            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+            {
+                using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(nodeIndexOLD);
                     return nextAddress;
@@ -116,25 +113,27 @@ using(binaryWriter.BaseStream.Pin())
         public class NodeWeights : GuerillaBlock
         {
             internal float nodeWeight;
-            public override int SerializedSize { get { return 4; } }
-            public override int Alignment { get { return 1; } }
-            public NodeWeights() : base()
+            
+            public override int SerializedSize{get { return 4; }}
+            
+            
+            public override int Alignment{get { return 1; }}
+            
+            public  NodeWeights(BinaryReader binaryReader): base(binaryReader)
             {
-            }
-            public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-            {
-                var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
                 nodeWeight = binaryReader.ReadSingle();
-                return blamPointers;
             }
-            public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+            public  NodeWeights(): base()
             {
-                base.ReadPointers(binaryReader, blamPointers);
+                
             }
-            public override int Write(BinaryWriter binaryWriter, int nextAddress)
+            public override void Read(BinaryReader binaryReader)
             {
-                base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+                nodeWeight = binaryReader.ReadSingle();
+            }
+            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+            {
+                using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(nodeWeight);
                     return nextAddress;
@@ -145,25 +144,27 @@ using(binaryWriter.BaseStream.Pin())
         public class NodeIndicesNEW : GuerillaBlock
         {
             internal int nodeIndexNEW;
-            public override int SerializedSize { get { return 4; } }
-            public override int Alignment { get { return 1; } }
-            public NodeIndicesNEW() : base()
+            
+            public override int SerializedSize{get { return 4; }}
+            
+            
+            public override int Alignment{get { return 1; }}
+            
+            public  NodeIndicesNEW(BinaryReader binaryReader): base(binaryReader)
             {
-            }
-            public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-            {
-                var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
                 nodeIndexNEW = binaryReader.ReadInt32();
-                return blamPointers;
             }
-            public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+            public  NodeIndicesNEW(): base()
             {
-                base.ReadPointers(binaryReader, blamPointers);
+                
             }
-            public override int Write(BinaryWriter binaryWriter, int nextAddress)
+            public override void Read(BinaryReader binaryReader)
             {
-                base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+                nodeIndexNEW = binaryReader.ReadInt32();
+            }
+            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+            {
+                using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(nodeIndexNEW);
                     return nextAddress;

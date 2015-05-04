@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class HudBitmapWidgets : HudBitmapWidgetsBase
     {
-        public HudBitmapWidgets() : base()
+        public  HudBitmapWidgets(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  HudBitmapWidgets(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 100, Alignment = 4)]
@@ -41,19 +44,17 @@ namespace Moonfish.Guerilla.Tags
         internal HudWidgetEffectBlock[] effect;
         internal SpecialHudType specialHudType;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 100; } }
-        public override int Alignment { get { return 4; } }
-        public HudBitmapWidgetsBase() : base()
+        
+        public override int SerializedSize{get { return 100; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  HudBitmapWidgetsBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
-            hudWidgetInputsStruct = new HudWidgetInputsStructBlock();
-            blamPointers.Concat(hudWidgetInputsStruct.ReadFields(binaryReader));
-            hudWidgetStateDefinitionStruct = new HudWidgetStateDefinitionStructBlock();
-            blamPointers.Concat(hudWidgetStateDefinitionStruct.ReadFields(binaryReader));
+            hudWidgetInputsStruct = new HudWidgetInputsStructBlock(binaryReader);
+            hudWidgetStateDefinitionStruct = new HudWidgetStateDefinitionStructBlock(binaryReader);
             anchor = (Anchor)binaryReader.ReadInt16();
             flags = (Flags)binaryReader.ReadInt16();
             bitmap = binaryReader.ReadTagReference();
@@ -68,25 +69,40 @@ namespace Moonfish.Guerilla.Tags
             fullscreenRegistrationPoint = binaryReader.ReadVector2();
             halfscreenRegistrationPoint = binaryReader.ReadVector2();
             quarterscreenRegistrationPoint = binaryReader.ReadVector2();
-            blamPointers.Enqueue(ReadBlockArrayPointer<HudWidgetEffectBlock>(binaryReader));
+            effect = Guerilla.ReadBlockArray<HudWidgetEffectBlock>(binaryReader);
             specialHudType = (SpecialHudType)binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  HudBitmapWidgetsBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            hudWidgetInputsStruct.ReadPointers(binaryReader, blamPointers);
-            hudWidgetStateDefinitionStruct.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            effect = ReadBlockArrayData<HudWidgetEffectBlock>(binaryReader, blamPointers.Dequeue());
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadStringID();
+            hudWidgetInputsStruct = new HudWidgetInputsStructBlock(binaryReader);
+            hudWidgetStateDefinitionStruct = new HudWidgetStateDefinitionStructBlock(binaryReader);
+            anchor = (Anchor)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            bitmap = binaryReader.ReadTagReference();
+            shader = binaryReader.ReadTagReference();
+            fullscreenSequenceIndex = binaryReader.ReadByte();
+            halfscreenSequenceIndex = binaryReader.ReadByte();
+            quarterscreenSequenceIndex = binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes(1);
+            fullscreenOffset = binaryReader.ReadPoint();
+            halfscreenOffset = binaryReader.ReadPoint();
+            quarterscreenOffset = binaryReader.ReadPoint();
+            fullscreenRegistrationPoint = binaryReader.ReadVector2();
+            halfscreenRegistrationPoint = binaryReader.ReadVector2();
+            quarterscreenRegistrationPoint = binaryReader.ReadVector2();
+            effect = Guerilla.ReadBlockArray<HudWidgetEffectBlock>(binaryReader);
+            specialHudType = (SpecialHudType)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 hudWidgetInputsStruct.Write(binaryWriter);

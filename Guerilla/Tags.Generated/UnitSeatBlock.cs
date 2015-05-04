@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class UnitSeatBlock : UnitSeatBlockBase
     {
-        public UnitSeatBlock() : base()
+        public  UnitSeatBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  UnitSeatBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 176, Alignment = 4)]
@@ -69,14 +72,14 @@ namespace Moonfish.Guerilla.Tags
         internal float maximumRelativeVelocity;
         internal Moonfish.Tags.StringIdent invisibleSeatRegion;
         internal int runtimeInvisibleSeatRegionIndex;
-        public override int SerializedSize { get { return 176; } }
-        public override int Alignment { get { return 4; } }
-        public UnitSeatBlockBase() : base()
+        
+        public override int SerializedSize{get { return 176; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  UnitSeatBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             label = binaryReader.ReadStringID();
             markerName = binaryReader.ReadStringID();
@@ -86,8 +89,7 @@ namespace Moonfish.Guerilla.Tags
             boardingMeleeString = binaryReader.ReadStringID();
             pingScale = binaryReader.ReadSingle();
             turnoverTimeSeconds = binaryReader.ReadSingle();
-            acceleration = new UnitSeatAccelerationStructBlock();
-            blamPointers.Concat(acceleration.ReadFields(binaryReader));
+            acceleration = new UnitSeatAccelerationStructBlock(binaryReader);
             aIScariness = binaryReader.ReadSingle();
             aiSeatType = (AiSeatType)binaryReader.ReadInt16();
             boardingSeat = binaryReader.ReadShortBlockIndex1();
@@ -97,9 +99,8 @@ namespace Moonfish.Guerilla.Tags
             minSpeedReference = binaryReader.ReadSingle();
             maxSpeedReference = binaryReader.ReadSingle();
             speedExponent = binaryReader.ReadSingle();
-            unitCamera = new UnitCameraStructBlock();
-            blamPointers.Concat(unitCamera.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<UnitHudReferenceBlock>(binaryReader));
+            unitCamera = new UnitCameraStructBlock(binaryReader);
+            unitHudInterface = Guerilla.ReadBlockArray<UnitHudReferenceBlock>(binaryReader);
             enterSeatString = binaryReader.ReadStringID();
             yawMinimum = binaryReader.ReadSingle();
             yawMaximum = binaryReader.ReadSingle();
@@ -110,19 +111,48 @@ namespace Moonfish.Guerilla.Tags
             maximumRelativeVelocity = binaryReader.ReadSingle();
             invisibleSeatRegion = binaryReader.ReadStringID();
             runtimeInvisibleSeatRegionIndex = binaryReader.ReadInt32();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  UnitSeatBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            acceleration.ReadPointers(binaryReader, blamPointers);
-            unitCamera.ReadPointers(binaryReader, blamPointers);
-            unitHudInterface = ReadBlockArrayData<UnitHudReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt32();
+            label = binaryReader.ReadStringID();
+            markerName = binaryReader.ReadStringID();
+            entryMarkerSName = binaryReader.ReadStringID();
+            boardingGrenadeMarker = binaryReader.ReadStringID();
+            boardingGrenadeString = binaryReader.ReadStringID();
+            boardingMeleeString = binaryReader.ReadStringID();
+            pingScale = binaryReader.ReadSingle();
+            turnoverTimeSeconds = binaryReader.ReadSingle();
+            acceleration = new UnitSeatAccelerationStructBlock(binaryReader);
+            aIScariness = binaryReader.ReadSingle();
+            aiSeatType = (AiSeatType)binaryReader.ReadInt16();
+            boardingSeat = binaryReader.ReadShortBlockIndex1();
+            listenerInterpolationFactor = binaryReader.ReadSingle();
+            yawRateBoundsDegreesPerSecond = binaryReader.ReadRange();
+            pitchRateBoundsDegreesPerSecond = binaryReader.ReadRange();
+            minSpeedReference = binaryReader.ReadSingle();
+            maxSpeedReference = binaryReader.ReadSingle();
+            speedExponent = binaryReader.ReadSingle();
+            unitCamera = new UnitCameraStructBlock(binaryReader);
+            unitHudInterface = Guerilla.ReadBlockArray<UnitHudReferenceBlock>(binaryReader);
+            enterSeatString = binaryReader.ReadStringID();
+            yawMinimum = binaryReader.ReadSingle();
+            yawMaximum = binaryReader.ReadSingle();
+            builtInGunner = binaryReader.ReadTagReference();
+            entryRadius = binaryReader.ReadSingle();
+            entryMarkerConeAngle = binaryReader.ReadSingle();
+            entryMarkerFacingAngle = binaryReader.ReadSingle();
+            maximumRelativeVelocity = binaryReader.ReadSingle();
+            invisibleSeatRegion = binaryReader.ReadStringID();
+            runtimeInvisibleSeatRegionIndex = binaryReader.ReadInt32();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(label);

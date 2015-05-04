@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AntiGravityPointDefinitionBlock : AntiGravityPointDefinitionBlockBase
     {
-        public AntiGravityPointDefinitionBlock() : base()
+        public  AntiGravityPointDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AntiGravityPointDefinitionBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 76, Alignment = 4)]
@@ -37,14 +40,14 @@ namespace Moonfish.Guerilla.Tags
         internal float mediumDamageError;
         internal float majorDamageError;
         internal float destroyedStateError;
-        public override int SerializedSize { get { return 76; } }
-        public override int Alignment { get { return 4; } }
-        public AntiGravityPointDefinitionBlockBase() : base()
+        
+        public override int SerializedSize{get { return 76; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AntiGravityPointDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             markerName = binaryReader.ReadStringID();
             flags = (Flags)binaryReader.ReadInt32();
             antigravStrength = binaryReader.ReadSingle();
@@ -63,32 +66,35 @@ namespace Moonfish.Guerilla.Tags
             mediumDamageError = binaryReader.ReadSingle();
             majorDamageError = binaryReader.ReadSingle();
             destroyedStateError = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  AntiGravityPointDefinitionBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_[4].ReadPointers(binaryReader, blamPointers);
-            invalidName_[5].ReadPointers(binaryReader, blamPointers);
-            invalidName_[6].ReadPointers(binaryReader, blamPointers);
-            invalidName_[7].ReadPointers(binaryReader, blamPointers);
-            invalidName_[8].ReadPointers(binaryReader, blamPointers);
-            invalidName_[9].ReadPointers(binaryReader, blamPointers);
-            invalidName_[10].ReadPointers(binaryReader, blamPointers);
-            invalidName_[11].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            markerName = binaryReader.ReadStringID();
+            flags = (Flags)binaryReader.ReadInt32();
+            antigravStrength = binaryReader.ReadSingle();
+            antigravOffset = binaryReader.ReadSingle();
+            antigravHeight = binaryReader.ReadSingle();
+            antigravDampFactor = binaryReader.ReadSingle();
+            antigravNormalK1 = binaryReader.ReadSingle();
+            antigravNormalK0 = binaryReader.ReadSingle();
+            radius = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(12);
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(2);
+            damageSourceRegionName = binaryReader.ReadStringID();
+            defaultStateError = binaryReader.ReadSingle();
+            minorDamageError = binaryReader.ReadSingle();
+            mediumDamageError = binaryReader.ReadSingle();
+            majorDamageError = binaryReader.ReadSingle();
+            destroyedStateError = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(markerName);
                 binaryWriter.Write((Int32)flags);

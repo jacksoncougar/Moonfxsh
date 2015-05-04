@@ -5,41 +5,45 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GameGlobalsDamageBlock : GameGlobalsDamageBlockBase
     {
-        public GameGlobalsDamageBlock() : base()
+        public  GameGlobalsDamageBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  GameGlobalsDamageBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class GameGlobalsDamageBlockBase : GuerillaBlock
     {
         internal DamageGroupBlock[] damageGroups;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
-        public GameGlobalsDamageBlockBase() : base()
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  GameGlobalsDamageBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            damageGroups = Guerilla.ReadBlockArray<DamageGroupBlock>(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  GameGlobalsDamageBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<DamageGroupBlock>(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            damageGroups = ReadBlockArrayData<DamageGroupBlock>(binaryReader, blamPointers.Dequeue());
+            damageGroups = Guerilla.ReadBlockArray<DamageGroupBlock>(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<DamageGroupBlock>(binaryWriter, damageGroups, nextAddress);
                 return nextAddress;

@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CollisionModelBspBlock : CollisionModelBspBlockBase
     {
-        public CollisionModelBspBlock() : base()
+        public  CollisionModelBspBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CollisionModelBspBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 68, Alignment = 4)]
@@ -22,31 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal short nodeIndex;
         internal byte[] invalidName_;
         internal GlobalCollisionBspStructBlock bsp;
-        public override int SerializedSize { get { return 68; } }
-        public override int Alignment { get { return 4; } }
-        public CollisionModelBspBlockBase() : base()
+        
+        public override int SerializedSize{get { return 68; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CollisionModelBspBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             nodeIndex = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            bsp = new GlobalCollisionBspStructBlock();
-            blamPointers.Concat(bsp.ReadFields(binaryReader));
-            return blamPointers;
+            bsp = new GlobalCollisionBspStructBlock(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  CollisionModelBspBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            bsp.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            nodeIndex = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            bsp = new GlobalCollisionBspStructBlock(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(nodeIndex);
                 binaryWriter.Write(invalidName_, 0, 2);

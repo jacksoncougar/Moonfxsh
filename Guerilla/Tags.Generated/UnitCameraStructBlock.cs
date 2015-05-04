@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class UnitCameraStructBlock : UnitCameraStructBlockBase
     {
-        public UnitCameraStructBlock() : base()
+        public  UnitCameraStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  UnitCameraStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 28, Alignment = 4)]
@@ -24,30 +27,35 @@ namespace Moonfish.Guerilla.Tags
         internal float pitchAutoLevel;
         internal Moonfish.Model.Range pitchRange;
         internal UnitCameraTrackBlock[] cameraTracks;
-        public override int SerializedSize { get { return 28; } }
-        public override int Alignment { get { return 4; } }
-        public UnitCameraStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 28; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  UnitCameraStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             cameraMarkerName = binaryReader.ReadStringID();
             cameraSubmergedMarkerName = binaryReader.ReadStringID();
             pitchAutoLevel = binaryReader.ReadSingle();
             pitchRange = binaryReader.ReadRange();
-            blamPointers.Enqueue(ReadBlockArrayPointer<UnitCameraTrackBlock>(binaryReader));
-            return blamPointers;
+            cameraTracks = Guerilla.ReadBlockArray<UnitCameraTrackBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  UnitCameraStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            cameraTracks = ReadBlockArrayData<UnitCameraTrackBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            cameraMarkerName = binaryReader.ReadStringID();
+            cameraSubmergedMarkerName = binaryReader.ReadStringID();
+            pitchAutoLevel = binaryReader.ReadSingle();
+            pitchRange = binaryReader.ReadRange();
+            cameraTracks = Guerilla.ReadBlockArray<UnitCameraTrackBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(cameraMarkerName);
                 binaryWriter.Write(cameraSubmergedMarkerName);

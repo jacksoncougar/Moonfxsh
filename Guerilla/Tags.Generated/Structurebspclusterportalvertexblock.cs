@@ -5,40 +5,45 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureBspClusterPortalVertexBlock : StructureBspClusterPortalVertexBlockBase
     {
-        public StructureBspClusterPortalVertexBlock() : base()
+        public  StructureBspClusterPortalVertexBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StructureBspClusterPortalVertexBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 12, Alignment = 4)]
     public class StructureBspClusterPortalVertexBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector3 point;
-        public override int SerializedSize { get { return 12; } }
-        public override int Alignment { get { return 4; } }
-        public StructureBspClusterPortalVertexBlockBase() : base()
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StructureBspClusterPortalVertexBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             point = binaryReader.ReadVector3();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  StructureBspClusterPortalVertexBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            point = binaryReader.ReadVector3();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(point);
                 return nextAddress;

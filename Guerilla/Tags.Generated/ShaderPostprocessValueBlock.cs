@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPostprocessValueBlock : ShaderPostprocessValueBlockBase
     {
-        public ShaderPostprocessValueBlock() : base()
+        public  ShaderPostprocessValueBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderPostprocessValueBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 5, Alignment = 4)]
@@ -21,26 +24,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal byte parameterIndex;
         internal float value;
-        public override int SerializedSize { get { return 5; } }
-        public override int Alignment { get { return 4; } }
-        public ShaderPostprocessValueBlockBase() : base()
+        
+        public override int SerializedSize{get { return 5; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderPostprocessValueBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             parameterIndex = binaryReader.ReadByte();
             value = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ShaderPostprocessValueBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            parameterIndex = binaryReader.ReadByte();
+            value = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(parameterIndex);
                 binaryWriter.Write(value);

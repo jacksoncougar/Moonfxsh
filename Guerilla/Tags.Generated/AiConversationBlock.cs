@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AiConversationBlock : AiConversationBlockBase
     {
-        public AiConversationBlock() : base()
+        public  AiConversationBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AiConversationBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 104, Alignment = 4)]
@@ -34,74 +37,43 @@ namespace Moonfish.Guerilla.Tags
         internal AiConversationParticipantBlock[] participants;
         internal AiConversationLineBlock[] lines;
         internal GNullBlock[] gNullBlock;
-        public override int SerializedSize { get { return 104; } }
-        public override int Alignment { get { return 4; } }
-        public AiConversationBlockBase() : base()
+        
+        public override int SerializedSize{get { return 104; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AiConversationBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             triggerDistanceWorldUnits = binaryReader.ReadSingle();
             runToPlayerDistWorldUnits = binaryReader.ReadSingle();
             invalidName_0 = binaryReader.ReadBytes(36);
-            blamPointers.Enqueue(ReadBlockArrayPointer<AiConversationParticipantBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<AiConversationLineBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<GNullBlock>(binaryReader));
-            return blamPointers;
+            participants = Guerilla.ReadBlockArray<AiConversationParticipantBlock>(binaryReader);
+            lines = Guerilla.ReadBlockArray<AiConversationLineBlock>(binaryReader);
+            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  AiConversationBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[4].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[5].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[6].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[7].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[8].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[9].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[10].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[11].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[12].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[13].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[14].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[15].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[16].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[17].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[18].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[19].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[20].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[21].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[22].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[23].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[24].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[25].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[26].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[27].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[28].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[29].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[30].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[31].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[32].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[33].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[34].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[35].ReadPointers(binaryReader, blamPointers);
-            participants = ReadBlockArrayData<AiConversationParticipantBlock>(binaryReader, blamPointers.Dequeue());
-            lines = ReadBlockArrayData<AiConversationLineBlock>(binaryReader, blamPointers.Dequeue());
-            gNullBlock = ReadBlockArrayData<GNullBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadString32();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            triggerDistanceWorldUnits = binaryReader.ReadSingle();
+            runToPlayerDistWorldUnits = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(36);
+            participants = Guerilla.ReadBlockArray<AiConversationParticipantBlock>(binaryReader);
+            lines = Guerilla.ReadBlockArray<AiConversationLineBlock>(binaryReader);
+            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write((Int16)flags);

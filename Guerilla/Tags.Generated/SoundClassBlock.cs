@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SoundClassBlock : SoundClassBlockBase
     {
-        public SoundClassBlock() : base()
+        public  SoundClassBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SoundClassBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 92, Alignment = 4)]
@@ -62,14 +65,14 @@ namespace Moonfish.Guerilla.Tags
         internal float transmissionMultiplier;
         internal float obstructionMaxBend;
         internal float occlusionMaxBend;
-        public override int SerializedSize { get { return 92; } }
-        public override int Alignment { get { return 4; } }
-        public SoundClassBlockBase() : base()
+        
+        public override int SerializedSize{get { return 92; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundClassBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             maxSoundsPerTag116 = binaryReader.ReadInt16();
             maxSoundsPerObject116 = binaryReader.ReadInt16();
             preemptionTimeMs = binaryReader.ReadInt32();
@@ -95,19 +98,42 @@ namespace Moonfish.Guerilla.Tags
             transmissionMultiplier = binaryReader.ReadSingle();
             obstructionMaxBend = binaryReader.ReadSingle();
             occlusionMaxBend = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  SoundClassBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            maxSoundsPerTag116 = binaryReader.ReadInt16();
+            maxSoundsPerObject116 = binaryReader.ReadInt16();
+            preemptionTimeMs = binaryReader.ReadInt32();
+            internalFlags = (InternalFlags)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt16();
+            priority = binaryReader.ReadInt16();
+            cacheMissMode = (CacheMissMode)binaryReader.ReadInt16();
+            reverbGainDB = binaryReader.ReadSingle();
+            overrideSpeakerGainDB = binaryReader.ReadSingle();
+            distanceBounds = binaryReader.ReadRange();
+            gainBoundsDB = binaryReader.ReadRange();
+            cutsceneDuckingDB = binaryReader.ReadSingle();
+            cutsceneDuckingFadeInTimeSeconds = binaryReader.ReadSingle();
+            cutsceneDuckingSustainTimeSeconds = binaryReader.ReadSingle();
+            cutsceneDuckingFadeOutTimeSeconds = binaryReader.ReadSingle();
+            scriptedDialogDuckingDB = binaryReader.ReadSingle();
+            scriptedDialogDuckingFadeInTimeSeconds = binaryReader.ReadSingle();
+            scriptedDialogDuckingSustainTimeSeconds = binaryReader.ReadSingle();
+            scriptedDialogDuckingFadeOutTimeSeconds = binaryReader.ReadSingle();
+            dopplerFactor = binaryReader.ReadSingle();
+            stereoPlaybackType = (StereoPlaybackType)binaryReader.ReadByte();
+            invalidName_ = binaryReader.ReadBytes(3);
+            transmissionMultiplier = binaryReader.ReadSingle();
+            obstructionMaxBend = binaryReader.ReadSingle();
+            occlusionMaxBend = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(maxSoundsPerTag116);
                 binaryWriter.Write(maxSoundsPerObject116);

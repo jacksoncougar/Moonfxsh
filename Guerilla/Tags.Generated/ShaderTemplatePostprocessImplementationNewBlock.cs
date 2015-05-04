@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderTemplatePostprocessImplementationNewBlock : ShaderTemplatePostprocessImplementationNewBlockBase
     {
-        public ShaderTemplatePostprocessImplementationNewBlock() : base()
+        public  ShaderTemplatePostprocessImplementationNewBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderTemplatePostprocessImplementationNewBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 6, Alignment = 4)]
@@ -22,33 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal TagBlockIndexStructBlock bitmaps;
         internal TagBlockIndexStructBlock pixelConstants;
         internal TagBlockIndexStructBlock vertexConstants;
-        public override int SerializedSize { get { return 6; } }
-        public override int Alignment { get { return 4; } }
-        public ShaderTemplatePostprocessImplementationNewBlockBase() : base()
+        
+        public override int SerializedSize{get { return 6; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderTemplatePostprocessImplementationNewBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            bitmaps = new TagBlockIndexStructBlock(binaryReader);
+            pixelConstants = new TagBlockIndexStructBlock(binaryReader);
+            vertexConstants = new TagBlockIndexStructBlock(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  ShaderTemplatePostprocessImplementationNewBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            bitmaps = new TagBlockIndexStructBlock();
-            blamPointers.Concat(bitmaps.ReadFields(binaryReader));
-            pixelConstants = new TagBlockIndexStructBlock();
-            blamPointers.Concat(pixelConstants.ReadFields(binaryReader));
-            vertexConstants = new TagBlockIndexStructBlock();
-            blamPointers.Concat(vertexConstants.ReadFields(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            bitmaps.ReadPointers(binaryReader, blamPointers);
-            pixelConstants.ReadPointers(binaryReader, blamPointers);
-            vertexConstants.ReadPointers(binaryReader, blamPointers);
+            bitmaps = new TagBlockIndexStructBlock(binaryReader);
+            pixelConstants = new TagBlockIndexStructBlock(binaryReader);
+            vertexConstants = new TagBlockIndexStructBlock(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 bitmaps.Write(binaryWriter);
                 pixelConstants.Write(binaryWriter);

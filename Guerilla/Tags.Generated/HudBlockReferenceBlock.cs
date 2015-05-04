@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class HudBlockReferenceBlock : HudBlockReferenceBlockBase
     {
-        public HudBlockReferenceBlock() : base()
+        public  HudBlockReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  HudBlockReferenceBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 36, Alignment = 4)]
@@ -29,14 +32,14 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("shad")]
         internal Moonfish.Tags.TagReference shader;
         internal OpenTK.Vector2 bounds;
-        public override int SerializedSize { get { return 36; } }
-        public override int Alignment { get { return 4; } }
-        public HudBlockReferenceBlockBase() : base()
+        
+        public override int SerializedSize{get { return 36; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  HudBlockReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             animationIndex = (AnimationIndex)binaryReader.ReadInt16();
             introAnimationDelayMilliseconds = binaryReader.ReadInt16();
@@ -45,16 +48,25 @@ namespace Moonfish.Guerilla.Tags
             bitmap = binaryReader.ReadTagReference();
             shader = binaryReader.ReadTagReference();
             bounds = binaryReader.ReadVector2();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  HudBlockReferenceBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt32();
+            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
+            renderDepthBias = binaryReader.ReadInt16();
+            startingBitmapSequenceIndex = binaryReader.ReadInt16();
+            bitmap = binaryReader.ReadTagReference();
+            shader = binaryReader.ReadTagReference();
+            bounds = binaryReader.ReadVector2();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write((Int16)animationIndex);

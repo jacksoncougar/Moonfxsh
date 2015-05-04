@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class UnitSeatAccelerationStructBlock : UnitSeatAccelerationStructBlockBase
     {
-        public UnitSeatAccelerationStructBlock() : base()
+        public  UnitSeatAccelerationStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  UnitSeatAccelerationStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -22,27 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 accelerationRangeWorldUnitsPerSecondSquared;
         internal float accelActionScaleActionsFail01;
         internal float accelAttachScaleDetachUnit01;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
-        public UnitSeatAccelerationStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  UnitSeatAccelerationStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             accelerationRangeWorldUnitsPerSecondSquared = binaryReader.ReadVector3();
             accelActionScaleActionsFail01 = binaryReader.ReadSingle();
             accelAttachScaleDetachUnit01 = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  UnitSeatAccelerationStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            accelerationRangeWorldUnitsPerSecondSquared = binaryReader.ReadVector3();
+            accelActionScaleActionsFail01 = binaryReader.ReadSingle();
+            accelAttachScaleDetachUnit01 = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(accelerationRangeWorldUnitsPerSecondSquared);
                 binaryWriter.Write(accelActionScaleActionsFail01);

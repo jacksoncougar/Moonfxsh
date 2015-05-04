@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class TableViewListRowReferenceBlock : TableViewListRowReferenceBlockBase
     {
-        public TableViewListRowReferenceBlock() : base()
+        public  TableViewListRowReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  TableViewListRowReferenceBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -23,31 +26,33 @@ namespace Moonfish.Guerilla.Tags
         internal short rowHeight;
         internal byte[] invalidName_;
         internal TableViewListItemReferenceBlock[] rowCells;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
-        public TableViewListRowReferenceBlockBase() : base()
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  TableViewListRowReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             rowHeight = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            blamPointers.Enqueue(ReadBlockArrayPointer<TableViewListItemReferenceBlock>(binaryReader));
-            return blamPointers;
+            rowCells = Guerilla.ReadBlockArray<TableViewListItemReferenceBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  TableViewListRowReferenceBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            rowCells = ReadBlockArrayData<TableViewListItemReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt32();
+            rowHeight = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            rowCells = Guerilla.ReadBlockArray<TableViewListItemReferenceBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(rowHeight);

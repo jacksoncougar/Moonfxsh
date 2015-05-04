@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ObjectAttachmentBlock : ObjectAttachmentBlockBase
     {
-        public ObjectAttachmentBlock() : base()
+        public  ObjectAttachmentBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ObjectAttachmentBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -26,32 +29,37 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal Moonfish.Tags.StringIdent primaryScale;
         internal Moonfish.Tags.StringIdent secondaryScale;
-        public override int SerializedSize { get { return 24; } }
-        public override int Alignment { get { return 4; } }
-        public ObjectAttachmentBlockBase() : base()
+        
+        public override int SerializedSize{get { return 24; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ObjectAttachmentBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             type = binaryReader.ReadTagReference();
             marker = binaryReader.ReadStringID();
             changeColor = (ChangeColor)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             primaryScale = binaryReader.ReadStringID();
             secondaryScale = binaryReader.ReadStringID();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ObjectAttachmentBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            type = binaryReader.ReadTagReference();
+            marker = binaryReader.ReadStringID();
+            changeColor = (ChangeColor)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            primaryScale = binaryReader.ReadStringID();
+            secondaryScale = binaryReader.ReadStringID();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(type);
                 binaryWriter.Write(marker);

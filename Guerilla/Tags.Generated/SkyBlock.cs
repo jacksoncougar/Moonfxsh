@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("sky ")]
     public partial class SkyBlock : SkyBlockBase
     {
-        public SkyBlock() : base()
+        public  SkyBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SkyBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 172, Alignment = 4)]
@@ -45,12 +48,12 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// Indoor ambient light color.
         /// </summary>
-        internal Moonfish.Tags.ColourR8G8B8 indoorAmbientColor;
+        internal Moonfish.Tags.ColourR8G8B8 IndoorAmbientColour;
         internal byte[] invalidName_;
         /// <summary>
         /// Indoor ambient light color.
         /// </summary>
-        internal Moonfish.Tags.ColourR8G8B8 outdoorAmbientColor;
+        internal Moonfish.Tags.ColourR8G8B8 OutdoorAmbientColour;
         internal byte[] invalidName_0;
         /// <summary>
         /// How far fog spreads into adjacent clusters.
@@ -69,78 +72,76 @@ namespace Moonfish.Guerilla.Tags
         internal SkyShaderFunctionBlock[] shaderFunctions;
         internal SkyAnimationBlock[] animations;
         internal byte[] invalidName_1;
-        internal Moonfish.Tags.ColourR8G8B8 clearColor;
-        public override int SerializedSize { get { return 172; } }
-        public override int Alignment { get { return 4; } }
-        public SkyBlockBase() : base()
+        internal Moonfish.Tags.ColourR8G8B8 ClearColour;
+        
+        public override int SerializedSize{get { return 172; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SkyBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             renderModel = binaryReader.ReadTagReference();
             animationGraph = binaryReader.ReadTagReference();
             flags = (Flags)binaryReader.ReadInt32();
             renderModelScale = binaryReader.ReadSingle();
             movementScale = binaryReader.ReadSingle();
-            blamPointers.Enqueue(ReadBlockArrayPointer<SkyCubemapBlock>(binaryReader));
-            indoorAmbientColor = binaryReader.ReadColorR8G8B8();
+            cubeMap = Guerilla.ReadBlockArray<SkyCubemapBlock>(binaryReader);
+            IndoorAmbientColour = binaryReader.ReadColorR8G8B8();
             invalidName_ = binaryReader.ReadBytes(4);
-            outdoorAmbientColor = binaryReader.ReadColorR8G8B8();
+            OutdoorAmbientColour = binaryReader.ReadColorR8G8B8();
             invalidName_0 = binaryReader.ReadBytes(4);
             fogSpreadDistanceWorldUnits = binaryReader.ReadSingle();
-            blamPointers.Enqueue(ReadBlockArrayPointer<SkyAtmosphericFogBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<SkyAtmosphericFogBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<SkyFogBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<SkyPatchyFogBlock>(binaryReader));
+            atmosphericFog = Guerilla.ReadBlockArray<SkyAtmosphericFogBlock>(binaryReader);
+            secondaryFog = Guerilla.ReadBlockArray<SkyAtmosphericFogBlock>(binaryReader);
+            skyFog = Guerilla.ReadBlockArray<SkyFogBlock>(binaryReader);
+            patchyFog = Guerilla.ReadBlockArray<SkyPatchyFogBlock>(binaryReader);
             amount01 = binaryReader.ReadSingle();
             threshold01 = binaryReader.ReadSingle();
             brightness01 = binaryReader.ReadSingle();
             gammaPower = binaryReader.ReadSingle();
-            blamPointers.Enqueue(ReadBlockArrayPointer<SkyLightBlock>(binaryReader));
+            lights = Guerilla.ReadBlockArray<SkyLightBlock>(binaryReader);
             globalSkyRotation = binaryReader.ReadSingle();
-            blamPointers.Enqueue(ReadBlockArrayPointer<SkyShaderFunctionBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<SkyAnimationBlock>(binaryReader));
+            shaderFunctions = Guerilla.ReadBlockArray<SkyShaderFunctionBlock>(binaryReader);
+            animations = Guerilla.ReadBlockArray<SkyAnimationBlock>(binaryReader);
             invalidName_1 = binaryReader.ReadBytes(12);
-            clearColor = binaryReader.ReadColorR8G8B8();
-            return blamPointers;
+            ClearColour = binaryReader.ReadColorR8G8B8();
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  SkyBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            cubeMap = ReadBlockArrayData<SkyCubemapBlock>(binaryReader, blamPointers.Dequeue());
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
-            atmosphericFog = ReadBlockArrayData<SkyAtmosphericFogBlock>(binaryReader, blamPointers.Dequeue());
-            secondaryFog = ReadBlockArrayData<SkyAtmosphericFogBlock>(binaryReader, blamPointers.Dequeue());
-            skyFog = ReadBlockArrayData<SkyFogBlock>(binaryReader, blamPointers.Dequeue());
-            patchyFog = ReadBlockArrayData<SkyPatchyFogBlock>(binaryReader, blamPointers.Dequeue());
-            lights = ReadBlockArrayData<SkyLightBlock>(binaryReader, blamPointers.Dequeue());
-            shaderFunctions = ReadBlockArrayData<SkyShaderFunctionBlock>(binaryReader, blamPointers.Dequeue());
-            animations = ReadBlockArrayData<SkyAnimationBlock>(binaryReader, blamPointers.Dequeue());
-            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[4].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[5].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[6].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[7].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[8].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[9].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[10].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[11].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            renderModel = binaryReader.ReadTagReference();
+            animationGraph = binaryReader.ReadTagReference();
+            flags = (Flags)binaryReader.ReadInt32();
+            renderModelScale = binaryReader.ReadSingle();
+            movementScale = binaryReader.ReadSingle();
+            cubeMap = Guerilla.ReadBlockArray<SkyCubemapBlock>(binaryReader);
+            IndoorAmbientColour = binaryReader.ReadColorR8G8B8();
+            invalidName_ = binaryReader.ReadBytes(4);
+            OutdoorAmbientColour = binaryReader.ReadColorR8G8B8();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            fogSpreadDistanceWorldUnits = binaryReader.ReadSingle();
+            atmosphericFog = Guerilla.ReadBlockArray<SkyAtmosphericFogBlock>(binaryReader);
+            secondaryFog = Guerilla.ReadBlockArray<SkyAtmosphericFogBlock>(binaryReader);
+            skyFog = Guerilla.ReadBlockArray<SkyFogBlock>(binaryReader);
+            patchyFog = Guerilla.ReadBlockArray<SkyPatchyFogBlock>(binaryReader);
+            amount01 = binaryReader.ReadSingle();
+            threshold01 = binaryReader.ReadSingle();
+            brightness01 = binaryReader.ReadSingle();
+            gammaPower = binaryReader.ReadSingle();
+            lights = Guerilla.ReadBlockArray<SkyLightBlock>(binaryReader);
+            globalSkyRotation = binaryReader.ReadSingle();
+            shaderFunctions = Guerilla.ReadBlockArray<SkyShaderFunctionBlock>(binaryReader);
+            animations = Guerilla.ReadBlockArray<SkyAnimationBlock>(binaryReader);
+            invalidName_1 = binaryReader.ReadBytes(12);
+            ClearColour = binaryReader.ReadColorR8G8B8();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(renderModel);
                 binaryWriter.Write(animationGraph);
@@ -148,9 +149,9 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(renderModelScale);
                 binaryWriter.Write(movementScale);
                 nextAddress = Guerilla.WriteBlockArray<SkyCubemapBlock>(binaryWriter, cubeMap, nextAddress);
-                binaryWriter.Write(indoorAmbientColor);
+                binaryWriter.Write(IndoorAmbientColour);
                 binaryWriter.Write(invalidName_, 0, 4);
-                binaryWriter.Write(outdoorAmbientColor);
+                binaryWriter.Write(OutdoorAmbientColour);
                 binaryWriter.Write(invalidName_0, 0, 4);
                 binaryWriter.Write(fogSpreadDistanceWorldUnits);
                 nextAddress = Guerilla.WriteBlockArray<SkyAtmosphericFogBlock>(binaryWriter, atmosphericFog, nextAddress);
@@ -166,7 +167,7 @@ using(binaryWriter.BaseStream.Pin())
                 nextAddress = Guerilla.WriteBlockArray<SkyShaderFunctionBlock>(binaryWriter, shaderFunctions, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SkyAnimationBlock>(binaryWriter, animations, nextAddress);
                 binaryWriter.Write(invalidName_1, 0, 12);
-                binaryWriter.Write(clearColor);
+                binaryWriter.Write(ClearColour);
                 return nextAddress;
             }
         }

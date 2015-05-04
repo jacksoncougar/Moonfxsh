@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class MaterialsBlock : MaterialsBlockBase
     {
-        public MaterialsBlock() : base()
+        public  MaterialsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  MaterialsBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 180, Alignment = 4)]
@@ -35,14 +38,14 @@ namespace Moonfish.Guerilla.Tags
         internal MaterialsSweetenersStructBlock sweeteners;
         [TagReference("foot")]
         internal Moonfish.Tags.TagReference materialEffects;
-        public override int SerializedSize { get { return 180; } }
-        public override int Alignment { get { return 4; } }
-        public MaterialsBlockBase() : base()
+        
+        public override int SerializedSize{get { return 180; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  MaterialsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             parentName = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -51,29 +54,35 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(2);
             generalArmor = binaryReader.ReadStringID();
             specificArmor = binaryReader.ReadStringID();
-            physicsProperties = new MaterialPhysicsPropertiesStructBlock();
-            blamPointers.Concat(physicsProperties.ReadFields(binaryReader));
+            physicsProperties = new MaterialPhysicsPropertiesStructBlock(binaryReader);
             oldMaterialPhysics = binaryReader.ReadTagReference();
             breakableSurface = binaryReader.ReadTagReference();
-            sweeteners = new MaterialsSweetenersStructBlock();
-            blamPointers.Concat(sweeteners.ReadFields(binaryReader));
+            sweeteners = new MaterialsSweetenersStructBlock(binaryReader);
             materialEffects = binaryReader.ReadTagReference();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  MaterialsBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            physicsProperties.ReadPointers(binaryReader, blamPointers);
-            sweeteners.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadStringID();
+            parentName = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(2);
+            flags = (Flags)binaryReader.ReadInt16();
+            oldMaterialType = (OldMaterialType)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            generalArmor = binaryReader.ReadStringID();
+            specificArmor = binaryReader.ReadStringID();
+            physicsProperties = new MaterialPhysicsPropertiesStructBlock(binaryReader);
+            oldMaterialPhysics = binaryReader.ReadTagReference();
+            breakableSurface = binaryReader.ReadTagReference();
+            sweeteners = new MaterialsSweetenersStructBlock(binaryReader);
+            materialEffects = binaryReader.ReadTagReference();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(parentName);

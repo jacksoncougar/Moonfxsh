@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SoundGestaltPermutationsBlock : SoundGestaltPermutationsBlockBase
     {
-        public SoundGestaltPermutationsBlock() : base()
+        public  SoundGestaltPermutationsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SoundGestaltPermutationsBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -27,14 +30,14 @@ namespace Moonfish.Guerilla.Tags
         internal int sampleSize;
         internal Moonfish.Tags.ShortBlockIndex1 firstChunk;
         internal short chunkCount;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
-        public SoundGestaltPermutationsBlockBase() : base()
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundGestaltPermutationsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadShortBlockIndex1();
             encodedSkipFraction = binaryReader.ReadInt16();
             encodedGainDB = binaryReader.ReadByte();
@@ -43,16 +46,25 @@ namespace Moonfish.Guerilla.Tags
             sampleSize = binaryReader.ReadInt32();
             firstChunk = binaryReader.ReadShortBlockIndex1();
             chunkCount = binaryReader.ReadInt16();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  SoundGestaltPermutationsBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadShortBlockIndex1();
+            encodedSkipFraction = binaryReader.ReadInt16();
+            encodedGainDB = binaryReader.ReadByte();
+            permutationInfoIndex = binaryReader.ReadByte();
+            languageNeutralTimeMs = binaryReader.ReadInt16();
+            sampleSize = binaryReader.ReadInt32();
+            firstChunk = binaryReader.ReadShortBlockIndex1();
+            chunkCount = binaryReader.ReadInt16();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(encodedSkipFraction);

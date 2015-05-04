@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("char")]
     public partial class CharacterBlock : CharacterBlockBase
     {
-        public CharacterBlock() : base()
+        public  CharacterBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CharacterBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 236, Alignment = 4)]
@@ -66,78 +69,85 @@ namespace Moonfish.Guerilla.Tags
         internal CharacterFiringPatternPropertiesBlock[] firingPatternProperties;
         internal CharacterGrenadesBlock[] grenadesProperties;
         internal CharacterVehicleBlock[] vehicleProperties;
-        public override int SerializedSize { get { return 236; } }
-        public override int Alignment { get { return 4; } }
-        public CharacterBlockBase() : base()
+        
+        public override int SerializedSize{get { return 236; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CharacterBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             characterFlags = (CharacterFlags)binaryReader.ReadInt32();
             parentCharacter = binaryReader.ReadTagReference();
             unit = binaryReader.ReadTagReference();
             creature = binaryReader.ReadTagReference();
             style = binaryReader.ReadTagReference();
             majorCharacter = binaryReader.ReadTagReference();
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterVariantsBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterGeneralBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterVitalityBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterPlacementBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterPerceptionBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterLookBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterMovementBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterSwarmBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterReadyBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterEngageBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterChargeBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterEvasionBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterCoverBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterRetreatBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterSearchBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterPresearchBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterIdleBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterVocalizationBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterBoardingBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterBossBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterWeaponsBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterFiringPatternPropertiesBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterGrenadesBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterVehicleBlock>(binaryReader));
-            return blamPointers;
+            variants = Guerilla.ReadBlockArray<CharacterVariantsBlock>(binaryReader);
+            generalProperties = Guerilla.ReadBlockArray<CharacterGeneralBlock>(binaryReader);
+            vitalityProperties = Guerilla.ReadBlockArray<CharacterVitalityBlock>(binaryReader);
+            placementProperties = Guerilla.ReadBlockArray<CharacterPlacementBlock>(binaryReader);
+            perceptionProperties = Guerilla.ReadBlockArray<CharacterPerceptionBlock>(binaryReader);
+            lookProperties = Guerilla.ReadBlockArray<CharacterLookBlock>(binaryReader);
+            movementProperties = Guerilla.ReadBlockArray<CharacterMovementBlock>(binaryReader);
+            swarmProperties = Guerilla.ReadBlockArray<CharacterSwarmBlock>(binaryReader);
+            readyProperties = Guerilla.ReadBlockArray<CharacterReadyBlock>(binaryReader);
+            engageProperties = Guerilla.ReadBlockArray<CharacterEngageBlock>(binaryReader);
+            chargeProperties = Guerilla.ReadBlockArray<CharacterChargeBlock>(binaryReader);
+            evasionProperties = Guerilla.ReadBlockArray<CharacterEvasionBlock>(binaryReader);
+            coverProperties = Guerilla.ReadBlockArray<CharacterCoverBlock>(binaryReader);
+            retreatProperties = Guerilla.ReadBlockArray<CharacterRetreatBlock>(binaryReader);
+            searchProperties = Guerilla.ReadBlockArray<CharacterSearchBlock>(binaryReader);
+            preSearchProperties = Guerilla.ReadBlockArray<CharacterPresearchBlock>(binaryReader);
+            idleProperties = Guerilla.ReadBlockArray<CharacterIdleBlock>(binaryReader);
+            vocalizationProperties = Guerilla.ReadBlockArray<CharacterVocalizationBlock>(binaryReader);
+            boardingProperties = Guerilla.ReadBlockArray<CharacterBoardingBlock>(binaryReader);
+            bossProperties = Guerilla.ReadBlockArray<CharacterBossBlock>(binaryReader);
+            weaponsProperties = Guerilla.ReadBlockArray<CharacterWeaponsBlock>(binaryReader);
+            firingPatternProperties = Guerilla.ReadBlockArray<CharacterFiringPatternPropertiesBlock>(binaryReader);
+            grenadesProperties = Guerilla.ReadBlockArray<CharacterGrenadesBlock>(binaryReader);
+            vehicleProperties = Guerilla.ReadBlockArray<CharacterVehicleBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  CharacterBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            variants = ReadBlockArrayData<CharacterVariantsBlock>(binaryReader, blamPointers.Dequeue());
-            generalProperties = ReadBlockArrayData<CharacterGeneralBlock>(binaryReader, blamPointers.Dequeue());
-            vitalityProperties = ReadBlockArrayData<CharacterVitalityBlock>(binaryReader, blamPointers.Dequeue());
-            placementProperties = ReadBlockArrayData<CharacterPlacementBlock>(binaryReader, blamPointers.Dequeue());
-            perceptionProperties = ReadBlockArrayData<CharacterPerceptionBlock>(binaryReader, blamPointers.Dequeue());
-            lookProperties = ReadBlockArrayData<CharacterLookBlock>(binaryReader, blamPointers.Dequeue());
-            movementProperties = ReadBlockArrayData<CharacterMovementBlock>(binaryReader, blamPointers.Dequeue());
-            swarmProperties = ReadBlockArrayData<CharacterSwarmBlock>(binaryReader, blamPointers.Dequeue());
-            readyProperties = ReadBlockArrayData<CharacterReadyBlock>(binaryReader, blamPointers.Dequeue());
-            engageProperties = ReadBlockArrayData<CharacterEngageBlock>(binaryReader, blamPointers.Dequeue());
-            chargeProperties = ReadBlockArrayData<CharacterChargeBlock>(binaryReader, blamPointers.Dequeue());
-            evasionProperties = ReadBlockArrayData<CharacterEvasionBlock>(binaryReader, blamPointers.Dequeue());
-            coverProperties = ReadBlockArrayData<CharacterCoverBlock>(binaryReader, blamPointers.Dequeue());
-            retreatProperties = ReadBlockArrayData<CharacterRetreatBlock>(binaryReader, blamPointers.Dequeue());
-            searchProperties = ReadBlockArrayData<CharacterSearchBlock>(binaryReader, blamPointers.Dequeue());
-            preSearchProperties = ReadBlockArrayData<CharacterPresearchBlock>(binaryReader, blamPointers.Dequeue());
-            idleProperties = ReadBlockArrayData<CharacterIdleBlock>(binaryReader, blamPointers.Dequeue());
-            vocalizationProperties = ReadBlockArrayData<CharacterVocalizationBlock>(binaryReader, blamPointers.Dequeue());
-            boardingProperties = ReadBlockArrayData<CharacterBoardingBlock>(binaryReader, blamPointers.Dequeue());
-            bossProperties = ReadBlockArrayData<CharacterBossBlock>(binaryReader, blamPointers.Dequeue());
-            weaponsProperties = ReadBlockArrayData<CharacterWeaponsBlock>(binaryReader, blamPointers.Dequeue());
-            firingPatternProperties = ReadBlockArrayData<CharacterFiringPatternPropertiesBlock>(binaryReader, blamPointers.Dequeue());
-            grenadesProperties = ReadBlockArrayData<CharacterGrenadesBlock>(binaryReader, blamPointers.Dequeue());
-            vehicleProperties = ReadBlockArrayData<CharacterVehicleBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            characterFlags = (CharacterFlags)binaryReader.ReadInt32();
+            parentCharacter = binaryReader.ReadTagReference();
+            unit = binaryReader.ReadTagReference();
+            creature = binaryReader.ReadTagReference();
+            style = binaryReader.ReadTagReference();
+            majorCharacter = binaryReader.ReadTagReference();
+            variants = Guerilla.ReadBlockArray<CharacterVariantsBlock>(binaryReader);
+            generalProperties = Guerilla.ReadBlockArray<CharacterGeneralBlock>(binaryReader);
+            vitalityProperties = Guerilla.ReadBlockArray<CharacterVitalityBlock>(binaryReader);
+            placementProperties = Guerilla.ReadBlockArray<CharacterPlacementBlock>(binaryReader);
+            perceptionProperties = Guerilla.ReadBlockArray<CharacterPerceptionBlock>(binaryReader);
+            lookProperties = Guerilla.ReadBlockArray<CharacterLookBlock>(binaryReader);
+            movementProperties = Guerilla.ReadBlockArray<CharacterMovementBlock>(binaryReader);
+            swarmProperties = Guerilla.ReadBlockArray<CharacterSwarmBlock>(binaryReader);
+            readyProperties = Guerilla.ReadBlockArray<CharacterReadyBlock>(binaryReader);
+            engageProperties = Guerilla.ReadBlockArray<CharacterEngageBlock>(binaryReader);
+            chargeProperties = Guerilla.ReadBlockArray<CharacterChargeBlock>(binaryReader);
+            evasionProperties = Guerilla.ReadBlockArray<CharacterEvasionBlock>(binaryReader);
+            coverProperties = Guerilla.ReadBlockArray<CharacterCoverBlock>(binaryReader);
+            retreatProperties = Guerilla.ReadBlockArray<CharacterRetreatBlock>(binaryReader);
+            searchProperties = Guerilla.ReadBlockArray<CharacterSearchBlock>(binaryReader);
+            preSearchProperties = Guerilla.ReadBlockArray<CharacterPresearchBlock>(binaryReader);
+            idleProperties = Guerilla.ReadBlockArray<CharacterIdleBlock>(binaryReader);
+            vocalizationProperties = Guerilla.ReadBlockArray<CharacterVocalizationBlock>(binaryReader);
+            boardingProperties = Guerilla.ReadBlockArray<CharacterBoardingBlock>(binaryReader);
+            bossProperties = Guerilla.ReadBlockArray<CharacterBossBlock>(binaryReader);
+            weaponsProperties = Guerilla.ReadBlockArray<CharacterWeaponsBlock>(binaryReader);
+            firingPatternProperties = Guerilla.ReadBlockArray<CharacterFiringPatternPropertiesBlock>(binaryReader);
+            grenadesProperties = Guerilla.ReadBlockArray<CharacterGrenadesBlock>(binaryReader);
+            vehicleProperties = Guerilla.ReadBlockArray<CharacterVehicleBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)characterFlags);
                 binaryWriter.Write(parentCharacter);

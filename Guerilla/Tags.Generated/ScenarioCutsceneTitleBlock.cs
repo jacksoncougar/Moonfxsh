@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioCutsceneTitleBlock : ScenarioCutsceneTitleBlockBase
     {
-        public ScenarioCutsceneTitleBlock() : base()
+        public  ScenarioCutsceneTitleBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioCutsceneTitleBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 36, Alignment = 4)]
@@ -29,14 +32,14 @@ namespace Moonfish.Guerilla.Tags
         internal float upTimeSeconds;
         internal float fadeOutTimeSeconds;
         internal byte[] padding;
-        public override int SerializedSize { get { return 36; } }
-        public override int Alignment { get { return 4; } }
-        public ScenarioCutsceneTitleBlockBase() : base()
+        
+        public override int SerializedSize{get { return 36; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioCutsceneTitleBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             textBoundsOnScreen = binaryReader.ReadVector2();
             justification = (Justification)binaryReader.ReadInt16();
@@ -47,18 +50,27 @@ namespace Moonfish.Guerilla.Tags
             upTimeSeconds = binaryReader.ReadSingle();
             fadeOutTimeSeconds = binaryReader.ReadSingle();
             padding = binaryReader.ReadBytes(2);
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ScenarioCutsceneTitleBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            padding[0].ReadPointers(binaryReader, blamPointers);
-            padding[1].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadStringID();
+            textBoundsOnScreen = binaryReader.ReadVector2();
+            justification = (Justification)binaryReader.ReadInt16();
+            font = (Font)binaryReader.ReadInt16();
+            textColor = binaryReader.ReadColourR1G1B1();
+            shadowColor = binaryReader.ReadColourR1G1B1();
+            fadeInTimeSeconds = binaryReader.ReadSingle();
+            upTimeSeconds = binaryReader.ReadSingle();
+            fadeOutTimeSeconds = binaryReader.ReadSingle();
+            padding = binaryReader.ReadBytes(2);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(textBoundsOnScreen);

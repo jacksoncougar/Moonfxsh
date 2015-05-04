@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class UiModelSceneReferenceBlock : UiModelSceneReferenceBlockBase
     {
-        public UiModelSceneReferenceBlock() : base()
+        public  UiModelSceneReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  UiModelSceneReferenceBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 76, Alignment = 4)]
@@ -33,21 +36,21 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent uNUSEDIntroAnim;
         internal Moonfish.Tags.StringIdent uNUSEDOutroAnim;
         internal Moonfish.Tags.StringIdent uNUSEDAmbientAnim;
-        public override int SerializedSize { get { return 76; } }
-        public override int Alignment { get { return 4; } }
-        public UiModelSceneReferenceBlockBase() : base()
+        
+        public override int SerializedSize{get { return 76; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  UiModelSceneReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             animationIndex = (AnimationIndex)binaryReader.ReadInt16();
             introAnimationDelayMilliseconds = binaryReader.ReadInt16();
             renderDepthBias = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            blamPointers.Enqueue(ReadBlockArrayPointer<UiObjectReferenceBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<UiLightReferenceBlock>(binaryReader));
+            objects = Guerilla.ReadBlockArray<UiObjectReferenceBlock>(binaryReader);
+            lights = Guerilla.ReadBlockArray<UiLightReferenceBlock>(binaryReader);
             animationScaleFactor = binaryReader.ReadVector3();
             cameraPosition = binaryReader.ReadVector3();
             fovDegress = binaryReader.ReadSingle();
@@ -55,20 +58,31 @@ namespace Moonfish.Guerilla.Tags
             uNUSEDIntroAnim = binaryReader.ReadStringID();
             uNUSEDOutroAnim = binaryReader.ReadStringID();
             uNUSEDAmbientAnim = binaryReader.ReadStringID();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  UiModelSceneReferenceBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            objects = ReadBlockArrayData<UiObjectReferenceBlock>(binaryReader, blamPointers.Dequeue());
-            lights = ReadBlockArrayData<UiLightReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt32();
+            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
+            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
+            renderDepthBias = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            objects = Guerilla.ReadBlockArray<UiObjectReferenceBlock>(binaryReader);
+            lights = Guerilla.ReadBlockArray<UiLightReferenceBlock>(binaryReader);
+            animationScaleFactor = binaryReader.ReadVector3();
+            cameraPosition = binaryReader.ReadVector3();
+            fovDegress = binaryReader.ReadSingle();
+            uiViewport = binaryReader.ReadVector2();
+            uNUSEDIntroAnim = binaryReader.ReadStringID();
+            uNUSEDOutroAnim = binaryReader.ReadStringID();
+            uNUSEDAmbientAnim = binaryReader.ReadStringID();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write((Int16)animationIndex);

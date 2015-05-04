@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class WeaponClassLookupBlock : WeaponClassLookupBlockBase
     {
-        public WeaponClassLookupBlock() : base()
+        public  WeaponClassLookupBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  WeaponClassLookupBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
@@ -21,26 +24,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Moonfish.Tags.StringIdent weaponName;
         internal Moonfish.Tags.StringIdent weaponClass;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
-        public WeaponClassLookupBlockBase() : base()
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  WeaponClassLookupBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             weaponName = binaryReader.ReadStringID();
             weaponClass = binaryReader.ReadStringID();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  WeaponClassLookupBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            weaponName = binaryReader.ReadStringID();
+            weaponClass = binaryReader.ReadStringID();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(weaponName);
                 binaryWriter.Write(weaponClass);

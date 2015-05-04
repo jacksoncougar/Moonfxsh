@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScreenEffectBonusStructBlock : ScreenEffectBonusStructBlockBase
     {
-        public ScreenEffectBonusStructBlock() : base()
+        public  ScreenEffectBonusStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScreenEffectBonusStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -23,26 +26,29 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference halfscreenScreenEffect;
         [TagReference("egor")]
         internal Moonfish.Tags.TagReference quarterscreenScreenEffect;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
-        public ScreenEffectBonusStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScreenEffectBonusStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             halfscreenScreenEffect = binaryReader.ReadTagReference();
             quarterscreenScreenEffect = binaryReader.ReadTagReference();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ScreenEffectBonusStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            halfscreenScreenEffect = binaryReader.ReadTagReference();
+            quarterscreenScreenEffect = binaryReader.ReadTagReference();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(halfscreenScreenEffect);
                 binaryWriter.Write(quarterscreenScreenEffect);

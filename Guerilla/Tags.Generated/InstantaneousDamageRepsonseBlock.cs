@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class InstantaneousDamageRepsonseBlock : InstantaneousDamageRepsonseBlockBase
     {
-        public InstantaneousDamageRepsonseBlock() : base()
+        public  InstantaneousDamageRepsonseBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  InstantaneousDamageRepsonseBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 80, Alignment = 4)]
@@ -46,27 +49,25 @@ namespace Moonfish.Guerilla.Tags
         internal float skipFraction;
         internal Moonfish.Tags.StringIdent destroyedChildObjectMarkerName;
         internal float totalDamageThreshold;
-        public override int SerializedSize { get { return 80; } }
-        public override int Alignment { get { return 4; } }
-        public InstantaneousDamageRepsonseBlockBase() : base()
+        
+        public override int SerializedSize{get { return 80; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  InstantaneousDamageRepsonseBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             responseType = (ResponseType)binaryReader.ReadInt16();
             constraintDamageType = (ConstraintDamageType)binaryReader.ReadInt16();
             flags = (Flags)binaryReader.ReadInt32();
             damageThreshold = binaryReader.ReadSingle();
             transitionEffect = binaryReader.ReadTagReference();
-            damageEffect = new InstantaneousResponseDamageEffectStructBlock();
-            blamPointers.Concat(damageEffect.ReadFields(binaryReader));
+            damageEffect = new InstantaneousResponseDamageEffectStructBlock(binaryReader);
             region = binaryReader.ReadStringID();
             newState = (NewState)binaryReader.ReadInt16();
             runtimeRegionIndex = binaryReader.ReadInt16();
             effectMarkerName = binaryReader.ReadStringID();
-            damageEffectMarker = new InstantaneousResponseDamageEffectMarkerStructBlock();
-            blamPointers.Concat(damageEffectMarker.ReadFields(binaryReader));
+            damageEffectMarker = new InstantaneousResponseDamageEffectMarkerStructBlock(binaryReader);
             responseDelay = binaryReader.ReadSingle();
             delayEffect = binaryReader.ReadTagReference();
             delayEffectMarkerName = binaryReader.ReadStringID();
@@ -75,18 +76,36 @@ namespace Moonfish.Guerilla.Tags
             skipFraction = binaryReader.ReadSingle();
             destroyedChildObjectMarkerName = binaryReader.ReadStringID();
             totalDamageThreshold = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  InstantaneousDamageRepsonseBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            damageEffect.ReadPointers(binaryReader, blamPointers);
-            damageEffectMarker.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            responseType = (ResponseType)binaryReader.ReadInt16();
+            constraintDamageType = (ConstraintDamageType)binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt32();
+            damageThreshold = binaryReader.ReadSingle();
+            transitionEffect = binaryReader.ReadTagReference();
+            damageEffect = new InstantaneousResponseDamageEffectStructBlock(binaryReader);
+            region = binaryReader.ReadStringID();
+            newState = (NewState)binaryReader.ReadInt16();
+            runtimeRegionIndex = binaryReader.ReadInt16();
+            effectMarkerName = binaryReader.ReadStringID();
+            damageEffectMarker = new InstantaneousResponseDamageEffectMarkerStructBlock(binaryReader);
+            responseDelay = binaryReader.ReadSingle();
+            delayEffect = binaryReader.ReadTagReference();
+            delayEffectMarkerName = binaryReader.ReadStringID();
+            constraintGroupName = binaryReader.ReadStringID();
+            ejectingSeatLabel = binaryReader.ReadStringID();
+            skipFraction = binaryReader.ReadSingle();
+            destroyedChildObjectMarkerName = binaryReader.ReadStringID();
+            totalDamageThreshold = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)responseType);
                 binaryWriter.Write((Int16)constraintDamageType);

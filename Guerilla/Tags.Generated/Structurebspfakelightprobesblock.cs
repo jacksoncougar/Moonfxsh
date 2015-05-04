@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureBspFakeLightprobesBlock : StructureBspFakeLightprobesBlockBase
     {
-        public StructureBspFakeLightprobesBlock() : base()
+        public  StructureBspFakeLightprobesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StructureBspFakeLightprobesBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 92, Alignment = 4)]
@@ -21,30 +24,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal ScenarioObjectIdStructBlock objectIdentifier;
         internal RenderLightingStructBlock renderLighting;
-        public override int SerializedSize { get { return 92; } }
-        public override int Alignment { get { return 4; } }
-        public StructureBspFakeLightprobesBlockBase() : base()
+        
+        public override int SerializedSize{get { return 92; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StructureBspFakeLightprobesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            objectIdentifier = new ScenarioObjectIdStructBlock(binaryReader);
+            renderLighting = new RenderLightingStructBlock(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  StructureBspFakeLightprobesBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            objectIdentifier = new ScenarioObjectIdStructBlock();
-            blamPointers.Concat(objectIdentifier.ReadFields(binaryReader));
-            renderLighting = new RenderLightingStructBlock();
-            blamPointers.Concat(renderLighting.ReadFields(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            objectIdentifier.ReadPointers(binaryReader, blamPointers);
-            renderLighting.ReadPointers(binaryReader, blamPointers);
+            objectIdentifier = new ScenarioObjectIdStructBlock(binaryReader);
+            renderLighting = new RenderLightingStructBlock(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 objectIdentifier.Write(binaryWriter);
                 renderLighting.Write(binaryWriter);

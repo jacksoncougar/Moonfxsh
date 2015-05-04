@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ModelTargetBlock : ModelTargetBlockBase
     {
-        public ModelTargetBlock() : base()
+        public  ModelTargetBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ModelTargetBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 28, Alignment = 4)]
@@ -44,33 +47,39 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float targetingRelevance;
         internal ModelTargetLockOnDataStructBlock lockOnData;
-        public override int SerializedSize { get { return 28; } }
-        public override int Alignment { get { return 4; } }
-        public ModelTargetBlockBase() : base()
+        
+        public override int SerializedSize{get { return 28; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ModelTargetBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             markerName = binaryReader.ReadStringID();
             size = binaryReader.ReadSingle();
             coneAngle = binaryReader.ReadSingle();
             damageSection = binaryReader.ReadShortBlockIndex2();
             variant = binaryReader.ReadShortBlockIndex1();
             targetingRelevance = binaryReader.ReadSingle();
-            lockOnData = new ModelTargetLockOnDataStructBlock();
-            blamPointers.Concat(lockOnData.ReadFields(binaryReader));
-            return blamPointers;
+            lockOnData = new ModelTargetLockOnDataStructBlock(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ModelTargetBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            lockOnData.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            markerName = binaryReader.ReadStringID();
+            size = binaryReader.ReadSingle();
+            coneAngle = binaryReader.ReadSingle();
+            damageSection = binaryReader.ReadShortBlockIndex2();
+            variant = binaryReader.ReadShortBlockIndex1();
+            targetingRelevance = binaryReader.ReadSingle();
+            lockOnData = new ModelTargetLockOnDataStructBlock(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(markerName);
                 binaryWriter.Write(size);

@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("pmov")]
     public partial class ParticlePhysicsBlock : ParticlePhysicsBlockBase
     {
-        public ParticlePhysicsBlock() : base()
+        public  ParticlePhysicsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ParticlePhysicsBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -32,28 +35,31 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference template;
         internal Flags flags;
         internal ParticleController[] movements;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
-        public ParticlePhysicsBlockBase() : base()
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ParticlePhysicsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             template = binaryReader.ReadTagReference();
             flags = (Flags)binaryReader.ReadInt32();
-            blamPointers.Enqueue(ReadBlockArrayPointer<ParticleController>(binaryReader));
-            return blamPointers;
+            movements = Guerilla.ReadBlockArray<ParticleController>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ParticlePhysicsBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            movements = ReadBlockArrayData<ParticleController>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            template = binaryReader.ReadTagReference();
+            flags = (Flags)binaryReader.ReadInt32();
+            movements = Guerilla.ReadBlockArray<ParticleController>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(template);
                 binaryWriter.Write((Int32)flags);

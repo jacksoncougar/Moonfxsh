@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("wgit")]
     public partial class UserInterfaceScreenWidgetDefinitionBlock : UserInterfaceScreenWidgetDefinitionBlockBase
     {
-        public UserInterfaceScreenWidgetDefinitionBlock() : base()
+        public  UserInterfaceScreenWidgetDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  UserInterfaceScreenWidgetDefinitionBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 104, Alignment = 4)]
@@ -37,55 +40,68 @@ namespace Moonfish.Guerilla.Tags
         internal WindowPaneReferenceBlock[] panes;
         internal ShapeGroup shapeGroup;
         internal byte[] invalidName_;
-        internal Moonfish.Tags.StringIdent headerStringId;
+        internal Moonfish.Tags.StringIdent HeaderStringIdent;
         internal LocalStringIdListSectionReferenceBlock[] localStrings;
         internal LocalBitmapReferenceBlock[] localBitmaps;
-        internal Moonfish.Tags.ColourR8G8B8 sourceColor;
-        internal Moonfish.Tags.ColourR8G8B8 destinationColor;
+        internal Moonfish.Tags.ColourR8G8B8 SourceColour;
+        internal Moonfish.Tags.ColourR8G8B8 DestinationColour;
         internal float accumulateZoomScaleX;
         internal float accumulateZoomScaleY;
         internal float refractionScaleX;
         internal float refractionScaleY;
-        public override int SerializedSize { get { return 104; } }
-        public override int Alignment { get { return 4; } }
-        public UserInterfaceScreenWidgetDefinitionBlockBase() : base()
+        
+        public override int SerializedSize{get { return 104; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  UserInterfaceScreenWidgetDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             screenID = (ScreenID)binaryReader.ReadInt16();
             buttonKeyType = (ButtonKeyType)binaryReader.ReadInt16();
             textColor = binaryReader.ReadVector4();
             stringListTag = binaryReader.ReadTagReference();
-            blamPointers.Enqueue(ReadBlockArrayPointer<WindowPaneReferenceBlock>(binaryReader));
+            panes = Guerilla.ReadBlockArray<WindowPaneReferenceBlock>(binaryReader);
             shapeGroup = (ShapeGroup)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            headerStringId = binaryReader.ReadStringID();
-            blamPointers.Enqueue(ReadBlockArrayPointer<LocalStringIdListSectionReferenceBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<LocalBitmapReferenceBlock>(binaryReader));
-            sourceColor = binaryReader.ReadColorR8G8B8();
-            destinationColor = binaryReader.ReadColorR8G8B8();
+            HeaderStringIdent = binaryReader.ReadStringID();
+            localStrings = Guerilla.ReadBlockArray<LocalStringIdListSectionReferenceBlock>(binaryReader);
+            localBitmaps = Guerilla.ReadBlockArray<LocalBitmapReferenceBlock>(binaryReader);
+            SourceColour = binaryReader.ReadColorR8G8B8();
+            DestinationColour = binaryReader.ReadColorR8G8B8();
             accumulateZoomScaleX = binaryReader.ReadSingle();
             accumulateZoomScaleY = binaryReader.ReadSingle();
             refractionScaleX = binaryReader.ReadSingle();
             refractionScaleY = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  UserInterfaceScreenWidgetDefinitionBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            panes = ReadBlockArrayData<WindowPaneReferenceBlock>(binaryReader, blamPointers.Dequeue());
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            localStrings = ReadBlockArrayData<LocalStringIdListSectionReferenceBlock>(binaryReader, blamPointers.Dequeue());
-            localBitmaps = ReadBlockArrayData<LocalBitmapReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt32();
+            screenID = (ScreenID)binaryReader.ReadInt16();
+            buttonKeyType = (ButtonKeyType)binaryReader.ReadInt16();
+            textColor = binaryReader.ReadVector4();
+            stringListTag = binaryReader.ReadTagReference();
+            panes = Guerilla.ReadBlockArray<WindowPaneReferenceBlock>(binaryReader);
+            shapeGroup = (ShapeGroup)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            HeaderStringIdent = binaryReader.ReadStringID();
+            localStrings = Guerilla.ReadBlockArray<LocalStringIdListSectionReferenceBlock>(binaryReader);
+            localBitmaps = Guerilla.ReadBlockArray<LocalBitmapReferenceBlock>(binaryReader);
+            SourceColour = binaryReader.ReadColorR8G8B8();
+            DestinationColour = binaryReader.ReadColorR8G8B8();
+            accumulateZoomScaleX = binaryReader.ReadSingle();
+            accumulateZoomScaleY = binaryReader.ReadSingle();
+            refractionScaleX = binaryReader.ReadSingle();
+            refractionScaleY = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write((Int16)screenID);
@@ -95,11 +111,11 @@ using(binaryWriter.BaseStream.Pin())
                 nextAddress = Guerilla.WriteBlockArray<WindowPaneReferenceBlock>(binaryWriter, panes, nextAddress);
                 binaryWriter.Write((Int16)shapeGroup);
                 binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write(headerStringId);
+                binaryWriter.Write(HeaderStringIdent);
                 nextAddress = Guerilla.WriteBlockArray<LocalStringIdListSectionReferenceBlock>(binaryWriter, localStrings, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<LocalBitmapReferenceBlock>(binaryWriter, localBitmaps, nextAddress);
-                binaryWriter.Write(sourceColor);
-                binaryWriter.Write(destinationColor);
+                binaryWriter.Write(SourceColour);
+                binaryWriter.Write(DestinationColour);
                 binaryWriter.Write(accumulateZoomScaleX);
                 binaryWriter.Write(accumulateZoomScaleY);
                 binaryWriter.Write(refractionScaleX);

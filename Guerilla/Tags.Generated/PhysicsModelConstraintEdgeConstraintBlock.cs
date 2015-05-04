@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PhysicsModelConstraintEdgeConstraintBlock : PhysicsModelConstraintEdgeConstraintBlockBase
     {
-        public PhysicsModelConstraintEdgeConstraintBlock() : base()
+        public  PhysicsModelConstraintEdgeConstraintBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PhysicsModelConstraintEdgeConstraintBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 12, Alignment = 4)]
@@ -26,28 +29,33 @@ namespace Moonfish.Guerilla.Tags
         /// 0 is the default (takes what it was set in max) anything else overrides that value
         /// </summary>
         internal float friction;
-        public override int SerializedSize { get { return 12; } }
-        public override int Alignment { get { return 4; } }
-        public PhysicsModelConstraintEdgeConstraintBlockBase() : base()
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PhysicsModelConstraintEdgeConstraintBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             type = (Type)binaryReader.ReadInt16();
             index = binaryReader.ReadShortBlockIndex2();
             flags = (Flags)binaryReader.ReadInt32();
             friction = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  PhysicsModelConstraintEdgeConstraintBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            type = (Type)binaryReader.ReadInt16();
+            index = binaryReader.ReadShortBlockIndex2();
+            flags = (Flags)binaryReader.ReadInt32();
+            friction = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)type);
                 binaryWriter.Write(index);

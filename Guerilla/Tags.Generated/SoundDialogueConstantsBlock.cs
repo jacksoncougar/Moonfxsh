@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("spk!")]
     public partial class SoundDialogueConstantsBlock : SoundDialogueConstantsBlockBase
     {
-        public SoundDialogueConstantsBlock() : base()
+        public  SoundDialogueConstantsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SoundDialogueConstantsBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -33,53 +36,35 @@ namespace Moonfish.Guerilla.Tags
         internal float somewhat;
         internal float often;
         internal byte[] invalidName_;
-        public override int SerializedSize { get { return 40; } }
-        public override int Alignment { get { return 4; } }
-        public SoundDialogueConstantsBlockBase() : base()
+        
+        public override int SerializedSize{get { return 40; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundDialogueConstantsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             almostNever = binaryReader.ReadSingle();
             rarely = binaryReader.ReadSingle();
             somewhat = binaryReader.ReadSingle();
             often = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(24);
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  SoundDialogueConstantsBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_[4].ReadPointers(binaryReader, blamPointers);
-            invalidName_[5].ReadPointers(binaryReader, blamPointers);
-            invalidName_[6].ReadPointers(binaryReader, blamPointers);
-            invalidName_[7].ReadPointers(binaryReader, blamPointers);
-            invalidName_[8].ReadPointers(binaryReader, blamPointers);
-            invalidName_[9].ReadPointers(binaryReader, blamPointers);
-            invalidName_[10].ReadPointers(binaryReader, blamPointers);
-            invalidName_[11].ReadPointers(binaryReader, blamPointers);
-            invalidName_[12].ReadPointers(binaryReader, blamPointers);
-            invalidName_[13].ReadPointers(binaryReader, blamPointers);
-            invalidName_[14].ReadPointers(binaryReader, blamPointers);
-            invalidName_[15].ReadPointers(binaryReader, blamPointers);
-            invalidName_[16].ReadPointers(binaryReader, blamPointers);
-            invalidName_[17].ReadPointers(binaryReader, blamPointers);
-            invalidName_[18].ReadPointers(binaryReader, blamPointers);
-            invalidName_[19].ReadPointers(binaryReader, blamPointers);
-            invalidName_[20].ReadPointers(binaryReader, blamPointers);
-            invalidName_[21].ReadPointers(binaryReader, blamPointers);
-            invalidName_[22].ReadPointers(binaryReader, blamPointers);
-            invalidName_[23].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            almostNever = binaryReader.ReadSingle();
+            rarely = binaryReader.ReadSingle();
+            somewhat = binaryReader.ReadSingle();
+            often = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(24);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(almostNever);
                 binaryWriter.Write(rarely);

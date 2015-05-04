@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class WeaponTriggers : WeaponTriggersBase
     {
-        public WeaponTriggers() : base()
+        public  WeaponTriggers(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  WeaponTriggers(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 64, Alignment = 4)]
@@ -28,14 +31,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal WeaponTriggerAutofireStructBlock autofire;
         internal WeaponTriggerChargingStructBlock charging;
-        public override int SerializedSize { get { return 64; } }
-        public override int Alignment { get { return 4; } }
-        public WeaponTriggersBase() : base()
+        
+        public override int SerializedSize{get { return 64; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  WeaponTriggersBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             input = (Input)binaryReader.ReadInt16();
             behavior = (Behavior)binaryReader.ReadInt16();
@@ -43,24 +46,28 @@ namespace Moonfish.Guerilla.Tags
             secondaryBarrel = binaryReader.ReadShortBlockIndex1();
             prediction = (Prediction)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            autofire = new WeaponTriggerAutofireStructBlock();
-            blamPointers.Concat(autofire.ReadFields(binaryReader));
-            charging = new WeaponTriggerChargingStructBlock();
-            blamPointers.Concat(charging.ReadFields(binaryReader));
-            return blamPointers;
+            autofire = new WeaponTriggerAutofireStructBlock(binaryReader);
+            charging = new WeaponTriggerChargingStructBlock(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  WeaponTriggersBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            autofire.ReadPointers(binaryReader, blamPointers);
-            charging.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt32();
+            input = (Input)binaryReader.ReadInt16();
+            behavior = (Behavior)binaryReader.ReadInt16();
+            primaryBarrel = binaryReader.ReadShortBlockIndex1();
+            secondaryBarrel = binaryReader.ReadShortBlockIndex1();
+            prediction = (Prediction)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            autofire = new WeaponTriggerAutofireStructBlock(binaryReader);
+            charging = new WeaponTriggerChargingStructBlock(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write((Int16)input);

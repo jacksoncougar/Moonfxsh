@@ -5,40 +5,45 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class UiLightReferenceBlock : UiLightReferenceBlockBase
     {
-        public UiLightReferenceBlock() : base()
+        public  UiLightReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  UiLightReferenceBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 32, Alignment = 4)]
     public class UiLightReferenceBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
-        public override int SerializedSize { get { return 32; } }
-        public override int Alignment { get { return 4; } }
-        public UiLightReferenceBlockBase() : base()
+        
+        public override int SerializedSize{get { return 32; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  UiLightReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  UiLightReferenceBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadString32();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 return nextAddress;

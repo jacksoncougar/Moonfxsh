@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureBspInstancedGeometryInstancesBlock : StructureBspInstancedGeometryInstancesBlockBase
     {
-        public StructureBspInstancedGeometryInstancesBlock() : base()
+        public  StructureBspInstancedGeometryInstancesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StructureBspInstancedGeometryInstancesBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 88, Alignment = 4)]
@@ -33,14 +36,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent name;
         internal PathfindingPolicy pathfindingPolicy;
         internal LightmappingPolicy lightmappingPolicy;
-        public override int SerializedSize { get { return 88; } }
-        public override int Alignment { get { return 4; } }
-        public StructureBspInstancedGeometryInstancesBlockBase() : base()
+        
+        public override int SerializedSize{get { return 88; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StructureBspInstancedGeometryInstancesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             scale = binaryReader.ReadSingle();
             forward = binaryReader.ReadVector3();
             left = binaryReader.ReadVector3();
@@ -55,36 +58,31 @@ namespace Moonfish.Guerilla.Tags
             name = binaryReader.ReadStringID();
             pathfindingPolicy = (PathfindingPolicy)binaryReader.ReadInt16();
             lightmappingPolicy = (LightmappingPolicy)binaryReader.ReadInt16();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  StructureBspInstancedGeometryInstancesBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[4].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[5].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[6].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[7].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[8].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[9].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[10].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[11].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            scale = binaryReader.ReadSingle();
+            forward = binaryReader.ReadVector3();
+            left = binaryReader.ReadVector3();
+            up = binaryReader.ReadVector3();
+            position = binaryReader.ReadVector3();
+            instanceDefinition = binaryReader.ReadShortBlockIndex1();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(4);
+            invalidName_0 = binaryReader.ReadBytes(12);
+            invalidName_1 = binaryReader.ReadBytes(4);
+            checksum = binaryReader.ReadInt32();
+            name = binaryReader.ReadStringID();
+            pathfindingPolicy = (PathfindingPolicy)binaryReader.ReadInt16();
+            lightmappingPolicy = (LightmappingPolicy)binaryReader.ReadInt16();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(scale);
                 binaryWriter.Write(forward);

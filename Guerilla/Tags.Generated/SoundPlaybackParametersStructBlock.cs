@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SoundPlaybackParametersStructBlock : SoundPlaybackParametersStructBlockBase
     {
-        public SoundPlaybackParametersStructBlock() : base()
+        public  SoundPlaybackParametersStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SoundPlaybackParametersStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 56, Alignment = 4)]
@@ -60,14 +63,14 @@ namespace Moonfish.Guerilla.Tags
         internal float azimuth;
         internal float positionalGainDB;
         internal float firstPersonGainDB;
-        public override int SerializedSize { get { return 56; } }
-        public override int Alignment { get { return 4; } }
-        public SoundPlaybackParametersStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 56; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundPlaybackParametersStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             minimumDistanceWorldUnits = binaryReader.ReadSingle();
             maximumDistanceWorldUnits = binaryReader.ReadSingle();
             skipFraction = binaryReader.ReadSingle();
@@ -82,16 +85,31 @@ namespace Moonfish.Guerilla.Tags
             azimuth = binaryReader.ReadSingle();
             positionalGainDB = binaryReader.ReadSingle();
             firstPersonGainDB = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  SoundPlaybackParametersStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            minimumDistanceWorldUnits = binaryReader.ReadSingle();
+            maximumDistanceWorldUnits = binaryReader.ReadSingle();
+            skipFraction = binaryReader.ReadSingle();
+            maximumBendPerSecondCents = binaryReader.ReadSingle();
+            gainBaseDB = binaryReader.ReadSingle();
+            gainVarianceDB = binaryReader.ReadSingle();
+            randomPitchBoundsCents = binaryReader.ReadInt32();
+            innerConeAngleDegrees = binaryReader.ReadSingle();
+            outerConeAngleDegrees = binaryReader.ReadSingle();
+            outerConeGainDB = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt32();
+            azimuth = binaryReader.ReadSingle();
+            positionalGainDB = binaryReader.ReadSingle();
+            firstPersonGainDB = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(minimumDistanceWorldUnits);
                 binaryWriter.Write(maximumDistanceWorldUnits);

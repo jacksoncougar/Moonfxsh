@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureBspDetailObjectDataBlock : StructureBspDetailObjectDataBlockBase
     {
-        public StructureBspDetailObjectDataBlock() : base()
+        public  StructureBspDetailObjectDataBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StructureBspDetailObjectDataBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 36, Alignment = 4)]
@@ -25,38 +28,37 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalZReferenceVectorBlock[] zReferenceVectors;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 36; } }
-        public override int Alignment { get { return 4; } }
-        public StructureBspDetailObjectDataBlockBase() : base()
+        
+        public override int SerializedSize{get { return 36; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StructureBspDetailObjectDataBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalDetailObjectCellsBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalDetailObjectBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalDetailObjectCountsBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalZReferenceVectorBlock>(binaryReader));
+            cells = Guerilla.ReadBlockArray<GlobalDetailObjectCellsBlock>(binaryReader);
+            instances = Guerilla.ReadBlockArray<GlobalDetailObjectBlock>(binaryReader);
+            counts = Guerilla.ReadBlockArray<GlobalDetailObjectCountsBlock>(binaryReader);
+            zReferenceVectors = Guerilla.ReadBlockArray<GlobalZReferenceVectorBlock>(binaryReader);
             invalidName_ = binaryReader.ReadBytes(1);
             invalidName_0 = binaryReader.ReadBytes(3);
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  StructureBspDetailObjectDataBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            cells = ReadBlockArrayData<GlobalDetailObjectCellsBlock>(binaryReader, blamPointers.Dequeue());
-            instances = ReadBlockArrayData<GlobalDetailObjectBlock>(binaryReader, blamPointers.Dequeue());
-            counts = ReadBlockArrayData<GlobalDetailObjectCountsBlock>(binaryReader, blamPointers.Dequeue());
-            zReferenceVectors = ReadBlockArrayData<GlobalZReferenceVectorBlock>(binaryReader, blamPointers.Dequeue());
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            cells = Guerilla.ReadBlockArray<GlobalDetailObjectCellsBlock>(binaryReader);
+            instances = Guerilla.ReadBlockArray<GlobalDetailObjectBlock>(binaryReader);
+            counts = Guerilla.ReadBlockArray<GlobalDetailObjectCountsBlock>(binaryReader);
+            zReferenceVectors = Guerilla.ReadBlockArray<GlobalZReferenceVectorBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(1);
+            invalidName_0 = binaryReader.ReadBytes(3);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<GlobalDetailObjectCellsBlock>(binaryWriter, cells, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GlobalDetailObjectBlock>(binaryWriter, instances, nextAddress);

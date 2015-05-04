@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalGeometryPointDataStructBlock : GlobalGeometryPointDataStructBlockBase
     {
-        public GlobalGeometryPointDataStructBlock() : base()
+        public  GlobalGeometryPointDataStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  GlobalGeometryPointDataStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 32, Alignment = 4)]
@@ -23,32 +26,33 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] runtimePointData;
         internal GlobalGeometryRigidPointGroupBlock[] rigidPointGroups;
         internal GlobalGeometryPointDataIndexBlock[] vertexPointIndices;
-        public override int SerializedSize { get { return 32; } }
-        public override int Alignment { get { return 4; } }
-        public GlobalGeometryPointDataStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 32; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  GlobalGeometryPointDataStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            rawPoints = Guerilla.ReadBlockArray<GlobalGeometryRawPointBlock>(binaryReader);
+            runtimePointData = Guerilla.ReadData(binaryReader);
+            rigidPointGroups = Guerilla.ReadBlockArray<GlobalGeometryRigidPointGroupBlock>(binaryReader);
+            vertexPointIndices = Guerilla.ReadBlockArray<GlobalGeometryPointDataIndexBlock>(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  GlobalGeometryPointDataStructBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometryRawPointBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
-            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometryRigidPointGroupBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometryPointDataIndexBlock>(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            rawPoints = ReadBlockArrayData<GlobalGeometryRawPointBlock>(binaryReader, blamPointers.Dequeue());
-            runtimePointData = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
-            rigidPointGroups = ReadBlockArrayData<GlobalGeometryRigidPointGroupBlock>(binaryReader, blamPointers.Dequeue());
-            vertexPointIndices = ReadBlockArrayData<GlobalGeometryPointDataIndexBlock>(binaryReader, blamPointers.Dequeue());
+            rawPoints = Guerilla.ReadBlockArray<GlobalGeometryRawPointBlock>(binaryReader);
+            runtimePointData = Guerilla.ReadData(binaryReader);
+            rigidPointGroups = Guerilla.ReadBlockArray<GlobalGeometryRigidPointGroupBlock>(binaryReader);
+            vertexPointIndices = Guerilla.ReadBlockArray<GlobalGeometryPointDataIndexBlock>(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<GlobalGeometryRawPointBlock>(binaryWriter, rawPoints, nextAddress);
                 nextAddress = Guerilla.WriteData(binaryWriter, runtimePointData, nextAddress);

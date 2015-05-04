@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPostprocessVertexShaderConstantBlock : ShaderPostprocessVertexShaderConstantBlockBase
     {
-        public ShaderPostprocessVertexShaderConstantBlock() : base()
+        public  ShaderPostprocessVertexShaderConstantBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderPostprocessVertexShaderConstantBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 18, Alignment = 4)]
@@ -25,30 +28,37 @@ namespace Moonfish.Guerilla.Tags
         internal float data0;
         internal float data1;
         internal float data2;
-        public override int SerializedSize { get { return 18; } }
-        public override int Alignment { get { return 4; } }
-        public ShaderPostprocessVertexShaderConstantBlockBase() : base()
+        
+        public override int SerializedSize{get { return 18; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderPostprocessVertexShaderConstantBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             registerIndex = binaryReader.ReadByte();
             registerBank = binaryReader.ReadByte();
             data = binaryReader.ReadSingle();
             data0 = binaryReader.ReadSingle();
             data1 = binaryReader.ReadSingle();
             data2 = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ShaderPostprocessVertexShaderConstantBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            registerIndex = binaryReader.ReadByte();
+            registerBank = binaryReader.ReadByte();
+            data = binaryReader.ReadSingle();
+            data0 = binaryReader.ReadSingle();
+            data1 = binaryReader.ReadSingle();
+            data2 = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(registerIndex);
                 binaryWriter.Write(registerBank);

@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class EffectPartBlock : EffectPartBlockBase
     {
-        public EffectPartBlock() : base()
+        public  EffectPartBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  EffectPartBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 56, Alignment = 4)]
@@ -38,14 +41,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range radiusModifierBounds;
         internal AScalesValues aScalesValues;
         internal BScalesValues bScalesValues;
-        public override int SerializedSize { get { return 56; } }
-        public override int Alignment { get { return 4; } }
-        public EffectPartBlockBase() : base()
+        
+        public override int SerializedSize{get { return 56; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  EffectPartBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             createIn = (CreateIn)binaryReader.ReadInt16();
             createIn0 = (CreateIn)binaryReader.ReadInt16();
             location = binaryReader.ReadShortBlockIndex1();
@@ -58,20 +61,29 @@ namespace Moonfish.Guerilla.Tags
             radiusModifierBounds = binaryReader.ReadRange();
             aScalesValues = (AScalesValues)binaryReader.ReadInt32();
             bScalesValues = (BScalesValues)binaryReader.ReadInt32();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  EffectPartBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            createIn = (CreateIn)binaryReader.ReadInt16();
+            createIn0 = (CreateIn)binaryReader.ReadInt16();
+            location = binaryReader.ReadShortBlockIndex1();
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(4);
+            type = binaryReader.ReadTagReference();
+            velocityBoundsWorldUnitsPerSecond = binaryReader.ReadRange();
+            velocityConeAngleDegrees = binaryReader.ReadSingle();
+            angularVelocityBoundsDegreesPerSecond = binaryReader.ReadRange();
+            radiusModifierBounds = binaryReader.ReadRange();
+            aScalesValues = (AScalesValues)binaryReader.ReadInt32();
+            bScalesValues = (BScalesValues)binaryReader.ReadInt32();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)createIn);
                 binaryWriter.Write((Int16)createIn0);

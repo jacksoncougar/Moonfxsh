@@ -5,40 +5,45 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SkillToRankMappingBlock : SkillToRankMappingBlockBase
     {
-        public SkillToRankMappingBlock() : base()
+        public  SkillToRankMappingBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SkillToRankMappingBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 4, Alignment = 4)]
     public class SkillToRankMappingBlockBase : GuerillaBlock
     {
         internal int skillBounds;
-        public override int SerializedSize { get { return 4; } }
-        public override int Alignment { get { return 4; } }
-        public SkillToRankMappingBlockBase() : base()
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SkillToRankMappingBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             skillBounds = binaryReader.ReadInt32();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  SkillToRankMappingBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            skillBounds = binaryReader.ReadInt32();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(skillBounds);
                 return nextAddress;

@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PrtSectionInfoBlock : PrtSectionInfoBlockBase
     {
-        public PrtSectionInfoBlock() : base()
+        public  PrtSectionInfoBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PrtSectionInfoBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
@@ -21,26 +24,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal int sectionIndex;
         internal int pcaDataOffset;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
-        public PrtSectionInfoBlockBase() : base()
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PrtSectionInfoBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             sectionIndex = binaryReader.ReadInt32();
             pcaDataOffset = binaryReader.ReadInt32();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  PrtSectionInfoBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            sectionIndex = binaryReader.ReadInt32();
+            pcaDataOffset = binaryReader.ReadInt32();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(sectionIndex);
                 binaryWriter.Write(pcaDataOffset);

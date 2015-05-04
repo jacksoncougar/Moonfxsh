@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PlatformSoundEffectCollectionBlock : PlatformSoundEffectCollectionBlockBase
     {
-        public PlatformSoundEffectCollectionBlock() : base()
+        public  PlatformSoundEffectCollectionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PlatformSoundEffectCollectionBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -22,29 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal PlatformSoundEffectBlock[] soundEffects;
         internal PlatformSoundEffectFunctionBlock[] lowFrequencyInput;
         internal int soundEffectOverrides;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
-        public PlatformSoundEffectCollectionBlockBase() : base()
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PlatformSoundEffectCollectionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<PlatformSoundEffectBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<PlatformSoundEffectFunctionBlock>(binaryReader));
+            soundEffects = Guerilla.ReadBlockArray<PlatformSoundEffectBlock>(binaryReader);
+            lowFrequencyInput = Guerilla.ReadBlockArray<PlatformSoundEffectFunctionBlock>(binaryReader);
             soundEffectOverrides = binaryReader.ReadInt32();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  PlatformSoundEffectCollectionBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            soundEffects = ReadBlockArrayData<PlatformSoundEffectBlock>(binaryReader, blamPointers.Dequeue());
-            lowFrequencyInput = ReadBlockArrayData<PlatformSoundEffectFunctionBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            soundEffects = Guerilla.ReadBlockArray<PlatformSoundEffectBlock>(binaryReader);
+            lowFrequencyInput = Guerilla.ReadBlockArray<PlatformSoundEffectFunctionBlock>(binaryReader);
+            soundEffectOverrides = binaryReader.ReadInt32();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<PlatformSoundEffectBlock>(binaryWriter, soundEffects, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<PlatformSoundEffectFunctionBlock>(binaryWriter, lowFrequencyInput, nextAddress);

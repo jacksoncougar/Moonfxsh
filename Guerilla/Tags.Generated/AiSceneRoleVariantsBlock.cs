@@ -5,40 +5,45 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AiSceneRoleVariantsBlock : AiSceneRoleVariantsBlockBase
     {
-        public AiSceneRoleVariantsBlock() : base()
+        public  AiSceneRoleVariantsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AiSceneRoleVariantsBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 4, Alignment = 4)]
     public class AiSceneRoleVariantsBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringIdent variantDesignation;
-        public override int SerializedSize { get { return 4; } }
-        public override int Alignment { get { return 4; } }
-        public AiSceneRoleVariantsBlockBase() : base()
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AiSceneRoleVariantsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             variantDesignation = binaryReader.ReadStringID();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  AiSceneRoleVariantsBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            variantDesignation = binaryReader.ReadStringID();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(variantDesignation);
                 return nextAddress;

@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class VehicleSuspensionBlock : VehicleSuspensionBlockBase
     {
-        public VehicleSuspensionBlock() : base()
+        public  VehicleSuspensionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  VehicleSuspensionBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -29,17 +32,16 @@ namespace Moonfish.Guerilla.Tags
         internal float destroyedMassPointOffset;
         internal float destroyedFullExtensionGroundDepth;
         internal float destroyedFullCompressionGroundDepth;
-        public override int SerializedSize { get { return 40; } }
-        public override int Alignment { get { return 4; } }
-        public VehicleSuspensionBlockBase() : base()
+        
+        public override int SerializedSize{get { return 40; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  VehicleSuspensionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             label = binaryReader.ReadStringID();
-            animation = new AnimationIndexStructBlock();
-            blamPointers.Concat(animation.ReadFields(binaryReader));
+            animation = new AnimationIndexStructBlock(binaryReader);
             markerName = binaryReader.ReadStringID();
             massPointOffset = binaryReader.ReadSingle();
             fullExtensionGroundDepth = binaryReader.ReadSingle();
@@ -48,17 +50,27 @@ namespace Moonfish.Guerilla.Tags
             destroyedMassPointOffset = binaryReader.ReadSingle();
             destroyedFullExtensionGroundDepth = binaryReader.ReadSingle();
             destroyedFullCompressionGroundDepth = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  VehicleSuspensionBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            animation.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            label = binaryReader.ReadStringID();
+            animation = new AnimationIndexStructBlock(binaryReader);
+            markerName = binaryReader.ReadStringID();
+            massPointOffset = binaryReader.ReadSingle();
+            fullExtensionGroundDepth = binaryReader.ReadSingle();
+            fullCompressionGroundDepth = binaryReader.ReadSingle();
+            regionName = binaryReader.ReadStringID();
+            destroyedMassPointOffset = binaryReader.ReadSingle();
+            destroyedFullExtensionGroundDepth = binaryReader.ReadSingle();
+            destroyedFullCompressionGroundDepth = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(label);
                 animation.Write(binaryWriter);

@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioWeaponDatumStructBlock : ScenarioWeaponDatumStructBlockBase
     {
-        public ScenarioWeaponDatumStructBlock() : base()
+        public  ScenarioWeaponDatumStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioWeaponDatumStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
@@ -22,27 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal short roundsLeft;
         internal short roundsLoaded;
         internal Flags flags;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
-        public ScenarioWeaponDatumStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioWeaponDatumStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             roundsLeft = binaryReader.ReadInt16();
             roundsLoaded = binaryReader.ReadInt16();
             flags = (Flags)binaryReader.ReadInt32();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ScenarioWeaponDatumStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            roundsLeft = binaryReader.ReadInt16();
+            roundsLoaded = binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt32();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(roundsLeft);
                 binaryWriter.Write(roundsLoaded);

@@ -5,40 +5,45 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CollisionModelMaterialBlock : CollisionModelMaterialBlockBase
     {
-        public CollisionModelMaterialBlock() : base()
+        public  CollisionModelMaterialBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CollisionModelMaterialBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 4, Alignment = 4)]
     public class CollisionModelMaterialBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.StringIdent name;
-        public override int SerializedSize { get { return 4; } }
-        public override int Alignment { get { return 4; } }
-        public CollisionModelMaterialBlockBase() : base()
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CollisionModelMaterialBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  CollisionModelMaterialBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadStringID();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 return nextAddress;

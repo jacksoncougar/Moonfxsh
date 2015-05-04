@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("$#!+")]
     public partial class CacheFileSoundBlock : CacheFileSoundBlockBase
     {
-        public CacheFileSoundBlock() : base()
+        public  CacheFileSoundBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CacheFileSoundBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -41,14 +44,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte customPlaybackIndex;
         internal short extraInfoIndex;
         internal int maximumPlayTimeMs;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
-        public CacheFileSoundBlockBase() : base()
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CacheFileSoundBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             soundClass = (SoundClass)binaryReader.ReadByte();
             sampleRate = (SampleRate)binaryReader.ReadByte();
@@ -62,16 +65,30 @@ namespace Moonfish.Guerilla.Tags
             customPlaybackIndex = binaryReader.ReadByte();
             extraInfoIndex = binaryReader.ReadInt16();
             maximumPlayTimeMs = binaryReader.ReadInt32();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  CacheFileSoundBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt16();
+            soundClass = (SoundClass)binaryReader.ReadByte();
+            sampleRate = (SampleRate)binaryReader.ReadByte();
+            encoding = (Encoding)binaryReader.ReadByte();
+            compression = (Compression)binaryReader.ReadByte();
+            playbackIndex = binaryReader.ReadInt16();
+            firstPitchRangeIndex = binaryReader.ReadInt16();
+            pitchRangeCount = binaryReader.ReadByte();
+            scaleIndex = binaryReader.ReadByte();
+            promotionIndex = binaryReader.ReadByte();
+            customPlaybackIndex = binaryReader.ReadByte();
+            extraInfoIndex = binaryReader.ReadInt16();
+            maximumPlayTimeMs = binaryReader.ReadInt32();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write((Byte)soundClass);

@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalWaterDefinitionsBlock : GlobalWaterDefinitionsBlockBase
     {
-        public GlobalWaterDefinitionsBlock() : base()
+        public  GlobalWaterDefinitionsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  GlobalWaterDefinitionsBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 172, Alignment = 4)]
@@ -23,10 +26,10 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference shader;
         internal WaterGeometrySectionBlock[] section;
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
-        internal Moonfish.Tags.ColourR8G8B8 sunSpotColor;
+        internal Moonfish.Tags.ColourR8G8B8 SunSpotColour;
         internal Moonfish.Tags.ColourR8G8B8 reflectionTint;
         internal Moonfish.Tags.ColourR8G8B8 refractionTint;
-        internal Moonfish.Tags.ColourR8G8B8 horizonColor;
+        internal Moonfish.Tags.ColourR8G8B8 HorizonColour;
         internal float sunSpecularPower;
         internal float reflectionBumpScale;
         internal float refractionBumpScale;
@@ -43,22 +46,21 @@ namespace Moonfish.Guerilla.Tags
         internal float fogNear;
         internal float fogFar;
         internal float dynamicHeightBias;
-        public override int SerializedSize { get { return 172; } }
-        public override int Alignment { get { return 4; } }
-        public GlobalWaterDefinitionsBlockBase() : base()
+        
+        public override int SerializedSize{get { return 172; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  GlobalWaterDefinitionsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             shader = binaryReader.ReadTagReference();
-            blamPointers.Enqueue(ReadBlockArrayPointer<WaterGeometrySectionBlock>(binaryReader));
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
-            blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader));
-            sunSpotColor = binaryReader.ReadColorR8G8B8();
+            section = Guerilla.ReadBlockArray<WaterGeometrySectionBlock>(binaryReader);
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            SunSpotColour = binaryReader.ReadColorR8G8B8();
             reflectionTint = binaryReader.ReadColorR8G8B8();
             refractionTint = binaryReader.ReadColorR8G8B8();
-            horizonColor = binaryReader.ReadColorR8G8B8();
+            HorizonColour = binaryReader.ReadColorR8G8B8();
             sunSpecularPower = binaryReader.ReadSingle();
             reflectionBumpScale = binaryReader.ReadSingle();
             refractionBumpScale = binaryReader.ReadSingle();
@@ -75,26 +77,48 @@ namespace Moonfish.Guerilla.Tags
             fogNear = binaryReader.ReadSingle();
             fogFar = binaryReader.ReadSingle();
             dynamicHeightBias = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  GlobalWaterDefinitionsBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            section = ReadBlockArrayData<WaterGeometrySectionBlock>(binaryReader, blamPointers.Dequeue());
-            geometryBlockInfo.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            shader = binaryReader.ReadTagReference();
+            section = Guerilla.ReadBlockArray<WaterGeometrySectionBlock>(binaryReader);
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            SunSpotColour = binaryReader.ReadColorR8G8B8();
+            reflectionTint = binaryReader.ReadColorR8G8B8();
+            refractionTint = binaryReader.ReadColorR8G8B8();
+            HorizonColour = binaryReader.ReadColorR8G8B8();
+            sunSpecularPower = binaryReader.ReadSingle();
+            reflectionBumpScale = binaryReader.ReadSingle();
+            refractionBumpScale = binaryReader.ReadSingle();
+            fresnelScale = binaryReader.ReadSingle();
+            sunDirHeading = binaryReader.ReadSingle();
+            sunDirPitch = binaryReader.ReadSingle();
+            fOV = binaryReader.ReadSingle();
+            aspect = binaryReader.ReadSingle();
+            height = binaryReader.ReadSingle();
+            farz = binaryReader.ReadSingle();
+            rotateOffset = binaryReader.ReadSingle();
+            center = binaryReader.ReadVector2();
+            extents = binaryReader.ReadVector2();
+            fogNear = binaryReader.ReadSingle();
+            fogFar = binaryReader.ReadSingle();
+            dynamicHeightBias = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(shader);
                 nextAddress = Guerilla.WriteBlockArray<WaterGeometrySectionBlock>(binaryWriter, section, nextAddress);
                 geometryBlockInfo.Write(binaryWriter);
-                binaryWriter.Write(sunSpotColor);
+                binaryWriter.Write(SunSpotColour);
                 binaryWriter.Write(reflectionTint);
                 binaryWriter.Write(refractionTint);
-                binaryWriter.Write(horizonColor);
+                binaryWriter.Write(HorizonColour);
                 binaryWriter.Write(sunSpecularPower);
                 binaryWriter.Write(reflectionBumpScale);
                 binaryWriter.Write(refractionBumpScale);

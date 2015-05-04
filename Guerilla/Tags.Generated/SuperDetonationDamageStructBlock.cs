@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SuperDetonationDamageStructBlock : SuperDetonationDamageStructBlockBase
     {
-        public SuperDetonationDamageStructBlock() : base()
+        public  SuperDetonationDamageStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SuperDetonationDamageStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
@@ -21,25 +24,27 @@ namespace Moonfish.Guerilla.Tags
     {
         [TagReference("jpt!")]
         internal Moonfish.Tags.TagReference superDetonationDamage;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
-        public SuperDetonationDamageStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SuperDetonationDamageStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             superDetonationDamage = binaryReader.ReadTagReference();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  SuperDetonationDamageStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            superDetonationDamage = binaryReader.ReadTagReference();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(superDetonationDamage);
                 return nextAddress;

@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,34 +19,40 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("sslt")]
     public partial class ScenarioStructureLightingResourceBlock : ScenarioStructureLightingResourceBlockBase
     {
-        public ScenarioStructureLightingResourceBlock() : base()
+        public  ScenarioStructureLightingResourceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioStructureLightingResourceBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class ScenarioStructureLightingResourceBlockBase : GuerillaBlock
     {
         internal ScenarioStructureBspSphericalHarmonicLightingBlock[] structureLighting;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
-        public ScenarioStructureLightingResourceBlockBase() : base()
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioStructureLightingResourceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            structureLighting = Guerilla.ReadBlockArray<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  ScenarioStructureLightingResourceBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            structureLighting = ReadBlockArrayData<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryReader, blamPointers.Dequeue());
+            structureLighting = Guerilla.ReadBlockArray<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<ScenarioStructureBspSphericalHarmonicLightingBlock>(binaryWriter, structureLighting, nextAddress);
                 return nextAddress;

@@ -5,42 +5,45 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class TagBlockIndexBlock : TagBlockIndexBlockBase
     {
-        public TagBlockIndexBlock() : base()
+        public  TagBlockIndexBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  TagBlockIndexBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 2, Alignment = 4)]
     public class TagBlockIndexBlockBase : GuerillaBlock
     {
         internal TagBlockIndexStructBlock indices;
-        public override int SerializedSize { get { return 2; } }
-        public override int Alignment { get { return 4; } }
-        public TagBlockIndexBlockBase() : base()
+        
+        public override int SerializedSize{get { return 2; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  TagBlockIndexBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            indices = new TagBlockIndexStructBlock(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  TagBlockIndexBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            indices = new TagBlockIndexStructBlock();
-            blamPointers.Concat(indices.ReadFields(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            indices.ReadPointers(binaryReader, blamPointers);
+            indices = new TagBlockIndexStructBlock(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 indices.Write(binaryWriter);
                 return nextAddress;

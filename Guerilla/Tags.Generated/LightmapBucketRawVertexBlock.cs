@@ -5,44 +5,50 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class LightmapBucketRawVertexBlock : LightmapBucketRawVertexBlockBase
     {
-        public LightmapBucketRawVertexBlock() : base()
+        public  LightmapBucketRawVertexBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  LightmapBucketRawVertexBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
     public class LightmapBucketRawVertexBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.ColourR8G8B8 primaryLightmapColor;
+        internal Moonfish.Tags.ColourR8G8B8 PrimaryLightmapColour;
         internal OpenTK.Vector3 primaryLightmapIncidentDirection;
-        public override int SerializedSize { get { return 24; } }
-        public override int Alignment { get { return 4; } }
-        public LightmapBucketRawVertexBlockBase() : base()
+        
+        public override int SerializedSize{get { return 24; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  LightmapBucketRawVertexBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            primaryLightmapColor = binaryReader.ReadColorR8G8B8();
+            PrimaryLightmapColour = binaryReader.ReadColorR8G8B8();
             primaryLightmapIncidentDirection = binaryReader.ReadVector3();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  LightmapBucketRawVertexBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            PrimaryLightmapColour = binaryReader.ReadColorR8G8B8();
+            primaryLightmapIncidentDirection = binaryReader.ReadVector3();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write(primaryLightmapColor);
+                binaryWriter.Write(PrimaryLightmapColour);
                 binaryWriter.Write(primaryLightmapIncidentDirection);
                 return nextAddress;
             }

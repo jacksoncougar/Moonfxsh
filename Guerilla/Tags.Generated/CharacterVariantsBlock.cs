@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterVariantsBlock : CharacterVariantsBlockBase
     {
-        public CharacterVariantsBlock() : base()
+        public  CharacterVariantsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CharacterVariantsBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 12, Alignment = 4)]
@@ -23,30 +26,33 @@ namespace Moonfish.Guerilla.Tags
         internal short variantIndex;
         internal byte[] invalidName_;
         internal Moonfish.Tags.StringIdent variantDesignator;
-        public override int SerializedSize { get { return 12; } }
-        public override int Alignment { get { return 4; } }
-        public CharacterVariantsBlockBase() : base()
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CharacterVariantsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             variantName = binaryReader.ReadStringID();
             variantIndex = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             variantDesignator = binaryReader.ReadStringID();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  CharacterVariantsBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            variantName = binaryReader.ReadStringID();
+            variantIndex = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            variantDesignator = binaryReader.ReadStringID();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(variantName);
                 binaryWriter.Write(variantIndex);

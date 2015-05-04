@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,34 +19,40 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("mply")]
     public partial class MultiplayerScenarioDescriptionBlock : MultiplayerScenarioDescriptionBlockBase
     {
-        public MultiplayerScenarioDescriptionBlock() : base()
+        public  MultiplayerScenarioDescriptionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  MultiplayerScenarioDescriptionBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class MultiplayerScenarioDescriptionBlockBase : GuerillaBlock
     {
         internal ScenarioDescriptionBlock[] multiplayerScenarios;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
-        public MultiplayerScenarioDescriptionBlockBase() : base()
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  MultiplayerScenarioDescriptionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            multiplayerScenarios = Guerilla.ReadBlockArray<ScenarioDescriptionBlock>(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  MultiplayerScenarioDescriptionBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioDescriptionBlock>(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            multiplayerScenarios = ReadBlockArrayData<ScenarioDescriptionBlock>(binaryReader, blamPointers.Dequeue());
+            multiplayerScenarios = Guerilla.ReadBlockArray<ScenarioDescriptionBlock>(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<ScenarioDescriptionBlock>(binaryWriter, multiplayerScenarios, nextAddress);
                 return nextAddress;

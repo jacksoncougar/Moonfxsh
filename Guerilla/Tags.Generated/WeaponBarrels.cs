@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class WeaponBarrels : WeaponBarrelsBase
     {
-        public WeaponBarrels() : base()
+        public  WeaponBarrels(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  WeaponBarrels(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 236, Alignment = 4)]
@@ -155,14 +158,14 @@ namespace Moonfish.Guerilla.Tags
         /// firingEffects determine what happens when this trigger is fired
         /// </summary>
         internal BarrelFiringEffectBlock[] firingEffects;
-        public override int SerializedSize { get { return 236; } }
-        public override int Alignment { get { return 4; } }
-        public WeaponBarrelsBase() : base()
+        
+        public override int SerializedSize{get { return 236; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  WeaponBarrelsBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             roundsPerSecond = binaryReader.ReadRange();
             accelerationTimeSeconds = binaryReader.ReadSingle();
@@ -197,8 +200,7 @@ namespace Moonfish.Guerilla.Tags
             damageEffectReportingType = (DamageEffectReportingType)binaryReader.ReadByte();
             invalidName_0 = binaryReader.ReadBytes(3);
             projectile = binaryReader.ReadTagReference();
-            eh = new WeaponBarrelDamageEffectStructBlock();
-            blamPointers.Concat(eh.ReadFields(binaryReader));
+            eh = new WeaponBarrelDamageEffectStructBlock(binaryReader);
             ejectionPortRecoveryTime = binaryReader.ReadSingle();
             illuminationRecoveryTime = binaryReader.ReadSingle();
             heatGeneratedPerRound01 = binaryReader.ReadSingle();
@@ -211,64 +213,66 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(2);
             invalidName_2 = binaryReader.ReadBytes(8);
             invalidName_3 = binaryReader.ReadBytes(24);
-            blamPointers.Enqueue(ReadBlockArrayPointer<BarrelFiringEffectBlock>(binaryReader));
-            return blamPointers;
+            firingEffects = Guerilla.ReadBlockArray<BarrelFiringEffectBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  WeaponBarrelsBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_[4].ReadPointers(binaryReader, blamPointers);
-            invalidName_[5].ReadPointers(binaryReader, blamPointers);
-            invalidName_[6].ReadPointers(binaryReader, blamPointers);
-            invalidName_[7].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
-            eh.ReadPointers(binaryReader, blamPointers);
-            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[4].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[5].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[6].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[7].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[4].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[5].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[6].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[7].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[8].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[9].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[10].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[11].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[12].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[13].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[14].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[15].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[16].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[17].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[18].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[19].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[20].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[21].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[22].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[23].ReadPointers(binaryReader, blamPointers);
-            firingEffects = ReadBlockArrayData<BarrelFiringEffectBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt32();
+            roundsPerSecond = binaryReader.ReadRange();
+            accelerationTimeSeconds = binaryReader.ReadSingle();
+            decelerationTimeSeconds = binaryReader.ReadSingle();
+            barrelSpinScale = binaryReader.ReadSingle();
+            blurredRateOfFire = binaryReader.ReadSingle();
+            shotsPerFire = binaryReader.ReadInt32();
+            fireRecoveryTimeSeconds = binaryReader.ReadSingle();
+            softRecoveryFraction = binaryReader.ReadSingle();
+            magazine = binaryReader.ReadShortBlockIndex1();
+            roundsPerShot = binaryReader.ReadInt16();
+            minimumRoundsLoaded = binaryReader.ReadInt16();
+            roundsBetweenTracers = binaryReader.ReadInt16();
+            optionalBarrelMarkerName = binaryReader.ReadStringID();
+            predictionType = (PredictionType)binaryReader.ReadInt16();
+            firingNoise = (FiringNoiseHowLoudThisWeaponAppearsToTheAI)binaryReader.ReadInt16();
+            accelerationTimeSeconds0 = binaryReader.ReadSingle();
+            decelerationTimeSeconds0 = binaryReader.ReadSingle();
+            damageError = binaryReader.ReadRange();
+            accelerationTimeSeconds1 = binaryReader.ReadSingle();
+            decelerationTimeSeconds1 = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(8);
+            minimumErrorDegrees = binaryReader.ReadSingle();
+            errorAngleDegrees = binaryReader.ReadRange();
+            dualWieldDamageScale = binaryReader.ReadSingle();
+            distributionFunction = (DistributionFunction)binaryReader.ReadInt16();
+            projectilesPerShot = binaryReader.ReadInt16();
+            distributionAngleDegrees = binaryReader.ReadSingle();
+            minimumErrorDegrees0 = binaryReader.ReadSingle();
+            errorAngleDegrees0 = binaryReader.ReadRange();
+            firstPersonOffsetWorldUnits = binaryReader.ReadVector3();
+            damageEffectReportingType = (DamageEffectReportingType)binaryReader.ReadByte();
+            invalidName_0 = binaryReader.ReadBytes(3);
+            projectile = binaryReader.ReadTagReference();
+            eh = new WeaponBarrelDamageEffectStructBlock(binaryReader);
+            ejectionPortRecoveryTime = binaryReader.ReadSingle();
+            illuminationRecoveryTime = binaryReader.ReadSingle();
+            heatGeneratedPerRound01 = binaryReader.ReadSingle();
+            ageGeneratedPerRound01 = binaryReader.ReadSingle();
+            overloadTimeSeconds = binaryReader.ReadSingle();
+            angleChangePerShot = binaryReader.ReadRange();
+            accelerationTimeSeconds2 = binaryReader.ReadSingle();
+            decelerationTimeSeconds2 = binaryReader.ReadSingle();
+            angleChangeFunction = (AngleChangeFunctionFunctionUsedToScaleBetweenInitialAndFinalAngleChangePerShot)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            invalidName_2 = binaryReader.ReadBytes(8);
+            invalidName_3 = binaryReader.ReadBytes(24);
+            firingEffects = Guerilla.ReadBlockArray<BarrelFiringEffectBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(roundsPerSecond);

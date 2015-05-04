@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("shad")]
     public partial class ShaderBlock : ShaderBlockBase
     {
-        public ShaderBlock() : base()
+        public  ShaderBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 84, Alignment = 4)]
@@ -48,23 +51,23 @@ namespace Moonfish.Guerilla.Tags
         internal float lightmapAmbientBias11;
         internal float addedDepthBiasOffset;
         internal float addedDepthBiasSlopeScale;
-        public override int SerializedSize { get { return 84; } }
-        public override int Alignment { get { return 4; } }
-        public ShaderBlockBase() : base()
+        
+        public override int SerializedSize{get { return 84; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             template = binaryReader.ReadTagReference();
             materialName = binaryReader.ReadStringID();
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPropertiesBlock>(binaryReader));
+            runtimeProperties = Guerilla.ReadBlockArray<ShaderPropertiesBlock>(binaryReader);
             invalidName_ = binaryReader.ReadBytes(2);
             flags = (Flags)binaryReader.ReadInt16();
-            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalShaderParameterBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPostprocessDefinitionNewBlock>(binaryReader));
+            parameters = Guerilla.ReadBlockArray<GlobalShaderParameterBlock>(binaryReader);
+            postprocessDefinition = Guerilla.ReadBlockArray<ShaderPostprocessDefinitionNewBlock>(binaryReader);
             invalidName_0 = binaryReader.ReadBytes(4);
-            blamPointers.Enqueue(ReadBlockArrayPointer<PredictedResourceBlock>(binaryReader));
+            predictedResources = Guerilla.ReadBlockArray<PredictedResourceBlock>(binaryReader);
             lightResponse = binaryReader.ReadTagReference();
             shaderLODBias = (ShaderLODBias)binaryReader.ReadInt16();
             specularType = (SpecularType)binaryReader.ReadInt16();
@@ -74,28 +77,35 @@ namespace Moonfish.Guerilla.Tags
             lightmapAmbientBias11 = binaryReader.ReadSingle();
             addedDepthBiasOffset = binaryReader.ReadSingle();
             addedDepthBiasSlopeScale = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ShaderBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            runtimeProperties = ReadBlockArrayData<ShaderPropertiesBlock>(binaryReader, blamPointers.Dequeue());
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            parameters = ReadBlockArrayData<GlobalShaderParameterBlock>(binaryReader, blamPointers.Dequeue());
-            postprocessDefinition = ReadBlockArrayData<ShaderPostprocessDefinitionNewBlock>(binaryReader, blamPointers.Dequeue());
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
-            predictedResources = ReadBlockArrayData<PredictedResourceBlock>(binaryReader, blamPointers.Dequeue());
-            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            template = binaryReader.ReadTagReference();
+            materialName = binaryReader.ReadStringID();
+            runtimeProperties = Guerilla.ReadBlockArray<ShaderPropertiesBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(2);
+            flags = (Flags)binaryReader.ReadInt16();
+            parameters = Guerilla.ReadBlockArray<GlobalShaderParameterBlock>(binaryReader);
+            postprocessDefinition = Guerilla.ReadBlockArray<ShaderPostprocessDefinitionNewBlock>(binaryReader);
+            invalidName_0 = binaryReader.ReadBytes(4);
+            predictedResources = Guerilla.ReadBlockArray<PredictedResourceBlock>(binaryReader);
+            lightResponse = binaryReader.ReadTagReference();
+            shaderLODBias = (ShaderLODBias)binaryReader.ReadInt16();
+            specularType = (SpecularType)binaryReader.ReadInt16();
+            lightmapType = (LightmapType)binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            lightmapSpecularBrightness = binaryReader.ReadSingle();
+            lightmapAmbientBias11 = binaryReader.ReadSingle();
+            addedDepthBiasOffset = binaryReader.ReadSingle();
+            addedDepthBiasSlopeScale = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(template);
                 binaryWriter.Write(materialName);

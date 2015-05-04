@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class VariantSettingEditReferenceBlock : VariantSettingEditReferenceBlockBase
     {
-        public VariantSettingEditReferenceBlock() : base()
+        public  VariantSettingEditReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  VariantSettingEditReferenceBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -23,34 +26,33 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal TextValuePairBlock[] options;
         internal NullBlock[] nullBlock;
-        public override int SerializedSize { get { return 24; } }
-        public override int Alignment { get { return 4; } }
-        public VariantSettingEditReferenceBlockBase() : base()
+        
+        public override int SerializedSize{get { return 24; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  VariantSettingEditReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             settingCategory = (SettingCategory)binaryReader.ReadInt32();
             invalidName_ = binaryReader.ReadBytes(4);
-            blamPointers.Enqueue(ReadBlockArrayPointer<TextValuePairBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<NullBlock>(binaryReader));
-            return blamPointers;
+            options = Guerilla.ReadBlockArray<TextValuePairBlock>(binaryReader);
+            nullBlock = Guerilla.ReadBlockArray<NullBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  VariantSettingEditReferenceBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
-            options = ReadBlockArrayData<TextValuePairBlock>(binaryReader, blamPointers.Dequeue());
-            nullBlock = ReadBlockArrayData<NullBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            settingCategory = (SettingCategory)binaryReader.ReadInt32();
+            invalidName_ = binaryReader.ReadBytes(4);
+            options = Guerilla.ReadBlockArray<TextValuePairBlock>(binaryReader);
+            nullBlock = Guerilla.ReadBlockArray<NullBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)settingCategory);
                 binaryWriter.Write(invalidName_, 0, 4);

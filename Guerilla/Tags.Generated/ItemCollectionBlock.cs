@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("itmc")]
     public partial class ItemCollectionBlock : ItemCollectionBlockBase
     {
-        public ItemCollectionBlock() : base()
+        public  ItemCollectionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ItemCollectionBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 12, Alignment = 4)]
@@ -31,30 +34,31 @@ namespace Moonfish.Guerilla.Tags
         internal ItemPermutation[] itemPermutations;
         internal short spawnTimeInSeconds0Default;
         internal byte[] invalidName_;
-        public override int SerializedSize { get { return 12; } }
-        public override int Alignment { get { return 4; } }
-        public ItemCollectionBlockBase() : base()
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ItemCollectionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ItemPermutation>(binaryReader));
+            itemPermutations = Guerilla.ReadBlockArray<ItemPermutation>(binaryReader);
             spawnTimeInSeconds0Default = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ItemCollectionBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            itemPermutations = ReadBlockArrayData<ItemPermutation>(binaryReader, blamPointers.Dequeue());
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            itemPermutations = Guerilla.ReadBlockArray<ItemPermutation>(binaryReader);
+            spawnTimeInSeconds0Default = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<ItemPermutation>(binaryWriter, itemPermutations, nextAddress);
                 binaryWriter.Write(spawnTimeInSeconds0Default);

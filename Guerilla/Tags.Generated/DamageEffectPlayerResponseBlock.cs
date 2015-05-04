@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class DamageEffectPlayerResponseBlock : DamageEffectPlayerResponseBlockBase
     {
-        public DamageEffectPlayerResponseBlock() : base()
+        public  DamageEffectPlayerResponseBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  DamageEffectPlayerResponseBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 76, Alignment = 4)]
@@ -24,37 +27,35 @@ namespace Moonfish.Guerilla.Tags
         internal ScreenFlashDefinitionStructBlock screenFlash;
         internal VibrationDefinitionStructBlock vibration;
         internal DamageEffectSoundEffectDefinitionBlock soundEffect;
-        public override int SerializedSize { get { return 76; } }
-        public override int Alignment { get { return 4; } }
-        public DamageEffectPlayerResponseBlockBase() : base()
+        
+        public override int SerializedSize{get { return 76; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  DamageEffectPlayerResponseBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             responseType = (ResponseType)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            screenFlash = new ScreenFlashDefinitionStructBlock();
-            blamPointers.Concat(screenFlash.ReadFields(binaryReader));
-            vibration = new VibrationDefinitionStructBlock();
-            blamPointers.Concat(vibration.ReadFields(binaryReader));
-            soundEffect = new DamageEffectSoundEffectDefinitionBlock();
-            blamPointers.Concat(soundEffect.ReadFields(binaryReader));
-            return blamPointers;
+            screenFlash = new ScreenFlashDefinitionStructBlock(binaryReader);
+            vibration = new VibrationDefinitionStructBlock(binaryReader);
+            soundEffect = new DamageEffectSoundEffectDefinitionBlock(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  DamageEffectPlayerResponseBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            screenFlash.ReadPointers(binaryReader, blamPointers);
-            vibration.ReadPointers(binaryReader, blamPointers);
-            soundEffect.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            responseType = (ResponseType)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            screenFlash = new ScreenFlashDefinitionStructBlock(binaryReader);
+            vibration = new VibrationDefinitionStructBlock(binaryReader);
+            soundEffect = new DamageEffectSoundEffectDefinitionBlock(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)responseType);
                 binaryWriter.Write(invalidName_, 0, 2);

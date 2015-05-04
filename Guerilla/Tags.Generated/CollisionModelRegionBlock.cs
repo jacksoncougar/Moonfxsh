@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CollisionModelRegionBlock : CollisionModelRegionBlockBase
     {
-        public CollisionModelRegionBlock() : base()
+        public  CollisionModelRegionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CollisionModelRegionBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 12, Alignment = 4)]
@@ -21,27 +24,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Moonfish.Tags.StringIdent name;
         internal CollisionModelPermutationBlock[] permutations;
-        public override int SerializedSize { get { return 12; } }
-        public override int Alignment { get { return 4; } }
-        public CollisionModelRegionBlockBase() : base()
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CollisionModelRegionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
-            blamPointers.Enqueue(ReadBlockArrayPointer<CollisionModelPermutationBlock>(binaryReader));
-            return blamPointers;
+            permutations = Guerilla.ReadBlockArray<CollisionModelPermutationBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  CollisionModelRegionBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            permutations = ReadBlockArrayData<CollisionModelPermutationBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadStringID();
+            permutations = Guerilla.ReadBlockArray<CollisionModelPermutationBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 nextAddress = Guerilla.WriteBlockArray<CollisionModelPermutationBlock>(binaryWriter, permutations, nextAddress);

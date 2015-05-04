@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureBspConveyorSurfaceBlock : StructureBspConveyorSurfaceBlockBase
     {
-        public StructureBspConveyorSurfaceBlock() : base()
+        public  StructureBspConveyorSurfaceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  StructureBspConveyorSurfaceBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -21,26 +24,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal OpenTK.Vector3 u;
         internal OpenTK.Vector3 v;
-        public override int SerializedSize { get { return 24; } }
-        public override int Alignment { get { return 4; } }
-        public StructureBspConveyorSurfaceBlockBase() : base()
+        
+        public override int SerializedSize{get { return 24; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  StructureBspConveyorSurfaceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             u = binaryReader.ReadVector3();
             v = binaryReader.ReadVector3();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  StructureBspConveyorSurfaceBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            u = binaryReader.ReadVector3();
+            v = binaryReader.ReadVector3();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(u);
                 binaryWriter.Write(v);

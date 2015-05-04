@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("weat")]
     public partial class WeatherSystemBlock : WeatherSystemBlockBase
     {
-        public WeatherSystemBlock() : base()
+        public  WeatherSystemBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  WeatherSystemBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 176, Alignment = 4)]
@@ -32,32 +35,33 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalWeatherBackgroundPlateBlock[] backgroundPlates;
         internal GlobalWindModelStructBlock windModel;
         internal float fadeRadius;
-        public override int SerializedSize { get { return 176; } }
-        public override int Alignment { get { return 4; } }
-        public WeatherSystemBlockBase() : base()
+        
+        public override int SerializedSize{get { return 176; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  WeatherSystemBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalParticleSystemLiteBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalWeatherBackgroundPlateBlock>(binaryReader));
-            windModel = new GlobalWindModelStructBlock();
-            blamPointers.Concat(windModel.ReadFields(binaryReader));
+            particleSystem = Guerilla.ReadBlockArray<GlobalParticleSystemLiteBlock>(binaryReader);
+            backgroundPlates = Guerilla.ReadBlockArray<GlobalWeatherBackgroundPlateBlock>(binaryReader);
+            windModel = new GlobalWindModelStructBlock(binaryReader);
             fadeRadius = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  WeatherSystemBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            particleSystem = ReadBlockArrayData<GlobalParticleSystemLiteBlock>(binaryReader, blamPointers.Dequeue());
-            backgroundPlates = ReadBlockArrayData<GlobalWeatherBackgroundPlateBlock>(binaryReader, blamPointers.Dequeue());
-            windModel.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            particleSystem = Guerilla.ReadBlockArray<GlobalParticleSystemLiteBlock>(binaryReader);
+            backgroundPlates = Guerilla.ReadBlockArray<GlobalWeatherBackgroundPlateBlock>(binaryReader);
+            windModel = new GlobalWindModelStructBlock(binaryReader);
+            fadeRadius = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<GlobalParticleSystemLiteBlock>(binaryWriter, particleSystem, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GlobalWeatherBackgroundPlateBlock>(binaryWriter, backgroundPlates, nextAddress);

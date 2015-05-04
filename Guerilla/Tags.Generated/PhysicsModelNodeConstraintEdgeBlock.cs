@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PhysicsModelNodeConstraintEdgeBlock : PhysicsModelNodeConstraintEdgeBlockBase
     {
-        public PhysicsModelNodeConstraintEdgeBlock() : base()
+        public  PhysicsModelNodeConstraintEdgeBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PhysicsModelNodeConstraintEdgeBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -31,35 +34,37 @@ namespace Moonfish.Guerilla.Tags
         /// if you don't fill this out we will pluck the material from the first primitive, of the first rigid body attached to node b, if node b is none we use whatever material a has
         /// </summary>
         internal Moonfish.Tags.StringIdent nodeBMaterial;
-        public override int SerializedSize { get { return 24; } }
-        public override int Alignment { get { return 4; } }
-        public PhysicsModelNodeConstraintEdgeBlockBase() : base()
+        
+        public override int SerializedSize{get { return 24; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PhysicsModelNodeConstraintEdgeBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(4);
             nodeA = binaryReader.ReadShortBlockIndex1();
             nodeB = binaryReader.ReadShortBlockIndex1();
-            blamPointers.Enqueue(ReadBlockArrayPointer<PhysicsModelConstraintEdgeConstraintBlock>(binaryReader));
+            constraints = Guerilla.ReadBlockArray<PhysicsModelConstraintEdgeConstraintBlock>(binaryReader);
             nodeAMaterial = binaryReader.ReadStringID();
             nodeBMaterial = binaryReader.ReadStringID();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  PhysicsModelNodeConstraintEdgeBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
-            constraints = ReadBlockArrayData<PhysicsModelConstraintEdgeConstraintBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            invalidName_ = binaryReader.ReadBytes(4);
+            nodeA = binaryReader.ReadShortBlockIndex1();
+            nodeB = binaryReader.ReadShortBlockIndex1();
+            constraints = Guerilla.ReadBlockArray<PhysicsModelConstraintEdgeConstraintBlock>(binaryReader);
+            nodeAMaterial = binaryReader.ReadStringID();
+            nodeBMaterial = binaryReader.ReadStringID();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 4);
                 binaryWriter.Write(nodeA);

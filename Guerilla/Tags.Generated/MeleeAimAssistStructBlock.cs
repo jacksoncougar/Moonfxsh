@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class MeleeAimAssistStructBlock : MeleeAimAssistStructBlockBase
     {
-        public MeleeAimAssistStructBlock() : base()
+        public  MeleeAimAssistStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  MeleeAimAssistStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -30,29 +33,35 @@ namespace Moonfish.Guerilla.Tags
         internal float throttleMagnitude;
         internal float throttleMinimumDistance;
         internal float throttleMaximumAdjustmentAngleDegrees;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
-        public MeleeAimAssistStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  MeleeAimAssistStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             magnetismAngleDegrees = binaryReader.ReadSingle();
             magnetismRangeWorldUnits = binaryReader.ReadSingle();
             throttleMagnitude = binaryReader.ReadSingle();
             throttleMinimumDistance = binaryReader.ReadSingle();
             throttleMaximumAdjustmentAngleDegrees = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  MeleeAimAssistStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            magnetismAngleDegrees = binaryReader.ReadSingle();
+            magnetismRangeWorldUnits = binaryReader.ReadSingle();
+            throttleMagnitude = binaryReader.ReadSingle();
+            throttleMinimumDistance = binaryReader.ReadSingle();
+            throttleMaximumAdjustmentAngleDegrees = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(magnetismAngleDegrees);
                 binaryWriter.Write(magnetismRangeWorldUnits);

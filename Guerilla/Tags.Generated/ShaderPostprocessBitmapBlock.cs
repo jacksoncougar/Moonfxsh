@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPostprocessBitmapBlock : ShaderPostprocessBitmapBlockBase
     {
-        public ShaderPostprocessBitmapBlock() : base()
+        public  ShaderPostprocessBitmapBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderPostprocessBitmapBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 10, Alignment = 4)]
@@ -23,28 +26,33 @@ namespace Moonfish.Guerilla.Tags
         internal byte flags;
         internal int bitmapGroupIndex;
         internal float logBitmapDimension;
-        public override int SerializedSize { get { return 10; } }
-        public override int Alignment { get { return 4; } }
-        public ShaderPostprocessBitmapBlockBase() : base()
+        
+        public override int SerializedSize{get { return 10; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderPostprocessBitmapBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             parameterIndex = binaryReader.ReadByte();
             flags = binaryReader.ReadByte();
             bitmapGroupIndex = binaryReader.ReadInt32();
             logBitmapDimension = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ShaderPostprocessBitmapBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            parameterIndex = binaryReader.ReadByte();
+            flags = binaryReader.ReadByte();
+            bitmapGroupIndex = binaryReader.ReadInt32();
+            logBitmapDimension = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(parameterIndex);
                 binaryWriter.Write(flags);

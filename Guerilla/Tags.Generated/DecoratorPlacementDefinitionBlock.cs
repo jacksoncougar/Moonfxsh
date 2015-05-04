@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class DecoratorPlacementDefinitionBlock : DecoratorPlacementDefinitionBlockBase
     {
-        public DecoratorPlacementDefinitionBlock() : base()
+        public  DecoratorPlacementDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  DecoratorPlacementDefinitionBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 48, Alignment = 4)]
@@ -25,34 +28,37 @@ namespace Moonfish.Guerilla.Tags
         internal DecoratorGroupBlock[] groups;
         internal DecoratorCellCollectionBlock[] cells;
         internal DecoratorProjectedDecalBlock[] decals;
-        public override int SerializedSize { get { return 48; } }
-        public override int Alignment { get { return 4; } }
-        public DecoratorPlacementDefinitionBlockBase() : base()
+        
+        public override int SerializedSize{get { return 48; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  DecoratorPlacementDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             gridOrigin = binaryReader.ReadVector3();
             cellCountPerDimension = binaryReader.ReadInt32();
-            blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorCacheBlockBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorGroupBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorCellCollectionBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorProjectedDecalBlock>(binaryReader));
-            return blamPointers;
+            cacheBlocks = Guerilla.ReadBlockArray<DecoratorCacheBlockBlock>(binaryReader);
+            groups = Guerilla.ReadBlockArray<DecoratorGroupBlock>(binaryReader);
+            cells = Guerilla.ReadBlockArray<DecoratorCellCollectionBlock>(binaryReader);
+            decals = Guerilla.ReadBlockArray<DecoratorProjectedDecalBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  DecoratorPlacementDefinitionBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            cacheBlocks = ReadBlockArrayData<DecoratorCacheBlockBlock>(binaryReader, blamPointers.Dequeue());
-            groups = ReadBlockArrayData<DecoratorGroupBlock>(binaryReader, blamPointers.Dequeue());
-            cells = ReadBlockArrayData<DecoratorCellCollectionBlock>(binaryReader, blamPointers.Dequeue());
-            decals = ReadBlockArrayData<DecoratorProjectedDecalBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            gridOrigin = binaryReader.ReadVector3();
+            cellCountPerDimension = binaryReader.ReadInt32();
+            cacheBlocks = Guerilla.ReadBlockArray<DecoratorCacheBlockBlock>(binaryReader);
+            groups = Guerilla.ReadBlockArray<DecoratorGroupBlock>(binaryReader);
+            cells = Guerilla.ReadBlockArray<DecoratorCellCollectionBlock>(binaryReader);
+            decals = Guerilla.ReadBlockArray<DecoratorProjectedDecalBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(gridOrigin);
                 binaryWriter.Write(cellCountPerDimension);

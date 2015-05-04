@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioMachineBlock : ScenarioMachineBlockBase
     {
-        public ScenarioMachineBlock() : base()
+        public  ScenarioMachineBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioMachineBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 72, Alignment = 4)]
@@ -24,35 +27,35 @@ namespace Moonfish.Guerilla.Tags
         internal ScenarioObjectDatumStructBlock objectData;
         internal ScenarioDeviceStructBlock deviceData;
         internal ScenarioMachineStructV3Block machineData;
-        public override int SerializedSize { get { return 72; } }
-        public override int Alignment { get { return 4; } }
-        public ScenarioMachineBlockBase() : base()
+        
+        public override int SerializedSize{get { return 72; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioMachineBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             type = binaryReader.ReadShortBlockIndex1();
             name = binaryReader.ReadShortBlockIndex1();
-            objectData = new ScenarioObjectDatumStructBlock();
-            blamPointers.Concat(objectData.ReadFields(binaryReader));
-            deviceData = new ScenarioDeviceStructBlock();
-            blamPointers.Concat(deviceData.ReadFields(binaryReader));
-            machineData = new ScenarioMachineStructV3Block();
-            blamPointers.Concat(machineData.ReadFields(binaryReader));
-            return blamPointers;
+            objectData = new ScenarioObjectDatumStructBlock(binaryReader);
+            deviceData = new ScenarioDeviceStructBlock(binaryReader);
+            machineData = new ScenarioMachineStructV3Block(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ScenarioMachineBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            objectData.ReadPointers(binaryReader, blamPointers);
-            deviceData.ReadPointers(binaryReader, blamPointers);
-            machineData.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            type = binaryReader.ReadShortBlockIndex1();
+            name = binaryReader.ReadShortBlockIndex1();
+            objectData = new ScenarioObjectDatumStructBlock(binaryReader);
+            deviceData = new ScenarioDeviceStructBlock(binaryReader);
+            machineData = new ScenarioMachineStructV3Block(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(type);
                 binaryWriter.Write(name);

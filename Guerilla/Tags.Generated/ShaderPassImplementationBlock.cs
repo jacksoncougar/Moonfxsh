@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderPassImplementationBlock : ShaderPassImplementationBlockBase
     {
-        public ShaderPassImplementationBlock() : base()
+        public  ShaderPassImplementationBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderPassImplementationBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 116, Alignment = 4)]
@@ -40,58 +43,63 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderStateConstantBlock[] constants;
         [TagReference("pixl")]
         internal Moonfish.Tags.TagReference pixelShader;
-        public override int SerializedSize { get { return 116; } }
-        public override int Alignment { get { return 4; } }
-        public ShaderPassImplementationBlockBase() : base()
+        
+        public override int SerializedSize{get { return 116; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderPassImplementationBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPassTextureBlock>(binaryReader));
+            textures = Guerilla.ReadBlockArray<ShaderPassTextureBlock>(binaryReader);
             vertexShader = binaryReader.ReadTagReference();
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPassVertexShaderConstantBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
+            vsConstants = Guerilla.ReadBlockArray<ShaderPassVertexShaderConstantBlock>(binaryReader);
+            pixelShaderCodeNOLONGERUSED = Guerilla.ReadData(binaryReader);
             channels = (Channels)binaryReader.ReadInt16();
             alphaBlend = (AlphaBlend)binaryReader.ReadInt16();
             depth = (Depth)binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderStateChannelsStateBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderStateAlphaBlendStateBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderStateAlphaTestStateBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderStateDepthStateBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderStateCullStateBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderStateFillStateBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderStateMiscStateBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderStateConstantBlock>(binaryReader));
+            channelState = Guerilla.ReadBlockArray<ShaderStateChannelsStateBlock>(binaryReader);
+            alphaBlendState = Guerilla.ReadBlockArray<ShaderStateAlphaBlendStateBlock>(binaryReader);
+            alphaTestState = Guerilla.ReadBlockArray<ShaderStateAlphaTestStateBlock>(binaryReader);
+            depthState = Guerilla.ReadBlockArray<ShaderStateDepthStateBlock>(binaryReader);
+            cullState = Guerilla.ReadBlockArray<ShaderStateCullStateBlock>(binaryReader);
+            fillState = Guerilla.ReadBlockArray<ShaderStateFillStateBlock>(binaryReader);
+            miscState = Guerilla.ReadBlockArray<ShaderStateMiscStateBlock>(binaryReader);
+            constants = Guerilla.ReadBlockArray<ShaderStateConstantBlock>(binaryReader);
             pixelShader = binaryReader.ReadTagReference();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ShaderPassImplementationBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            textures = ReadBlockArrayData<ShaderPassTextureBlock>(binaryReader, blamPointers.Dequeue());
-            vsConstants = ReadBlockArrayData<ShaderPassVertexShaderConstantBlock>(binaryReader, blamPointers.Dequeue());
-            pixelShaderCodeNOLONGERUSED = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            channelState = ReadBlockArrayData<ShaderStateChannelsStateBlock>(binaryReader, blamPointers.Dequeue());
-            alphaBlendState = ReadBlockArrayData<ShaderStateAlphaBlendStateBlock>(binaryReader, blamPointers.Dequeue());
-            alphaTestState = ReadBlockArrayData<ShaderStateAlphaTestStateBlock>(binaryReader, blamPointers.Dequeue());
-            depthState = ReadBlockArrayData<ShaderStateDepthStateBlock>(binaryReader, blamPointers.Dequeue());
-            cullState = ReadBlockArrayData<ShaderStateCullStateBlock>(binaryReader, blamPointers.Dequeue());
-            fillState = ReadBlockArrayData<ShaderStateFillStateBlock>(binaryReader, blamPointers.Dequeue());
-            miscState = ReadBlockArrayData<ShaderStateMiscStateBlock>(binaryReader, blamPointers.Dequeue());
-            constants = ReadBlockArrayData<ShaderStateConstantBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            textures = Guerilla.ReadBlockArray<ShaderPassTextureBlock>(binaryReader);
+            vertexShader = binaryReader.ReadTagReference();
+            vsConstants = Guerilla.ReadBlockArray<ShaderPassVertexShaderConstantBlock>(binaryReader);
+            pixelShaderCodeNOLONGERUSED = Guerilla.ReadData(binaryReader);
+            channels = (Channels)binaryReader.ReadInt16();
+            alphaBlend = (AlphaBlend)binaryReader.ReadInt16();
+            depth = (Depth)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            channelState = Guerilla.ReadBlockArray<ShaderStateChannelsStateBlock>(binaryReader);
+            alphaBlendState = Guerilla.ReadBlockArray<ShaderStateAlphaBlendStateBlock>(binaryReader);
+            alphaTestState = Guerilla.ReadBlockArray<ShaderStateAlphaTestStateBlock>(binaryReader);
+            depthState = Guerilla.ReadBlockArray<ShaderStateDepthStateBlock>(binaryReader);
+            cullState = Guerilla.ReadBlockArray<ShaderStateCullStateBlock>(binaryReader);
+            fillState = Guerilla.ReadBlockArray<ShaderStateFillStateBlock>(binaryReader);
+            miscState = Guerilla.ReadBlockArray<ShaderStateMiscStateBlock>(binaryReader);
+            constants = Guerilla.ReadBlockArray<ShaderStateConstantBlock>(binaryReader);
+            pixelShader = binaryReader.ReadTagReference();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write(invalidName_, 0, 2);

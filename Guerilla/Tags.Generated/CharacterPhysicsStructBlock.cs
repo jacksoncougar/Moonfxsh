@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterPhysicsStructBlock : CharacterPhysicsStructBlockBase
     {
-        public CharacterPhysicsStructBlock() : base()
+        public  CharacterPhysicsStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CharacterPhysicsStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 148, Alignment = 4)]
@@ -40,14 +43,14 @@ namespace Moonfish.Guerilla.Tags
         internal CharacterPhysicsFlyingStructBlock flyingPhysics;
         internal CharacterPhysicsDeadStructBlock deadPhysics;
         internal CharacterPhysicsSentinelStructBlock sentinelPhysics;
-        public override int SerializedSize { get { return 148; } }
-        public override int Alignment { get { return 4; } }
-        public CharacterPhysicsStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 148; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CharacterPhysicsStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             heightStanding = binaryReader.ReadSingle();
             heightCrouching = binaryReader.ReadSingle();
@@ -56,38 +59,39 @@ namespace Moonfish.Guerilla.Tags
             livingMaterialName = binaryReader.ReadStringID();
             deadMaterialName = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(4);
-            blamPointers.Enqueue(ReadBlockArrayPointer<SpheresBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<PillsBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<SpheresBlock>(binaryReader));
-            groundPhysics = new CharacterPhysicsGroundStructBlock();
-            blamPointers.Concat(groundPhysics.ReadFields(binaryReader));
-            flyingPhysics = new CharacterPhysicsFlyingStructBlock();
-            blamPointers.Concat(flyingPhysics.ReadFields(binaryReader));
-            deadPhysics = new CharacterPhysicsDeadStructBlock();
-            blamPointers.Concat(deadPhysics.ReadFields(binaryReader));
-            sentinelPhysics = new CharacterPhysicsSentinelStructBlock();
-            blamPointers.Concat(sentinelPhysics.ReadFields(binaryReader));
-            return blamPointers;
+            deadSphereShapes = Guerilla.ReadBlockArray<SpheresBlock>(binaryReader);
+            pillShapes = Guerilla.ReadBlockArray<PillsBlock>(binaryReader);
+            sphereShapes = Guerilla.ReadBlockArray<SpheresBlock>(binaryReader);
+            groundPhysics = new CharacterPhysicsGroundStructBlock(binaryReader);
+            flyingPhysics = new CharacterPhysicsFlyingStructBlock(binaryReader);
+            deadPhysics = new CharacterPhysicsDeadStructBlock(binaryReader);
+            sentinelPhysics = new CharacterPhysicsSentinelStructBlock(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  CharacterPhysicsStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
-            deadSphereShapes = ReadBlockArrayData<SpheresBlock>(binaryReader, blamPointers.Dequeue());
-            pillShapes = ReadBlockArrayData<PillsBlock>(binaryReader, blamPointers.Dequeue());
-            sphereShapes = ReadBlockArrayData<SpheresBlock>(binaryReader, blamPointers.Dequeue());
-            groundPhysics.ReadPointers(binaryReader, blamPointers);
-            flyingPhysics.ReadPointers(binaryReader, blamPointers);
-            deadPhysics.ReadPointers(binaryReader, blamPointers);
-            sentinelPhysics.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt32();
+            heightStanding = binaryReader.ReadSingle();
+            heightCrouching = binaryReader.ReadSingle();
+            radius = binaryReader.ReadSingle();
+            mass = binaryReader.ReadSingle();
+            livingMaterialName = binaryReader.ReadStringID();
+            deadMaterialName = binaryReader.ReadStringID();
+            invalidName_ = binaryReader.ReadBytes(4);
+            deadSphereShapes = Guerilla.ReadBlockArray<SpheresBlock>(binaryReader);
+            pillShapes = Guerilla.ReadBlockArray<PillsBlock>(binaryReader);
+            sphereShapes = Guerilla.ReadBlockArray<SpheresBlock>(binaryReader);
+            groundPhysics = new CharacterPhysicsGroundStructBlock(binaryReader);
+            flyingPhysics = new CharacterPhysicsFlyingStructBlock(binaryReader);
+            deadPhysics = new CharacterPhysicsDeadStructBlock(binaryReader);
+            sentinelPhysics = new CharacterPhysicsSentinelStructBlock(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(heightStanding);

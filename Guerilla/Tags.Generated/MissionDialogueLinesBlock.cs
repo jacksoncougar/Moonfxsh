@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class MissionDialogueLinesBlock : MissionDialogueLinesBlockBase
     {
-        public MissionDialogueLinesBlock() : base()
+        public  MissionDialogueLinesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  MissionDialogueLinesBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -22,28 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent name;
         internal MissionDialogueVariantsBlock[] variants;
         internal Moonfish.Tags.StringIdent defaultSoundEffect;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
-        public MissionDialogueLinesBlockBase() : base()
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  MissionDialogueLinesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
-            blamPointers.Enqueue(ReadBlockArrayPointer<MissionDialogueVariantsBlock>(binaryReader));
+            variants = Guerilla.ReadBlockArray<MissionDialogueVariantsBlock>(binaryReader);
             defaultSoundEffect = binaryReader.ReadStringID();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  MissionDialogueLinesBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            variants = ReadBlockArrayData<MissionDialogueVariantsBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadStringID();
+            variants = Guerilla.ReadBlockArray<MissionDialogueVariantsBlock>(binaryReader);
+            defaultSoundEffect = binaryReader.ReadStringID();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 nextAddress = Guerilla.WriteBlockArray<MissionDialogueVariantsBlock>(binaryWriter, variants, nextAddress);

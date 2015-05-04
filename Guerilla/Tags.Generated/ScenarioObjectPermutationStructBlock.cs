@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioObjectPermutationStructBlock : ScenarioObjectPermutationStructBlockBase
     {
-        public ScenarioObjectPermutationStructBlock() : base()
+        public  ScenarioObjectPermutationStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioObjectPermutationStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -25,30 +28,37 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ColourR1G1B1 secondaryColor;
         internal Moonfish.Tags.ColourR1G1B1 tertiaryColor;
         internal Moonfish.Tags.ColourR1G1B1 quaternaryColor;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
-        public ScenarioObjectPermutationStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioObjectPermutationStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             variantName = binaryReader.ReadStringID();
             activeChangeColors = (ActiveChangeColors)binaryReader.ReadInt32();
             primaryColor = binaryReader.ReadColourR1G1B1();
             secondaryColor = binaryReader.ReadColourR1G1B1();
             tertiaryColor = binaryReader.ReadColourR1G1B1();
             quaternaryColor = binaryReader.ReadColourR1G1B1();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ScenarioObjectPermutationStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            variantName = binaryReader.ReadStringID();
+            activeChangeColors = (ActiveChangeColors)binaryReader.ReadInt32();
+            primaryColor = binaryReader.ReadColourR1G1B1();
+            secondaryColor = binaryReader.ReadColourR1G1B1();
+            tertiaryColor = binaryReader.ReadColourR1G1B1();
+            quaternaryColor = binaryReader.ReadColourR1G1B1();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(variantName);
                 binaryWriter.Write((Int32)activeChangeColors);

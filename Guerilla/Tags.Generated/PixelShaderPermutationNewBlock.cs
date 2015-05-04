@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PixelShaderPermutationNewBlock : PixelShaderPermutationNewBlockBase
     {
-        public PixelShaderPermutationNewBlock() : base()
+        public  PixelShaderPermutationNewBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PixelShaderPermutationNewBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 6, Alignment = 4)]
@@ -22,29 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal short enumIndex;
         internal short flags;
         internal TagBlockIndexStructBlock combiners;
-        public override int SerializedSize { get { return 6; } }
-        public override int Alignment { get { return 4; } }
-        public PixelShaderPermutationNewBlockBase() : base()
+        
+        public override int SerializedSize{get { return 6; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PixelShaderPermutationNewBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             enumIndex = binaryReader.ReadInt16();
             flags = binaryReader.ReadInt16();
-            combiners = new TagBlockIndexStructBlock();
-            blamPointers.Concat(combiners.ReadFields(binaryReader));
-            return blamPointers;
+            combiners = new TagBlockIndexStructBlock(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  PixelShaderPermutationNewBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            combiners.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            enumIndex = binaryReader.ReadInt16();
+            flags = binaryReader.ReadInt16();
+            combiners = new TagBlockIndexStructBlock(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(enumIndex);
                 binaryWriter.Write(flags);

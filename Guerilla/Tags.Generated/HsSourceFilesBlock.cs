@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("hsc*")]
     public partial class HsSourceFilesBlock : HsSourceFilesBlockBase
     {
-        public HsSourceFilesBlock() : base()
+        public  HsSourceFilesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  HsSourceFilesBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -30,27 +33,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Moonfish.Tags.String32 name;
         internal byte[] source;
-        public override int SerializedSize { get { return 40; } }
-        public override int Alignment { get { return 4; } }
-        public HsSourceFilesBlockBase() : base()
+        
+        public override int SerializedSize{get { return 40; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  HsSourceFilesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
-            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
-            return blamPointers;
+            source = Guerilla.ReadData(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  HsSourceFilesBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            source = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadString32();
+            source = Guerilla.ReadData(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 nextAddress = Guerilla.WriteData(binaryWriter, source, nextAddress);

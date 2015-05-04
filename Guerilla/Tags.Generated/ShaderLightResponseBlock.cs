@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("slit")]
     public partial class ShaderLightResponseBlock : ShaderLightResponseBlockBase
     {
-        public ShaderLightResponseBlock() : base()
+        public  ShaderLightResponseBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ShaderLightResponseBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -32,34 +35,33 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderTemplateLevelOfDetailBlock[] shaderLODs;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
-        public ShaderLightResponseBlockBase() : base()
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ShaderLightResponseBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderTemplateCategoryBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ShaderTemplateLevelOfDetailBlock>(binaryReader));
+            categories = Guerilla.ReadBlockArray<ShaderTemplateCategoryBlock>(binaryReader);
+            shaderLODs = Guerilla.ReadBlockArray<ShaderTemplateLevelOfDetailBlock>(binaryReader);
             invalidName_ = binaryReader.ReadBytes(2);
             invalidName_0 = binaryReader.ReadBytes(2);
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ShaderLightResponseBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            categories = ReadBlockArrayData<ShaderTemplateCategoryBlock>(binaryReader, blamPointers.Dequeue());
-            shaderLODs = ReadBlockArrayData<ShaderTemplateLevelOfDetailBlock>(binaryReader, blamPointers.Dequeue());
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            categories = Guerilla.ReadBlockArray<ShaderTemplateCategoryBlock>(binaryReader);
+            shaderLODs = Guerilla.ReadBlockArray<ShaderTemplateLevelOfDetailBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(2);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<ShaderTemplateCategoryBlock>(binaryWriter, categories, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ShaderTemplateLevelOfDetailBlock>(binaryWriter, shaderLODs, nextAddress);

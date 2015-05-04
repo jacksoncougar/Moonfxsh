@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class HudWidgetEffectBlock : HudWidgetEffectBlockBase
     {
-        public HudWidgetEffectBlock() : base()
+        public  HudWidgetEffectBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  HudWidgetEffectBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 104, Alignment = 4)]
@@ -26,43 +29,39 @@ namespace Moonfish.Guerilla.Tags
         internal HudWidgetEffectFunctionStructBlock hudWidgetEffectFunctionStruct1;
         internal HudWidgetEffectFunctionStructBlock hudWidgetEffectFunctionStruct2;
         internal HudWidgetEffectFunctionStructBlock hudWidgetEffectFunctionStruct3;
-        public override int SerializedSize { get { return 104; } }
-        public override int Alignment { get { return 4; } }
-        public HudWidgetEffectBlockBase() : base()
+        
+        public override int SerializedSize{get { return 104; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  HudWidgetEffectBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            hudWidgetEffectFunctionStruct = new HudWidgetEffectFunctionStructBlock();
-            blamPointers.Concat(hudWidgetEffectFunctionStruct.ReadFields(binaryReader));
-            hudWidgetEffectFunctionStruct0 = new HudWidgetEffectFunctionStructBlock();
-            blamPointers.Concat(hudWidgetEffectFunctionStruct0.ReadFields(binaryReader));
-            hudWidgetEffectFunctionStruct1 = new HudWidgetEffectFunctionStructBlock();
-            blamPointers.Concat(hudWidgetEffectFunctionStruct1.ReadFields(binaryReader));
-            hudWidgetEffectFunctionStruct2 = new HudWidgetEffectFunctionStructBlock();
-            blamPointers.Concat(hudWidgetEffectFunctionStruct2.ReadFields(binaryReader));
-            hudWidgetEffectFunctionStruct3 = new HudWidgetEffectFunctionStructBlock();
-            blamPointers.Concat(hudWidgetEffectFunctionStruct3.ReadFields(binaryReader));
-            return blamPointers;
+            hudWidgetEffectFunctionStruct = new HudWidgetEffectFunctionStructBlock(binaryReader);
+            hudWidgetEffectFunctionStruct0 = new HudWidgetEffectFunctionStructBlock(binaryReader);
+            hudWidgetEffectFunctionStruct1 = new HudWidgetEffectFunctionStructBlock(binaryReader);
+            hudWidgetEffectFunctionStruct2 = new HudWidgetEffectFunctionStructBlock(binaryReader);
+            hudWidgetEffectFunctionStruct3 = new HudWidgetEffectFunctionStructBlock(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  HudWidgetEffectBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            hudWidgetEffectFunctionStruct.ReadPointers(binaryReader, blamPointers);
-            hudWidgetEffectFunctionStruct0.ReadPointers(binaryReader, blamPointers);
-            hudWidgetEffectFunctionStruct1.ReadPointers(binaryReader, blamPointers);
-            hudWidgetEffectFunctionStruct2.ReadPointers(binaryReader, blamPointers);
-            hudWidgetEffectFunctionStruct3.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            hudWidgetEffectFunctionStruct = new HudWidgetEffectFunctionStructBlock(binaryReader);
+            hudWidgetEffectFunctionStruct0 = new HudWidgetEffectFunctionStructBlock(binaryReader);
+            hudWidgetEffectFunctionStruct1 = new HudWidgetEffectFunctionStructBlock(binaryReader);
+            hudWidgetEffectFunctionStruct2 = new HudWidgetEffectFunctionStructBlock(binaryReader);
+            hudWidgetEffectFunctionStruct3 = new HudWidgetEffectFunctionStructBlock(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write(invalidName_, 0, 2);

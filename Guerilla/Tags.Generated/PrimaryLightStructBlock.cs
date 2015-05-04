@@ -5,54 +5,60 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PrimaryLightStructBlock : PrimaryLightStructBlockBase
     {
-        public PrimaryLightStructBlock() : base()
+        public  PrimaryLightStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PrimaryLightStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 36, Alignment = 4)]
     public class PrimaryLightStructBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.ColourR8G8B8 minLightmapColor;
-        internal Moonfish.Tags.ColourR8G8B8 maxLightmapColor;
+        internal Moonfish.Tags.ColourR8G8B8 MinLightmapColour;
+        internal Moonfish.Tags.ColourR8G8B8 MaxLightmapColour;
         /// <summary>
         /// degrees from up the direct light cannot be
         /// </summary>
         internal float exclusionAngleFromUp;
         internal MappingFunctionBlock function;
-        public override int SerializedSize { get { return 36; } }
-        public override int Alignment { get { return 4; } }
-        public PrimaryLightStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 36; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PrimaryLightStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            minLightmapColor = binaryReader.ReadColorR8G8B8();
-            maxLightmapColor = binaryReader.ReadColorR8G8B8();
+            MinLightmapColour = binaryReader.ReadColorR8G8B8();
+            MaxLightmapColour = binaryReader.ReadColorR8G8B8();
             exclusionAngleFromUp = binaryReader.ReadSingle();
-            function = new MappingFunctionBlock();
-            blamPointers.Concat(function.ReadFields(binaryReader));
-            return blamPointers;
+            function = new MappingFunctionBlock(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  PrimaryLightStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            function.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            MinLightmapColour = binaryReader.ReadColorR8G8B8();
+            MaxLightmapColour = binaryReader.ReadColorR8G8B8();
+            exclusionAngleFromUp = binaryReader.ReadSingle();
+            function = new MappingFunctionBlock(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write(minLightmapColor);
-                binaryWriter.Write(maxLightmapColor);
+                binaryWriter.Write(MinLightmapColour);
+                binaryWriter.Write(MaxLightmapColour);
                 binaryWriter.Write(exclusionAngleFromUp);
                 function.Write(binaryWriter);
                 return nextAddress;

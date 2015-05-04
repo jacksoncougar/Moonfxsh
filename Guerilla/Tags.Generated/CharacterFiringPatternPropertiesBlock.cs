@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterFiringPatternPropertiesBlock : CharacterFiringPatternPropertiesBlockBase
     {
-        public CharacterFiringPatternPropertiesBlock() : base()
+        public  CharacterFiringPatternPropertiesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CharacterFiringPatternPropertiesBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -22,27 +25,29 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("weap")]
         internal Moonfish.Tags.TagReference weapon;
         internal CharacterFiringPatternBlock[] firingPatterns;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
-        public CharacterFiringPatternPropertiesBlockBase() : base()
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CharacterFiringPatternPropertiesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             weapon = binaryReader.ReadTagReference();
-            blamPointers.Enqueue(ReadBlockArrayPointer<CharacterFiringPatternBlock>(binaryReader));
-            return blamPointers;
+            firingPatterns = Guerilla.ReadBlockArray<CharacterFiringPatternBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  CharacterFiringPatternPropertiesBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            firingPatterns = ReadBlockArrayData<CharacterFiringPatternBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            weapon = binaryReader.ReadTagReference();
+            firingPatterns = Guerilla.ReadBlockArray<CharacterFiringPatternBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(weapon);
                 nextAddress = Guerilla.WriteBlockArray<CharacterFiringPatternBlock>(binaryWriter, firingPatterns, nextAddress);

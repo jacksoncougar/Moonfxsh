@@ -5,42 +5,45 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class OldUnusedObjectIdentifiersBlock : OldUnusedObjectIdentifiersBlockBase
     {
-        public OldUnusedObjectIdentifiersBlock() : base()
+        public  OldUnusedObjectIdentifiersBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  OldUnusedObjectIdentifiersBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class OldUnusedObjectIdentifiersBlockBase : GuerillaBlock
     {
         internal ScenarioObjectIdStructBlock objectID;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
-        public OldUnusedObjectIdentifiersBlockBase() : base()
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  OldUnusedObjectIdentifiersBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            objectID = new ScenarioObjectIdStructBlock(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  OldUnusedObjectIdentifiersBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            objectID = new ScenarioObjectIdStructBlock();
-            blamPointers.Concat(objectID.ReadFields(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            objectID.ReadPointers(binaryReader, blamPointers);
+            objectID = new ScenarioObjectIdStructBlock(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 objectID.Write(binaryWriter);
                 return nextAddress;

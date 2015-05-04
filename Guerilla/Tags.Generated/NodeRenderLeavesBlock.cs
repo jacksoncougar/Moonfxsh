@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class NodeRenderLeavesBlock : NodeRenderLeavesBlockBase
     {
-        public NodeRenderLeavesBlock() : base()
+        public  NodeRenderLeavesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  NodeRenderLeavesBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -21,28 +24,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal BspLeafBlock[] collisionLeaves;
         internal BspSurfaceReferenceBlock[] surfaceReferences;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
-        public NodeRenderLeavesBlockBase() : base()
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  NodeRenderLeavesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            collisionLeaves = Guerilla.ReadBlockArray<BspLeafBlock>(binaryReader);
+            surfaceReferences = Guerilla.ReadBlockArray<BspSurfaceReferenceBlock>(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  NodeRenderLeavesBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<BspLeafBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<BspSurfaceReferenceBlock>(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            collisionLeaves = ReadBlockArrayData<BspLeafBlock>(binaryReader, blamPointers.Dequeue());
-            surfaceReferences = ReadBlockArrayData<BspSurfaceReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            collisionLeaves = Guerilla.ReadBlockArray<BspLeafBlock>(binaryReader);
+            surfaceReferences = Guerilla.ReadBlockArray<BspSurfaceReferenceBlock>(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<BspLeafBlock>(binaryWriter, collisionLeaves, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<BspSurfaceReferenceBlock>(binaryWriter, surfaceReferences, nextAddress);

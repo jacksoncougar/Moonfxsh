@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AnimationAimingScreenStructBlock : AnimationAimingScreenStructBlockBase
     {
-        public AnimationAimingScreenStructBlock() : base()
+        public  AnimationAimingScreenStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AnimationAimingScreenStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -27,14 +30,14 @@ namespace Moonfish.Guerilla.Tags
         internal float upPitchPerFrame;
         internal short downPitchFrameCount;
         internal short upPitchFrameCount;
-        public override int SerializedSize { get { return 24; } }
-        public override int Alignment { get { return 4; } }
-        public AnimationAimingScreenStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 24; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AnimationAimingScreenStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             rightYawPerFrame = binaryReader.ReadSingle();
             leftYawPerFrame = binaryReader.ReadSingle();
             rightFrameCount = binaryReader.ReadInt16();
@@ -43,16 +46,25 @@ namespace Moonfish.Guerilla.Tags
             upPitchPerFrame = binaryReader.ReadSingle();
             downPitchFrameCount = binaryReader.ReadInt16();
             upPitchFrameCount = binaryReader.ReadInt16();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  AnimationAimingScreenStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            rightYawPerFrame = binaryReader.ReadSingle();
+            leftYawPerFrame = binaryReader.ReadSingle();
+            rightFrameCount = binaryReader.ReadInt16();
+            leftFrameCount = binaryReader.ReadInt16();
+            downPitchPerFrame = binaryReader.ReadSingle();
+            upPitchPerFrame = binaryReader.ReadSingle();
+            downPitchFrameCount = binaryReader.ReadInt16();
+            upPitchFrameCount = binaryReader.ReadInt16();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(rightYawPerFrame);
                 binaryWriter.Write(leftYawPerFrame);

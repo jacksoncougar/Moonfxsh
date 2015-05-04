@@ -5,42 +5,45 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ColorFunctionStructBlock : ColorFunctionStructBlockBase
     {
-        public ColorFunctionStructBlock() : base()
+        public  ColorFunctionStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ColorFunctionStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class ColorFunctionStructBlockBase : GuerillaBlock
     {
         internal MappingFunctionBlock function;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
-        public ColorFunctionStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ColorFunctionStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            function = new MappingFunctionBlock(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  ColorFunctionStructBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            function = new MappingFunctionBlock();
-            blamPointers.Concat(function.ReadFields(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            function.ReadPointers(binaryReader, blamPointers);
+            function = new MappingFunctionBlock(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 function.Write(binaryWriter);
                 return nextAddress;

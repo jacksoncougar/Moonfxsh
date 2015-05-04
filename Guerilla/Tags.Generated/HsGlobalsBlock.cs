@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class HsGlobalsBlock : HsGlobalsBlockBase
     {
-        public HsGlobalsBlock() : base()
+        public  HsGlobalsBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  HsGlobalsBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -23,30 +26,33 @@ namespace Moonfish.Guerilla.Tags
         internal Type type;
         internal byte[] invalidName_;
         internal int initializationExpressionIndex;
-        public override int SerializedSize { get { return 40; } }
-        public override int Alignment { get { return 4; } }
-        public HsGlobalsBlockBase() : base()
+        
+        public override int SerializedSize{get { return 40; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  HsGlobalsBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
             type = (Type)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             initializationExpressionIndex = binaryReader.ReadInt32();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  HsGlobalsBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadString32();
+            type = (Type)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            initializationExpressionIndex = binaryReader.ReadInt32();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write((Int16)type);

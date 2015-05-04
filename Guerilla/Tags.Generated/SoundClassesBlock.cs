@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,34 +19,40 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("sncl")]
     public partial class SoundClassesBlock : SoundClassesBlockBase
     {
-        public SoundClassesBlock() : base()
+        public  SoundClassesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SoundClassesBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class SoundClassesBlockBase : GuerillaBlock
     {
         internal SoundClassBlock[] soundClasses;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
-        public SoundClassesBlockBase() : base()
+        
+        public override int SerializedSize{get { return 8; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundClassesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            soundClasses = Guerilla.ReadBlockArray<SoundClassBlock>(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  SoundClassesBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<SoundClassBlock>(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            soundClasses = ReadBlockArrayData<SoundClassBlock>(binaryReader, blamPointers.Dequeue());
+            soundClasses = Guerilla.ReadBlockArray<SoundClassBlock>(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<SoundClassBlock>(binaryWriter, soundClasses, nextAddress);
                 return nextAddress;

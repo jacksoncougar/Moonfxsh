@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class DecoratorCellCollectionBlock : DecoratorCellCollectionBlockBase
     {
-        public DecoratorCellCollectionBlock() : base()
+        public  DecoratorCellCollectionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  DecoratorCellCollectionBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -23,37 +26,33 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 cacheBlockIndex;
         internal short groupCount;
         internal int groupStartIndex;
-        public override int SerializedSize { get { return 24; } }
-        public override int Alignment { get { return 4; } }
-        public DecoratorCellCollectionBlockBase() : base()
+        
+        public override int SerializedSize{get { return 24; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  DecoratorCellCollectionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            childIndices = new []{ new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices() };
-            blamPointers.Concat(childIndices[0].ReadFields(binaryReader));
-            blamPointers.Concat(childIndices[1].ReadFields(binaryReader));
-            blamPointers.Concat(childIndices[2].ReadFields(binaryReader));
-            blamPointers.Concat(childIndices[3].ReadFields(binaryReader));
-            blamPointers.Concat(childIndices[4].ReadFields(binaryReader));
-            blamPointers.Concat(childIndices[5].ReadFields(binaryReader));
-            blamPointers.Concat(childIndices[6].ReadFields(binaryReader));
-            blamPointers.Concat(childIndices[7].ReadFields(binaryReader));
+            childIndices = new []{ new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader),  };
             cacheBlockIndex = binaryReader.ReadShortBlockIndex1();
             groupCount = binaryReader.ReadInt16();
             groupStartIndex = binaryReader.ReadInt32();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  DecoratorCellCollectionBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            childIndices = ReadBlockArrayData<ChildIndices>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            childIndices = new []{ new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader), new ChildIndices(binaryReader),  };
+            cacheBlockIndex = binaryReader.ReadShortBlockIndex1();
+            groupCount = binaryReader.ReadInt16();
+            groupStartIndex = binaryReader.ReadInt32();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 childIndices[0].Write(binaryWriter);
                 childIndices[1].Write(binaryWriter);
@@ -73,25 +72,27 @@ using(binaryWriter.BaseStream.Pin())
         public class ChildIndices : GuerillaBlock
         {
             internal short childIndex;
-            public override int SerializedSize { get { return 2; } }
-            public override int Alignment { get { return 1; } }
-            public ChildIndices() : base()
+            
+            public override int SerializedSize{get { return 2; }}
+            
+            
+            public override int Alignment{get { return 1; }}
+            
+            public  ChildIndices(BinaryReader binaryReader): base(binaryReader)
             {
-            }
-            public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-            {
-                var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
                 childIndex = binaryReader.ReadInt16();
-                return blamPointers;
             }
-            public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+            public  ChildIndices(): base()
             {
-                base.ReadPointers(binaryReader, blamPointers);
+                
             }
-            public override int Write(BinaryWriter binaryWriter, int nextAddress)
+            public override void Read(BinaryReader binaryReader)
             {
-                base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+                childIndex = binaryReader.ReadInt16();
+            }
+            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+            {
+                using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(childIndex);
                     return nextAddress;

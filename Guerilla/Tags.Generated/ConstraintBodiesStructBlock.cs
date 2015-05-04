@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ConstraintBodiesStructBlock : ConstraintBodiesStructBlockBase
     {
-        public ConstraintBodiesStructBlock() : base()
+        public  ConstraintBodiesStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ConstraintBodiesStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 116, Alignment = 4)]
@@ -34,14 +37,14 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 bPosition;
         internal Moonfish.Tags.ShortBlockIndex1 edgeIndex;
         internal byte[] invalidName_;
-        public override int SerializedSize { get { return 116; } }
-        public override int Alignment { get { return 4; } }
-        public ConstraintBodiesStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 116; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ConstraintBodiesStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             nodeA = binaryReader.ReadShortBlockIndex1();
             nodeB = binaryReader.ReadShortBlockIndex1();
@@ -57,18 +60,32 @@ namespace Moonfish.Guerilla.Tags
             bPosition = binaryReader.ReadVector3();
             edgeIndex = binaryReader.ReadShortBlockIndex1();
             invalidName_ = binaryReader.ReadBytes(2);
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ConstraintBodiesStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadStringID();
+            nodeA = binaryReader.ReadShortBlockIndex1();
+            nodeB = binaryReader.ReadShortBlockIndex1();
+            aScale = binaryReader.ReadSingle();
+            aForward = binaryReader.ReadVector3();
+            aLeft = binaryReader.ReadVector3();
+            aUp = binaryReader.ReadVector3();
+            aPosition = binaryReader.ReadVector3();
+            bScale = binaryReader.ReadSingle();
+            bForward = binaryReader.ReadVector3();
+            bLeft = binaryReader.ReadVector3();
+            bUp = binaryReader.ReadVector3();
+            bPosition = binaryReader.ReadVector3();
+            edgeIndex = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(nodeA);

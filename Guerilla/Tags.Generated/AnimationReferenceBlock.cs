@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AnimationReferenceBlock : AnimationReferenceBlockBase
     {
-        public AnimationReferenceBlock() : base()
+        public  AnimationReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  AnimationReferenceBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 44, Alignment = 4)]
@@ -28,38 +31,43 @@ namespace Moonfish.Guerilla.Tags
         internal AmbientAnimationLoopingStyle ambientAnimationLoopingStyle;
         internal byte[] invalidName_;
         internal ScreenAnimationKeyframeReferenceBlock[] keyframes1;
-        public override int SerializedSize { get { return 44; } }
-        public override int Alignment { get { return 4; } }
-        public AnimationReferenceBlockBase() : base()
+        
+        public override int SerializedSize{get { return 44; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  AnimationReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             animationPeriodMilliseconds = binaryReader.ReadInt32();
-            blamPointers.Enqueue(ReadBlockArrayPointer<ScreenAnimationKeyframeReferenceBlock>(binaryReader));
+            keyframes = Guerilla.ReadBlockArray<ScreenAnimationKeyframeReferenceBlock>(binaryReader);
             animationPeriodMilliseconds0 = binaryReader.ReadInt32();
-            blamPointers.Enqueue(ReadBlockArrayPointer<ScreenAnimationKeyframeReferenceBlock>(binaryReader));
+            keyframes0 = Guerilla.ReadBlockArray<ScreenAnimationKeyframeReferenceBlock>(binaryReader);
             animationPeriodMilliseconds1 = binaryReader.ReadInt32();
             ambientAnimationLoopingStyle = (AmbientAnimationLoopingStyle)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            blamPointers.Enqueue(ReadBlockArrayPointer<ScreenAnimationKeyframeReferenceBlock>(binaryReader));
-            return blamPointers;
+            keyframes1 = Guerilla.ReadBlockArray<ScreenAnimationKeyframeReferenceBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  AnimationReferenceBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            keyframes = ReadBlockArrayData<ScreenAnimationKeyframeReferenceBlock>(binaryReader, blamPointers.Dequeue());
-            keyframes0 = ReadBlockArrayData<ScreenAnimationKeyframeReferenceBlock>(binaryReader, blamPointers.Dequeue());
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            keyframes1 = ReadBlockArrayData<ScreenAnimationKeyframeReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt32();
+            animationPeriodMilliseconds = binaryReader.ReadInt32();
+            keyframes = Guerilla.ReadBlockArray<ScreenAnimationKeyframeReferenceBlock>(binaryReader);
+            animationPeriodMilliseconds0 = binaryReader.ReadInt32();
+            keyframes0 = Guerilla.ReadBlockArray<ScreenAnimationKeyframeReferenceBlock>(binaryReader);
+            animationPeriodMilliseconds1 = binaryReader.ReadInt32();
+            ambientAnimationLoopingStyle = (AmbientAnimationLoopingStyle)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            keyframes1 = Guerilla.ReadBlockArray<ScreenAnimationKeyframeReferenceBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(animationPeriodMilliseconds);

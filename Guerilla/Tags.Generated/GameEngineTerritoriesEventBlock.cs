@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GameEngineTerritoriesEventBlock : GameEngineTerritoriesEventBlockBase
     {
-        public GameEngineTerritoriesEventBlock() : base()
+        public  GameEngineTerritoriesEventBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  GameEngineTerritoriesEventBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 168, Alignment = 4)]
@@ -41,14 +44,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_4;
         internal byte[] invalidName_5;
         internal SoundResponseDefinitionBlock[] soundPermutations;
-        public override int SerializedSize { get { return 168; } }
-        public override int Alignment { get { return 4; } }
-        public GameEngineTerritoriesEventBlockBase() : base()
+        
+        public override int SerializedSize{get { return 168; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  GameEngineTerritoriesEventBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             _event = (Event)binaryReader.ReadInt16();
@@ -66,79 +69,42 @@ namespace Moonfish.Guerilla.Tags
             soundFlags = (SoundFlags)binaryReader.ReadInt16();
             invalidName_3 = binaryReader.ReadBytes(2);
             sound = binaryReader.ReadTagReference();
-            extraSounds = new SoundResponseExtraSoundsStructBlock();
-            blamPointers.Concat(extraSounds.ReadFields(binaryReader));
+            extraSounds = new SoundResponseExtraSoundsStructBlock(binaryReader);
             invalidName_4 = binaryReader.ReadBytes(4);
             invalidName_5 = binaryReader.ReadBytes(16);
-            blamPointers.Enqueue(ReadBlockArrayPointer<SoundResponseDefinitionBlock>(binaryReader));
-            return blamPointers;
+            soundPermutations = Guerilla.ReadBlockArray<SoundResponseDefinitionBlock>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  GameEngineTerritoriesEventBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[4].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[5].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[6].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[7].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[8].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[9].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[10].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[11].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[12].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[13].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[14].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[15].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[16].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[17].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[18].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[19].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[20].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[21].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[22].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[23].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[24].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[25].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[26].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[27].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[1].ReadPointers(binaryReader, blamPointers);
-            extraSounds.ReadPointers(binaryReader, blamPointers);
-            invalidName_4[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_4[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_4[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_4[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[4].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[5].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[6].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[7].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[8].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[9].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[10].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[11].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[12].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[13].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[14].ReadPointers(binaryReader, blamPointers);
-            invalidName_5[15].ReadPointers(binaryReader, blamPointers);
-            soundPermutations = ReadBlockArrayData<SoundResponseDefinitionBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            _event = (Event)binaryReader.ReadInt16();
+            audience = (Audience)binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            invalidName_1 = binaryReader.ReadBytes(2);
+            displayString = binaryReader.ReadStringID();
+            requiredField = (RequiredField)binaryReader.ReadInt16();
+            excludedAudience = (ExcludedAudience)binaryReader.ReadInt16();
+            primaryString = binaryReader.ReadStringID();
+            primaryStringDurationSeconds = binaryReader.ReadInt32();
+            pluralDisplayString = binaryReader.ReadStringID();
+            invalidName_2 = binaryReader.ReadBytes(28);
+            soundDelayAnnouncerOnly = binaryReader.ReadSingle();
+            soundFlags = (SoundFlags)binaryReader.ReadInt16();
+            invalidName_3 = binaryReader.ReadBytes(2);
+            sound = binaryReader.ReadTagReference();
+            extraSounds = new SoundResponseExtraSoundsStructBlock(binaryReader);
+            invalidName_4 = binaryReader.ReadBytes(4);
+            invalidName_5 = binaryReader.ReadBytes(16);
+            soundPermutations = Guerilla.ReadBlockArray<SoundResponseDefinitionBlock>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write(invalidName_, 0, 2);

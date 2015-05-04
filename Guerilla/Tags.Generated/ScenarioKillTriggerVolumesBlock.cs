@@ -5,40 +5,45 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioKillTriggerVolumesBlock : ScenarioKillTriggerVolumesBlockBase
     {
-        public ScenarioKillTriggerVolumesBlock() : base()
+        public  ScenarioKillTriggerVolumesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ScenarioKillTriggerVolumesBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 2, Alignment = 4)]
     public class ScenarioKillTriggerVolumesBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.ShortBlockIndex1 triggerVolume;
-        public override int SerializedSize { get { return 2; } }
-        public override int Alignment { get { return 4; } }
-        public ScenarioKillTriggerVolumesBlockBase() : base()
+        
+        public override int SerializedSize{get { return 2; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ScenarioKillTriggerVolumesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             triggerVolume = binaryReader.ReadShortBlockIndex1();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ScenarioKillTriggerVolumesBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            triggerVolume = binaryReader.ReadShortBlockIndex1();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(triggerVolume);
                 return nextAddress;

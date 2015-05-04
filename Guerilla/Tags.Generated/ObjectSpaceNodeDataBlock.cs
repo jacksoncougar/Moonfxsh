@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ObjectSpaceNodeDataBlock : ObjectSpaceNodeDataBlockBase
     {
-        public ObjectSpaceNodeDataBlock() : base()
+        public  ObjectSpaceNodeDataBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ObjectSpaceNodeDataBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 28, Alignment = 4)]
@@ -22,29 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal short nodeIndex;
         internal ComponentFlags componentFlags;
         internal QuantizedOrientationStructBlock orientation;
-        public override int SerializedSize { get { return 28; } }
-        public override int Alignment { get { return 4; } }
-        public ObjectSpaceNodeDataBlockBase() : base()
+        
+        public override int SerializedSize{get { return 28; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ObjectSpaceNodeDataBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             nodeIndex = binaryReader.ReadInt16();
             componentFlags = (ComponentFlags)binaryReader.ReadInt16();
-            orientation = new QuantizedOrientationStructBlock();
-            blamPointers.Concat(orientation.ReadFields(binaryReader));
-            return blamPointers;
+            orientation = new QuantizedOrientationStructBlock(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ObjectSpaceNodeDataBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            orientation.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            nodeIndex = binaryReader.ReadInt16();
+            componentFlags = (ComponentFlags)binaryReader.ReadInt16();
+            orientation = new QuantizedOrientationStructBlock(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(nodeIndex);
                 binaryWriter.Write((Int16)componentFlags);

@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class InheritedAnimationBlock : InheritedAnimationBlockBase
     {
-        public InheritedAnimationBlock() : base()
+        public  InheritedAnimationBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  InheritedAnimationBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 32, Alignment = 4)]
@@ -25,31 +28,35 @@ namespace Moonfish.Guerilla.Tags
         internal InheritedAnimationNodeMapFlagBlock[] nodeMapFlags;
         internal float rootZOffset;
         internal int inheritanceFlags;
-        public override int SerializedSize { get { return 32; } }
-        public override int Alignment { get { return 4; } }
-        public InheritedAnimationBlockBase() : base()
+        
+        public override int SerializedSize{get { return 32; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  InheritedAnimationBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             inheritedGraph = binaryReader.ReadTagReference();
-            blamPointers.Enqueue(ReadBlockArrayPointer<InheritedAnimationNodeMapBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<InheritedAnimationNodeMapFlagBlock>(binaryReader));
+            nodeMap = Guerilla.ReadBlockArray<InheritedAnimationNodeMapBlock>(binaryReader);
+            nodeMapFlags = Guerilla.ReadBlockArray<InheritedAnimationNodeMapFlagBlock>(binaryReader);
             rootZOffset = binaryReader.ReadSingle();
             inheritanceFlags = binaryReader.ReadInt32();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  InheritedAnimationBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            nodeMap = ReadBlockArrayData<InheritedAnimationNodeMapBlock>(binaryReader, blamPointers.Dequeue());
-            nodeMapFlags = ReadBlockArrayData<InheritedAnimationNodeMapFlagBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            inheritedGraph = binaryReader.ReadTagReference();
+            nodeMap = Guerilla.ReadBlockArray<InheritedAnimationNodeMapBlock>(binaryReader);
+            nodeMapFlags = Guerilla.ReadBlockArray<InheritedAnimationNodeMapFlagBlock>(binaryReader);
+            rootZOffset = binaryReader.ReadSingle();
+            inheritanceFlags = binaryReader.ReadInt32();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(inheritedGraph);
                 nextAddress = Guerilla.WriteBlockArray<InheritedAnimationNodeMapBlock>(binaryWriter, nodeMap, nextAddress);

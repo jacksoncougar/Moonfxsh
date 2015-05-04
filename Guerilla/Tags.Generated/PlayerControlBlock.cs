@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PlayerControlBlock : PlayerControlBlockBase
     {
-        public PlayerControlBlock() : base()
+        public  PlayerControlBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  PlayerControlBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 128, Alignment = 4)]
@@ -103,14 +106,14 @@ namespace Moonfish.Guerilla.Tags
         /// time that player needs to press ACTION to register as a HOLD
         /// </summary>
         internal float minimumActionHoldTimeSeconds;
-        public override int SerializedSize { get { return 128; } }
-        public override int Alignment { get { return 4; } }
-        public PlayerControlBlockBase() : base()
+        
+        public override int SerializedSize{get { return 128; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  PlayerControlBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             magnetismFriction = binaryReader.ReadSingle();
             magnetismAdhesion = binaryReader.ReadSingle();
             inconsequentialTargetScale = binaryReader.ReadSingle();
@@ -136,49 +139,46 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes(2);
             minimumAutolevellingTicks = binaryReader.ReadInt16();
             minimumAngleForVehicleFlipping = binaryReader.ReadSingle();
-            blamPointers.Enqueue(ReadBlockArrayPointer<LookFunctionBlock>(binaryReader));
+            lookFunction = Guerilla.ReadBlockArray<LookFunctionBlock>(binaryReader);
             minimumActionHoldTimeSeconds = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  PlayerControlBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_[4].ReadPointers(binaryReader, blamPointers);
-            invalidName_[5].ReadPointers(binaryReader, blamPointers);
-            invalidName_[6].ReadPointers(binaryReader, blamPointers);
-            invalidName_[7].ReadPointers(binaryReader, blamPointers);
-            invalidName_[8].ReadPointers(binaryReader, blamPointers);
-            invalidName_[9].ReadPointers(binaryReader, blamPointers);
-            invalidName_[10].ReadPointers(binaryReader, blamPointers);
-            invalidName_[11].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[4].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[5].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[6].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[7].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[4].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[5].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[6].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[7].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
-            lookFunction = ReadBlockArrayData<LookFunctionBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            magnetismFriction = binaryReader.ReadSingle();
+            magnetismAdhesion = binaryReader.ReadSingle();
+            inconsequentialTargetScale = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(12);
+            crosshairLocation = binaryReader.ReadVector2();
+            secondsToStart = binaryReader.ReadSingle();
+            secondsToFullSpeed = binaryReader.ReadSingle();
+            decayRate = binaryReader.ReadSingle();
+            fullSpeedMultiplier = binaryReader.ReadSingle();
+            peggedMagnitude = binaryReader.ReadSingle();
+            peggedAngularThreshold = binaryReader.ReadSingle();
+            invalidName_0 = binaryReader.ReadBytes(8);
+            lookDefaultPitchRateDegrees = binaryReader.ReadSingle();
+            lookDefaultYawRateDegrees = binaryReader.ReadSingle();
+            lookPegThreshold01 = binaryReader.ReadSingle();
+            lookYawAccelerationTimeSeconds = binaryReader.ReadSingle();
+            lookYawAccelerationScale = binaryReader.ReadSingle();
+            lookPitchAccelerationTimeSeconds = binaryReader.ReadSingle();
+            lookPitchAccelerationScale = binaryReader.ReadSingle();
+            lookAutolevellingScale = binaryReader.ReadSingle();
+            invalidName_1 = binaryReader.ReadBytes(8);
+            gravityScale = binaryReader.ReadSingle();
+            invalidName_2 = binaryReader.ReadBytes(2);
+            minimumAutolevellingTicks = binaryReader.ReadInt16();
+            minimumAngleForVehicleFlipping = binaryReader.ReadSingle();
+            lookFunction = Guerilla.ReadBlockArray<LookFunctionBlock>(binaryReader);
+            minimumActionHoldTimeSeconds = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(magnetismFriction);
                 binaryWriter.Write(magnetismAdhesion);

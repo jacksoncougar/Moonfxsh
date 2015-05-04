@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ModelMaterialBlock : ModelMaterialBlockBase
     {
-        public ModelMaterialBlock() : base()
+        public  ModelMaterialBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  ModelMaterialBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -26,14 +29,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal Moonfish.Tags.StringIdent globalMaterialName;
         internal byte[] invalidName_1;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
-        public ModelMaterialBlockBase() : base()
+        
+        public override int SerializedSize{get { return 20; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  ModelMaterialBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             materialName = binaryReader.ReadStringID();
             materialType = (MaterialType)binaryReader.ReadInt16();
             damageSection = binaryReader.ReadShortBlockIndex2();
@@ -41,24 +44,24 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(2);
             globalMaterialName = binaryReader.ReadStringID();
             invalidName_1 = binaryReader.ReadBytes(4);
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  ModelMaterialBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            materialName = binaryReader.ReadStringID();
+            materialType = (MaterialType)binaryReader.ReadInt16();
+            damageSection = binaryReader.ReadShortBlockIndex2();
+            invalidName_ = binaryReader.ReadBytes(2);
+            invalidName_0 = binaryReader.ReadBytes(2);
+            globalMaterialName = binaryReader.ReadStringID();
+            invalidName_1 = binaryReader.ReadBytes(4);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(materialName);
                 binaryWriter.Write((Int16)materialType);

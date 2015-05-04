@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class UserHintClimbBlock : UserHintClimbBlockBase
     {
-        public UserHintClimbBlock() : base()
+        public  UserHintClimbBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  UserHintClimbBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 4, Alignment = 4)]
@@ -21,26 +24,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Flags flags;
         internal Moonfish.Tags.ShortBlockIndex1 geometryIndex;
-        public override int SerializedSize { get { return 4; } }
-        public override int Alignment { get { return 4; } }
-        public UserHintClimbBlockBase() : base()
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  UserHintClimbBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             geometryIndex = binaryReader.ReadShortBlockIndex1();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  UserHintClimbBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt16();
+            geometryIndex = binaryReader.ReadShortBlockIndex1();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write(geometryIndex);

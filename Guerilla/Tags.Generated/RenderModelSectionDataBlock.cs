@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class RenderModelSectionDataBlock : RenderModelSectionDataBlockBase
     {
-        public RenderModelSectionDataBlock() : base()
+        public  RenderModelSectionDataBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  RenderModelSectionDataBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 112, Alignment = 4)]
@@ -23,37 +26,33 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalGeometryPointDataStructBlock pointData;
         internal RenderModelNodeMapBlock[] nodeMap;
         internal byte[] invalidName_;
-        public override int SerializedSize { get { return 112; } }
-        public override int Alignment { get { return 4; } }
-        public RenderModelSectionDataBlockBase() : base()
+        
+        public override int SerializedSize{get { return 112; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  RenderModelSectionDataBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            section = new GlobalGeometrySectionStructBlock();
-            blamPointers.Concat(section.ReadFields(binaryReader));
-            pointData = new GlobalGeometryPointDataStructBlock();
-            blamPointers.Concat(pointData.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<RenderModelNodeMapBlock>(binaryReader));
+            section = new GlobalGeometrySectionStructBlock(binaryReader);
+            pointData = new GlobalGeometryPointDataStructBlock(binaryReader);
+            nodeMap = Guerilla.ReadBlockArray<RenderModelNodeMapBlock>(binaryReader);
             invalidName_ = binaryReader.ReadBytes(4);
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  RenderModelSectionDataBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            section.ReadPointers(binaryReader, blamPointers);
-            pointData.ReadPointers(binaryReader, blamPointers);
-            nodeMap = ReadBlockArrayData<RenderModelNodeMapBlock>(binaryReader, blamPointers.Dequeue());
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            section = new GlobalGeometrySectionStructBlock(binaryReader);
+            pointData = new GlobalGeometryPointDataStructBlock(binaryReader);
+            nodeMap = Guerilla.ReadBlockArray<RenderModelNodeMapBlock>(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(4);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 section.Write(binaryWriter);
                 pointData.Write(binaryWriter);

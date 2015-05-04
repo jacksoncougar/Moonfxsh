@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class UserHintParallelogramBlock : UserHintParallelogramBlockBase
     {
-        public UserHintParallelogramBlock() : base()
+        public  UserHintParallelogramBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  UserHintParallelogramBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 68, Alignment = 4)]
@@ -32,14 +35,14 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 point3;
         internal short referenceFrame2;
         internal byte[] invalidName_2;
-        public override int SerializedSize { get { return 68; } }
-        public override int Alignment { get { return 4; } }
-        public UserHintParallelogramBlockBase() : base()
+        
+        public override int SerializedSize{get { return 68; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  UserHintParallelogramBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             point0 = binaryReader.ReadVector3();
             referenceFrame = binaryReader.ReadInt16();
@@ -53,24 +56,30 @@ namespace Moonfish.Guerilla.Tags
             point3 = binaryReader.ReadVector3();
             referenceFrame2 = binaryReader.ReadInt16();
             invalidName_2 = binaryReader.ReadBytes(2);
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  UserHintParallelogramBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt32();
+            point0 = binaryReader.ReadVector3();
+            referenceFrame = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            point1 = binaryReader.ReadVector3();
+            referenceFrame0 = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+            point2 = binaryReader.ReadVector3();
+            referenceFrame1 = binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(2);
+            point3 = binaryReader.ReadVector3();
+            referenceFrame2 = binaryReader.ReadInt16();
+            invalidName_2 = binaryReader.ReadBytes(2);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(point0);

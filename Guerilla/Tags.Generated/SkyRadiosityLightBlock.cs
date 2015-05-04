@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SkyRadiosityLightBlock : SkyRadiosityLightBlockBase
     {
-        public SkyRadiosityLightBlock() : base()
+        public  SkyRadiosityLightBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SkyRadiosityLightBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -23,7 +26,7 @@ namespace Moonfish.Guerilla.Tags
         /// <summary>
         /// Light color.
         /// </summary>
-        internal Moonfish.Tags.ColourR8G8B8 color;
+        internal Moonfish.Tags.ColourR8G8B8 Colour;
         /// <summary>
         /// Light power from 0 to infinity.
         /// </summary>
@@ -37,45 +40,40 @@ namespace Moonfish.Guerilla.Tags
         /// Angular diameter of the light source in the sky.
         /// </summary>
         internal float diameterDegrees;
-        public override int SerializedSize { get { return 40; } }
-        public override int Alignment { get { return 4; } }
-        public SkyRadiosityLightBlockBase() : base()
+        
+        public override int SerializedSize{get { return 40; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SkyRadiosityLightBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
-            color = binaryReader.ReadColorR8G8B8();
+            Colour = binaryReader.ReadColorR8G8B8();
             power0Inf = binaryReader.ReadSingle();
             testDistanceWorldUnits = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(12);
             diameterDegrees = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  SkyRadiosityLightBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_[4].ReadPointers(binaryReader, blamPointers);
-            invalidName_[5].ReadPointers(binaryReader, blamPointers);
-            invalidName_[6].ReadPointers(binaryReader, blamPointers);
-            invalidName_[7].ReadPointers(binaryReader, blamPointers);
-            invalidName_[8].ReadPointers(binaryReader, blamPointers);
-            invalidName_[9].ReadPointers(binaryReader, blamPointers);
-            invalidName_[10].ReadPointers(binaryReader, blamPointers);
-            invalidName_[11].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt32();
+            Colour = binaryReader.ReadColorR8G8B8();
+            power0Inf = binaryReader.ReadSingle();
+            testDistanceWorldUnits = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(12);
+            diameterDegrees = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
-                binaryWriter.Write(color);
+                binaryWriter.Write(Colour);
                 binaryWriter.Write(power0Inf);
                 binaryWriter.Write(testDistanceWorldUnits);
                 binaryWriter.Write(invalidName_, 0, 12);

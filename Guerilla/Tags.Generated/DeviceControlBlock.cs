@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("ctrl")]
     public partial class DeviceControlBlock : DeviceControlBlockBase
     {
-        public DeviceControlBlock() : base()
+        public  DeviceControlBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  DeviceControlBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 36, Alignment = 4)]
@@ -38,14 +41,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference off;
         [TagReference("null")]
         internal Moonfish.Tags.TagReference deny;
-        public override int SerializedSize { get { return 320; } }
-        public override int Alignment { get { return 4; } }
-        public DeviceControlBlockBase() : base()
+        
+        public override int SerializedSize{get { return 36; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  DeviceControlBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             type = (Type)binaryReader.ReadInt16();
             triggersWhen = (TriggersWhen)binaryReader.ReadInt16();
             callValue01 = binaryReader.ReadSingle();
@@ -53,16 +56,24 @@ namespace Moonfish.Guerilla.Tags
             on = binaryReader.ReadTagReference();
             off = binaryReader.ReadTagReference();
             deny = binaryReader.ReadTagReference();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  DeviceControlBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            type = (Type)binaryReader.ReadInt16();
+            triggersWhen = (TriggersWhen)binaryReader.ReadInt16();
+            callValue01 = binaryReader.ReadSingle();
+            actionString = binaryReader.ReadStringID();
+            on = binaryReader.ReadTagReference();
+            off = binaryReader.ReadTagReference();
+            deny = binaryReader.ReadTagReference();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)type);
                 binaryWriter.Write((Int16)triggersWhen);

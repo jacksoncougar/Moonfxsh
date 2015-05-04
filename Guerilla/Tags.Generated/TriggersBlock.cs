@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class TriggersBlock : TriggersBlockBase
     {
-        public TriggersBlock() : base()
+        public  TriggersBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  TriggersBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 48, Alignment = 4)]
@@ -24,32 +27,35 @@ namespace Moonfish.Guerilla.Tags
         internal CombinationRule combinationRule;
         internal byte[] invalidName_;
         internal OrderCompletionCondition[] conditions;
-        public override int SerializedSize { get { return 48; } }
-        public override int Alignment { get { return 4; } }
-        public TriggersBlockBase() : base()
+        
+        public override int SerializedSize{get { return 48; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  TriggersBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
             triggerFlags = (TriggerFlags)binaryReader.ReadInt32();
             combinationRule = (CombinationRule)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            blamPointers.Enqueue(ReadBlockArrayPointer<OrderCompletionCondition>(binaryReader));
-            return blamPointers;
+            conditions = Guerilla.ReadBlockArray<OrderCompletionCondition>(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  TriggersBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            conditions = ReadBlockArrayData<OrderCompletionCondition>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadString32();
+            triggerFlags = (TriggerFlags)binaryReader.ReadInt32();
+            combinationRule = (CombinationRule)binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            conditions = Guerilla.ReadBlockArray<OrderCompletionCondition>(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write((Int32)triggerFlags);

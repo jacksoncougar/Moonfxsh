@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class TrianglesBlock : TrianglesBlockBase
     {
-        public TrianglesBlock() : base()
+        public  TrianglesBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  TrianglesBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 96, Alignment = 16)]
@@ -40,14 +43,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_3;
         internal OpenTK.Vector3 pointC;
         internal byte[] invalidName_4;
-        public override int SerializedSize { get { return 96; } }
-        public override int Alignment { get { return 16; } }
-        public TrianglesBlockBase() : base()
+        
+        public override int SerializedSize{get { return 96; }}
+        
+        
+        public override int Alignment{get { return 16; }}
+        
+        public  TrianglesBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             material = binaryReader.ReadShortBlockIndex1();
             flags = (Flags)binaryReader.ReadInt16();
@@ -69,38 +72,38 @@ namespace Moonfish.Guerilla.Tags
             invalidName_3 = binaryReader.ReadBytes(4);
             pointC = binaryReader.ReadVector3();
             invalidName_4 = binaryReader.ReadBytes(4);
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  TrianglesBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_2[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_3[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_4[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_4[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_4[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_4[3].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadStringID();
+            material = binaryReader.ReadShortBlockIndex1();
+            flags = (Flags)binaryReader.ReadInt16();
+            relativeMassScale = binaryReader.ReadSingle();
+            friction = binaryReader.ReadSingle();
+            restitution = binaryReader.ReadSingle();
+            volume = binaryReader.ReadSingle();
+            mass = binaryReader.ReadSingle();
+            invalidName_ = binaryReader.ReadBytes(2);
+            phantom = binaryReader.ReadShortBlockIndex1();
+            invalidName_0 = binaryReader.ReadBytes(4);
+            size = binaryReader.ReadInt16();
+            count = binaryReader.ReadInt16();
+            invalidName_1 = binaryReader.ReadBytes(4);
+            radius = binaryReader.ReadSingle();
+            pointA = binaryReader.ReadVector3();
+            invalidName_2 = binaryReader.ReadBytes(4);
+            pointB = binaryReader.ReadVector3();
+            invalidName_3 = binaryReader.ReadBytes(4);
+            pointC = binaryReader.ReadVector3();
+            invalidName_4 = binaryReader.ReadBytes(4);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(material);

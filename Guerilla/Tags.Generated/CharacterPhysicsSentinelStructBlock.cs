@@ -5,38 +5,44 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterPhysicsSentinelStructBlock : CharacterPhysicsSentinelStructBlockBase
     {
-        public CharacterPhysicsSentinelStructBlock() : base()
+        public  CharacterPhysicsSentinelStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CharacterPhysicsSentinelStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 0, Alignment = 4)]
     public class CharacterPhysicsSentinelStructBlockBase : GuerillaBlock
     {
-        public override int SerializedSize { get { return 0; } }
-        public override int Alignment { get { return 4; } }
-        public CharacterPhysicsSentinelStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 0; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CharacterPhysicsSentinelStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  CharacterPhysicsSentinelStructBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 return nextAddress;
             }

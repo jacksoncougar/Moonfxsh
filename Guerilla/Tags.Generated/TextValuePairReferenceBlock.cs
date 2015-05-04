@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class TextValuePairReferenceBlock : TextValuePairReferenceBlockBase
     {
-        public TextValuePairReferenceBlock() : base()
+        public  TextValuePairReferenceBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  TextValuePairReferenceBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 12, Alignment = 4)]
@@ -21,32 +24,36 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Flags flags;
         internal int value;
-        internal Moonfish.Tags.StringIdent labelStringId;
-        public override int SerializedSize { get { return 12; } }
-        public override int Alignment { get { return 4; } }
-        public TextValuePairReferenceBlockBase() : base()
+        internal Moonfish.Tags.StringIdent LabelStringIdent;
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  TextValuePairReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             value = binaryReader.ReadInt32();
-            labelStringId = binaryReader.ReadStringID();
-            return blamPointers;
+            LabelStringIdent = binaryReader.ReadStringID();
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  TextValuePairReferenceBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            flags = (Flags)binaryReader.ReadInt32();
+            value = binaryReader.ReadInt32();
+            LabelStringIdent = binaryReader.ReadStringID();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(value);
-                binaryWriter.Write(labelStringId);
+                binaryWriter.Write(LabelStringIdent);
                 return nextAddress;
             }
         }

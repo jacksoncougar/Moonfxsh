@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GrenadeAndPowerupStructBlock : GrenadeAndPowerupStructBlockBase
     {
-        public GrenadeAndPowerupStructBlock() : base()
+        public  GrenadeAndPowerupStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  GrenadeAndPowerupStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -21,28 +24,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal GrenadeBlock[] grenades;
         internal PowerupBlock[] powerups;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
-        public GrenadeAndPowerupStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  GrenadeAndPowerupStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
+            grenades = Guerilla.ReadBlockArray<GrenadeBlock>(binaryReader);
+            powerups = Guerilla.ReadBlockArray<PowerupBlock>(binaryReader);
         }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        public  GrenadeAndPowerupStructBlockBase(): base()
         {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<GrenadeBlock>(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<PowerupBlock>(binaryReader));
-            return blamPointers;
+            
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            grenades = ReadBlockArrayData<GrenadeBlock>(binaryReader, blamPointers.Dequeue());
-            powerups = ReadBlockArrayData<PowerupBlock>(binaryReader, blamPointers.Dequeue());
+            grenades = Guerilla.ReadBlockArray<GrenadeBlock>(binaryReader);
+            powerups = Guerilla.ReadBlockArray<PowerupBlock>(binaryReader);
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<GrenadeBlock>(binaryWriter, grenades, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<PowerupBlock>(binaryWriter, powerups, nextAddress);

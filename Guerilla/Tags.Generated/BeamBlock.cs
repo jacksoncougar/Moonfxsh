@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class BeamBlock : BeamBlockBase
     {
-        public BeamBlock() : base()
+        public  BeamBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  BeamBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 60, Alignment = 4)]
@@ -29,47 +32,43 @@ namespace Moonfish.Guerilla.Tags
         internal ScalarFunctionStructBlock length;
         internal ScalarFunctionStructBlock yaw;
         internal ScalarFunctionStructBlock pitch;
-        public override int SerializedSize { get { return 60; } }
-        public override int Alignment { get { return 4; } }
-        public BeamBlockBase() : base()
+        
+        public override int SerializedSize{get { return 60; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  BeamBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             shader = binaryReader.ReadTagReference();
             location = binaryReader.ReadShortBlockIndex1();
             invalidName_ = binaryReader.ReadBytes(2);
-            color = new ColorFunctionStructBlock();
-            blamPointers.Concat(color.ReadFields(binaryReader));
-            alpha = new ScalarFunctionStructBlock();
-            blamPointers.Concat(alpha.ReadFields(binaryReader));
-            width = new ScalarFunctionStructBlock();
-            blamPointers.Concat(width.ReadFields(binaryReader));
-            length = new ScalarFunctionStructBlock();
-            blamPointers.Concat(length.ReadFields(binaryReader));
-            yaw = new ScalarFunctionStructBlock();
-            blamPointers.Concat(yaw.ReadFields(binaryReader));
-            pitch = new ScalarFunctionStructBlock();
-            blamPointers.Concat(pitch.ReadFields(binaryReader));
-            return blamPointers;
+            color = new ColorFunctionStructBlock(binaryReader);
+            alpha = new ScalarFunctionStructBlock(binaryReader);
+            width = new ScalarFunctionStructBlock(binaryReader);
+            length = new ScalarFunctionStructBlock(binaryReader);
+            yaw = new ScalarFunctionStructBlock(binaryReader);
+            pitch = new ScalarFunctionStructBlock(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  BeamBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            color.ReadPointers(binaryReader, blamPointers);
-            alpha.ReadPointers(binaryReader, blamPointers);
-            width.ReadPointers(binaryReader, blamPointers);
-            length.ReadPointers(binaryReader, blamPointers);
-            yaw.ReadPointers(binaryReader, blamPointers);
-            pitch.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            shader = binaryReader.ReadTagReference();
+            location = binaryReader.ReadShortBlockIndex1();
+            invalidName_ = binaryReader.ReadBytes(2);
+            color = new ColorFunctionStructBlock(binaryReader);
+            alpha = new ScalarFunctionStructBlock(binaryReader);
+            width = new ScalarFunctionStructBlock(binaryReader);
+            length = new ScalarFunctionStructBlock(binaryReader);
+            yaw = new ScalarFunctionStructBlock(binaryReader);
+            pitch = new ScalarFunctionStructBlock(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(shader);
                 binaryWriter.Write(location);

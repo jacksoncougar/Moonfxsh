@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class EnvironmentObjectNodes : EnvironmentObjectNodesBase
     {
-        public EnvironmentObjectNodes() : base()
+        public  EnvironmentObjectNodes(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  EnvironmentObjectNodes(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 4, Alignment = 4)]
@@ -22,27 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal short referenceFrameIndex;
         internal byte projectionAxis;
         internal ProjectionSign projectionSign;
-        public override int SerializedSize { get { return 4; } }
-        public override int Alignment { get { return 4; } }
-        public EnvironmentObjectNodesBase() : base()
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  EnvironmentObjectNodesBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             referenceFrameIndex = binaryReader.ReadInt16();
             projectionAxis = binaryReader.ReadByte();
             projectionSign = (ProjectionSign)binaryReader.ReadByte();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  EnvironmentObjectNodesBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            referenceFrameIndex = binaryReader.ReadInt16();
+            projectionAxis = binaryReader.ReadByte();
+            projectionSign = (ProjectionSign)binaryReader.ReadByte();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(referenceFrameIndex);
                 binaryWriter.Write(projectionAxis);

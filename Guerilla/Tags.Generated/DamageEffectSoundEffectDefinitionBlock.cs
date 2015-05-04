@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class DamageEffectSoundEffectDefinitionBlock : DamageEffectSoundEffectDefinitionBlockBase
     {
-        public DamageEffectSoundEffectDefinitionBlock() : base()
+        public  DamageEffectSoundEffectDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  DamageEffectSoundEffectDefinitionBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -22,29 +25,31 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent effectName;
         internal float durationSeconds;
         internal MappingFunctionBlock effectScaleFunction;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
-        public DamageEffectSoundEffectDefinitionBlockBase() : base()
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  DamageEffectSoundEffectDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             effectName = binaryReader.ReadStringID();
             durationSeconds = binaryReader.ReadSingle();
-            effectScaleFunction = new MappingFunctionBlock();
-            blamPointers.Concat(effectScaleFunction.ReadFields(binaryReader));
-            return blamPointers;
+            effectScaleFunction = new MappingFunctionBlock(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  DamageEffectSoundEffectDefinitionBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            effectScaleFunction.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            effectName = binaryReader.ReadStringID();
+            durationSeconds = binaryReader.ReadSingle();
+            effectScaleFunction = new MappingFunctionBlock(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(effectName);
                 binaryWriter.Write(durationSeconds);

@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class VehiclePermutation : VehiclePermutationBase
     {
-        public VehiclePermutation() : base()
+        public  VehiclePermutation(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  VehiclePermutation(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -24,32 +27,36 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float weight;
         /// <summary>
-        /// which vehicle to 
+        /// which vehicle to
         /// </summary>
         [TagReference("vehi")]
         internal Moonfish.Tags.TagReference vehicle;
         internal Moonfish.Tags.StringIdent variantName;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
-        public VehiclePermutationBase() : base()
+        
+        public override int SerializedSize{get { return 16; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  VehiclePermutationBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             weight = binaryReader.ReadSingle();
             vehicle = binaryReader.ReadTagReference();
             variantName = binaryReader.ReadStringID();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  VehiclePermutationBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            weight = binaryReader.ReadSingle();
+            vehicle = binaryReader.ReadTagReference();
+            variantName = binaryReader.ReadStringID();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(weight);
                 binaryWriter.Write(vehicle);

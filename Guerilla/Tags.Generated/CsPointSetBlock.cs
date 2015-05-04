@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CsPointSetBlock : CsPointSetBlockBase
     {
-        public CsPointSetBlock() : base()
+        public  CsPointSetBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  CsPointSetBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 48, Alignment = 4)]
@@ -24,30 +27,35 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 bspIndex;
         internal short manualReferenceFrame;
         internal Flags flags;
-        public override int SerializedSize { get { return 48; } }
-        public override int Alignment { get { return 4; } }
-        public CsPointSetBlockBase() : base()
+        
+        public override int SerializedSize{get { return 48; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  CsPointSetBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
-            blamPointers.Enqueue(ReadBlockArrayPointer<CsPointBlock>(binaryReader));
+            points = Guerilla.ReadBlockArray<CsPointBlock>(binaryReader);
             bspIndex = binaryReader.ReadShortBlockIndex1();
             manualReferenceFrame = binaryReader.ReadInt16();
             flags = (Flags)binaryReader.ReadInt32();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  CsPointSetBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            points = ReadBlockArrayData<CsPointBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            name = binaryReader.ReadString32();
+            points = Guerilla.ReadBlockArray<CsPointBlock>(binaryReader);
+            bspIndex = binaryReader.ReadShortBlockIndex1();
+            manualReferenceFrame = binaryReader.ReadInt16();
+            flags = (Flags)binaryReader.ReadInt32();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 nextAddress = Guerilla.WriteBlockArray<CsPointBlock>(binaryWriter, points, nextAddress);

@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("bipd")]
     public partial class BipedBlock : BipedBlockBase
     {
-        public BipedBlock() : base()
+        public  BipedBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  BipedBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 296, Alignment = 4)]
@@ -113,14 +116,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference deathSpawnCharacter;
         internal short deathSpawnCount;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 788; } }
-        public override int Alignment { get { return 4; } }
-        public BipedBlockBase() : base()
+        
+        public override int SerializedSize{get { return 296; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  BipedBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             movingTurningSpeedDegreesPerSecond = binaryReader.ReadSingle();
             flags = (Flags)binaryReader.ReadInt32();
             stationaryTurningThreshold = binaryReader.ReadSingle();
@@ -142,49 +145,58 @@ namespace Moonfish.Guerilla.Tags
             cameraVerticalMovementScale = binaryReader.ReadSingle();
             cameraExclusionDistanceWorldUnits = binaryReader.ReadSingle();
             autoaimWidthWorldUnits = binaryReader.ReadSingle();
-            lockOnData = new BipedLockOnDataStructBlock();
-            blamPointers.Concat(lockOnData.ReadFields(binaryReader));
+            lockOnData = new BipedLockOnDataStructBlock(binaryReader);
             invalidName_ = binaryReader.ReadBytes(16);
             headShotAccScale = binaryReader.ReadSingle();
             areaDamageEffect = binaryReader.ReadTagReference();
-            physics = new CharacterPhysicsStructBlock();
-            blamPointers.Concat(physics.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<ContactPointBlock>(binaryReader));
+            physics = new CharacterPhysicsStructBlock(binaryReader);
+            contactPoints = Guerilla.ReadBlockArray<ContactPointBlock>(binaryReader);
             reanimationCharacter = binaryReader.ReadTagReference();
             deathSpawnCharacter = binaryReader.ReadTagReference();
             deathSpawnCount = binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  BipedBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            lockOnData.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            invalidName_[2].ReadPointers(binaryReader, blamPointers);
-            invalidName_[3].ReadPointers(binaryReader, blamPointers);
-            invalidName_[4].ReadPointers(binaryReader, blamPointers);
-            invalidName_[5].ReadPointers(binaryReader, blamPointers);
-            invalidName_[6].ReadPointers(binaryReader, blamPointers);
-            invalidName_[7].ReadPointers(binaryReader, blamPointers);
-            invalidName_[8].ReadPointers(binaryReader, blamPointers);
-            invalidName_[9].ReadPointers(binaryReader, blamPointers);
-            invalidName_[10].ReadPointers(binaryReader, blamPointers);
-            invalidName_[11].ReadPointers(binaryReader, blamPointers);
-            invalidName_[12].ReadPointers(binaryReader, blamPointers);
-            invalidName_[13].ReadPointers(binaryReader, blamPointers);
-            invalidName_[14].ReadPointers(binaryReader, blamPointers);
-            invalidName_[15].ReadPointers(binaryReader, blamPointers);
-            physics.ReadPointers(binaryReader, blamPointers);
-            contactPoints = ReadBlockArrayData<ContactPointBlock>(binaryReader, blamPointers.Dequeue());
-            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            movingTurningSpeedDegreesPerSecond = binaryReader.ReadSingle();
+            flags = (Flags)binaryReader.ReadInt32();
+            stationaryTurningThreshold = binaryReader.ReadSingle();
+            jumpVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            maximumSoftLandingTimeSeconds = binaryReader.ReadSingle();
+            maximumHardLandingTimeSeconds = binaryReader.ReadSingle();
+            minimumSoftLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            minimumHardLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            maximumHardLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            deathHardLandingVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
+            stunDuration = binaryReader.ReadSingle();
+            standingCameraHeightWorldUnits = binaryReader.ReadSingle();
+            crouchingCameraHeightWorldUnits = binaryReader.ReadSingle();
+            crouchTransitionTimeSeconds = binaryReader.ReadSingle();
+            cameraInterpolationStartDegrees = binaryReader.ReadSingle();
+            cameraInterpolationEndDegrees = binaryReader.ReadSingle();
+            cameraForwardMovementScale = binaryReader.ReadSingle();
+            cameraSideMovementScale = binaryReader.ReadSingle();
+            cameraVerticalMovementScale = binaryReader.ReadSingle();
+            cameraExclusionDistanceWorldUnits = binaryReader.ReadSingle();
+            autoaimWidthWorldUnits = binaryReader.ReadSingle();
+            lockOnData = new BipedLockOnDataStructBlock(binaryReader);
+            invalidName_ = binaryReader.ReadBytes(16);
+            headShotAccScale = binaryReader.ReadSingle();
+            areaDamageEffect = binaryReader.ReadTagReference();
+            physics = new CharacterPhysicsStructBlock(binaryReader);
+            contactPoints = Guerilla.ReadBlockArray<ContactPointBlock>(binaryReader);
+            reanimationCharacter = binaryReader.ReadTagReference();
+            deathSpawnCharacter = binaryReader.ReadTagReference();
+            deathSpawnCount = binaryReader.ReadInt16();
+            invalidName_0 = binaryReader.ReadBytes(2);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(movingTurningSpeedDegreesPerSecond);
                 binaryWriter.Write((Int32)flags);

@@ -5,8 +5,6 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -21,8 +19,13 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("mcsr")]
     public partial class MouseCursorDefinitionBlock : MouseCursorDefinitionBlockBase
     {
-        public MouseCursorDefinitionBlock() : base()
+        public  MouseCursorDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  MouseCursorDefinitionBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 12, Alignment = 4)]
@@ -30,27 +33,29 @@ namespace Moonfish.Guerilla.Tags
     {
         internal MouseCursorBitmapReferenceBlock[] mouseCursorBitmaps;
         internal float animationSpeedFps;
-        public override int SerializedSize { get { return 12; } }
-        public override int Alignment { get { return 4; } }
-        public MouseCursorDefinitionBlockBase() : base()
+        
+        public override int SerializedSize{get { return 12; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  MouseCursorDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            blamPointers.Enqueue(ReadBlockArrayPointer<MouseCursorBitmapReferenceBlock>(binaryReader));
+            mouseCursorBitmaps = Guerilla.ReadBlockArray<MouseCursorBitmapReferenceBlock>(binaryReader);
             animationSpeedFps = binaryReader.ReadSingle();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  MouseCursorDefinitionBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            mouseCursorBitmaps = ReadBlockArrayData<MouseCursorBitmapReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            mouseCursorBitmaps = Guerilla.ReadBlockArray<MouseCursorBitmapReferenceBlock>(binaryReader);
+            animationSpeedFps = binaryReader.ReadSingle();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<MouseCursorBitmapReferenceBlock>(binaryWriter, mouseCursorBitmaps, nextAddress);
                 binaryWriter.Write(animationSpeedFps);

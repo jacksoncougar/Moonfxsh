@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class MeleeDamageParametersStructBlock : MeleeDamageParametersStructBlockBase
     {
-        public MeleeDamageParametersStructBlock() : base()
+        public  MeleeDamageParametersStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  MeleeDamageParametersStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 76, Alignment = 4)]
@@ -43,14 +46,14 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         [TagReference("jpt!")]
         internal Moonfish.Tags.TagReference lungeMeleeResponse;
-        public override int SerializedSize { get { return 76; } }
-        public override int Alignment { get { return 4; } }
-        public MeleeDamageParametersStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 76; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  MeleeDamageParametersStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             damagePyramidAngles = binaryReader.ReadVector2();
             damagePyramidDepth = binaryReader.ReadSingle();
             invalidName_1StHitMeleeDamage = binaryReader.ReadTagReference();
@@ -61,16 +64,27 @@ namespace Moonfish.Guerilla.Tags
             invalidName_3RdHitMeleeResponse = binaryReader.ReadTagReference();
             lungeMeleeDamage = binaryReader.ReadTagReference();
             lungeMeleeResponse = binaryReader.ReadTagReference();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  MeleeDamageParametersStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            damagePyramidAngles = binaryReader.ReadVector2();
+            damagePyramidDepth = binaryReader.ReadSingle();
+            invalidName_1StHitMeleeDamage = binaryReader.ReadTagReference();
+            invalidName_1StHitMeleeResponse = binaryReader.ReadTagReference();
+            invalidName_2NdHitMeleeDamage = binaryReader.ReadTagReference();
+            invalidName_2NdHitMeleeResponse = binaryReader.ReadTagReference();
+            invalidName_3RdHitMeleeDamage = binaryReader.ReadTagReference();
+            invalidName_3RdHitMeleeResponse = binaryReader.ReadTagReference();
+            lungeMeleeDamage = binaryReader.ReadTagReference();
+            lungeMeleeResponse = binaryReader.ReadTagReference();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(damagePyramidAngles);
                 binaryWriter.Write(damagePyramidDepth);

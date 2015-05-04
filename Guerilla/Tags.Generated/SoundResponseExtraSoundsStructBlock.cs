@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SoundResponseExtraSoundsStructBlock : SoundResponseExtraSoundsStructBlockBase
     {
-        public SoundResponseExtraSoundsStructBlock() : base()
+        public  SoundResponseExtraSoundsStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  SoundResponseExtraSoundsStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 64, Alignment = 4)]
@@ -35,14 +38,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference chineseSound;
         [TagReference("snd!")]
         internal Moonfish.Tags.TagReference portugueseSound;
-        public override int SerializedSize { get { return 64; } }
-        public override int Alignment { get { return 4; } }
-        public SoundResponseExtraSoundsStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 64; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  SoundResponseExtraSoundsStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             japaneseSound = binaryReader.ReadTagReference();
             germanSound = binaryReader.ReadTagReference();
             frenchSound = binaryReader.ReadTagReference();
@@ -51,16 +54,25 @@ namespace Moonfish.Guerilla.Tags
             koreanSound = binaryReader.ReadTagReference();
             chineseSound = binaryReader.ReadTagReference();
             portugueseSound = binaryReader.ReadTagReference();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  SoundResponseExtraSoundsStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            japaneseSound = binaryReader.ReadTagReference();
+            germanSound = binaryReader.ReadTagReference();
+            frenchSound = binaryReader.ReadTagReference();
+            spanishSound = binaryReader.ReadTagReference();
+            italianSound = binaryReader.ReadTagReference();
+            koreanSound = binaryReader.ReadTagReference();
+            chineseSound = binaryReader.ReadTagReference();
+            portugueseSound = binaryReader.ReadTagReference();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(japaneseSound);
                 binaryWriter.Write(germanSound);

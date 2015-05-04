@@ -1,11 +1,8 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Fasterflect;
-using Microsoft.CSharp;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Reflection
@@ -35,7 +32,7 @@ namespace Moonfish.Guerilla.Reflection
             EnumDefinitions = new List<EnumInfo>();
             ClassDefinitions = new List<ClassInfo>();
             Methods = new List<MethodInfo>();
-            MethodsTemplates = new List<MethodInfo>();
+            MethodTemplates = new List<MethodInfo>();
             _value = new GuerillaName("");
             Name = "";
             Namespace = new NamespaceInfo();
@@ -86,7 +83,7 @@ namespace Moonfish.Guerilla.Reflection
         public List<FieldInfo> Fields { get; set; }
         public List<PropertyInfo> Properties { get; set; }
         public List<MethodInfo> Methods { get; set; }
-        public List<MethodInfo> MethodsTemplates { get; set; }
+        public List<MethodInfo> MethodTemplates { get; set; }
         public NamespaceInfo Namespace { get; set; }
         public List<string> Usings { get; set; }
 
@@ -136,325 +133,17 @@ namespace Moonfish.Guerilla.Reflection
 
         public void Generate()
         {
-            MethodsTemplates.Clear();
+            MethodTemplates.Clear();
             Methods.Clear();
             Constructors.Clear();
 
-            GenerateBinaryReaderMethod();
-            GenerateReadPointersMethod();
+            Methods.AddRange(new[]
+            {
+                MethodInfoFactory.GenerateReadFieldsMethod(this),
+                MethodInfoFactory.GenerateReadPointersMethod(this)
+            });
 
-            GenerateDefaultConstructor();
-
-            GenerateWriteBlockTemplateMethod();
-            GenerateWriteArrayMethod();
-            GenerateWriteDataMethod();
             GenerateWriteMethod();
-        }
-
-        private void GenerateDefaultConstructor()
-        {
-            Constructors.Add(new MethodInfo
-            {
-                ClassName = Name,
-                AccessModifiers = AccessModifiers.Public,
-                Wrapper = HasBaseClass
-            });
-        }
-
-        public void GenerateBinaryReaderConstructor()
-        {
-            Constructors.Add(new MethodInfo
-            {
-                ClassName = Name,
-                AccessModifiers = AccessModifiers.Public,
-                Arguments = new List<ParameterInfo>
-                {
-                    new ParameterInfo(typeof (BinaryReader))
-                }
-            });
-            var body = new StringBuilder();
-
-            body.AppendFormatLine("var blamPointers = new Queue<BlamPointer>(base.{0});",
-                Methods.Last().GetMethodCallSignature());
-
-            foreach (var item in Fields)
-            {
-                if (item.IsArray)
-                {
-                    // fixed byte array like padding or skip arrays
-                    if (item.ArraySize > 0 && Type.GetType(item.FieldTypeName) == typeof (byte))
-                    {
-                        body.AppendLine(string.Format("{0} = binaryReader.ReadBytes({1});", item.Value.Name,
-                            item.ArraySize));
-                    }
-                    // variable byte array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof (byte))
-                    {
-                        body.AppendLine(
-                            "blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));");
-                    }
-                    // variable short array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof (short))
-                    {
-                        body.AppendLine(
-                            "blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 2));");
-                    }
-                    // inline array
-                    else if (item.ArraySize > 0)
-                    {
-                        var initializer = "";
-                        for (var i = 0; i <= item.ArraySize - 1; i++)
-                        {
-                            initializer += string.Format("new {0}(binaryReader){1}", item.FieldTypeName,
-                                i == item.ArraySize ? "" : ", ");
-                        }
-                        body.AppendLine(string.Format("{0} = new []{{ {1} }};", item.Value.Name, initializer));
-                    }
-                    // assume a TagBlock
-                    else
-                    {
-                        body.AppendFormatLine(
-                            "blamPointers.Enqueue(ReadBlockArrayPointer<{0}>(binaryReader));", item.FieldTypeName);
-                    }
-                }
-                else
-                {
-                    if (EnumDefinitions.Any(x => x.Value.Name == item.FieldTypeName))
-                    {
-                        var enumDefinition = EnumDefinitions.First(x => x.Value.Name == item.FieldTypeName);
-                        var type = enumDefinition.BaseType == EnumInfo.Type.Byte
-                            ? "Byte"
-                            : enumDefinition.BaseType == EnumInfo.Type.Short ? "Int16" : "Int32";
-                        body.AppendLine(string.Format("{0} = ({1})binaryReader.Read{2}();", item.Value.Name,
-                            item.FieldTypeName, type));
-                    }
-                    else if (Type.GetType(item.FieldTypeName) == null)
-                    {
-                        body.AppendFormatLine("{0} = new {1}();", item.Value.Name,
-                            item.FieldTypeName);
-                        body.AppendFormatLine("{0}.ReadFields(binaryReader);", item.Value.Name,
-                            item.FieldTypeName);
-                    }
-                    else
-                    {
-                        var value = BinaryIOReflection.GetBinaryReaderMethodName(Type.GetType(item.FieldTypeName));
-                        body.AppendLine(string.Format("{0} = binaryReader.{1}();", item.Value.Name, value));
-                    }
-                }
-            }
-            body.AppendLine("return blamPointers;");
-
-            Constructors.Last().Body = body.ToString().TrimEnd();
-        }
-
-        public void GenerateReadPointersMethod()
-        {
-            Methods.Add(new MethodInfo
-            {
-                ClassName = "ReadPointers",
-                AccessModifiers = AccessModifiers.Public | AccessModifiers.Override,
-                Arguments = new List<ParameterInfo>
-                {
-                    new ParameterInfo(typeof (BinaryReader)),
-                    new ParameterInfo(typeof (Queue<BlamPointer>), "blamPointers"),
-                },
-                Returns = typeof (void).Name()
-            });
-
-            var body = new StringBuilder();
-            var method = Methods.Last();
-            body.AppendFormatLine("base.{0};", method.GetMethodCallSignature());
-
-            foreach (var item in Fields)
-            {
-                if (item.IsArray)
-                {
-                    // inline array
-                    if (item.ArraySize > 0 && Type.GetType(item.FieldTypeName) == typeof (byte))
-                    {
-                        continue;
-                    }
-                    // variable byte array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof (byte))
-                    {
-                        body.AppendFormatLine(
-                            "{0} = ReadDataByteArray(binaryReader, blamPointers.Dequeue());", item.Value.Name);
-                    }
-                    // variable short array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof (short))
-                    {
-                        body.AppendFormatLine(
-                            "{0} = ReadDataShortArray(binaryReader, blamPointers.Dequeue());", item.Value.Name);
-                    }
-                    // inline array
-                    else if (item.ArraySize > 0)
-                    {
-                        for (var i = 0; i < item.ArraySize; i++)
-                        {
-                            body.AppendFormatLine("{0}[{1}].ReadPointers(binaryReader, blamPointers);", item.Value.Name,
-                                i);
-                        }
-                    }
-                    // assume a TagBlock
-                    else
-                    {
-                        body.AppendFormatLine(
-                            "{1} = ReadBlockArrayData<{0}>(binaryReader, blamPointers.Dequeue());",
-                            item.FieldTypeName, item.Value.Name);
-                    }
-                }
-                else
-                {
-                    if (Type.GetType(item.FieldTypeName) == null &&
-                        EnumDefinitions.All(x => x.Value.Name != item.FieldTypeName))
-                    {
-                        body.AppendFormatLine("{0}.ReadPointers(binaryReader, blamPointers);", item.Value.Name);
-                    }
-                }
-            }
-            Methods.Last().Body = body.ToString().TrimEnd();
-        }
-
-        public void GenerateBinaryReaderMethod()
-        {
-            Methods.Add(new MethodInfo
-            {
-                ClassName = "ReadFields",
-                AccessModifiers = AccessModifiers.Public | AccessModifiers.Override,
-                Arguments = new List<ParameterInfo>
-                {
-                    new ParameterInfo(typeof (BinaryReader))
-                },
-                Returns = typeof (Queue<BlamPointer>).Name()
-            });
-            var body = new StringBuilder();
-
-            body.AppendFormatLine("var blamPointers = new Queue<BlamPointer>(base.{0});",
-                Methods.Last().GetMethodCallSignature());
-
-            foreach (var item in Fields)
-            {
-                if (item.IsArray)
-                {
-                    // fixed byte array like padding or skip arrays
-                    if (item.ArraySize > 0 && Type.GetType(item.FieldTypeName) == typeof (byte))
-                    {
-                        body.AppendLine(string.Format("{0} = binaryReader.ReadBytes({1});", item.Value.Name,
-                            item.ArraySize));
-                    }
-                    // variable byte array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof (byte))
-                    {
-                        body.AppendFormatLine(
-                            "blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));", item.FieldTypeName);
-                    }
-                    // variable short array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof (short))
-                    {
-                        body.AppendFormatLine(
-                            "blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 2));", item.FieldTypeName);
-                    }
-                    // inline array
-                    else if (item.ArraySize > 0)
-                    {
-                        var initializer = "";
-                        for (var i = 0; i < item.ArraySize; i++)
-                        {
-                            initializer += string.Format("new {0}(){1}", item.FieldTypeName,
-                                i == item.ArraySize - 1 ? "" : ", ");
-                        }
-                        body.AppendLine(string.Format("{0} = new []{{ {1} }};", item.Value.Name, initializer));
-
-                        for (var i = 0; i < item.ArraySize; i++)
-                        {
-                            body.AppendFormatLine(
-                                "blamPointers = new Queue<BlamPointer>(blamPointers.Concat({0}[{1}].ReadFields(binaryReader)));",
-                                item.Value.Name, i);
-                        }
-                    }
-                    // assume a TagBlock
-                    else
-                    {
-                        body.AppendFormatLine(
-                            "blamPointers.Enqueue(ReadBlockArrayPointer<{0}>(binaryReader));", item.FieldTypeName);
-                    }
-                }
-                else
-                {
-                    if (EnumDefinitions.Any(x => x.Value.Name == item.FieldTypeName))
-                    {
-                        var enumDefinition = EnumDefinitions.First(x => x.Value.Name == item.FieldTypeName);
-                        var type = enumDefinition.BaseType == EnumInfo.Type.Byte
-                            ? "Byte"
-                            : enumDefinition.BaseType == EnumInfo.Type.Short ? "Int16" : "Int32";
-                        body.AppendLine(string.Format("{0} = ({1})binaryReader.Read{2}();", item.Value.Name,
-                            item.FieldTypeName, type));
-                    }
-                    else if (Type.GetType(item.FieldTypeName) == null)
-                    {
-                        body.AppendFormatLine("{0} = new {1}();", item.Value.Name,
-                            item.FieldTypeName);
-                        body.AppendFormatLine(
-                            "blamPointers = new Queue<BlamPointer>(blamPointers.Concat({0}.ReadFields(binaryReader)));",
-                            item.Value.Name);
-                    }
-                    else
-                    {
-                        var value = BinaryIOReflection.GetBinaryReaderMethodName(Type.GetType(item.FieldTypeName));
-                        body.AppendLine(string.Format("{0} = binaryReader.{1}();", item.Value.Name, value));
-                    }
-                }
-            }
-            body.AppendLine("return blamPointers;");
-
-            Methods.Last().Body = body.ToString().TrimEnd();
-        }
-
-        public void GenerateReadBlockTemplateMethod()
-        {
-            MethodsTemplates.Add(new MethodInfo
-            {
-                Arguments = new List<ParameterInfo> {new ParameterInfo(typeof (BinaryReader))},
-                AccessModifiers = AccessModifiers.Internal | AccessModifiers.Virtual,
-                ClassName = "Read{0}Array",
-                Body =
-                    @"var elementSize = Deserializer.SizeOf(typeof({0}));
-var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-var array = new {0}[blamPointer.count];
-using (binaryReader.BaseStream.Pin())
-{{
-    for (int i = 0; i < blamPointer.count; ++i)
-    {{
-        binaryReader.BaseStream.Position = blamPointer[i];
-        array[i] = new {0}(binaryReader);
-    }}
-}}
-return array;",
-                Returns = "{0}[]"
-            });
-        }
-
-        public void GenerateReadDataMethod()
-        {
-//            Methods.Add(new MethodInfo
-//            {
-//                Arguments = new List<ParameterInfo> { new ParameterInfo(typeof(BinaryReader)) },
-//                AccessModifiers = AccessModifiers.Internal | AccessModifiers.Virtual,
-//                ClassName = "ReadData",
-//                Body =
-//                    @"var blamPointer = binaryReader.ReadBlamPointer(1);
-//var data = new byte[blamPointer.count];
-//if(blamPointer.count > 0)
-//{
-//    using (binaryReader.BaseStream.Pin())
-//    {
-//        binaryReader.BaseStream.Position = blamPointer[0];
-//        data = binaryReader.ReadBytes(blamPointer.count);
-//    }
-//}
-//return data;",
-//                Returns = "byte[]"
-//            });
         }
 
         public ClassInfo GenerateWrapper(string wrapperName, string baseName)
@@ -476,51 +165,6 @@ return array;",
                 wrapperClassInfo.Attributes.Add(tagClassAttribute);
             wrapperClassInfo.Name = wrapperName;
             return wrapperClassInfo;
-        }
-
-        public void GenerateWriteBlockTemplateMethod()
-        {
-            MethodsTemplates.Add(new MethodInfo
-            {
-                Arguments = new List<ParameterInfo> {new ParameterInfo(typeof (BinaryWriter))},
-                AccessModifiers = AccessModifiers.Internal | AccessModifiers.Virtual,
-                ClassName = "Write{0}Array",
-                Body = "",
-                Returns = "void"
-            });
-        }
-
-        public void GenerateWriteDataMethod()
-        {
-//            var binaryWriterParam = new ParameterInfo(typeof(BinaryWriter), "binaryWriter");
-//            var dataParam = new ParameterInfo(typeof(byte[]), "data");
-//            var addressParam = new ParameterInfo(typeof(long), "nextAddress") { Modifier = ParameterModifier.Ref };
-
-//            Methods.Add(new MethodInfo
-//            {
-//                Arguments = new List<ParameterInfo>
-//                {
-//                    binaryWriterParam,
-//                    dataParam,
-//                    addressParam
-//                },
-//                AccessModifiers = AccessModifiers.Internal | AccessModifiers.Virtual,
-//                ClassName = "WriteData",
-//                Body = string.Format(
-//@"using ({0}.BaseStream.Pin())
-//{{
-//    {0}.BaseStream.Position = {2};
-//    {0}.BaseStream.Pad(4);
-//    {0}.Write({1});
-//    {0}.BaseStream.Pad(4);
-//    {2} = {0}.BaseStream.Position;
-//}}", binaryWriterParam.Name, dataParam.Name, addressParam.Name),
-//                Returns = "void"
-//            });
-        }
-
-        public void GenerateWriteArrayMethod()
-        {
         }
 
         public void GenerateWriteMethod()

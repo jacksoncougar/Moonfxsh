@@ -9,7 +9,6 @@ using Fasterflect;
 using Moonfish.Cache;
 using Moonfish.Guerilla;
 using Moonfish.Tags;
-using Moonfish.Tags.BlamExtension;
 using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish
@@ -244,39 +243,16 @@ namespace Moonfish
                 else
                 {
                     var data = Deserialize(datum.Identifier);
-                    //var alignment = Guerilla.Guerilla.AlignmentOf(data.GetType());
-                    //datum.VirtualAddress = binaryWriter.BaseStream.Pad(alignment);
-                    //var length = binaryWriter.BaseStream.Length;
-                    //binaryWriter.Write(data);
-                    //binaryWriter.Seek(0, SeekOrigin.End);
-                    //length = ( int ) binaryWriter.BaseStream.Length - length;
-                    //datum.Length = (int)length;
-                    //Index.Update(datum.Identifier, datum);
+                    var length = binaryWriter.BaseStream.Length;
+                    binaryWriter.Write(data);
+                    binaryWriter.Seek(0, SeekOrigin.End);
+                    length = (int)binaryWriter.BaseStream.Length - length;
+                    datum.Length = (int)length;
+                    Index.Update(datum.Identifier, datum);
                 }
             }
             binaryWriter.WritePadding(512);
         }
-
-        private static void ProcessFields(List<MoonfishTagField> fields, BinaryReader binaryReader,
-            BinaryWriter binaryWriter, int address)
-        {
-            foreach (var field in fields)
-            {
-                if (field.Type == MoonfishFieldType.FieldBlock)
-                {
-                    // move the stream to the field
-                    var offsetOfField = MoonfishTagDefinition.CalculateOffsetOfField(fields, field);
-                    binaryReader.BaseStream.Position = address + offsetOfField;
-
-                    var elementSize = ((MoonfishTagDefinition) field.Definition).CalculateSizeOfFieldSet();
-                    var pointer = binaryReader.ReadBlamPointer(elementSize);
-                }
-                if (field.Type == MoonfishFieldType.FieldData)
-                {
-                }
-            }
-        }
-
 
         public void ActiveAllocation(StructureCache activeAllocation)
         {
@@ -299,11 +275,11 @@ namespace Moonfish
             return DefaultMemoryBlock.Contains(blamPointer) || ActiveStructureMemoryAllocation.Contains(blamPointer);
         }
 
-        public object Deserialize(TagIdent ident)
+        public GuerillaBlock Deserialize(TagIdent ident)
         {
             object deserializedTag;
             if (_deserializedTagCache.TryGetValue(ident, out deserializedTag))
-                return deserializedTag;
+                return (GuerillaBlock)deserializedTag;
 
             var type = Halo2.GetTypeOf(Index[ident].Class);
             if (type == null) return null;

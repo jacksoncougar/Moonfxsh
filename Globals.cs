@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Moonfish.Guerilla;
 
 namespace Moonfish
 {
@@ -71,7 +72,7 @@ namespace Moonfish
             }
         }
 
-        public static T GetReferenceObject<T>(TagReference reference) where T : class
+        public static T GetReferenceObject<T>(TagReference reference) where T : GuerillaBlock
         {
             if (mapStream == null) return null;
             if (reference.Ident == TagIdent.NullIdentifier) return null;

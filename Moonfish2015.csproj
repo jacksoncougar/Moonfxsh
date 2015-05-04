@@ -168,6 +168,7 @@
     <Compile Include="Graphics\VertexFunctions.cs" />
     <Compile Include="Guerilla\BinaryIOReflection.cs" />
     <Compile Include="Guerilla\GuerillaBlock.cs" />
+    <Compile Include="Guerilla\GuerillaBlockAllocator.cs" />
     <Compile Include="Guerilla\Reflection\AccessModifiers.cs" />
     <Compile Include="Guerilla\Reflection\AccessModifiersExtensions.cs" />
     <Compile Include="Guerilla\Reflection\AttributeInfo.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="Guerilla\MoonfishTagGroup.cs" />
     <Compile Include="Guerilla\MoonfishTagReferenceDefinition.cs" />
     <Compile Include="Guerilla\MoonfishTagStruct.cs" />
+    <Compile Include="Guerilla\Reflection\MethodInfoFactory.cs" />
     <Compile Include="Guerilla\Reflection\NamespaceInfo.cs" />
     <Compile Include="Guerilla\Reflection\ParameterInfo.cs" />
     <Compile Include="Guerilla\Preprocess\BitmapDataBlock.cs" />

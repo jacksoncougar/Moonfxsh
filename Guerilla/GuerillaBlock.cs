@@ -16,15 +16,7 @@ namespace Moonfish.Guerilla
         public abstract int SerializedSize { get; }
 
         public abstract int Alignment { get; }
-
-        protected GuerillaBlock()
-        {
-        }
-
-        protected GuerillaBlock(BinaryReader binaryReader)
-        {
-        }
-
+        
         public static BlamPointer ReadBlockArrayPointer<T>(BinaryReader binaryReader)
             where T : GuerillaBlock, new()
         {
@@ -37,6 +29,11 @@ namespace Moonfish.Guerilla
         {
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
             return blamPointer;
+        }
+
+        public virtual int CalculateMarshalledSize()
+        {
+            return 0;
         }
 
         delegate T ObjectActivator<out T>(params object[] args);

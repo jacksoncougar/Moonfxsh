@@ -6,6 +6,7 @@ using Moonfish.Compiler;
 using System.ComponentModel;
 using System.IO;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
@@ -21,28 +22,33 @@ namespace Moonfish
         private static void Main()
         {
             var converter = new GuerillaCs(Local.GuerillaPath);
-            foreach (var tag in Guerilla.Guerilla.h2Tags)
+            foreach (var tag in Guerilla.Guerilla.h2Tags.Where(x=>x.Class == TagClass.Bitm))
             {
                 converter.DumpTagLayout(
                     new MoonfishTagGroup(tag),
-                    Path.Combine(Local.ProjectDirectory, @"Guerilla\Tags.Generated\"));
+                    Path.Combine(Local.ProjectDirectory, @"Guerilla\Debug\"));
+                Console.WriteLine("Exported: {0}", tag.Class);
             }
             Application.Exit();
+            return;
+
+
+            //StaticBenchmark.Begin();
+            //for(var i = 0; i<map.Index.Count; ++i)
+            //{
+            //    var tag = map.Index[i].Identifier; 
+            //    map.Deserialize(tag);
+            //}
+            //StaticBenchmark.End();
+            //var v = StaticBenchmark.Result;
+
+            ////return;
+            //map.ClearCache(map.Index.ScenarioIdent);
+
             var map = new CacheStream(@"C:\Users\stem\Documents\modding\headlong.map");
 
-            StaticBenchmark.Begin();
-            foreach (var tag in map.Index)
-            {
-                map.Deserialize(tag.Identifier);
-            }
-            StaticBenchmark.End();
-            var v = StaticBenchmark.Result;
-
             var item = map.Deserialize(map.Index.ScenarioIdent);
-            map.ClearCache(map.Index.ScenarioIdent);
-
-            item = map.Deserialize(map.Index.ScenarioIdent);
-            //map.Add( (ScenarioBlock)item, "moonfish/moonfish" );
+            map.Add((ScenarioBlock)item, "moonfish/moonfish");
 
             //var validator = new Validator();
             //var guerilla = new GuerillaCs(Local.GuerillaPath);

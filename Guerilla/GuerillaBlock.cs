@@ -80,6 +80,8 @@ namespace Moonfish.Guerilla
 
         public virtual void Read(BinaryReader binaryReader)
         {
+            var pointers = ReadFields(binaryReader);
+            ReadPointers(binaryReader, pointers);
         }
 
         public virtual int Write(BinaryWriter binaryWriter, int nextAddress)

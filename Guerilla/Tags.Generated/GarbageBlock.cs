@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute(Size = 168, Alignment = 4)]
-    public class GarbageBlockBase : GuerillaBlock
+    public class GarbageBlockBase : ItemBlock
     {
         internal byte[] invalidName_;
 

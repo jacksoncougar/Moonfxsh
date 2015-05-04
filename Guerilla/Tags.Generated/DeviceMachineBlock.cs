@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute(Size = 24, Alignment = 4)]
-    public class DeviceMachineBlockBase : GuerillaBlock
+    public class DeviceMachineBlockBase : DeviceBlock
     {
         internal Type type;
         internal Flags flags;

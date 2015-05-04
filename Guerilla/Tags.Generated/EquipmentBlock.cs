@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class EquipmentBlockBase : GuerillaBlock
+    public class EquipmentBlockBase : ItemBlock
     {
         internal PowerupType powerupType;
         internal GrenadeType grenadeType;

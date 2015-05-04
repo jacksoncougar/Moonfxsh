@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute(Size = 0, Alignment = 4)]
-    public class DeviceLightFixtureBlockBase : GuerillaBlock
+    public class DeviceLightFixtureBlockBase : DeviceBlock
     {
         public override int SerializedSize
         {

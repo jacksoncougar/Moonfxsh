@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute(Size = 16, Alignment = 4)]
-    public class SoundSceneryBlockBase : GuerillaBlock
+    public class SoundSceneryBlockBase : ObjectBlock
     {
         internal byte[] invalidName_;
 

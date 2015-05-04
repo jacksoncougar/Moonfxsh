@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute(Size = 232, Alignment = 4)]
-    public class ProjectileBlockBase : GuerillaBlock
+    public class ProjectileBlockBase : ObjectBlock
     {
         internal Flags flags;
         internal DetonationTimerStarts detonationTimerStarts;

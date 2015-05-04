@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute(Size = 196, Alignment = 4)]
-    public class CreatureBlockBase : GuerillaBlock
+    public class CreatureBlockBase : ObjectBlock
     {
         internal Flags flags;
         internal DefaultTeam defaultTeam;

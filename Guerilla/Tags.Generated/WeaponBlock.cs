@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute(Size = 496, Alignment = 4)]
-    public class WeaponBlockBase : GuerillaBlock
+    public class WeaponBlockBase : ItemBlock
     {
         internal Flags flags;
         internal Moonfish.Tags.StringIdent invalidName_;

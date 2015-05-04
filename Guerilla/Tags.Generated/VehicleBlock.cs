@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute(Size = 276, Alignment = 4)]
-    public class VehicleBlockBase : GuerillaBlock
+    public class VehicleBlockBase : UnitBlock
     {
         internal Flags flags;
         internal Type type;

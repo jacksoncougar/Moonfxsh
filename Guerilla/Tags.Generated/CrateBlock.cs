@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute(Size = 4, Alignment = 4)]
-    public class CrateBlockBase : GuerillaBlock
+    public class CrateBlockBase : ObjectBlock
     {
         internal Flags flags;
         internal byte[] invalidName_;

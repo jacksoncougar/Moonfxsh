@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute(Size = 296, Alignment = 4)]
-    public class BipedBlockBase : GuerillaBlock
+    public class BipedBlockBase : UnitBlock
     {
         internal float movingTurningSpeedDegreesPerSecond;
         internal Flags flags;

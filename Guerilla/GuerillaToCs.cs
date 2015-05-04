@@ -105,7 +105,8 @@ namespace Moonfish.Guerilla
                         Returns = "int",
                         Name = "Alignment"
                     }
-                }
+                },
+                BaseClass = new ClassInfo("GuerillaBlock")
             };
 
 

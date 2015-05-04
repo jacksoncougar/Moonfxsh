@@ -39,7 +39,6 @@ namespace Moonfish.Guerilla.Reflection
             _value = new GuerillaName("");
             Name = "";
             Namespace = new NamespaceInfo();
-            BaseClass = new ClassInfo("GuerillaBlock");
         }
 
         public ClassInfo(string name) : this()
@@ -174,9 +173,6 @@ namespace Moonfish.Guerilla.Reflection
                 }
             });
             var body = new StringBuilder();
-            var count =
-                Fields.Select(item => Type.GetType(item.FieldTypeName))
-                    .Count(fieldType => fieldType != null && fieldType.IsSubclassOf(typeof (GuerillaBlock)));
 
             body.AppendFormatLine("var blamPointers = new Queue<BlamPointer>(base.{0});",
                 Methods.Last().GetMethodCallSignature());
@@ -276,10 +272,7 @@ namespace Moonfish.Guerilla.Reflection
                     // inline array
                     if (item.ArraySize > 0 && Type.GetType(item.FieldTypeName) == typeof (byte))
                     {
-                        for (var i = 0; i < item.ArraySize; i++)
-                        {
-                            //body.AppendFormatLine("{0}[{1}].ReadPointers(binaryReader, blamPointers);", item.Value.Name, i);
-                        }
+                        continue;
                     }
                     // variable byte array (data)
                     else if (Type.GetType(item.FieldTypeName) == typeof (byte))

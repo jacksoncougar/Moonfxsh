@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute(Size = 36, Alignment = 4)]
-    public class DeviceControlBlockBase : GuerillaBlock
+    public class DeviceControlBlockBase : DeviceBlock
     {
         internal Type type;
         internal TriggersWhen triggersWhen;

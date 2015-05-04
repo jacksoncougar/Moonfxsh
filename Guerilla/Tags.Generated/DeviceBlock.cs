@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute(Size = 96, Alignment = 4)]
-    public class DeviceBlockBase : GuerillaBlock
+    public class DeviceBlockBase : ObjectBlock
     {
         internal Flags flags;
         internal float powerTransitionTimeSeconds;

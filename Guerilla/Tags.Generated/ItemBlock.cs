@@ -28,7 +28,7 @@ namespace Moonfish.Guerilla.Tags
     };
 
     [LayoutAttribute(Size = 112, Alignment = 4)]
-    public class ItemBlockBase : GuerillaBlock
+    public class ItemBlockBase : ObjectBlock
     {
         internal Flags flags;
         internal short oLDMessageIndex;

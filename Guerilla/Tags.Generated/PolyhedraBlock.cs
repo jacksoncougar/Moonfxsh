@@ -91,7 +91,9 @@ namespace Moonfish.Guerilla.Tags
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
-            fourVectorsStorage = ReadBlockArrayData<FourVectorsStorage>(binaryReader, blamPointers.Dequeue());
+            fourVectorsStorage[0].ReadPointers(binaryReader, blamPointers);
+            fourVectorsStorage[1].ReadPointers(binaryReader, blamPointers);
+            fourVectorsStorage[2].ReadPointers(binaryReader, blamPointers);
         }
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {

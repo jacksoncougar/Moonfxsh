@@ -76,8 +76,14 @@ namespace Moonfish.Guerilla.Tags
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
-            childShapesStorage = ReadBlockArrayData<ChildShapesStorage>(binaryReader, blamPointers.Dequeue());
-            multispheres = ReadBlockArrayData<Multispheres>(binaryReader, blamPointers.Dequeue());
+            childShapesStorage[0].ReadPointers(binaryReader, blamPointers);
+            childShapesStorage[1].ReadPointers(binaryReader, blamPointers);
+            childShapesStorage[2].ReadPointers(binaryReader, blamPointers);
+            childShapesStorage[3].ReadPointers(binaryReader, blamPointers);
+            multispheres[0].ReadPointers(binaryReader, blamPointers);
+            multispheres[1].ReadPointers(binaryReader, blamPointers);
+            multispheres[2].ReadPointers(binaryReader, blamPointers);
+            multispheres[3].ReadPointers(binaryReader, blamPointers);
         }
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
@@ -207,7 +213,14 @@ using(binaryWriter.BaseStream.Pin())
             public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
             {
                 base.ReadPointers(binaryReader, blamPointers);
-                fourVectorsStorage = ReadBlockArrayData<FourVectorsStorage>(binaryReader, blamPointers.Dequeue());
+                fourVectorsStorage[0].ReadPointers(binaryReader, blamPointers);
+                fourVectorsStorage[1].ReadPointers(binaryReader, blamPointers);
+                fourVectorsStorage[2].ReadPointers(binaryReader, blamPointers);
+                fourVectorsStorage[3].ReadPointers(binaryReader, blamPointers);
+                fourVectorsStorage[4].ReadPointers(binaryReader, blamPointers);
+                fourVectorsStorage[5].ReadPointers(binaryReader, blamPointers);
+                fourVectorsStorage[6].ReadPointers(binaryReader, blamPointers);
+                fourVectorsStorage[7].ReadPointers(binaryReader, blamPointers);
             }
             public override int Write(BinaryWriter binaryWriter, int nextAddress)
             {

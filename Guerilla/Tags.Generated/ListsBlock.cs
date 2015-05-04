@@ -52,7 +52,10 @@ namespace Moonfish.Guerilla.Tags
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
-            childShapesStorage = ReadBlockArrayData<ChildShapesStorage>(binaryReader, blamPointers.Dequeue());
+            childShapesStorage[0].ReadPointers(binaryReader, blamPointers);
+            childShapesStorage[1].ReadPointers(binaryReader, blamPointers);
+            childShapesStorage[2].ReadPointers(binaryReader, blamPointers);
+            childShapesStorage[3].ReadPointers(binaryReader, blamPointers);
         }
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {

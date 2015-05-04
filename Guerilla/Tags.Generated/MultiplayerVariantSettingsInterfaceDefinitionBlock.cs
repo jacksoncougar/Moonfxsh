@@ -104,7 +104,13 @@ namespace Moonfish.Guerilla.Tags
             createNewVariantStruct5.ReadPointers(binaryReader, blamPointers);
             createNewVariantStruct6.ReadPointers(binaryReader, blamPointers);
             createNewVariantStruct7.ReadPointers(binaryReader, blamPointers);
-            unusedCreateNewVariants = ReadBlockArrayData<UnusedCreateNewVariants>(binaryReader, blamPointers.Dequeue());
+            unusedCreateNewVariants[0].ReadPointers(binaryReader, blamPointers);
+            unusedCreateNewVariants[1].ReadPointers(binaryReader, blamPointers);
+            unusedCreateNewVariants[2].ReadPointers(binaryReader, blamPointers);
+            unusedCreateNewVariants[3].ReadPointers(binaryReader, blamPointers);
+            unusedCreateNewVariants[4].ReadPointers(binaryReader, blamPointers);
+            unusedCreateNewVariants[5].ReadPointers(binaryReader, blamPointers);
+            unusedCreateNewVariants[6].ReadPointers(binaryReader, blamPointers);
         }
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {

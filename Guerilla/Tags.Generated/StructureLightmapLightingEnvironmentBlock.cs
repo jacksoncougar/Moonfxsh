@@ -91,9 +91,33 @@ namespace Moonfish.Guerilla.Tags
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
-            redCoefficients = ReadBlockArrayData<RedCoefficients>(binaryReader, blamPointers.Dequeue());
-            greenCoefficients = ReadBlockArrayData<GreenCoefficients>(binaryReader, blamPointers.Dequeue());
-            blueCoefficients = ReadBlockArrayData<BlueCoefficients>(binaryReader, blamPointers.Dequeue());
+            redCoefficients[0].ReadPointers(binaryReader, blamPointers);
+            redCoefficients[1].ReadPointers(binaryReader, blamPointers);
+            redCoefficients[2].ReadPointers(binaryReader, blamPointers);
+            redCoefficients[3].ReadPointers(binaryReader, blamPointers);
+            redCoefficients[4].ReadPointers(binaryReader, blamPointers);
+            redCoefficients[5].ReadPointers(binaryReader, blamPointers);
+            redCoefficients[6].ReadPointers(binaryReader, blamPointers);
+            redCoefficients[7].ReadPointers(binaryReader, blamPointers);
+            redCoefficients[8].ReadPointers(binaryReader, blamPointers);
+            greenCoefficients[0].ReadPointers(binaryReader, blamPointers);
+            greenCoefficients[1].ReadPointers(binaryReader, blamPointers);
+            greenCoefficients[2].ReadPointers(binaryReader, blamPointers);
+            greenCoefficients[3].ReadPointers(binaryReader, blamPointers);
+            greenCoefficients[4].ReadPointers(binaryReader, blamPointers);
+            greenCoefficients[5].ReadPointers(binaryReader, blamPointers);
+            greenCoefficients[6].ReadPointers(binaryReader, blamPointers);
+            greenCoefficients[7].ReadPointers(binaryReader, blamPointers);
+            greenCoefficients[8].ReadPointers(binaryReader, blamPointers);
+            blueCoefficients[0].ReadPointers(binaryReader, blamPointers);
+            blueCoefficients[1].ReadPointers(binaryReader, blamPointers);
+            blueCoefficients[2].ReadPointers(binaryReader, blamPointers);
+            blueCoefficients[3].ReadPointers(binaryReader, blamPointers);
+            blueCoefficients[4].ReadPointers(binaryReader, blamPointers);
+            blueCoefficients[5].ReadPointers(binaryReader, blamPointers);
+            blueCoefficients[6].ReadPointers(binaryReader, blamPointers);
+            blueCoefficients[7].ReadPointers(binaryReader, blamPointers);
+            blueCoefficients[8].ReadPointers(binaryReader, blamPointers);
         }
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {

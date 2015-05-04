@@ -67,8 +67,13 @@ namespace Moonfish.Guerilla.Tags
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
-            nodeIndices = ReadBlockArrayData<NodeIndices>(binaryReader, blamPointers.Dequeue());
-            nodeWeights = ReadBlockArrayData<NodeWeights>(binaryReader, blamPointers.Dequeue());
+            nodeIndices[0].ReadPointers(binaryReader, blamPointers);
+            nodeIndices[1].ReadPointers(binaryReader, blamPointers);
+            nodeIndices[2].ReadPointers(binaryReader, blamPointers);
+            nodeIndices[3].ReadPointers(binaryReader, blamPointers);
+            nodeWeights[0].ReadPointers(binaryReader, blamPointers);
+            nodeWeights[1].ReadPointers(binaryReader, blamPointers);
+            nodeWeights[2].ReadPointers(binaryReader, blamPointers);
         }
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {

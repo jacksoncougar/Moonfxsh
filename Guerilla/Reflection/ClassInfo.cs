@@ -25,7 +25,8 @@ namespace Moonfish.Guerilla.Reflection
                 new UsingInfo("OpenTK"),
                 new UsingInfo("System"),
                 new UsingInfo("System.IO"),
-                new UsingInfo("System.Collections.Generic")
+                new UsingInfo("System.Collections.Generic"),
+                new UsingInfo("System.Linq")
             };
             Attributes = new List<AttributeInfo>();
             Fields = new List<FieldInfo>();
@@ -268,7 +269,7 @@ namespace Moonfish.Guerilla.Reflection
 
             foreach (var item in Fields)
             {
-                if (item.IsArray && item.ArraySize == 0)
+                if (item.IsArray)
                 {
                     // variable byte array (data)
                     if (Type.GetType(item.FieldTypeName) == typeof (byte))
@@ -282,8 +283,24 @@ namespace Moonfish.Guerilla.Reflection
                         body.AppendFormatLine(
                             "{0} = ReadDataShortArray(binaryReader, blamPointers.Dequeue());", item.Value.Name);
                     }
+                    // inline array
+                    else if (item.ArraySize > 0)
+                    {
+                        var initializer = "";
+                        for (var i = 0; i < item.ArraySize; i++)
+                        {
+                            initializer += string.Format("new {0}(){1}", item.FieldTypeName,
+                                i == item.ArraySize - 1 ? "" : ", ");
+                        }
+                        body.AppendLine(string.Format("{0} = new []{{ {1} }};", item.Value.Name, initializer));
+
+                        for (var i = 0; i < item.ArraySize; i++)
+                        {
+                            body.AppendFormatLine("blamPointers.Concat({0}[{1}].ReadFields());", item.Value.Name, i);
+                        }
+                    }
                     // assume a TagBlock
-                    else if (item.ArraySize == 0)
+                    else
                     {
 
                         body.AppendFormatLine(

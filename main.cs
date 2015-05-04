@@ -21,7 +21,7 @@ namespace Moonfish
         private static void Main( )
         {
             var converter = new GuerillaCs(Local.GuerillaPath);
-            foreach (var tag in Guerilla.Guerilla.h2Tags.Where(x=>x.Class == TagClass.Scnr))
+            foreach (var tag in Guerilla.Guerilla.h2Tags.Where(x=>x.Class == TagClass.DECP))
             {
                 converter.DumpTagLayout(
                     new MoonfishTagGroup(tag),

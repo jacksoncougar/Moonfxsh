@@ -387,7 +387,7 @@ namespace Moonfish.Guerilla.Reflection
                     {
                         body.AppendFormatLine("{0} = new {1}();", item.Value.Name,
                             item.FieldTypeName);
-                        body.AppendFormatLine("blamPointers.Concat({0}.ReadFields(binaryReader));", item.Value.Name);
+                        body.AppendFormatLine("blamPointers = new Queue<BlamPointer>(blamPointers.Concat({0}.ReadFields(binaryReader)));", item.Value.Name);
                     }
                     else
                     {

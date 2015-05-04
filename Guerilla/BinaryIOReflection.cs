@@ -19,8 +19,8 @@ namespace Moonfish.Guerilla
         {
             var method = ( from m in _binaryReaderMethods
                 where m.Key == type
-                where m.Value.ToLower( ).Contains( type.Name.Split( '.' ).Last( ).ToLower( ) )
                 select m.Value ).FirstOrDefault( );
+           
             return method;
         }
 

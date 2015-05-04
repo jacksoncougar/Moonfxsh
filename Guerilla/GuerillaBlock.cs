@@ -79,7 +79,9 @@ namespace Moonfish.Guerilla
         {
         }
 
-        public abstract void Read( BinaryReader binaryReader );
+        public virtual void Read(BinaryReader binaryReader)
+        {
+        }
 
         public virtual int Write(BinaryWriter binaryWriter, int nextAddress)
         {

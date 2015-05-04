@@ -27,11 +27,10 @@ namespace Moonfish.Guerilla
             where T : GuerillaBlock, new()
         {
             var elementSize = new T().SerializedSize;
-            return ReadBlockArrayPointer<T>(binaryReader, elementSize);
+            return ReadBlockArrayPointer(binaryReader, elementSize);
         }
 
-        public static BlamPointer ReadBlockArrayPointer<T>(BinaryReader binaryReader, int elementSize)
-            where T : GuerillaBlock, new()
+        public static BlamPointer ReadBlockArrayPointer(BinaryReader binaryReader, int elementSize)
         {
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
             return blamPointer;

@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class DecoratorPermutationsBlock : DecoratorPermutationsBlockBase
     {
-        public  DecoratorPermutationsBlock(BinaryReader binaryReader): base(binaryReader)
+        public DecoratorPermutationsBlock() : base()
         {
-            
-        }
-        public  DecoratorPermutationsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -37,14 +34,14 @@ namespace Moonfish.Guerilla.Tags
         internal float baseMapTintPercentage;
         internal float lightmapTintPercentage;
         internal float windScale;
-        
-        public override int SerializedSize{get { return 40; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  DecoratorPermutationsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 40; } }
+        public override int Alignment { get { return 4; } }
+        public DecoratorPermutationsBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             shader = binaryReader.ReadByteBlockIndex1();
             invalidName_ = binaryReader.ReadBytes(3);
@@ -60,32 +57,21 @@ namespace Moonfish.Guerilla.Tags
             baseMapTintPercentage = binaryReader.ReadSingle();
             lightmapTintPercentage = binaryReader.ReadSingle();
             windScale = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  DecoratorPermutationsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadStringID();
-            shader = binaryReader.ReadByteBlockIndex1();
-            invalidName_ = binaryReader.ReadBytes(3);
-            flags = (Flags)binaryReader.ReadByte();
-            fadeDistance = (FadeDistance)binaryReader.ReadByte();
-            index = binaryReader.ReadByte();
-            distributionWeight = binaryReader.ReadByte();
-            scale = binaryReader.ReadRange();
-            tint1 = binaryReader.ReadColourR1G1B1();
-            invalidName_0 = binaryReader.ReadBytes(1);
-            tint2 = binaryReader.ReadColourR1G1B1();
-            invalidName_1 = binaryReader.ReadBytes(1);
-            baseMapTintPercentage = binaryReader.ReadSingle();
-            lightmapTintPercentage = binaryReader.ReadSingle();
-            windScale = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(shader);

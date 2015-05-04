@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class SoundGlobalMixStructBlock : SoundGlobalMixStructBlockBase
     {
-        public  SoundGlobalMixStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public SoundGlobalMixStructBlock() : base()
         {
-            
-        }
-        public  SoundGlobalMixStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 48, Alignment = 4)]
@@ -34,14 +31,14 @@ namespace Moonfish.Guerilla.Tags
         internal float soloPlayerFadeOutTimeSeconds;
         internal float soloPlayerFadeInTimeSeconds;
         internal float gameMusicFadeOutTimeSeconds;
-        
-        public override int SerializedSize{get { return 48; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  SoundGlobalMixStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 48; } }
+        public override int Alignment { get { return 4; } }
+        public SoundGlobalMixStructBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             monoUnspatializedGainDB = binaryReader.ReadSingle();
             stereoTo3DGainDB = binaryReader.ReadSingle();
             rearSurroundToFrontStereoGainDB = binaryReader.ReadSingle();
@@ -54,29 +51,16 @@ namespace Moonfish.Guerilla.Tags
             soloPlayerFadeOutTimeSeconds = binaryReader.ReadSingle();
             soloPlayerFadeInTimeSeconds = binaryReader.ReadSingle();
             gameMusicFadeOutTimeSeconds = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  SoundGlobalMixStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            monoUnspatializedGainDB = binaryReader.ReadSingle();
-            stereoTo3DGainDB = binaryReader.ReadSingle();
-            rearSurroundToFrontStereoGainDB = binaryReader.ReadSingle();
-            frontSpeakerGainDB = binaryReader.ReadSingle();
-            centerSpeakerGainDB = binaryReader.ReadSingle();
-            frontSpeakerGainDB0 = binaryReader.ReadSingle();
-            centerSpeakerGainDB0 = binaryReader.ReadSingle();
-            stereoUnspatializedGainDB = binaryReader.ReadSingle();
-            soloPlayerFadeOutDelaySeconds = binaryReader.ReadSingle();
-            soloPlayerFadeOutTimeSeconds = binaryReader.ReadSingle();
-            soloPlayerFadeInTimeSeconds = binaryReader.ReadSingle();
-            gameMusicFadeOutTimeSeconds = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(monoUnspatializedGainDB);
                 binaryWriter.Write(stereoTo3DGainDB);

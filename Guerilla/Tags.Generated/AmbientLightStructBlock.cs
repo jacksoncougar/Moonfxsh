@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AmbientLightStructBlock : AmbientLightStructBlockBase
     {
-        public  AmbientLightStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public AmbientLightStructBlock() : base()
         {
-            
-        }
-        public  AmbientLightStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 32, Alignment = 4)]
@@ -25,31 +22,29 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ColourR8G8B8 minLightmapSample;
         internal Moonfish.Tags.ColourR8G8B8 maxLightmapSample;
         internal MappingFunctionBlock function;
-        
-        public override int SerializedSize{get { return 32; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  AmbientLightStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 32; } }
+        public override int Alignment { get { return 4; } }
+        public AmbientLightStructBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             minLightmapSample = binaryReader.ReadColorR8G8B8();
             maxLightmapSample = binaryReader.ReadColorR8G8B8();
-            function = new MappingFunctionBlock(binaryReader);
+            function = new MappingFunctionBlock();
+            blamPointers.Concat(function.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  AmbientLightStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            function.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            minLightmapSample = binaryReader.ReadColorR8G8B8();
-            maxLightmapSample = binaryReader.ReadColorR8G8B8();
-            function = new MappingFunctionBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(minLightmapSample);
                 binaryWriter.Write(maxLightmapSample);

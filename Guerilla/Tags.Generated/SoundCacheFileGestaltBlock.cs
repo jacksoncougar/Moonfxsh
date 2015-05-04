@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("ugh!")]
     public partial class SoundCacheFileGestaltBlock : SoundCacheFileGestaltBlockBase
     {
-        public  SoundCacheFileGestaltBlock(BinaryReader binaryReader): base(binaryReader)
+        public SoundCacheFileGestaltBlock() : base()
         {
-            
-        }
-        public  SoundCacheFileGestaltBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 88, Alignment = 4)]
@@ -42,47 +39,46 @@ namespace Moonfish.Guerilla.Tags
         internal SoundPermutationChunkBlock[] chunks;
         internal SoundGestaltPromotionsBlock[] promotions;
         internal SoundGestaltExtraInfoBlock[] extraInfos;
-        
-        public override int SerializedSize{get { return 88; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  SoundCacheFileGestaltBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 88; } }
+        public override int Alignment { get { return 4; } }
+        public SoundCacheFileGestaltBlockBase() : base()
         {
-            playbacks = Guerilla.ReadBlockArray<SoundGestaltPlaybackBlock>(binaryReader);
-            scales = Guerilla.ReadBlockArray<SoundGestaltScaleBlock>(binaryReader);
-            importNames = Guerilla.ReadBlockArray<SoundGestaltImportNamesBlock>(binaryReader);
-            pitchRangeParameters = Guerilla.ReadBlockArray<SoundGestaltPitchRangeParametersBlock>(binaryReader);
-            pitchRanges = Guerilla.ReadBlockArray<SoundGestaltPitchRangesBlock>(binaryReader);
-            permutations = Guerilla.ReadBlockArray<SoundGestaltPermutationsBlock>(binaryReader);
-            customPlaybacks = Guerilla.ReadBlockArray<SoundGestaltCustomPlaybackBlock>(binaryReader);
-            runtimePermutationFlags = Guerilla.ReadBlockArray<SoundGestaltRuntimePermutationBitVectorBlock>(binaryReader);
-            chunks = Guerilla.ReadBlockArray<SoundPermutationChunkBlock>(binaryReader);
-            promotions = Guerilla.ReadBlockArray<SoundGestaltPromotionsBlock>(binaryReader);
-            extraInfos = Guerilla.ReadBlockArray<SoundGestaltExtraInfoBlock>(binaryReader);
         }
-        public  SoundCacheFileGestaltBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundGestaltPlaybackBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundGestaltScaleBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundGestaltImportNamesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundGestaltPitchRangeParametersBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundGestaltPitchRangesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundGestaltPermutationsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundGestaltCustomPlaybackBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundGestaltRuntimePermutationBitVectorBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundPermutationChunkBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundGestaltPromotionsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SoundGestaltExtraInfoBlock>(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            playbacks = Guerilla.ReadBlockArray<SoundGestaltPlaybackBlock>(binaryReader);
-            scales = Guerilla.ReadBlockArray<SoundGestaltScaleBlock>(binaryReader);
-            importNames = Guerilla.ReadBlockArray<SoundGestaltImportNamesBlock>(binaryReader);
-            pitchRangeParameters = Guerilla.ReadBlockArray<SoundGestaltPitchRangeParametersBlock>(binaryReader);
-            pitchRanges = Guerilla.ReadBlockArray<SoundGestaltPitchRangesBlock>(binaryReader);
-            permutations = Guerilla.ReadBlockArray<SoundGestaltPermutationsBlock>(binaryReader);
-            customPlaybacks = Guerilla.ReadBlockArray<SoundGestaltCustomPlaybackBlock>(binaryReader);
-            runtimePermutationFlags = Guerilla.ReadBlockArray<SoundGestaltRuntimePermutationBitVectorBlock>(binaryReader);
-            chunks = Guerilla.ReadBlockArray<SoundPermutationChunkBlock>(binaryReader);
-            promotions = Guerilla.ReadBlockArray<SoundGestaltPromotionsBlock>(binaryReader);
-            extraInfos = Guerilla.ReadBlockArray<SoundGestaltExtraInfoBlock>(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            playbacks = ReadBlockArrayData<SoundGestaltPlaybackBlock>(binaryReader, blamPointers.Dequeue());
+            scales = ReadBlockArrayData<SoundGestaltScaleBlock>(binaryReader, blamPointers.Dequeue());
+            importNames = ReadBlockArrayData<SoundGestaltImportNamesBlock>(binaryReader, blamPointers.Dequeue());
+            pitchRangeParameters = ReadBlockArrayData<SoundGestaltPitchRangeParametersBlock>(binaryReader, blamPointers.Dequeue());
+            pitchRanges = ReadBlockArrayData<SoundGestaltPitchRangesBlock>(binaryReader, blamPointers.Dequeue());
+            permutations = ReadBlockArrayData<SoundGestaltPermutationsBlock>(binaryReader, blamPointers.Dequeue());
+            customPlaybacks = ReadBlockArrayData<SoundGestaltCustomPlaybackBlock>(binaryReader, blamPointers.Dequeue());
+            runtimePermutationFlags = ReadBlockArrayData<SoundGestaltRuntimePermutationBitVectorBlock>(binaryReader, blamPointers.Dequeue());
+            chunks = ReadBlockArrayData<SoundPermutationChunkBlock>(binaryReader, blamPointers.Dequeue());
+            promotions = ReadBlockArrayData<SoundGestaltPromotionsBlock>(binaryReader, blamPointers.Dequeue());
+            extraInfos = ReadBlockArrayData<SoundGestaltExtraInfoBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<SoundGestaltPlaybackBlock>(binaryWriter, playbacks, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SoundGestaltScaleBlock>(binaryWriter, scales, nextAddress);

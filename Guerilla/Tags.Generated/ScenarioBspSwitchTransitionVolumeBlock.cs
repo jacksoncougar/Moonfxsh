@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioBspSwitchTransitionVolumeBlock : ScenarioBspSwitchTransitionVolumeBlockBase
     {
-        public  ScenarioBspSwitchTransitionVolumeBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioBspSwitchTransitionVolumeBlock() : base()
         {
-            
-        }
-        public  ScenarioBspSwitchTransitionVolumeBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
@@ -25,31 +22,29 @@ namespace Moonfish.Guerilla.Tags
         internal int bSPIndexKey;
         internal Moonfish.Tags.ShortBlockIndex1 triggerVolume;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 8; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioBspSwitchTransitionVolumeBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 8; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioBspSwitchTransitionVolumeBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             bSPIndexKey = binaryReader.ReadInt32();
             triggerVolume = binaryReader.ReadShortBlockIndex1();
             invalidName_ = binaryReader.ReadBytes(2);
+            return blamPointers;
         }
-        public  ScenarioBspSwitchTransitionVolumeBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            bSPIndexKey = binaryReader.ReadInt32();
-            triggerVolume = binaryReader.ReadShortBlockIndex1();
-            invalidName_ = binaryReader.ReadBytes(2);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(bSPIndexKey);
                 binaryWriter.Write(triggerVolume);

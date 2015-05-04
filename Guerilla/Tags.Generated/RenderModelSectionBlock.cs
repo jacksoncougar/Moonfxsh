@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class RenderModelSectionBlock : RenderModelSectionBlockBase
     {
-        public  RenderModelSectionBlock(BinaryReader binaryReader): base(binaryReader)
+        public RenderModelSectionBlock() : base()
         {
-            
-        }
-        public  RenderModelSectionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 92, Alignment = 4)]
@@ -29,39 +26,38 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal RenderModelSectionDataBlock[] sectionData;
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
-        
-        public override int SerializedSize{get { return 92; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  RenderModelSectionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 92; } }
+        public override int Alignment { get { return 4; } }
+        public RenderModelSectionBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             globalGeometryClassificationEnumDefinition = (GlobalGeometryClassificationEnumDefinition)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
+            sectionInfo = new GlobalGeometrySectionInfoStructBlock();
+            blamPointers.Concat(sectionInfo.ReadFields(binaryReader));
             rigidNode = binaryReader.ReadShortBlockIndex1();
             flags = (Flags)binaryReader.ReadInt16();
-            sectionData = Guerilla.ReadBlockArray<RenderModelSectionDataBlock>(binaryReader);
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<RenderModelSectionDataBlock>(binaryReader));
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
+            blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  RenderModelSectionBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            sectionInfo.ReadPointers(binaryReader, blamPointers);
+            sectionData = ReadBlockArrayData<RenderModelSectionDataBlock>(binaryReader, blamPointers.Dequeue());
+            geometryBlockInfo.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            globalGeometryClassificationEnumDefinition = (GlobalGeometryClassificationEnumDefinition)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
-            rigidNode = binaryReader.ReadShortBlockIndex1();
-            flags = (Flags)binaryReader.ReadInt16();
-            sectionData = Guerilla.ReadBlockArray<RenderModelSectionDataBlock>(binaryReader);
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)globalGeometryClassificationEnumDefinition);
                 binaryWriter.Write(invalidName_, 0, 2);

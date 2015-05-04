@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("cin*")]
     public partial class ScenarioCinematicsResourceBlock : ScenarioCinematicsResourceBlockBase
     {
-        public  ScenarioCinematicsResourceBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioCinematicsResourceBlock() : base()
         {
-            
-        }
-        public  ScenarioCinematicsResourceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -34,31 +31,30 @@ namespace Moonfish.Guerilla.Tags
         internal ScenarioCutsceneFlagBlock[] flags;
         internal ScenarioCutsceneCameraPointBlock[] cameraPoints;
         internal RecordedAnimationBlock[] recordedAnimations;
-        
-        public override int SerializedSize{get { return 24; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioCinematicsResourceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 24; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioCinematicsResourceBlockBase() : base()
         {
-            flags = Guerilla.ReadBlockArray<ScenarioCutsceneFlagBlock>(binaryReader);
-            cameraPoints = Guerilla.ReadBlockArray<ScenarioCutsceneCameraPointBlock>(binaryReader);
-            recordedAnimations = Guerilla.ReadBlockArray<RecordedAnimationBlock>(binaryReader);
         }
-        public  ScenarioCinematicsResourceBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioCutsceneFlagBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioCutsceneCameraPointBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<RecordedAnimationBlock>(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            flags = Guerilla.ReadBlockArray<ScenarioCutsceneFlagBlock>(binaryReader);
-            cameraPoints = Guerilla.ReadBlockArray<ScenarioCutsceneCameraPointBlock>(binaryReader);
-            recordedAnimations = Guerilla.ReadBlockArray<RecordedAnimationBlock>(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            flags = ReadBlockArrayData<ScenarioCutsceneFlagBlock>(binaryReader, blamPointers.Dequeue());
+            cameraPoints = ReadBlockArrayData<ScenarioCutsceneCameraPointBlock>(binaryReader, blamPointers.Dequeue());
+            recordedAnimations = ReadBlockArrayData<RecordedAnimationBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<ScenarioCutsceneFlagBlock>(binaryWriter, flags, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ScenarioCutsceneCameraPointBlock>(binaryWriter, cameraPoints, nextAddress);

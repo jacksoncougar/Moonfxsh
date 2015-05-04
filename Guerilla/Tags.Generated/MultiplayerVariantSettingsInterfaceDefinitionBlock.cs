@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("goof")]
     public partial class MultiplayerVariantSettingsInterfaceDefinitionBlock : MultiplayerVariantSettingsInterfaceDefinitionBlockBase
     {
-        public  MultiplayerVariantSettingsInterfaceDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
+        public MultiplayerVariantSettingsInterfaceDefinitionBlock() : base()
         {
-            
-        }
-        public  MultiplayerVariantSettingsInterfaceDefinitionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 368, Alignment = 4)]
@@ -51,57 +48,68 @@ namespace Moonfish.Guerilla.Tags
         internal CreateNewVariantStructBlock createNewVariantStruct6;
         internal CreateNewVariantStructBlock createNewVariantStruct7;
         internal UnusedCreateNewVariants[] unusedCreateNewVariants;
-        
-        public override int SerializedSize{get { return 368; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  MultiplayerVariantSettingsInterfaceDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 368; } }
+        public override int Alignment { get { return 4; } }
+        public MultiplayerVariantSettingsInterfaceDefinitionBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadTagReference();
             invalidName_0 = binaryReader.ReadTagReference();
             invalidName_1 = binaryReader.ReadTagReference();
-            gameEngineSettings = Guerilla.ReadBlockArray<VariantSettingEditReferenceBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<VariantSettingEditReferenceBlock>(binaryReader));
             defaultVariantStrings = binaryReader.ReadTagReference();
-            defaultVariants = Guerilla.ReadBlockArray<GDefaultVariantsBlock>(binaryReader);
-            createNewVariantStruct = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct0 = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct1 = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct2 = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct3 = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct4 = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct5 = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct6 = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct7 = new CreateNewVariantStructBlock(binaryReader);
-            unusedCreateNewVariants = new []{ new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader),  };
+            blamPointers.Enqueue(ReadBlockArrayPointer<GDefaultVariantsBlock>(binaryReader));
+            createNewVariantStruct = new CreateNewVariantStructBlock();
+            blamPointers.Concat(createNewVariantStruct.ReadFields(binaryReader));
+            createNewVariantStruct0 = new CreateNewVariantStructBlock();
+            blamPointers.Concat(createNewVariantStruct0.ReadFields(binaryReader));
+            createNewVariantStruct1 = new CreateNewVariantStructBlock();
+            blamPointers.Concat(createNewVariantStruct1.ReadFields(binaryReader));
+            createNewVariantStruct2 = new CreateNewVariantStructBlock();
+            blamPointers.Concat(createNewVariantStruct2.ReadFields(binaryReader));
+            createNewVariantStruct3 = new CreateNewVariantStructBlock();
+            blamPointers.Concat(createNewVariantStruct3.ReadFields(binaryReader));
+            createNewVariantStruct4 = new CreateNewVariantStructBlock();
+            blamPointers.Concat(createNewVariantStruct4.ReadFields(binaryReader));
+            createNewVariantStruct5 = new CreateNewVariantStructBlock();
+            blamPointers.Concat(createNewVariantStruct5.ReadFields(binaryReader));
+            createNewVariantStruct6 = new CreateNewVariantStructBlock();
+            blamPointers.Concat(createNewVariantStruct6.ReadFields(binaryReader));
+            createNewVariantStruct7 = new CreateNewVariantStructBlock();
+            blamPointers.Concat(createNewVariantStruct7.ReadFields(binaryReader));
+            unusedCreateNewVariants = new []{ new UnusedCreateNewVariants(), new UnusedCreateNewVariants(), new UnusedCreateNewVariants(), new UnusedCreateNewVariants(), new UnusedCreateNewVariants(), new UnusedCreateNewVariants(), new UnusedCreateNewVariants() };
+            blamPointers.Concat(unusedCreateNewVariants[0].ReadFields(binaryReader));
+            blamPointers.Concat(unusedCreateNewVariants[1].ReadFields(binaryReader));
+            blamPointers.Concat(unusedCreateNewVariants[2].ReadFields(binaryReader));
+            blamPointers.Concat(unusedCreateNewVariants[3].ReadFields(binaryReader));
+            blamPointers.Concat(unusedCreateNewVariants[4].ReadFields(binaryReader));
+            blamPointers.Concat(unusedCreateNewVariants[5].ReadFields(binaryReader));
+            blamPointers.Concat(unusedCreateNewVariants[6].ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  MultiplayerVariantSettingsInterfaceDefinitionBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            gameEngineSettings = ReadBlockArrayData<VariantSettingEditReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            defaultVariants = ReadBlockArrayData<GDefaultVariantsBlock>(binaryReader, blamPointers.Dequeue());
+            createNewVariantStruct.ReadPointers(binaryReader, blamPointers);
+            createNewVariantStruct0.ReadPointers(binaryReader, blamPointers);
+            createNewVariantStruct1.ReadPointers(binaryReader, blamPointers);
+            createNewVariantStruct2.ReadPointers(binaryReader, blamPointers);
+            createNewVariantStruct3.ReadPointers(binaryReader, blamPointers);
+            createNewVariantStruct4.ReadPointers(binaryReader, blamPointers);
+            createNewVariantStruct5.ReadPointers(binaryReader, blamPointers);
+            createNewVariantStruct6.ReadPointers(binaryReader, blamPointers);
+            createNewVariantStruct7.ReadPointers(binaryReader, blamPointers);
+            unusedCreateNewVariants = ReadBlockArrayData<UnusedCreateNewVariants>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadTagReference();
-            invalidName_0 = binaryReader.ReadTagReference();
-            invalidName_1 = binaryReader.ReadTagReference();
-            gameEngineSettings = Guerilla.ReadBlockArray<VariantSettingEditReferenceBlock>(binaryReader);
-            defaultVariantStrings = binaryReader.ReadTagReference();
-            defaultVariants = Guerilla.ReadBlockArray<GDefaultVariantsBlock>(binaryReader);
-            createNewVariantStruct = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct0 = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct1 = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct2 = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct3 = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct4 = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct5 = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct6 = new CreateNewVariantStructBlock(binaryReader);
-            createNewVariantStruct7 = new CreateNewVariantStructBlock(binaryReader);
-            unusedCreateNewVariants = new []{ new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader), new UnusedCreateNewVariants(binaryReader),  };
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_);
                 binaryWriter.Write(invalidName_0);
@@ -132,27 +140,27 @@ namespace Moonfish.Guerilla.Tags
         public class UnusedCreateNewVariants : GuerillaBlock
         {
             internal CreateNewVariantStructBlock createNewVariantStruct;
-            
-            public override int SerializedSize{get { return 20; }}
-            
-            
-            public override int Alignment{get { return 1; }}
-            
-            public  UnusedCreateNewVariants(BinaryReader binaryReader): base(binaryReader)
+            public override int SerializedSize { get { return 20; } }
+            public override int Alignment { get { return 1; } }
+            public UnusedCreateNewVariants() : base()
             {
-                createNewVariantStruct = new CreateNewVariantStructBlock(binaryReader);
             }
-            public  UnusedCreateNewVariants(): base()
+            public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
             {
-                
+                var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+                createNewVariantStruct = new CreateNewVariantStructBlock();
+                blamPointers.Concat(createNewVariantStruct.ReadFields(binaryReader));
+                return blamPointers;
             }
-            public override void Read(BinaryReader binaryReader)
+            public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
             {
-                createNewVariantStruct = new CreateNewVariantStructBlock(binaryReader);
+                base.ReadPointers(binaryReader, blamPointers);
+                createNewVariantStruct.ReadPointers(binaryReader, blamPointers);
             }
-            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+            public override int Write(BinaryWriter binaryWriter, int nextAddress)
             {
-                using(binaryWriter.BaseStream.Pin())
+                base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
                 {
                     createNewVariantStruct.Write(binaryWriter);
                     return nextAddress;

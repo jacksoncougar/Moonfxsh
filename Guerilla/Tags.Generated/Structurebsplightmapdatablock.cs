@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureBspLightmapDataBlock : StructureBspLightmapDataBlockBase
     {
-        public  StructureBspLightmapDataBlock(BinaryReader binaryReader): base(binaryReader)
+        public StructureBspLightmapDataBlock() : base()
         {
-            
-        }
-        public  StructureBspLightmapDataBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
@@ -24,27 +21,25 @@ namespace Moonfish.Guerilla.Tags
     {
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference bitmapGroup;
-        
-        public override int SerializedSize{get { return 8; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  StructureBspLightmapDataBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 8; } }
+        public override int Alignment { get { return 4; } }
+        public StructureBspLightmapDataBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             bitmapGroup = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  StructureBspLightmapDataBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            bitmapGroup = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(bitmapGroup);
                 return nextAddress;

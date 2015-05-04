@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureInstancedGeometryRenderInfoStructBlock : StructureInstancedGeometryRenderInfoStructBlockBase
     {
-        public  StructureInstancedGeometryRenderInfoStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public StructureInstancedGeometryRenderInfoStructBlock() : base()
         {
-            
-        }
-        public  StructureInstancedGeometryRenderInfoStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 92, Alignment = 4)]
@@ -26,33 +23,34 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalGeometryBlockInfoStructBlock geometryBlockInfo;
         internal StructureBspClusterDataBlockNew[] renderData;
         internal GlobalGeometrySectionStripIndexBlock[] indexReorderTable;
-        
-        public override int SerializedSize{get { return 92; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  StructureInstancedGeometryRenderInfoStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 92; } }
+        public override int Alignment { get { return 4; } }
+        public StructureInstancedGeometryRenderInfoStructBlockBase() : base()
         {
-            sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            renderData = Guerilla.ReadBlockArray<StructureBspClusterDataBlockNew>(binaryReader);
-            indexReorderTable = Guerilla.ReadBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryReader);
         }
-        public  StructureInstancedGeometryRenderInfoStructBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            sectionInfo = new GlobalGeometrySectionInfoStructBlock();
+            blamPointers.Concat(sectionInfo.ReadFields(binaryReader));
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
+            blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspClusterDataBlockNew>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometrySectionStripIndexBlock>(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            renderData = Guerilla.ReadBlockArray<StructureBspClusterDataBlockNew>(binaryReader);
-            indexReorderTable = Guerilla.ReadBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            sectionInfo.ReadPointers(binaryReader, blamPointers);
+            geometryBlockInfo.ReadPointers(binaryReader, blamPointers);
+            renderData = ReadBlockArrayData<StructureBspClusterDataBlockNew>(binaryReader, blamPointers.Dequeue());
+            indexReorderTable = ReadBlockArrayData<GlobalGeometrySectionStripIndexBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 sectionInfo.Write(binaryWriter);
                 geometryBlockInfo.Write(binaryWriter);

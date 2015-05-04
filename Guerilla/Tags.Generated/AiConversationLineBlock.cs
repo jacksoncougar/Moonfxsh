@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AiConversationLineBlock : AiConversationLineBlockBase
     {
-        public  AiConversationLineBlock(BinaryReader binaryReader): base(binaryReader)
+        public AiConversationLineBlock() : base()
         {
-            
-        }
-        public  AiConversationLineBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 76, Alignment = 4)]
@@ -44,14 +41,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference variant5;
         [TagReference("snd!")]
         internal Moonfish.Tags.TagReference variant6;
-        
-        public override int SerializedSize{get { return 76; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  AiConversationLineBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 76; } }
+        public override int Alignment { get { return 4; } }
+        public AiConversationLineBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             participant = binaryReader.ReadShortBlockIndex1();
             addressee = (Addressee)binaryReader.ReadInt16();
@@ -65,30 +62,32 @@ namespace Moonfish.Guerilla.Tags
             variant4 = binaryReader.ReadTagReference();
             variant5 = binaryReader.ReadTagReference();
             variant6 = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  AiConversationLineBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[11].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            participant = binaryReader.ReadShortBlockIndex1();
-            addressee = (Addressee)binaryReader.ReadInt16();
-            addresseeParticipant = binaryReader.ReadShortBlockIndex1();
-            invalidName_ = binaryReader.ReadBytes(4);
-            lineDelayTime = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(12);
-            variant1 = binaryReader.ReadTagReference();
-            variant2 = binaryReader.ReadTagReference();
-            variant3 = binaryReader.ReadTagReference();
-            variant4 = binaryReader.ReadTagReference();
-            variant5 = binaryReader.ReadTagReference();
-            variant6 = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write(participant);

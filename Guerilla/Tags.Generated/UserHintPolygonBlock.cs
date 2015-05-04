@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class UserHintPolygonBlock : UserHintPolygonBlockBase
     {
-        public  UserHintPolygonBlock(BinaryReader binaryReader): base(binaryReader)
+        public UserHintPolygonBlock() : base()
         {
-            
-        }
-        public  UserHintPolygonBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 12, Alignment = 4)]
@@ -24,29 +21,27 @@ namespace Moonfish.Guerilla.Tags
     {
         internal Flags flags;
         internal UserHintPointBlock[] points;
-        
-        public override int SerializedSize{get { return 12; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  UserHintPolygonBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 12; } }
+        public override int Alignment { get { return 4; } }
+        public UserHintPolygonBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
-            points = Guerilla.ReadBlockArray<UserHintPointBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<UserHintPointBlock>(binaryReader));
+            return blamPointers;
         }
-        public  UserHintPolygonBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            points = ReadBlockArrayData<UserHintPointBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            points = Guerilla.ReadBlockArray<UserHintPointBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 nextAddress = Guerilla.WriteBlockArray<UserHintPointBlock>(binaryWriter, points, nextAddress);

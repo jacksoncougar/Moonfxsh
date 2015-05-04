@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class UserHintBlock : UserHintBlockBase
     {
-        public  UserHintBlock(BinaryReader binaryReader): base(binaryReader)
+        public UserHintBlock() : base()
         {
-            
-        }
-        public  UserHintBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 72, Alignment = 4)]
@@ -31,43 +28,42 @@ namespace Moonfish.Guerilla.Tags
         internal UserHintClimbBlock[] climbHints;
         internal UserHintWellBlock[] wellHints;
         internal UserHintFlightBlock[] flightHints;
-        
-        public override int SerializedSize{get { return 72; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  UserHintBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 72; } }
+        public override int Alignment { get { return 4; } }
+        public UserHintBlockBase() : base()
         {
-            pointGeometry = Guerilla.ReadBlockArray<UserHintPointBlock>(binaryReader);
-            rayGeometry = Guerilla.ReadBlockArray<UserHintRayBlock>(binaryReader);
-            lineSegmentGeometry = Guerilla.ReadBlockArray<UserHintLineSegmentBlock>(binaryReader);
-            parallelogramGeometry = Guerilla.ReadBlockArray<UserHintParallelogramBlock>(binaryReader);
-            polygonGeometry = Guerilla.ReadBlockArray<UserHintPolygonBlock>(binaryReader);
-            jumpHints = Guerilla.ReadBlockArray<UserHintJumpBlock>(binaryReader);
-            climbHints = Guerilla.ReadBlockArray<UserHintClimbBlock>(binaryReader);
-            wellHints = Guerilla.ReadBlockArray<UserHintWellBlock>(binaryReader);
-            flightHints = Guerilla.ReadBlockArray<UserHintFlightBlock>(binaryReader);
         }
-        public  UserHintBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<UserHintPointBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<UserHintRayBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<UserHintLineSegmentBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<UserHintParallelogramBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<UserHintPolygonBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<UserHintJumpBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<UserHintClimbBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<UserHintWellBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<UserHintFlightBlock>(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            pointGeometry = Guerilla.ReadBlockArray<UserHintPointBlock>(binaryReader);
-            rayGeometry = Guerilla.ReadBlockArray<UserHintRayBlock>(binaryReader);
-            lineSegmentGeometry = Guerilla.ReadBlockArray<UserHintLineSegmentBlock>(binaryReader);
-            parallelogramGeometry = Guerilla.ReadBlockArray<UserHintParallelogramBlock>(binaryReader);
-            polygonGeometry = Guerilla.ReadBlockArray<UserHintPolygonBlock>(binaryReader);
-            jumpHints = Guerilla.ReadBlockArray<UserHintJumpBlock>(binaryReader);
-            climbHints = Guerilla.ReadBlockArray<UserHintClimbBlock>(binaryReader);
-            wellHints = Guerilla.ReadBlockArray<UserHintWellBlock>(binaryReader);
-            flightHints = Guerilla.ReadBlockArray<UserHintFlightBlock>(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            pointGeometry = ReadBlockArrayData<UserHintPointBlock>(binaryReader, blamPointers.Dequeue());
+            rayGeometry = ReadBlockArrayData<UserHintRayBlock>(binaryReader, blamPointers.Dequeue());
+            lineSegmentGeometry = ReadBlockArrayData<UserHintLineSegmentBlock>(binaryReader, blamPointers.Dequeue());
+            parallelogramGeometry = ReadBlockArrayData<UserHintParallelogramBlock>(binaryReader, blamPointers.Dequeue());
+            polygonGeometry = ReadBlockArrayData<UserHintPolygonBlock>(binaryReader, blamPointers.Dequeue());
+            jumpHints = ReadBlockArrayData<UserHintJumpBlock>(binaryReader, blamPointers.Dequeue());
+            climbHints = ReadBlockArrayData<UserHintClimbBlock>(binaryReader, blamPointers.Dequeue());
+            wellHints = ReadBlockArrayData<UserHintWellBlock>(binaryReader, blamPointers.Dequeue());
+            flightHints = ReadBlockArrayData<UserHintFlightBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<UserHintPointBlock>(binaryWriter, pointGeometry, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<UserHintRayBlock>(binaryWriter, rayGeometry, nextAddress);

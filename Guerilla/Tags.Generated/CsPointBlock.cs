@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CsPointBlock : CsPointBlockBase
     {
-        public  CsPointBlock(BinaryReader binaryReader): base(binaryReader)
+        public CsPointBlock() : base()
         {
-            
-        }
-        public  CsPointBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 60, Alignment = 4)]
@@ -28,37 +25,32 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal int surfaceIndex;
         internal OpenTK.Vector2 facingDirection;
-        
-        public override int SerializedSize{get { return 60; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  CsPointBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 60; } }
+        public override int Alignment { get { return 4; } }
+        public CsPointBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
             position = binaryReader.ReadVector3();
             referenceFrame = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             surfaceIndex = binaryReader.ReadInt32();
             facingDirection = binaryReader.ReadVector2();
+            return blamPointers;
         }
-        public  CsPointBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadString32();
-            position = binaryReader.ReadVector3();
-            referenceFrame = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            surfaceIndex = binaryReader.ReadInt32();
-            facingDirection = binaryReader.ReadVector2();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(position);

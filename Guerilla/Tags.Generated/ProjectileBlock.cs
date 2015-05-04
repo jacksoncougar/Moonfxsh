@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("proj")]
     public partial class ProjectileBlock : ProjectileBlockBase
     {
-        public  ProjectileBlock(BinaryReader binaryReader): base(binaryReader)
+        public ProjectileBlock() : base()
         {
-            
-        }
-        public  ProjectileBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 232, Alignment = 4)]
@@ -122,14 +119,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal float targetedLeadingFraction;
         internal ProjectileMaterialResponseBlock[] materialResponses;
-        
-        public override int SerializedSize{get { return 232; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ProjectileBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 420; } }
+        public override int Alignment { get { return 4; } }
+        public ProjectileBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             detonationTimerStarts = (DetonationTimerStarts)binaryReader.ReadInt16();
             impactNoise = (ImpactNoise)binaryReader.ReadInt16();
@@ -148,7 +145,8 @@ namespace Moonfish.Guerilla.Tags
             detonationDamage = binaryReader.ReadTagReference();
             attachedDetonationDamage = binaryReader.ReadTagReference();
             superDetonation = binaryReader.ReadTagReference();
-            yourMomma = new SuperDetonationDamageStructBlock(binaryReader);
+            yourMomma = new SuperDetonationDamageStructBlock();
+            blamPointers.Concat(yourMomma.ReadFields(binaryReader));
             detonationSound = binaryReader.ReadTagReference();
             damageReportingType = (DamageReportingType)binaryReader.ReadByte();
             invalidName_ = binaryReader.ReadBytes(3);
@@ -166,65 +164,33 @@ namespace Moonfish.Guerilla.Tags
             waterDamageRangeWorldUnits = binaryReader.ReadRange();
             initialVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
             finalVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            blah = new AngularVelocityLowerBoundStructBlock(binaryReader);
+            blah = new AngularVelocityLowerBoundStructBlock();
+            blamPointers.Concat(blah.ReadFields(binaryReader));
             guidedAngularVelocityUpperDegreesPerSecond = binaryReader.ReadSingle();
             accelerationRangeWorldUnits = binaryReader.ReadRange();
             invalidName_0 = binaryReader.ReadBytes(4);
             targetedLeadingFraction = binaryReader.ReadSingle();
-            materialResponses = Guerilla.ReadBlockArray<ProjectileMaterialResponseBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ProjectileMaterialResponseBlock>(binaryReader));
+            return blamPointers;
         }
-        public  ProjectileBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            yourMomma.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            blah.ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            materialResponses = ReadBlockArrayData<ProjectileMaterialResponseBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            detonationTimerStarts = (DetonationTimerStarts)binaryReader.ReadInt16();
-            impactNoise = (ImpactNoise)binaryReader.ReadInt16();
-            aIPerceptionRadiusWorldUnits = binaryReader.ReadSingle();
-            collisionRadiusWorldUnits = binaryReader.ReadSingle();
-            armingTimeSeconds = binaryReader.ReadSingle();
-            dangerRadiusWorldUnits = binaryReader.ReadSingle();
-            timerSeconds = binaryReader.ReadRange();
-            minimumVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            maximumRangeWorldUnits = binaryReader.ReadSingle();
-            detonationNoise = (DetonationNoise)binaryReader.ReadInt16();
-            superDetProjectileCount = binaryReader.ReadInt16();
-            detonationStarted = binaryReader.ReadTagReference();
-            detonationEffectAirborne = binaryReader.ReadTagReference();
-            detonationEffectGround = binaryReader.ReadTagReference();
-            detonationDamage = binaryReader.ReadTagReference();
-            attachedDetonationDamage = binaryReader.ReadTagReference();
-            superDetonation = binaryReader.ReadTagReference();
-            yourMomma = new SuperDetonationDamageStructBlock(binaryReader);
-            detonationSound = binaryReader.ReadTagReference();
-            damageReportingType = (DamageReportingType)binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(3);
-            superAttachedDetonationDamage = binaryReader.ReadTagReference();
-            materialEffectRadius = binaryReader.ReadSingle();
-            flybySound = binaryReader.ReadTagReference();
-            impactEffect = binaryReader.ReadTagReference();
-            impactDamage = binaryReader.ReadTagReference();
-            boardingDetonationTime = binaryReader.ReadSingle();
-            boardingDetonationDamage = binaryReader.ReadTagReference();
-            boardingAttachedDetonationDamage = binaryReader.ReadTagReference();
-            airGravityScale = binaryReader.ReadSingle();
-            airDamageRangeWorldUnits = binaryReader.ReadRange();
-            waterGravityScale = binaryReader.ReadSingle();
-            waterDamageRangeWorldUnits = binaryReader.ReadRange();
-            initialVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            finalVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            blah = new AngularVelocityLowerBoundStructBlock(binaryReader);
-            guidedAngularVelocityUpperDegreesPerSecond = binaryReader.ReadSingle();
-            accelerationRangeWorldUnits = binaryReader.ReadRange();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            targetedLeadingFraction = binaryReader.ReadSingle();
-            materialResponses = Guerilla.ReadBlockArray<ProjectileMaterialResponseBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write((Int16)detonationTimerStarts);

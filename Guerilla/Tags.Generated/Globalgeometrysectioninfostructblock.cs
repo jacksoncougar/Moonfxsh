@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalGeometrySectionInfoStructBlock : GlobalGeometrySectionInfoStructBlockBase
     {
-        public  GlobalGeometrySectionInfoStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalGeometrySectionInfoStructBlock() : base()
         {
-            
-        }
-        public  GlobalGeometrySectionInfoStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -41,14 +38,14 @@ namespace Moonfish.Guerilla.Tags
         internal short softwarePlaneCount;
         internal short totalSubpartCont;
         internal SectionLightingFlags sectionLightingFlags;
-        
-        public override int SerializedSize{get { return 40; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GlobalGeometrySectionInfoStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 40; } }
+        public override int Alignment { get { return 4; } }
+        public GlobalGeometrySectionInfoStructBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             totalVertexCount = binaryReader.ReadInt16();
             totalTriangleCount = binaryReader.ReadInt16();
             totalPartCount = binaryReader.ReadInt16();
@@ -62,42 +59,23 @@ namespace Moonfish.Guerilla.Tags
             shadowCastingRigidTriangleCount = binaryReader.ReadInt16();
             geometryClassification = (GeometryClassification)binaryReader.ReadInt16();
             geometryCompressionFlags = (GeometryCompressionFlags)binaryReader.ReadInt16();
-            eMPTYSTRING = Guerilla.ReadBlockArray<GlobalGeometryCompressionInfoBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometryCompressionInfoBlock>(binaryReader));
             hardwareNodeCount = binaryReader.ReadByte();
             nodeMapSize = binaryReader.ReadByte();
             softwarePlaneCount = binaryReader.ReadInt16();
             totalSubpartCont = binaryReader.ReadInt16();
             sectionLightingFlags = (SectionLightingFlags)binaryReader.ReadInt16();
+            return blamPointers;
         }
-        public  GlobalGeometrySectionInfoStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            eMPTYSTRING = ReadBlockArrayData<GlobalGeometryCompressionInfoBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            totalVertexCount = binaryReader.ReadInt16();
-            totalTriangleCount = binaryReader.ReadInt16();
-            totalPartCount = binaryReader.ReadInt16();
-            shadowCastingTriangleCount = binaryReader.ReadInt16();
-            shadowCastingPartCount = binaryReader.ReadInt16();
-            opaquePointCount = binaryReader.ReadInt16();
-            opaqueVertexCount = binaryReader.ReadInt16();
-            opaquePartCount = binaryReader.ReadInt16();
-            opaqueMaxNodesVertex = binaryReader.ReadByte();
-            transparentMaxNodesVertex = binaryReader.ReadByte();
-            shadowCastingRigidTriangleCount = binaryReader.ReadInt16();
-            geometryClassification = (GeometryClassification)binaryReader.ReadInt16();
-            geometryCompressionFlags = (GeometryCompressionFlags)binaryReader.ReadInt16();
-            eMPTYSTRING = Guerilla.ReadBlockArray<GlobalGeometryCompressionInfoBlock>(binaryReader);
-            hardwareNodeCount = binaryReader.ReadByte();
-            nodeMapSize = binaryReader.ReadByte();
-            softwarePlaneCount = binaryReader.ReadInt16();
-            totalSubpartCont = binaryReader.ReadInt16();
-            sectionLightingFlags = (SectionLightingFlags)binaryReader.ReadInt16();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(totalVertexCount);
                 binaryWriter.Write(totalTriangleCount);

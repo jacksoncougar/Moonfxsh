@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class UiLevelsDefinitionBlock : UiLevelsDefinitionBlockBase
     {
-        public  UiLevelsDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
+        public UiLevelsDefinitionBlock() : base()
         {
-            
-        }
-        public  UiLevelsDefinitionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -25,31 +22,30 @@ namespace Moonfish.Guerilla.Tags
         internal UiCampaignBlock[] campaigns;
         internal GlobalUiCampaignLevelBlock[] campaignLevels;
         internal GlobalUiMultiplayerLevelBlock[] multiplayerLevels;
-        
-        public override int SerializedSize{get { return 24; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  UiLevelsDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 24; } }
+        public override int Alignment { get { return 4; } }
+        public UiLevelsDefinitionBlockBase() : base()
         {
-            campaigns = Guerilla.ReadBlockArray<UiCampaignBlock>(binaryReader);
-            campaignLevels = Guerilla.ReadBlockArray<GlobalUiCampaignLevelBlock>(binaryReader);
-            multiplayerLevels = Guerilla.ReadBlockArray<GlobalUiMultiplayerLevelBlock>(binaryReader);
         }
-        public  UiLevelsDefinitionBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<UiCampaignBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalUiCampaignLevelBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalUiMultiplayerLevelBlock>(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            campaigns = Guerilla.ReadBlockArray<UiCampaignBlock>(binaryReader);
-            campaignLevels = Guerilla.ReadBlockArray<GlobalUiCampaignLevelBlock>(binaryReader);
-            multiplayerLevels = Guerilla.ReadBlockArray<GlobalUiMultiplayerLevelBlock>(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            campaigns = ReadBlockArrayData<UiCampaignBlock>(binaryReader, blamPointers.Dequeue());
+            campaignLevels = ReadBlockArrayData<GlobalUiCampaignLevelBlock>(binaryReader, blamPointers.Dequeue());
+            multiplayerLevels = ReadBlockArrayData<GlobalUiMultiplayerLevelBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<UiCampaignBlock>(binaryWriter, campaigns, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GlobalUiCampaignLevelBlock>(binaryWriter, campaignLevels, nextAddress);

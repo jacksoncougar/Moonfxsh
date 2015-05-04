@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ParticleController : ParticleControllerBase
     {
-        public  ParticleController(BinaryReader binaryReader): base(binaryReader)
+        public ParticleController() : base()
         {
-            
-        }
-        public  ParticleController(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -26,33 +23,39 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal ParticleControllerParameters[] parameters;
         internal byte[] invalidName_0;
-        
-        public override int SerializedSize{get { return 20; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ParticleControllerBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 20; } }
+        public override int Alignment { get { return 4; } }
+        public ParticleControllerBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             type = (Type)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            parameters = Guerilla.ReadBlockArray<ParticleControllerParameters>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ParticleControllerParameters>(binaryReader));
             invalidName_0 = binaryReader.ReadBytes(8);
+            return blamPointers;
         }
-        public  ParticleControllerBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            parameters = ReadBlockArrayData<ParticleControllerParameters>(binaryReader, blamPointers.Dequeue());
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[7].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            type = (Type)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            parameters = Guerilla.ReadBlockArray<ParticleControllerParameters>(binaryReader);
-            invalidName_0 = binaryReader.ReadBytes(8);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)type);
                 binaryWriter.Write(invalidName_, 0, 2);

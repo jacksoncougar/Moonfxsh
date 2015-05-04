@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ObjectAiPropertiesBlock : ObjectAiPropertiesBlockBase
     {
-        public  ObjectAiPropertiesBlock(BinaryReader binaryReader): base(binaryReader)
+        public ObjectAiPropertiesBlock() : base()
         {
-            
-        }
-        public  ObjectAiPropertiesBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -30,35 +27,33 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal AiSize aiSize;
         internal LeapJumpSpeed leapJumpSpeed;
-        
-        public override int SerializedSize{get { return 16; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ObjectAiPropertiesBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 16; } }
+        public override int Alignment { get { return 4; } }
+        public ObjectAiPropertiesBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             aiFlags = (AiFlags)binaryReader.ReadInt32();
             aiTypeName = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(4);
             aiSize = (AiSize)binaryReader.ReadInt16();
             leapJumpSpeed = (LeapJumpSpeed)binaryReader.ReadInt16();
+            return blamPointers;
         }
-        public  ObjectAiPropertiesBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            aiFlags = (AiFlags)binaryReader.ReadInt32();
-            aiTypeName = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(4);
-            aiSize = (AiSize)binaryReader.ReadInt16();
-            leapJumpSpeed = (LeapJumpSpeed)binaryReader.ReadInt16();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)aiFlags);
                 binaryWriter.Write(aiTypeName);

@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalGeometrySectionStructBlock : GlobalGeometrySectionStructBlockBase
     {
-        public  GlobalGeometrySectionStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalGeometrySectionStructBlock() : base()
         {
-            
-        }
-        public  GlobalGeometrySectionStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 68, Alignment = 4)]
@@ -31,43 +28,45 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalGeometrySectionStripIndexBlock[] moppReorderTable;
         internal GlobalGeometrySectionVertexBufferBlock[] vertexBuffers;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 68; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GlobalGeometrySectionStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 68; } }
+        public override int Alignment { get { return 4; } }
+        public GlobalGeometrySectionStructBlockBase() : base()
         {
-            parts = Guerilla.ReadBlockArray<GlobalGeometryPartBlockNew>(binaryReader);
-            subparts = Guerilla.ReadBlockArray<GlobalSubpartsBlock>(binaryReader);
-            visibilityBounds = Guerilla.ReadBlockArray<GlobalVisibilityBoundsBlock>(binaryReader);
-            rawVertices = Guerilla.ReadBlockArray<GlobalGeometrySectionRawVertexBlock>(binaryReader);
-            stripIndices = Guerilla.ReadBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryReader);
-            visibilityMoppCode = Guerilla.ReadData(binaryReader);
-            moppReorderTable = Guerilla.ReadBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryReader);
-            vertexBuffers = Guerilla.ReadBlockArray<GlobalGeometrySectionVertexBufferBlock>(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometryPartBlockNew>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalSubpartsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalVisibilityBoundsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometrySectionRawVertexBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometrySectionStripIndexBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometrySectionStripIndexBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometrySectionVertexBufferBlock>(binaryReader));
             invalidName_ = binaryReader.ReadBytes(4);
+            return blamPointers;
         }
-        public  GlobalGeometrySectionStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            parts = ReadBlockArrayData<GlobalGeometryPartBlockNew>(binaryReader, blamPointers.Dequeue());
+            subparts = ReadBlockArrayData<GlobalSubpartsBlock>(binaryReader, blamPointers.Dequeue());
+            visibilityBounds = ReadBlockArrayData<GlobalVisibilityBoundsBlock>(binaryReader, blamPointers.Dequeue());
+            rawVertices = ReadBlockArrayData<GlobalGeometrySectionRawVertexBlock>(binaryReader, blamPointers.Dequeue());
+            stripIndices = ReadBlockArrayData<GlobalGeometrySectionStripIndexBlock>(binaryReader, blamPointers.Dequeue());
+            visibilityMoppCode = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            moppReorderTable = ReadBlockArrayData<GlobalGeometrySectionStripIndexBlock>(binaryReader, blamPointers.Dequeue());
+            vertexBuffers = ReadBlockArrayData<GlobalGeometrySectionVertexBufferBlock>(binaryReader, blamPointers.Dequeue());
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            parts = Guerilla.ReadBlockArray<GlobalGeometryPartBlockNew>(binaryReader);
-            subparts = Guerilla.ReadBlockArray<GlobalSubpartsBlock>(binaryReader);
-            visibilityBounds = Guerilla.ReadBlockArray<GlobalVisibilityBoundsBlock>(binaryReader);
-            rawVertices = Guerilla.ReadBlockArray<GlobalGeometrySectionRawVertexBlock>(binaryReader);
-            stripIndices = Guerilla.ReadBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryReader);
-            visibilityMoppCode = Guerilla.ReadData(binaryReader);
-            moppReorderTable = Guerilla.ReadBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryReader);
-            vertexBuffers = Guerilla.ReadBlockArray<GlobalGeometrySectionVertexBufferBlock>(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(4);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<GlobalGeometryPartBlockNew>(binaryWriter, parts, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GlobalSubpartsBlock>(binaryWriter, subparts, nextAddress);

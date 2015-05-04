@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioCutsceneCameraPointBlock : ScenarioCutsceneCameraPointBlockBase
     {
-        public  ScenarioCutsceneCameraPointBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioCutsceneCameraPointBlock() : base()
         {
-            
-        }
-        public  ScenarioCutsceneCameraPointBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 64, Alignment = 4)]
@@ -28,37 +25,30 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 position;
         internal OpenTK.Vector3 orientation;
         internal float unused;
-        
-        public override int SerializedSize{get { return 64; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioCutsceneCameraPointBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 64; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioCutsceneCameraPointBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             type = (Type)binaryReader.ReadInt16();
             name = binaryReader.ReadString32();
             position = binaryReader.ReadVector3();
             orientation = binaryReader.ReadVector3();
             unused = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  ScenarioCutsceneCameraPointBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            type = (Type)binaryReader.ReadInt16();
-            name = binaryReader.ReadString32();
-            position = binaryReader.ReadVector3();
-            orientation = binaryReader.ReadVector3();
-            unused = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write((Int16)type);

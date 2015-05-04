@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("jpt!")]
     public partial class DamageEffectBlock : DamageEffectBlockBase
     {
-        public  DamageEffectBlock(BinaryReader binaryReader): base(binaryReader)
+        public DamageEffectBlock() : base()
         {
-            
-        }
-        public  DamageEffectBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 200, Alignment = 4)]
@@ -113,14 +110,14 @@ namespace Moonfish.Guerilla.Tags
         internal float outwardVelocityWorldUnitsPerSecond;
         internal float outwardRadiusWorldUnits;
         internal float outwardExponent;
-        
-        public override int SerializedSize{get { return 200; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  DamageEffectBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 200; } }
+        public override int Alignment { get { return 4; } }
+        public DamageEffectBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             radiusWorldUnits = binaryReader.ReadRange();
             cutoffScale01 = binaryReader.ReadSingle();
             flags = (Flags)binaryReader.ReadInt32();
@@ -131,7 +128,8 @@ namespace Moonfish.Guerilla.Tags
             damageLowerBound = binaryReader.ReadSingle();
             damageUpperBound = binaryReader.ReadRange();
             dmgInnerConeAngle = binaryReader.ReadSingle();
-            blah = new DamageOuterConeAngleStructBlock(binaryReader);
+            blah = new DamageOuterConeAngleStructBlock();
+            blamPointers.Concat(blah.ReadFields(binaryReader));
             activeCamouflageDamage01 = binaryReader.ReadSingle();
             stun01 = binaryReader.ReadSingle();
             maximumStun01 = binaryReader.ReadSingle();
@@ -146,7 +144,7 @@ namespace Moonfish.Guerilla.Tags
             aIStunBounds01 = binaryReader.ReadRange();
             shakeRadius = binaryReader.ReadSingle();
             eMPRadius = binaryReader.ReadSingle();
-            playerResponses = Guerilla.ReadBlockArray<DamageEffectPlayerResponseBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<DamageEffectPlayerResponseBlock>(binaryReader));
             durationSeconds = binaryReader.ReadSingle();
             fadeFunction = (FadeFunction)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -169,65 +167,24 @@ namespace Moonfish.Guerilla.Tags
             outwardVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
             outwardRadiusWorldUnits = binaryReader.ReadSingle();
             outwardExponent = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  DamageEffectBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            blah.ReadPointers(binaryReader, blamPointers);
+            playerResponses = ReadBlockArrayData<DamageEffectPlayerResponseBlock>(binaryReader, blamPointers.Dequeue());
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            radiusWorldUnits = binaryReader.ReadRange();
-            cutoffScale01 = binaryReader.ReadSingle();
-            flags = (Flags)binaryReader.ReadInt32();
-            sideEffect = (SideEffect)binaryReader.ReadInt16();
-            category = (Category)binaryReader.ReadInt16();
-            flags0 = (Flags)binaryReader.ReadInt32();
-            aOECoreRadiusWorldUnits = binaryReader.ReadSingle();
-            damageLowerBound = binaryReader.ReadSingle();
-            damageUpperBound = binaryReader.ReadRange();
-            dmgInnerConeAngle = binaryReader.ReadSingle();
-            blah = new DamageOuterConeAngleStructBlock(binaryReader);
-            activeCamouflageDamage01 = binaryReader.ReadSingle();
-            stun01 = binaryReader.ReadSingle();
-            maximumStun01 = binaryReader.ReadSingle();
-            stunTimeSeconds = binaryReader.ReadSingle();
-            instantaneousAcceleration0Inf = binaryReader.ReadSingle();
-            riderDirectDamageScale = binaryReader.ReadSingle();
-            riderMaximumTransferDamageScale = binaryReader.ReadSingle();
-            riderMinimumTransferDamageScale = binaryReader.ReadSingle();
-            generalDamage = binaryReader.ReadStringID();
-            specificDamage = binaryReader.ReadStringID();
-            aIStunRadiusWorldUnits = binaryReader.ReadSingle();
-            aIStunBounds01 = binaryReader.ReadRange();
-            shakeRadius = binaryReader.ReadSingle();
-            eMPRadius = binaryReader.ReadSingle();
-            playerResponses = Guerilla.ReadBlockArray<DamageEffectPlayerResponseBlock>(binaryReader);
-            durationSeconds = binaryReader.ReadSingle();
-            fadeFunction = (FadeFunction)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            rotationDegrees = binaryReader.ReadSingle();
-            pushbackWorldUnits = binaryReader.ReadSingle();
-            jitterWorldUnits = binaryReader.ReadRange();
-            durationSeconds0 = binaryReader.ReadSingle();
-            falloffFunction = (FalloffFunctionAFunctionToEnvelopeTheEffectsMagnitudeOverTime)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            randomTranslationWorldUnits = binaryReader.ReadSingle();
-            randomRotationDegrees = binaryReader.ReadSingle();
-            wobbleFunction = (WobbleFunctionAFunctionToPerturbTheEffectsBehaviorOverTime)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            wobbleFunctionPeriodSeconds = binaryReader.ReadSingle();
-            wobbleWeight = binaryReader.ReadSingle();
-            sound = binaryReader.ReadTagReference();
-            forwardVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            forwardRadiusWorldUnits = binaryReader.ReadSingle();
-            forwardExponent = binaryReader.ReadSingle();
-            outwardVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            outwardRadiusWorldUnits = binaryReader.ReadSingle();
-            outwardExponent = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(radiusWorldUnits);
                 binaryWriter.Write(cutoffScale01);

@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class VocalizationDefinitionsBlock2 : VocalizationDefinitionsBlock2Base
     {
-        public  VocalizationDefinitionsBlock2(BinaryReader binaryReader): base(binaryReader)
+        public VocalizationDefinitionsBlock2() : base()
         {
-            
-        }
-        public  VocalizationDefinitionsBlock2(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 96, Alignment = 4)]
@@ -82,14 +79,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent sampleLine;
         internal ResponseBlock[] reponses;
         internal VocalizationDefinitionsBlock3[] children;
-        
-        public override int SerializedSize{get { return 96; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  VocalizationDefinitionsBlock2Base(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 96; } }
+        public override int Alignment { get { return 4; } }
+        public VocalizationDefinitionsBlock2Base() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             vocalization = binaryReader.ReadStringID();
             parentVocalization = binaryReader.ReadStringID();
             parentIndex = binaryReader.ReadInt16();
@@ -115,46 +112,20 @@ namespace Moonfish.Guerilla.Tags
             playerSkipFraction = binaryReader.ReadSingle();
             skipFraction = binaryReader.ReadSingle();
             sampleLine = binaryReader.ReadStringID();
-            reponses = Guerilla.ReadBlockArray<ResponseBlock>(binaryReader);
-            children = Guerilla.ReadBlockArray<VocalizationDefinitionsBlock3>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ResponseBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<VocalizationDefinitionsBlock3>(binaryReader));
+            return blamPointers;
         }
-        public  VocalizationDefinitionsBlock2Base(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            reponses = ReadBlockArrayData<ResponseBlock>(binaryReader, blamPointers.Dequeue());
+            children = ReadBlockArrayData<VocalizationDefinitionsBlock3>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            vocalization = binaryReader.ReadStringID();
-            parentVocalization = binaryReader.ReadStringID();
-            parentIndex = binaryReader.ReadInt16();
-            priority = (Priority)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt32();
-            glanceBehavior = (GlanceBehaviorHowDoesTheSpeakerOfThisVocalizationDirectHisGaze)binaryReader.ReadInt16();
-            glanceRecipientBehavior = (GlanceRecipientBehaviorHowDoesSomeoneWhoHearsMeBehave)binaryReader.ReadInt16();
-            perceptionType = (PerceptionType)binaryReader.ReadInt16();
-            maxCombatStatus = (MaxCombatStatus)binaryReader.ReadInt16();
-            animationImpulse = (AnimationImpulse)binaryReader.ReadInt16();
-            overlapPriority = (OverlapPriority)binaryReader.ReadInt16();
-            soundRepetitionDelayMinutes = binaryReader.ReadSingle();
-            allowableQueueDelaySeconds = binaryReader.ReadSingle();
-            preVocDelaySeconds = binaryReader.ReadSingle();
-            notificationDelaySeconds = binaryReader.ReadSingle();
-            postVocDelaySeconds = binaryReader.ReadSingle();
-            repeatDelaySeconds = binaryReader.ReadSingle();
-            weight01 = binaryReader.ReadSingle();
-            speakerFreezeTime = binaryReader.ReadSingle();
-            listenerFreezeTime = binaryReader.ReadSingle();
-            speakerEmotion = (SpeakerEmotion)binaryReader.ReadInt16();
-            listenerEmotion = (ListenerEmotion)binaryReader.ReadInt16();
-            playerSkipFraction = binaryReader.ReadSingle();
-            skipFraction = binaryReader.ReadSingle();
-            sampleLine = binaryReader.ReadStringID();
-            reponses = Guerilla.ReadBlockArray<ResponseBlock>(binaryReader);
-            children = Guerilla.ReadBlockArray<VocalizationDefinitionsBlock3>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(vocalization);
                 binaryWriter.Write(parentVocalization);

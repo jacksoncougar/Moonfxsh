@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalDamageSectionBlock : GlobalDamageSectionBlockBase
     {
-        public  GlobalDamageSectionBlock(BinaryReader binaryReader): base(binaryReader)
+        public GlobalDamageSectionBlock() : base()
         {
-            
-        }
-        public  GlobalDamageSectionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 56, Alignment = 4)]
@@ -36,47 +33,46 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal Moonfish.Tags.StringIdent resurrectionRestoredRegionName;
         internal byte[] invalidName_0;
-        
-        public override int SerializedSize{get { return 56; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GlobalDamageSectionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 56; } }
+        public override int Alignment { get { return 4; } }
+        public GlobalDamageSectionBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             flags = (Flags)binaryReader.ReadInt32();
             vitalityPercentage01 = binaryReader.ReadSingle();
-            instantResponses = Guerilla.ReadBlockArray<InstantaneousDamageRepsonseBlock>(binaryReader);
-            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            gNullBlock0 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<InstantaneousDamageRepsonseBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GNullBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GNullBlock>(binaryReader));
             stunTimeSeconds = binaryReader.ReadSingle();
             rechargeTimeSeconds = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(4);
             resurrectionRestoredRegionName = binaryReader.ReadStringID();
             invalidName_0 = binaryReader.ReadBytes(4);
+            return blamPointers;
         }
-        public  GlobalDamageSectionBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            instantResponses = ReadBlockArrayData<InstantaneousDamageRepsonseBlock>(binaryReader, blamPointers.Dequeue());
+            gNullBlock = ReadBlockArrayData<GNullBlock>(binaryReader, blamPointers.Dequeue());
+            gNullBlock0 = ReadBlockArrayData<GNullBlock>(binaryReader, blamPointers.Dequeue());
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadStringID();
-            flags = (Flags)binaryReader.ReadInt32();
-            vitalityPercentage01 = binaryReader.ReadSingle();
-            instantResponses = Guerilla.ReadBlockArray<InstantaneousDamageRepsonseBlock>(binaryReader);
-            gNullBlock = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            gNullBlock0 = Guerilla.ReadBlockArray<GNullBlock>(binaryReader);
-            stunTimeSeconds = binaryReader.ReadSingle();
-            rechargeTimeSeconds = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(4);
-            resurrectionRestoredRegionName = binaryReader.ReadStringID();
-            invalidName_0 = binaryReader.ReadBytes(4);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write((Int32)flags);

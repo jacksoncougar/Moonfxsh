@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("coln")]
     public partial class ColonyBlock : ColonyBlockBase
     {
-        public  ColonyBlock(BinaryReader binaryReader): base(binaryReader)
+        public ColonyBlock() : base()
         {
-            
-        }
-        public  ColonyBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 60, Alignment = 4)]
@@ -41,14 +38,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagReference baseMap;
         [TagReference("bitm")]
         internal Moonfish.Tags.TagReference detailMap;
-        
-        public override int SerializedSize{get { return 60; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ColonyBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 60; } }
+        public override int Alignment { get { return 4; } }
+        public ColonyBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             invalidName_0 = binaryReader.ReadBytes(4);
@@ -57,25 +54,34 @@ namespace Moonfish.Guerilla.Tags
             debugColor = binaryReader.ReadVector4();
             baseMap = binaryReader.ReadTagReference();
             detailMap = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  ColonyBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[11].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(4);
-            radius = binaryReader.ReadRange();
-            invalidName_1 = binaryReader.ReadBytes(12);
-            debugColor = binaryReader.ReadVector4();
-            baseMap = binaryReader.ReadTagReference();
-            detailMap = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write(invalidName_, 0, 2);

@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class FallingDamageBlock : FallingDamageBlockBase
     {
-        public  FallingDamageBlock(BinaryReader binaryReader): base(binaryReader)
+        public FallingDamageBlock() : base()
         {
-            
-        }
-        public  FallingDamageBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 104, Alignment = 4)]
@@ -39,14 +36,14 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("jpt!")]
         internal Moonfish.Tags.TagReference flamingDeathDamage;
         internal byte[] invalidName_1;
-        
-        public override int SerializedSize{get { return 104; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  FallingDamageBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 104; } }
+        public override int Alignment { get { return 4; } }
+        public FallingDamageBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(8);
             harmfulFallingDistanceWorldUnits = binaryReader.ReadRange();
             fallingDamage = binaryReader.ReadTagReference();
@@ -58,28 +55,60 @@ namespace Moonfish.Guerilla.Tags
             vehicleCollisionDamage = binaryReader.ReadTagReference();
             flamingDeathDamage = binaryReader.ReadTagReference();
             invalidName_1 = binaryReader.ReadBytes(28);
+            return blamPointers;
         }
-        public  FallingDamageBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[19].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[20].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[21].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[22].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[23].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[24].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[25].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[26].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[27].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadBytes(8);
-            harmfulFallingDistanceWorldUnits = binaryReader.ReadRange();
-            fallingDamage = binaryReader.ReadTagReference();
-            invalidName_0 = binaryReader.ReadBytes(8);
-            maximumFallingDistanceWorldUnits = binaryReader.ReadSingle();
-            distanceDamage = binaryReader.ReadTagReference();
-            vehicleEnvironemtnCollisionDamageEffect = binaryReader.ReadTagReference();
-            vehicleKilledUnitDamageEffect = binaryReader.ReadTagReference();
-            vehicleCollisionDamage = binaryReader.ReadTagReference();
-            flamingDeathDamage = binaryReader.ReadTagReference();
-            invalidName_1 = binaryReader.ReadBytes(28);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 8);
                 binaryWriter.Write(harmfulFallingDistanceWorldUnits);

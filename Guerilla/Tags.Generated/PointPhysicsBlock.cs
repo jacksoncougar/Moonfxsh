@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("pphy")]
     public partial class PointPhysicsBlock : PointPhysicsBlockBase
     {
-        public  PointPhysicsBlock(BinaryReader binaryReader): base(binaryReader)
+        public PointPhysicsBlock() : base()
         {
-            
-        }
-        public  PointPhysicsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 64, Alignment = 4)]
@@ -45,14 +42,14 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float elasticity;
         internal byte[] invalidName_0;
-        
-        public override int SerializedSize{get { return 64; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PointPhysicsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 64; } }
+        public override int Alignment { get { return 4; } }
+        public PointPhysicsBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             invalidName_ = binaryReader.ReadBytes(28);
             densityGML = binaryReader.ReadSingle();
@@ -61,25 +58,56 @@ namespace Moonfish.Guerilla.Tags
             surfaceFriction = binaryReader.ReadSingle();
             elasticity = binaryReader.ReadSingle();
             invalidName_0 = binaryReader.ReadBytes(12);
+            return blamPointers;
         }
-        public  PointPhysicsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_[19].ReadPointers(binaryReader, blamPointers);
+            invalidName_[20].ReadPointers(binaryReader, blamPointers);
+            invalidName_[21].ReadPointers(binaryReader, blamPointers);
+            invalidName_[22].ReadPointers(binaryReader, blamPointers);
+            invalidName_[23].ReadPointers(binaryReader, blamPointers);
+            invalidName_[24].ReadPointers(binaryReader, blamPointers);
+            invalidName_[25].ReadPointers(binaryReader, blamPointers);
+            invalidName_[26].ReadPointers(binaryReader, blamPointers);
+            invalidName_[27].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[11].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            invalidName_ = binaryReader.ReadBytes(28);
-            densityGML = binaryReader.ReadSingle();
-            airFriction = binaryReader.ReadSingle();
-            waterFriction = binaryReader.ReadSingle();
-            surfaceFriction = binaryReader.ReadSingle();
-            elasticity = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(12);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(invalidName_, 0, 28);

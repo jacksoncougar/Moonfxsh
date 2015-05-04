@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShaderTextureStateConstantBlock : ShaderTextureStateConstantBlockBase
     {
-        public  ShaderTextureStateConstantBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShaderTextureStateConstantBlock() : base()
         {
-            
-        }
-        public  ShaderTextureStateConstantBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
@@ -25,31 +22,29 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent sourceParameter;
         internal byte[] invalidName_;
         internal Constant constant;
-        
-        public override int SerializedSize{get { return 8; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ShaderTextureStateConstantBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 8; } }
+        public override int Alignment { get { return 4; } }
+        public ShaderTextureStateConstantBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             sourceParameter = binaryReader.ReadStringID();
             invalidName_ = binaryReader.ReadBytes(2);
             constant = (Constant)binaryReader.ReadInt16();
+            return blamPointers;
         }
-        public  ShaderTextureStateConstantBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            sourceParameter = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(2);
-            constant = (Constant)binaryReader.ReadInt16();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(sourceParameter);
                 binaryWriter.Write(invalidName_, 0, 2);

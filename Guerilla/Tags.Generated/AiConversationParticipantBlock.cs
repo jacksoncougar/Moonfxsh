@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AiConversationParticipantBlock : AiConversationParticipantBlockBase
     {
-        public  AiConversationParticipantBlock(BinaryReader binaryReader): base(binaryReader)
+        public AiConversationParticipantBlock() : base()
         {
-            
-        }
-        public  AiConversationParticipantBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 84, Alignment = 4)]
@@ -36,14 +33,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.String32 encounterName;
         internal byte[] invalidName_2;
         internal byte[] invalidName_3;
-        
-        public override int SerializedSize{get { return 84; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  AiConversationParticipantBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 84; } }
+        public override int Alignment { get { return 4; } }
+        public AiConversationParticipantBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(8);
             useThisObject = binaryReader.ReadShortBlockIndex1();
             setNewName = binaryReader.ReadShortBlockIndex1();
@@ -52,25 +49,64 @@ namespace Moonfish.Guerilla.Tags
             encounterName = binaryReader.ReadString32();
             invalidName_2 = binaryReader.ReadBytes(4);
             invalidName_3 = binaryReader.ReadBytes(12);
+            return blamPointers;
         }
-        public  AiConversationParticipantBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[11].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadBytes(8);
-            useThisObject = binaryReader.ReadShortBlockIndex1();
-            setNewName = binaryReader.ReadShortBlockIndex1();
-            invalidName_0 = binaryReader.ReadBytes(12);
-            invalidName_1 = binaryReader.ReadBytes(12);
-            encounterName = binaryReader.ReadString32();
-            invalidName_2 = binaryReader.ReadBytes(4);
-            invalidName_3 = binaryReader.ReadBytes(12);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 8);
                 binaryWriter.Write(useThisObject);

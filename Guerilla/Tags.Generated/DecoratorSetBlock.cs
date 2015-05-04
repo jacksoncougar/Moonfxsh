@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("DECR")]
     public partial class DecoratorSetBlock : DecoratorSetBlockBase
     {
-        public  DecoratorSetBlock(BinaryReader binaryReader): base(binaryReader)
+        public DecoratorSetBlock() : base()
         {
-            
-        }
-        public  DecoratorSetBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 108, Alignment = 4)]
@@ -47,45 +44,58 @@ namespace Moonfish.Guerilla.Tags
         internal CachedDataBlock[] cachedData;
         internal GlobalGeometryBlockInfoStructBlock geometrySectionInfo;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 108; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  DecoratorSetBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 108; } }
+        public override int Alignment { get { return 4; } }
+        public DecoratorSetBlockBase() : base()
         {
-            shaders = Guerilla.ReadBlockArray<DecoratorShaderReferenceBlock>(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorShaderReferenceBlock>(binaryReader));
             lightingMinScale = binaryReader.ReadSingle();
             lightingMaxScale = binaryReader.ReadSingle();
-            classes = Guerilla.ReadBlockArray<DecoratorClassesBlock>(binaryReader);
-            models = Guerilla.ReadBlockArray<DecoratorModelsBlock>(binaryReader);
-            rawVertices = Guerilla.ReadBlockArray<DecoratorModelVerticesBlock>(binaryReader);
-            indices = Guerilla.ReadBlockArray<DecoratorModelIndicesBlock>(binaryReader);
-            cachedData = Guerilla.ReadBlockArray<CachedDataBlock>(binaryReader);
-            geometrySectionInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorClassesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorModelsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorModelVerticesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorModelIndicesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<CachedDataBlock>(binaryReader));
+            geometrySectionInfo = new GlobalGeometryBlockInfoStructBlock();
+            blamPointers.Concat(geometrySectionInfo.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(16);
+            return blamPointers;
         }
-        public  DecoratorSetBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            shaders = ReadBlockArrayData<DecoratorShaderReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            classes = ReadBlockArrayData<DecoratorClassesBlock>(binaryReader, blamPointers.Dequeue());
+            models = ReadBlockArrayData<DecoratorModelsBlock>(binaryReader, blamPointers.Dequeue());
+            rawVertices = ReadBlockArrayData<DecoratorModelVerticesBlock>(binaryReader, blamPointers.Dequeue());
+            indices = ReadBlockArrayData<DecoratorModelIndicesBlock>(binaryReader, blamPointers.Dequeue());
+            cachedData = ReadBlockArrayData<CachedDataBlock>(binaryReader, blamPointers.Dequeue());
+            geometrySectionInfo.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_[15].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            shaders = Guerilla.ReadBlockArray<DecoratorShaderReferenceBlock>(binaryReader);
-            lightingMinScale = binaryReader.ReadSingle();
-            lightingMaxScale = binaryReader.ReadSingle();
-            classes = Guerilla.ReadBlockArray<DecoratorClassesBlock>(binaryReader);
-            models = Guerilla.ReadBlockArray<DecoratorModelsBlock>(binaryReader);
-            rawVertices = Guerilla.ReadBlockArray<DecoratorModelVerticesBlock>(binaryReader);
-            indices = Guerilla.ReadBlockArray<DecoratorModelIndicesBlock>(binaryReader);
-            cachedData = Guerilla.ReadBlockArray<CachedDataBlock>(binaryReader);
-            geometrySectionInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(16);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<DecoratorShaderReferenceBlock>(binaryWriter, shaders, nextAddress);
                 binaryWriter.Write(lightingMinScale);

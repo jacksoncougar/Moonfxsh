@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureBspClusterBlock : StructureBspClusterBlockBase
     {
-        public  StructureBspClusterBlock(BinaryReader binaryReader): base(binaryReader)
+        public StructureBspClusterBlock() : base()
         {
-            
-        }
-        public  StructureBspClusterBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 176, Alignment = 4)]
@@ -48,17 +45,19 @@ namespace Moonfish.Guerilla.Tags
         internal StructureBspClusterInstancedGeometryIndexBlock[] instancedGeometryIndices;
         internal GlobalGeometrySectionStripIndexBlock[] indexReorderTable;
         internal byte[] collisionMoppCode;
-        
-        public override int SerializedSize{get { return 176; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  StructureBspClusterBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 176; } }
+        public override int Alignment { get { return 4; } }
+        public StructureBspClusterBlockBase() : base()
         {
-            sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            clusterData = Guerilla.ReadBlockArray<StructureBspClusterDataBlockNew>(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            sectionInfo = new GlobalGeometrySectionInfoStructBlock();
+            blamPointers.Concat(sectionInfo.ReadFields(binaryReader));
+            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
+            blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspClusterDataBlockNew>(binaryReader));
             boundsX = binaryReader.ReadRange();
             boundsY = binaryReader.ReadRange();
             boundsZ = binaryReader.ReadRange();
@@ -76,49 +75,38 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(4);
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_1 = binaryReader.ReadBytes(2);
-            predictedResources = Guerilla.ReadBlockArray<PredictedResourceBlock>(binaryReader);
-            portals = Guerilla.ReadBlockArray<StructureBspClusterPortalIndexBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<PredictedResourceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspClusterPortalIndexBlock>(binaryReader));
             checksumFromStructure = binaryReader.ReadInt32();
-            instancedGeometryIndices = Guerilla.ReadBlockArray<StructureBspClusterInstancedGeometryIndexBlock>(binaryReader);
-            indexReorderTable = Guerilla.ReadBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryReader);
-            collisionMoppCode = Guerilla.ReadData(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspClusterInstancedGeometryIndexBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometrySectionStripIndexBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
+            return blamPointers;
         }
-        public  StructureBspClusterBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            sectionInfo.ReadPointers(binaryReader, blamPointers);
+            geometryBlockInfo.ReadPointers(binaryReader, blamPointers);
+            clusterData = ReadBlockArrayData<StructureBspClusterDataBlockNew>(binaryReader, blamPointers.Dequeue());
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            predictedResources = ReadBlockArrayData<PredictedResourceBlock>(binaryReader, blamPointers.Dequeue());
+            portals = ReadBlockArrayData<StructureBspClusterPortalIndexBlock>(binaryReader, blamPointers.Dequeue());
+            instancedGeometryIndices = ReadBlockArrayData<StructureBspClusterInstancedGeometryIndexBlock>(binaryReader, blamPointers.Dequeue());
+            indexReorderTable = ReadBlockArrayData<GlobalGeometrySectionStripIndexBlock>(binaryReader, blamPointers.Dequeue());
+            collisionMoppCode = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            sectionInfo = new GlobalGeometrySectionInfoStructBlock(binaryReader);
-            geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock(binaryReader);
-            clusterData = Guerilla.ReadBlockArray<StructureBspClusterDataBlockNew>(binaryReader);
-            boundsX = binaryReader.ReadRange();
-            boundsY = binaryReader.ReadRange();
-            boundsZ = binaryReader.ReadRange();
-            scenarioSkyIndex = binaryReader.ReadByte();
-            mediaIndex = binaryReader.ReadByte();
-            scenarioVisibleSkyIndex = binaryReader.ReadByte();
-            scenarioAtmosphericFogIndex = binaryReader.ReadByte();
-            planarFogDesignator = binaryReader.ReadByte();
-            visibleFogPlaneIndex = binaryReader.ReadByte();
-            backgroundSound = binaryReader.ReadShortBlockIndex1();
-            soundEnvironment = binaryReader.ReadShortBlockIndex1();
-            weather = binaryReader.ReadShortBlockIndex1();
-            transitionStructureBSP = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(4);
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            predictedResources = Guerilla.ReadBlockArray<PredictedResourceBlock>(binaryReader);
-            portals = Guerilla.ReadBlockArray<StructureBspClusterPortalIndexBlock>(binaryReader);
-            checksumFromStructure = binaryReader.ReadInt32();
-            instancedGeometryIndices = Guerilla.ReadBlockArray<StructureBspClusterInstancedGeometryIndexBlock>(binaryReader);
-            indexReorderTable = Guerilla.ReadBlockArray<GlobalGeometrySectionStripIndexBlock>(binaryReader);
-            collisionMoppCode = Guerilla.ReadData(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 sectionInfo.Write(binaryWriter);
                 geometryBlockInfo.Write(binaryWriter);

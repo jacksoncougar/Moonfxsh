@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ProjectileMaterialResponseBlock : ProjectileMaterialResponseBlockBase
     {
-        public  ProjectileMaterialResponseBlock(BinaryReader binaryReader): base(binaryReader)
+        public ProjectileMaterialResponseBlock() : base()
         {
-            
-        }
-        public  ProjectileMaterialResponseBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 88, Alignment = 4)]
@@ -63,14 +60,14 @@ namespace Moonfish.Guerilla.Tags
         /// the fraction of the projectile's velocity perpendicular to the surface lost on impact
         /// </summary>
         internal float perpendicularFriction;
-        
-        public override int SerializedSize{get { return 88; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ProjectileMaterialResponseBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 88; } }
+        public override int Alignment { get { return 4; } }
+        public ProjectileMaterialResponseBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             response = (Response)binaryReader.ReadInt16();
             dONOTUSEOLDEffect = binaryReader.ReadTagReference();
@@ -91,37 +88,22 @@ namespace Moonfish.Guerilla.Tags
             maximumDistance = binaryReader.ReadSingle();
             parallelFriction = binaryReader.ReadSingle();
             perpendicularFriction = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  ProjectileMaterialResponseBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            response = (Response)binaryReader.ReadInt16();
-            dONOTUSEOLDEffect = binaryReader.ReadTagReference();
-            materialName = binaryReader.ReadStringID();
-            invalidName_ = binaryReader.ReadBytes(4);
-            response0 = (Response)binaryReader.ReadInt16();
-            flags0 = (Flags)binaryReader.ReadInt16();
-            chanceFraction01 = binaryReader.ReadSingle();
-            betweenDegrees = binaryReader.ReadRange();
-            andWorldUnitsPerSecond = binaryReader.ReadRange();
-            dONOTUSEOLDEffect0 = binaryReader.ReadTagReference();
-            scaleEffectsBy = (ScaleEffectsBy)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            angularNoiseDegrees = binaryReader.ReadSingle();
-            velocityNoiseWorldUnitsPerSecond = binaryReader.ReadSingle();
-            dONOTUSEOLDDetonationEffect = binaryReader.ReadTagReference();
-            initialFriction = binaryReader.ReadSingle();
-            maximumDistance = binaryReader.ReadSingle();
-            parallelFriction = binaryReader.ReadSingle();
-            perpendicularFriction = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write((Int16)response);

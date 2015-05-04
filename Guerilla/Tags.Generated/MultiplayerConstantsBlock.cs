@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class MultiplayerConstantsBlock : MultiplayerConstantsBlockBase
     {
-        public  MultiplayerConstantsBlock(BinaryReader binaryReader): base(binaryReader)
+        public MultiplayerConstantsBlock() : base()
         {
-            
-        }
-        public  MultiplayerConstantsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 352, Alignment = 4)]
@@ -55,14 +52,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_4;
         internal byte[] invalidName_5;
         internal byte[] invalidName_6;
-        
-        public override int SerializedSize{get { return 352; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  MultiplayerConstantsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 352; } }
+        public override int Alignment { get { return 4; } }
+        public MultiplayerConstantsBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             maximumRandomSpawnBias = binaryReader.ReadSingle();
             teleporterRechargeTimeSeconds = binaryReader.ReadSingle();
             grenadeDangerWeight = binaryReader.ReadSingle();
@@ -89,43 +86,280 @@ namespace Moonfish.Guerilla.Tags
             invalidName_4 = binaryReader.ReadBytes(32);
             invalidName_5 = binaryReader.ReadBytes(32);
             invalidName_6 = binaryReader.ReadBytes(32);
+            return blamPointers;
         }
-        public  MultiplayerConstantsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_[19].ReadPointers(binaryReader, blamPointers);
+            invalidName_[20].ReadPointers(binaryReader, blamPointers);
+            invalidName_[21].ReadPointers(binaryReader, blamPointers);
+            invalidName_[22].ReadPointers(binaryReader, blamPointers);
+            invalidName_[23].ReadPointers(binaryReader, blamPointers);
+            invalidName_[24].ReadPointers(binaryReader, blamPointers);
+            invalidName_[25].ReadPointers(binaryReader, blamPointers);
+            invalidName_[26].ReadPointers(binaryReader, blamPointers);
+            invalidName_[27].ReadPointers(binaryReader, blamPointers);
+            invalidName_[28].ReadPointers(binaryReader, blamPointers);
+            invalidName_[29].ReadPointers(binaryReader, blamPointers);
+            invalidName_[30].ReadPointers(binaryReader, blamPointers);
+            invalidName_[31].ReadPointers(binaryReader, blamPointers);
+            invalidName_[32].ReadPointers(binaryReader, blamPointers);
+            invalidName_[33].ReadPointers(binaryReader, blamPointers);
+            invalidName_[34].ReadPointers(binaryReader, blamPointers);
+            invalidName_[35].ReadPointers(binaryReader, blamPointers);
+            invalidName_[36].ReadPointers(binaryReader, blamPointers);
+            invalidName_[37].ReadPointers(binaryReader, blamPointers);
+            invalidName_[38].ReadPointers(binaryReader, blamPointers);
+            invalidName_[39].ReadPointers(binaryReader, blamPointers);
+            invalidName_[40].ReadPointers(binaryReader, blamPointers);
+            invalidName_[41].ReadPointers(binaryReader, blamPointers);
+            invalidName_[42].ReadPointers(binaryReader, blamPointers);
+            invalidName_[43].ReadPointers(binaryReader, blamPointers);
+            invalidName_[44].ReadPointers(binaryReader, blamPointers);
+            invalidName_[45].ReadPointers(binaryReader, blamPointers);
+            invalidName_[46].ReadPointers(binaryReader, blamPointers);
+            invalidName_[47].ReadPointers(binaryReader, blamPointers);
+            invalidName_[48].ReadPointers(binaryReader, blamPointers);
+            invalidName_[49].ReadPointers(binaryReader, blamPointers);
+            invalidName_[50].ReadPointers(binaryReader, blamPointers);
+            invalidName_[51].ReadPointers(binaryReader, blamPointers);
+            invalidName_[52].ReadPointers(binaryReader, blamPointers);
+            invalidName_[53].ReadPointers(binaryReader, blamPointers);
+            invalidName_[54].ReadPointers(binaryReader, blamPointers);
+            invalidName_[55].ReadPointers(binaryReader, blamPointers);
+            invalidName_[56].ReadPointers(binaryReader, blamPointers);
+            invalidName_[57].ReadPointers(binaryReader, blamPointers);
+            invalidName_[58].ReadPointers(binaryReader, blamPointers);
+            invalidName_[59].ReadPointers(binaryReader, blamPointers);
+            invalidName_[60].ReadPointers(binaryReader, blamPointers);
+            invalidName_[61].ReadPointers(binaryReader, blamPointers);
+            invalidName_[62].ReadPointers(binaryReader, blamPointers);
+            invalidName_[63].ReadPointers(binaryReader, blamPointers);
+            invalidName_[64].ReadPointers(binaryReader, blamPointers);
+            invalidName_[65].ReadPointers(binaryReader, blamPointers);
+            invalidName_[66].ReadPointers(binaryReader, blamPointers);
+            invalidName_[67].ReadPointers(binaryReader, blamPointers);
+            invalidName_[68].ReadPointers(binaryReader, blamPointers);
+            invalidName_[69].ReadPointers(binaryReader, blamPointers);
+            invalidName_[70].ReadPointers(binaryReader, blamPointers);
+            invalidName_[71].ReadPointers(binaryReader, blamPointers);
+            invalidName_[72].ReadPointers(binaryReader, blamPointers);
+            invalidName_[73].ReadPointers(binaryReader, blamPointers);
+            invalidName_[74].ReadPointers(binaryReader, blamPointers);
+            invalidName_[75].ReadPointers(binaryReader, blamPointers);
+            invalidName_[76].ReadPointers(binaryReader, blamPointers);
+            invalidName_[77].ReadPointers(binaryReader, blamPointers);
+            invalidName_[78].ReadPointers(binaryReader, blamPointers);
+            invalidName_[79].ReadPointers(binaryReader, blamPointers);
+            invalidName_[80].ReadPointers(binaryReader, blamPointers);
+            invalidName_[81].ReadPointers(binaryReader, blamPointers);
+            invalidName_[82].ReadPointers(binaryReader, blamPointers);
+            invalidName_[83].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[19].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[20].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[21].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[22].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[23].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[24].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[25].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[26].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[27].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[28].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[29].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[30].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[31].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[19].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[20].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[21].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[22].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[23].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[24].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[25].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[26].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[27].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[28].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[29].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[30].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[31].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[19].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[20].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[21].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[22].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[23].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[24].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[25].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[26].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[27].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[28].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[29].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[30].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[31].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[19].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[20].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[21].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[22].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[23].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[24].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[25].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[26].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[27].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[28].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[29].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[30].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[31].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[19].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[20].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[21].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[22].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[23].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[24].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[25].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[26].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[27].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[28].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[29].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[30].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[31].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            maximumRandomSpawnBias = binaryReader.ReadSingle();
-            teleporterRechargeTimeSeconds = binaryReader.ReadSingle();
-            grenadeDangerWeight = binaryReader.ReadSingle();
-            grenadeDangerInnerRadius = binaryReader.ReadSingle();
-            grenadeDangerOuterRadius = binaryReader.ReadSingle();
-            grenadeDangerLeadTimeSeconds = binaryReader.ReadSingle();
-            vehicleDangerMinSpeedWuSec = binaryReader.ReadSingle();
-            vehicleDangerWeight = binaryReader.ReadSingle();
-            vehicleDangerRadius = binaryReader.ReadSingle();
-            vehicleDangerLeadTimeSeconds = binaryReader.ReadSingle();
-            vehicleNearbyPlayerDist = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(84);
-            invalidName_0 = binaryReader.ReadBytes(32);
-            invalidName_1 = binaryReader.ReadBytes(32);
-            hillShader = binaryReader.ReadTagReference();
-            invalidName_2 = binaryReader.ReadBytes(16);
-            flagResetStopDistance = binaryReader.ReadSingle();
-            bombExplodeEffect = binaryReader.ReadTagReference();
-            bombExplodeDmgEffect = binaryReader.ReadTagReference();
-            bombDefuseEffect = binaryReader.ReadTagReference();
-            bombDefusalString = binaryReader.ReadStringID();
-            blockedTeleporterString = binaryReader.ReadStringID();
-            invalidName_3 = binaryReader.ReadBytes(4);
-            invalidName_4 = binaryReader.ReadBytes(32);
-            invalidName_5 = binaryReader.ReadBytes(32);
-            invalidName_6 = binaryReader.ReadBytes(32);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(maximumRandomSpawnBias);
                 binaryWriter.Write(teleporterRechargeTimeSeconds);

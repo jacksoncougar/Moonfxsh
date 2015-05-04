@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class LoopingSoundDetailBlock : LoopingSoundDetailBlockBase
     {
-        public  LoopingSoundDetailBlock(BinaryReader binaryReader): base(binaryReader)
+        public LoopingSoundDetailBlock() : base()
         {
-            
-        }
-        public  LoopingSoundDetailBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 52, Alignment = 4)]
@@ -43,14 +40,14 @@ namespace Moonfish.Guerilla.Tags
         /// the sound's distance (from its spatialized looping sound or from the listener if the looping sound is stereo) will be randomly selected from this range.
         /// </summary>
         internal Moonfish.Model.Range distanceBoundsWorldUnits;
-        
-        public override int SerializedSize{get { return 52; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  LoopingSoundDetailBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 52; } }
+        public override int Alignment { get { return 4; } }
+        public LoopingSoundDetailBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             sound = binaryReader.ReadTagReference();
             randomPeriodBoundsSeconds = binaryReader.ReadRange();
@@ -59,25 +56,16 @@ namespace Moonfish.Guerilla.Tags
             yawBoundsDegrees = binaryReader.ReadRange();
             pitchBoundsDegrees = binaryReader.ReadRange();
             distanceBoundsWorldUnits = binaryReader.ReadRange();
+            return blamPointers;
         }
-        public  LoopingSoundDetailBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadStringID();
-            sound = binaryReader.ReadTagReference();
-            randomPeriodBoundsSeconds = binaryReader.ReadRange();
-            invalidName_ = binaryReader.ReadSingle();
-            flags = (Flags)binaryReader.ReadInt32();
-            yawBoundsDegrees = binaryReader.ReadRange();
-            pitchBoundsDegrees = binaryReader.ReadRange();
-            distanceBoundsWorldUnits = binaryReader.ReadRange();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(sound);

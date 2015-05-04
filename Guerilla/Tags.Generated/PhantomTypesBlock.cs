@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PhantomTypesBlock : PhantomTypesBlockBase
     {
-        public  PhantomTypesBlock(BinaryReader binaryReader): base(binaryReader)
+        public PhantomTypesBlock() : base()
         {
-            
-        }
-        public  PhantomTypesBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 104, Alignment = 4)]
@@ -57,14 +54,14 @@ namespace Moonfish.Guerilla.Tags
         internal float alignmentAcc;
         internal float alignmentMaxVel;
         internal byte[] invalidName_2;
-        
-        public override int SerializedSize{get { return 104; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PhantomTypesBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 104; } }
+        public override int Alignment { get { return 4; } }
+        public PhantomTypesBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             minimumSize = (MinimumSize)binaryReader.ReadByte();
             maximumSize = (MaximumSize)binaryReader.ReadByte();
@@ -85,37 +82,62 @@ namespace Moonfish.Guerilla.Tags
             alignmentAcc = binaryReader.ReadSingle();
             alignmentMaxVel = binaryReader.ReadSingle();
             invalidName_2 = binaryReader.ReadBytes(8);
+            return blamPointers;
         }
-        public  PhantomTypesBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[19].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[20].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[21].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[22].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[23].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[24].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[25].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[26].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[27].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[7].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            minimumSize = (MinimumSize)binaryReader.ReadByte();
-            maximumSize = (MaximumSize)binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(2);
-            markerName = binaryReader.ReadStringID();
-            alignmentMarkerName = binaryReader.ReadStringID();
-            invalidName_0 = binaryReader.ReadBytes(8);
-            hookesLawE = binaryReader.ReadSingle();
-            linearDeadRadius = binaryReader.ReadSingle();
-            centerAcc = binaryReader.ReadSingle();
-            centerMaxVel = binaryReader.ReadSingle();
-            axisAcc = binaryReader.ReadSingle();
-            axisMaxVel = binaryReader.ReadSingle();
-            directionAcc = binaryReader.ReadSingle();
-            directionMaxVel = binaryReader.ReadSingle();
-            invalidName_1 = binaryReader.ReadBytes(28);
-            alignmentHookesLawE = binaryReader.ReadSingle();
-            alignmentAcc = binaryReader.ReadSingle();
-            alignmentMaxVel = binaryReader.ReadSingle();
-            invalidName_2 = binaryReader.ReadBytes(8);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write((Byte)minimumSize);

@@ -5,25 +5,22 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StatesBlock : StatesBlockBase
     {
-        public  StatesBlock(BinaryReader binaryReader): base(binaryReader)
+        public StatesBlock() : base()
         {
-            
-        }
-        public  StatesBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 96, Alignment = 4)]
     public class StatesBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
-        internal Moonfish.Tags.ColourR8G8B8 Colour;
+        internal Moonfish.Tags.ColourR8G8B8 color;
         internal short countsAsNeighbors;
         internal byte[] invalidName_;
         internal float initialPlacementWeight;
@@ -38,16 +35,16 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.ShortBlockIndex1 seven;
         internal Moonfish.Tags.ShortBlockIndex1 eight;
         internal byte[] invalidName_1;
-        
-        public override int SerializedSize{get { return 96; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  StatesBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 96; } }
+        public override int Alignment { get { return 4; } }
+        public StatesBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
-            Colour = binaryReader.ReadColorR8G8B8();
+            color = binaryReader.ReadColorR8G8B8();
             countsAsNeighbors = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             initialPlacementWeight = binaryReader.ReadSingle();
@@ -62,36 +59,47 @@ namespace Moonfish.Guerilla.Tags
             seven = binaryReader.ReadShortBlockIndex1();
             eight = binaryReader.ReadShortBlockIndex1();
             invalidName_1 = binaryReader.ReadBytes(2);
+            return blamPointers;
         }
-        public  StatesBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[19].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[20].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[21].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[22].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[23].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadString32();
-            Colour = binaryReader.ReadColorR8G8B8();
-            countsAsNeighbors = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            initialPlacementWeight = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(24);
-            zero = binaryReader.ReadShortBlockIndex1();
-            one = binaryReader.ReadShortBlockIndex1();
-            two = binaryReader.ReadShortBlockIndex1();
-            three = binaryReader.ReadShortBlockIndex1();
-            four = binaryReader.ReadShortBlockIndex1();
-            five = binaryReader.ReadShortBlockIndex1();
-            six = binaryReader.ReadShortBlockIndex1();
-            seven = binaryReader.ReadShortBlockIndex1();
-            eight = binaryReader.ReadShortBlockIndex1();
-            invalidName_1 = binaryReader.ReadBytes(2);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
-                binaryWriter.Write(Colour);
+                binaryWriter.Write(color);
                 binaryWriter.Write(countsAsNeighbors);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(initialPlacementWeight);

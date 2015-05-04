@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class MassPointBlock : MassPointBlockBase
     {
-        public  MassPointBlock(BinaryReader binaryReader): base(binaryReader)
+        public MassPointBlock() : base()
         {
-            
-        }
-        public  MassPointBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 128, Alignment = 4)]
@@ -39,14 +36,14 @@ namespace Moonfish.Guerilla.Tags
         internal float frictionPerpendicularScale;
         internal float radius;
         internal byte[] invalidName_0;
-        
-        public override int SerializedSize{get { return 128; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  MassPointBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 128; } }
+        public override int Alignment { get { return 4; } }
+        public MassPointBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
             poweredMassPoint = binaryReader.ReadShortBlockIndex1();
             modelNode = binaryReader.ReadInt16();
@@ -64,34 +61,38 @@ namespace Moonfish.Guerilla.Tags
             frictionPerpendicularScale = binaryReader.ReadSingle();
             radius = binaryReader.ReadSingle();
             invalidName_0 = binaryReader.ReadBytes(20);
+            return blamPointers;
         }
-        public  MassPointBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[19].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadString32();
-            poweredMassPoint = binaryReader.ReadShortBlockIndex1();
-            modelNode = binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt32();
-            relativeMass = binaryReader.ReadSingle();
-            mass = binaryReader.ReadSingle();
-            relativeDensity = binaryReader.ReadSingle();
-            density = binaryReader.ReadSingle();
-            position = binaryReader.ReadVector3();
-            forward = binaryReader.ReadVector3();
-            up = binaryReader.ReadVector3();
-            frictionType = (FrictionType)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            frictionParallelScale = binaryReader.ReadSingle();
-            frictionPerpendicularScale = binaryReader.ReadSingle();
-            radius = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(20);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(poweredMassPoint);

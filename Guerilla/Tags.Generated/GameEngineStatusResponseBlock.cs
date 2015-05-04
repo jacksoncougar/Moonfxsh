@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class GameEngineStatusResponseBlock : GameEngineStatusResponseBlockBase
     {
-        public  GameEngineStatusResponseBlock(BinaryReader binaryReader): base(binaryReader)
+        public GameEngineStatusResponseBlock() : base()
         {
-            
-        }
-        public  GameEngineStatusResponseBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 28, Alignment = 4)]
@@ -31,14 +28,14 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("null")]
         internal Moonfish.Tags.TagReference invalidName_1;
         internal byte[] invalidName_2;
-        
-        public override int SerializedSize{get { return 28; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  GameEngineStatusResponseBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 28; } }
+        public override int Alignment { get { return 4; } }
+        public GameEngineStatusResponseBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             state = (State)binaryReader.ReadInt16();
@@ -47,25 +44,24 @@ namespace Moonfish.Guerilla.Tags
             teamMessage = binaryReader.ReadStringID();
             invalidName_1 = binaryReader.ReadTagReference();
             invalidName_2 = binaryReader.ReadBytes(4);
+            return blamPointers;
         }
-        public  GameEngineStatusResponseBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[3].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            state = (State)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            ffaMessage = binaryReader.ReadStringID();
-            teamMessage = binaryReader.ReadStringID();
-            invalidName_1 = binaryReader.ReadTagReference();
-            invalidName_2 = binaryReader.ReadBytes(4);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write(invalidName_, 0, 2);

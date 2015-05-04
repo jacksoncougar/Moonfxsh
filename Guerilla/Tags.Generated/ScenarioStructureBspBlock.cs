@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("sbsp")]
     public partial class ScenarioStructureBspBlock : ScenarioStructureBspBlockBase
     {
-        public  ScenarioStructureBspBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioStructureBspBlock() : base()
         {
-            
-        }
-        public  ScenarioStructureBspBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 572, Alignment = 4)]
@@ -99,135 +96,251 @@ namespace Moonfish.Guerilla.Tags
         internal StructureBspAudibilityBlock[] audibility;
         internal StructureBspFakeLightprobesBlock[] objectFakeLightprobes;
         internal DecoratorPlacementDefinitionBlock[] decorators0;
-        
-        public override int SerializedSize{get { return 572; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioStructureBspBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 572; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioStructureBspBlockBase() : base()
         {
-            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalTagImportInfoBlock>(binaryReader));
             invalidName_ = binaryReader.ReadBytes(4);
-            collisionMaterials = Guerilla.ReadBlockArray<StructureCollisionMaterialsBlock>(binaryReader);
-            collisionBSP = Guerilla.ReadBlockArray<GlobalCollisionBspBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureCollisionMaterialsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalCollisionBspBlock>(binaryReader));
             vehicleFloorWorldUnits = binaryReader.ReadSingle();
             vehicleCeilingWorldUnits = binaryReader.ReadSingle();
-            uNUSEDNodes = Guerilla.ReadBlockArray<UNUSEDStructureBspNodeBlock>(binaryReader);
-            leaves = Guerilla.ReadBlockArray<StructureBspLeafBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<UNUSEDStructureBspNodeBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspLeafBlock>(binaryReader));
             worldBoundsX = binaryReader.ReadRange();
             worldBoundsY = binaryReader.ReadRange();
             worldBoundsZ = binaryReader.ReadRange();
-            surfaceReferences = Guerilla.ReadBlockArray<StructureBspSurfaceReferenceBlock>(binaryReader);
-            clusterData = Guerilla.ReadData(binaryReader);
-            clusterPortals = Guerilla.ReadBlockArray<StructureBspClusterPortalBlock>(binaryReader);
-            fogPlanes = Guerilla.ReadBlockArray<StructureBspFogPlaneBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspSurfaceReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspClusterPortalBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspFogPlaneBlock>(binaryReader));
             invalidName_0 = binaryReader.ReadBytes(24);
-            weatherPalette = Guerilla.ReadBlockArray<StructureBspWeatherPaletteBlock>(binaryReader);
-            weatherPolyhedra = Guerilla.ReadBlockArray<StructureBspWeatherPolyhedronBlock>(binaryReader);
-            detailObjects = Guerilla.ReadBlockArray<StructureBspDetailObjectDataBlock>(binaryReader);
-            clusters = Guerilla.ReadBlockArray<StructureBspClusterBlock>(binaryReader);
-            materials = Guerilla.ReadBlockArray<GlobalGeometryMaterialBlock>(binaryReader);
-            skyOwnerCluster = Guerilla.ReadBlockArray<StructureBspSkyOwnerClusterBlock>(binaryReader);
-            conveyorSurfaces = Guerilla.ReadBlockArray<StructureBspConveyorSurfaceBlock>(binaryReader);
-            breakableSurfaces = Guerilla.ReadBlockArray<StructureBspBreakableSurfaceBlock>(binaryReader);
-            pathfindingData = Guerilla.ReadBlockArray<PathfindingDataBlock>(binaryReader);
-            pathfindingEdges = Guerilla.ReadBlockArray<StructureBspPathfindingEdgesBlock>(binaryReader);
-            backgroundSoundPalette = Guerilla.ReadBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryReader);
-            soundEnvironmentPalette = Guerilla.ReadBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryReader);
-            soundPASData = Guerilla.ReadData(binaryReader);
-            markers = Guerilla.ReadBlockArray<StructureBspMarkerBlock>(binaryReader);
-            runtimeDecals = Guerilla.ReadBlockArray<StructureBspRuntimeDecalBlock>(binaryReader);
-            environmentObjectPalette = Guerilla.ReadBlockArray<StructureBspEnvironmentObjectPaletteBlock>(binaryReader);
-            environmentObjects = Guerilla.ReadBlockArray<StructureBspEnvironmentObjectBlock>(binaryReader);
-            lightmaps = Guerilla.ReadBlockArray<StructureBspLightmapDataBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspWeatherPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspWeatherPolyhedronBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspDetailObjectDataBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspClusterBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometryMaterialBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspSkyOwnerClusterBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspConveyorSurfaceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspBreakableSurfaceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PathfindingDataBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspPathfindingEdgesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspBackgroundSoundPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspSoundEnvironmentPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspMarkerBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspRuntimeDecalBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspEnvironmentObjectPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspEnvironmentObjectBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspLightmapDataBlock>(binaryReader));
             invalidName_1 = binaryReader.ReadBytes(4);
-            leafMapLeaves = Guerilla.ReadBlockArray<GlobalMapLeafBlock>(binaryReader);
-            leafMapConnections = Guerilla.ReadBlockArray<GlobalLeafConnectionBlock>(binaryReader);
-            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
-            precomputedLighting = Guerilla.ReadBlockArray<StructureBspPrecomputedLightingBlock>(binaryReader);
-            instancedGeometriesDefinitions = Guerilla.ReadBlockArray<StructureBspInstancedGeometryDefinitionBlock>(binaryReader);
-            instancedGeometryInstances = Guerilla.ReadBlockArray<StructureBspInstancedGeometryInstancesBlock>(binaryReader);
-            ambienceSoundClusters = Guerilla.ReadBlockArray<StructureBspSoundClusterBlock>(binaryReader);
-            reverbSoundClusters = Guerilla.ReadBlockArray<StructureBspSoundClusterBlock>(binaryReader);
-            transparentPlanes = Guerilla.ReadBlockArray<TransparentPlanesBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalMapLeafBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalLeafConnectionBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalErrorReportCategoriesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspPrecomputedLightingBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspInstancedGeometryDefinitionBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspInstancedGeometryInstancesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspSoundClusterBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspSoundClusterBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<TransparentPlanesBlock>(binaryReader));
             invalidName_2 = binaryReader.ReadBytes(96);
             vehicleSpericalLimitRadius = binaryReader.ReadSingle();
             vehicleSpericalLimitCenter = binaryReader.ReadVector3();
-            debugInfo = Guerilla.ReadBlockArray<StructureBspDebugInfoBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspDebugInfoBlock>(binaryReader));
             decorators = binaryReader.ReadTagReference();
-            structurePhysics = new GlobalStructurePhysicsStructBlock(binaryReader);
-            waterDefinitions = Guerilla.ReadBlockArray<GlobalWaterDefinitionsBlock>(binaryReader);
-            portalDeviceMapping = Guerilla.ReadBlockArray<StructurePortalDeviceMappingBlock>(binaryReader);
-            audibility = Guerilla.ReadBlockArray<StructureBspAudibilityBlock>(binaryReader);
-            objectFakeLightprobes = Guerilla.ReadBlockArray<StructureBspFakeLightprobesBlock>(binaryReader);
-            decorators0 = Guerilla.ReadBlockArray<DecoratorPlacementDefinitionBlock>(binaryReader);
+            structurePhysics = new GlobalStructurePhysicsStructBlock();
+            blamPointers.Concat(structurePhysics.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalWaterDefinitionsBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructurePortalDeviceMappingBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspAudibilityBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspFakeLightprobesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorPlacementDefinitionBlock>(binaryReader));
+            return blamPointers;
         }
-        public  ScenarioStructureBspBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            importInfo = ReadBlockArrayData<GlobalTagImportInfoBlock>(binaryReader, blamPointers.Dequeue());
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            collisionMaterials = ReadBlockArrayData<StructureCollisionMaterialsBlock>(binaryReader, blamPointers.Dequeue());
+            collisionBSP = ReadBlockArrayData<GlobalCollisionBspBlock>(binaryReader, blamPointers.Dequeue());
+            uNUSEDNodes = ReadBlockArrayData<UNUSEDStructureBspNodeBlock>(binaryReader, blamPointers.Dequeue());
+            leaves = ReadBlockArrayData<StructureBspLeafBlock>(binaryReader, blamPointers.Dequeue());
+            surfaceReferences = ReadBlockArrayData<StructureBspSurfaceReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            clusterData = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            clusterPortals = ReadBlockArrayData<StructureBspClusterPortalBlock>(binaryReader, blamPointers.Dequeue());
+            fogPlanes = ReadBlockArrayData<StructureBspFogPlaneBlock>(binaryReader, blamPointers.Dequeue());
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[19].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[20].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[21].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[22].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[23].ReadPointers(binaryReader, blamPointers);
+            weatherPalette = ReadBlockArrayData<StructureBspWeatherPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            weatherPolyhedra = ReadBlockArrayData<StructureBspWeatherPolyhedronBlock>(binaryReader, blamPointers.Dequeue());
+            detailObjects = ReadBlockArrayData<StructureBspDetailObjectDataBlock>(binaryReader, blamPointers.Dequeue());
+            clusters = ReadBlockArrayData<StructureBspClusterBlock>(binaryReader, blamPointers.Dequeue());
+            materials = ReadBlockArrayData<GlobalGeometryMaterialBlock>(binaryReader, blamPointers.Dequeue());
+            skyOwnerCluster = ReadBlockArrayData<StructureBspSkyOwnerClusterBlock>(binaryReader, blamPointers.Dequeue());
+            conveyorSurfaces = ReadBlockArrayData<StructureBspConveyorSurfaceBlock>(binaryReader, blamPointers.Dequeue());
+            breakableSurfaces = ReadBlockArrayData<StructureBspBreakableSurfaceBlock>(binaryReader, blamPointers.Dequeue());
+            pathfindingData = ReadBlockArrayData<PathfindingDataBlock>(binaryReader, blamPointers.Dequeue());
+            pathfindingEdges = ReadBlockArrayData<StructureBspPathfindingEdgesBlock>(binaryReader, blamPointers.Dequeue());
+            backgroundSoundPalette = ReadBlockArrayData<StructureBspBackgroundSoundPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            soundEnvironmentPalette = ReadBlockArrayData<StructureBspSoundEnvironmentPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            soundPASData = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            markers = ReadBlockArrayData<StructureBspMarkerBlock>(binaryReader, blamPointers.Dequeue());
+            runtimeDecals = ReadBlockArrayData<StructureBspRuntimeDecalBlock>(binaryReader, blamPointers.Dequeue());
+            environmentObjectPalette = ReadBlockArrayData<StructureBspEnvironmentObjectPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            environmentObjects = ReadBlockArrayData<StructureBspEnvironmentObjectBlock>(binaryReader, blamPointers.Dequeue());
+            lightmaps = ReadBlockArrayData<StructureBspLightmapDataBlock>(binaryReader, blamPointers.Dequeue());
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
+            leafMapLeaves = ReadBlockArrayData<GlobalMapLeafBlock>(binaryReader, blamPointers.Dequeue());
+            leafMapConnections = ReadBlockArrayData<GlobalLeafConnectionBlock>(binaryReader, blamPointers.Dequeue());
+            errors = ReadBlockArrayData<GlobalErrorReportCategoriesBlock>(binaryReader, blamPointers.Dequeue());
+            precomputedLighting = ReadBlockArrayData<StructureBspPrecomputedLightingBlock>(binaryReader, blamPointers.Dequeue());
+            instancedGeometriesDefinitions = ReadBlockArrayData<StructureBspInstancedGeometryDefinitionBlock>(binaryReader, blamPointers.Dequeue());
+            instancedGeometryInstances = ReadBlockArrayData<StructureBspInstancedGeometryInstancesBlock>(binaryReader, blamPointers.Dequeue());
+            ambienceSoundClusters = ReadBlockArrayData<StructureBspSoundClusterBlock>(binaryReader, blamPointers.Dequeue());
+            reverbSoundClusters = ReadBlockArrayData<StructureBspSoundClusterBlock>(binaryReader, blamPointers.Dequeue());
+            transparentPlanes = ReadBlockArrayData<TransparentPlanesBlock>(binaryReader, blamPointers.Dequeue());
+            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[19].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[20].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[21].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[22].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[23].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[24].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[25].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[26].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[27].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[28].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[29].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[30].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[31].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[32].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[33].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[34].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[35].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[36].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[37].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[38].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[39].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[40].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[41].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[42].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[43].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[44].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[45].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[46].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[47].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[48].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[49].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[50].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[51].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[52].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[53].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[54].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[55].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[56].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[57].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[58].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[59].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[60].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[61].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[62].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[63].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[64].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[65].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[66].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[67].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[68].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[69].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[70].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[71].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[72].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[73].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[74].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[75].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[76].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[77].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[78].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[79].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[80].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[81].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[82].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[83].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[84].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[85].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[86].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[87].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[88].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[89].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[90].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[91].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[92].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[93].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[94].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[95].ReadPointers(binaryReader, blamPointers);
+            debugInfo = ReadBlockArrayData<StructureBspDebugInfoBlock>(binaryReader, blamPointers.Dequeue());
+            structurePhysics.ReadPointers(binaryReader, blamPointers);
+            waterDefinitions = ReadBlockArrayData<GlobalWaterDefinitionsBlock>(binaryReader, blamPointers.Dequeue());
+            portalDeviceMapping = ReadBlockArrayData<StructurePortalDeviceMappingBlock>(binaryReader, blamPointers.Dequeue());
+            audibility = ReadBlockArrayData<StructureBspAudibilityBlock>(binaryReader, blamPointers.Dequeue());
+            objectFakeLightprobes = ReadBlockArrayData<StructureBspFakeLightprobesBlock>(binaryReader, blamPointers.Dequeue());
+            decorators0 = ReadBlockArrayData<DecoratorPlacementDefinitionBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            importInfo = Guerilla.ReadBlockArray<GlobalTagImportInfoBlock>(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(4);
-            collisionMaterials = Guerilla.ReadBlockArray<StructureCollisionMaterialsBlock>(binaryReader);
-            collisionBSP = Guerilla.ReadBlockArray<GlobalCollisionBspBlock>(binaryReader);
-            vehicleFloorWorldUnits = binaryReader.ReadSingle();
-            vehicleCeilingWorldUnits = binaryReader.ReadSingle();
-            uNUSEDNodes = Guerilla.ReadBlockArray<UNUSEDStructureBspNodeBlock>(binaryReader);
-            leaves = Guerilla.ReadBlockArray<StructureBspLeafBlock>(binaryReader);
-            worldBoundsX = binaryReader.ReadRange();
-            worldBoundsY = binaryReader.ReadRange();
-            worldBoundsZ = binaryReader.ReadRange();
-            surfaceReferences = Guerilla.ReadBlockArray<StructureBspSurfaceReferenceBlock>(binaryReader);
-            clusterData = Guerilla.ReadData(binaryReader);
-            clusterPortals = Guerilla.ReadBlockArray<StructureBspClusterPortalBlock>(binaryReader);
-            fogPlanes = Guerilla.ReadBlockArray<StructureBspFogPlaneBlock>(binaryReader);
-            invalidName_0 = binaryReader.ReadBytes(24);
-            weatherPalette = Guerilla.ReadBlockArray<StructureBspWeatherPaletteBlock>(binaryReader);
-            weatherPolyhedra = Guerilla.ReadBlockArray<StructureBspWeatherPolyhedronBlock>(binaryReader);
-            detailObjects = Guerilla.ReadBlockArray<StructureBspDetailObjectDataBlock>(binaryReader);
-            clusters = Guerilla.ReadBlockArray<StructureBspClusterBlock>(binaryReader);
-            materials = Guerilla.ReadBlockArray<GlobalGeometryMaterialBlock>(binaryReader);
-            skyOwnerCluster = Guerilla.ReadBlockArray<StructureBspSkyOwnerClusterBlock>(binaryReader);
-            conveyorSurfaces = Guerilla.ReadBlockArray<StructureBspConveyorSurfaceBlock>(binaryReader);
-            breakableSurfaces = Guerilla.ReadBlockArray<StructureBspBreakableSurfaceBlock>(binaryReader);
-            pathfindingData = Guerilla.ReadBlockArray<PathfindingDataBlock>(binaryReader);
-            pathfindingEdges = Guerilla.ReadBlockArray<StructureBspPathfindingEdgesBlock>(binaryReader);
-            backgroundSoundPalette = Guerilla.ReadBlockArray<StructureBspBackgroundSoundPaletteBlock>(binaryReader);
-            soundEnvironmentPalette = Guerilla.ReadBlockArray<StructureBspSoundEnvironmentPaletteBlock>(binaryReader);
-            soundPASData = Guerilla.ReadData(binaryReader);
-            markers = Guerilla.ReadBlockArray<StructureBspMarkerBlock>(binaryReader);
-            runtimeDecals = Guerilla.ReadBlockArray<StructureBspRuntimeDecalBlock>(binaryReader);
-            environmentObjectPalette = Guerilla.ReadBlockArray<StructureBspEnvironmentObjectPaletteBlock>(binaryReader);
-            environmentObjects = Guerilla.ReadBlockArray<StructureBspEnvironmentObjectBlock>(binaryReader);
-            lightmaps = Guerilla.ReadBlockArray<StructureBspLightmapDataBlock>(binaryReader);
-            invalidName_1 = binaryReader.ReadBytes(4);
-            leafMapLeaves = Guerilla.ReadBlockArray<GlobalMapLeafBlock>(binaryReader);
-            leafMapConnections = Guerilla.ReadBlockArray<GlobalLeafConnectionBlock>(binaryReader);
-            errors = Guerilla.ReadBlockArray<GlobalErrorReportCategoriesBlock>(binaryReader);
-            precomputedLighting = Guerilla.ReadBlockArray<StructureBspPrecomputedLightingBlock>(binaryReader);
-            instancedGeometriesDefinitions = Guerilla.ReadBlockArray<StructureBspInstancedGeometryDefinitionBlock>(binaryReader);
-            instancedGeometryInstances = Guerilla.ReadBlockArray<StructureBspInstancedGeometryInstancesBlock>(binaryReader);
-            ambienceSoundClusters = Guerilla.ReadBlockArray<StructureBspSoundClusterBlock>(binaryReader);
-            reverbSoundClusters = Guerilla.ReadBlockArray<StructureBspSoundClusterBlock>(binaryReader);
-            transparentPlanes = Guerilla.ReadBlockArray<TransparentPlanesBlock>(binaryReader);
-            invalidName_2 = binaryReader.ReadBytes(96);
-            vehicleSpericalLimitRadius = binaryReader.ReadSingle();
-            vehicleSpericalLimitCenter = binaryReader.ReadVector3();
-            debugInfo = Guerilla.ReadBlockArray<StructureBspDebugInfoBlock>(binaryReader);
-            decorators = binaryReader.ReadTagReference();
-            structurePhysics = new GlobalStructurePhysicsStructBlock(binaryReader);
-            waterDefinitions = Guerilla.ReadBlockArray<GlobalWaterDefinitionsBlock>(binaryReader);
-            portalDeviceMapping = Guerilla.ReadBlockArray<StructurePortalDeviceMappingBlock>(binaryReader);
-            audibility = Guerilla.ReadBlockArray<StructureBspAudibilityBlock>(binaryReader);
-            objectFakeLightprobes = Guerilla.ReadBlockArray<StructureBspFakeLightprobesBlock>(binaryReader);
-            decorators0 = Guerilla.ReadBlockArray<DecoratorPlacementDefinitionBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<GlobalTagImportInfoBlock>(binaryWriter, importInfo, nextAddress);
                 binaryWriter.Write(invalidName_, 0, 4);

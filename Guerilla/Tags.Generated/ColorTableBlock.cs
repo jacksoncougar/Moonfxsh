@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,40 +21,34 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("colo")]
     public partial class ColorTableBlock : ColorTableBlockBase
     {
-        public  ColorTableBlock(BinaryReader binaryReader): base(binaryReader)
+        public ColorTableBlock() : base()
         {
-            
-        }
-        public  ColorTableBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class ColorTableBlockBase : GuerillaBlock
     {
         internal ColorBlock[] colors;
-        
-        public override int SerializedSize{get { return 8; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ColorTableBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 8; } }
+        public override int Alignment { get { return 4; } }
+        public ColorTableBlockBase() : base()
         {
-            colors = Guerilla.ReadBlockArray<ColorBlock>(binaryReader);
         }
-        public  ColorTableBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ColorBlock>(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            colors = Guerilla.ReadBlockArray<ColorBlock>(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            colors = ReadBlockArrayData<ColorBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<ColorBlock>(binaryWriter, colors, nextAddress);
                 return nextAddress;

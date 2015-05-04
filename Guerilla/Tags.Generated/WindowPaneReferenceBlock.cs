@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class WindowPaneReferenceBlock : WindowPaneReferenceBlockBase
     {
-        public  WindowPaneReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public WindowPaneReferenceBlock() : base()
         {
-            
-        }
-        public  WindowPaneReferenceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 76, Alignment = 4)]
@@ -33,47 +30,46 @@ namespace Moonfish.Guerilla.Tags
         internal STextValuePairBlocksBlockUNUSED[] textValueBlocks;
         internal HudBlockReferenceBlock[] hudBlocks;
         internal PlayerBlockReferenceBlock[] playerBlocks;
-        
-        public override int SerializedSize{get { return 76; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  WindowPaneReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 76; } }
+        public override int Alignment { get { return 4; } }
+        public WindowPaneReferenceBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(2);
             animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            buttons = Guerilla.ReadBlockArray<ButtonWidgetReferenceBlock>(binaryReader);
-            listBlock = Guerilla.ReadBlockArray<ListReferenceBlock>(binaryReader);
-            tableView = Guerilla.ReadBlockArray<TableViewListReferenceBlock>(binaryReader);
-            textBlocks = Guerilla.ReadBlockArray<TextBlockReferenceBlock>(binaryReader);
-            bitmapBlocks = Guerilla.ReadBlockArray<BitmapBlockReferenceBlock>(binaryReader);
-            modelSceneBlocks = Guerilla.ReadBlockArray<UiModelSceneReferenceBlock>(binaryReader);
-            textValueBlocks = Guerilla.ReadBlockArray<STextValuePairBlocksBlockUNUSED>(binaryReader);
-            hudBlocks = Guerilla.ReadBlockArray<HudBlockReferenceBlock>(binaryReader);
-            playerBlocks = Guerilla.ReadBlockArray<PlayerBlockReferenceBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ButtonWidgetReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ListReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<TableViewListReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<TextBlockReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<BitmapBlockReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<UiModelSceneReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<STextValuePairBlocksBlockUNUSED>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<HudBlockReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PlayerBlockReferenceBlock>(binaryReader));
+            return blamPointers;
         }
-        public  WindowPaneReferenceBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            buttons = ReadBlockArrayData<ButtonWidgetReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            listBlock = ReadBlockArrayData<ListReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            tableView = ReadBlockArrayData<TableViewListReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            textBlocks = ReadBlockArrayData<TextBlockReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            bitmapBlocks = ReadBlockArrayData<BitmapBlockReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            modelSceneBlocks = ReadBlockArrayData<UiModelSceneReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            textValueBlocks = ReadBlockArrayData<STextValuePairBlocksBlockUNUSED>(binaryReader, blamPointers.Dequeue());
+            hudBlocks = ReadBlockArrayData<HudBlockReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            playerBlocks = ReadBlockArrayData<PlayerBlockReferenceBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadBytes(2);
-            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            buttons = Guerilla.ReadBlockArray<ButtonWidgetReferenceBlock>(binaryReader);
-            listBlock = Guerilla.ReadBlockArray<ListReferenceBlock>(binaryReader);
-            tableView = Guerilla.ReadBlockArray<TableViewListReferenceBlock>(binaryReader);
-            textBlocks = Guerilla.ReadBlockArray<TextBlockReferenceBlock>(binaryReader);
-            bitmapBlocks = Guerilla.ReadBlockArray<BitmapBlockReferenceBlock>(binaryReader);
-            modelSceneBlocks = Guerilla.ReadBlockArray<UiModelSceneReferenceBlock>(binaryReader);
-            textValueBlocks = Guerilla.ReadBlockArray<STextValuePairBlocksBlockUNUSED>(binaryReader);
-            hudBlocks = Guerilla.ReadBlockArray<HudBlockReferenceBlock>(binaryReader);
-            playerBlocks = Guerilla.ReadBlockArray<PlayerBlockReferenceBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write((Int16)animationIndex);

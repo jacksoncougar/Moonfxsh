@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ActorStartingLocationsBlock : ActorStartingLocationsBlockBase
     {
-        public  ActorStartingLocationsBlock(BinaryReader binaryReader): base(binaryReader)
+        public ActorStartingLocationsBlock() : base()
         {
-            
-        }
-        public  ActorStartingLocationsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 100, Alignment = 4)]
@@ -50,14 +47,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.String32 placementScript;
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
-        
-        public override int SerializedSize{get { return 100; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ActorStartingLocationsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 100; } }
+        public override int Alignment { get { return 4; } }
+        public ActorStartingLocationsBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             position = binaryReader.ReadVector3();
             referenceFrame = binaryReader.ReadInt16();
@@ -80,39 +77,24 @@ namespace Moonfish.Guerilla.Tags
             placementScript = binaryReader.ReadString32();
             invalidName_1 = binaryReader.ReadBytes(2);
             invalidName_2 = binaryReader.ReadBytes(2);
+            return blamPointers;
         }
-        public  ActorStartingLocationsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadStringID();
-            position = binaryReader.ReadVector3();
-            referenceFrame = binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            facingYawPitchDegrees = binaryReader.ReadVector2();
-            flags = (Flags)binaryReader.ReadInt32();
-            characterType = binaryReader.ReadShortBlockIndex1();
-            initialWeapon = binaryReader.ReadShortBlockIndex1();
-            initialSecondaryWeapon = binaryReader.ReadShortBlockIndex1();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            vehicleType = binaryReader.ReadShortBlockIndex1();
-            seatType = (SeatType)binaryReader.ReadInt16();
-            grenadeType = (GrenadeType)binaryReader.ReadInt16();
-            swarmCount = binaryReader.ReadInt16();
-            actorVariantName = binaryReader.ReadStringID();
-            vehicleVariantName = binaryReader.ReadStringID();
-            initialMovementDistance = binaryReader.ReadSingle();
-            emitterVehicle = binaryReader.ReadShortBlockIndex1();
-            initialMovementMode = (InitialMovementMode)binaryReader.ReadInt16();
-            placementScript = binaryReader.ReadString32();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            invalidName_2 = binaryReader.ReadBytes(2);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(position);

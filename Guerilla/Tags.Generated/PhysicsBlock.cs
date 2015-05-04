@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("phys")]
     public partial class PhysicsBlock : PhysicsBlockBase
     {
-        public  PhysicsBlock(BinaryReader binaryReader): base(binaryReader)
+        public PhysicsBlock() : base()
         {
-            
-        }
-        public  PhysicsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 116, Alignment = 4)]
@@ -58,14 +55,14 @@ namespace Moonfish.Guerilla.Tags
         internal InertialMatrixBlock[] inertialMatrixAndInverse;
         internal PoweredMassPointBlock[] poweredMassPoints;
         internal MassPointBlock[] massPoints;
-        
-        public override int SerializedSize{get { return 116; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PhysicsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 116; } }
+        public override int Alignment { get { return 4; } }
+        public PhysicsBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             radius = binaryReader.ReadSingle();
             momentScale = binaryReader.ReadSingle();
             mass = binaryReader.ReadSingle();
@@ -87,44 +84,34 @@ namespace Moonfish.Guerilla.Tags
             xxMoment = binaryReader.ReadSingle();
             yyMoment = binaryReader.ReadSingle();
             zzMoment = binaryReader.ReadSingle();
-            inertialMatrixAndInverse = Guerilla.ReadBlockArray<InertialMatrixBlock>(binaryReader);
-            poweredMassPoints = Guerilla.ReadBlockArray<PoweredMassPointBlock>(binaryReader);
-            massPoints = Guerilla.ReadBlockArray<MassPointBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<InertialMatrixBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PoweredMassPointBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<MassPointBlock>(binaryReader));
+            return blamPointers;
         }
-        public  PhysicsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
+            inertialMatrixAndInverse = ReadBlockArrayData<InertialMatrixBlock>(binaryReader, blamPointers.Dequeue());
+            poweredMassPoints = ReadBlockArrayData<PoweredMassPointBlock>(binaryReader, blamPointers.Dequeue());
+            massPoints = ReadBlockArrayData<MassPointBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            radius = binaryReader.ReadSingle();
-            momentScale = binaryReader.ReadSingle();
-            mass = binaryReader.ReadSingle();
-            centerOfMass = binaryReader.ReadVector3();
-            density = binaryReader.ReadSingle();
-            gravityScale = binaryReader.ReadSingle();
-            groundFriction = binaryReader.ReadSingle();
-            groundDepth = binaryReader.ReadSingle();
-            groundDampFraction = binaryReader.ReadSingle();
-            groundNormalK1 = binaryReader.ReadSingle();
-            groundNormalK0 = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(4);
-            waterFriction = binaryReader.ReadSingle();
-            waterDepth = binaryReader.ReadSingle();
-            waterDensity = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            airFriction = binaryReader.ReadSingle();
-            invalidName_1 = binaryReader.ReadBytes(4);
-            xxMoment = binaryReader.ReadSingle();
-            yyMoment = binaryReader.ReadSingle();
-            zzMoment = binaryReader.ReadSingle();
-            inertialMatrixAndInverse = Guerilla.ReadBlockArray<InertialMatrixBlock>(binaryReader);
-            poweredMassPoints = Guerilla.ReadBlockArray<PoweredMassPointBlock>(binaryReader);
-            massPoints = Guerilla.ReadBlockArray<MassPointBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(radius);
                 binaryWriter.Write(momentScale);

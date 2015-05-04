@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class DamageSeatInfoBlock : DamageSeatInfoBlockBase
     {
-        public  DamageSeatInfoBlock(BinaryReader binaryReader): base(binaryReader)
+        public DamageSeatInfoBlock() : base()
         {
-            
-        }
-        public  DamageSeatInfoBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -30,35 +27,29 @@ namespace Moonfish.Guerilla.Tags
         internal float damageTransferFallOffRadius;
         internal float maximumTransferDamageScale;
         internal float minimumTransferDamageScale;
-        
-        public override int SerializedSize{get { return 20; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  DamageSeatInfoBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 20; } }
+        public override int Alignment { get { return 4; } }
+        public DamageSeatInfoBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             seatLabel = binaryReader.ReadStringID();
             directDamageScale = binaryReader.ReadSingle();
             damageTransferFallOffRadius = binaryReader.ReadSingle();
             maximumTransferDamageScale = binaryReader.ReadSingle();
             minimumTransferDamageScale = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  DamageSeatInfoBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            seatLabel = binaryReader.ReadStringID();
-            directDamageScale = binaryReader.ReadSingle();
-            damageTransferFallOffRadius = binaryReader.ReadSingle();
-            maximumTransferDamageScale = binaryReader.ReadSingle();
-            minimumTransferDamageScale = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(seatLabel);
                 binaryWriter.Write(directDamageScale);

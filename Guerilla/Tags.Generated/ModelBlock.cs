@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("hlmt")]
     public partial class ModelBlock : ModelBlockBase
     {
-        public  ModelBlock(BinaryReader binaryReader): base(binaryReader)
+        public ModelBlock() : base()
         {
-            
-        }
-        public  ModelBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 252, Alignment = 4)]
@@ -79,14 +76,14 @@ namespace Moonfish.Guerilla.Tags
         [TagReference("shad")]
         internal Moonfish.Tags.TagReference hologramShader;
         internal Moonfish.Tags.StringIdent hologramControlFunction;
-        
-        public override int SerializedSize{get { return 252; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ModelBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 252; } }
+        public override int Alignment { get { return 4; } }
+        public ModelBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             renderModel = binaryReader.ReadTagReference();
             collisionModel = binaryReader.ReadTagReference();
             animation = binaryReader.ReadTagReference();
@@ -103,69 +100,122 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(4);
             shadowFadeDistance = (ShadowFadeDistance)binaryReader.ReadInt16();
             invalidName_1 = binaryReader.ReadBytes(2);
-            variants = Guerilla.ReadBlockArray<ModelVariantBlock>(binaryReader);
-            materials = Guerilla.ReadBlockArray<ModelMaterialBlock>(binaryReader);
-            newDamageInfo = Guerilla.ReadBlockArray<GlobalDamageInfoBlock>(binaryReader);
-            targets = Guerilla.ReadBlockArray<ModelTargetBlock>(binaryReader);
-            modelRegionBlock = Guerilla.ReadBlockArray<ModelRegionBlock>(binaryReader);
-            modelNodeBlock = Guerilla.ReadBlockArray<ModelNodeBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ModelVariantBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ModelMaterialBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalDamageInfoBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ModelTargetBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ModelRegionBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ModelNodeBlock>(binaryReader));
             invalidName_2 = binaryReader.ReadBytes(4);
-            modelObjectData = Guerilla.ReadBlockArray<ModelObjectDataBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ModelObjectDataBlock>(binaryReader));
             defaultDialogue = binaryReader.ReadTagReference();
             uNUSED = binaryReader.ReadTagReference();
             flags = (Flags)binaryReader.ReadInt32();
             defaultDialogueEffect = binaryReader.ReadStringID();
-            renderOnlyNodeFlags = new []{ new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader),  };
-            renderOnlySectionFlags = new []{ new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader),  };
+            renderOnlyNodeFlags = new []{ new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags(), new RenderOnlyNodeFlags() };
+            blamPointers.Concat(renderOnlyNodeFlags[0].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[1].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[2].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[3].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[4].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[5].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[6].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[7].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[8].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[9].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[10].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[11].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[12].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[13].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[14].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[15].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[16].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[17].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[18].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[19].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[20].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[21].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[22].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[23].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[24].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[25].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[26].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[27].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[28].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[29].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[30].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlyNodeFlags[31].ReadFields(binaryReader));
+            renderOnlySectionFlags = new []{ new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags(), new RenderOnlySectionFlags() };
+            blamPointers.Concat(renderOnlySectionFlags[0].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[1].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[2].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[3].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[4].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[5].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[6].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[7].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[8].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[9].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[10].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[11].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[12].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[13].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[14].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[15].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[16].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[17].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[18].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[19].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[20].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[21].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[22].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[23].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[24].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[25].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[26].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[27].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[28].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[29].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[30].ReadFields(binaryReader));
+            blamPointers.Concat(renderOnlySectionFlags[31].ReadFields(binaryReader));
             runtimeFlags = (RuntimeFlags)binaryReader.ReadInt32();
-            scenarioLoadParameters = Guerilla.ReadBlockArray<GlobalScenarioLoadParametersBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GlobalScenarioLoadParametersBlock>(binaryReader));
             hologramShader = binaryReader.ReadTagReference();
             hologramControlFunction = binaryReader.ReadStringID();
+            return blamPointers;
         }
-        public  ModelBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            variants = ReadBlockArrayData<ModelVariantBlock>(binaryReader, blamPointers.Dequeue());
+            materials = ReadBlockArrayData<ModelMaterialBlock>(binaryReader, blamPointers.Dequeue());
+            newDamageInfo = ReadBlockArrayData<GlobalDamageInfoBlock>(binaryReader, blamPointers.Dequeue());
+            targets = ReadBlockArrayData<ModelTargetBlock>(binaryReader, blamPointers.Dequeue());
+            modelRegionBlock = ReadBlockArrayData<ModelRegionBlock>(binaryReader, blamPointers.Dequeue());
+            modelNodeBlock = ReadBlockArrayData<ModelNodeBlock>(binaryReader, blamPointers.Dequeue());
+            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[3].ReadPointers(binaryReader, blamPointers);
+            modelObjectData = ReadBlockArrayData<ModelObjectDataBlock>(binaryReader, blamPointers.Dequeue());
+            renderOnlyNodeFlags = ReadBlockArrayData<RenderOnlyNodeFlags>(binaryReader, blamPointers.Dequeue());
+            renderOnlySectionFlags = ReadBlockArrayData<RenderOnlySectionFlags>(binaryReader, blamPointers.Dequeue());
+            scenarioLoadParameters = ReadBlockArrayData<GlobalScenarioLoadParametersBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            renderModel = binaryReader.ReadTagReference();
-            collisionModel = binaryReader.ReadTagReference();
-            animation = binaryReader.ReadTagReference();
-            physics = binaryReader.ReadTagReference();
-            physicsModel = binaryReader.ReadTagReference();
-            disappearDistanceWorldUnits = binaryReader.ReadSingle();
-            beginFadeDistanceWorldUnits = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(4);
-            reduceToL1WorldUnitsSuperLow = binaryReader.ReadSingle();
-            reduceToL2WorldUnitsLow = binaryReader.ReadSingle();
-            reduceToL3WorldUnitsMedium = binaryReader.ReadSingle();
-            reduceToL4WorldUnitsHigh = binaryReader.ReadSingle();
-            reduceToL5WorldUnitsSuperHigh = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(4);
-            shadowFadeDistance = (ShadowFadeDistance)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            variants = Guerilla.ReadBlockArray<ModelVariantBlock>(binaryReader);
-            materials = Guerilla.ReadBlockArray<ModelMaterialBlock>(binaryReader);
-            newDamageInfo = Guerilla.ReadBlockArray<GlobalDamageInfoBlock>(binaryReader);
-            targets = Guerilla.ReadBlockArray<ModelTargetBlock>(binaryReader);
-            modelRegionBlock = Guerilla.ReadBlockArray<ModelRegionBlock>(binaryReader);
-            modelNodeBlock = Guerilla.ReadBlockArray<ModelNodeBlock>(binaryReader);
-            invalidName_2 = binaryReader.ReadBytes(4);
-            modelObjectData = Guerilla.ReadBlockArray<ModelObjectDataBlock>(binaryReader);
-            defaultDialogue = binaryReader.ReadTagReference();
-            uNUSED = binaryReader.ReadTagReference();
-            flags = (Flags)binaryReader.ReadInt32();
-            defaultDialogueEffect = binaryReader.ReadStringID();
-            renderOnlyNodeFlags = new []{ new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader), new RenderOnlyNodeFlags(binaryReader),  };
-            renderOnlySectionFlags = new []{ new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader), new RenderOnlySectionFlags(binaryReader),  };
-            runtimeFlags = (RuntimeFlags)binaryReader.ReadInt32();
-            scenarioLoadParameters = Guerilla.ReadBlockArray<GlobalScenarioLoadParametersBlock>(binaryReader);
-            hologramShader = binaryReader.ReadTagReference();
-            hologramControlFunction = binaryReader.ReadStringID();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(renderModel);
                 binaryWriter.Write(collisionModel);
@@ -291,27 +341,25 @@ namespace Moonfish.Guerilla.Tags
         public class RenderOnlyNodeFlags : GuerillaBlock
         {
             internal byte invalidName_;
-            
-            public override int SerializedSize{get { return 1; }}
-            
-            
-            public override int Alignment{get { return 1; }}
-            
-            public  RenderOnlyNodeFlags(BinaryReader binaryReader): base(binaryReader)
+            public override int SerializedSize { get { return 1; } }
+            public override int Alignment { get { return 1; } }
+            public RenderOnlyNodeFlags() : base()
             {
+            }
+            public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+            {
+                var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
                 invalidName_ = binaryReader.ReadByte();
+                return blamPointers;
             }
-            public  RenderOnlyNodeFlags(): base()
+            public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
             {
-                
+                base.ReadPointers(binaryReader, blamPointers);
             }
-            public override void Read(BinaryReader binaryReader)
+            public override int Write(BinaryWriter binaryWriter, int nextAddress)
             {
-                invalidName_ = binaryReader.ReadByte();
-            }
-            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-            {
-                using(binaryWriter.BaseStream.Pin())
+                base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(invalidName_);
                     return nextAddress;
@@ -322,27 +370,25 @@ namespace Moonfish.Guerilla.Tags
         public class RenderOnlySectionFlags : GuerillaBlock
         {
             internal byte invalidName_;
-            
-            public override int SerializedSize{get { return 1; }}
-            
-            
-            public override int Alignment{get { return 1; }}
-            
-            public  RenderOnlySectionFlags(BinaryReader binaryReader): base(binaryReader)
+            public override int SerializedSize { get { return 1; } }
+            public override int Alignment { get { return 1; } }
+            public RenderOnlySectionFlags() : base()
             {
+            }
+            public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+            {
+                var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
                 invalidName_ = binaryReader.ReadByte();
+                return blamPointers;
             }
-            public  RenderOnlySectionFlags(): base()
+            public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
             {
-                
+                base.ReadPointers(binaryReader, blamPointers);
             }
-            public override void Read(BinaryReader binaryReader)
+            public override int Write(BinaryWriter binaryWriter, int nextAddress)
             {
-                invalidName_ = binaryReader.ReadByte();
-            }
-            public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-            {
-                using(binaryWriter.BaseStream.Pin())
+                base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(invalidName_);
                     return nextAddress;

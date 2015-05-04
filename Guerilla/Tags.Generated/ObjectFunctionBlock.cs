@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ObjectFunctionBlock : ObjectFunctionBlockBase
     {
-        public  ObjectFunctionBlock(BinaryReader binaryReader): base(binaryReader)
+        public ObjectFunctionBlock() : base()
         {
-            
-        }
-        public  ObjectFunctionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 32, Alignment = 4)]
@@ -35,39 +32,33 @@ namespace Moonfish.Guerilla.Tags
         internal float minValue;
         internal MappingFunctionBlock defaultFunction;
         internal Moonfish.Tags.StringIdent scaleBy;
-        
-        public override int SerializedSize{get { return 32; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ObjectFunctionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 32; } }
+        public override int Alignment { get { return 4; } }
+        public ObjectFunctionBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             importName = binaryReader.ReadStringID();
             exportName = binaryReader.ReadStringID();
             turnOffWith = binaryReader.ReadStringID();
             minValue = binaryReader.ReadSingle();
-            defaultFunction = new MappingFunctionBlock(binaryReader);
+            defaultFunction = new MappingFunctionBlock();
+            blamPointers.Concat(defaultFunction.ReadFields(binaryReader));
             scaleBy = binaryReader.ReadStringID();
+            return blamPointers;
         }
-        public  ObjectFunctionBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            defaultFunction.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            importName = binaryReader.ReadStringID();
-            exportName = binaryReader.ReadStringID();
-            turnOffWith = binaryReader.ReadStringID();
-            minValue = binaryReader.ReadSingle();
-            defaultFunction = new MappingFunctionBlock(binaryReader);
-            scaleBy = binaryReader.ReadStringID();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(importName);

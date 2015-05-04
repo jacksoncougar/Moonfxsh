@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("unit")]
     public partial class UnitBlock : UnitBlockBase
     {
-        public  UnitBlock(BinaryReader binaryReader): base(binaryReader)
+        public UnitBlock() : base()
         {
-            
-        }
-        public  UnitBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 304, Alignment = 4)]
@@ -104,22 +101,24 @@ namespace Moonfish.Guerilla.Tags
         internal UnitSeatBlock[] seats;
         internal UnitBoostStructBlock boost;
         internal UnitLipsyncScalesStructBlock lipsync;
-        
-        public override int SerializedSize{get { return 304; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  UnitBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 492; } }
+        public override int Alignment { get { return 4; } }
+        public UnitBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             defaultTeam = (DefaultTeam)binaryReader.ReadInt16();
             constantSoundVolume = (ConstantSoundVolume)binaryReader.ReadInt16();
             integratedLightToggle = binaryReader.ReadTagReference();
             cameraFieldOfViewDegrees = binaryReader.ReadSingle();
             cameraStiffness = binaryReader.ReadSingle();
-            unitCamera = new UnitCameraStructBlock(binaryReader);
-            acceleration = new UnitSeatAccelerationStructBlock(binaryReader);
+            unitCamera = new UnitCameraStructBlock();
+            blamPointers.Concat(unitCamera.ReadFields(binaryReader));
+            acceleration = new UnitSeatAccelerationStructBlock();
+            blamPointers.Concat(acceleration.ReadFields(binaryReader));
             softPingThreshold01 = binaryReader.ReadSingle();
             softPingInterruptTimeSeconds = binaryReader.ReadSingle();
             hardPingThreshold01 = binaryReader.ReadSingle();
@@ -142,79 +141,50 @@ namespace Moonfish.Guerilla.Tags
             lookingAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
             rightHandNode = binaryReader.ReadStringID();
             leftHandNode = binaryReader.ReadStringID();
-            moreDamnNodes = new UnitAdditionalNodeNamesStructBlock(binaryReader);
+            moreDamnNodes = new UnitAdditionalNodeNamesStructBlock();
+            blamPointers.Concat(moreDamnNodes.ReadFields(binaryReader));
             meleeDamage = binaryReader.ReadTagReference();
-            yourMomma = new UnitBoardingMeleeStructBlock(binaryReader);
+            yourMomma = new UnitBoardingMeleeStructBlock();
+            blamPointers.Concat(yourMomma.ReadFields(binaryReader));
             motionSensorBlipSize = (MotionSensorBlipSize)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            postures = Guerilla.ReadBlockArray<UnitPosturesBlock>(binaryReader);
-            nEWHUDINTERFACES = Guerilla.ReadBlockArray<UnitHudReferenceBlock>(binaryReader);
-            dialogueVariants = Guerilla.ReadBlockArray<DialogueVariantBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<UnitPosturesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<UnitHudReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<DialogueVariantBlock>(binaryReader));
             grenadeVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
             grenadeType = (GrenadeType)binaryReader.ReadInt16();
             grenadeCount = binaryReader.ReadInt16();
-            poweredSeats = Guerilla.ReadBlockArray<PoweredSeatBlock>(binaryReader);
-            weapons = Guerilla.ReadBlockArray<UnitWeaponBlock>(binaryReader);
-            seats = Guerilla.ReadBlockArray<UnitSeatBlock>(binaryReader);
-            boost = new UnitBoostStructBlock(binaryReader);
-            lipsync = new UnitLipsyncScalesStructBlock(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<PoweredSeatBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<UnitWeaponBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<UnitSeatBlock>(binaryReader));
+            boost = new UnitBoostStructBlock();
+            blamPointers.Concat(boost.ReadFields(binaryReader));
+            lipsync = new UnitLipsyncScalesStructBlock();
+            blamPointers.Concat(lipsync.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  UnitBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            unitCamera.ReadPointers(binaryReader, blamPointers);
+            acceleration.ReadPointers(binaryReader, blamPointers);
+            moreDamnNodes.ReadPointers(binaryReader, blamPointers);
+            yourMomma.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            postures = ReadBlockArrayData<UnitPosturesBlock>(binaryReader, blamPointers.Dequeue());
+            nEWHUDINTERFACES = ReadBlockArrayData<UnitHudReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            dialogueVariants = ReadBlockArrayData<DialogueVariantBlock>(binaryReader, blamPointers.Dequeue());
+            poweredSeats = ReadBlockArrayData<PoweredSeatBlock>(binaryReader, blamPointers.Dequeue());
+            weapons = ReadBlockArrayData<UnitWeaponBlock>(binaryReader, blamPointers.Dequeue());
+            seats = ReadBlockArrayData<UnitSeatBlock>(binaryReader, blamPointers.Dequeue());
+            boost.ReadPointers(binaryReader, blamPointers);
+            lipsync.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            defaultTeam = (DefaultTeam)binaryReader.ReadInt16();
-            constantSoundVolume = (ConstantSoundVolume)binaryReader.ReadInt16();
-            integratedLightToggle = binaryReader.ReadTagReference();
-            cameraFieldOfViewDegrees = binaryReader.ReadSingle();
-            cameraStiffness = binaryReader.ReadSingle();
-            unitCamera = new UnitCameraStructBlock(binaryReader);
-            acceleration = new UnitSeatAccelerationStructBlock(binaryReader);
-            softPingThreshold01 = binaryReader.ReadSingle();
-            softPingInterruptTimeSeconds = binaryReader.ReadSingle();
-            hardPingThreshold01 = binaryReader.ReadSingle();
-            hardPingInterruptTimeSeconds = binaryReader.ReadSingle();
-            hardDeathThreshold01 = binaryReader.ReadSingle();
-            feignDeathThreshold01 = binaryReader.ReadSingle();
-            feignDeathTimeSeconds = binaryReader.ReadSingle();
-            distanceOfEvadeAnimWorldUnits = binaryReader.ReadSingle();
-            distanceOfDiveAnimWorldUnits = binaryReader.ReadSingle();
-            stunnedMovementThreshold01 = binaryReader.ReadSingle();
-            feignDeathChance01 = binaryReader.ReadSingle();
-            feignRepeatChance01 = binaryReader.ReadSingle();
-            spawnedTurretCharacter = binaryReader.ReadTagReference();
-            spawnedActorCount = binaryReader.ReadInt32();
-            spawnedVelocity = binaryReader.ReadSingle();
-            aimingVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
-            aimingAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
-            casualAimingModifier01 = binaryReader.ReadSingle();
-            lookingVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
-            lookingAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
-            rightHandNode = binaryReader.ReadStringID();
-            leftHandNode = binaryReader.ReadStringID();
-            moreDamnNodes = new UnitAdditionalNodeNamesStructBlock(binaryReader);
-            meleeDamage = binaryReader.ReadTagReference();
-            yourMomma = new UnitBoardingMeleeStructBlock(binaryReader);
-            motionSensorBlipSize = (MotionSensorBlipSize)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            postures = Guerilla.ReadBlockArray<UnitPosturesBlock>(binaryReader);
-            nEWHUDINTERFACES = Guerilla.ReadBlockArray<UnitHudReferenceBlock>(binaryReader);
-            dialogueVariants = Guerilla.ReadBlockArray<DialogueVariantBlock>(binaryReader);
-            grenadeVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
-            grenadeType = (GrenadeType)binaryReader.ReadInt16();
-            grenadeCount = binaryReader.ReadInt16();
-            poweredSeats = Guerilla.ReadBlockArray<PoweredSeatBlock>(binaryReader);
-            weapons = Guerilla.ReadBlockArray<UnitWeaponBlock>(binaryReader);
-            seats = Guerilla.ReadBlockArray<UnitSeatBlock>(binaryReader);
-            boost = new UnitBoostStructBlock(binaryReader);
-            lipsync = new UnitLipsyncScalesStructBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write((Int16)defaultTeam);

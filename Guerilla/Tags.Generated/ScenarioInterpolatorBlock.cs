@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioInterpolatorBlock : ScenarioInterpolatorBlockBase
     {
-        public  ScenarioInterpolatorBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioInterpolatorBlock() : base()
         {
-            
-        }
-        public  ScenarioInterpolatorBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -28,37 +25,36 @@ namespace Moonfish.Guerilla.Tags
         internal ScalarFunctionStructBlock function;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
-        
-        public override int SerializedSize{get { return 24; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioInterpolatorBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 24; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioInterpolatorBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             acceleratorNameInterpolator = binaryReader.ReadStringID();
             multiplierNameInterpolator = binaryReader.ReadStringID();
-            function = new ScalarFunctionStructBlock(binaryReader);
+            function = new ScalarFunctionStructBlock();
+            blamPointers.Concat(function.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(2);
             invalidName_0 = binaryReader.ReadBytes(2);
+            return blamPointers;
         }
-        public  ScenarioInterpolatorBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            function.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadStringID();
-            acceleratorNameInterpolator = binaryReader.ReadStringID();
-            multiplierNameInterpolator = binaryReader.ReadStringID();
-            function = new ScalarFunctionStructBlock(binaryReader);
-            invalidName_ = binaryReader.ReadBytes(2);
-            invalidName_0 = binaryReader.ReadBytes(2);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(acceleratorNameInterpolator);

@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("cont")]
     public partial class ContrailBlock : ContrailBlockBase
     {
-        public  ContrailBlock(BinaryReader binaryReader): base(binaryReader)
+        public ContrailBlock() : base()
         {
-            
-        }
-        public  ContrailBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 240, Alignment = 4)]
@@ -126,14 +123,14 @@ namespace Moonfish.Guerilla.Tags
         internal float zspriteRadiusScale;
         internal byte[] invalidName_6;
         internal ContrailPointStatesBlock[] pointStates;
-        
-        public override int SerializedSize{get { return 240; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ContrailBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 240; } }
+        public override int Alignment { get { return 4; } }
+        public ContrailBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt16();
             scaleFlags = (ScaleFlagsTheseFlagsDetermineWhichFieldsAreScaledByTheContrailDensity)binaryReader.ReadInt16();
             pointGenerationRatePointsPerSecond = binaryReader.ReadSingle();
@@ -178,63 +175,118 @@ namespace Moonfish.Guerilla.Tags
             invalidName_5 = binaryReader.ReadBytes(4);
             zspriteRadiusScale = binaryReader.ReadSingle();
             invalidName_6 = binaryReader.ReadBytes(20);
-            pointStates = Guerilla.ReadBlockArray<ContrailPointStatesBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ContrailPointStatesBlock>(binaryReader));
+            return blamPointers;
         }
-        public  ContrailBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[19].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[20].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[21].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[22].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[23].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[24].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[25].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[26].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[27].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[28].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[29].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[30].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[31].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[32].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[33].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[34].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[35].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[36].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[37].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[38].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[39].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[19].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[20].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[21].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[22].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[23].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[24].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[25].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[26].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[27].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_3[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_4[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_5[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_6[19].ReadPointers(binaryReader, blamPointers);
+            pointStates = ReadBlockArrayData<ContrailPointStatesBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt16();
-            scaleFlags = (ScaleFlagsTheseFlagsDetermineWhichFieldsAreScaledByTheContrailDensity)binaryReader.ReadInt16();
-            pointGenerationRatePointsPerSecond = binaryReader.ReadSingle();
-            pointVelocityWorldUnitsPerSecond = binaryReader.ReadRange();
-            pointVelocityConeAngleDegrees = binaryReader.ReadSingle();
-            inheritedVelocityFraction = binaryReader.ReadSingle();
-            renderType = (RenderTypeThisSpecifiesHowTheContrailIsOrientedInSpace)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            textureRepeatsU = binaryReader.ReadSingle();
-            textureRepeatsV = binaryReader.ReadSingle();
-            textureAnimationURepeatsPerSecond = binaryReader.ReadSingle();
-            textureAnimationVRepeatsPerSecond = binaryReader.ReadSingle();
-            animationRateFramesPerSecond = binaryReader.ReadSingle();
-            bitmap = binaryReader.ReadTagReference();
-            firstSequenceIndex = binaryReader.ReadInt16();
-            sequenceCount = binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(40);
-            shaderFlags = (ShaderFlags)binaryReader.ReadInt16();
-            framebufferBlendFunction = (FramebufferBlendFunction)binaryReader.ReadInt16();
-            framebufferFadeMode = (FramebufferFadeMode)binaryReader.ReadInt16();
-            mapFlags = (MapFlags)binaryReader.ReadInt16();
-            invalidName_1 = binaryReader.ReadBytes(28);
-            bitmap0 = binaryReader.ReadTagReference();
-            anchor = (Anchor)binaryReader.ReadInt16();
-            flags0 = (Flags)binaryReader.ReadInt16();
-            invalidName_2 = binaryReader.ReadBytes(2);
-            uAnimationFunction = (UAnimationFunction)binaryReader.ReadInt16();
-            uAnimationPeriodSeconds = binaryReader.ReadSingle();
-            uAnimationPhase = binaryReader.ReadSingle();
-            uAnimationScaleRepeats = binaryReader.ReadSingle();
-            invalidName_3 = binaryReader.ReadBytes(2);
-            vAnimationFunction = (VAnimationFunction)binaryReader.ReadInt16();
-            vAnimationPeriodSeconds = binaryReader.ReadSingle();
-            vAnimationPhase = binaryReader.ReadSingle();
-            vAnimationScaleRepeats = binaryReader.ReadSingle();
-            invalidName_4 = binaryReader.ReadBytes(2);
-            rotationAnimationFunction = (RotationAnimationFunction)binaryReader.ReadInt16();
-            rotationAnimationPeriodSeconds = binaryReader.ReadSingle();
-            rotationAnimationPhase = binaryReader.ReadSingle();
-            rotationAnimationScaleDegrees = binaryReader.ReadSingle();
-            rotationAnimationCenter = binaryReader.ReadVector2();
-            invalidName_5 = binaryReader.ReadBytes(4);
-            zspriteRadiusScale = binaryReader.ReadSingle();
-            invalidName_6 = binaryReader.ReadBytes(20);
-            pointStates = Guerilla.ReadBlockArray<ContrailPointStatesBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)flags);
                 binaryWriter.Write((Int16)scaleFlags);

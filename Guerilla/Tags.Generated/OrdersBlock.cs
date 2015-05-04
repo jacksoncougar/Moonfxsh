@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class OrdersBlock : OrdersBlockBase
     {
-        public  OrdersBlock(BinaryReader binaryReader): base(binaryReader)
+        public OrdersBlock() : base()
         {
-            
-        }
-        public  OrdersBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 124, Alignment = 4)]
@@ -37,14 +34,14 @@ namespace Moonfish.Guerilla.Tags
         internal SecondarySetTriggerBlock[] secondarySetTrigger;
         internal SpecialMovementBlock[] specialMovement;
         internal OrderEndingBlock[] orderEndings;
-        
-        public override int SerializedSize{get { return 124; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  OrdersBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 124; } }
+        public override int Alignment { get { return 4; } }
+        public OrdersBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
             style = binaryReader.ReadShortBlockIndex1();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -55,37 +52,32 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(2);
             followSquad = binaryReader.ReadShortBlockIndex1();
             followRadius = binaryReader.ReadSingle();
-            primaryAreaSet = Guerilla.ReadBlockArray<ZoneSetBlock>(binaryReader);
-            secondaryAreaSet = Guerilla.ReadBlockArray<SecondaryZoneSetBlock>(binaryReader);
-            secondarySetTrigger = Guerilla.ReadBlockArray<SecondarySetTriggerBlock>(binaryReader);
-            specialMovement = Guerilla.ReadBlockArray<SpecialMovementBlock>(binaryReader);
-            orderEndings = Guerilla.ReadBlockArray<OrderEndingBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ZoneSetBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SecondaryZoneSetBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SecondarySetTriggerBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<SpecialMovementBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<OrderEndingBlock>(binaryReader));
+            return blamPointers;
         }
-        public  OrdersBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            primaryAreaSet = ReadBlockArrayData<ZoneSetBlock>(binaryReader, blamPointers.Dequeue());
+            secondaryAreaSet = ReadBlockArrayData<SecondaryZoneSetBlock>(binaryReader, blamPointers.Dequeue());
+            secondarySetTrigger = ReadBlockArrayData<SecondarySetTriggerBlock>(binaryReader, blamPointers.Dequeue());
+            specialMovement = ReadBlockArrayData<SpecialMovementBlock>(binaryReader, blamPointers.Dequeue());
+            orderEndings = ReadBlockArrayData<OrderEndingBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadString32();
-            style = binaryReader.ReadShortBlockIndex1();
-            invalidName_ = binaryReader.ReadBytes(2);
-            flags = (Flags)binaryReader.ReadInt32();
-            forceCombatStatus = (ForceCombatStatus)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            entryScript = binaryReader.ReadString32();
-            invalidName_1 = binaryReader.ReadBytes(2);
-            followSquad = binaryReader.ReadShortBlockIndex1();
-            followRadius = binaryReader.ReadSingle();
-            primaryAreaSet = Guerilla.ReadBlockArray<ZoneSetBlock>(binaryReader);
-            secondaryAreaSet = Guerilla.ReadBlockArray<SecondaryZoneSetBlock>(binaryReader);
-            secondarySetTrigger = Guerilla.ReadBlockArray<SecondarySetTriggerBlock>(binaryReader);
-            specialMovement = Guerilla.ReadBlockArray<SpecialMovementBlock>(binaryReader);
-            orderEndings = Guerilla.ReadBlockArray<OrderEndingBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(style);

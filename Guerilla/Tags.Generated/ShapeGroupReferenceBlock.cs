@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ShapeGroupReferenceBlock : ShapeGroupReferenceBlockBase
     {
-        public  ShapeGroupReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public ShapeGroupReferenceBlock() : base()
         {
-            
-        }
-        public  ShapeGroupReferenceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 24, Alignment = 4)]
@@ -25,31 +22,30 @@ namespace Moonfish.Guerilla.Tags
         internal ShapeBlockReferenceBlock[] shapes;
         internal UiModelSceneReferenceBlock[] modelSceneBlocks;
         internal BitmapBlockReferenceBlock[] bitmapBlocks;
-        
-        public override int SerializedSize{get { return 24; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ShapeGroupReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 24; } }
+        public override int Alignment { get { return 4; } }
+        public ShapeGroupReferenceBlockBase() : base()
         {
-            shapes = Guerilla.ReadBlockArray<ShapeBlockReferenceBlock>(binaryReader);
-            modelSceneBlocks = Guerilla.ReadBlockArray<UiModelSceneReferenceBlock>(binaryReader);
-            bitmapBlocks = Guerilla.ReadBlockArray<BitmapBlockReferenceBlock>(binaryReader);
         }
-        public  ShapeGroupReferenceBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ShapeBlockReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<UiModelSceneReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<BitmapBlockReferenceBlock>(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            shapes = Guerilla.ReadBlockArray<ShapeBlockReferenceBlock>(binaryReader);
-            modelSceneBlocks = Guerilla.ReadBlockArray<UiModelSceneReferenceBlock>(binaryReader);
-            bitmapBlocks = Guerilla.ReadBlockArray<BitmapBlockReferenceBlock>(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            shapes = ReadBlockArrayData<ShapeBlockReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            modelSceneBlocks = ReadBlockArrayData<UiModelSceneReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            bitmapBlocks = ReadBlockArrayData<BitmapBlockReferenceBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<ShapeBlockReferenceBlock>(binaryWriter, shapes, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<UiModelSceneReferenceBlock>(binaryWriter, modelSceneBlocks, nextAddress);

@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("lsnd")]
     public partial class SoundLoopingBlock : SoundLoopingBlockBase
     {
-        public  SoundLoopingBlock(BinaryReader binaryReader): base(binaryReader)
+        public SoundLoopingBlock() : base()
         {
-            
-        }
-        public  SoundLoopingBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 44, Alignment = 4)]
@@ -45,39 +42,41 @@ namespace Moonfish.Guerilla.Tags
         /// detailSounds play at random throughout the duration of the looping sound.
         /// </summary>
         internal LoopingSoundDetailBlock[] detailSounds;
-        
-        public override int SerializedSize{get { return 44; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  SoundLoopingBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 44; } }
+        public override int Alignment { get { return 4; } }
+        public SoundLoopingBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             martysMusicTimeSeconds = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadSingle();
             invalidName_0 = binaryReader.ReadBytes(8);
             invalidName_1 = binaryReader.ReadTagReference();
-            tracks = Guerilla.ReadBlockArray<LoopingSoundTrackBlock>(binaryReader);
-            detailSounds = Guerilla.ReadBlockArray<LoopingSoundDetailBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<LoopingSoundTrackBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<LoopingSoundDetailBlock>(binaryReader));
+            return blamPointers;
         }
-        public  SoundLoopingBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[7].ReadPointers(binaryReader, blamPointers);
+            tracks = ReadBlockArrayData<LoopingSoundTrackBlock>(binaryReader, blamPointers.Dequeue());
+            detailSounds = ReadBlockArrayData<LoopingSoundDetailBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            martysMusicTimeSeconds = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadSingle();
-            invalidName_0 = binaryReader.ReadBytes(8);
-            invalidName_1 = binaryReader.ReadTagReference();
-            tracks = Guerilla.ReadBlockArray<LoopingSoundTrackBlock>(binaryReader);
-            detailSounds = Guerilla.ReadBlockArray<LoopingSoundDetailBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(martysMusicTimeSeconds);

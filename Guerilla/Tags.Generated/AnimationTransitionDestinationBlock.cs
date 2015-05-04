@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AnimationTransitionDestinationBlock : AnimationTransitionDestinationBlockBase
     {
-        public  AnimationTransitionDestinationBlock(BinaryReader binaryReader): base(binaryReader)
+        public AnimationTransitionDestinationBlock() : base()
         {
-            
-        }
-        public  AnimationTransitionDestinationBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -32,33 +29,32 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent mode;
         internal AnimationDestinationStateStructBlock stateInfo;
         internal AnimationIndexStructBlock animation;
-        
-        public override int SerializedSize{get { return 20; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  AnimationTransitionDestinationBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 20; } }
+        public override int Alignment { get { return 4; } }
+        public AnimationTransitionDestinationBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             fullName = binaryReader.ReadStringID();
             mode = binaryReader.ReadStringID();
-            stateInfo = new AnimationDestinationStateStructBlock(binaryReader);
-            animation = new AnimationIndexStructBlock(binaryReader);
+            stateInfo = new AnimationDestinationStateStructBlock();
+            blamPointers.Concat(stateInfo.ReadFields(binaryReader));
+            animation = new AnimationIndexStructBlock();
+            blamPointers.Concat(animation.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public  AnimationTransitionDestinationBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            stateInfo.ReadPointers(binaryReader, blamPointers);
+            animation.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            fullName = binaryReader.ReadStringID();
-            mode = binaryReader.ReadStringID();
-            stateInfo = new AnimationDestinationStateStructBlock(binaryReader);
-            animation = new AnimationIndexStructBlock(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(fullName);
                 binaryWriter.Write(mode);

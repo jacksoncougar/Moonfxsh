@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioLightStructBlock : ScenarioLightStructBlockBase
     {
-        public  ScenarioLightStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioLightStructBlock() : base()
         {
-            
-        }
-        public  ScenarioLightStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 48, Alignment = 4)]
@@ -34,14 +31,14 @@ namespace Moonfish.Guerilla.Tags
         internal float fieldOfViewDegrees;
         internal float falloffDistanceWorldUnits;
         internal float cutoffDistanceWorldUnitsFromFarPlane;
-        
-        public override int SerializedSize{get { return 48; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioLightStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 48; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioLightStructBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             type = (Type)binaryReader.ReadInt16();
             flags = (Flags)binaryReader.ReadInt16();
             lightmapType = (LightmapType)binaryReader.ReadInt16();
@@ -54,29 +51,16 @@ namespace Moonfish.Guerilla.Tags
             fieldOfViewDegrees = binaryReader.ReadSingle();
             falloffDistanceWorldUnits = binaryReader.ReadSingle();
             cutoffDistanceWorldUnitsFromFarPlane = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  ScenarioLightStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            type = (Type)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            lightmapType = (LightmapType)binaryReader.ReadInt16();
-            lightmapFlags = (LightmapFlags)binaryReader.ReadInt16();
-            lightmapHalfLife = binaryReader.ReadSingle();
-            lightmapLightScale = binaryReader.ReadSingle();
-            targetPoint = binaryReader.ReadVector3();
-            widthWorldUnits = binaryReader.ReadSingle();
-            heightScaleWorldUnits = binaryReader.ReadSingle();
-            fieldOfViewDegrees = binaryReader.ReadSingle();
-            falloffDistanceWorldUnits = binaryReader.ReadSingle();
-            cutoffDistanceWorldUnitsFromFarPlane = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)type);
                 binaryWriter.Write((Int16)flags);

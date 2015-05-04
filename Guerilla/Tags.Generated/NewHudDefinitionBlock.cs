@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("nhdt")]
     public partial class NewHudDefinitionBlock : NewHudDefinitionBlockBase
     {
-        public  NewHudDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
+        public NewHudDefinitionBlock() : base()
         {
-            
-        }
-        public  NewHudDefinitionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -37,35 +34,34 @@ namespace Moonfish.Guerilla.Tags
         internal HudTextWidgets[] textWidgets;
         internal NewHudDashlightDataStructBlock dashlightData;
         internal HudScreenEffectWidgets[] screenEffectWidgets;
-        
-        public override int SerializedSize{get { return 40; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  NewHudDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 40; } }
+        public override int Alignment { get { return 4; } }
+        public NewHudDefinitionBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             dONOTUSE = binaryReader.ReadTagReference();
-            bitmapWidgets = Guerilla.ReadBlockArray<HudBitmapWidgets>(binaryReader);
-            textWidgets = Guerilla.ReadBlockArray<HudTextWidgets>(binaryReader);
-            dashlightData = new NewHudDashlightDataStructBlock(binaryReader);
-            screenEffectWidgets = Guerilla.ReadBlockArray<HudScreenEffectWidgets>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<HudBitmapWidgets>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<HudTextWidgets>(binaryReader));
+            dashlightData = new NewHudDashlightDataStructBlock();
+            blamPointers.Concat(dashlightData.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<HudScreenEffectWidgets>(binaryReader));
+            return blamPointers;
         }
-        public  NewHudDefinitionBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            bitmapWidgets = ReadBlockArrayData<HudBitmapWidgets>(binaryReader, blamPointers.Dequeue());
+            textWidgets = ReadBlockArrayData<HudTextWidgets>(binaryReader, blamPointers.Dequeue());
+            dashlightData.ReadPointers(binaryReader, blamPointers);
+            screenEffectWidgets = ReadBlockArrayData<HudScreenEffectWidgets>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            dONOTUSE = binaryReader.ReadTagReference();
-            bitmapWidgets = Guerilla.ReadBlockArray<HudBitmapWidgets>(binaryReader);
-            textWidgets = Guerilla.ReadBlockArray<HudTextWidgets>(binaryReader);
-            dashlightData = new NewHudDashlightDataStructBlock(binaryReader);
-            screenEffectWidgets = Guerilla.ReadBlockArray<HudScreenEffectWidgets>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(dONOTUSE);
                 nextAddress = Guerilla.WriteBlockArray<HudBitmapWidgets>(binaryWriter, bitmapWidgets, nextAddress);

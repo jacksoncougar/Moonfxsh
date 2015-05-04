@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StaticSpawnZoneBlock : StaticSpawnZoneBlockBase
     {
-        public  StaticSpawnZoneBlock(BinaryReader binaryReader): base(binaryReader)
+        public StaticSpawnZoneBlock() : base()
         {
-            
-        }
-        public  StaticSpawnZoneBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 48, Alignment = 4)]
@@ -29,39 +26,33 @@ namespace Moonfish.Guerilla.Tags
         internal float innerRadius;
         internal float outerRadius;
         internal float weight;
-        
-        public override int SerializedSize{get { return 48; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  StaticSpawnZoneBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 48; } }
+        public override int Alignment { get { return 4; } }
+        public StaticSpawnZoneBlockBase() : base()
         {
-            data = new StaticSpawnZoneDataStructBlock(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            data = new StaticSpawnZoneDataStructBlock();
+            blamPointers.Concat(data.ReadFields(binaryReader));
             position = binaryReader.ReadVector3();
             lowerHeight = binaryReader.ReadSingle();
             upperHeight = binaryReader.ReadSingle();
             innerRadius = binaryReader.ReadSingle();
             outerRadius = binaryReader.ReadSingle();
             weight = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  StaticSpawnZoneBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            data.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            data = new StaticSpawnZoneDataStructBlock(binaryReader);
-            position = binaryReader.ReadVector3();
-            lowerHeight = binaryReader.ReadSingle();
-            upperHeight = binaryReader.ReadSingle();
-            innerRadius = binaryReader.ReadSingle();
-            outerRadius = binaryReader.ReadSingle();
-            weight = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 data.Write(binaryWriter);
                 binaryWriter.Write(position);

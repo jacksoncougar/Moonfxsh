@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StaticSpawnZoneDataStructBlock : StaticSpawnZoneDataStructBlockBase
     {
-        public  StaticSpawnZoneDataStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public StaticSpawnZoneDataStructBlock() : base()
         {
-            
-        }
-        public  StaticSpawnZoneDataStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -26,33 +23,28 @@ namespace Moonfish.Guerilla.Tags
         internal RelevantTeam relevantTeam;
         internal RelevantGames relevantGames;
         internal Flags flags;
-        
-        public override int SerializedSize{get { return 16; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  StaticSpawnZoneDataStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 16; } }
+        public override int Alignment { get { return 4; } }
+        public StaticSpawnZoneDataStructBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             relevantTeam = (RelevantTeam)binaryReader.ReadInt32();
             relevantGames = (RelevantGames)binaryReader.ReadInt32();
             flags = (Flags)binaryReader.ReadInt32();
+            return blamPointers;
         }
-        public  StaticSpawnZoneDataStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadStringID();
-            relevantTeam = (RelevantTeam)binaryReader.ReadInt32();
-            relevantGames = (RelevantGames)binaryReader.ReadInt32();
-            flags = (Flags)binaryReader.ReadInt32();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write((Int32)relevantTeam);

@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class HudWidgetStateDefinitionStructBlock : HudWidgetStateDefinitionStructBlockBase
     {
-        public  HudWidgetStateDefinitionStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public HudWidgetStateDefinitionStructBlock() : base()
         {
-            
-        }
-        public  HudWidgetStateDefinitionStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -34,14 +31,14 @@ namespace Moonfish.Guerilla.Tags
         internal byte clipCutoff;
         internal byte totalCutoff;
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 20; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  HudWidgetStateDefinitionStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 20; } }
+        public override int Alignment { get { return 4; } }
+        public HudWidgetStateDefinitionStructBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             yUnitFlags = (YUnitFlags)binaryReader.ReadInt16();
             yExtraFlags = (YExtraFlags)binaryReader.ReadInt16();
             yWeaponFlags = (YWeaponFlags)binaryReader.ReadInt16();
@@ -54,29 +51,17 @@ namespace Moonfish.Guerilla.Tags
             clipCutoff = binaryReader.ReadByte();
             totalCutoff = binaryReader.ReadByte();
             invalidName_ = binaryReader.ReadBytes(1);
+            return blamPointers;
         }
-        public  HudWidgetStateDefinitionStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            yUnitFlags = (YUnitFlags)binaryReader.ReadInt16();
-            yExtraFlags = (YExtraFlags)binaryReader.ReadInt16();
-            yWeaponFlags = (YWeaponFlags)binaryReader.ReadInt16();
-            yGameEngineStateFlags = (YGameEngineStateFlags)binaryReader.ReadInt16();
-            nUnitFlags = (NUnitFlags)binaryReader.ReadInt16();
-            nExtraFlags = (NExtraFlags)binaryReader.ReadInt16();
-            nWeaponFlags = (NWeaponFlags)binaryReader.ReadInt16();
-            nGameEngineStateFlags = (NGameEngineStateFlags)binaryReader.ReadInt16();
-            ageCutoff = binaryReader.ReadByte();
-            clipCutoff = binaryReader.ReadByte();
-            totalCutoff = binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(1);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)yUnitFlags);
                 binaryWriter.Write((Int16)yExtraFlags);

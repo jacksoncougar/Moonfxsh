@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CollisionModelPermutationBlock : CollisionModelPermutationBlockBase
     {
-        public  CollisionModelPermutationBlock(BinaryReader binaryReader): base(binaryReader)
+        public CollisionModelPermutationBlock() : base()
         {
-            
-        }
-        public  CollisionModelPermutationBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 20, Alignment = 4)]
@@ -25,31 +22,29 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent name;
         internal CollisionModelBspBlock[] bsps;
         internal CollisionBspPhysicsBlock[] bspPhysics;
-        
-        public override int SerializedSize{get { return 20; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  CollisionModelPermutationBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 20; } }
+        public override int Alignment { get { return 4; } }
+        public CollisionModelPermutationBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
-            bsps = Guerilla.ReadBlockArray<CollisionModelBspBlock>(binaryReader);
-            bspPhysics = Guerilla.ReadBlockArray<CollisionBspPhysicsBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<CollisionModelBspBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<CollisionBspPhysicsBlock>(binaryReader));
+            return blamPointers;
         }
-        public  CollisionModelPermutationBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            bsps = ReadBlockArrayData<CollisionModelBspBlock>(binaryReader, blamPointers.Dequeue());
+            bspPhysics = ReadBlockArrayData<CollisionBspPhysicsBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadStringID();
-            bsps = Guerilla.ReadBlockArray<CollisionModelBspBlock>(binaryReader);
-            bspPhysics = Guerilla.ReadBlockArray<CollisionBspPhysicsBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 nextAddress = Guerilla.WriteBlockArray<CollisionModelBspBlock>(binaryWriter, bsps, nextAddress);

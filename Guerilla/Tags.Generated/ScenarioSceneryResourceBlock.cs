@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("*cen")]
     public partial class ScenarioSceneryResourceBlock : ScenarioSceneryResourceBlockBase
     {
-        public  ScenarioSceneryResourceBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioSceneryResourceBlock() : base()
         {
-            
-        }
-        public  ScenarioSceneryResourceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 72, Alignment = 4)]
@@ -41,45 +38,42 @@ namespace Moonfish.Guerilla.Tags
         internal ScenarioCrateBlock[] objects0;
         internal int nextBlockObjectIDSalt;
         internal GScenarioEditorFolderBlock[] editorFolders;
-        
-        public override int SerializedSize{get { return 72; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioSceneryResourceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 72; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioSceneryResourceBlockBase() : base()
         {
-            names = Guerilla.ReadBlockArray<ScenarioObjectNamesBlock>(binaryReader);
-            invalidName_ = Guerilla.ReadBlockArray<DontUseMeScenarioEnvironmentObjectBlock>(binaryReader);
-            structureReferences = Guerilla.ReadBlockArray<ScenarioStructureBspReferenceBlock>(binaryReader);
-            palette = Guerilla.ReadBlockArray<ScenarioSceneryPaletteBlock>(binaryReader);
-            objects = Guerilla.ReadBlockArray<ScenarioSceneryBlock>(binaryReader);
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioObjectNamesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<DontUseMeScenarioEnvironmentObjectBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioStructureBspReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioSceneryPaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioSceneryBlock>(binaryReader));
             nextSceneryObjectIDSalt = binaryReader.ReadInt32();
-            palette0 = Guerilla.ReadBlockArray<ScenarioCratePaletteBlock>(binaryReader);
-            objects0 = Guerilla.ReadBlockArray<ScenarioCrateBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioCratePaletteBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ScenarioCrateBlock>(binaryReader));
             nextBlockObjectIDSalt = binaryReader.ReadInt32();
-            editorFolders = Guerilla.ReadBlockArray<GScenarioEditorFolderBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<GScenarioEditorFolderBlock>(binaryReader));
+            return blamPointers;
         }
-        public  ScenarioSceneryResourceBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            names = ReadBlockArrayData<ScenarioObjectNamesBlock>(binaryReader, blamPointers.Dequeue());
+            invalidName_ = ReadBlockArrayData<DontUseMeScenarioEnvironmentObjectBlock>(binaryReader, blamPointers.Dequeue());
+            structureReferences = ReadBlockArrayData<ScenarioStructureBspReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            palette = ReadBlockArrayData<ScenarioSceneryPaletteBlock>(binaryReader, blamPointers.Dequeue());
+            objects = ReadBlockArrayData<ScenarioSceneryBlock>(binaryReader, blamPointers.Dequeue());
+            palette0 = ReadBlockArrayData<ScenarioCratePaletteBlock>(binaryReader, blamPointers.Dequeue());
+            objects0 = ReadBlockArrayData<ScenarioCrateBlock>(binaryReader, blamPointers.Dequeue());
+            editorFolders = ReadBlockArrayData<GScenarioEditorFolderBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            names = Guerilla.ReadBlockArray<ScenarioObjectNamesBlock>(binaryReader);
-            invalidName_ = Guerilla.ReadBlockArray<DontUseMeScenarioEnvironmentObjectBlock>(binaryReader);
-            structureReferences = Guerilla.ReadBlockArray<ScenarioStructureBspReferenceBlock>(binaryReader);
-            palette = Guerilla.ReadBlockArray<ScenarioSceneryPaletteBlock>(binaryReader);
-            objects = Guerilla.ReadBlockArray<ScenarioSceneryBlock>(binaryReader);
-            nextSceneryObjectIDSalt = binaryReader.ReadInt32();
-            palette0 = Guerilla.ReadBlockArray<ScenarioCratePaletteBlock>(binaryReader);
-            objects0 = Guerilla.ReadBlockArray<ScenarioCrateBlock>(binaryReader);
-            nextBlockObjectIDSalt = binaryReader.ReadInt32();
-            editorFolders = Guerilla.ReadBlockArray<GScenarioEditorFolderBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<ScenarioObjectNamesBlock>(binaryWriter, names, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<DontUseMeScenarioEnvironmentObjectBlock>(binaryWriter, invalidName_, nextAddress);

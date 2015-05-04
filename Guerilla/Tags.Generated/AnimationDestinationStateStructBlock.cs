@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class AnimationDestinationStateStructBlock : AnimationDestinationStateStructBlockBase
     {
-        public  AnimationDestinationStateStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public AnimationDestinationStateStructBlock() : base()
         {
-            
-        }
-        public  AnimationDestinationStateStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
@@ -39,35 +36,30 @@ namespace Moonfish.Guerilla.Tags
         /// second level sub-index into state
         /// </summary>
         internal byte indexB;
-        
-        public override int SerializedSize{get { return 8; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  AnimationDestinationStateStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 8; } }
+        public override int Alignment { get { return 4; } }
+        public AnimationDestinationStateStructBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             stateName = binaryReader.ReadStringID();
             frameEventLink = (FrameEventLinkWhichFrameEventToLinkTo)binaryReader.ReadByte();
             invalidName_ = binaryReader.ReadBytes(1);
             indexA = binaryReader.ReadByte();
             indexB = binaryReader.ReadByte();
+            return blamPointers;
         }
-        public  AnimationDestinationStateStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            stateName = binaryReader.ReadStringID();
-            frameEventLink = (FrameEventLinkWhichFrameEventToLinkTo)binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(1);
-            indexA = binaryReader.ReadByte();
-            indexB = binaryReader.ReadByte();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(stateName);
                 binaryWriter.Write((Byte)frameEventLink);

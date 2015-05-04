@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class TableViewListReferenceBlock : TableViewListReferenceBlockBase
     {
-        public  TableViewListReferenceBlock(BinaryReader binaryReader): base(binaryReader)
+        public TableViewListReferenceBlock() : base()
         {
-            
-        }
-        public  TableViewListReferenceBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -30,14 +27,14 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector4 textColor;
         internal Moonfish.Tags.Point topLeft;
         internal TableViewListRowReferenceBlock[] tableRows;
-        
-        public override int SerializedSize{get { return 40; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  TableViewListReferenceBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 40; } }
+        public override int Alignment { get { return 4; } }
+        public TableViewListReferenceBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             animationIndex = (AnimationIndex)binaryReader.ReadInt16();
             introAnimationDelayMilliseconds = binaryReader.ReadInt16();
@@ -45,26 +42,20 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes(2);
             textColor = binaryReader.ReadVector4();
             topLeft = binaryReader.ReadPoint();
-            tableRows = Guerilla.ReadBlockArray<TableViewListRowReferenceBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<TableViewListRowReferenceBlock>(binaryReader));
+            return blamPointers;
         }
-        public  TableViewListReferenceBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            tableRows = ReadBlockArrayData<TableViewListRowReferenceBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            animationIndex = (AnimationIndex)binaryReader.ReadInt16();
-            introAnimationDelayMilliseconds = binaryReader.ReadInt16();
-            customFont = (CustomFont)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            textColor = binaryReader.ReadVector4();
-            topLeft = binaryReader.ReadPoint();
-            tableRows = Guerilla.ReadBlockArray<TableViewListRowReferenceBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write((Int16)animationIndex);

@@ -5,45 +5,41 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class RuntimeLevelsDefinitionBlock : RuntimeLevelsDefinitionBlockBase
     {
-        public  RuntimeLevelsDefinitionBlock(BinaryReader binaryReader): base(binaryReader)
+        public RuntimeLevelsDefinitionBlock() : base()
         {
-            
-        }
-        public  RuntimeLevelsDefinitionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class RuntimeLevelsDefinitionBlockBase : GuerillaBlock
     {
         internal RuntimeCampaignLevelBlock[] campaignLevels;
-        
-        public override int SerializedSize{get { return 8; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  RuntimeLevelsDefinitionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 8; } }
+        public override int Alignment { get { return 4; } }
+        public RuntimeLevelsDefinitionBlockBase() : base()
         {
-            campaignLevels = Guerilla.ReadBlockArray<RuntimeCampaignLevelBlock>(binaryReader);
         }
-        public  RuntimeLevelsDefinitionBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<RuntimeCampaignLevelBlock>(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            campaignLevels = Guerilla.ReadBlockArray<RuntimeCampaignLevelBlock>(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            campaignLevels = ReadBlockArrayData<RuntimeCampaignLevelBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<RuntimeCampaignLevelBlock>(binaryWriter, campaignLevels, nextAddress);
                 return nextAddress;

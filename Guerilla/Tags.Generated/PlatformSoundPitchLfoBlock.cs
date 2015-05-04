@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PlatformSoundPitchLfoBlock : PlatformSoundPitchLfoBlockBase
     {
-        public  PlatformSoundPitchLfoBlock(BinaryReader binaryReader): base(binaryReader)
+        public PlatformSoundPitchLfoBlock() : base()
         {
-            
-        }
-        public  PlatformSoundPitchLfoBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 48, Alignment = 4)]
@@ -25,31 +22,33 @@ namespace Moonfish.Guerilla.Tags
         internal SoundPlaybackParameterDefinitionBlock delay;
         internal SoundPlaybackParameterDefinitionBlock frequency;
         internal SoundPlaybackParameterDefinitionBlock pitchModulation;
-        
-        public override int SerializedSize{get { return 48; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PlatformSoundPitchLfoBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 48; } }
+        public override int Alignment { get { return 4; } }
+        public PlatformSoundPitchLfoBlockBase() : base()
         {
-            delay = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            frequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            pitchModulation = new SoundPlaybackParameterDefinitionBlock(binaryReader);
         }
-        public  PlatformSoundPitchLfoBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            delay = new SoundPlaybackParameterDefinitionBlock();
+            blamPointers.Concat(delay.ReadFields(binaryReader));
+            frequency = new SoundPlaybackParameterDefinitionBlock();
+            blamPointers.Concat(frequency.ReadFields(binaryReader));
+            pitchModulation = new SoundPlaybackParameterDefinitionBlock();
+            blamPointers.Concat(pitchModulation.ReadFields(binaryReader));
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            delay = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            frequency = new SoundPlaybackParameterDefinitionBlock(binaryReader);
-            pitchModulation = new SoundPlaybackParameterDefinitionBlock(binaryReader);
+            base.ReadPointers(binaryReader, blamPointers);
+            delay.ReadPointers(binaryReader, blamPointers);
+            frequency.ReadPointers(binaryReader, blamPointers);
+            pitchModulation.ReadPointers(binaryReader, blamPointers);
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 delay.Write(binaryWriter);
                 frequency.Write(binaryWriter);

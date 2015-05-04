@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("styl")]
     public partial class StyleBlock : StyleBlockBase
     {
-        public  StyleBlock(BinaryReader binaryReader): base(binaryReader)
+        public StyleBlock() : base()
         {
-            
-        }
-        public  StyleBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 92, Alignment = 4)]
@@ -56,14 +53,14 @@ namespace Moonfish.Guerilla.Tags
         internal Behaviors5 behaviors5;
         internal SpecialMovementBlock[] specialMovement;
         internal BehaviorNamesBlock[] behaviorList;
-        
-        public override int SerializedSize{get { return 92; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  StyleBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 92; } }
+        public override int Alignment { get { return 4; } }
+        public StyleBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
             combatStatusDecayOptions = (CombatStatusDecayOptions)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -87,44 +84,25 @@ namespace Moonfish.Guerilla.Tags
             behaviors3 = (Behaviors3)binaryReader.ReadInt32();
             behaviors4 = (Behaviors4)binaryReader.ReadInt32();
             behaviors5 = (Behaviors5)binaryReader.ReadInt32();
-            specialMovement = Guerilla.ReadBlockArray<SpecialMovementBlock>(binaryReader);
-            behaviorList = Guerilla.ReadBlockArray<BehaviorNamesBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<SpecialMovementBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<BehaviorNamesBlock>(binaryReader));
+            return blamPointers;
         }
-        public  StyleBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            specialMovement = ReadBlockArrayData<SpecialMovementBlock>(binaryReader, blamPointers.Dequeue());
+            behaviorList = ReadBlockArrayData<BehaviorNamesBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadString32();
-            combatStatusDecayOptions = (CombatStatusDecayOptions)binaryReader.ReadInt16();
-            invalidName_ = binaryReader.ReadBytes(2);
-            attitude = (Attitude)binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            engageAttitude = (EngageAttitude)binaryReader.ReadByte();
-            evasionAttitude = (EvasionAttitude)binaryReader.ReadByte();
-            coverAttitude = (CoverAttitude)binaryReader.ReadByte();
-            searchAttitude = (SearchAttitude)binaryReader.ReadByte();
-            presearchAttitude = (PresearchAttitude)binaryReader.ReadByte();
-            retreatAttitude = (RetreatAttitude)binaryReader.ReadByte();
-            chargeAttitude = (ChargeAttitude)binaryReader.ReadByte();
-            readyAttitude = (ReadyAttitude)binaryReader.ReadByte();
-            idleAttitude = (IdleAttitude)binaryReader.ReadByte();
-            weaponAttitude = (WeaponAttitude)binaryReader.ReadByte();
-            swarmAttitude = (SwarmAttitude)binaryReader.ReadByte();
-            invalidName_1 = binaryReader.ReadBytes(1);
-            styleControl = (StyleControl)binaryReader.ReadInt32();
-            behaviors1 = (Behaviors1)binaryReader.ReadInt32();
-            behaviors2 = (Behaviors2)binaryReader.ReadInt32();
-            behaviors3 = (Behaviors3)binaryReader.ReadInt32();
-            behaviors4 = (Behaviors4)binaryReader.ReadInt32();
-            behaviors5 = (Behaviors5)binaryReader.ReadInt32();
-            specialMovement = Guerilla.ReadBlockArray<SpecialMovementBlock>(binaryReader);
-            behaviorList = Guerilla.ReadBlockArray<BehaviorNamesBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write((Int16)combatStatusDecayOptions);

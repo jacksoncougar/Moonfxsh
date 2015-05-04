@@ -5,47 +5,42 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class MultiplayerColorBlock : MultiplayerColorBlockBase
     {
-        public  MultiplayerColorBlock(BinaryReader binaryReader): base(binaryReader)
+        public MultiplayerColorBlock() : base()
         {
-            
-        }
-        public  MultiplayerColorBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 12, Alignment = 4)]
     public class MultiplayerColorBlockBase : GuerillaBlock
     {
-        internal Moonfish.Tags.ColourR8G8B8 Colour;
-        
-        public override int SerializedSize{get { return 12; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  MultiplayerColorBlockBase(BinaryReader binaryReader): base(binaryReader)
+        internal Moonfish.Tags.ColourR8G8B8 color;
+        public override int SerializedSize { get { return 12; } }
+        public override int Alignment { get { return 4; } }
+        public MultiplayerColorBlockBase() : base()
         {
-            Colour = binaryReader.ReadColorR8G8B8();
         }
-        public  MultiplayerColorBlockBase(): base()
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
-            
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
+            color = binaryReader.ReadColorR8G8B8();
+            return blamPointers;
         }
-        public override void Read(BinaryReader binaryReader)
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            Colour = binaryReader.ReadColorR8G8B8();
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write(Colour);
+                binaryWriter.Write(color);
                 return nextAddress;
             }
         }

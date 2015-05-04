@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class StructureLightmapGroupBlock : StructureLightmapGroupBlockBase
     {
-        public  StructureLightmapGroupBlock(BinaryReader binaryReader): base(binaryReader)
+        public StructureLightmapGroupBlock() : base()
         {
-            
-        }
-        public  StructureLightmapGroupBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 104, Alignment = 4)]
@@ -38,55 +35,50 @@ namespace Moonfish.Guerilla.Tags
         internal LightmapInstanceBucketReferenceBlock[] instanceBucketRefs;
         internal LightmapSceneryObjectInfoBlock[] sceneryObjectInfo;
         internal LightmapInstanceBucketReferenceBlock[] sceneryObjectBucketRefs;
-        
-        public override int SerializedSize{get { return 104; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  StructureLightmapGroupBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 104; } }
+        public override int Alignment { get { return 4; } }
+        public StructureLightmapGroupBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             type = (Type)binaryReader.ReadInt16();
             flags = (Flags)binaryReader.ReadInt16();
             structureChecksum = binaryReader.ReadInt32();
-            sectionPalette = Guerilla.ReadBlockArray<StructureLightmapPaletteColorBlock>(binaryReader);
-            writablePalettes = Guerilla.ReadBlockArray<StructureLightmapPaletteColorBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureLightmapPaletteColorBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureLightmapPaletteColorBlock>(binaryReader));
             bitmapGroup = binaryReader.ReadTagReference();
-            clusters = Guerilla.ReadBlockArray<LightmapGeometrySectionBlock>(binaryReader);
-            clusterRenderInfo = Guerilla.ReadBlockArray<LightmapGeometryRenderInfoBlock>(binaryReader);
-            poopDefinitions = Guerilla.ReadBlockArray<LightmapGeometrySectionBlock>(binaryReader);
-            lightingEnvironments = Guerilla.ReadBlockArray<StructureLightmapLightingEnvironmentBlock>(binaryReader);
-            geometryBuckets = Guerilla.ReadBlockArray<LightmapVertexBufferBucketBlock>(binaryReader);
-            instanceRenderInfo = Guerilla.ReadBlockArray<LightmapGeometryRenderInfoBlock>(binaryReader);
-            instanceBucketRefs = Guerilla.ReadBlockArray<LightmapInstanceBucketReferenceBlock>(binaryReader);
-            sceneryObjectInfo = Guerilla.ReadBlockArray<LightmapSceneryObjectInfoBlock>(binaryReader);
-            sceneryObjectBucketRefs = Guerilla.ReadBlockArray<LightmapInstanceBucketReferenceBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightmapGeometrySectionBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightmapGeometryRenderInfoBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightmapGeometrySectionBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<StructureLightmapLightingEnvironmentBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightmapVertexBufferBucketBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightmapGeometryRenderInfoBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightmapInstanceBucketReferenceBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightmapSceneryObjectInfoBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightmapInstanceBucketReferenceBlock>(binaryReader));
+            return blamPointers;
         }
-        public  StructureLightmapGroupBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            sectionPalette = ReadBlockArrayData<StructureLightmapPaletteColorBlock>(binaryReader, blamPointers.Dequeue());
+            writablePalettes = ReadBlockArrayData<StructureLightmapPaletteColorBlock>(binaryReader, blamPointers.Dequeue());
+            clusters = ReadBlockArrayData<LightmapGeometrySectionBlock>(binaryReader, blamPointers.Dequeue());
+            clusterRenderInfo = ReadBlockArrayData<LightmapGeometryRenderInfoBlock>(binaryReader, blamPointers.Dequeue());
+            poopDefinitions = ReadBlockArrayData<LightmapGeometrySectionBlock>(binaryReader, blamPointers.Dequeue());
+            lightingEnvironments = ReadBlockArrayData<StructureLightmapLightingEnvironmentBlock>(binaryReader, blamPointers.Dequeue());
+            geometryBuckets = ReadBlockArrayData<LightmapVertexBufferBucketBlock>(binaryReader, blamPointers.Dequeue());
+            instanceRenderInfo = ReadBlockArrayData<LightmapGeometryRenderInfoBlock>(binaryReader, blamPointers.Dequeue());
+            instanceBucketRefs = ReadBlockArrayData<LightmapInstanceBucketReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            sceneryObjectInfo = ReadBlockArrayData<LightmapSceneryObjectInfoBlock>(binaryReader, blamPointers.Dequeue());
+            sceneryObjectBucketRefs = ReadBlockArrayData<LightmapInstanceBucketReferenceBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            type = (Type)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            structureChecksum = binaryReader.ReadInt32();
-            sectionPalette = Guerilla.ReadBlockArray<StructureLightmapPaletteColorBlock>(binaryReader);
-            writablePalettes = Guerilla.ReadBlockArray<StructureLightmapPaletteColorBlock>(binaryReader);
-            bitmapGroup = binaryReader.ReadTagReference();
-            clusters = Guerilla.ReadBlockArray<LightmapGeometrySectionBlock>(binaryReader);
-            clusterRenderInfo = Guerilla.ReadBlockArray<LightmapGeometryRenderInfoBlock>(binaryReader);
-            poopDefinitions = Guerilla.ReadBlockArray<LightmapGeometrySectionBlock>(binaryReader);
-            lightingEnvironments = Guerilla.ReadBlockArray<StructureLightmapLightingEnvironmentBlock>(binaryReader);
-            geometryBuckets = Guerilla.ReadBlockArray<LightmapVertexBufferBucketBlock>(binaryReader);
-            instanceRenderInfo = Guerilla.ReadBlockArray<LightmapGeometryRenderInfoBlock>(binaryReader);
-            instanceBucketRefs = Guerilla.ReadBlockArray<LightmapInstanceBucketReferenceBlock>(binaryReader);
-            sceneryObjectInfo = Guerilla.ReadBlockArray<LightmapSceneryObjectInfoBlock>(binaryReader);
-            sceneryObjectBucketRefs = Guerilla.ReadBlockArray<LightmapInstanceBucketReferenceBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)type);
                 binaryWriter.Write((Int16)flags);

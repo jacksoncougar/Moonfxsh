@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterLookBlock : CharacterLookBlockBase
     {
-        public  CharacterLookBlock(BinaryReader binaryReader): base(binaryReader)
+        public CharacterLookBlock() : base()
         {
-            
-        }
-        public  CharacterLookBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 80, Alignment = 4)]
@@ -63,14 +60,14 @@ namespace Moonfish.Guerilla.Tags
         /// rate at which we change aiming directions when looking around randomly when searching or in combat
         /// </summary>
         internal Moonfish.Model.Range combatIdleAimingSeconds;
-        
-        public override int SerializedSize{get { return 80; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  CharacterLookBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 80; } }
+        public override int Alignment { get { return 4; } }
+        public CharacterLookBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             maximumAimingDeviationDegrees = binaryReader.ReadVector2();
             maximumLookingDeviationDegrees = binaryReader.ReadVector2();
             invalidName_ = binaryReader.ReadBytes(16);
@@ -82,28 +79,32 @@ namespace Moonfish.Guerilla.Tags
             noncombatIdleAimingSeconds = binaryReader.ReadRange();
             combatIdleLookingSeconds = binaryReader.ReadRange();
             combatIdleAimingSeconds = binaryReader.ReadRange();
+            return blamPointers;
         }
-        public  CharacterLookBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_[15].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            maximumAimingDeviationDegrees = binaryReader.ReadVector2();
-            maximumLookingDeviationDegrees = binaryReader.ReadVector2();
-            invalidName_ = binaryReader.ReadBytes(16);
-            noncombatLookDeltaLDegrees = binaryReader.ReadSingle();
-            noncombatLookDeltaRDegrees = binaryReader.ReadSingle();
-            combatLookDeltaLDegrees = binaryReader.ReadSingle();
-            combatLookDeltaRDegrees = binaryReader.ReadSingle();
-            noncombatIdleLookingSeconds = binaryReader.ReadRange();
-            noncombatIdleAimingSeconds = binaryReader.ReadRange();
-            combatIdleLookingSeconds = binaryReader.ReadRange();
-            combatIdleAimingSeconds = binaryReader.ReadRange();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(maximumAimingDeviationDegrees);
                 binaryWriter.Write(maximumLookingDeviationDegrees);

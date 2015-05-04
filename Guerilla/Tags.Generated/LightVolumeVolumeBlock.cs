@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class LightVolumeVolumeBlock : LightVolumeVolumeBlockBase
     {
-        public  LightVolumeVolumeBlock(BinaryReader binaryReader): base(binaryReader)
+        public LightVolumeVolumeBlock() : base()
         {
-            
-        }
-        public  LightVolumeVolumeBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 152, Alignment = 4)]
@@ -42,23 +39,28 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal LightVolumeRuntimeOffsetBlock[] invalidName_0;
         internal byte[] invalidName_1;
-        
-        public override int SerializedSize{get { return 152; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  LightVolumeVolumeBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 152; } }
+        public override int Alignment { get { return 4; } }
+        public LightVolumeVolumeBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             flags = (Flags)binaryReader.ReadInt32();
             bitmap = binaryReader.ReadTagReference();
             spriteCount4256 = binaryReader.ReadInt32();
-            offsetFunction = new ScalarFunctionStructBlock(binaryReader);
-            radiusFunction = new ScalarFunctionStructBlock(binaryReader);
-            brightnessFunction = new ScalarFunctionStructBlock(binaryReader);
-            colorFunction = new ColorFunctionStructBlock(binaryReader);
-            facingFunction = new ScalarFunctionStructBlock(binaryReader);
-            aspect = Guerilla.ReadBlockArray<LightVolumeAspectBlock>(binaryReader);
+            offsetFunction = new ScalarFunctionStructBlock();
+            blamPointers.Concat(offsetFunction.ReadFields(binaryReader));
+            radiusFunction = new ScalarFunctionStructBlock();
+            blamPointers.Concat(radiusFunction.ReadFields(binaryReader));
+            brightnessFunction = new ScalarFunctionStructBlock();
+            blamPointers.Concat(brightnessFunction.ReadFields(binaryReader));
+            colorFunction = new ColorFunctionStructBlock();
+            blamPointers.Concat(colorFunction.ReadFields(binaryReader));
+            facingFunction = new ScalarFunctionStructBlock();
+            blamPointers.Concat(facingFunction.ReadFields(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightVolumeAspectBlock>(binaryReader));
             radiusFracMin00039062510 = binaryReader.ReadSingle();
             dEPRECATEDXStepExponent050875 = binaryReader.ReadSingle();
             dEPRECATEDXBufferLength32512 = binaryReader.ReadInt32();
@@ -67,38 +69,77 @@ namespace Moonfish.Guerilla.Tags
             xBufferMaxIterations1256 = binaryReader.ReadInt32();
             xDeltaMaxError000101 = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadBytes(4);
-            invalidName_0 = Guerilla.ReadBlockArray<LightVolumeRuntimeOffsetBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<LightVolumeRuntimeOffsetBlock>(binaryReader));
             invalidName_1 = binaryReader.ReadBytes(48);
+            return blamPointers;
         }
-        public  LightVolumeVolumeBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            offsetFunction.ReadPointers(binaryReader, blamPointers);
+            radiusFunction.ReadPointers(binaryReader, blamPointers);
+            brightnessFunction.ReadPointers(binaryReader, blamPointers);
+            colorFunction.ReadPointers(binaryReader, blamPointers);
+            facingFunction.ReadPointers(binaryReader, blamPointers);
+            aspect = ReadBlockArrayData<LightVolumeAspectBlock>(binaryReader, blamPointers.Dequeue());
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0 = ReadBlockArrayData<LightVolumeRuntimeOffsetBlock>(binaryReader, blamPointers.Dequeue());
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[15].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[16].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[17].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[18].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[19].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[20].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[21].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[22].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[23].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[24].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[25].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[26].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[27].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[28].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[29].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[30].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[31].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[32].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[33].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[34].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[35].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[36].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[37].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[38].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[39].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[40].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[41].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[42].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[43].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[44].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[45].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[46].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[47].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            flags = (Flags)binaryReader.ReadInt32();
-            bitmap = binaryReader.ReadTagReference();
-            spriteCount4256 = binaryReader.ReadInt32();
-            offsetFunction = new ScalarFunctionStructBlock(binaryReader);
-            radiusFunction = new ScalarFunctionStructBlock(binaryReader);
-            brightnessFunction = new ScalarFunctionStructBlock(binaryReader);
-            colorFunction = new ColorFunctionStructBlock(binaryReader);
-            facingFunction = new ScalarFunctionStructBlock(binaryReader);
-            aspect = Guerilla.ReadBlockArray<LightVolumeAspectBlock>(binaryReader);
-            radiusFracMin00039062510 = binaryReader.ReadSingle();
-            dEPRECATEDXStepExponent050875 = binaryReader.ReadSingle();
-            dEPRECATEDXBufferLength32512 = binaryReader.ReadInt32();
-            xBufferSpacing1256 = binaryReader.ReadInt32();
-            xBufferMinIterations1256 = binaryReader.ReadInt32();
-            xBufferMaxIterations1256 = binaryReader.ReadInt32();
-            xDeltaMaxError000101 = binaryReader.ReadSingle();
-            invalidName_ = binaryReader.ReadBytes(4);
-            invalidName_0 = Guerilla.ReadBlockArray<LightVolumeRuntimeOffsetBlock>(binaryReader);
-            invalidName_1 = binaryReader.ReadBytes(48);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)flags);
                 binaryWriter.Write(bitmap);

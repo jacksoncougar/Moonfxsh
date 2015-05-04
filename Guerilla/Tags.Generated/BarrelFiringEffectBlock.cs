@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class BarrelFiringEffectBlock : BarrelFiringEffectBlockBase
     {
-        public  BarrelFiringEffectBlock(BinaryReader binaryReader): base(binaryReader)
+        public BarrelFiringEffectBlock() : base()
         {
-            
-        }
-        public  BarrelFiringEffectBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 52, Alignment = 4)]
@@ -60,14 +57,14 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         [TagReference("jpt!")]
         internal Moonfish.Tags.TagReference emptyDamage;
-        
-        public override int SerializedSize{get { return 52; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  BarrelFiringEffectBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 52; } }
+        public override int Alignment { get { return 4; } }
+        public BarrelFiringEffectBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             shotCountLowerBound = binaryReader.ReadInt16();
             shotCountUpperBound = binaryReader.ReadInt16();
             firingEffect = binaryReader.ReadTagReference();
@@ -76,25 +73,16 @@ namespace Moonfish.Guerilla.Tags
             firingDamage = binaryReader.ReadTagReference();
             misfireDamage = binaryReader.ReadTagReference();
             emptyDamage = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  BarrelFiringEffectBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            shotCountLowerBound = binaryReader.ReadInt16();
-            shotCountUpperBound = binaryReader.ReadInt16();
-            firingEffect = binaryReader.ReadTagReference();
-            misfireEffect = binaryReader.ReadTagReference();
-            emptyEffect = binaryReader.ReadTagReference();
-            firingDamage = binaryReader.ReadTagReference();
-            misfireDamage = binaryReader.ReadTagReference();
-            emptyDamage = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(shotCountLowerBound);
                 binaryWriter.Write(shotCountUpperBound);

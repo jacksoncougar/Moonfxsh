@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("snde")]
     public partial class SoundEnvironmentBlock : SoundEnvironmentBlockBase
     {
-        public  SoundEnvironmentBlock(BinaryReader binaryReader): base(binaryReader)
+        public SoundEnvironmentBlock() : base()
         {
-            
-        }
-        public  SoundEnvironmentBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 72, Alignment = 4)]
@@ -62,14 +59,14 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         internal float hfReference20To20000Hz;
         internal byte[] invalidName_1;
-        
-        public override int SerializedSize{get { return 72; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  SoundEnvironmentBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 72; } }
+        public override int Alignment { get { return 4; } }
+        public SoundEnvironmentBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(4);
             priority = binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
@@ -86,33 +83,38 @@ namespace Moonfish.Guerilla.Tags
             density = binaryReader.ReadSingle();
             hfReference20To20000Hz = binaryReader.ReadSingle();
             invalidName_1 = binaryReader.ReadBytes(16);
+            return blamPointers;
         }
-        public  SoundEnvironmentBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[4].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[5].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[6].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[7].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[8].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[9].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[10].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[11].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[12].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[13].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[14].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[15].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadBytes(4);
-            priority = binaryReader.ReadInt16();
-            invalidName_0 = binaryReader.ReadBytes(2);
-            roomIntensityDB = binaryReader.ReadSingle();
-            roomIntensityHfDB = binaryReader.ReadSingle();
-            roomRolloff0To10 = binaryReader.ReadSingle();
-            decayTime1To20Seconds = binaryReader.ReadSingle();
-            decayHfRatio1To2 = binaryReader.ReadSingle();
-            reflectionsIntensityDB10010 = binaryReader.ReadSingle();
-            reflectionsDelay0To3Seconds = binaryReader.ReadSingle();
-            reverbIntensityDB10020 = binaryReader.ReadSingle();
-            reverbDelay0To1Seconds = binaryReader.ReadSingle();
-            diffusion = binaryReader.ReadSingle();
-            density = binaryReader.ReadSingle();
-            hfReference20To20000Hz = binaryReader.ReadSingle();
-            invalidName_1 = binaryReader.ReadBytes(16);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 4);
                 binaryWriter.Write(priority);

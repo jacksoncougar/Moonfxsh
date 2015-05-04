@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class CharacterRetreatBlock : CharacterRetreatBlockBase
     {
-        public  CharacterRetreatBlock(BinaryReader binaryReader): base(binaryReader)
+        public CharacterRetreatBlock() : base()
         {
-            
-        }
-        public  CharacterRetreatBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 76, Alignment = 4)]
@@ -84,14 +81,14 @@ namespace Moonfish.Guerilla.Tags
         /// </summary>
         [TagReference("weap")]
         internal Moonfish.Tags.TagReference backupWeapon;
-        
-        public override int SerializedSize{get { return 76; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  CharacterRetreatBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 76; } }
+        public override int Alignment { get { return 4; } }
+        public CharacterRetreatBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             retreatFlags = (RetreatFlags)binaryReader.ReadInt32();
             shieldThreshold = binaryReader.ReadSingle();
             scaryTargetThreshold = binaryReader.ReadSingle();
@@ -108,33 +105,16 @@ namespace Moonfish.Guerilla.Tags
             zigZagPeriodSeconds = binaryReader.ReadSingle();
             retreatGrenadeChance = binaryReader.ReadSingle();
             backupWeapon = binaryReader.ReadTagReference();
+            return blamPointers;
         }
-        public  CharacterRetreatBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            retreatFlags = (RetreatFlags)binaryReader.ReadInt32();
-            shieldThreshold = binaryReader.ReadSingle();
-            scaryTargetThreshold = binaryReader.ReadSingle();
-            dangerThreshold = binaryReader.ReadSingle();
-            proximityThreshold = binaryReader.ReadSingle();
-            minMaxForcedCowerTimeBounds = binaryReader.ReadRange();
-            minMaxCowerTimeoutBounds = binaryReader.ReadRange();
-            proximityAmbushThreshold = binaryReader.ReadSingle();
-            awarenessAmbushThreshold = binaryReader.ReadSingle();
-            leaderDeadRetreatChance = binaryReader.ReadSingle();
-            peerDeadRetreatChance = binaryReader.ReadSingle();
-            secondPeerDeadRetreatChance = binaryReader.ReadSingle();
-            zigZagAngleDegrees = binaryReader.ReadSingle();
-            zigZagPeriodSeconds = binaryReader.ReadSingle();
-            retreatGrenadeChance = binaryReader.ReadSingle();
-            backupWeapon = binaryReader.ReadTagReference();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int32)retreatFlags);
                 binaryWriter.Write(shieldThreshold);

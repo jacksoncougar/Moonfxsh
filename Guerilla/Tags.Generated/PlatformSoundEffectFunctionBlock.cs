@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class PlatformSoundEffectFunctionBlock : PlatformSoundEffectFunctionBlockBase
     {
-        public  PlatformSoundEffectFunctionBlock(BinaryReader binaryReader): base(binaryReader)
+        public PlatformSoundEffectFunctionBlock() : base()
         {
-            
-        }
-        public  PlatformSoundEffectFunctionBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 16, Alignment = 4)]
@@ -26,33 +23,30 @@ namespace Moonfish.Guerilla.Tags
         internal Range range;
         internal MappingFunctionBlock function;
         internal float timePeriodSeconds;
-        
-        public override int SerializedSize{get { return 16; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  PlatformSoundEffectFunctionBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 16; } }
+        public override int Alignment { get { return 4; } }
+        public PlatformSoundEffectFunctionBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             input = (Input)binaryReader.ReadInt16();
             range = (Range)binaryReader.ReadInt16();
-            function = new MappingFunctionBlock(binaryReader);
+            function = new MappingFunctionBlock();
+            blamPointers.Concat(function.ReadFields(binaryReader));
             timePeriodSeconds = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  PlatformSoundEffectFunctionBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            function.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            input = (Input)binaryReader.ReadInt16();
-            range = (Range)binaryReader.ReadInt16();
-            function = new MappingFunctionBlock(binaryReader);
-            timePeriodSeconds = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write((Int16)input);
                 binaryWriter.Write((Int16)range);

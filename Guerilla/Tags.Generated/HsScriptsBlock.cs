@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class HsScriptsBlock : HsScriptsBlockBase
     {
-        public  HsScriptsBlock(BinaryReader binaryReader): base(binaryReader)
+        public HsScriptsBlock() : base()
         {
-            
-        }
-        public  HsScriptsBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -26,33 +23,28 @@ namespace Moonfish.Guerilla.Tags
         internal ScriptType scriptType;
         internal ReturnType returnType;
         internal int rootExpressionIndex;
-        
-        public override int SerializedSize{get { return 40; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  HsScriptsBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 40; } }
+        public override int Alignment { get { return 4; } }
+        public HsScriptsBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
             scriptType = (ScriptType)binaryReader.ReadInt16();
             returnType = (ReturnType)binaryReader.ReadInt16();
             rootExpressionIndex = binaryReader.ReadInt32();
+            return blamPointers;
         }
-        public  HsScriptsBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            name = binaryReader.ReadString32();
-            scriptType = (ScriptType)binaryReader.ReadInt16();
-            returnType = (ReturnType)binaryReader.ReadInt16();
-            rootExpressionIndex = binaryReader.ReadInt32();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write((Int16)scriptType);

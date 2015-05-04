@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class NewHudDashlightDataStructBlock : NewHudDashlightDataStructBlockBase
     {
-        public  NewHudDashlightDataStructBlock(BinaryReader binaryReader): base(binaryReader)
+        public NewHudDashlightDataStructBlock() : base()
         {
-            
-        }
-        public  NewHudDashlightDataStructBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 8, Alignment = 4)]
@@ -34,31 +31,27 @@ namespace Moonfish.Guerilla.Tags
         /// the ageCutoff for showing the low battery dashlight
         /// </summary>
         internal float ageCutoff;
-        
-        public override int SerializedSize{get { return 8; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  NewHudDashlightDataStructBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 8; } }
+        public override int Alignment { get { return 4; } }
+        public NewHudDashlightDataStructBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             lowClipCutoff = binaryReader.ReadInt16();
             lowAmmoCutoff = binaryReader.ReadInt16();
             ageCutoff = binaryReader.ReadSingle();
+            return blamPointers;
         }
-        public  NewHudDashlightDataStructBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            lowClipCutoff = binaryReader.ReadInt16();
-            lowAmmoCutoff = binaryReader.ReadInt16();
-            ageCutoff = binaryReader.ReadSingle();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(lowClipCutoff);
                 binaryWriter.Write(lowAmmoCutoff);

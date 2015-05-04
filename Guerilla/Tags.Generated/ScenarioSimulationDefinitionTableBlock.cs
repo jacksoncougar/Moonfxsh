@@ -5,45 +5,44 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class ScenarioSimulationDefinitionTableBlock : ScenarioSimulationDefinitionTableBlockBase
     {
-        public  ScenarioSimulationDefinitionTableBlock(BinaryReader binaryReader): base(binaryReader)
+        public ScenarioSimulationDefinitionTableBlock() : base()
         {
-            
-        }
-        public  ScenarioSimulationDefinitionTableBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 4, Alignment = 4)]
     public class ScenarioSimulationDefinitionTableBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
-        
-        public override int SerializedSize{get { return 4; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ScenarioSimulationDefinitionTableBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 4; } }
+        public override int Alignment { get { return 4; } }
+        public ScenarioSimulationDefinitionTableBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(4);
+            return blamPointers;
         }
-        public  ScenarioSimulationDefinitionTableBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_[3].ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadBytes(4);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 4);
                 return nextAddress;

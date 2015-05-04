@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class DecoratorModelVerticesBlock : DecoratorModelVerticesBlockBase
     {
-        public  DecoratorModelVerticesBlock(BinaryReader binaryReader): base(binaryReader)
+        public DecoratorModelVerticesBlock() : base()
         {
-            
-        }
-        public  DecoratorModelVerticesBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 56, Alignment = 4)]
@@ -27,35 +24,29 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 tangent;
         internal OpenTK.Vector3 binormal;
         internal OpenTK.Vector2 texcoord;
-        
-        public override int SerializedSize{get { return 56; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  DecoratorModelVerticesBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 56; } }
+        public override int Alignment { get { return 4; } }
+        public DecoratorModelVerticesBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             position = binaryReader.ReadVector3();
             normal = binaryReader.ReadVector3();
             tangent = binaryReader.ReadVector3();
             binormal = binaryReader.ReadVector3();
             texcoord = binaryReader.ReadVector2();
+            return blamPointers;
         }
-        public  DecoratorModelVerticesBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            position = binaryReader.ReadVector3();
-            normal = binaryReader.ReadVector3();
-            tangent = binaryReader.ReadVector3();
-            binormal = binaryReader.ReadVector3();
-            texcoord = binaryReader.ReadVector2();
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(position);
                 binaryWriter.Write(normal);

@@ -5,6 +5,8 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Tags
 {
@@ -19,13 +21,8 @@ namespace Moonfish.Guerilla.Tags
     [TagClassAttribute("obje")]
     public partial class ObjectBlock : ObjectBlockBase
     {
-        public  ObjectBlock(BinaryReader binaryReader): base(binaryReader)
+        public ObjectBlock() : base()
         {
-            
-        }
-        public  ObjectBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 188, Alignment = 4)]
@@ -107,14 +104,14 @@ namespace Moonfish.Guerilla.Tags
         internal OldObjectFunctionBlock[] oldFunctions;
         internal ObjectChangeColors[] changeColors;
         internal PredictedResourceBlock[] predictedResources;
-        
-        public override int SerializedSize{get { return 188; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  ObjectBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 188; } }
+        public override int Alignment { get { return 4; } }
+        public ObjectBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(2);
             flags = (Flags)binaryReader.ReadInt16();
             boundingRadiusWorldUnits = binaryReader.ReadSingle();
@@ -132,8 +129,8 @@ namespace Moonfish.Guerilla.Tags
             modifierShader = binaryReader.ReadTagReference();
             creationEffect = binaryReader.ReadTagReference();
             materialEffects = binaryReader.ReadTagReference();
-            aiProperties = Guerilla.ReadBlockArray<ObjectAiPropertiesBlock>(binaryReader);
-            functions = Guerilla.ReadBlockArray<ObjectFunctionBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ObjectAiPropertiesBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ObjectFunctionBlock>(binaryReader));
             applyCollisionDamageScale = binaryReader.ReadSingle();
             minGameAccDefault = binaryReader.ReadSingle();
             maxGameAccDefault = binaryReader.ReadSingle();
@@ -145,57 +142,37 @@ namespace Moonfish.Guerilla.Tags
             maxAbsScaleDefault = binaryReader.ReadSingle();
             hudTextMessageIndex = binaryReader.ReadInt16();
             invalidName_2 = binaryReader.ReadBytes(2);
-            attachments = Guerilla.ReadBlockArray<ObjectAttachmentBlock>(binaryReader);
-            widgets = Guerilla.ReadBlockArray<ObjectWidgetBlock>(binaryReader);
-            oldFunctions = Guerilla.ReadBlockArray<OldObjectFunctionBlock>(binaryReader);
-            changeColors = Guerilla.ReadBlockArray<ObjectChangeColors>(binaryReader);
-            predictedResources = Guerilla.ReadBlockArray<PredictedResourceBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<ObjectAttachmentBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ObjectWidgetBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<OldObjectFunctionBlock>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<ObjectChangeColors>(binaryReader));
+            blamPointers.Enqueue(ReadBlockArrayPointer<PredictedResourceBlock>(binaryReader));
+            return blamPointers;
         }
-        public  ObjectBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_0[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[1].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[2].ReadPointers(binaryReader, blamPointers);
+            invalidName_1[3].ReadPointers(binaryReader, blamPointers);
+            aiProperties = ReadBlockArrayData<ObjectAiPropertiesBlock>(binaryReader, blamPointers.Dequeue());
+            functions = ReadBlockArrayData<ObjectFunctionBlock>(binaryReader, blamPointers.Dequeue());
+            invalidName_2[0].ReadPointers(binaryReader, blamPointers);
+            invalidName_2[1].ReadPointers(binaryReader, blamPointers);
+            attachments = ReadBlockArrayData<ObjectAttachmentBlock>(binaryReader, blamPointers.Dequeue());
+            widgets = ReadBlockArrayData<ObjectWidgetBlock>(binaryReader, blamPointers.Dequeue());
+            oldFunctions = ReadBlockArrayData<OldObjectFunctionBlock>(binaryReader, blamPointers.Dequeue());
+            changeColors = ReadBlockArrayData<ObjectChangeColors>(binaryReader, blamPointers.Dequeue());
+            predictedResources = ReadBlockArrayData<PredictedResourceBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            invalidName_ = binaryReader.ReadBytes(2);
-            flags = (Flags)binaryReader.ReadInt16();
-            boundingRadiusWorldUnits = binaryReader.ReadSingle();
-            boundingOffset = binaryReader.ReadVector3();
-            accelerationScale0Inf = binaryReader.ReadSingle();
-            lightmapShadowMode = (LightmapShadowMode)binaryReader.ReadInt16();
-            sweetenerSize = (SweetenerSize)binaryReader.ReadByte();
-            invalidName_0 = binaryReader.ReadBytes(1);
-            invalidName_1 = binaryReader.ReadBytes(4);
-            dynamicLightSphereRadius = binaryReader.ReadSingle();
-            dynamicLightSphereOffset = binaryReader.ReadVector3();
-            defaultModelVariant = binaryReader.ReadStringID();
-            model = binaryReader.ReadTagReference();
-            crateObject = binaryReader.ReadTagReference();
-            modifierShader = binaryReader.ReadTagReference();
-            creationEffect = binaryReader.ReadTagReference();
-            materialEffects = binaryReader.ReadTagReference();
-            aiProperties = Guerilla.ReadBlockArray<ObjectAiPropertiesBlock>(binaryReader);
-            functions = Guerilla.ReadBlockArray<ObjectFunctionBlock>(binaryReader);
-            applyCollisionDamageScale = binaryReader.ReadSingle();
-            minGameAccDefault = binaryReader.ReadSingle();
-            maxGameAccDefault = binaryReader.ReadSingle();
-            minGameScaleDefault = binaryReader.ReadSingle();
-            maxGameScaleDefault = binaryReader.ReadSingle();
-            minAbsAccDefault = binaryReader.ReadSingle();
-            maxAbsAccDefault = binaryReader.ReadSingle();
-            minAbsScaleDefault = binaryReader.ReadSingle();
-            maxAbsScaleDefault = binaryReader.ReadSingle();
-            hudTextMessageIndex = binaryReader.ReadInt16();
-            invalidName_2 = binaryReader.ReadBytes(2);
-            attachments = Guerilla.ReadBlockArray<ObjectAttachmentBlock>(binaryReader);
-            widgets = Guerilla.ReadBlockArray<ObjectWidgetBlock>(binaryReader);
-            oldFunctions = Guerilla.ReadBlockArray<OldObjectFunctionBlock>(binaryReader);
-            changeColors = Guerilla.ReadBlockArray<ObjectChangeColors>(binaryReader);
-            predictedResources = Guerilla.ReadBlockArray<PredictedResourceBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write((Int16)flags);

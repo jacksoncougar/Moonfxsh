@@ -5,18 +5,15 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class UiErrorCategoryBlock : UiErrorCategoryBlockBase
     {
-        public  UiErrorCategoryBlock(BinaryReader binaryReader): base(binaryReader)
+        public UiErrorCategoryBlock() : base()
         {
-            
-        }
-        public  UiErrorCategoryBlock(): base()
-        {
-            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -33,14 +30,14 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.StringIdent defaultOk;
         internal Moonfish.Tags.StringIdent defaultCancel;
         internal UiErrorBlock[] errorBlock;
-        
-        public override int SerializedSize{get { return 40; }}
-        
-        
-        public override int Alignment{get { return 4; }}
-        
-        public  UiErrorCategoryBlockBase(BinaryReader binaryReader): base(binaryReader)
+        public override int SerializedSize { get { return 40; } }
+        public override int Alignment { get { return 4; } }
+        public UiErrorCategoryBlockBase() : base()
         {
+        }
+        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
+        {
+            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             categoryName = binaryReader.ReadStringID();
             flags = (Flags)binaryReader.ReadInt16();
             defaultButton = (DefaultButton)binaryReader.ReadByte();
@@ -50,28 +47,19 @@ namespace Moonfish.Guerilla.Tags
             defaultMessage = binaryReader.ReadStringID();
             defaultOk = binaryReader.ReadStringID();
             defaultCancel = binaryReader.ReadStringID();
-            errorBlock = Guerilla.ReadBlockArray<UiErrorBlock>(binaryReader);
+            blamPointers.Enqueue(ReadBlockArrayPointer<UiErrorBlock>(binaryReader));
+            return blamPointers;
         }
-        public  UiErrorCategoryBlockBase(): base()
+        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-            
+            base.ReadPointers(binaryReader, blamPointers);
+            invalidName_[0].ReadPointers(binaryReader, blamPointers);
+            errorBlock = ReadBlockArrayData<UiErrorBlock>(binaryReader, blamPointers.Dequeue());
         }
-        public override void Read(BinaryReader binaryReader)
+        public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
-            categoryName = binaryReader.ReadStringID();
-            flags = (Flags)binaryReader.ReadInt16();
-            defaultButton = (DefaultButton)binaryReader.ReadByte();
-            invalidName_ = binaryReader.ReadBytes(1);
-            stringTag = binaryReader.ReadTagReference();
-            defaultTitle = binaryReader.ReadStringID();
-            defaultMessage = binaryReader.ReadStringID();
-            defaultOk = binaryReader.ReadStringID();
-            defaultCancel = binaryReader.ReadStringID();
-            errorBlock = Guerilla.ReadBlockArray<UiErrorBlock>(binaryReader);
-        }
-        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
-        {
-            using(binaryWriter.BaseStream.Pin())
+            base.Write(binaryWriter, nextAddress);
+using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(categoryName);
                 binaryWriter.Write((Int16)flags);

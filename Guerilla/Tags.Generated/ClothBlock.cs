@@ -57,7 +57,7 @@ namespace Moonfish.Guerilla.Tags
             gridSpacingX = binaryReader.ReadSingle();
             gridSpacingY = binaryReader.ReadSingle();
             properties = new ClothPropertiesBlock();
-            blamPointers.Concat(properties.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(properties.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer<ClothVerticesBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<ClothIndicesBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<ClothIndicesBlock>(binaryReader));

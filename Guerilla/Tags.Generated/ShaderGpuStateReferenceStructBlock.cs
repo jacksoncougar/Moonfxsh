@@ -35,19 +35,19 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             renderStates = new TagBlockIndexStructBlock();
-            blamPointers.Concat(renderStates.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(renderStates.ReadFields(binaryReader)));
             textureStageStates = new TagBlockIndexStructBlock();
-            blamPointers.Concat(textureStageStates.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(textureStageStates.ReadFields(binaryReader)));
             renderStateParameters = new TagBlockIndexStructBlock();
-            blamPointers.Concat(renderStateParameters.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(renderStateParameters.ReadFields(binaryReader)));
             textureStageParameters = new TagBlockIndexStructBlock();
-            blamPointers.Concat(textureStageParameters.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(textureStageParameters.ReadFields(binaryReader)));
             textures = new TagBlockIndexStructBlock();
-            blamPointers.Concat(textures.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(textures.ReadFields(binaryReader)));
             vnConstants = new TagBlockIndexStructBlock();
-            blamPointers.Concat(vnConstants.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(vnConstants.ReadFields(binaryReader)));
             cnConstants = new TagBlockIndexStructBlock();
-            blamPointers.Concat(cnConstants.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(cnConstants.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

@@ -61,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorModelIndicesBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<CachedDataBlock>(binaryReader));
             geometrySectionInfo = new GlobalGeometryBlockInfoStructBlock();
-            blamPointers.Concat(geometrySectionInfo.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(geometrySectionInfo.ReadFields(binaryReader)));
             invalidName_ = binaryReader.ReadBytes(16);
             return blamPointers;
         }

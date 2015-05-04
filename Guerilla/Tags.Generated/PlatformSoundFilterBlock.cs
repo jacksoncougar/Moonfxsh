@@ -36,13 +36,13 @@ namespace Moonfish.Guerilla.Tags
             filterType = (FilterType)binaryReader.ReadInt32();
             filterWidth07 = binaryReader.ReadInt32();
             leftFilterFrequency = new SoundPlaybackParameterDefinitionBlock();
-            blamPointers.Concat(leftFilterFrequency.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(leftFilterFrequency.ReadFields(binaryReader)));
             leftFilterGain = new SoundPlaybackParameterDefinitionBlock();
-            blamPointers.Concat(leftFilterGain.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(leftFilterGain.ReadFields(binaryReader)));
             rightFilterFrequency = new SoundPlaybackParameterDefinitionBlock();
-            blamPointers.Concat(rightFilterFrequency.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(rightFilterFrequency.ReadFields(binaryReader)));
             rightFilterGain = new SoundPlaybackParameterDefinitionBlock();
-            blamPointers.Concat(rightFilterGain.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(rightFilterGain.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

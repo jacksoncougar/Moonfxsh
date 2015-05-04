@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             acceleratorNameInterpolator = binaryReader.ReadStringID();
             multiplierNameInterpolator = binaryReader.ReadStringID();
             function = new ScalarFunctionStructBlock();
-            blamPointers.Concat(function.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(function.ReadFields(binaryReader)));
             invalidName_ = binaryReader.ReadBytes(2);
             invalidName_0 = binaryReader.ReadBytes(2);
             return blamPointers;

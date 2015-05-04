@@ -33,15 +33,15 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             bitmapTransforms = new TagBlockIndexStructBlock();
-            blamPointers.Concat(bitmapTransforms.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(bitmapTransforms.ReadFields(binaryReader)));
             renderStates = new TagBlockIndexStructBlock();
-            blamPointers.Concat(renderStates.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(renderStates.ReadFields(binaryReader)));
             textureStates = new TagBlockIndexStructBlock();
-            blamPointers.Concat(textureStates.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(textureStates.ReadFields(binaryReader)));
             pixelConstants = new TagBlockIndexStructBlock();
-            blamPointers.Concat(pixelConstants.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(pixelConstants.ReadFields(binaryReader)));
             vertexConstants = new TagBlockIndexStructBlock();
-            blamPointers.Concat(vertexConstants.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(vertexConstants.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

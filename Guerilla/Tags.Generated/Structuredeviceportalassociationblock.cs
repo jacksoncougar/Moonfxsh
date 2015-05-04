@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             deviceId = new ScenarioObjectIdStructBlock();
-            blamPointers.Concat(deviceId.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(deviceId.ReadFields(binaryReader)));
             firstGamePortalIndex = binaryReader.ReadInt16();
             gamePortalCount = binaryReader.ReadInt16();
             return blamPointers;

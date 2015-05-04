@@ -154,7 +154,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspDebugInfoBlock>(binaryReader));
             decorators = binaryReader.ReadTagReference();
             structurePhysics = new GlobalStructurePhysicsStructBlock();
-            blamPointers.Concat(structurePhysics.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(structurePhysics.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer<GlobalWaterDefinitionsBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<StructurePortalDeviceMappingBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspAudibilityBlock>(binaryReader));

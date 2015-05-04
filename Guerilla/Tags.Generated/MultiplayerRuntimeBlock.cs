@@ -162,7 +162,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<WeaponsBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<VehiclesBlock>(binaryReader));
             arr = new GrenadeAndPowerupStructBlock();
-            blamPointers.Concat(arr.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(arr.ReadFields(binaryReader)));
             inGameText = binaryReader.ReadTagReference();
             blamPointers.Enqueue(ReadBlockArrayPointer<SoundsBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<GameEngineGeneralEventBlock>(binaryReader));

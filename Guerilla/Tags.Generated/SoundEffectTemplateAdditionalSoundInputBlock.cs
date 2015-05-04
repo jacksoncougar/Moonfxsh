@@ -32,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             dspEffect = binaryReader.ReadStringID();
             lowFrequencySound = new MappingFunctionBlock();
-            blamPointers.Concat(lowFrequencySound.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(lowFrequencySound.ReadFields(binaryReader)));
             timePeriodSeconds = binaryReader.ReadSingle();
             return blamPointers;
         }

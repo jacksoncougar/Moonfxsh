@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
             minLightmapSample = binaryReader.ReadColorR8G8B8();
             maxLightmapSample = binaryReader.ReadColorR8G8B8();
             function = new MappingFunctionBlock();
-            blamPointers.Concat(function.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(function.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

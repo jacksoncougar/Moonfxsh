@@ -63,23 +63,23 @@ namespace Moonfish.Guerilla.Tags
             defaultVariantStrings = binaryReader.ReadTagReference();
             blamPointers.Enqueue(ReadBlockArrayPointer<GDefaultVariantsBlock>(binaryReader));
             createNewVariantStruct = new CreateNewVariantStructBlock();
-            blamPointers.Concat(createNewVariantStruct.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(createNewVariantStruct.ReadFields(binaryReader)));
             createNewVariantStruct0 = new CreateNewVariantStructBlock();
-            blamPointers.Concat(createNewVariantStruct0.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(createNewVariantStruct0.ReadFields(binaryReader)));
             createNewVariantStruct1 = new CreateNewVariantStructBlock();
-            blamPointers.Concat(createNewVariantStruct1.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(createNewVariantStruct1.ReadFields(binaryReader)));
             createNewVariantStruct2 = new CreateNewVariantStructBlock();
-            blamPointers.Concat(createNewVariantStruct2.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(createNewVariantStruct2.ReadFields(binaryReader)));
             createNewVariantStruct3 = new CreateNewVariantStructBlock();
-            blamPointers.Concat(createNewVariantStruct3.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(createNewVariantStruct3.ReadFields(binaryReader)));
             createNewVariantStruct4 = new CreateNewVariantStructBlock();
-            blamPointers.Concat(createNewVariantStruct4.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(createNewVariantStruct4.ReadFields(binaryReader)));
             createNewVariantStruct5 = new CreateNewVariantStructBlock();
-            blamPointers.Concat(createNewVariantStruct5.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(createNewVariantStruct5.ReadFields(binaryReader)));
             createNewVariantStruct6 = new CreateNewVariantStructBlock();
-            blamPointers.Concat(createNewVariantStruct6.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(createNewVariantStruct6.ReadFields(binaryReader)));
             createNewVariantStruct7 = new CreateNewVariantStructBlock();
-            blamPointers.Concat(createNewVariantStruct7.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(createNewVariantStruct7.ReadFields(binaryReader)));
             unusedCreateNewVariants = new []{ new UnusedCreateNewVariants(), new UnusedCreateNewVariants(), new UnusedCreateNewVariants(), new UnusedCreateNewVariants(), new UnusedCreateNewVariants(), new UnusedCreateNewVariants(), new UnusedCreateNewVariants() };
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(unusedCreateNewVariants[0].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(unusedCreateNewVariants[1].ReadFields(binaryReader)));
@@ -149,7 +149,7 @@ using(binaryWriter.BaseStream.Pin())
             {
                 var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
                 createNewVariantStruct = new CreateNewVariantStructBlock();
-                blamPointers.Concat(createNewVariantStruct.ReadFields(binaryReader));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(createNewVariantStruct.ReadFields(binaryReader)));
                 return blamPointers;
             }
             public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

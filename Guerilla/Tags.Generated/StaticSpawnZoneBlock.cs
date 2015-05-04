@@ -35,7 +35,7 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             data = new StaticSpawnZoneDataStructBlock();
-            blamPointers.Concat(data.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(data.ReadFields(binaryReader)));
             position = binaryReader.ReadVector3();
             lowerHeight = binaryReader.ReadSingle();
             upperHeight = binaryReader.ReadSingle();

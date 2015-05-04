@@ -33,9 +33,9 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             alongAxis = new ScalarFunctionStructBlock();
-            blamPointers.Concat(alongAxis.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(alongAxis.ReadFields(binaryReader)));
             awayFromAxis = new ScalarFunctionStructBlock();
-            blamPointers.Concat(awayFromAxis.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(awayFromAxis.ReadFields(binaryReader)));
             parallelScale = binaryReader.ReadSingle();
             parallelThresholdAngleDegrees = binaryReader.ReadSingle();
             parallelExponent = binaryReader.ReadSingle();

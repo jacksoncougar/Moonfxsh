@@ -143,12 +143,12 @@ namespace Moonfish.Guerilla.Tags
             cameraExclusionDistanceWorldUnits = binaryReader.ReadSingle();
             autoaimWidthWorldUnits = binaryReader.ReadSingle();
             lockOnData = new BipedLockOnDataStructBlock();
-            blamPointers.Concat(lockOnData.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(lockOnData.ReadFields(binaryReader)));
             invalidName_ = binaryReader.ReadBytes(16);
             headShotAccScale = binaryReader.ReadSingle();
             areaDamageEffect = binaryReader.ReadTagReference();
             physics = new CharacterPhysicsStructBlock();
-            blamPointers.Concat(physics.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(physics.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer<ContactPointBlock>(binaryReader));
             reanimationCharacter = binaryReader.ReadTagReference();
             deathSpawnCharacter = binaryReader.ReadTagReference();

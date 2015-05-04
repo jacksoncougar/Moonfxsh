@@ -116,9 +116,9 @@ namespace Moonfish.Guerilla.Tags
             cameraFieldOfViewDegrees = binaryReader.ReadSingle();
             cameraStiffness = binaryReader.ReadSingle();
             unitCamera = new UnitCameraStructBlock();
-            blamPointers.Concat(unitCamera.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(unitCamera.ReadFields(binaryReader)));
             acceleration = new UnitSeatAccelerationStructBlock();
-            blamPointers.Concat(acceleration.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(acceleration.ReadFields(binaryReader)));
             softPingThreshold01 = binaryReader.ReadSingle();
             softPingInterruptTimeSeconds = binaryReader.ReadSingle();
             hardPingThreshold01 = binaryReader.ReadSingle();
@@ -142,10 +142,10 @@ namespace Moonfish.Guerilla.Tags
             rightHandNode = binaryReader.ReadStringID();
             leftHandNode = binaryReader.ReadStringID();
             moreDamnNodes = new UnitAdditionalNodeNamesStructBlock();
-            blamPointers.Concat(moreDamnNodes.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(moreDamnNodes.ReadFields(binaryReader)));
             meleeDamage = binaryReader.ReadTagReference();
             yourMomma = new UnitBoardingMeleeStructBlock();
-            blamPointers.Concat(yourMomma.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(yourMomma.ReadFields(binaryReader)));
             motionSensorBlipSize = (MotionSensorBlipSize)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             blamPointers.Enqueue(ReadBlockArrayPointer<UnitPosturesBlock>(binaryReader));
@@ -158,9 +158,9 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<UnitWeaponBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<UnitSeatBlock>(binaryReader));
             boost = new UnitBoostStructBlock();
-            blamPointers.Concat(boost.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(boost.ReadFields(binaryReader)));
             lipsync = new UnitLipsyncScalesStructBlock();
-            blamPointers.Concat(lipsync.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(lipsync.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

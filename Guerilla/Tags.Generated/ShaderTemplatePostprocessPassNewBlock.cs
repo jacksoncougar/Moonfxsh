@@ -32,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             pass = binaryReader.ReadTagReference();
             implementations = new TagBlockIndexStructBlock();
-            blamPointers.Concat(implementations.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(implementations.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

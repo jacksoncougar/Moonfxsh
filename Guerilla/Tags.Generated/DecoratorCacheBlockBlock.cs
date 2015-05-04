@@ -30,7 +30,7 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
-            blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer<DecoratorCacheBlockDataBlock>(binaryReader));
             return blamPointers;
         }

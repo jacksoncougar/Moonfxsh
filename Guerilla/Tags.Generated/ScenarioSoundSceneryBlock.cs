@@ -34,9 +34,9 @@ namespace Moonfish.Guerilla.Tags
             type = binaryReader.ReadShortBlockIndex1();
             name = binaryReader.ReadShortBlockIndex1();
             objectData = new ScenarioObjectDatumStructBlock();
-            blamPointers.Concat(objectData.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(objectData.ReadFields(binaryReader)));
             soundScenery = new SoundSceneryDatumStructBlock();
-            blamPointers.Concat(soundScenery.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(soundScenery.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

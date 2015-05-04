@@ -35,7 +35,7 @@ namespace Moonfish.Guerilla.Tags
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             label = binaryReader.ReadStringID();
             animation = new AnimationIndexStructBlock();
-            blamPointers.Concat(animation.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(animation.ReadFields(binaryReader)));
             invalidName_ = binaryReader.ReadBytes(2);
             functionControls = (FunctionControls)binaryReader.ReadInt16();
             function = binaryReader.ReadStringID();

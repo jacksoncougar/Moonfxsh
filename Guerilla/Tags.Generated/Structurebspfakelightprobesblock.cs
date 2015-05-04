@@ -30,9 +30,9 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             objectIdentifier = new ScenarioObjectIdStructBlock();
-            blamPointers.Concat(objectIdentifier.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(objectIdentifier.ReadFields(binaryReader)));
             renderLighting = new RenderLightingStructBlock();
-            blamPointers.Concat(renderLighting.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(renderLighting.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

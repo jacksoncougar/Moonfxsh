@@ -31,9 +31,9 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             geometryInfo = new GlobalGeometrySectionInfoStructBlock();
-            blamPointers.Concat(geometryInfo.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(geometryInfo.ReadFields(binaryReader)));
             geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
-            blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer<LightmapGeometrySectionCacheDataBlock>(binaryReader));
             return blamPointers;
         }

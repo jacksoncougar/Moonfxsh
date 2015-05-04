@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
             defaultEnumIntegerValue = binaryReader.ReadInt32();
             defaultScalarValue = binaryReader.ReadSingle();
             defaultFunction = new MappingFunctionBlock();
-            blamPointers.Concat(defaultFunction.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(defaultFunction.ReadFields(binaryReader)));
             minimumScalarValue = binaryReader.ReadSingle();
             maximumScalarValue = binaryReader.ReadSingle();
             return blamPointers;

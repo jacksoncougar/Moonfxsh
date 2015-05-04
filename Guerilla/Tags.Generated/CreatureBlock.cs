@@ -63,7 +63,7 @@ namespace Moonfish.Guerilla.Tags
             casualTurningModifier01 = binaryReader.ReadSingle();
             autoaimWidthWorldUnits = binaryReader.ReadSingle();
             physics = new CharacterPhysicsStructBlock();
-            blamPointers.Concat(physics.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(physics.ReadFields(binaryReader)));
             impactDamage = binaryReader.ReadTagReference();
             impactShieldDamage = binaryReader.ReadTagReference();
             destroyAfterDeathTimeSeconds = binaryReader.ReadRange();

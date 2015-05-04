@@ -32,7 +32,7 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             sharedInterface = new WeaponSharedInterfaceStructBlock();
-            blamPointers.Concat(sharedInterface.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(sharedInterface.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer<WeaponFirstPersonInterfaceBlock>(binaryReader));
             newHudInterface = binaryReader.ReadTagReference();
             return blamPointers;

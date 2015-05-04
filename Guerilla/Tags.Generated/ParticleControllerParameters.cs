@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             parameterId = binaryReader.ReadInt32();
             property = new ParticlePropertyScalarStructNewBlock();
-            blamPointers.Concat(property.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(property.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

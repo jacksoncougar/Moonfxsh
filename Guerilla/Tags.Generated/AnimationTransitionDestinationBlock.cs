@@ -40,9 +40,9 @@ namespace Moonfish.Guerilla.Tags
             fullName = binaryReader.ReadStringID();
             mode = binaryReader.ReadStringID();
             stateInfo = new AnimationDestinationStateStructBlock();
-            blamPointers.Concat(stateInfo.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(stateInfo.ReadFields(binaryReader)));
             animation = new AnimationIndexStructBlock();
-            blamPointers.Concat(animation.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(animation.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

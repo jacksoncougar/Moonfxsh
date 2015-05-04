@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<HudBitmapWidgets>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<HudTextWidgets>(binaryReader));
             dashlightData = new NewHudDashlightDataStructBlock();
-            blamPointers.Concat(dashlightData.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(dashlightData.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer<HudScreenEffectWidgets>(binaryReader));
             return blamPointers;
         }

@@ -47,9 +47,9 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             loadedTorqueCurve = new TorqueCurveStructBlock();
-            blamPointers.Concat(loadedTorqueCurve.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(loadedTorqueCurve.ReadFields(binaryReader)));
             cruisingTorqueCurve = new TorqueCurveStructBlock();
-            blamPointers.Concat(cruisingTorqueCurve.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(cruisingTorqueCurve.ReadFields(binaryReader)));
             minTimeToUpshift = binaryReader.ReadSingle();
             engineUpShiftScale = binaryReader.ReadSingle();
             gearRatio = binaryReader.ReadSingle();

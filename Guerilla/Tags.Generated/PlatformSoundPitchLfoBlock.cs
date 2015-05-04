@@ -31,11 +31,11 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             delay = new SoundPlaybackParameterDefinitionBlock();
-            blamPointers.Concat(delay.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(delay.ReadFields(binaryReader)));
             frequency = new SoundPlaybackParameterDefinitionBlock();
-            blamPointers.Concat(frequency.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(frequency.ReadFields(binaryReader)));
             pitchModulation = new SoundPlaybackParameterDefinitionBlock();
-            blamPointers.Concat(pitchModulation.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(pitchModulation.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

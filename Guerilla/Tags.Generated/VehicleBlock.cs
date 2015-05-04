@@ -160,7 +160,7 @@ namespace Moonfish.Guerilla.Tags
             specialEffect = binaryReader.ReadTagReference();
             unusedEffect = binaryReader.ReadTagReference();
             havokVehiclePhysics = new HavokVehiclePhysicsStructBlock();
-            blamPointers.Concat(havokVehiclePhysics.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(havokVehiclePhysics.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

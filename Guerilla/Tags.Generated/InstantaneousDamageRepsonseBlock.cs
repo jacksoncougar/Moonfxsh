@@ -60,13 +60,13 @@ namespace Moonfish.Guerilla.Tags
             damageThreshold = binaryReader.ReadSingle();
             transitionEffect = binaryReader.ReadTagReference();
             damageEffect = new InstantaneousResponseDamageEffectStructBlock();
-            blamPointers.Concat(damageEffect.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(damageEffect.ReadFields(binaryReader)));
             region = binaryReader.ReadStringID();
             newState = (NewState)binaryReader.ReadInt16();
             runtimeRegionIndex = binaryReader.ReadInt16();
             effectMarkerName = binaryReader.ReadStringID();
             damageEffectMarker = new InstantaneousResponseDamageEffectMarkerStructBlock();
-            blamPointers.Concat(damageEffectMarker.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(damageEffectMarker.ReadFields(binaryReader)));
             responseDelay = binaryReader.ReadSingle();
             delayEffect = binaryReader.ReadTagReference();
             delayEffectMarkerName = binaryReader.ReadStringID();

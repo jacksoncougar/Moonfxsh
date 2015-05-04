@@ -30,9 +30,9 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             lowFrequencyVibration = new VibrationFrequencyDefinitionStructBlock();
-            blamPointers.Concat(lowFrequencyVibration.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(lowFrequencyVibration.ReadFields(binaryReader)));
             highFrequencyVibration = new VibrationFrequencyDefinitionStructBlock();
-            blamPointers.Concat(highFrequencyVibration.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(highFrequencyVibration.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
             frontSpeakerGainDB0 = binaryReader.ReadSingle();
             rearSpeakerGainDB0 = binaryReader.ReadSingle();
             globalMix = new SoundGlobalMixStructBlock();
-            blamPointers.Concat(globalMix.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(globalMix.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

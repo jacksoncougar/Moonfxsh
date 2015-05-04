@@ -79,7 +79,7 @@ namespace Moonfish.Guerilla.Tags
             nextAnimation = binaryReader.ReadShortBlockIndex1();
             blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
             dataSizes = new PackedDataSizesStructBlock();
-            blamPointers.Concat(dataSizes.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(dataSizes.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer<AnimationFrameEventBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<AnimationSoundEventBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<AnimationEffectEventBlock>(binaryReader));

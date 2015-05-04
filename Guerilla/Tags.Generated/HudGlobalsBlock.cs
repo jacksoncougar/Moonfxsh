@@ -259,7 +259,7 @@ namespace Moonfish.Guerilla.Tags
             checkpointSound = binaryReader.ReadTagReference();
             invalidName_14 = binaryReader.ReadBytes(96);
             newGlobals = new GlobalNewHudGlobalsStructBlock();
-            blamPointers.Concat(newGlobals.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(newGlobals.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

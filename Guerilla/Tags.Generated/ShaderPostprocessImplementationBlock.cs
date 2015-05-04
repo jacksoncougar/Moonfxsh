@@ -38,25 +38,25 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             gPUConstantState = new ShaderGpuStateReferenceStructBlock();
-            blamPointers.Concat(gPUConstantState.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(gPUConstantState.ReadFields(binaryReader)));
             gPUVolatileState = new ShaderGpuStateReferenceStructBlock();
-            blamPointers.Concat(gPUVolatileState.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(gPUVolatileState.ReadFields(binaryReader)));
             bitmapParameters = new TagBlockIndexStructBlock();
-            blamPointers.Concat(bitmapParameters.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(bitmapParameters.ReadFields(binaryReader)));
             bitmapTransforms = new TagBlockIndexStructBlock();
-            blamPointers.Concat(bitmapTransforms.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(bitmapTransforms.ReadFields(binaryReader)));
             valueParameters = new TagBlockIndexStructBlock();
-            blamPointers.Concat(valueParameters.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(valueParameters.ReadFields(binaryReader)));
             colorParameters = new TagBlockIndexStructBlock();
-            blamPointers.Concat(colorParameters.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(colorParameters.ReadFields(binaryReader)));
             bitmapTransformOverlays = new TagBlockIndexStructBlock();
-            blamPointers.Concat(bitmapTransformOverlays.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(bitmapTransformOverlays.ReadFields(binaryReader)));
             valueOverlays = new TagBlockIndexStructBlock();
-            blamPointers.Concat(valueOverlays.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(valueOverlays.ReadFields(binaryReader)));
             colorOverlays = new TagBlockIndexStructBlock();
-            blamPointers.Concat(colorOverlays.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(colorOverlays.ReadFields(binaryReader)));
             vertexShaderConstants = new TagBlockIndexStructBlock();
-            blamPointers.Concat(vertexShaderConstants.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(vertexShaderConstants.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

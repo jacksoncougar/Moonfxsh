@@ -32,9 +32,9 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             section = new GlobalGeometrySectionStructBlock();
-            blamPointers.Concat(section.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(section.ReadFields(binaryReader)));
             pointData = new GlobalGeometryPointDataStructBlock();
-            blamPointers.Concat(pointData.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(pointData.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer<RenderModelNodeMapBlock>(binaryReader));
             invalidName_ = binaryReader.ReadBytes(4);
             return blamPointers;

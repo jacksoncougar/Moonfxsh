@@ -35,11 +35,11 @@ namespace Moonfish.Guerilla.Tags
             type = binaryReader.ReadShortBlockIndex1();
             name = binaryReader.ReadShortBlockIndex1();
             objectData = new ScenarioObjectDatumStructBlock();
-            blamPointers.Concat(objectData.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(objectData.ReadFields(binaryReader)));
             deviceData = new ScenarioDeviceStructBlock();
-            blamPointers.Concat(deviceData.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(deviceData.ReadFields(binaryReader)));
             lightFixtureData = new ScenarioLightFixtureStructBlock();
-            blamPointers.Concat(lightFixtureData.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(lightFixtureData.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

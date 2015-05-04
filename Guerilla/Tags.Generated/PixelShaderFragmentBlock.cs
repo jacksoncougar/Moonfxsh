@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
             switchParameterIndex = binaryReader.ReadByte();
             invalidName_ = binaryReader.ReadBytes(1);
             permutationsIndex = new TagBlockIndexStructBlock();
-            blamPointers.Concat(permutationsIndex.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(permutationsIndex.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

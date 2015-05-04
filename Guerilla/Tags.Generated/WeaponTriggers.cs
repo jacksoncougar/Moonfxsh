@@ -44,9 +44,9 @@ namespace Moonfish.Guerilla.Tags
             prediction = (Prediction)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             autofire = new WeaponTriggerAutofireStructBlock();
-            blamPointers.Concat(autofire.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(autofire.ReadFields(binaryReader)));
             charging = new WeaponTriggerChargingStructBlock();
-            blamPointers.Concat(charging.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(charging.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

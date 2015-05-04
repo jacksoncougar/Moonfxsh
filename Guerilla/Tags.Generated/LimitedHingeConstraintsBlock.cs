@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             constraintBodies = new ConstraintBodiesStructBlock();
-            blamPointers.Concat(constraintBodies.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(constraintBodies.ReadFields(binaryReader)));
             invalidName_ = binaryReader.ReadBytes(4);
             limitFriction = binaryReader.ReadSingle();
             limitMinAngle = binaryReader.ReadSingle();

@@ -58,7 +58,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(40);
             position = binaryReader.ReadVector3();
             orientation = new ScenarioNetgameEquipmentOrientationStructBlock();
-            blamPointers.Concat(orientation.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(orientation.ReadFields(binaryReader)));
             itemVehicleCollection = binaryReader.ReadTagReference();
             invalidName_2 = binaryReader.ReadBytes(48);
             return blamPointers;

@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             rangeName = binaryReader.ReadStringID();
             timePeriodInSeconds = binaryReader.ReadSingle();
             function = new ScalarFunctionStructBlock();
-            blamPointers.Concat(function.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(function.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

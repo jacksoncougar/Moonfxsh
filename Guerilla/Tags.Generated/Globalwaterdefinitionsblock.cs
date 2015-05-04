@@ -54,7 +54,7 @@ namespace Moonfish.Guerilla.Tags
             shader = binaryReader.ReadTagReference();
             blamPointers.Enqueue(ReadBlockArrayPointer<WaterGeometrySectionBlock>(binaryReader));
             geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
-            blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader)));
             sunSpotColor = binaryReader.ReadColorR8G8B8();
             reflectionTint = binaryReader.ReadColorR8G8B8();
             refractionTint = binaryReader.ReadColorR8G8B8();

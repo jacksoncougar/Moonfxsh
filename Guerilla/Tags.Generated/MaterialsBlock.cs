@@ -52,11 +52,11 @@ namespace Moonfish.Guerilla.Tags
             generalArmor = binaryReader.ReadStringID();
             specificArmor = binaryReader.ReadStringID();
             physicsProperties = new MaterialPhysicsPropertiesStructBlock();
-            blamPointers.Concat(physicsProperties.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(physicsProperties.ReadFields(binaryReader)));
             oldMaterialPhysics = binaryReader.ReadTagReference();
             breakableSurface = binaryReader.ReadTagReference();
             sweeteners = new MaterialsSweetenersStructBlock();
-            blamPointers.Concat(sweeteners.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(sweeteners.ReadFields(binaryReader)));
             materialEffects = binaryReader.ReadTagReference();
             return blamPointers;
         }

@@ -35,7 +35,7 @@ namespace Moonfish.Guerilla.Tags
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             fullName = binaryReader.ReadStringID();
             stateInfo = new AnimationTransitionStateStructBlock();
-            blamPointers.Concat(stateInfo.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(stateInfo.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer<AnimationTransitionDestinationBlock>(binaryReader));
             return blamPointers;
         }

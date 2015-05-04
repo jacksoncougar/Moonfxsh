@@ -44,7 +44,7 @@ namespace Moonfish.Guerilla.Tags
             transformFlags = (TransformFlags)binaryReader.ReadInt16();
             manualBSPFlags = binaryReader.ReadBlockFlags16();
             objectID = new ScenarioObjectIdStructBlock();
-            blamPointers.Concat(objectID.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(objectID.ReadFields(binaryReader)));
             bSPPolicy = (BSPPolicy)binaryReader.ReadByte();
             invalidName_ = binaryReader.ReadBytes(1);
             editorFolder = binaryReader.ReadShortBlockIndex1();

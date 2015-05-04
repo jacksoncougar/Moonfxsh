@@ -35,11 +35,11 @@ namespace Moonfish.Guerilla.Tags
             responseType = (ResponseType)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             screenFlash = new ScreenFlashDefinitionStructBlock();
-            blamPointers.Concat(screenFlash.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(screenFlash.ReadFields(binaryReader)));
             vibration = new VibrationDefinitionStructBlock();
-            blamPointers.Concat(vibration.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(vibration.ReadFields(binaryReader)));
             soundEffect = new DamageEffectSoundEffectDefinitionBlock();
-            blamPointers.Concat(soundEffect.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(soundEffect.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             outputModifier = (OutputModifier)binaryReader.ReadInt16();
             outputModifierInput = (OutputModifierInput)binaryReader.ReadInt16();
             mapping = new MappingFunctionBlock();
-            blamPointers.Concat(mapping.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(mapping.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

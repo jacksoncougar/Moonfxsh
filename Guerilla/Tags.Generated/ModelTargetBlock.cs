@@ -59,7 +59,7 @@ namespace Moonfish.Guerilla.Tags
             variant = binaryReader.ReadShortBlockIndex1();
             targetingRelevance = binaryReader.ReadSingle();
             lockOnData = new ModelTargetLockOnDataStructBlock();
-            blamPointers.Concat(lockOnData.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(lockOnData.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

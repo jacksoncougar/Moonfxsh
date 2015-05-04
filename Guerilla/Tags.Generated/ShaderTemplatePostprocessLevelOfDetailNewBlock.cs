@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             layers = new TagBlockIndexStructBlock();
-            blamPointers.Concat(layers.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(layers.ReadFields(binaryReader)));
             availableLayers = binaryReader.ReadInt32();
             projectedHeightPercentage = binaryReader.ReadSingle();
             return blamPointers;

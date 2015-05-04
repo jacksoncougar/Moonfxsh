@@ -37,15 +37,15 @@ namespace Moonfish.Guerilla.Tags
             flags = (Flags)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             hudWidgetEffectFunctionStruct = new HudWidgetEffectFunctionStructBlock();
-            blamPointers.Concat(hudWidgetEffectFunctionStruct.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(hudWidgetEffectFunctionStruct.ReadFields(binaryReader)));
             hudWidgetEffectFunctionStruct0 = new HudWidgetEffectFunctionStructBlock();
-            blamPointers.Concat(hudWidgetEffectFunctionStruct0.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(hudWidgetEffectFunctionStruct0.ReadFields(binaryReader)));
             hudWidgetEffectFunctionStruct1 = new HudWidgetEffectFunctionStructBlock();
-            blamPointers.Concat(hudWidgetEffectFunctionStruct1.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(hudWidgetEffectFunctionStruct1.ReadFields(binaryReader)));
             hudWidgetEffectFunctionStruct2 = new HudWidgetEffectFunctionStructBlock();
-            blamPointers.Concat(hudWidgetEffectFunctionStruct2.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(hudWidgetEffectFunctionStruct2.ReadFields(binaryReader)));
             hudWidgetEffectFunctionStruct3 = new HudWidgetEffectFunctionStructBlock();
-            blamPointers.Concat(hudWidgetEffectFunctionStruct3.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(hudWidgetEffectFunctionStruct3.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

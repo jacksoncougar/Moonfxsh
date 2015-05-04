@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla.Tags
             turnOffWith = binaryReader.ReadStringID();
             minValue = binaryReader.ReadSingle();
             defaultFunction = new MappingFunctionBlock();
-            blamPointers.Concat(defaultFunction.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(defaultFunction.ReadFields(binaryReader)));
             scaleBy = binaryReader.ReadStringID();
             return blamPointers;
         }

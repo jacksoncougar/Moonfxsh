@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
             enumIndex = binaryReader.ReadInt16();
             flags = binaryReader.ReadInt16();
             combiners = new TagBlockIndexStructBlock();
-            blamPointers.Concat(combiners.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(combiners.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

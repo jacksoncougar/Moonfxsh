@@ -129,7 +129,7 @@ namespace Moonfish.Guerilla.Tags
             damageUpperBound = binaryReader.ReadRange();
             dmgInnerConeAngle = binaryReader.ReadSingle();
             blah = new DamageOuterConeAngleStructBlock();
-            blamPointers.Concat(blah.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(blah.ReadFields(binaryReader)));
             activeCamouflageDamage01 = binaryReader.ReadSingle();
             stun01 = binaryReader.ReadSingle();
             maximumStun01 = binaryReader.ReadSingle();

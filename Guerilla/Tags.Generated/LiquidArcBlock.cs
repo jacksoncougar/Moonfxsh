@@ -72,12 +72,12 @@ namespace Moonfish.Guerilla.Tags
             bitmap = binaryReader.ReadTagReference();
             invalidName_1 = binaryReader.ReadBytes(8);
             horizontalRange = new ScalarFunctionStructBlock();
-            blamPointers.Concat(horizontalRange.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(horizontalRange.ReadFields(binaryReader)));
             verticalRange = new ScalarFunctionStructBlock();
-            blamPointers.Concat(verticalRange.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(verticalRange.ReadFields(binaryReader)));
             verticalNegativeScale01 = binaryReader.ReadSingle();
             roughness = new ScalarFunctionStructBlock();
-            blamPointers.Concat(roughness.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(roughness.ReadFields(binaryReader)));
             invalidName_2 = binaryReader.ReadBytes(64);
             octave1FrequencyCyclesSecond = binaryReader.ReadSingle();
             octave2FrequencyCyclesSecond = binaryReader.ReadSingle();
@@ -93,9 +93,9 @@ namespace Moonfish.Guerilla.Tags
             invalidName_4 = binaryReader.ReadBytes(2);
             blamPointers.Enqueue(ReadBlockArrayPointer<LiquidCoreBlock>(binaryReader));
             rangeScale = new ScalarFunctionStructBlock();
-            blamPointers.Concat(rangeScale.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(rangeScale.ReadFields(binaryReader)));
             brightnessScale = new ScalarFunctionStructBlock();
-            blamPointers.Concat(brightnessScale.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(brightnessScale.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

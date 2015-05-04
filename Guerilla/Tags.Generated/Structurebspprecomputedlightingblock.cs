@@ -37,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
             attachmentIndex = binaryReader.ReadByte();
             objectType = binaryReader.ReadByte();
             visibility = new VisibilityStructBlock();
-            blamPointers.Concat(visibility.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(visibility.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

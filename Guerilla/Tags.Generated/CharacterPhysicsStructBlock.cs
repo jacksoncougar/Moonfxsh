@@ -60,13 +60,13 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<PillsBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<SpheresBlock>(binaryReader));
             groundPhysics = new CharacterPhysicsGroundStructBlock();
-            blamPointers.Concat(groundPhysics.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(groundPhysics.ReadFields(binaryReader)));
             flyingPhysics = new CharacterPhysicsFlyingStructBlock();
-            blamPointers.Concat(flyingPhysics.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(flyingPhysics.ReadFields(binaryReader)));
             deadPhysics = new CharacterPhysicsDeadStructBlock();
-            blamPointers.Concat(deadPhysics.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(deadPhysics.ReadFields(binaryReader)));
             sentinelPhysics = new CharacterPhysicsSentinelStructBlock();
-            blamPointers.Concat(sentinelPhysics.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(sentinelPhysics.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

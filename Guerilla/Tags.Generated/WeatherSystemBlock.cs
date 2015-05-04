@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<GlobalParticleSystemLiteBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<GlobalWeatherBackgroundPlateBlock>(binaryReader));
             windModel = new GlobalWindModelStructBlock();
-            blamPointers.Concat(windModel.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(windModel.ReadFields(binaryReader)));
             fadeRadius = binaryReader.ReadSingle();
             return blamPointers;
         }

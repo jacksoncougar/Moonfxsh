@@ -35,10 +35,10 @@ namespace Moonfish.Guerilla.Tags
             type = binaryReader.ReadShortBlockIndex1();
             name = binaryReader.ReadShortBlockIndex1();
             objectData = new ScenarioObjectDatumStructBlock();
-            blamPointers.Concat(objectData.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(objectData.ReadFields(binaryReader)));
             indexer = binaryReader.ReadBytes(4);
             permutationData = new ScenarioObjectPermutationStructBlock();
-            blamPointers.Concat(permutationData.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(permutationData.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

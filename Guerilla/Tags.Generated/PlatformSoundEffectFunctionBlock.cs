@@ -34,7 +34,7 @@ namespace Moonfish.Guerilla.Tags
             input = (Input)binaryReader.ReadInt16();
             range = (Range)binaryReader.ReadInt16();
             function = new MappingFunctionBlock();
-            blamPointers.Concat(function.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(function.ReadFields(binaryReader)));
             timePeriodSeconds = binaryReader.ReadSingle();
             return blamPointers;
         }

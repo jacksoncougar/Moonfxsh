@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
             nodeIndex = binaryReader.ReadInt16();
             componentFlags = (ComponentFlags)binaryReader.ReadInt16();
             orientation = new QuantizedOrientationStructBlock();
-            blamPointers.Concat(orientation.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(orientation.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

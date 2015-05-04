@@ -44,11 +44,11 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             resources = new AnimationGraphResourcesStructBlock();
-            blamPointers.Concat(resources.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(resources.ReadFields(binaryReader)));
             content = new AnimationGraphContentsStructBlock();
-            blamPointers.Concat(content.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(content.ReadFields(binaryReader)));
             runTimeData = new ModelAnimationRuntimeDataStructBlock();
-            blamPointers.Concat(runTimeData.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(runTimeData.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
             blamPointers.Enqueue(ReadBlockArrayPointer<AdditionalNodeDataBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<MoonfishXboxAnimationRawBlock>(binaryReader));

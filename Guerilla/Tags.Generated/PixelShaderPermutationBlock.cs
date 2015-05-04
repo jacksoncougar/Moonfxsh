@@ -36,9 +36,9 @@ namespace Moonfish.Guerilla.Tags
             enumIndex = binaryReader.ReadInt16();
             flags = (Flags)binaryReader.ReadInt16();
             constants = new TagBlockIndexStructBlock();
-            blamPointers.Concat(constants.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(constants.ReadFields(binaryReader)));
             combiners = new TagBlockIndexStructBlock();
-            blamPointers.Concat(combiners.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(combiners.ReadFields(binaryReader)));
             invalidName_ = binaryReader.ReadBytes(4);
             invalidName_0 = binaryReader.ReadBytes(4);
             return blamPointers;

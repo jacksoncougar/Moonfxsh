@@ -38,7 +38,7 @@ namespace Moonfish.Guerilla.Tags
             maxLightmapColor = binaryReader.ReadColorR8G8B8();
             exclusionAngleFromUp = binaryReader.ReadSingle();
             function = new MappingFunctionBlock();
-            blamPointers.Concat(function.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(function.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

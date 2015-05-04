@@ -69,13 +69,13 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes(16);
             shader = binaryReader.ReadTagReference();
             scaleX = new ParticlePropertyScalarStructNewBlock();
-            blamPointers.Concat(scaleX.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(scaleX.ReadFields(binaryReader)));
             scaleY = new ParticlePropertyScalarStructNewBlock();
-            blamPointers.Concat(scaleY.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(scaleY.ReadFields(binaryReader)));
             scaleZ = new ParticlePropertyScalarStructNewBlock();
-            blamPointers.Concat(scaleZ.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(scaleZ.ReadFields(binaryReader)));
             rotation = new ParticlePropertyScalarStructNewBlock();
-            blamPointers.Concat(rotation.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(rotation.ReadFields(binaryReader)));
             collisionEffect = binaryReader.ReadTagReference();
             deathEffect = binaryReader.ReadTagReference();
             blamPointers.Enqueue(ReadBlockArrayPointer<EffectLocationsBlock>(binaryReader));
@@ -85,7 +85,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<ParticleModelIndicesBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<CachedDataBlock>(binaryReader));
             geometrySectionInfo = new GlobalGeometryBlockInfoStructBlock();
-            blamPointers.Concat(geometrySectionInfo.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(geometrySectionInfo.ReadFields(binaryReader)));
             invalidName_0 = binaryReader.ReadBytes(16);
             invalidName_1 = binaryReader.ReadBytes(8);
             return blamPointers;

@@ -198,7 +198,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(3);
             projectile = binaryReader.ReadTagReference();
             eh = new WeaponBarrelDamageEffectStructBlock();
-            blamPointers.Concat(eh.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(eh.ReadFields(binaryReader)));
             ejectionPortRecoveryTime = binaryReader.ReadSingle();
             illuminationRecoveryTime = binaryReader.ReadSingle();
             heatGeneratedPerRound01 = binaryReader.ReadSingle();

@@ -87,7 +87,7 @@ namespace Moonfish.Guerilla.Tags
             pingScale = binaryReader.ReadSingle();
             turnoverTimeSeconds = binaryReader.ReadSingle();
             acceleration = new UnitSeatAccelerationStructBlock();
-            blamPointers.Concat(acceleration.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(acceleration.ReadFields(binaryReader)));
             aIScariness = binaryReader.ReadSingle();
             aiSeatType = (AiSeatType)binaryReader.ReadInt16();
             boardingSeat = binaryReader.ReadShortBlockIndex1();
@@ -98,7 +98,7 @@ namespace Moonfish.Guerilla.Tags
             maxSpeedReference = binaryReader.ReadSingle();
             speedExponent = binaryReader.ReadSingle();
             unitCamera = new UnitCameraStructBlock();
-            blamPointers.Concat(unitCamera.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(unitCamera.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer<UnitHudReferenceBlock>(binaryReader));
             enterSeatString = binaryReader.ReadStringID();
             yawMinimum = binaryReader.ReadSingle();

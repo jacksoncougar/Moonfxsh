@@ -36,7 +36,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes(2);
             blamPointers.Enqueue(ReadBlockArrayPointer<LightmapBucketRawVertexBlock>(binaryReader));
             geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
-            blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer<LightmapVertexBufferBucketCacheDataBlock>(binaryReader));
             return blamPointers;
         }

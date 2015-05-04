@@ -31,11 +31,11 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             bitmaps = new TagBlockIndexStructBlock();
-            blamPointers.Concat(bitmaps.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(bitmaps.ReadFields(binaryReader)));
             pixelConstants = new TagBlockIndexStructBlock();
-            blamPointers.Concat(pixelConstants.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(pixelConstants.ReadFields(binaryReader)));
             vertexConstants = new TagBlockIndexStructBlock();
-            blamPointers.Concat(vertexConstants.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(vertexConstants.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

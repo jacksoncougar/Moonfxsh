@@ -42,7 +42,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<NewHudSoundBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<PlayerTrainingEntryDataBlock>(binaryReader));
             constants = new GlobalNewHudGlobalsConstantsStructBlock();
-            blamPointers.Concat(constants.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(constants.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

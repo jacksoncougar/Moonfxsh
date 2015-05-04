@@ -55,7 +55,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPostprocessColorOverlayBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPostprocessVertexShaderConstantBlock>(binaryReader));
             gPUState = new ShaderGpuStateStructBlock();
-            blamPointers.Concat(gPUState.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(gPUState.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

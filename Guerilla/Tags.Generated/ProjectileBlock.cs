@@ -146,7 +146,7 @@ namespace Moonfish.Guerilla.Tags
             attachedDetonationDamage = binaryReader.ReadTagReference();
             superDetonation = binaryReader.ReadTagReference();
             yourMomma = new SuperDetonationDamageStructBlock();
-            blamPointers.Concat(yourMomma.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(yourMomma.ReadFields(binaryReader)));
             detonationSound = binaryReader.ReadTagReference();
             damageReportingType = (DamageReportingType)binaryReader.ReadByte();
             invalidName_ = binaryReader.ReadBytes(3);
@@ -165,7 +165,7 @@ namespace Moonfish.Guerilla.Tags
             initialVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
             finalVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
             blah = new AngularVelocityLowerBoundStructBlock();
-            blamPointers.Concat(blah.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(blah.ReadFields(binaryReader)));
             guidedAngularVelocityUpperDegreesPerSecond = binaryReader.ReadSingle();
             accelerationRangeWorldUnits = binaryReader.ReadRange();
             invalidName_0 = binaryReader.ReadBytes(4);

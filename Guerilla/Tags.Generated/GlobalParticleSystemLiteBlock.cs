@@ -66,7 +66,7 @@ namespace Moonfish.Guerilla.Tags
             initialVelocity = binaryReader.ReadVector3();
             bitmapAnimationSpeed = binaryReader.ReadSingle();
             geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
-            blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer<ParticleSystemLiteDataBlock>(binaryReader));
             type = (Type)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);

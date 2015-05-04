@@ -67,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_3 = binaryReader.ReadBytes(2);
             sound = binaryReader.ReadTagReference();
             extraSounds = new SoundResponseExtraSoundsStructBlock();
-            blamPointers.Concat(extraSounds.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(extraSounds.ReadFields(binaryReader)));
             invalidName_4 = binaryReader.ReadBytes(4);
             invalidName_5 = binaryReader.ReadBytes(16);
             blamPointers.Enqueue(ReadBlockArrayPointer<SoundResponseDefinitionBlock>(binaryReader));

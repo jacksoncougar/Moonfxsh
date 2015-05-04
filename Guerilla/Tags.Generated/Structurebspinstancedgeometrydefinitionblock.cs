@@ -36,12 +36,12 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             renderInfo = new StructureInstancedGeometryRenderInfoStructBlock();
-            blamPointers.Concat(renderInfo.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(renderInfo.ReadFields(binaryReader)));
             checksum = binaryReader.ReadInt32();
             boundingSphereCenter = binaryReader.ReadVector3();
             boundingSphereRadius = binaryReader.ReadSingle();
             collisionInfo = new GlobalCollisionBspStructBlock();
-            blamPointers.Concat(collisionInfo.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(collisionInfo.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer<CollisionBspPhysicsBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspLeafBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspSurfaceReferenceBlock>(binaryReader));

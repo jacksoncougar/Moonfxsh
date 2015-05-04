@@ -39,7 +39,7 @@ namespace Moonfish.Guerilla.Tags
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             label = binaryReader.ReadStringID();
             animation = new AnimationIndexStructBlock();
-            blamPointers.Concat(animation.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(animation.ReadFields(binaryReader)));
             markerName = binaryReader.ReadStringID();
             massPointOffset = binaryReader.ReadSingle();
             fullExtensionGroundDepth = binaryReader.ReadSingle();

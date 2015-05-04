@@ -50,13 +50,13 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             gPUState = new ShaderGpuStateStructBlock();
-            blamPointers.Concat(gPUState.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(gPUState.ReadFields(binaryReader)));
             gPUConstantState = new ShaderGpuStateReferenceStructBlock();
-            blamPointers.Concat(gPUConstantState.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(gPUConstantState.ReadFields(binaryReader)));
             gPUVolatileState = new ShaderGpuStateReferenceStructBlock();
-            blamPointers.Concat(gPUVolatileState.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(gPUVolatileState.ReadFields(binaryReader)));
             gPUDefaultState = new ShaderGpuStateReferenceStructBlock();
-            blamPointers.Concat(gPUDefaultState.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(gPUDefaultState.ReadFields(binaryReader)));
             vertexShader = binaryReader.ReadTagReference();
             invalidName_ = binaryReader.ReadBytes(8);
             invalidName_0 = binaryReader.ReadBytes(8);

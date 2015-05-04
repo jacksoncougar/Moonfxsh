@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
             nodeIndex = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             bsp = new GlobalCollisionBspStructBlock();
-            blamPointers.Concat(bsp.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(bsp.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

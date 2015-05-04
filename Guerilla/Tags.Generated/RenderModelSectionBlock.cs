@@ -37,12 +37,12 @@ namespace Moonfish.Guerilla.Tags
             globalGeometryClassificationEnumDefinition = (GlobalGeometryClassificationEnumDefinition)binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             sectionInfo = new GlobalGeometrySectionInfoStructBlock();
-            blamPointers.Concat(sectionInfo.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(sectionInfo.ReadFields(binaryReader)));
             rigidNode = binaryReader.ReadShortBlockIndex1();
             flags = (Flags)binaryReader.ReadInt16();
             blamPointers.Enqueue(ReadBlockArrayPointer<RenderModelSectionDataBlock>(binaryReader));
             geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
-            blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

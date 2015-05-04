@@ -33,7 +33,7 @@ namespace Moonfish.Guerilla.Tags
             effectName = binaryReader.ReadStringID();
             durationSeconds = binaryReader.ReadSingle();
             effectScaleFunction = new MappingFunctionBlock();
-            blamPointers.Concat(effectScaleFunction.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(effectScaleFunction.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

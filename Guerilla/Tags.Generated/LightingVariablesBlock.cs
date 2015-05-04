@@ -36,13 +36,13 @@ namespace Moonfish.Guerilla.Tags
             objectAffected = (ObjectAffected)binaryReader.ReadInt32();
             lightmapBrightnessOffset = binaryReader.ReadSingle();
             primaryLight = new PrimaryLightStructBlock();
-            blamPointers.Concat(primaryLight.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(primaryLight.ReadFields(binaryReader)));
             secondaryLight = new SecondaryLightStructBlock();
-            blamPointers.Concat(secondaryLight.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(secondaryLight.ReadFields(binaryReader)));
             ambientLight = new AmbientLightStructBlock();
-            blamPointers.Concat(ambientLight.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(ambientLight.ReadFields(binaryReader)));
             lightmapShadows = new LightmapShadowsStructBlock();
-            blamPointers.Concat(lightmapShadows.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(lightmapShadows.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

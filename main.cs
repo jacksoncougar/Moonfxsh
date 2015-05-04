@@ -20,14 +20,14 @@ namespace Moonfish
         [STAThread]
         private static void Main( )
         {
-            //var converter = new GuerillaCs(Local.GuerillaPath);
-            //foreach (var tag in Guerilla.Guerilla.h2Tags)
-            //{
-            //    converter.DumpTagLayout(
-            //        new MoonfishTagGroup(tag),
-            //        Path.Combine(Local.ProjectDirectory, @"Guerilla\Tags.Generated\"));
-            //}
-            //Application.Exit();
+            var converter = new GuerillaCs(Local.GuerillaPath);
+            foreach (var tag in Guerilla.Guerilla.h2Tags)
+            {
+                converter.DumpTagLayout(
+                    new MoonfishTagGroup(tag),
+                    Path.Combine(Local.ProjectDirectory, @"Guerilla\Tags.Generated\"));
+            }
+            Application.Exit();
             var map = new CacheStream(@"C:\Users\stem\Documents\modding\headlong.map");
             var item = map.Deserialize(map.Index.ScenarioIdent);
             map.ClearCache(map.Index.ScenarioIdent);

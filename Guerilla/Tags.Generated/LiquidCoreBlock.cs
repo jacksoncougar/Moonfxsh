@@ -39,15 +39,15 @@ namespace Moonfish.Guerilla.Tags
             bitmapIndex = binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
             thickness = new ScalarFunctionStructBlock();
-            blamPointers.Concat(thickness.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(thickness.ReadFields(binaryReader)));
             color = new ColorFunctionStructBlock();
-            blamPointers.Concat(color.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(color.ReadFields(binaryReader)));
             brightnessTime = new ScalarFunctionStructBlock();
-            blamPointers.Concat(brightnessTime.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(brightnessTime.ReadFields(binaryReader)));
             brightnessFacing = new ScalarFunctionStructBlock();
-            blamPointers.Concat(brightnessFacing.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(brightnessFacing.ReadFields(binaryReader)));
             alongAxisScale = new ScalarFunctionStructBlock();
-            blamPointers.Concat(alongAxisScale.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(alongAxisScale.ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

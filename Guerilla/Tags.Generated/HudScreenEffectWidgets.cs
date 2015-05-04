@@ -46,15 +46,15 @@ namespace Moonfish.Guerilla.Tags
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             hudWidgetInputsStruct = new HudWidgetInputsStructBlock();
-            blamPointers.Concat(hudWidgetInputsStruct.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(hudWidgetInputsStruct.ReadFields(binaryReader)));
             hudWidgetStateDefinitionStruct = new HudWidgetStateDefinitionStructBlock();
-            blamPointers.Concat(hudWidgetStateDefinitionStruct.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(hudWidgetStateDefinitionStruct.ReadFields(binaryReader)));
             anchor = (Anchor)binaryReader.ReadInt16();
             flags = (Flags)binaryReader.ReadInt16();
             bitmap = binaryReader.ReadTagReference();
             fullscreenScreenEffect = binaryReader.ReadTagReference();
             waa = new ScreenEffectBonusStructBlock();
-            blamPointers.Concat(waa.ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(waa.ReadFields(binaryReader)));
             fullscreenSequenceIndex = binaryReader.ReadByte();
             halfscreenSequenceIndex = binaryReader.ReadByte();
             quarterscreenSequenceIndex = binaryReader.ReadByte();

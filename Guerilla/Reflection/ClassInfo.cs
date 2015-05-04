@@ -286,17 +286,9 @@ namespace Moonfish.Guerilla.Reflection
                     // inline array
                     else if (item.ArraySize > 0)
                     {
-                        var initializer = "";
                         for (var i = 0; i < item.ArraySize; i++)
                         {
-                            initializer += string.Format("new {0}(){1}", item.FieldTypeName,
-                                i == item.ArraySize - 1 ? "" : ", ");
-                        }
-                        body.AppendLine(string.Format("{0} = new []{{ {1} }};", item.Value.Name, initializer));
-
-                        for (var i = 0; i < item.ArraySize; i++)
-                        {
-                            body.AppendFormatLine("blamPointers.Concat({0}[{1}].ReadFields());", item.Value.Name, i);
+                            body.AppendFormatLine("{0}[{1}].ReadPointers(binaryReader, blamPointers);", item.Value.Name, i);
                         }
                     }
                     // assume a TagBlock
@@ -361,12 +353,17 @@ namespace Moonfish.Guerilla.Reflection
                     else if (item.ArraySize > 0)
                     {
                         var initializer = "";
-                        for (var i = 0; i <= item.ArraySize - 1; i++)
+                        for (var i = 0; i < item.ArraySize; i++)
                         {
-                            initializer += string.Format("new {0}(binaryReader){1}", item.FieldTypeName,
-                                i == item.ArraySize ? "" : ", ");
+                            initializer += string.Format("new {0}(){1}", item.FieldTypeName,
+                                i == item.ArraySize - 1 ? "" : ", ");
                         }
                         body.AppendLine(string.Format("{0} = new []{{ {1} }};", item.Value.Name, initializer));
+
+                        for (var i = 0; i < item.ArraySize; i++)
+                        {
+                            body.AppendFormatLine("blamPointers.Concat({0}[{1}].ReadFields(binaryReader));", item.Value.Name, i);
+                        }
                     }
                     // assume a TagBlock
                     else

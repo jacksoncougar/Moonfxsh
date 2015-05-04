@@ -295,7 +295,7 @@ namespace Moonfish.Guerilla.Reflection
                 {
                     if (Type.GetType(item.FieldTypeName) == null && EnumDefinitions.All(x => x.Value.Name != item.FieldTypeName))
                     {
-                        body.AppendFormatLine("{0}.ReadPoiners(binaryReader, blamPointers);", item.Value.Name);
+                        body.AppendFormatLine("{0}.ReadPointers(binaryReader, blamPointers);", item.Value.Name);
                     }
                 }
             }

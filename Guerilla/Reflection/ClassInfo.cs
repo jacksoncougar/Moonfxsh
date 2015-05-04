@@ -39,6 +39,7 @@ namespace Moonfish.Guerilla.Reflection
             _value = new GuerillaName("");
             Name = "";
             Namespace = new NamespaceInfo();
+            BaseClass = new ClassInfo("GuerillaBlock");
         }
 
         public ClassInfo(string name) : this()
@@ -60,7 +61,7 @@ namespace Moonfish.Guerilla.Reflection
             get
             {
                 var hasBaseClass = HasBaseClass;
-                var hasInterfaces = string.IsNullOrWhiteSpace(Interfaces);
+                var hasInterfaces = !string.IsNullOrWhiteSpace(Interfaces);
                 return hasBaseClass || hasInterfaces
                     ? string.Format(": {0}{1}{2}", BaseClass.Name, hasBaseClass ? " " : "", Interfaces)
                     : "";

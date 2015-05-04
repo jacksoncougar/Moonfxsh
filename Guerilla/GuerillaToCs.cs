@@ -109,6 +109,7 @@ namespace Moonfish.Guerilla
             };
 
 
+
             ProcessFields(block.Fields, @class);
             @class.Format();
             return @class;

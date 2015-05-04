@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class VisibilityStructBlock : VisibilityStructBlockBase
     {
-        public VisibilityStructBlock() : base()
+        public  VisibilityStructBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  VisibilityStructBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 40, Alignment = 4)]
@@ -27,38 +30,41 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] visibilityClusters;
         internal byte[] clusterRemapTable;
         internal byte[] visibilityVolumes;
-        public override int SerializedSize { get { return 40; } }
-        public override int Alignment { get { return 4; } }
-        public VisibilityStructBlockBase() : base()
+        
+        public override int SerializedSize{get { return 40; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  VisibilityStructBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             projectionCount = binaryReader.ReadInt16();
             clusterCount = binaryReader.ReadInt16();
             volumeCount = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
-            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
-            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
-            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
-            blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
-            return blamPointers;
+            projections = Guerilla.ReadData(binaryReader);
+            visibilityClusters = Guerilla.ReadData(binaryReader);
+            clusterRemapTable = Guerilla.ReadData(binaryReader);
+            visibilityVolumes = Guerilla.ReadData(binaryReader);
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  VisibilityStructBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
-            invalidName_[0].ReadPointers(binaryReader, blamPointers);
-            invalidName_[1].ReadPointers(binaryReader, blamPointers);
-            projections = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
-            visibilityClusters = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
-            clusterRemapTable = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
-            visibilityVolumes = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            projectionCount = binaryReader.ReadInt16();
+            clusterCount = binaryReader.ReadInt16();
+            volumeCount = binaryReader.ReadInt16();
+            invalidName_ = binaryReader.ReadBytes(2);
+            projections = Guerilla.ReadData(binaryReader);
+            visibilityClusters = Guerilla.ReadData(binaryReader);
+            clusterRemapTable = Guerilla.ReadData(binaryReader);
+            visibilityVolumes = Guerilla.ReadData(binaryReader);
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(projectionCount);
                 binaryWriter.Write(clusterCount);

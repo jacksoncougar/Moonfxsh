@@ -271,16 +271,8 @@ namespace Moonfish.Guerilla.Reflection
             {
                 if (item.IsArray)
                 {
-                    // inline array
-                    if (item.ArraySize > 0 && Type.GetType(item.FieldTypeName) == typeof(byte))
-                    {
-                        for (var i = 0; i < item.ArraySize; i++)
-                        {
-                            body.AppendFormatLine("{0}[{1}].ReadPointers(binaryReader, blamPointers);", item.Value.Name, i);
-                        }
-                    }
                     // variable byte array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof (byte))
+                    if (Type.GetType(item.FieldTypeName) == typeof (byte) && item.ArraySize <= 0)
                     {
                         body.AppendFormatLine(
                             "{0} = ReadDataByteArray(binaryReader, blamPointers.Dequeue());", item.Value.Name);
@@ -290,6 +282,14 @@ namespace Moonfish.Guerilla.Reflection
                     {
                         body.AppendFormatLine(
                             "{0} = ReadDataShortArray(binaryReader, blamPointers.Dequeue());", item.Value.Name);
+                    }
+                    // inline array
+                    else if (item.ArraySize > 0)
+                    {
+                        for (var i = 0; i < item.ArraySize; i++)
+                        {
+                            body.AppendFormatLine("{0}[{1}].ReadPointers(binaryReader, blamPointers);", item.Value.Name, i);
+                        }
                     }
                     // assume a TagBlock
                     else

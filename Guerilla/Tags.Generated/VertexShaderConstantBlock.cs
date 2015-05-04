@@ -5,15 +5,18 @@ using Moonfish.Tags;
 using OpenTK;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moonfish.Guerilla.Tags
 {
     public partial class VertexShaderConstantBlock : VertexShaderConstantBlockBase
     {
-        public VertexShaderConstantBlock() : base()
+        public  VertexShaderConstantBlock(BinaryReader binaryReader): base(binaryReader)
         {
+            
+        }
+        public  VertexShaderConstantBlock(): base()
+        {
+            
         }
     };
     [LayoutAttribute(Size = 4, Alignment = 4)]
@@ -23,28 +26,33 @@ namespace Moonfish.Guerilla.Tags
         internal byte parameterIndex;
         internal byte destinationMask;
         internal byte scaleByTextureStage;
-        public override int SerializedSize { get { return 4; } }
-        public override int Alignment { get { return 4; } }
-        public VertexShaderConstantBlockBase() : base()
+        
+        public override int SerializedSize{get { return 4; }}
+        
+        
+        public override int Alignment{get { return 4; }}
+        
+        public  VertexShaderConstantBlockBase(BinaryReader binaryReader): base(binaryReader)
         {
-        }
-        public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
-        {
-            var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             registerIndex = binaryReader.ReadByte();
             parameterIndex = binaryReader.ReadByte();
             destinationMask = binaryReader.ReadByte();
             scaleByTextureStage = binaryReader.ReadByte();
-            return blamPointers;
         }
-        public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
+        public  VertexShaderConstantBlockBase(): base()
         {
-            base.ReadPointers(binaryReader, blamPointers);
+            
         }
-        public override int Write(BinaryWriter binaryWriter, int nextAddress)
+        public override void Read(BinaryReader binaryReader)
         {
-            base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            registerIndex = binaryReader.ReadByte();
+            parameterIndex = binaryReader.ReadByte();
+            destinationMask = binaryReader.ReadByte();
+            scaleByTextureStage = binaryReader.ReadByte();
+        }
+        public override int Write(System.IO.BinaryWriter binaryWriter, Int32 nextAddress)
+        {
+            using(binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(registerIndex);
                 binaryWriter.Write(parameterIndex);

@@ -81,13 +81,13 @@ namespace Moonfish.Guerilla.Tags
             createNewVariantStruct7 = new CreateNewVariantStructBlock();
             blamPointers.Concat(createNewVariantStruct7.ReadFields(binaryReader));
             unusedCreateNewVariants = new []{ new UnusedCreateNewVariants(), new UnusedCreateNewVariants(), new UnusedCreateNewVariants(), new UnusedCreateNewVariants(), new UnusedCreateNewVariants(), new UnusedCreateNewVariants(), new UnusedCreateNewVariants() };
-            blamPointers.Concat(unusedCreateNewVariants[0].ReadFields(binaryReader));
-            blamPointers.Concat(unusedCreateNewVariants[1].ReadFields(binaryReader));
-            blamPointers.Concat(unusedCreateNewVariants[2].ReadFields(binaryReader));
-            blamPointers.Concat(unusedCreateNewVariants[3].ReadFields(binaryReader));
-            blamPointers.Concat(unusedCreateNewVariants[4].ReadFields(binaryReader));
-            blamPointers.Concat(unusedCreateNewVariants[5].ReadFields(binaryReader));
-            blamPointers.Concat(unusedCreateNewVariants[6].ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(unusedCreateNewVariants[0].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(unusedCreateNewVariants[1].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(unusedCreateNewVariants[2].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(unusedCreateNewVariants[3].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(unusedCreateNewVariants[4].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(unusedCreateNewVariants[5].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(unusedCreateNewVariants[6].ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

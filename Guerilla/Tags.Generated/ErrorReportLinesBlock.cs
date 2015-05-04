@@ -30,8 +30,8 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             points = new []{ new Points(), new Points() };
-            blamPointers.Concat(points[0].ReadFields(binaryReader));
-            blamPointers.Concat(points[1].ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(points[0].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(points[1].ReadFields(binaryReader)));
             color = binaryReader.ReadVector4();
             return blamPointers;
         }
@@ -67,15 +67,15 @@ using(binaryWriter.BaseStream.Pin())
                 var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
                 position = binaryReader.ReadVector3();
                 nodeIndices = new []{ new NodeIndices(), new NodeIndices(), new NodeIndices(), new NodeIndices() };
-                blamPointers.Concat(nodeIndices[0].ReadFields(binaryReader));
-                blamPointers.Concat(nodeIndices[1].ReadFields(binaryReader));
-                blamPointers.Concat(nodeIndices[2].ReadFields(binaryReader));
-                blamPointers.Concat(nodeIndices[3].ReadFields(binaryReader));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(nodeIndices[0].ReadFields(binaryReader)));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(nodeIndices[1].ReadFields(binaryReader)));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(nodeIndices[2].ReadFields(binaryReader)));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(nodeIndices[3].ReadFields(binaryReader)));
                 nodeWeights = new []{ new NodeWeights(), new NodeWeights(), new NodeWeights(), new NodeWeights() };
-                blamPointers.Concat(nodeWeights[0].ReadFields(binaryReader));
-                blamPointers.Concat(nodeWeights[1].ReadFields(binaryReader));
-                blamPointers.Concat(nodeWeights[2].ReadFields(binaryReader));
-                blamPointers.Concat(nodeWeights[3].ReadFields(binaryReader));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(nodeWeights[0].ReadFields(binaryReader)));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(nodeWeights[1].ReadFields(binaryReader)));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(nodeWeights[2].ReadFields(binaryReader)));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(nodeWeights[3].ReadFields(binaryReader)));
                 return blamPointers;
             }
             public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

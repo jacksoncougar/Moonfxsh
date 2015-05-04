@@ -43,10 +43,10 @@ namespace Moonfish.Guerilla.Tags
             childShapesSize = binaryReader.ReadInt32();
             childShapesCapacity = binaryReader.ReadInt32();
             childShapesStorage = new []{ new ChildShapesStorage(), new ChildShapesStorage(), new ChildShapesStorage(), new ChildShapesStorage() };
-            blamPointers.Concat(childShapesStorage[0].ReadFields(binaryReader));
-            blamPointers.Concat(childShapesStorage[1].ReadFields(binaryReader));
-            blamPointers.Concat(childShapesStorage[2].ReadFields(binaryReader));
-            blamPointers.Concat(childShapesStorage[3].ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childShapesStorage[0].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childShapesStorage[1].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childShapesStorage[2].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childShapesStorage[3].ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

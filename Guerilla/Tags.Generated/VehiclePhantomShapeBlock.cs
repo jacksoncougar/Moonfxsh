@@ -53,10 +53,10 @@ namespace Moonfish.Guerilla.Tags
             childShapesSize = binaryReader.ReadInt32();
             childShapesCapacity = binaryReader.ReadInt32();
             childShapesStorage = new []{ new ChildShapesStorage(), new ChildShapesStorage(), new ChildShapesStorage(), new ChildShapesStorage() };
-            blamPointers.Concat(childShapesStorage[0].ReadFields(binaryReader));
-            blamPointers.Concat(childShapesStorage[1].ReadFields(binaryReader));
-            blamPointers.Concat(childShapesStorage[2].ReadFields(binaryReader));
-            blamPointers.Concat(childShapesStorage[3].ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childShapesStorage[0].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childShapesStorage[1].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childShapesStorage[2].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childShapesStorage[3].ReadFields(binaryReader)));
             multisphereCount = binaryReader.ReadInt32();
             flags = (Flags)binaryReader.ReadInt32();
             invalidName_2 = binaryReader.ReadBytes(8);
@@ -67,10 +67,10 @@ namespace Moonfish.Guerilla.Tags
             z0 = binaryReader.ReadSingle();
             z1 = binaryReader.ReadSingle();
             multispheres = new []{ new Multispheres(), new Multispheres(), new Multispheres(), new Multispheres() };
-            blamPointers.Concat(multispheres[0].ReadFields(binaryReader));
-            blamPointers.Concat(multispheres[1].ReadFields(binaryReader));
-            blamPointers.Concat(multispheres[2].ReadFields(binaryReader));
-            blamPointers.Concat(multispheres[3].ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(multispheres[0].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(multispheres[1].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(multispheres[2].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(multispheres[3].ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
@@ -194,14 +194,14 @@ using(binaryWriter.BaseStream.Pin())
                 invalidName_0 = binaryReader.ReadBytes(4);
                 numSpheres = binaryReader.ReadInt32();
                 fourVectorsStorage = new []{ new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage() };
-                blamPointers.Concat(fourVectorsStorage[0].ReadFields(binaryReader));
-                blamPointers.Concat(fourVectorsStorage[1].ReadFields(binaryReader));
-                blamPointers.Concat(fourVectorsStorage[2].ReadFields(binaryReader));
-                blamPointers.Concat(fourVectorsStorage[3].ReadFields(binaryReader));
-                blamPointers.Concat(fourVectorsStorage[4].ReadFields(binaryReader));
-                blamPointers.Concat(fourVectorsStorage[5].ReadFields(binaryReader));
-                blamPointers.Concat(fourVectorsStorage[6].ReadFields(binaryReader));
-                blamPointers.Concat(fourVectorsStorage[7].ReadFields(binaryReader));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[0].ReadFields(binaryReader)));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[1].ReadFields(binaryReader)));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[2].ReadFields(binaryReader)));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[3].ReadFields(binaryReader)));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[4].ReadFields(binaryReader)));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[5].ReadFields(binaryReader)));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[6].ReadFields(binaryReader)));
+                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[7].ReadFields(binaryReader)));
                 return blamPointers;
             }
             public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

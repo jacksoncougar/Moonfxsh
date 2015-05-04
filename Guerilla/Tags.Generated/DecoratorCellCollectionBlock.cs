@@ -32,14 +32,14 @@ namespace Moonfish.Guerilla.Tags
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             childIndices = new []{ new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices(), new ChildIndices() };
-            blamPointers.Concat(childIndices[0].ReadFields(binaryReader));
-            blamPointers.Concat(childIndices[1].ReadFields(binaryReader));
-            blamPointers.Concat(childIndices[2].ReadFields(binaryReader));
-            blamPointers.Concat(childIndices[3].ReadFields(binaryReader));
-            blamPointers.Concat(childIndices[4].ReadFields(binaryReader));
-            blamPointers.Concat(childIndices[5].ReadFields(binaryReader));
-            blamPointers.Concat(childIndices[6].ReadFields(binaryReader));
-            blamPointers.Concat(childIndices[7].ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childIndices[0].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childIndices[1].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childIndices[2].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childIndices[3].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childIndices[4].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childIndices[5].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childIndices[6].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childIndices[7].ReadFields(binaryReader)));
             cacheBlockIndex = binaryReader.ReadShortBlockIndex1();
             groupCount = binaryReader.ReadInt16();
             groupStartIndex = binaryReader.ReadInt32();

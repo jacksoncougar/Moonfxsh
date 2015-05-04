@@ -42,12 +42,12 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes(2);
             nodeName = binaryReader.ReadStringID();
             eMPTYSTRING = new []{ new EMPTYSTRING(), new EMPTYSTRING(), new EMPTYSTRING(), new EMPTYSTRING(), new EMPTYSTRING(), new EMPTYSTRING() };
-            blamPointers.Concat(eMPTYSTRING[0].ReadFields(binaryReader));
-            blamPointers.Concat(eMPTYSTRING[1].ReadFields(binaryReader));
-            blamPointers.Concat(eMPTYSTRING[2].ReadFields(binaryReader));
-            blamPointers.Concat(eMPTYSTRING[3].ReadFields(binaryReader));
-            blamPointers.Concat(eMPTYSTRING[4].ReadFields(binaryReader));
-            blamPointers.Concat(eMPTYSTRING[5].ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(eMPTYSTRING[0].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(eMPTYSTRING[1].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(eMPTYSTRING[2].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(eMPTYSTRING[3].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(eMPTYSTRING[4].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(eMPTYSTRING[5].ReadFields(binaryReader)));
             position = binaryReader.ReadVector3();
             extents = binaryReader.ReadVector3();
             invalidName_0 = binaryReader.ReadBytes(4);

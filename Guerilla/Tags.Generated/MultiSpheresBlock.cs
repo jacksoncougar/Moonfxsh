@@ -59,14 +59,14 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(4);
             numSpheres = binaryReader.ReadInt32();
             fourVectorsStorage = new []{ new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage() };
-            blamPointers.Concat(fourVectorsStorage[0].ReadFields(binaryReader));
-            blamPointers.Concat(fourVectorsStorage[1].ReadFields(binaryReader));
-            blamPointers.Concat(fourVectorsStorage[2].ReadFields(binaryReader));
-            blamPointers.Concat(fourVectorsStorage[3].ReadFields(binaryReader));
-            blamPointers.Concat(fourVectorsStorage[4].ReadFields(binaryReader));
-            blamPointers.Concat(fourVectorsStorage[5].ReadFields(binaryReader));
-            blamPointers.Concat(fourVectorsStorage[6].ReadFields(binaryReader));
-            blamPointers.Concat(fourVectorsStorage[7].ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[0].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[1].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[2].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[3].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[4].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[5].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[6].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[7].ReadFields(binaryReader)));
             return blamPointers;
         }
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)

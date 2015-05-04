@@ -79,9 +79,9 @@ namespace Moonfish.Guerilla.Tags
             fourVectorsCapacity = binaryReader.ReadInt32();
             numVertices = binaryReader.ReadInt32();
             fourVectorsStorage = new []{ new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage() };
-            blamPointers.Concat(fourVectorsStorage[0].ReadFields(binaryReader));
-            blamPointers.Concat(fourVectorsStorage[1].ReadFields(binaryReader));
-            blamPointers.Concat(fourVectorsStorage[2].ReadFields(binaryReader));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[0].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[1].ReadFields(binaryReader)));
+            blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[2].ReadFields(binaryReader)));
             invalidName_5 = binaryReader.ReadBytes(4);
             planeEquationsSize = binaryReader.ReadInt32();
             planeEquationsCapacity = binaryReader.ReadInt32();

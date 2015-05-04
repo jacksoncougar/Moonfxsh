@@ -362,7 +362,7 @@ namespace Moonfish.Guerilla.Reflection
 
                         for (var i = 0; i < item.ArraySize; i++)
                         {
-                            body.AppendFormatLine("blamPointers.Concat({0}[{1}].ReadFields(binaryReader));", item.Value.Name, i);
+                            body.AppendFormatLine("blamPointers = blamPointers.Concat({0}[{1}].ReadFields(binaryReader));", item.Value.Name, i);
                         }
                     }
                     // assume a TagBlock

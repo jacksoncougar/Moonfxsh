@@ -89,7 +89,7 @@ namespace Moonfish
             resourceStream.Position = blockInfo.ResourceOffset + 8;
             var buffer = new byte[blockInfo.blockSize - 8];
             resourceStream.Read( buffer, 0, blockInfo.blockSize - 8 );
-            return new ResourceStream( buffer, blockInfo ) {};
+            return new ResourceStream( buffer, blockInfo );
         }
 
         private static CacheStream mapStream;

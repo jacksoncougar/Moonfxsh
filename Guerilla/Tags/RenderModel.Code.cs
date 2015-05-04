@@ -26,8 +26,12 @@ namespace Moonfish.Guerilla.Tags
 
                 var vertexBufferResources = source.Resources.Where(
                     x => x.type == GlobalGeometryBlockResourceBlockBase.Type.VertexBuffer).ToArray();
+                foreach (var buffer in sectionData[0].section.vertexBuffers)
+                    if (buffer.vertexBuffer.Type == VertexAttributeType.None)
+                    {
 
-                for (int i = 0; i < sectionData[0].section.vertexBuffers.Length; i++)
+                    }
+                for (var i = 0; i < sectionData[0].section.vertexBuffers.Length; i++)
                 {
                     sectionData[0].section.vertexBuffers[i].vertexBuffer.Data =
                         source.GetResourceData(vertexBufferResources[i]);

@@ -60,7 +60,9 @@ namespace Moonfish.Tags
     {
         public static VertexBuffer ReadVertexBuffer( this BinaryReader binaryReader )
         {
-            return new VertexBuffer( ) {Type = binaryReader.ReadVertexAttributeType( )};
+            var buffer = new VertexBuffer( ) {Type = binaryReader.ReadVertexAttributeType( )};
+            binaryReader.ReadBytes(30);
+            return buffer;
         }
 
         public static String32 ReadString32( this BinaryReader binaryReader )

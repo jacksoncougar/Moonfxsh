@@ -69,8 +69,12 @@ namespace Moonfish.Graphics
             var identifier = Map.Index.Select( TagClass.Hlmt, "banshee" ).First( ).Identifier;
 
             var @object = (ModelBlock)Map.Deserialize(identifier);
-            foreach (IResourceBlock section in  @object.RenderModel.sections)
+            var i = 0;
+            foreach (IResourceBlock section in @object.RenderModel.sections)
+            {
                 section.LoadRawResources();
+                ++i;
+            }
             var scenarioObject = new ScenarioObject( @object );
             Scene.ObjectManager.Add(identifier, scenarioObject);
             Scene.ProgramManager.LoadMaterials( @object.RenderModel.materials.Select( x => x.shader.Ident ), Map );

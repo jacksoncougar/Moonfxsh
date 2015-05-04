@@ -28,15 +28,20 @@ namespace Moonfish
             //        Path.Combine(Local.ProjectDirectory, @"Guerilla\Tags.Generated\"));
             //}
             //Application.Exit();
-            //var map = new CacheStream(@"C:\Users\stem\Documents\modding\headlong.map");
+            var map = new CacheStream(@"C:\Users\stem\Documents\modding\headlong.map");
 
-            //var item = map.Deserialize(map.Index.ScenarioIdent);
-            //map.ClearCache(map.Index.ScenarioIdent);
-            //StaticBenchmark.Begin();
+            StaticBenchmark.Begin();
+            foreach (var tag in map.Index)
+            {
+                map.Deserialize(tag.Identifier);
+            }
+            StaticBenchmark.End();
+            var v = StaticBenchmark.Result;
 
-            //item = map.Deserialize(map.Index.ScenarioIdent);
-            //StaticBenchmark.End();
-            //var v = StaticBenchmark.Result;
+            var item = map.Deserialize(map.Index.ScenarioIdent);
+            map.ClearCache(map.Index.ScenarioIdent);
+
+            item = map.Deserialize(map.Index.ScenarioIdent);
             //map.Add( (ScenarioBlock)item, "moonfish/moonfish" );
 
             //var validator = new Validator();

@@ -145,30 +145,4 @@ namespace Moonfish.Guerilla.Tags
             return base.ConvertTo(context, culture, value, destinationType);
         }
     }
-
-    partial class GlobalGeometrySectionStructBlock
-    {
-        internal GlobalGeometrySectionVertexBufferBlock[] ReadGlobalGeometrySectionVertexBufferBlockArray(
-            BinaryReader binaryReader)
-        {
-            var vertexBuffers = new GlobalGeometrySectionVertexBufferBlock[0];
-            //base.ReadGlobalGeometrySectionVertexBufferBlockArray(binaryReader);
-            using (binaryReader.BaseStream.Pin())
-            {
-                if (binaryReader.BaseStream is ResourceStream)
-                {
-                    var stream = binaryReader.BaseStream as ResourceStream;
-
-                    var vertexBufferResources = stream.Resources.Where(
-                        x => x.type == GlobalGeometryBlockResourceBlockBase.Type.VertexBuffer).ToArray();
-
-                    for (int i = 0; i < vertexBuffers.Length; i++)
-                    {
-                        vertexBuffers[i].vertexBuffer.Data = stream.GetResourceData(vertexBufferResources[i]);
-                    }
-                }
-                return vertexBuffers;
-            }
-        }
-    }
-}
+}   

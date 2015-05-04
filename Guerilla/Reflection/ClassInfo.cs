@@ -280,7 +280,7 @@ namespace Moonfish.Guerilla.Reflection
                         }
                     }
                     // variable byte array (data)
-                    else if (Type.GetType(item.FieldTypeName) == typeof (byte) && item.ArraySize <= 0)
+                    else if (Type.GetType(item.FieldTypeName) == typeof (byte))
                     {
                         body.AppendFormatLine(
                             "{0} = ReadDataByteArray(binaryReader, blamPointers.Dequeue());", item.Value.Name);

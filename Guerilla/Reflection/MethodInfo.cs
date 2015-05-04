@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Fasterflect;
 
 namespace Moonfish.Guerilla.Reflection
 {
@@ -19,9 +20,9 @@ namespace Moonfish.Guerilla.Reflection
         public string Returns { get; set; }
         public bool Wrapper { get; set; }
 
-        public string GetMethodCallSignature( params ParameterInfo[] parameters )
+        public string GetMethodCallSignature(  )
         {
-            return GetMethodCallSignatureFormat( "", GetArguments( parameters ) );
+            return GetMethodCallSignatureFormat( "", GetArguments( Arguments ) );
         }
 
         public string GetMethodSignature( )
@@ -29,12 +30,12 @@ namespace Moonfish.Guerilla.Reflection
             return GetMethodSignatureFormat( "" );
         }
 
-        public string GetMethodSignatureFormat( string methodName )
+        private string GetMethodSignatureFormat( string methodName )
         {
             return GetMethodCallSignatureFormat( methodName, GetSignature( Arguments ) );
         }
 
-        public string GetMethodCallSignatureFormat( string methodName, StringBuilder argumentString )
+        private string GetMethodCallSignatureFormat( string methodName, StringBuilder argumentString )
         {
             return string.Format( "{0}{1}", String.Format( ClassName, methodName ),
                 string.Format( "({0})", argumentString ) );
@@ -49,10 +50,10 @@ namespace Moonfish.Guerilla.Reflection
                     .ToList( )
                     .ForEach(
                         x =>
-                            argumentStringBuilder.AppendFormat( "{0} {1}, ", x.ParameterType, x.Name ) );
+                            argumentStringBuilder.AppendFormat( "{0} {1}, ", x.ParameterType.Name(), x.Name ) );
                 var arg = arguments.Last( );
                 argumentStringBuilder.Append(
-                    string.Format( "{0} {1} {2}", arg.Modifier.GetSignatureModifier( ), arg.ParameterType.Name, arg.Name )
+                    string.Format( "{0} {1} {2}", arg.Modifier.GetSignatureModifier( ), arg.ParameterType.Name(), arg.Name )
                         .TrimStart( ) );
             }
             return argumentStringBuilder;
@@ -88,15 +89,16 @@ namespace Moonfish.Guerilla.Reflection
         {
             var methodStringBuilder = new StringBuilder( );
             var modifiersString = AccessModifiers.ToTokenString();
-            methodStringBuilder.AppendFormat( "{0} {1} {2}", modifiersString, Returns, GetMethodSignature( ) );
+            methodStringBuilder.AppendFormat("{0}{3}{1}{4}{2}", modifiersString, Returns, GetMethodSignature(),
+                string.IsNullOrWhiteSpace(modifiersString) ? "" : " ",
+                string.IsNullOrWhiteSpace(Returns) ? "" : " ");
             if ( Wrapper )
             {
-                methodStringBuilder.AppendFormat( ": base({0})", GetArguments( Arguments ) );
+                methodStringBuilder.AppendFormat( " : base({0})", GetArguments( Arguments ) );
             }
             methodStringBuilder.AppendLine( );
             methodStringBuilder.AppendLine( "{" );
-            methodStringBuilder.Append( Body );
-            methodStringBuilder.AppendLine( );
+            if (!string.IsNullOrWhiteSpace(Body)) methodStringBuilder.AppendLine(Body);
             methodStringBuilder.AppendLine( "}" );
             return methodStringBuilder.ToString( ).Trim( );
         }

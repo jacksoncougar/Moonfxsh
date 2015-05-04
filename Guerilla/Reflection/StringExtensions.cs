@@ -12,7 +12,7 @@ namespace Moonfish.Guerilla.Reflection
             tabCount = netTab < 0 ? tabCount + netTab : tabCount;
             var tab = new string( ' ', tabCount * tabSize );
             tabCount = netTab > 0 ? tabCount + netTab : tabCount;
-            return tab + value.Trim( );
+            return tab + value;
         }
     }
 }

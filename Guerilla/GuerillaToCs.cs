@@ -256,7 +256,7 @@ namespace Moonfish.Guerilla
                 }
 
                 streamWriter.WriteLine( );
-                streamWriter.WriteLine( classInfo.Namespace.Tab( ref tabCount ) );
+                streamWriter.WriteLine( classInfo.Namespace.ToString().Tab( ref tabCount ) );
                 streamWriter.WriteLine( "{".Tab( ref tabCount ) );
 
                 GenerateOutputForSubclass( wrapperClassInfo, streamWriter, tabCount );
@@ -436,7 +436,7 @@ namespace Moonfish.Guerilla
                                 BeginProcessTagBlockDefinition( field.Definition );
                         }
 
-                        fieldInfo.FieldTypeName = _definitionsDictionary[ field.Definition.Name ].Value.Name;
+                        fieldInfo.FieldTypeName = _definitionsDictionary[ field.Definition.Name ].Name;
                         fieldInfo.IsArray = true;
                         @class.Fields.Add( fieldInfo );
                         break;

@@ -1,4 +1,5 @@
 using System;
+using Fasterflect;
 
 namespace Moonfish.Guerilla.Reflection
 {
@@ -31,7 +32,7 @@ namespace Moonfish.Guerilla.Reflection
         {
             Modifier = ParameterModifier.None;
             ParameterType = parameterType;
-            var type = parameterType.Name;
+            var type = parameterType.Name();
             Name = Guerilla.ToMemberName( type );
         }
 

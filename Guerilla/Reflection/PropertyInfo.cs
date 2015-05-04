@@ -15,23 +15,21 @@ namespace Moonfish.Guerilla.Reflection
             var hasSetter = SetBody != null;
             var hasGetter = GetBody != null;
 
-            var builder =
-                new StringBuilder(  );
-            builder.AppendLine( );
-            builder.Append( string.Format( "{0} {1} {2}", AccessModifiers.ToTokenString( ), Returns, Name ) );
+            var builder = new StringBuilder(  );
+            builder.Append( string.Format( "{0} {1} {2} ", AccessModifiers.ToTokenString( ), Returns, Name ) );
             var indent = 0;
-            builder.Append( "{ ".Tab( ref indent ) );
+            builder.Append( "{".Tab( ref indent ) );
             if ( hasGetter )
             {
                 var auto = string.IsNullOrWhiteSpace( GetBody );
-                builder.Append( auto ? " get; " : string.Format( "get {{ {0} }}", GetBody ) );
+                builder.Append( auto ? " get; " : string.Format( " get {{ {0} }}", GetBody ) );
             }
             if ( hasSetter )
             {
                 var auto = string.IsNullOrWhiteSpace( SetBody );
-                builder.Append( auto ? " set; " : string.Format( "set {{ {0} }}", GetBody ) );
+                builder.Append( auto ? " set; " : string.Format( " set {{ {0} }}", GetBody ) );
             }
-            builder.AppendLine( " }".Tab( ref indent ) );
+            builder.Append( " }".Tab( ref indent ) );
             return builder.ToString( );
         }
     }

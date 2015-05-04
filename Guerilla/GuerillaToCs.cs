@@ -137,7 +137,8 @@ namespace Moonfish.Guerilla
                     {
                         size += parentTag.Definition.CalculateSizeOfFieldSet( );
                         hasParent = h2Tags.Any(x => x.Class == parentTag.Class);
-                        parentTag = new MoonfishTagGroup(h2Tags.First(x => x.Class == parentTag.ParentClass));
+                        if (hasParent)
+                            parentTag = new MoonfishTagGroup(h2Tags.First(x => x.Class == parentTag.ParentClass));
                     }
                 }
                 else

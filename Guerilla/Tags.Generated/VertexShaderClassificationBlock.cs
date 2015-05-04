@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 28, Alignment = 4)]
     public class VertexShaderClassificationBlockBase : GuerillaBlock
     {
@@ -23,11 +25,21 @@ namespace Moonfish.Guerilla.Tags
         internal short[] compiledShader;
         internal byte[] code;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 28; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 28; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public VertexShaderClassificationBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -37,16 +49,18 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(8);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             compiledShader = ReadDataShortArray(binaryReader, blamPointers.Dequeue());
             code = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 4);
                 nextAddress = Guerilla.WriteData(binaryWriter, compiledShader, nextAddress);

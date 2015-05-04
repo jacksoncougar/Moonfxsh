@@ -11,23 +11,23 @@ namespace Moonfish.Graphics
 
         public Matrix4 ParentWorldMatrix
         {
-            get { return _nodes.GetWorldMatrix( marker.nodeIndex ); }
+            get { return _nodes.GetWorldMatrix(marker.nodeIndex); }
         }
 
         public Matrix4 WorldMatrix
         {
             get
             {
-                var translationMatrix = Matrix4.CreateTranslation( marker.Translation );
-                var rotationMatrix = Matrix4.CreateFromQuaternion( marker.Rotation );
-                var scaleMatrix = Matrix4.CreateScale( marker.Scale );
-                return scaleMatrix * rotationMatrix * translationMatrix * _nodes.GetWorldMatrix( marker.nodeIndex );
+                var translationMatrix = Matrix4.CreateTranslation(marker.Translation);
+                var rotationMatrix = Matrix4.CreateFromQuaternion(marker.Rotation);
+                var scaleMatrix = Matrix4.CreateScale(marker.Scale);
+                return scaleMatrix*rotationMatrix*translationMatrix*_nodes.GetWorldMatrix(marker.nodeIndex);
             }
         }
 
         public RenderModelMarkerBlock marker;
 
-        public MarkerWrapper( RenderModelMarkerBlock marker, List<RenderModelNodeBlock> nodes )
+        public MarkerWrapper(RenderModelMarkerBlock marker, List<RenderModelNodeBlock> nodes)
         {
             this.marker = marker;
             _nodes = nodes;
@@ -37,15 +37,15 @@ namespace Moonfish.Graphics
 
         public event EventHandler MarkerUpdated;
 
-        internal void mousePole_WorldMatrixChanged( object sender, MatrixChangedEventArgs e )
+        internal void mousePole_WorldMatrixChanged(object sender, MatrixChangedEventArgs e)
         {
-            var matrix = e.Matrix * ParentWorldMatrix.Inverted( );
-            var translation = matrix.ExtractTranslation( );
-            var rotation = matrix.ExtractRotation( );
+            var matrix = e.Matrix*ParentWorldMatrix.Inverted();
+            var translation = matrix.ExtractTranslation();
+            var rotation = matrix.ExtractRotation();
             marker.Translation = translation;
             marker.rotation = rotation;
-            if ( MarkerUpdated != null ) MarkerUpdated( this, null );
-            if ( MarkerUpdatedCallback != null ) MarkerUpdatedCallback( WorldMatrix );
+            if (MarkerUpdated != null) MarkerUpdated(this, null);
+            if (MarkerUpdatedCallback != null) MarkerUpdatedCallback(WorldMatrix);
         }
     }
 }

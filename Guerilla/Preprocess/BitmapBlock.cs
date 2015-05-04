@@ -6,18 +6,18 @@ namespace Moonfish.Guerilla.Preprocess
 {
     internal class BitmapBlock
     {
-        [GuerillaPreProcessMethod( BlockName = "bitmap_block" )]
-        protected static void GuerillaPreProcessMethod( BinaryReader binaryReader, IList<tag_field> fields )
+        [GuerillaPreProcessMethod(BlockName = "bitmap_block")]
+        protected static void GuerillaPreProcessMethod(BinaryReader binaryReader, IList<tag_field> fields)
         {
-            ( fields[ 2 ].Definition as enum_definition ).Options = new List<string>( new[]
+            (fields[2].Definition as enum_definition).Options = new List<string>(new[]
             {
                 "TextureArray2D",
                 "TextureArray3D",
                 "Cubemaps",
                 "Sprites",
                 "Interface Bitmaps"
-            } );
-            ( fields[ 4 ].Definition as enum_definition ).Options = new List<string>( new[]
+            });
+            (fields[4].Definition as enum_definition).Options = new List<string>(new[]
             {
                 "Compressed with Color-Key Transparency",
                 "Compressed with Explicit Alpha",
@@ -25,29 +25,29 @@ namespace Moonfish.Guerilla.Preprocess
                 "Color 16-Bit",
                 "Color 32-Bit",
                 "Monochrome"
-            } );
-            fields[ 12 ].Name = "Sprite Size";
-            var enumDefinition = ( fields[ 12 ].Definition as enum_definition );
-            for ( int i = 0; i < enumDefinition.Options.Count; ++i )
+            });
+            fields[12].Name = "Sprite Size";
+            var enumDefinition = (fields[12].Definition as enum_definition);
+            for (int i = 0; i < enumDefinition.Options.Count; ++i)
             {
-                enumDefinition.Options[ i ] = string.Format( "Size{0}", enumDefinition.Options[ i ] );
+                enumDefinition.Options[i] = string.Format("Size{0}", enumDefinition.Options[i]);
             }
-            var index = ( from field in fields
+            var index = (from field in fields
                 where field.Name == "WDP fields"
-                select fields.IndexOf( field ) ).Single( );
+                select fields.IndexOf(field)).Single();
             var wdpFields =
-                fields.Where( x => fields.IndexOf( x ) >= index && fields.IndexOf( x ) < index + 5 ).ToArray( );
-            var dataFields = fields.Where( x => x.type == field_type._field_data ).ToArray( );
+                fields.Where(x => fields.IndexOf(x) >= index && fields.IndexOf(x) < index + 5).ToArray();
+            var dataFields = fields.Where(x => x.type == field_type._field_data).ToArray();
 
-            for ( int i = 0; i < wdpFields.Count( ); i++ )
+            for (int i = 0; i < wdpFields.Count(); i++)
             {
-                fields.Remove( wdpFields[ i ] );
+                fields.Remove(wdpFields[i]);
             }
-            for ( int i = 0; i < dataFields.Count( ); i++ )
+            for (int i = 0; i < dataFields.Count(); i++)
             {
-                index = fields.IndexOf( dataFields[ i ] );
-                fields.RemoveAt( index );
-                fields.Insert( index, new tag_field( ) {type = field_type._field_skip, Name = "data", definition = 8} );
+                index = fields.IndexOf(dataFields[i]);
+                fields.RemoveAt(index);
+                fields.Insert(index, new tag_field() {type = field_type._field_skip, Name = "data", definition = 8});
             }
         }
     }

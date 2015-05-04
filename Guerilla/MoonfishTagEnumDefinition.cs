@@ -6,7 +6,7 @@ namespace Moonfish.Guerilla
     {
         public List<string> Names { get; private set; }
 
-        public MoonfishTagEnumDefinition( enum_definition definition )
+        public MoonfishTagEnumDefinition(enum_definition definition)
         {
             Names = definition.Options;
         }

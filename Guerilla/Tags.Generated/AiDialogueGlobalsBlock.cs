@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Adlg = (TagClass)"adlg";
+        public static readonly TagClass Adlg = (TagClass) "adlg";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 44, Alignment = 4)]
     public class AiDialogueGlobalsBlockBase : GuerillaBlock
     {
@@ -33,11 +35,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal DialogueDataBlock[] dialogueData;
         internal InvoluntaryDataBlock[] involuntaryData;
-        public override int SerializedSize { get { return 44; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 44; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public AiDialogueGlobalsBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -48,6 +60,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<InvoluntaryDataBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -56,12 +69,14 @@ namespace Moonfish.Guerilla.Tags
             dialogueData = ReadBlockArrayData<DialogueDataBlock>(binaryReader, blamPointers.Dequeue());
             involuntaryData = ReadBlockArrayData<InvoluntaryDataBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                nextAddress = Guerilla.WriteBlockArray<VocalizationDefinitionsBlock0>(binaryWriter, vocalizations, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<VocalizationDefinitionsBlock0>(binaryWriter, vocalizations,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<VocalizationPatternsBlock>(binaryWriter, patterns, nextAddress);
                 binaryWriter.Write(invalidName_, 0, 12);
                 nextAddress = Guerilla.WriteBlockArray<DialogueDataBlock>(binaryWriter, dialogueData, nextAddress);

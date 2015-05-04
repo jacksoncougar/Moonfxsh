@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 64, Alignment = 4)]
     public class GlobalCollisionBspStructBlockBase : GuerillaBlock
     {
@@ -27,11 +29,21 @@ namespace Moonfish.Guerilla.Tags
         internal SurfacesBlock[] surfaces;
         internal EdgesBlock[] edges;
         internal VerticesBlock[] vertices;
-        public override int SerializedSize { get { return 64; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 64; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public GlobalCollisionBspStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -45,6 +57,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<VerticesBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -57,10 +70,11 @@ namespace Moonfish.Guerilla.Tags
             edges = ReadBlockArrayData<EdgesBlock>(binaryReader, blamPointers.Dequeue());
             vertices = ReadBlockArrayData<VerticesBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<Bsp3dNodesBlock>(binaryWriter, bSP3DNodes, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<PlanesBlock>(binaryWriter, planes, nextAddress);

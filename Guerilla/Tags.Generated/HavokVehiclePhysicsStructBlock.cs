@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,63 +17,86 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 84, Alignment = 4)]
     public class HavokVehiclePhysicsStructBlockBase : GuerillaBlock
     {
         internal Flags flags;
+
         /// <summary>
         ///  for friction based vehicles only
         /// </summary>
         internal float groundFriction;
+
         /// <summary>
         ///  for friction based vehicles only
         /// </summary>
         internal float groundDepth;
+
         /// <summary>
         ///  for friction based vehicles only
         /// </summary>
         internal float groundDampFactor;
+
         /// <summary>
         ///  for friction based vehicles only
         /// </summary>
         internal float groundMovingFriction;
+
         /// <summary>
         /// degrees 0-90
         /// </summary>
         internal float groundMaximumSlope0;
+
         /// <summary>
         /// degrees 0-90.  and greater than slope 0
         /// </summary>
         internal float groundMaximumSlope1;
+
         internal byte[] invalidName_;
+
         /// <summary>
         /// lift per WU.
         /// </summary>
         internal float antiGravityBankLift;
+
         /// <summary>
         /// how quickly we bank when we steer 
         /// </summary>
         internal float steeringBankReactionScale;
+
         /// <summary>
         /// value of 0 defaults to 1.  .5 is half gravity
         /// </summary>
         internal float gravityScale;
+
         /// <summary>
         /// generated from the radius of the hkConvexShape for this vehicle
         /// </summary>
         internal float radius;
+
         internal AntiGravityPointDefinitionBlock[] antiGravityPoints;
         internal FrictionPointDefinitionBlock[] frictionPoints;
         internal VehiclePhantomShapeBlock[] shapePhantomShape;
-        public override int SerializedSize { get { return 84; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 84; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public HavokVehiclePhysicsStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             groundFriction = binaryReader.ReadSingle();
             groundDepth = binaryReader.ReadSingle();
             groundDampFactor = binaryReader.ReadSingle();
@@ -89,6 +113,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<VehiclePhantomShapeBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -96,12 +121,13 @@ namespace Moonfish.Guerilla.Tags
             frictionPoints = ReadBlockArrayData<FrictionPointDefinitionBlock>(binaryReader, blamPointers.Dequeue());
             shapePhantomShape = ReadBlockArrayData<VehiclePhantomShapeBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int32) flags);
                 binaryWriter.Write(groundFriction);
                 binaryWriter.Write(groundDepth);
                 binaryWriter.Write(groundDampFactor);
@@ -113,12 +139,16 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(steeringBankReactionScale);
                 binaryWriter.Write(gravityScale);
                 binaryWriter.Write(radius);
-                nextAddress = Guerilla.WriteBlockArray<AntiGravityPointDefinitionBlock>(binaryWriter, antiGravityPoints, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<FrictionPointDefinitionBlock>(binaryWriter, frictionPoints, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<VehiclePhantomShapeBlock>(binaryWriter, shapePhantomShape, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AntiGravityPointDefinitionBlock>(binaryWriter, antiGravityPoints,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<FrictionPointDefinitionBlock>(binaryWriter, frictionPoints,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<VehiclePhantomShapeBlock>(binaryWriter, shapePhantomShape,
+                    nextAddress);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

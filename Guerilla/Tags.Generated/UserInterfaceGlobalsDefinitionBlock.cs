@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Wgtz = (TagClass)"wgtz";
+        public static readonly TagClass Wgtz = (TagClass) "wgtz";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,21 +26,29 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 32, Alignment = 4)]
     public class UserInterfaceGlobalsDefinitionBlockBase : GuerillaBlock
     {
-        [TagReference("wigl")]
-        internal Moonfish.Tags.TagReference sharedGlobals;
+        [TagReference("wigl")] internal Moonfish.Tags.TagReference sharedGlobals;
         internal UserInterfaceWidgetReferenceBlock[] screenWidgets;
-        [TagReference("goof")]
-        internal Moonfish.Tags.TagReference mpVariantSettingsUi;
-        [TagReference("unic")]
-        internal Moonfish.Tags.TagReference gameHopperDescriptions;
-        public override int SerializedSize { get { return 32; } }
-        public override int Alignment { get { return 4; } }
+        [TagReference("goof")] internal Moonfish.Tags.TagReference mpVariantSettingsUi;
+        [TagReference("unic")] internal Moonfish.Tags.TagReference gameHopperDescriptions;
+
+        public override int SerializedSize
+        {
+            get { return 32; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public UserInterfaceGlobalsDefinitionBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -49,18 +58,21 @@ namespace Moonfish.Guerilla.Tags
             gameHopperDescriptions = binaryReader.ReadTagReference();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             screenWidgets = ReadBlockArrayData<UserInterfaceWidgetReferenceBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(sharedGlobals);
-                nextAddress = Guerilla.WriteBlockArray<UserInterfaceWidgetReferenceBlock>(binaryWriter, screenWidgets, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<UserInterfaceWidgetReferenceBlock>(binaryWriter, screenWidgets,
+                    nextAddress);
                 binaryWriter.Write(mpVariantSettingsUi);
                 binaryWriter.Write(gameHopperDescriptions);
                 return nextAddress;

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 24, Alignment = 4)]
     public class VariantSettingEditReferenceBlockBase : GuerillaBlock
     {
@@ -23,38 +25,51 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal TextValuePairBlock[] options;
         internal NullBlock[] nullBlock;
-        public override int SerializedSize { get { return 24; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public VariantSettingEditReferenceBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            settingCategory = (SettingCategory)binaryReader.ReadInt32();
+            settingCategory = (SettingCategory) binaryReader.ReadInt32();
             invalidName_ = binaryReader.ReadBytes(4);
             blamPointers.Enqueue(ReadBlockArrayPointer<TextValuePairBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<NullBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             options = ReadBlockArrayData<TextValuePairBlock>(binaryReader, blamPointers.Dequeue());
             nullBlock = ReadBlockArrayData<NullBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)settingCategory);
+                binaryWriter.Write((Int32) settingCategory);
                 binaryWriter.Write(invalidName_, 0, 4);
                 nextAddress = Guerilla.WriteBlockArray<TextValuePairBlock>(binaryWriter, options, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<NullBlock>(binaryWriter, nullBlock, nextAddress);
                 return nextAddress;
             }
         }
+
         internal enum SettingCategory : int
         {
             MatchCtf = 0,

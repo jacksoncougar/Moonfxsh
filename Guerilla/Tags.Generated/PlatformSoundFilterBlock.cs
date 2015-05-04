@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 72, Alignment = 4)]
     public class PlatformSoundFilterBlockBase : GuerillaBlock
     {
@@ -25,15 +27,25 @@ namespace Moonfish.Guerilla.Tags
         internal SoundPlaybackParameterDefinitionBlock leftFilterGain;
         internal SoundPlaybackParameterDefinitionBlock rightFilterFrequency;
         internal SoundPlaybackParameterDefinitionBlock rightFilterGain;
-        public override int SerializedSize { get { return 72; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 72; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public PlatformSoundFilterBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            filterType = (FilterType)binaryReader.ReadInt32();
+            filterType = (FilterType) binaryReader.ReadInt32();
             filterWidth07 = binaryReader.ReadInt32();
             leftFilterFrequency = new SoundPlaybackParameterDefinitionBlock();
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(leftFilterFrequency.ReadFields(binaryReader)));
@@ -45,6 +57,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(rightFilterGain.ReadFields(binaryReader)));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -53,12 +66,13 @@ namespace Moonfish.Guerilla.Tags
             rightFilterFrequency.ReadPointers(binaryReader, blamPointers);
             rightFilterGain.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)filterType);
+                binaryWriter.Write((Int32) filterType);
                 binaryWriter.Write(filterWidth07);
                 leftFilterFrequency.Write(binaryWriter);
                 leftFilterGain.Write(binaryWriter);
@@ -67,6 +81,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         internal enum FilterType : int
         {
             ParametricEQ = 0,

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 608, Alignment = 4)]
     public class ErrorReportsBlockBase : GuerillaBlock
     {
@@ -38,16 +40,26 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range boundsZ;
         internal OpenTK.Vector4 color;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 608; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 608; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ErrorReportsBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            type = (Type)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
+            type = (Type) binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
             blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
             sourceFilename = binaryReader.ReadString32();
             sourceLineNumber = binaryReader.ReadInt32();
@@ -67,6 +79,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(84);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -78,13 +91,14 @@ namespace Moonfish.Guerilla.Tags
             quads = ReadBlockArrayData<ErrorReportQuadsBlock>(binaryReader, blamPointers.Dequeue());
             comments = ReadBlockArrayData<ErrorReportCommentsBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16) type);
+                binaryWriter.Write((Int16) flags);
                 nextAddress = Guerilla.WriteData(binaryWriter, text, nextAddress);
                 binaryWriter.Write(sourceFilename);
                 binaryWriter.Write(sourceLineNumber);
@@ -105,6 +119,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         internal enum Type : short
         {
             Silent = 0,
@@ -112,6 +127,7 @@ using(binaryWriter.BaseStream.Pin())
             Warning = 2,
             Error = 3,
         };
+
         [FlagsAttribute]
         internal enum Flags : short
         {

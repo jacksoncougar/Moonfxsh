@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Jmad = (TagClass)"jmad";
+        public static readonly TagClass Jmad = (TagClass) "jmad";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 188, Alignment = 4)]
     public class ModelAnimationGraphBlockBase : GuerillaBlock
     {
@@ -35,11 +37,21 @@ namespace Moonfish.Guerilla.Tags
         internal AdditionalNodeDataBlock[] additionalNodeData;
         internal MoonfishXboxAnimationRawBlock[] xboxUnknownAnimationBlock;
         internal MoonfishXboxAnimationUnknownBlock[] xboxUnknownAnimationBlock0;
-        public override int SerializedSize { get { return 188; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 188; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ModelAnimationGraphBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -55,6 +67,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<MoonfishXboxAnimationUnknownBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -63,21 +76,27 @@ namespace Moonfish.Guerilla.Tags
             runTimeData.ReadPointers(binaryReader, blamPointers);
             lastImportResults = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
             additionalNodeData = ReadBlockArrayData<AdditionalNodeDataBlock>(binaryReader, blamPointers.Dequeue());
-            xboxUnknownAnimationBlock = ReadBlockArrayData<MoonfishXboxAnimationRawBlock>(binaryReader, blamPointers.Dequeue());
-            xboxUnknownAnimationBlock0 = ReadBlockArrayData<MoonfishXboxAnimationUnknownBlock>(binaryReader, blamPointers.Dequeue());
+            xboxUnknownAnimationBlock = ReadBlockArrayData<MoonfishXboxAnimationRawBlock>(binaryReader,
+                blamPointers.Dequeue());
+            xboxUnknownAnimationBlock0 = ReadBlockArrayData<MoonfishXboxAnimationUnknownBlock>(binaryReader,
+                blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 resources.Write(binaryWriter);
                 content.Write(binaryWriter);
                 runTimeData.Write(binaryWriter);
                 nextAddress = Guerilla.WriteData(binaryWriter, lastImportResults, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<AdditionalNodeDataBlock>(binaryWriter, additionalNodeData, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<MoonfishXboxAnimationRawBlock>(binaryWriter, xboxUnknownAnimationBlock, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<MoonfishXboxAnimationUnknownBlock>(binaryWriter, xboxUnknownAnimationBlock0, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AdditionalNodeDataBlock>(binaryWriter, additionalNodeData,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MoonfishXboxAnimationRawBlock>(binaryWriter,
+                    xboxUnknownAnimationBlock, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MoonfishXboxAnimationUnknownBlock>(binaryWriter,
+                    xboxUnknownAnimationBlock0, nextAddress);
                 return nextAddress;
             }
         }

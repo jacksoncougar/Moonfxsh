@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,11 +17,11 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 52, Alignment = 4)]
     public class AnimationGraphResourcesStructBlockBase : GuerillaBlock
     {
-        [TagReference("jmad")]
-        internal Moonfish.Tags.TagReference parentAnimationGraph;
+        [TagReference("jmad")] internal Moonfish.Tags.TagReference parentAnimationGraph;
         internal InheritanceFlags inheritanceFlags;
         internal PrivateFlags privateFlags;
         internal short animationCodecPack;
@@ -29,17 +30,27 @@ namespace Moonfish.Guerilla.Tags
         internal AnimationGraphEffectReferenceBlock[] effectReferencesABCDCC;
         internal AnimationBlendScreenBlock[] blendScreensABCDCC;
         internal AnimationPoolBlock[] animationsABCDCC;
-        public override int SerializedSize { get { return 52; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 52; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public AnimationGraphResourcesStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             parentAnimationGraph = binaryReader.ReadTagReference();
-            inheritanceFlags = (InheritanceFlags)binaryReader.ReadByte();
-            privateFlags = (PrivateFlags)binaryReader.ReadByte();
+            inheritanceFlags = (InheritanceFlags) binaryReader.ReadByte();
+            privateFlags = (PrivateFlags) binaryReader.ReadByte();
             animationCodecPack = binaryReader.ReadInt16();
             blamPointers.Enqueue(ReadBlockArrayPointer<AnimationGraphNodeBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<AnimationGraphSoundReferenceBlock>(binaryReader));
@@ -48,38 +59,48 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<AnimationPoolBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             skeletonNodesABCDCC = ReadBlockArrayData<AnimationGraphNodeBlock>(binaryReader, blamPointers.Dequeue());
-            soundReferencesABCDCC = ReadBlockArrayData<AnimationGraphSoundReferenceBlock>(binaryReader, blamPointers.Dequeue());
-            effectReferencesABCDCC = ReadBlockArrayData<AnimationGraphEffectReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            soundReferencesABCDCC = ReadBlockArrayData<AnimationGraphSoundReferenceBlock>(binaryReader,
+                blamPointers.Dequeue());
+            effectReferencesABCDCC = ReadBlockArrayData<AnimationGraphEffectReferenceBlock>(binaryReader,
+                blamPointers.Dequeue());
             blendScreensABCDCC = ReadBlockArrayData<AnimationBlendScreenBlock>(binaryReader, blamPointers.Dequeue());
             animationsABCDCC = ReadBlockArrayData<AnimationPoolBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(parentAnimationGraph);
-                binaryWriter.Write((Byte)inheritanceFlags);
-                binaryWriter.Write((Byte)privateFlags);
+                binaryWriter.Write((Byte) inheritanceFlags);
+                binaryWriter.Write((Byte) privateFlags);
                 binaryWriter.Write(animationCodecPack);
-                nextAddress = Guerilla.WriteBlockArray<AnimationGraphNodeBlock>(binaryWriter, skeletonNodesABCDCC, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<AnimationGraphSoundReferenceBlock>(binaryWriter, soundReferencesABCDCC, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<AnimationGraphEffectReferenceBlock>(binaryWriter, effectReferencesABCDCC, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<AnimationBlendScreenBlock>(binaryWriter, blendScreensABCDCC, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AnimationGraphNodeBlock>(binaryWriter, skeletonNodesABCDCC,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AnimationGraphSoundReferenceBlock>(binaryWriter,
+                    soundReferencesABCDCC, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AnimationGraphEffectReferenceBlock>(binaryWriter,
+                    effectReferencesABCDCC, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AnimationBlendScreenBlock>(binaryWriter, blendScreensABCDCC,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<AnimationPoolBlock>(binaryWriter, animationsABCDCC, nextAddress);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum InheritanceFlags : byte
         {
             InheritRootTransScaleOnly = 1,
             InheritForUseOnPlayer = 2,
         };
+
         [FlagsAttribute]
         internal enum PrivateFlags : byte
         {

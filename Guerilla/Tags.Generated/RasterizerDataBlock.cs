@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,50 +17,32 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 264, Alignment = 4)]
     public class RasterizerDataBlockBase : GuerillaBlock
     {
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference distanceAttenuation;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference vectorNormalization;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference gradients;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference uNUSED;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference uNUSED0;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference uNUSED1;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference glow;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference uNUSED2;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference uNUSED3;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference distanceAttenuation;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference vectorNormalization;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference gradients;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference uNUSED;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference uNUSED0;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference uNUSED1;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference glow;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference uNUSED2;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference uNUSED3;
         internal byte[] invalidName_;
         internal VertexShaderReferenceBlock[] globalVertexShaders;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference default2D;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference default3D;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference defaultCubeMap;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference uNUSED4;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference uNUSED5;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference uNUSED6;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference uNUSED7;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference uNUSED8;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference uNUSED9;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference default2D;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference default3D;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference defaultCubeMap;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference uNUSED4;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference uNUSED5;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference uNUSED6;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference uNUSED7;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference uNUSED8;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference uNUSED9;
         internal byte[] invalidName_0;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference globalShader;
+        [TagReference("shad")] internal Moonfish.Tags.TagReference globalShader;
         internal Flags flags;
         internal byte[] invalidName_1;
         internal float refractionAmountPixels;
@@ -68,13 +51,22 @@ namespace Moonfish.Guerilla.Tags
         internal float hyperStealthRefractionPixels;
         internal float hyperStealthDistanceFalloff;
         internal Moonfish.Tags.ColourR8G8B8 hyperStealthTintColor;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference uNUSED10;
-        public override int SerializedSize { get { return 264; } }
-        public override int Alignment { get { return 4; } }
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference uNUSED10;
+
+        public override int SerializedSize
+        {
+            get { return 264; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public RasterizerDataBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -100,7 +92,7 @@ namespace Moonfish.Guerilla.Tags
             uNUSED9 = binaryReader.ReadTagReference();
             invalidName_0 = binaryReader.ReadBytes(36);
             globalShader = binaryReader.ReadTagReference();
-            flags = (Flags)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
             invalidName_1 = binaryReader.ReadBytes(2);
             refractionAmountPixels = binaryReader.ReadSingle();
             distanceFalloff = binaryReader.ReadSingle();
@@ -111,15 +103,17 @@ namespace Moonfish.Guerilla.Tags
             uNUSED10 = binaryReader.ReadTagReference();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             globalVertexShaders = ReadBlockArrayData<VertexShaderReferenceBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(distanceAttenuation);
                 binaryWriter.Write(vectorNormalization);
@@ -131,7 +125,8 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(uNUSED2);
                 binaryWriter.Write(uNUSED3);
                 binaryWriter.Write(invalidName_, 0, 16);
-                nextAddress = Guerilla.WriteBlockArray<VertexShaderReferenceBlock>(binaryWriter, globalVertexShaders, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<VertexShaderReferenceBlock>(binaryWriter, globalVertexShaders,
+                    nextAddress);
                 binaryWriter.Write(default2D);
                 binaryWriter.Write(default3D);
                 binaryWriter.Write(defaultCubeMap);
@@ -143,7 +138,7 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(uNUSED9);
                 binaryWriter.Write(invalidName_0, 0, 36);
                 binaryWriter.Write(globalShader);
-                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16) flags);
                 binaryWriter.Write(invalidName_1, 0, 2);
                 binaryWriter.Write(refractionAmountPixels);
                 binaryWriter.Write(distanceFalloff);
@@ -155,6 +150,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {

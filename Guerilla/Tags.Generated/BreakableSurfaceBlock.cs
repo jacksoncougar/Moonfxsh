@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Bsdt = (TagClass)"bsdt";
+        public static readonly TagClass Bsdt = (TagClass) "bsdt";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,21 +26,30 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 32, Alignment = 4)]
     public class BreakableSurfaceBlockBase : GuerillaBlock
     {
         internal float maximumVitality;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference effect;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference sound;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference effect;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference sound;
         internal ParticleSystemDefinitionBlockNew[] particleEffects;
         internal float particleDensity;
-        public override int SerializedSize { get { return 32; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 32; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public BreakableSurfaceBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -50,20 +60,23 @@ namespace Moonfish.Guerilla.Tags
             particleDensity = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             particleEffects = ReadBlockArrayData<ParticleSystemDefinitionBlockNew>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(maximumVitality);
                 binaryWriter.Write(effect);
                 binaryWriter.Write(sound);
-                nextAddress = Guerilla.WriteBlockArray<ParticleSystemDefinitionBlockNew>(binaryWriter, particleEffects, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ParticleSystemDefinitionBlockNew>(binaryWriter, particleEffects,
+                    nextAddress);
                 binaryWriter.Write(particleDensity);
                 return nextAddress;
             }

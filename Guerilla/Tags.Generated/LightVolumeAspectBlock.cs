@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 28, Alignment = 4)]
     public class LightVolumeAspectBlockBase : GuerillaBlock
     {
@@ -24,11 +26,21 @@ namespace Moonfish.Guerilla.Tags
         internal float parallelScale;
         internal float parallelThresholdAngleDegrees;
         internal float parallelExponent;
-        public override int SerializedSize { get { return 28; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 28; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public LightVolumeAspectBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -41,16 +53,18 @@ namespace Moonfish.Guerilla.Tags
             parallelExponent = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             alongAxis.ReadPointers(binaryReader, blamPointers);
             awayFromAxis.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 alongAxis.Write(binaryWriter);
                 awayFromAxis.Write(binaryWriter);

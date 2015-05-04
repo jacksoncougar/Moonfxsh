@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Sky = (TagClass)"sky ";
+        public static readonly TagClass Sky = (TagClass) "sky ";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,37 +26,45 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 172, Alignment = 4)]
     public class SkyBlockBase : GuerillaBlock
     {
-        [TagReference("mode")]
-        internal Moonfish.Tags.TagReference renderModel;
-        [TagReference("jmad")]
-        internal Moonfish.Tags.TagReference animationGraph;
+        [TagReference("mode")] internal Moonfish.Tags.TagReference renderModel;
+        [TagReference("jmad")] internal Moonfish.Tags.TagReference animationGraph;
         internal Flags flags;
+
         /// <summary>
         /// Multiplier by which to scale the model's geometry up or down (0 defaults to standard, 0.03).
         /// </summary>
         internal float renderModelScale;
+
         /// <summary>
         /// How much the sky moves to remain centered on the player (0 defaults to 1.0, which means no parallax).
         /// </summary>
         internal float movementScale;
+
         internal SkyCubemapBlock[] cubeMap;
+
         /// <summary>
         /// Indoor ambient light color.
         /// </summary>
         internal Moonfish.Tags.ColourR8G8B8 indoorAmbientColor;
+
         internal byte[] invalidName_;
+
         /// <summary>
         /// Indoor ambient light color.
         /// </summary>
         internal Moonfish.Tags.ColourR8G8B8 outdoorAmbientColor;
+
         internal byte[] invalidName_0;
+
         /// <summary>
         /// How far fog spreads into adjacent clusters.
         /// </summary>
         internal float fogSpreadDistanceWorldUnits;
+
         internal SkyAtmosphericFogBlock[] atmosphericFog;
         internal SkyAtmosphericFogBlock[] secondaryFog;
         internal SkyFogBlock[] skyFog;
@@ -70,17 +79,27 @@ namespace Moonfish.Guerilla.Tags
         internal SkyAnimationBlock[] animations;
         internal byte[] invalidName_1;
         internal Moonfish.Tags.ColourR8G8B8 clearColor;
-        public override int SerializedSize { get { return 172; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 172; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public SkyBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             renderModel = binaryReader.ReadTagReference();
             animationGraph = binaryReader.ReadTagReference();
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             renderModelScale = binaryReader.ReadSingle();
             movementScale = binaryReader.ReadSingle();
             blamPointers.Enqueue(ReadBlockArrayPointer<SkyCubemapBlock>(binaryReader));
@@ -105,6 +124,7 @@ namespace Moonfish.Guerilla.Tags
             clearColor = binaryReader.ReadColorR8G8B8();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -117,14 +137,15 @@ namespace Moonfish.Guerilla.Tags
             shaderFunctions = ReadBlockArrayData<SkyShaderFunctionBlock>(binaryReader, blamPointers.Dequeue());
             animations = ReadBlockArrayData<SkyAnimationBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(renderModel);
                 binaryWriter.Write(animationGraph);
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int32) flags);
                 binaryWriter.Write(renderModelScale);
                 binaryWriter.Write(movementScale);
                 nextAddress = Guerilla.WriteBlockArray<SkyCubemapBlock>(binaryWriter, cubeMap, nextAddress);
@@ -143,13 +164,15 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(gammaPower);
                 nextAddress = Guerilla.WriteBlockArray<SkyLightBlock>(binaryWriter, lights, nextAddress);
                 binaryWriter.Write(globalSkyRotation);
-                nextAddress = Guerilla.WriteBlockArray<SkyShaderFunctionBlock>(binaryWriter, shaderFunctions, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SkyShaderFunctionBlock>(binaryWriter, shaderFunctions,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SkyAnimationBlock>(binaryWriter, animations, nextAddress);
                 binaryWriter.Write(invalidName_1, 0, 12);
                 binaryWriter.Write(clearColor);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

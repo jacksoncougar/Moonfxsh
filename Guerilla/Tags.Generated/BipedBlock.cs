@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Bipd = (TagClass)"bipd";
+        public static readonly TagClass Bipd = (TagClass) "bipd";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 296, Alignment = 4)]
     public class BipedBlockBase : GuerillaBlock
     {
@@ -32,97 +34,125 @@ namespace Moonfish.Guerilla.Tags
         internal Flags flags;
         internal float stationaryTurningThreshold;
         internal float jumpVelocityWorldUnitsPerSecond;
+
         /// <summary>
         /// the longest amount of time the biped can take to recover from a soft landing
         /// </summary>
         internal float maximumSoftLandingTimeSeconds;
+
         /// <summary>
         /// the longest amount of time the biped can take to recover from a hard landing
         /// </summary>
         internal float maximumHardLandingTimeSeconds;
+
         /// <summary>
         /// below this velocity the biped does not react when landing
         /// </summary>
         internal float minimumSoftLandingVelocityWorldUnitsPerSecond;
+
         /// <summary>
         /// below this velocity the biped will not do a soft landing when returning to the ground
         /// </summary>
         internal float minimumHardLandingVelocityWorldUnitsPerSecond;
+
         /// <summary>
         /// the velocity corresponding to the maximum landing time
         /// </summary>
         internal float maximumHardLandingVelocityWorldUnitsPerSecond;
+
         /// <summary>
         /// the maximum velocity with which a character can strike the ground and live
         /// </summary>
         internal float deathHardLandingVelocityWorldUnitsPerSecond;
+
         /// <summary>
         /// 0 is the default.  Bipeds are stuned when damaged by vehicle collisions, also some are when they take emp damage
         /// </summary>
         internal float stunDuration;
+
         internal float standingCameraHeightWorldUnits;
         internal float crouchingCameraHeightWorldUnits;
         internal float crouchTransitionTimeSeconds;
+
         /// <summary>
         /// looking-downward angle that starts camera interpolation to fp position
         /// </summary>
         internal float cameraInterpolationStartDegrees;
+
         /// <summary>
         /// looking-downward angle at which camera interpolation to fp position is complete
         /// </summary>
         internal float cameraInterpolationEndDegrees;
+
         /// <summary>
         /// amount of fp camera movement forward and back (1.0 is full)
         /// </summary>
         internal float cameraForwardMovementScale;
+
         /// <summary>
         /// amount of fp camera movement side-to-side (1.0 is full)
         /// </summary>
         internal float cameraSideMovementScale;
+
         /// <summary>
         /// amount of fp camera movement vertically (1.0 is full)
         /// </summary>
         internal float cameraVerticalMovementScale;
+
         /// <summary>
         /// fp camera must always be at least this far out from root node
         /// </summary>
         internal float cameraExclusionDistanceWorldUnits;
+
         internal float autoaimWidthWorldUnits;
         internal BipedLockOnDataStructBlock lockOnData;
         internal byte[] invalidName_;
+
         /// <summary>
         /// when the biped ragdolls from a head shot it acceleartes based on this value.  0 defaults to the standard acceleration scale
         /// </summary>
         internal float headShotAccScale;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference areaDamageEffect;
+
+        [TagReference("effe")] internal Moonfish.Tags.TagReference areaDamageEffect;
         internal CharacterPhysicsStructBlock physics;
+
         /// <summary>
         /// these are the points where the biped touches the ground
         /// </summary>
         internal ContactPointBlock[] contactPoints;
+
         /// <summary>
         /// when the flood reanimate this guy, he turns into a ...
         /// </summary>
-        [TagReference("char")]
-        internal Moonfish.Tags.TagReference reanimationCharacter;
+        [TagReference("char")] internal Moonfish.Tags.TagReference reanimationCharacter;
+
         /// <summary>
         /// when I die, out of the ashes of my death crawls a ...
         /// </summary>
-        [TagReference("char")]
-        internal Moonfish.Tags.TagReference deathSpawnCharacter;
+        [TagReference("char")] internal Moonfish.Tags.TagReference deathSpawnCharacter;
+
         internal short deathSpawnCount;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 788; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 788; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public BipedBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             movingTurningSpeedDegreesPerSecond = binaryReader.ReadSingle();
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             stationaryTurningThreshold = binaryReader.ReadSingle();
             jumpVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
             maximumSoftLandingTimeSeconds = binaryReader.ReadSingle();
@@ -156,6 +186,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(2);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -163,13 +194,14 @@ namespace Moonfish.Guerilla.Tags
             physics.ReadPointers(binaryReader, blamPointers);
             contactPoints = ReadBlockArrayData<ContactPointBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(movingTurningSpeedDegreesPerSecond);
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int32) flags);
                 binaryWriter.Write(stationaryTurningThreshold);
                 binaryWriter.Write(jumpVelocityWorldUnitsPerSecond);
                 binaryWriter.Write(maximumSoftLandingTimeSeconds);
@@ -202,6 +234,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

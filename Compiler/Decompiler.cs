@@ -12,24 +12,23 @@ namespace Moonfish.Compiler
 {
     public static class Decompiler
     {
-        public static void Decompile( this CacheStream cache )
+        public static void Decompile(this CacheStream cache)
         {
-            var rootDirectory = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ),
-                "Halo 2 Modding" );
-            foreach ( var tag in cache.Index.Where( x => x.Class == TagClass.Bitm ) )
+            var rootDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "Halo 2 Modding");
+            foreach (var tag in cache.Index.Where(x => x.Class == TagClass.Bitm))
             {
-                var path = Path.Combine( rootDirectory, Path.ChangeExtension( tag.Path, tag.Class.ToTokenString( ) ) );
+                var path = Path.Combine(rootDirectory, Path.ChangeExtension(tag.Path, tag.Class.ToTokenString()));
 
-                var directory = Path.GetDirectoryName( path );
+                var directory = Path.GetDirectoryName(path);
                 if (directory != null && !Directory.Exists(directory))
                     Directory.CreateDirectory(directory);
 
-                using ( var stream = new FileStream( path, FileMode.Create, FileAccess.Write, FileShare.Read ) )
+                using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read))
                 {
-                    BinaryWriter binaryWriter = new BinaryWriter( stream );
-                    var tagObject = cache.Deserialize( tag.Identifier ) as IGuerilla;
+                    BinaryWriter binaryWriter = new BinaryWriter(stream);
+                    var tagObject = cache.Deserialize(tag.Identifier) as IGuerilla;
                     //tagObject.Write( binaryWriter );
-
                 }
             }
         }

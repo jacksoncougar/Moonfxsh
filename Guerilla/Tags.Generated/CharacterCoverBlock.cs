@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,71 +17,95 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 64, Alignment = 4)]
     public class CharacterCoverBlockBase : GuerillaBlock
     {
         internal CoverFlags coverFlags;
+
         /// <summary>
         /// how long we stay behind cover after seeking cover
         /// </summary>
         internal Moonfish.Model.Range hideBehindCoverTimeSeconds;
+
         /// <summary>
         /// When vitality drops below this level, possibly trigger a cover
         /// </summary>
         internal float coverVitalityThreshold;
+
         /// <summary>
         /// trigger cover when shield drops below this fraction (low shield cover impulse must be enabled)
         /// </summary>
         internal float coverShieldFraction;
+
         /// <summary>
         /// amount of time I will wait before trying again after covering
         /// </summary>
         internal float coverCheckDelay;
+
         /// <summary>
         /// emergeFromCoverWhenShieldFractionReachesThreshold
         /// </summary>
         internal float emergeFromCoverWhenShieldFractionReachesThreshold;
+
         /// <summary>
         /// Danger must be this high to cover. At a danger level of 'danger threshold', the chance of seeking cover is the cover chance lower bound (below)
         /// </summary>
         internal float coverDangerThreshold;
+
         /// <summary>
         /// At or above danger level of upper threshold, the chance of seeking cover is the cover chance upper bound (below)
         /// </summary>
         internal float dangerUpperThreshold;
+
         /// <summary>
         /// Bounds on the chances of seeking cover.
         /// </summary>
         internal Moonfish.Model.Range coverChance;
+
         /// <summary>
         /// When the proximity_self_preservation impulse is enabled, triggers self-preservation when target within this distance
         /// </summary>
         internal float proximitySelfPreserveWus;
+
         /// <summary>
         /// Disallow covering from visible target under the given distance away
         /// </summary>
         internal float disallowCoverDistanceWorldUnits;
+
         /// <summary>
         /// When self preserving from a target less than given distance, causes melee attack (assuming proximity_melee_impulse is enabled)
         /// </summary>
         internal float proximityMeleeDistance;
+
         /// <summary>
         /// When danger from an unreachable enemy surpasses threshold, actor cover (assuming unreachable_enemy_cover impulse is enabled)
         /// </summary>
         internal float unreachableEnemyDangerThreshold;
+
         /// <summary>
         /// When target is aware of me and surpasses the given scariness, self-preserve (scary_target_cover_impulse)
         /// </summary>
         internal float scaryTargetThreshold;
-        public override int SerializedSize { get { return 64; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 64; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public CharacterCoverBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            coverFlags = (CoverFlags)binaryReader.ReadInt32();
+            coverFlags = (CoverFlags) binaryReader.ReadInt32();
             hideBehindCoverTimeSeconds = binaryReader.ReadRange();
             coverVitalityThreshold = binaryReader.ReadSingle();
             coverShieldFraction = binaryReader.ReadSingle();
@@ -96,16 +121,18 @@ namespace Moonfish.Guerilla.Tags
             scaryTargetThreshold = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)coverFlags);
+                binaryWriter.Write((Int32) coverFlags);
                 binaryWriter.Write(hideBehindCoverTimeSeconds);
                 binaryWriter.Write(coverVitalityThreshold);
                 binaryWriter.Write(coverShieldFraction);
@@ -122,6 +149,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum CoverFlags : int
         {

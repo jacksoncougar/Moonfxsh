@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,12 +17,12 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 24, Alignment = 4)]
     public class PlayerBlockReferenceBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
-        [TagReference("skin")]
-        internal Moonfish.Tags.TagReference skin;
+        [TagReference("skin")] internal Moonfish.Tags.TagReference skin;
         internal Moonfish.Tags.Point bottomLeft;
         internal TableOrder tableOrder;
         internal byte maximumPlayerCount;
@@ -29,18 +30,28 @@ namespace Moonfish.Guerilla.Tags
         internal byte columnCount;
         internal short rowHeight;
         internal short columnWidth;
-        public override int SerializedSize { get { return 24; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 24; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public PlayerBlockReferenceBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(4);
             skin = binaryReader.ReadTagReference();
             bottomLeft = binaryReader.ReadPoint();
-            tableOrder = (TableOrder)binaryReader.ReadByte();
+            tableOrder = (TableOrder) binaryReader.ReadByte();
             maximumPlayerCount = binaryReader.ReadByte();
             rowCount = binaryReader.ReadByte();
             columnCount = binaryReader.ReadByte();
@@ -48,19 +59,21 @@ namespace Moonfish.Guerilla.Tags
             columnWidth = binaryReader.ReadInt16();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 4);
                 binaryWriter.Write(skin);
                 binaryWriter.Write(bottomLeft);
-                binaryWriter.Write((Byte)tableOrder);
+                binaryWriter.Write((Byte) tableOrder);
                 binaryWriter.Write(maximumPlayerCount);
                 binaryWriter.Write(rowCount);
                 binaryWriter.Write(columnCount);
@@ -69,6 +82,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         internal enum TableOrder : byte
         {
             RowMajor = 0,

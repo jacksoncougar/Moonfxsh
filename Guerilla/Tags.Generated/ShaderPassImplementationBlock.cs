@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,14 +17,14 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 116, Alignment = 4)]
     public class ShaderPassImplementationBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal byte[] invalidName_;
         internal ShaderPassTextureBlock[] textures;
-        [TagReference("vrtx")]
-        internal Moonfish.Tags.TagReference vertexShader;
+        [TagReference("vrtx")] internal Moonfish.Tags.TagReference vertexShader;
         internal ShaderPassVertexShaderConstantBlock[] vsConstants;
         internal byte[] pixelShaderCodeNOLONGERUSED;
         internal Channels channels;
@@ -38,25 +39,34 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderStateFillStateBlock[] fillState;
         internal ShaderStateMiscStateBlock[] miscState;
         internal ShaderStateConstantBlock[] constants;
-        [TagReference("pixl")]
-        internal Moonfish.Tags.TagReference pixelShader;
-        public override int SerializedSize { get { return 116; } }
-        public override int Alignment { get { return 4; } }
+        [TagReference("pixl")] internal Moonfish.Tags.TagReference pixelShader;
+
+        public override int SerializedSize
+        {
+            get { return 116; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ShaderPassImplementationBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPassTextureBlock>(binaryReader));
             vertexShader = binaryReader.ReadTagReference();
             blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPassVertexShaderConstantBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer(binaryReader, 1));
-            channels = (Channels)binaryReader.ReadInt16();
-            alphaBlend = (AlphaBlend)binaryReader.ReadInt16();
-            depth = (Depth)binaryReader.ReadInt16();
+            channels = (Channels) binaryReader.ReadInt16();
+            alphaBlend = (AlphaBlend) binaryReader.ReadInt16();
+            depth = (Depth) binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
             blamPointers.Enqueue(ReadBlockArrayPointer<ShaderStateChannelsStateBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<ShaderStateAlphaBlendStateBlock>(binaryReader));
@@ -69,6 +79,7 @@ namespace Moonfish.Guerilla.Tags
             pixelShader = binaryReader.ReadTagReference();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -84,24 +95,29 @@ namespace Moonfish.Guerilla.Tags
             miscState = ReadBlockArrayData<ShaderStateMiscStateBlock>(binaryReader, blamPointers.Dequeue());
             constants = ReadBlockArrayData<ShaderStateConstantBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16) flags);
                 binaryWriter.Write(invalidName_, 0, 2);
                 nextAddress = Guerilla.WriteBlockArray<ShaderPassTextureBlock>(binaryWriter, textures, nextAddress);
                 binaryWriter.Write(vertexShader);
-                nextAddress = Guerilla.WriteBlockArray<ShaderPassVertexShaderConstantBlock>(binaryWriter, vsConstants, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderPassVertexShaderConstantBlock>(binaryWriter, vsConstants,
+                    nextAddress);
                 nextAddress = Guerilla.WriteData(binaryWriter, pixelShaderCodeNOLONGERUSED, nextAddress);
-                binaryWriter.Write((Int16)channels);
-                binaryWriter.Write((Int16)alphaBlend);
-                binaryWriter.Write((Int16)depth);
+                binaryWriter.Write((Int16) channels);
+                binaryWriter.Write((Int16) alphaBlend);
+                binaryWriter.Write((Int16) depth);
                 binaryWriter.Write(invalidName_0, 0, 2);
-                nextAddress = Guerilla.WriteBlockArray<ShaderStateChannelsStateBlock>(binaryWriter, channelState, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ShaderStateAlphaBlendStateBlock>(binaryWriter, alphaBlendState, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ShaderStateAlphaTestStateBlock>(binaryWriter, alphaTestState, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderStateChannelsStateBlock>(binaryWriter, channelState,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderStateAlphaBlendStateBlock>(binaryWriter, alphaBlendState,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderStateAlphaTestStateBlock>(binaryWriter, alphaTestState,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ShaderStateDepthStateBlock>(binaryWriter, depthState, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ShaderStateCullStateBlock>(binaryWriter, cullState, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ShaderStateFillStateBlock>(binaryWriter, fillState, nextAddress);
@@ -111,12 +127,14 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {
             DeleteFromCacheFile = 1,
             Critical = 2,
         };
+
         internal enum Channels : short
         {
             All = 0,
@@ -124,6 +142,7 @@ using(binaryWriter.BaseStream.Pin())
             AlphaOnly = 2,
             Custom = 3,
         };
+
         internal enum AlphaBlend : short
         {
             Disabled = 0,
@@ -135,6 +154,7 @@ using(binaryWriter.BaseStream.Pin())
             AlphaBlend = 6,
             Custom = 7,
         };
+
         internal enum Depth : short
         {
             Disabled = 0,

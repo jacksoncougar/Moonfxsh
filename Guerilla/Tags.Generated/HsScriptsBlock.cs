@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 40, Alignment = 4)]
     public class HsScriptsBlockBase : GuerillaBlock
     {
@@ -23,36 +25,49 @@ namespace Moonfish.Guerilla.Tags
         internal ScriptType scriptType;
         internal ReturnType returnType;
         internal int rootExpressionIndex;
-        public override int SerializedSize { get { return 40; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 40; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public HsScriptsBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
-            scriptType = (ScriptType)binaryReader.ReadInt16();
-            returnType = (ReturnType)binaryReader.ReadInt16();
+            scriptType = (ScriptType) binaryReader.ReadInt16();
+            returnType = (ReturnType) binaryReader.ReadInt16();
             rootExpressionIndex = binaryReader.ReadInt32();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
-                binaryWriter.Write((Int16)scriptType);
-                binaryWriter.Write((Int16)returnType);
+                binaryWriter.Write((Int16) scriptType);
+                binaryWriter.Write((Int16) returnType);
                 binaryWriter.Write(rootExpressionIndex);
                 return nextAddress;
             }
         }
+
         internal enum ScriptType : short
         {
             Startup = 0,
@@ -62,6 +77,7 @@ using(binaryWriter.BaseStream.Pin())
             Stub = 4,
             CommandScript = 5,
         };
+
         internal enum ReturnType : short
         {
             Unparsed = 0,

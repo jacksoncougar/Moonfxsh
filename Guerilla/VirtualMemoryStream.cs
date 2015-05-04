@@ -7,42 +7,42 @@ namespace Moonfish.Guerilla
     {
         private VirtualMappedAddress map;
 
-        public VirtualMemoryStream( string path, int virtualAddress )
-            : base( File.ReadAllBytes( path ) )
+        public VirtualMemoryStream(string path, int virtualAddress)
+            : base(File.ReadAllBytes(path))
         {
-            map = new VirtualMappedAddress( )
+            map = new VirtualMappedAddress()
             {
                 Address = virtualAddress,
-                Length = ( int ) this.Length,
+                Length = (int) this.Length,
                 Magic = virtualAddress
             };
         }
 
-        public override long Seek( long offset, SeekOrigin origin )
+        public override long Seek(long offset, SeekOrigin origin)
         {
-            return base.Seek( CheckOffset( offset ), origin );
+            return base.Seek(CheckOffset(offset), origin);
         }
 
         public override long Position
         {
             get { return base.Position; }
-            set { base.Position = CheckOffset( value ); }
+            set { base.Position = CheckOffset(value); }
         }
 
-        private long CheckOffset( long value )
+        private long CheckOffset(long value)
         {
-            if ( value < 0 || value > this.Length )
+            if (value < 0 || value > this.Length)
             {
-                return PointerToOffset( ( int ) value );
+                return PointerToOffset((int) value);
             }
             else return value;
         }
 
-        private int PointerToOffset( int value )
+        private int PointerToOffset(int value)
         {
-            if ( map.ContainsVirtualOffset( value ) )
-                return map.GetOffset( value );
-            throw new InvalidOperationException( );
+            if (map.ContainsVirtualOffset(value))
+                return map.GetOffset(value);
+            throw new InvalidOperationException();
         }
     }
 }

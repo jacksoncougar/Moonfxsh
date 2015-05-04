@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 88, Alignment = 4)]
     public class ShaderPassPostprocessDefinitionNewBlockBase : GuerillaBlock
     {
@@ -30,11 +32,21 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderPassPostprocessConstantNewBlock[] constants;
         internal ShaderPassPostprocessConstantInfoNewBlock[] constantInfo;
         internal ShaderPassPostprocessImplementationBlock[] oldImplementations;
-        public override int SerializedSize { get { return 88; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 88; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ShaderPassPostprocessDefinitionNewBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -51,37 +63,51 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPassPostprocessImplementationBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
-            implementations = ReadBlockArrayData<ShaderPassPostprocessImplementationNewBlock>(binaryReader, blamPointers.Dequeue());
+            implementations = ReadBlockArrayData<ShaderPassPostprocessImplementationNewBlock>(binaryReader,
+                blamPointers.Dequeue());
             textures = ReadBlockArrayData<ShaderPassPostprocessTextureNewBlock>(binaryReader, blamPointers.Dequeue());
             renderStates = ReadBlockArrayData<RenderStateBlock>(binaryReader, blamPointers.Dequeue());
-            textureStates = ReadBlockArrayData<ShaderPassPostprocessTextureStateBlock>(binaryReader, blamPointers.Dequeue());
+            textureStates = ReadBlockArrayData<ShaderPassPostprocessTextureStateBlock>(binaryReader,
+                blamPointers.Dequeue());
             psFragments = ReadBlockArrayData<PixelShaderFragmentBlock>(binaryReader, blamPointers.Dequeue());
             psPermutations = ReadBlockArrayData<PixelShaderPermutationNewBlock>(binaryReader, blamPointers.Dequeue());
             psCombiners = ReadBlockArrayData<PixelShaderCombinerBlock>(binaryReader, blamPointers.Dequeue());
             externs = ReadBlockArrayData<ShaderPassPostprocessExternNewBlock>(binaryReader, blamPointers.Dequeue());
             constants = ReadBlockArrayData<ShaderPassPostprocessConstantNewBlock>(binaryReader, blamPointers.Dequeue());
-            constantInfo = ReadBlockArrayData<ShaderPassPostprocessConstantInfoNewBlock>(binaryReader, blamPointers.Dequeue());
-            oldImplementations = ReadBlockArrayData<ShaderPassPostprocessImplementationBlock>(binaryReader, blamPointers.Dequeue());
+            constantInfo = ReadBlockArrayData<ShaderPassPostprocessConstantInfoNewBlock>(binaryReader,
+                blamPointers.Dequeue());
+            oldImplementations = ReadBlockArrayData<ShaderPassPostprocessImplementationBlock>(binaryReader,
+                blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessImplementationNewBlock>(binaryWriter, implementations, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessTextureNewBlock>(binaryWriter, textures, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessImplementationNewBlock>(binaryWriter,
+                    implementations, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessTextureNewBlock>(binaryWriter, textures,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<RenderStateBlock>(binaryWriter, renderStates, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessTextureStateBlock>(binaryWriter, textureStates, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessTextureStateBlock>(binaryWriter,
+                    textureStates, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<PixelShaderFragmentBlock>(binaryWriter, psFragments, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PixelShaderPermutationNewBlock>(binaryWriter, psPermutations, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PixelShaderPermutationNewBlock>(binaryWriter, psPermutations,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<PixelShaderCombinerBlock>(binaryWriter, psCombiners, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessExternNewBlock>(binaryWriter, externs, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessConstantNewBlock>(binaryWriter, constants, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessConstantInfoNewBlock>(binaryWriter, constantInfo, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessImplementationBlock>(binaryWriter, oldImplementations, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessExternNewBlock>(binaryWriter, externs,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessConstantNewBlock>(binaryWriter, constants,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessConstantInfoNewBlock>(binaryWriter,
+                    constantInfo, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessImplementationBlock>(binaryWriter,
+                    oldImplementations, nextAddress);
                 return nextAddress;
             }
         }

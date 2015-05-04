@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,12 +17,12 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 3172, Alignment = 4)]
     public class GlobalUiMultiplayerLevelBlockBase : GuerillaBlock
     {
         internal int mapID;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference bitmap;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference bitmap;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
         internal Moonfish.Tags.String256 path;
@@ -44,11 +45,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte maxTeamsStub13;
         internal byte maxTeamsStub14;
         internal byte maxTeamsStub15;
-        public override int SerializedSize { get { return 3172; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 3172; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public GlobalUiMultiplayerLevelBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -58,7 +69,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(2304);
             path = binaryReader.ReadString256();
             sortOrder = binaryReader.ReadInt32();
-            flags = (Flags)binaryReader.ReadByte();
+            flags = (Flags) binaryReader.ReadByte();
             invalidName_1 = binaryReader.ReadBytes(3);
             maxTeamsNone = binaryReader.ReadByte();
             maxTeamsCTF = binaryReader.ReadByte();
@@ -78,14 +89,16 @@ namespace Moonfish.Guerilla.Tags
             maxTeamsStub15 = binaryReader.ReadByte();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(mapID);
                 binaryWriter.Write(bitmap);
@@ -93,7 +106,7 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(invalidName_0, 0, 2304);
                 binaryWriter.Write(path);
                 binaryWriter.Write(sortOrder);
-                binaryWriter.Write((Byte)flags);
+                binaryWriter.Write((Byte) flags);
                 binaryWriter.Write(invalidName_1, 0, 3);
                 binaryWriter.Write(maxTeamsNone);
                 binaryWriter.Write(maxTeamsCTF);
@@ -114,6 +127,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : byte
         {

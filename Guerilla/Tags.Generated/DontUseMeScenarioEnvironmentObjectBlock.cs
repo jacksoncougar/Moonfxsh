@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 64, Alignment = 4)]
     public class DontUseMeScenarioEnvironmentObjectBlockBase : GuerillaBlock
     {
@@ -26,11 +28,21 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Tags.TagClass objectDefinitionTag;
         internal int _object;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 64; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 64; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public DontUseMeScenarioEnvironmentObjectBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -43,14 +55,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(44);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(bSP);
                 binaryWriter.Write(eMPTYSTRING);

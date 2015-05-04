@@ -13,18 +13,18 @@ namespace Moonfish.Graphics
         event EventHandler<SceneMouseEventArgs> MouseUp;
         event EventHandler<SceneMouseEventArgs> MouseClick;
         event EventHandler<SceneMouseEventArgs> MouseCaptureChanged;
-        void OnMouseDown( Object sender, SceneMouseEventArgs e );
-        void OnMouseMove( Object sender, SceneMouseEventArgs e );
-        void OnMouseUp( Object sender, SceneMouseEventArgs e );
-        void OnMouseClick( Object sender, SceneMouseEventArgs e );
-        void OnMouseCaptureChanged( Object sender, EventArgs e );
+        void OnMouseDown(Object sender, SceneMouseEventArgs e);
+        void OnMouseMove(Object sender, SceneMouseEventArgs e);
+        void OnMouseUp(Object sender, SceneMouseEventArgs e);
+        void OnMouseClick(Object sender, SceneMouseEventArgs e);
+        void OnMouseCaptureChanged(Object sender, EventArgs e);
     }
 
     public class SelectEventArgs : EventArgs
     {
         public object SelectedObject { get; private set; }
 
-        public SelectEventArgs( object selectedObject )
+        public SelectEventArgs(object selectedObject)
         {
             this.SelectedObject = selectedObject;
         }
@@ -34,8 +34,8 @@ namespace Moonfish.Graphics
     {
         public readonly Camera Camera;
 
-        public SceneMouseMoveEventArgs( Camera camera, MouseEventArgs e )
-            : base( e.Button, e.Clicks, e.X, e.Y, e.Delta )
+        public SceneMouseMoveEventArgs(Camera camera, MouseEventArgs e)
+            : base(e.Button, e.Clicks, e.X, e.Y, e.Delta)
         {
             Camera = camera;
         }
@@ -54,27 +54,27 @@ namespace Moonfish.Graphics
         public Vector3 HitNormalWorld { get; set; }
         public readonly Camera Camera;
 
-        public SceneMouseEventArgs( Camera camera, Vector2 mouseViewportCoordinates, Vector3 mouseWorldCoordinates,
-            MouseButtons button )
+        public SceneMouseEventArgs(Camera camera, Vector2 mouseViewportCoordinates, Vector3 mouseWorldCoordinates,
+            MouseButtons button)
         {
             // Project the mouse coordinates into world-space at the far z-plane
-            var distantWorldPoint = Maths.Project( camera.ViewMatrix, camera.ProjectionMatrix,
-                new Vector3( mouseViewportCoordinates.X, mouseViewportCoordinates.Y, 1f ),
-                ( Rectangle ) camera.Viewport ).Xyz;
+            var distantWorldPoint = Maths.Project(camera.ViewMatrix, camera.ProjectionMatrix,
+                new Vector3(mouseViewportCoordinates.X, mouseViewportCoordinates.Y, 1f),
+                (Rectangle) camera.Viewport).Xyz;
 
             // Produce a ray originating at the camera and pointing towards the distant world point^
             Camera = camera;
             this.ScreenCoordinates = mouseViewportCoordinates;
-            this.MouseRay = new Ray( camera.Position, distantWorldPoint );
-            this.MouseRayFarPoint = ( distantWorldPoint - camera.Position ).Length;
+            this.MouseRay = new Ray(camera.Position, distantWorldPoint);
+            this.MouseRayFarPoint = (distantWorldPoint - camera.Position).Length;
             this.Button = button;
             this.WorldCoordinates = mouseWorldCoordinates;
         }
     }
 
-    public delegate void SelectedObjectChangedEventHandler( object seneder, SelectEventArgs e );
+    public delegate void SelectedObjectChangedEventHandler(object seneder, SelectEventArgs e);
 
-    public delegate void MouseMoveEventHandler( object sender, SceneMouseEventArgs e );
+    public delegate void MouseMoveEventHandler(object sender, SceneMouseEventArgs e);
 
-    public delegate void MatrixChangedEventHandler( object sender, MatrixChangedEventArgs e );
+    public delegate void MatrixChangedEventHandler(object sender, MatrixChangedEventArgs e);
 }

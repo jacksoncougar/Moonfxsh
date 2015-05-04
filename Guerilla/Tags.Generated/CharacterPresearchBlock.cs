@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,33 +17,48 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 36, Alignment = 4)]
     public class CharacterPresearchBlockBase : GuerillaBlock
     {
         internal PreSearchFlags preSearchFlags;
+
         /// <summary>
         /// If the min presearch time expires and the target is (actually) outside the min-certainty radius, presearch turns off
         /// </summary>
         internal Moonfish.Model.Range minPresearchTimeSeconds;
+
         /// <summary>
         /// Presearch turns off after the given time
         /// </summary>
         internal Moonfish.Model.Range maxPresearchTimeSeconds;
+
         internal float minCertaintyRadius;
         internal float dEPRECATED;
+
         /// <summary>
         /// if the minSuppressingTime expires and the target is outside the min-certainty radius, suppressing fire turns off
         /// </summary>
         internal Moonfish.Model.Range minSuppressingTime;
-        public override int SerializedSize { get { return 36; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 36; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public CharacterPresearchBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            preSearchFlags = (PreSearchFlags)binaryReader.ReadInt32();
+            preSearchFlags = (PreSearchFlags) binaryReader.ReadInt32();
             minPresearchTimeSeconds = binaryReader.ReadRange();
             maxPresearchTimeSeconds = binaryReader.ReadRange();
             minCertaintyRadius = binaryReader.ReadSingle();
@@ -50,16 +66,18 @@ namespace Moonfish.Guerilla.Tags
             minSuppressingTime = binaryReader.ReadRange();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)preSearchFlags);
+                binaryWriter.Write((Int32) preSearchFlags);
                 binaryWriter.Write(minPresearchTimeSeconds);
                 binaryWriter.Write(maxPresearchTimeSeconds);
                 binaryWriter.Write(minCertaintyRadius);
@@ -68,6 +86,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum PreSearchFlags : int
         {

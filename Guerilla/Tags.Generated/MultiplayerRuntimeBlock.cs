@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,40 +17,27 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 1384, Alignment = 4)]
     public class MultiplayerRuntimeBlockBase : GuerillaBlock
     {
-        [TagReference("item")]
-        internal Moonfish.Tags.TagReference flag;
-        [TagReference("item")]
-        internal Moonfish.Tags.TagReference ball;
-        [TagReference("unit")]
-        internal Moonfish.Tags.TagReference unit;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference flagShader;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference hillShader;
-        [TagReference("item")]
-        internal Moonfish.Tags.TagReference head;
-        [TagReference("item")]
-        internal Moonfish.Tags.TagReference juggernautPowerup;
-        [TagReference("item")]
-        internal Moonfish.Tags.TagReference daBomb;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference invalidName_;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference invalidName_0;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference invalidName_1;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference invalidName_2;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference invalidName_3;
+        [TagReference("item")] internal Moonfish.Tags.TagReference flag;
+        [TagReference("item")] internal Moonfish.Tags.TagReference ball;
+        [TagReference("unit")] internal Moonfish.Tags.TagReference unit;
+        [TagReference("shad")] internal Moonfish.Tags.TagReference flagShader;
+        [TagReference("shad")] internal Moonfish.Tags.TagReference hillShader;
+        [TagReference("item")] internal Moonfish.Tags.TagReference head;
+        [TagReference("item")] internal Moonfish.Tags.TagReference juggernautPowerup;
+        [TagReference("item")] internal Moonfish.Tags.TagReference daBomb;
+        [TagReference("null")] internal Moonfish.Tags.TagReference invalidName_;
+        [TagReference("null")] internal Moonfish.Tags.TagReference invalidName_0;
+        [TagReference("null")] internal Moonfish.Tags.TagReference invalidName_1;
+        [TagReference("null")] internal Moonfish.Tags.TagReference invalidName_2;
+        [TagReference("null")] internal Moonfish.Tags.TagReference invalidName_3;
         internal WeaponsBlock[] weapons;
         internal VehiclesBlock[] vehicles;
         internal GrenadeAndPowerupStructBlock arr;
-        [TagReference("unic")]
-        internal Moonfish.Tags.TagReference inGameText;
+        [TagReference("unic")] internal Moonfish.Tags.TagReference inGameText;
         internal SoundsBlock[] sounds;
         internal GameEngineGeneralEventBlock[] generalEvents;
         internal GameEngineFlavorEventBlock[] flavorEvents;
@@ -66,10 +54,8 @@ namespace Moonfish.Guerilla.Tags
         internal GNullBlock[] gNullBlock2;
         internal GNullBlock[] gNullBlock3;
         internal GNullBlock[] gNullBlock4;
-        [TagReference("itmc")]
-        internal Moonfish.Tags.TagReference defaultItemCollection1;
-        [TagReference("itmc")]
-        internal Moonfish.Tags.TagReference defaultItemCollection2;
+        [TagReference("itmc")] internal Moonfish.Tags.TagReference defaultItemCollection1;
+        [TagReference("itmc")] internal Moonfish.Tags.TagReference defaultItemCollection2;
         internal int defaultFragGrenadeCount;
         internal int defaultPlasmaGrenadeCount;
         internal byte[] invalidName_4;
@@ -128,21 +114,26 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_19;
         internal MultiplayerConstantsBlock[] multiplayerConstants;
         internal GameEngineStatusResponseBlock[] stateResponses;
-        [TagReference("nhdt")]
-        internal Moonfish.Tags.TagReference scoreboardHudDefinition;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference scoreboardEmblemShader;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference scoreboardEmblemBitmap;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference scoreboardDeadEmblemShader;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference scoreboardDeadEmblemBitmap;
-        public override int SerializedSize { get { return 1384; } }
-        public override int Alignment { get { return 4; } }
+        [TagReference("nhdt")] internal Moonfish.Tags.TagReference scoreboardHudDefinition;
+        [TagReference("shad")] internal Moonfish.Tags.TagReference scoreboardEmblemShader;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference scoreboardEmblemBitmap;
+        [TagReference("shad")] internal Moonfish.Tags.TagReference scoreboardDeadEmblemShader;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference scoreboardDeadEmblemBitmap;
+
+        public override int SerializedSize
+        {
+            get { return 1384; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public MultiplayerRuntimeBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -247,6 +238,7 @@ namespace Moonfish.Guerilla.Tags
             scoreboardDeadEmblemBitmap = binaryReader.ReadTagReference();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -272,10 +264,11 @@ namespace Moonfish.Guerilla.Tags
             multiplayerConstants = ReadBlockArrayData<MultiplayerConstantsBlock>(binaryReader, blamPointers.Dequeue());
             stateResponses = ReadBlockArrayData<GameEngineStatusResponseBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(flag);
                 binaryWriter.Write(ball);
@@ -295,17 +288,24 @@ using(binaryWriter.BaseStream.Pin())
                 arr.Write(binaryWriter);
                 binaryWriter.Write(inGameText);
                 nextAddress = Guerilla.WriteBlockArray<SoundsBlock>(binaryWriter, sounds, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GameEngineGeneralEventBlock>(binaryWriter, generalEvents, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GameEngineFlavorEventBlock>(binaryWriter, flavorEvents, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GameEngineSlayerEventBlock>(binaryWriter, slayerEvents, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GameEngineGeneralEventBlock>(binaryWriter, generalEvents,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GameEngineFlavorEventBlock>(binaryWriter, flavorEvents,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GameEngineSlayerEventBlock>(binaryWriter, slayerEvents,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GameEngineCtfEventBlock>(binaryWriter, ctfEvents, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GameEngineOddballEventBlock>(binaryWriter, oddballEvents, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GameEngineOddballEventBlock>(binaryWriter, oddballEvents,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GameEngineKingEventBlock>(binaryWriter, kingEvents, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock0, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GameEngineJuggernautEventBlock>(binaryWriter, juggernautEvents, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GameEngineTerritoriesEventBlock>(binaryWriter, territoriesEvents, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GameEngineAssaultEventBlock>(binaryWriter, invasionEvents, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GameEngineJuggernautEventBlock>(binaryWriter, juggernautEvents,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GameEngineTerritoriesEventBlock>(binaryWriter, territoriesEvents,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GameEngineAssaultEventBlock>(binaryWriter, invasionEvents,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock1, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock2, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GNullBlock>(binaryWriter, gNullBlock3, nextAddress);
@@ -368,8 +368,10 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(invalidName_17, 0, 16);
                 binaryWriter.Write(invalidName_18, 0, 560);
                 binaryWriter.Write(invalidName_19, 0, 48);
-                nextAddress = Guerilla.WriteBlockArray<MultiplayerConstantsBlock>(binaryWriter, multiplayerConstants, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GameEngineStatusResponseBlock>(binaryWriter, stateResponses, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MultiplayerConstantsBlock>(binaryWriter, multiplayerConstants,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GameEngineStatusResponseBlock>(binaryWriter, stateResponses,
+                    nextAddress);
                 binaryWriter.Write(scoreboardHudDefinition);
                 binaryWriter.Write(scoreboardEmblemShader);
                 binaryWriter.Write(scoreboardEmblemBitmap);

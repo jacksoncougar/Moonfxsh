@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Coln = (TagClass)"coln";
+        public static readonly TagClass Coln = (TagClass) "coln";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 60, Alignment = 4)]
     public class ColonyBlockBase : GuerillaBlock
     {
@@ -34,19 +36,27 @@ namespace Moonfish.Guerilla.Tags
         internal Moonfish.Model.Range radius;
         internal byte[] invalidName_1;
         internal OpenTK.Vector4 debugColor;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference baseMap;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference detailMap;
-        public override int SerializedSize { get { return 60; } }
-        public override int Alignment { get { return 4; } }
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference baseMap;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference detailMap;
+
+        public override int SerializedSize
+        {
+            get { return 60; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ColonyBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             invalidName_0 = binaryReader.ReadBytes(4);
             radius = binaryReader.ReadRange();
@@ -56,16 +66,18 @@ namespace Moonfish.Guerilla.Tags
             detailMap = binaryReader.ReadTagReference();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16) flags);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(invalidName_0, 0, 4);
                 binaryWriter.Write(radius);
@@ -76,6 +88,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {

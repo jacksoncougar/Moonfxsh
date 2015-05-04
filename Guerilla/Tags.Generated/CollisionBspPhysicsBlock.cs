@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 112, Alignment = 16)]
     public class CollisionBspPhysicsBlockBase : GuerillaBlock
     {
@@ -38,11 +40,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_9;
         internal byte[] moppCodeData;
         internal byte[] padding;
-        public override int SerializedSize { get { return 112; } }
-        public override int Alignment { get { return 16; } }
+
+        public override int SerializedSize
+        {
+            get { return 112; }
+        }
+
+        public override int Alignment
+        {
+            get { return 16; }
+        }
+
         public CollisionBspPhysicsBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -67,15 +79,17 @@ namespace Moonfish.Guerilla.Tags
             padding = binaryReader.ReadBytes(4);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             moppCodeData = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 4);
                 binaryWriter.Write(size);

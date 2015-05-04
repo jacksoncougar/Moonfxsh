@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,23 +17,31 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 44, Alignment = 4)]
     public class GrenadesBlockBase : GuerillaBlock
     {
         internal short maximumCount;
         internal byte[] invalidName_;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference throwingEffect;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference throwingEffect;
         internal byte[] invalidName_0;
-        [TagReference("eqip")]
-        internal Moonfish.Tags.TagReference equipment;
-        [TagReference("proj")]
-        internal Moonfish.Tags.TagReference projectile;
-        public override int SerializedSize { get { return 44; } }
-        public override int Alignment { get { return 4; } }
+        [TagReference("eqip")] internal Moonfish.Tags.TagReference equipment;
+        [TagReference("proj")] internal Moonfish.Tags.TagReference projectile;
+
+        public override int SerializedSize
+        {
+            get { return 44; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public GrenadesBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -44,14 +53,16 @@ namespace Moonfish.Guerilla.Tags
             projectile = binaryReader.ReadTagReference();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(maximumCount);
                 binaryWriter.Write(invalidName_, 0, 2);

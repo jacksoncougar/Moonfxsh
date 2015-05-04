@@ -22,32 +22,32 @@ namespace Moonfish.Graphics
 
         private TimeSpan _frameStart, _frameEnd;
 
-        public Performance( )
+        public Performance()
         {
-            _timer = new Stopwatch( );
+            _timer = new Stopwatch();
             _frameHistory = new FrameInfo[Size];
-            _timer.Start( );
+            _timer.Start();
         }
 
-        public void BeginFrame( )
+        public void BeginFrame()
         {
             _frameStart = _timer.Elapsed;
         }
 
-        public void EndFrame( )
+        public void EndFrame()
         {
             _frameEnd = _timer.Elapsed;
 
-            var elapsed = ( _frameEnd - _frameStart ).Ticks;
-            _frameHistory[ ++_index >= Size ? _index = 0 : _index ] = new FrameInfo( ) {RenderTime = elapsed};
-            var sum = _frameHistory.Sum( value => value.RenderTime );
-            FramesPerSecond = Stopwatch.Frequency / ( sum / _frameHistory.Length );
-            FrameTime = sum / _frameHistory.Length;
+            var elapsed = (_frameEnd - _frameStart).Ticks;
+            _frameHistory[++_index >= Size ? _index = 0 : _index] = new FrameInfo() {RenderTime = elapsed};
+            var sum = _frameHistory.Sum(value => value.RenderTime);
+            FramesPerSecond = Stopwatch.Frequency/(sum/_frameHistory.Length);
+            FrameTime = sum/_frameHistory.Length;
         }
 
         public float Delta
         {
-            get { return ( _timer.Elapsed - _frameEnd ).Milliseconds; }
+            get { return (_timer.Elapsed - _frameEnd).Milliseconds; }
         }
     }
 }

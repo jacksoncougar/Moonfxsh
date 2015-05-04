@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Crea = (TagClass)"crea";
+        public static readonly TagClass Crea = (TagClass) "crea";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 196, Alignment = 4)]
     public class CreatureBlockBase : GuerillaBlock
     {
@@ -36,28 +38,38 @@ namespace Moonfish.Guerilla.Tags
         internal float casualTurningModifier01;
         internal float autoaimWidthWorldUnits;
         internal CharacterPhysicsStructBlock physics;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference impactDamage;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference impactDamage;
+
         /// <summary>
         /// if not specified, uses 'impact damage'
         /// </summary>
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference impactShieldDamage;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference impactShieldDamage;
+
         /// <summary>
         /// if non-zero, the creature will destroy itself upon death after this much time
         /// </summary>
         internal Moonfish.Model.Range destroyAfterDeathTimeSeconds;
-        public override int SerializedSize { get { return 384; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 384; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public CreatureBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
-            defaultTeam = (DefaultTeam)binaryReader.ReadInt16();
-            motionSensorBlipSize = (MotionSensorBlipSize)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt32();
+            defaultTeam = (DefaultTeam) binaryReader.ReadInt16();
+            motionSensorBlipSize = (MotionSensorBlipSize) binaryReader.ReadInt16();
             turningVelocityMaximumDegreesPerSecond = binaryReader.ReadSingle();
             turningAccelerationMaximumDegreesPerSecondSquared = binaryReader.ReadSingle();
             casualTurningModifier01 = binaryReader.ReadSingle();
@@ -69,19 +81,21 @@ namespace Moonfish.Guerilla.Tags
             destroyAfterDeathTimeSeconds = binaryReader.ReadRange();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             physics.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)defaultTeam);
-                binaryWriter.Write((Int16)motionSensorBlipSize);
+                binaryWriter.Write((Int32) flags);
+                binaryWriter.Write((Int16) defaultTeam);
+                binaryWriter.Write((Int16) motionSensorBlipSize);
                 binaryWriter.Write(turningVelocityMaximumDegreesPerSecond);
                 binaryWriter.Write(turningAccelerationMaximumDegreesPerSecondSquared);
                 binaryWriter.Write(casualTurningModifier01);
@@ -93,6 +107,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -104,6 +119,7 @@ using(binaryWriter.BaseStream.Pin())
             AttachUponImpact = 32,
             NotOnMotionSensor = 64,
         };
+
         internal enum DefaultTeam : short
         {
             Default = 0,
@@ -123,6 +139,7 @@ using(binaryWriter.BaseStream.Pin())
             Unused14 = 14,
             Unused15 = 15,
         };
+
         internal enum MotionSensorBlipSize : short
         {
             Medium = 0,

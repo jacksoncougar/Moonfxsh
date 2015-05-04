@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 32, Alignment = 4)]
     public class ParticlesUpdateDataBlockBase : GuerillaBlock
     {
@@ -25,11 +27,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal float mass;
         internal float creationTimeStamp;
-        public override int SerializedSize { get { return 32; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 32; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ParticlesUpdateDataBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -41,14 +53,16 @@ namespace Moonfish.Guerilla.Tags
             creationTimeStamp = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(velocityX);
                 binaryWriter.Write(velocityY);

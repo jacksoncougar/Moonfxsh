@@ -12,130 +12,130 @@ namespace Moonfish.Graphics
     {
         public Program SystemProgram
         {
-            get { return this.Shaders[ "system" ]; }
+            get { return this.Shaders["system"]; }
         }
 
         public Program ScreenProgram
         {
-            get { return this.Shaders[ "screen" ]; }
+            get { return this.Shaders["screen"]; }
         }
 
         private Dictionary<string, Program> Shaders { get; set; }
 
-        private Vector3 lightPosition = new Vector3( 1f, 1f, 0.5f );
+        private Vector3 lightPosition = new Vector3(1f, 1f, 0.5f);
         private int NormalMapPaletteTexture;
 
         public Dictionary<TagIdent, MaterialShader> Materials { get; set; }
 
-        public ProgramManager( )
+        public ProgramManager()
         {
-            Materials = new Dictionary<TagIdent, MaterialShader>( );
-            Shaders = new Dictionary<string, Program>( );
-            LoadDefaultShader( );
-            LoadSystemShader( );
-            LoadScreenShader( );
+            Materials = new Dictionary<TagIdent, MaterialShader>();
+            Shaders = new Dictionary<string, Program>();
+            LoadDefaultShader();
+            LoadSystemShader();
+            LoadScreenShader();
         }
 
-        public void LoadMaterials( IEnumerable<TagIdent> shaders, CacheStream map )
+        public void LoadMaterials(IEnumerable<TagIdent> shaders, CacheStream map)
         {
-            Materials.ToList( ).ForEach( x => x.Value.Dispose( ) );
-            Materials.Clear( );
-            foreach ( var shader in shaders )
+            Materials.ToList().ForEach(x => x.Value.Dispose());
+            Materials.Clear();
+            foreach (var shader in shaders)
             {
                 var shaderBlock = (ShaderBlock) map.Deserialize(shader);
-                var material = new MaterialShader( shaderBlock, map );
-                material.UsePass( 0 );
-                Materials[ shader ] = material;
+                var material = new MaterialShader(shaderBlock, map);
+                material.UsePass(0);
+                Materials[shader] = material;
             }
         }
 
-        private void LoadSystemShader( )
+        private void LoadSystemShader()
         {
-            var vertex_shader = new Shader( "data/sys_vertex.vert", ShaderType.VertexShader );
-            var fragment_shader = new Shader( "data/sys_fragment.frag", ShaderType.FragmentShader );
-            var defaultProgram = new Program( "system" );
-            OpenGL.ReportError( );
-            GL.BindAttribLocation( defaultProgram.Ident, 0, "Position" );
-            OpenGL.ReportError( );
-            GL.BindAttribLocation( defaultProgram.Ident, 1, "Colour" );
-            OpenGL.ReportError( );
+            var vertex_shader = new Shader("data/sys_vertex.vert", ShaderType.VertexShader);
+            var fragment_shader = new Shader("data/sys_fragment.frag", ShaderType.FragmentShader);
+            var defaultProgram = new Program("system");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 0, "Position");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 1, "Colour");
+            OpenGL.ReportError();
 
-            defaultProgram.Link( new List<Shader>( 2 ) {vertex_shader, fragment_shader} );
-            OpenGL.ReportError( );
-            Shaders[ "system" ] = defaultProgram;
+            defaultProgram.Link(new List<Shader>(2) {vertex_shader, fragment_shader});
+            OpenGL.ReportError();
+            Shaders["system"] = defaultProgram;
         }
 
-        private void LoadScreenShader( )
+        private void LoadScreenShader()
         {
-            var vertex_shader = new Shader( "data/viewscreen.vert", ShaderType.VertexShader );
-            var fragment_shader = new Shader( "data/sys_fragment.frag", ShaderType.FragmentShader );
-            var defaultProgram = new Program( "screen" );
-            OpenGL.ReportError( );
-            GL.BindAttribLocation( defaultProgram.Ident, 0, "Position" );
-            OpenGL.ReportError( );
-            GL.BindAttribLocation( defaultProgram.Ident, 1, "Colour" );
-            OpenGL.ReportError( );
+            var vertex_shader = new Shader("data/viewscreen.vert", ShaderType.VertexShader);
+            var fragment_shader = new Shader("data/sys_fragment.frag", ShaderType.FragmentShader);
+            var defaultProgram = new Program("screen");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 0, "Position");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 1, "Colour");
+            OpenGL.ReportError();
 
-            defaultProgram.Link( new List<Shader>( 2 ) {vertex_shader, fragment_shader} );
-            OpenGL.ReportError( );
-            Shaders[ "screen" ] = defaultProgram;
+            defaultProgram.Link(new List<Shader>(2) {vertex_shader, fragment_shader});
+            OpenGL.ReportError();
+            Shaders["screen"] = defaultProgram;
         }
 
-        private void LoadDefaultShader( )
+        private void LoadDefaultShader()
         {
             Program defaultProgram;
-            var vertex_shader = new Shader( "data/vertex.vert", ShaderType.VertexShader );
-            var fragment_shader = new Shader( "data/fragment.frag", ShaderType.FragmentShader );
-            defaultProgram = new Program( "shaded" );
-            OpenGL.ReportError( );
-            GL.BindAttribLocation( defaultProgram.Ident, 0, "position" );
-            OpenGL.ReportError( );
-            GL.BindAttribLocation( defaultProgram.Ident, 1, "boneIndices" );
-            OpenGL.ReportError( );
-            GL.BindAttribLocation( defaultProgram.Ident, 2, "boneWeights" );
-            OpenGL.ReportError( );
-            GL.BindAttribLocation( defaultProgram.Ident, 3, "texcoord" );
-            OpenGL.ReportError( );
-            GL.BindAttribLocation( defaultProgram.Ident, 4, "normal" );
-            OpenGL.ReportError( );
-            GL.BindAttribLocation( defaultProgram.Ident, 5, "tangent" );
-            OpenGL.ReportError( );
-            GL.BindAttribLocation( defaultProgram.Ident, 6, "bitangent" );
-            OpenGL.ReportError( );
-            GL.BindAttribLocation( defaultProgram.Ident, 7, "colour" );
-            OpenGL.ReportError( );
+            var vertex_shader = new Shader("data/vertex.vert", ShaderType.VertexShader);
+            var fragment_shader = new Shader("data/fragment.frag", ShaderType.FragmentShader);
+            defaultProgram = new Program("shaded");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 0, "position");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 1, "boneIndices");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 2, "boneWeights");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 3, "texcoord");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 4, "normal");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 5, "tangent");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 6, "bitangent");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 7, "colour");
+            OpenGL.ReportError();
 
             //GL.BindAttribLocation(defaultProgram.ID, 3, "colour"); OpenGL.ReportError();
-            defaultProgram.Link( new List<Shader>( 2 ) {vertex_shader, fragment_shader} );
-            OpenGL.ReportError( );
-            var loc = GL.GetAttribLocation( defaultProgram.Ident, "worldMatrix" );
-            Shaders[ "default" ] = defaultProgram;
+            defaultProgram.Link(new List<Shader>(2) {vertex_shader, fragment_shader});
+            OpenGL.ReportError();
+            var loc = GL.GetAttribLocation(defaultProgram.Ident, "worldMatrix");
+            Shaders["default"] = defaultProgram;
 
 
-            LoadNormalMapPalette( );
+            LoadNormalMapPalette();
 
-            var p8NormalColourUniform = Shaders[ "default" ].GetUniformLocation( "P8NormalColour" );
-            var p8NormalMapUniform = Shaders[ "default" ].GetUniformLocation( "P8NormalMap" );
-            var diffuseMapUniform = Shaders[ "default" ].GetUniformLocation( "DiffuseMap" );
-            var environmentMapUniform = Shaders[ "default" ].GetUniformLocation( "EnvironmentMap" );
+            var p8NormalColourUniform = Shaders["default"].GetUniformLocation("P8NormalColour");
+            var p8NormalMapUniform = Shaders["default"].GetUniformLocation("P8NormalMap");
+            var diffuseMapUniform = Shaders["default"].GetUniformLocation("DiffuseMap");
+            var environmentMapUniform = Shaders["default"].GetUniformLocation("EnvironmentMap");
 
-            Shaders[ "default" ].Use( );
-            Shaders[ "default" ].SetUniform( p8NormalColourUniform, 0 );
-            Shaders[ "default" ].SetUniform( p8NormalMapUniform, 3 );
-            Shaders[ "default" ].SetUniform( diffuseMapUniform, 1 );
-            Shaders[ "default" ].SetUniform( environmentMapUniform, 2 );
+            Shaders["default"].Use();
+            Shaders["default"].SetUniform(p8NormalColourUniform, 0);
+            Shaders["default"].SetUniform(p8NormalMapUniform, 3);
+            Shaders["default"].SetUniform(diffuseMapUniform, 1);
+            Shaders["default"].SetUniform(environmentMapUniform, 2);
         }
 
-        private void LoadNormalMapPalette( )
+        private void LoadNormalMapPalette()
         {
-            NormalMapPaletteTexture = GL.GenTexture( );
-            GL.ActiveTexture( TextureUnit.Texture0 );
-            GL.BindTexture( TextureTarget.Texture1D, NormalMapPaletteTexture );
-            GL.TexParameter( TextureTarget.Texture1D, TextureParameterName.TextureWrapS, ( int ) TextureWrapMode.Clamp );
-            GL.TexParameter( TextureTarget.Texture1D, TextureParameterName.TextureMagFilter,
-                ( int ) TextureMagFilter.Nearest );
-            GL.TexParameter( TextureTarget.Texture1D, TextureParameterName.TextureMinFilter,
-                ( int ) TextureMinFilter.Nearest );
+            NormalMapPaletteTexture = GL.GenTexture();
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture1D, NormalMapPaletteTexture);
+            GL.TexParameter(TextureTarget.Texture1D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.Clamp);
+            GL.TexParameter(TextureTarget.Texture1D, TextureParameterName.TextureMagFilter,
+                (int) TextureMagFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture1D, TextureParameterName.TextureMinFilter,
+                (int) TextureMinFilter.Nearest);
 
             #region Palette Data
 
@@ -202,42 +202,42 @@ namespace Moonfish.Graphics
 
             #endregion
 
-            GL.TexImage1D( TextureTarget.Texture1D, 0, PixelInternalFormat.Rgba8, 256, 0, PixelFormat.Bgra,
-                PixelType.UnsignedByte, H2PaletteBuffer );
+            GL.TexImage1D(TextureTarget.Texture1D, 0, PixelInternalFormat.Rgba8, 256, 0, PixelFormat.Bgra,
+                PixelType.UnsignedByte, H2PaletteBuffer);
         }
 
-        public void BindNormalMapPaletteTexture( TextureUnit target = TextureUnit.Texture0 )
+        public void BindNormalMapPaletteTexture(TextureUnit target = TextureUnit.Texture0)
         {
-            GL.ActiveTexture( target );
-            GL.BindTexture( TextureTarget.Texture1D, NormalMapPaletteTexture );
+            GL.ActiveTexture(target);
+            GL.BindTexture(TextureTarget.Texture1D, NormalMapPaletteTexture);
         }
 
-        public Program GetProgram( ShaderReference reference )
+        public Program GetProgram(ShaderReference reference)
         {
-            switch ( reference.Type )
+            switch (reference.Type)
             {
                 case ShaderReference.ReferenceType.Halo2:
                     MaterialShader material;
-                    if ( this.Materials.TryGetValue( ( TagIdent ) reference.Ident, out material ) )
+                    if (this.Materials.TryGetValue((TagIdent) reference.Ident, out material))
                     {
-                        material.UsePass( 0 );
+                        material.UsePass(0);
                     }
 
-                    return this.Shaders[ "default" ];
+                    return this.Shaders["default"];
                 case ShaderReference.ReferenceType.System:
-                    return this.Shaders[ "system" ];
+                    return this.Shaders["system"];
             }
             return null;
         }
 
-        public IEnumerator<Program> GetEnumerator( )
+        public IEnumerator<Program> GetEnumerator()
         {
-            return this.Shaders.Select( x => x.Value ).GetEnumerator( );
+            return this.Shaders.Select(x => x.Value).GetEnumerator();
         }
 
-        IEnumerator IEnumerable.GetEnumerator( )
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator( );
+            return this.GetEnumerator();
         }
     };
 }

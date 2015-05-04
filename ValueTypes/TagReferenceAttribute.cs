@@ -6,9 +6,9 @@ namespace Moonfish.Tags
     {
         private TagClass referenceClass;
 
-        public TagReferenceAttribute( string tagClassString )
+        public TagReferenceAttribute(string tagClassString)
         {
-            referenceClass = new TagClass( Encoding.UTF8.GetBytes( tagClassString ) );
+            referenceClass = new TagClass(Encoding.UTF8.GetBytes(tagClassString));
         }
     }
 }

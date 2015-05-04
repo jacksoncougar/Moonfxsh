@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 116, Alignment = 4)]
     public class PathfindingDataBlockBase : GuerillaBlock
     {
@@ -31,11 +33,21 @@ namespace Moonfish.Guerilla.Tags
         internal int structureChecksum;
         internal byte[] invalidName_;
         internal UserHintBlock[] userPlacedHints;
-        public override int SerializedSize { get { return 116; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 116; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public PathfindingDataBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -53,6 +65,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<UserHintBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -64,13 +77,15 @@ namespace Moonfish.Guerilla.Tags
             vertices = ReadBlockArrayData<SectorVertexBlock>(binaryReader, blamPointers.Dequeue());
             objectRefs = ReadBlockArrayData<EnvironmentObjectRefs>(binaryReader, blamPointers.Dequeue());
             pathfindingHints = ReadBlockArrayData<PathfindingHintsBlock>(binaryReader, blamPointers.Dequeue());
-            instancedGeometryRefs = ReadBlockArrayData<InstancedGeometryReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            instancedGeometryRefs = ReadBlockArrayData<InstancedGeometryReferenceBlock>(binaryReader,
+                blamPointers.Dequeue());
             userPlacedHints = ReadBlockArrayData<UserHintBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<SectorBlock>(binaryWriter, sectors, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SectorLinkBlock>(binaryWriter, links, nextAddress);
@@ -79,8 +94,10 @@ using(binaryWriter.BaseStream.Pin())
                 nextAddress = Guerilla.WriteBlockArray<SurfaceFlagsBlock>(binaryWriter, surfaceFlags, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SectorVertexBlock>(binaryWriter, vertices, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<EnvironmentObjectRefs>(binaryWriter, objectRefs, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PathfindingHintsBlock>(binaryWriter, pathfindingHints, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<InstancedGeometryReferenceBlock>(binaryWriter, instancedGeometryRefs, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PathfindingHintsBlock>(binaryWriter, pathfindingHints,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<InstancedGeometryReferenceBlock>(binaryWriter,
+                    instancedGeometryRefs, nextAddress);
                 binaryWriter.Write(structureChecksum);
                 binaryWriter.Write(invalidName_, 0, 32);
                 nextAddress = Guerilla.WriteBlockArray<UserHintBlock>(binaryWriter, userPlacedHints, nextAddress);

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Phys = (TagClass)"phys";
+        public static readonly TagClass Phys = (TagClass) "phys";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 116, Alignment = 4)]
     public class PhysicsBlockBase : GuerillaBlock
     {
@@ -32,6 +34,7 @@ namespace Moonfish.Guerilla.Tags
         /// positive uses old inferior physics, negative uses new improved physics
         /// </summary>
         internal float radius;
+
         internal float momentScale;
         internal float mass;
         internal OpenTK.Vector3 centerOfMass;
@@ -55,11 +58,21 @@ namespace Moonfish.Guerilla.Tags
         internal InertialMatrixBlock[] inertialMatrixAndInverse;
         internal PoweredMassPointBlock[] poweredMassPoints;
         internal MassPointBlock[] massPoints;
-        public override int SerializedSize { get { return 116; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 116; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public PhysicsBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -89,6 +102,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<MassPointBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -96,10 +110,11 @@ namespace Moonfish.Guerilla.Tags
             poweredMassPoints = ReadBlockArrayData<PoweredMassPointBlock>(binaryReader, blamPointers.Dequeue());
             massPoints = ReadBlockArrayData<MassPointBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(radius);
                 binaryWriter.Write(momentScale);
@@ -122,8 +137,10 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(xxMoment);
                 binaryWriter.Write(yyMoment);
                 binaryWriter.Write(zzMoment);
-                nextAddress = Guerilla.WriteBlockArray<InertialMatrixBlock>(binaryWriter, inertialMatrixAndInverse, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PoweredMassPointBlock>(binaryWriter, poweredMassPoints, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<InertialMatrixBlock>(binaryWriter, inertialMatrixAndInverse,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PoweredMassPointBlock>(binaryWriter, poweredMassPoints,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<MassPointBlock>(binaryWriter, massPoints, nextAddress);
                 return nextAddress;
             }

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,38 +17,43 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 76, Alignment = 4)]
     public class MeleeDamageParametersStructBlockBase : GuerillaBlock
     {
         internal OpenTK.Vector2 damagePyramidAngles;
         internal float damagePyramidDepth;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference invalidName_1StHitMeleeDamage;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference invalidName_1StHitMeleeResponse;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference invalidName_2NdHitMeleeDamage;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference invalidName_2NdHitMeleeResponse;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference invalidName_3RdHitMeleeDamage;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference invalidName_3RdHitMeleeResponse;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference invalidName_1StHitMeleeDamage;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference invalidName_1StHitMeleeResponse;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference invalidName_2NdHitMeleeDamage;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference invalidName_2NdHitMeleeResponse;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference invalidName_3RdHitMeleeDamage;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference invalidName_3RdHitMeleeResponse;
+
         /// <summary>
         /// this is only important for the energy sword
         /// </summary>
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference lungeMeleeDamage;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference lungeMeleeDamage;
+
         /// <summary>
         /// this is only important for the energy sword
         /// </summary>
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference lungeMeleeResponse;
-        public override int SerializedSize { get { return 76; } }
-        public override int Alignment { get { return 4; } }
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference lungeMeleeResponse;
+
+        public override int SerializedSize
+        {
+            get { return 76; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public MeleeDamageParametersStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -63,14 +69,16 @@ namespace Moonfish.Guerilla.Tags
             lungeMeleeResponse = binaryReader.ReadTagReference();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(damagePyramidAngles);
                 binaryWriter.Write(damagePyramidDepth);

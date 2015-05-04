@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 128, Alignment = 4)]
     public class PlayerControlBlockBase : GuerillaBlock
     {
@@ -23,91 +25,123 @@ namespace Moonfish.Guerilla.Tags
         /// how much the crosshair slows over enemies
         /// </summary>
         internal float magnetismFriction;
+
         /// <summary>
         /// how much the crosshair sticks to enemies
         /// </summary>
         internal float magnetismAdhesion;
+
         /// <summary>
         /// scales magnetism level for inconsequential targets like infection forms
         /// </summary>
         internal float inconsequentialTargetScale;
+
         internal byte[] invalidName_;
+
         /// <summary>
         /// -1..1, 0 is middle of the screen
         /// </summary>
         internal OpenTK.Vector2 crosshairLocation;
+
         /// <summary>
         /// how long you must be pegged before you start sprinting
         /// </summary>
         internal float secondsToStart;
+
         /// <summary>
         /// how long you must sprint before you reach top speed
         /// </summary>
         internal float secondsToFullSpeed;
+
         /// <summary>
         /// how fast being unpegged decays the timer (seconds per second)
         /// </summary>
         internal float decayRate;
+
         /// <summary>
         /// how much faster we actually go when at full sprint
         /// </summary>
         internal float fullSpeedMultiplier;
+
         /// <summary>
         /// how far the stick needs to be pressed before being considered pegged
         /// </summary>
         internal float peggedMagnitude;
+
         /// <summary>
         /// how far off straight up (in degrees) we consider pegged
         /// </summary>
         internal float peggedAngularThreshold;
+
         internal byte[] invalidName_0;
         internal float lookDefaultPitchRateDegrees;
         internal float lookDefaultYawRateDegrees;
+
         /// <summary>
         /// magnitude of yaw for pegged acceleration to kick in
         /// </summary>
         internal float lookPegThreshold01;
+
         /// <summary>
         /// time for a pegged look to reach maximum effect
         /// </summary>
         internal float lookYawAccelerationTimeSeconds;
+
         /// <summary>
         /// maximum effect of a pegged look (scales last value in the look function below)
         /// </summary>
         internal float lookYawAccelerationScale;
+
         /// <summary>
         /// time for a pegged look to reach maximum effect
         /// </summary>
         internal float lookPitchAccelerationTimeSeconds;
+
         /// <summary>
         /// maximum effect of a pegged look (scales last value in the look function below)
         /// </summary>
         internal float lookPitchAccelerationScale;
+
         /// <summary>
         /// 1 is fast, 0 is none, >1 will probably be really fast
         /// </summary>
         internal float lookAutolevellingScale;
+
         internal byte[] invalidName_1;
         internal float gravityScale;
         internal byte[] invalidName_2;
+
         /// <summary>
         /// amount of time player needs to move and not look up or down for autolevelling to kick in
         /// </summary>
         internal short minimumAutolevellingTicks;
+
         /// <summary>
         /// 0 means the vehicle's up vector is along the ground, 90 means the up vector is pointing straight up:degrees
         /// </summary>
         internal float minimumAngleForVehicleFlipping;
+
         internal LookFunctionBlock[] lookFunction;
+
         /// <summary>
         /// time that player needs to press ACTION to register as a HOLD
         /// </summary>
         internal float minimumActionHoldTimeSeconds;
-        public override int SerializedSize { get { return 128; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 128; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public PlayerControlBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -140,15 +174,17 @@ namespace Moonfish.Guerilla.Tags
             minimumActionHoldTimeSeconds = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             lookFunction = ReadBlockArrayData<LookFunctionBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(magnetismFriction);
                 binaryWriter.Write(magnetismAdhesion);

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,113 +17,149 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 112, Alignment = 4)]
     public class CharacterVitalityBlockBase : GuerillaBlock
     {
         internal VitalityFlags vitalityFlags;
+
         /// <summary>
         /// maximum body vitality of our unit
         /// </summary>
         internal float normalBodyVitality;
+
         /// <summary>
         /// maximum shield vitality of our unit
         /// </summary>
         internal float normalShieldVitality;
+
         /// <summary>
         /// maximum body vitality of our unit (on legendary)
         /// </summary>
         internal float legendaryBodyVitality;
+
         /// <summary>
         /// maximum shield vitality of our unit (on legendary)
         /// </summary>
         internal float legendaryShieldVitality;
+
         /// <summary>
         /// fraction of body health that can be regained after damage
         /// </summary>
         internal float bodyRechargeFraction;
+
         /// <summary>
         /// damage necessary to trigger a soft ping when shields are up
         /// </summary>
         internal float softPingThresholdWithShields;
+
         /// <summary>
         /// damage necessary to trigger a soft ping when shields are down
         /// </summary>
         internal float softPingThresholdNoShields;
+
         /// <summary>
         /// minimum time before a soft ping can be interrupted
         /// </summary>
         internal float softPingMinInterruptTime;
+
         /// <summary>
         /// damage necessary to trigger a hard ping when shields are up
         /// </summary>
         internal float hardPingThresholdWithShields;
+
         /// <summary>
         /// damage necessary to trigger a hard ping when shields are down
         /// </summary>
         internal float hardPingThresholdNoShields;
+
         /// <summary>
         /// minimum time before a hard ping can be interrupted
         /// </summary>
         internal float hardPingMinInterruptTime;
+
         /// <summary>
         /// current damage begins to fall after a time delay has passed since last the damage
         /// </summary>
         internal float currentDamageDecayDelay;
+
         /// <summary>
         /// amount of time it would take for 100% current damage to decay to 0
         /// </summary>
         internal float currentDamageDecayTime;
+
         /// <summary>
         /// recent damage begins to fall after a time delay has passed since last the damage
         /// </summary>
         internal float recentDamageDecayDelay;
+
         /// <summary>
         /// amount of time it would take for 100% recent damage to decay to 0
         /// </summary>
         internal float recentDamageDecayTime;
+
         /// <summary>
         /// amount of time delay before a shield begins to recharge
         /// </summary>
         internal float bodyRechargeDelayTime;
+
         /// <summary>
         /// amount of time for shields to recharge completely
         /// </summary>
         internal float bodyRechargeTime;
+
         /// <summary>
         /// amount of time delay before a shield begins to recharge
         /// </summary>
         internal float shieldRechargeDelayTime;
+
         /// <summary>
         /// amount of time for shields to recharge completely
         /// </summary>
         internal float shieldRechargeTime;
+
         /// <summary>
         /// stun level that triggers the stunned state (currently, the 'stunned' behavior)
         /// </summary>
         internal float stunThreshold;
+
         internal Moonfish.Model.Range stunTimeBoundsSeconds;
+
         /// <summary>
         /// Amount of shield damage sustained before it is considered 'extended'
         /// </summary>
         internal float extendedShieldDamageThreshold;
+
         /// <summary>
         /// Amount of body damage sustained before it is considered 'extended'
         /// </summary>
         internal float extendedBodyDamageThreshold;
+
         /// <summary>
         /// when I die and explode, I damage stuff within this distance of me.
         /// </summary>
         internal float suicideRadius;
+
         internal byte[] invalidName_;
-        public override int SerializedSize { get { return 112; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 112; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public CharacterVitalityBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            vitalityFlags = (VitalityFlags)binaryReader.ReadInt32();
+            vitalityFlags = (VitalityFlags) binaryReader.ReadInt32();
             normalBodyVitality = binaryReader.ReadSingle();
             normalShieldVitality = binaryReader.ReadSingle();
             legendaryBodyVitality = binaryReader.ReadSingle();
@@ -150,16 +187,18 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes(8);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)vitalityFlags);
+                binaryWriter.Write((Int32) vitalityFlags);
                 binaryWriter.Write(normalBodyVitality);
                 binaryWriter.Write(normalShieldVitality);
                 binaryWriter.Write(legendaryBodyVitality);
@@ -188,6 +227,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum VitalityFlags : int
         {

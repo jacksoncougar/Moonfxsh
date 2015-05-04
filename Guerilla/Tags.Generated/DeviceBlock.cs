@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Devi = (TagClass)"devi";
+        public static readonly TagClass Devi = (TagClass) "devi";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 96, Alignment = 4)]
     public class DeviceBlockBase : GuerillaBlock
     {
@@ -37,38 +39,41 @@ namespace Moonfish.Guerilla.Tags
         internal float depoweredPositionAccelerationTimeSeconds;
         internal LightmapFlags lightmapFlags;
         internal byte[] invalidName_;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference openUp;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference closeDown;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference opened;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference closed;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference depowered;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference repowered;
+        [TagReference("null")] internal Moonfish.Tags.TagReference openUp;
+        [TagReference("null")] internal Moonfish.Tags.TagReference closeDown;
+        [TagReference("null")] internal Moonfish.Tags.TagReference opened;
+        [TagReference("null")] internal Moonfish.Tags.TagReference closed;
+        [TagReference("null")] internal Moonfish.Tags.TagReference depowered;
+        [TagReference("null")] internal Moonfish.Tags.TagReference repowered;
         internal float delayTimeSeconds;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference delayEffect;
+        [TagReference("null")] internal Moonfish.Tags.TagReference delayEffect;
         internal float automaticActivationRadiusWorldUnits;
-        public override int SerializedSize { get { return 284; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 284; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public DeviceBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             powerTransitionTimeSeconds = binaryReader.ReadSingle();
             powerAccelerationTimeSeconds = binaryReader.ReadSingle();
             positionTransitionTimeSeconds = binaryReader.ReadSingle();
             positionAccelerationTimeSeconds = binaryReader.ReadSingle();
             depoweredPositionTransitionTimeSeconds = binaryReader.ReadSingle();
             depoweredPositionAccelerationTimeSeconds = binaryReader.ReadSingle();
-            lightmapFlags = (LightmapFlags)binaryReader.ReadInt16();
+            lightmapFlags = (LightmapFlags) binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             openUp = binaryReader.ReadTagReference();
             closeDown = binaryReader.ReadTagReference();
@@ -81,23 +86,25 @@ namespace Moonfish.Guerilla.Tags
             automaticActivationRadiusWorldUnits = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int32) flags);
                 binaryWriter.Write(powerTransitionTimeSeconds);
                 binaryWriter.Write(powerAccelerationTimeSeconds);
                 binaryWriter.Write(positionTransitionTimeSeconds);
                 binaryWriter.Write(positionAccelerationTimeSeconds);
                 binaryWriter.Write(depoweredPositionTransitionTimeSeconds);
                 binaryWriter.Write(depoweredPositionAccelerationTimeSeconds);
-                binaryWriter.Write((Int16)lightmapFlags);
+                binaryWriter.Write((Int16) lightmapFlags);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(openUp);
                 binaryWriter.Write(closeDown);
@@ -111,6 +118,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -118,6 +126,7 @@ using(binaryWriter.BaseStream.Pin())
             Unused = 2,
             AllowInterpolation = 4,
         };
+
         [FlagsAttribute]
         internal enum LightmapFlags : short
         {

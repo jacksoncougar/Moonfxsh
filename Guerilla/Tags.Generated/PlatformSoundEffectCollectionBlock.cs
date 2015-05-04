@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,17 +17,28 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class PlatformSoundEffectCollectionBlockBase : GuerillaBlock
     {
         internal PlatformSoundEffectBlock[] soundEffects;
         internal PlatformSoundEffectFunctionBlock[] lowFrequencyInput;
         internal int soundEffectOverrides;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public PlatformSoundEffectCollectionBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -35,19 +47,23 @@ namespace Moonfish.Guerilla.Tags
             soundEffectOverrides = binaryReader.ReadInt32();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             soundEffects = ReadBlockArrayData<PlatformSoundEffectBlock>(binaryReader, blamPointers.Dequeue());
-            lowFrequencyInput = ReadBlockArrayData<PlatformSoundEffectFunctionBlock>(binaryReader, blamPointers.Dequeue());
+            lowFrequencyInput = ReadBlockArrayData<PlatformSoundEffectFunctionBlock>(binaryReader,
+                blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<PlatformSoundEffectBlock>(binaryWriter, soundEffects, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PlatformSoundEffectFunctionBlock>(binaryWriter, lowFrequencyInput, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PlatformSoundEffectFunctionBlock>(binaryWriter, lowFrequencyInput,
+                    nextAddress);
                 binaryWriter.Write(soundEffectOverrides);
                 return nextAddress;
             }

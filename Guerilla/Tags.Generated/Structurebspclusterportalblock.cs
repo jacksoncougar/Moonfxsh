@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 36, Alignment = 4)]
     public class StructureBspClusterPortalBlockBase : GuerillaBlock
     {
@@ -26,11 +28,21 @@ namespace Moonfish.Guerilla.Tags
         internal float boundingRadius;
         internal Flags flags;
         internal StructureBspClusterPortalVertexBlock[] vertices;
-        public override int SerializedSize { get { return 36; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 36; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public StructureBspClusterPortalBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -39,30 +51,34 @@ namespace Moonfish.Guerilla.Tags
             planeIndex = binaryReader.ReadInt32();
             centroid = binaryReader.ReadVector3();
             boundingRadius = binaryReader.ReadSingle();
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspClusterPortalVertexBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             vertices = ReadBlockArrayData<StructureBspClusterPortalVertexBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(backCluster);
                 binaryWriter.Write(frontCluster);
                 binaryWriter.Write(planeIndex);
                 binaryWriter.Write(centroid);
                 binaryWriter.Write(boundingRadius);
-                binaryWriter.Write((Int32)flags);
-                nextAddress = Guerilla.WriteBlockArray<StructureBspClusterPortalVertexBlock>(binaryWriter, vertices, nextAddress);
+                binaryWriter.Write((Int32) flags);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspClusterPortalVertexBlock>(binaryWriter, vertices,
+                    nextAddress);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

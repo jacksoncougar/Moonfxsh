@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,22 +17,31 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 32, Alignment = 4)]
     public class GlobalGeometryMaterialBlockBase : GuerillaBlock
     {
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference oldShader;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference shader;
+        [TagReference("shad")] internal Moonfish.Tags.TagReference oldShader;
+        [TagReference("shad")] internal Moonfish.Tags.TagReference shader;
         internal GlobalGeometryMaterialPropertyBlock[] properties;
         internal byte[] invalidName_;
         internal byte breakableSurfaceIndex;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 32; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 32; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public GlobalGeometryMaterialBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -43,19 +53,22 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(3);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             properties = ReadBlockArrayData<GlobalGeometryMaterialPropertyBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(oldShader);
                 binaryWriter.Write(shader);
-                nextAddress = Guerilla.WriteBlockArray<GlobalGeometryMaterialPropertyBlock>(binaryWriter, properties, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GlobalGeometryMaterialPropertyBlock>(binaryWriter, properties,
+                    nextAddress);
                 binaryWriter.Write(invalidName_, 0, 4);
                 binaryWriter.Write(breakableSurfaceIndex);
                 binaryWriter.Write(invalidName_0, 0, 3);

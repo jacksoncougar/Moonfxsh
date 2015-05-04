@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 44, Alignment = 4)]
     public class CharacterPhysicsFlyingStructBlockBase : GuerillaBlock
     {
@@ -23,45 +25,64 @@ namespace Moonfish.Guerilla.Tags
         /// angle at which we bank left/right when sidestepping or turning while moving forwards
         /// </summary>
         internal float bankAngleDegrees;
+
         /// <summary>
         /// time it takes us to apply a bank
         /// </summary>
         internal float bankApplyTimeSeconds;
+
         /// <summary>
         /// time it takes us to recover from a bank
         /// </summary>
         internal float bankDecayTimeSeconds;
+
         /// <summary>
         /// amount that we pitch up/down when moving up or down
         /// </summary>
         internal float pitchRatio;
+
         /// <summary>
         /// max velocity when not crouching
         /// </summary>
         internal float maxVelocityWorldUnitsPerSecond;
+
         /// <summary>
         /// max sideways or up/down velocity when not crouching
         /// </summary>
         internal float maxSidestepVelocityWorldUnitsPerSecond;
+
         internal float accelerationWorldUnitsPerSecondSquared;
         internal float decelerationWorldUnitsPerSecondSquared;
+
         /// <summary>
         /// turn rate
         /// </summary>
         internal float angularVelocityMaximumDegreesPerSecond;
+
         /// <summary>
         /// turn acceleration rate
         /// </summary>
         internal float angularAccelerationMaximumDegreesPerSecondSquared;
+
         /// <summary>
         /// how much slower we fly if crouching (zero = same speed)
         /// </summary>
         internal float crouchVelocityModifier01;
-        public override int SerializedSize { get { return 44; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 44; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public CharacterPhysicsFlyingStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -78,14 +99,16 @@ namespace Moonfish.Guerilla.Tags
             crouchVelocityModifier01 = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(bankAngleDegrees);
                 binaryWriter.Write(bankApplyTimeSeconds);

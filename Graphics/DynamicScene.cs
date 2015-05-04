@@ -15,15 +15,15 @@ namespace Moonfish.Graphics
 
         public RotationGizmo MousePole { get; set; }
 
-        public DynamicScene( )
+        public DynamicScene()
         {
             DrawDebugCollision = false;
-            CollisionManager = new CollisionManager( ProgramManager.SystemProgram );
-            MousePole = new RotationGizmo( );
+            CollisionManager = new CollisionManager(ProgramManager.SystemProgram);
+            MousePole = new RotationGizmo();
             Camera.CameraUpdated += MousePole.OnCameraUpdate;
             SelectedObjectChanged += OnSelectedObjectChanged;
-            foreach ( var item in MousePole.CollisionObjects )
-                CollisionManager.World.AddCollisionObject( item );
+            foreach (var item in MousePole.CollisionObjects)
+                CollisionManager.World.AddCollisionObject(item);
             ;
 #if DEBUG
             GLDebug.DebugProgram = ProgramManager.SystemProgram;
@@ -31,51 +31,51 @@ namespace Moonfish.Graphics
 #endif
         }
 
-        private void OnSelectedObjectChanged( object seneder, SelectEventArgs e )
+        private void OnSelectedObjectChanged(object seneder, SelectEventArgs e)
         {
-            if ( e.SelectedObject == null )
+            if (e.SelectedObject == null)
             {
-                MousePole.DropHandlers( );
-                MousePole.Show( false );
+                MousePole.DropHandlers();
+                MousePole.Show(false);
                 return;
             }
             var item = e.SelectedObject as ScenarioCollisionObject;
-            if ( item != null )
+            if (item != null)
             {
                 var node = item.UserObject as RenderModelNodeBlock;
-                MousePole.Show( true );
-                MousePole.DropHandlers( );
+                MousePole.Show(true);
+                MousePole.DropHandlers();
                 MousePole.WorldMatrix = item.WorldTransform;
                 MousePole.WorldMatrixChanged +=
-                    delegate( object sender, MatrixChangedEventArgs args )
+                    delegate(object sender, MatrixChangedEventArgs args)
                     {
-                        item.ParentObject.SetChildWorldMatrix( item.UserObject, args.Matrix );
+                        item.ParentObject.SetChildWorldMatrix(item.UserObject, args.Matrix);
                     };
             }
         }
 
-        public override void Draw( float delta )
+        public override void Draw(float delta)
         {
-            base.Draw( delta );
-            ObjectManager.Draw( ProgramManager, MousePole.Model );
+            base.Draw(delta);
+            ObjectManager.Draw(ProgramManager, MousePole.Model);
 
-            if ( DrawDebugCollision )
-                CollisionManager.World.DebugDrawWorld( );
+            if (DrawDebugCollision)
+                CollisionManager.World.DebugDrawWorld();
         }
 
-        public override void Update( )
+        public override void Update()
         {
-            foreach ( CollisionObject collisionObject in CollisionManager.World.CollisionObjectArray )
+            foreach (CollisionObject collisionObject in CollisionManager.World.CollisionObjectArray)
             {
-                if ( collisionObject.UserObject is MarkerWrapper )
+                if (collisionObject.UserObject is MarkerWrapper)
                 {
                     var worldMatrix = collisionObject.WorldTransform;
-                    var scale = Camera.CreateScale( worldMatrix.ExtractTranslation( ), 0.05f, 15f );
-                    collisionObject.CollisionShape.LocalScaling = new Vector3( scale, scale, scale );
+                    var scale = Camera.CreateScale(worldMatrix.ExtractTranslation(), 0.05f, 15f);
+                    collisionObject.CollisionShape.LocalScaling = new Vector3(scale, scale, scale);
                 }
             }
-            CollisionManager.Update( );
-            base.Update( );
+            CollisionManager.Update();
+            base.Update();
         }
     }
 }

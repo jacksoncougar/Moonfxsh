@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 144, Alignment = 4)]
     public class LightingVariablesBlockBase : GuerillaBlock
     {
@@ -25,15 +27,25 @@ namespace Moonfish.Guerilla.Tags
         internal SecondaryLightStructBlock secondaryLight;
         internal AmbientLightStructBlock ambientLight;
         internal LightmapShadowsStructBlock lightmapShadows;
-        public override int SerializedSize { get { return 144; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 144; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public LightingVariablesBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            objectAffected = (ObjectAffected)binaryReader.ReadInt32();
+            objectAffected = (ObjectAffected) binaryReader.ReadInt32();
             lightmapBrightnessOffset = binaryReader.ReadSingle();
             primaryLight = new PrimaryLightStructBlock();
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(primaryLight.ReadFields(binaryReader)));
@@ -45,6 +57,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(lightmapShadows.ReadFields(binaryReader)));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -53,12 +66,13 @@ namespace Moonfish.Guerilla.Tags
             ambientLight.ReadPointers(binaryReader, blamPointers);
             lightmapShadows.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)objectAffected);
+                binaryWriter.Write((Int32) objectAffected);
                 binaryWriter.Write(lightmapBrightnessOffset);
                 primaryLight.Write(binaryWriter);
                 secondaryLight.Write(binaryWriter);
@@ -67,6 +81,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum ObjectAffected : int
         {

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass MGS2 = (TagClass)"MGS2";
+        public static readonly TagClass MGS2 = (TagClass) "MGS2";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,17 +26,28 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 16, Alignment = 4)]
     public class LightVolumeBlockBase : GuerillaBlock
     {
         internal float falloffDistanceFromCameraWorldUnits;
         internal float cutoffDistanceFromCameraWorldUnits;
         internal LightVolumeVolumeBlock[] volumes;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public LightVolumeBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -44,15 +56,17 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<LightVolumeVolumeBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             volumes = ReadBlockArrayData<LightVolumeVolumeBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(falloffDistanceFromCameraWorldUnits);
                 binaryWriter.Write(cutoffDistanceFromCameraWorldUnits);

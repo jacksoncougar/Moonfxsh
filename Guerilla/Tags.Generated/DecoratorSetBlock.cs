@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass DECR = (TagClass)"DECR";
+        public static readonly TagClass DECR = (TagClass) "DECR";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,18 +26,22 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 108, Alignment = 4)]
     public class DecoratorSetBlockBase : GuerillaBlock
     {
         internal DecoratorShaderReferenceBlock[] shaders;
+
         /// <summary>
         /// 0.0 defaults to 0.4
         /// </summary>
         internal float lightingMinScale;
+
         /// <summary>
         /// 0.0 defaults to 2.0
         /// </summary>
         internal float lightingMaxScale;
+
         internal DecoratorClassesBlock[] classes;
         internal DecoratorModelsBlock[] models;
         internal DecoratorModelVerticesBlock[] rawVertices;
@@ -44,11 +49,21 @@ namespace Moonfish.Guerilla.Tags
         internal CachedDataBlock[] cachedData;
         internal GlobalGeometryBlockInfoStructBlock geometrySectionInfo;
         internal byte[] invalidName_;
-        public override int SerializedSize { get { return 108; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 108; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public DecoratorSetBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -65,6 +80,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes(16);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -76,17 +92,19 @@ namespace Moonfish.Guerilla.Tags
             cachedData = ReadBlockArrayData<CachedDataBlock>(binaryReader, blamPointers.Dequeue());
             geometrySectionInfo.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<DecoratorShaderReferenceBlock>(binaryWriter, shaders, nextAddress);
                 binaryWriter.Write(lightingMinScale);
                 binaryWriter.Write(lightingMaxScale);
                 nextAddress = Guerilla.WriteBlockArray<DecoratorClassesBlock>(binaryWriter, classes, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<DecoratorModelsBlock>(binaryWriter, models, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<DecoratorModelVerticesBlock>(binaryWriter, rawVertices, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<DecoratorModelVerticesBlock>(binaryWriter, rawVertices,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<DecoratorModelIndicesBlock>(binaryWriter, indices, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CachedDataBlock>(binaryWriter, cachedData, nextAddress);
                 geometrySectionInfo.Write(binaryWriter);

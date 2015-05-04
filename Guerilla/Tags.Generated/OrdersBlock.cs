@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 124, Alignment = 4)]
     public class OrdersBlockBase : GuerillaBlock
     {
@@ -34,19 +36,29 @@ namespace Moonfish.Guerilla.Tags
         internal SecondarySetTriggerBlock[] secondarySetTrigger;
         internal SpecialMovementBlock[] specialMovement;
         internal OrderEndingBlock[] orderEndings;
-        public override int SerializedSize { get { return 124; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 124; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public OrdersBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
             style = binaryReader.ReadShortBlockIndex1();
             invalidName_ = binaryReader.ReadBytes(2);
-            flags = (Flags)binaryReader.ReadInt32();
-            forceCombatStatus = (ForceCombatStatus)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt32();
+            forceCombatStatus = (ForceCombatStatus) binaryReader.ReadInt16();
             invalidName_0 = binaryReader.ReadBytes(2);
             entryScript = binaryReader.ReadString32();
             invalidName_1 = binaryReader.ReadBytes(2);
@@ -59,6 +71,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<OrderEndingBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -68,29 +81,33 @@ namespace Moonfish.Guerilla.Tags
             specialMovement = ReadBlockArrayData<SpecialMovementBlock>(binaryReader, blamPointers.Dequeue());
             orderEndings = ReadBlockArrayData<OrderEndingBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(style);
                 binaryWriter.Write(invalidName_, 0, 2);
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)forceCombatStatus);
+                binaryWriter.Write((Int32) flags);
+                binaryWriter.Write((Int16) forceCombatStatus);
                 binaryWriter.Write(invalidName_0, 0, 2);
                 binaryWriter.Write(entryScript);
                 binaryWriter.Write(invalidName_1, 0, 2);
                 binaryWriter.Write(followSquad);
                 binaryWriter.Write(followRadius);
                 nextAddress = Guerilla.WriteBlockArray<ZoneSetBlock>(binaryWriter, primaryAreaSet, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SecondaryZoneSetBlock>(binaryWriter, secondaryAreaSet, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SecondarySetTriggerBlock>(binaryWriter, secondarySetTrigger, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SecondaryZoneSetBlock>(binaryWriter, secondaryAreaSet,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SecondarySetTriggerBlock>(binaryWriter, secondarySetTrigger,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SpecialMovementBlock>(binaryWriter, specialMovement, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<OrderEndingBlock>(binaryWriter, orderEndings, nextAddress);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -104,6 +121,7 @@ using(binaryWriter.BaseStream.Pin())
             SuppressCombatUntilEngaged = 128,
             InhibitVehicleUse = 256,
         };
+
         internal enum ForceCombatStatus : short
         {
             NONE = 0,

@@ -4,14 +4,14 @@
     {
         private readonly int _value;
 
-        private ResourcePointer( int value )
+        private ResourcePointer(int value)
         {
             _value = value;
         }
 
-        public static implicit operator ResourcePointer( int value )
+        public static implicit operator ResourcePointer(int value)
         {
-            return new ResourcePointer( value );
+            return new ResourcePointer(value);
         }
 
         public static implicit operator int(ResourcePointer pointer)
@@ -21,12 +21,12 @@
 
         public Halo2.ResourceSource Source
         {
-            get { return ( Halo2.ResourceSource ) ( ( _value & 0xC0000000 ) >> 30 ); }
+            get { return (Halo2.ResourceSource) ((_value & 0xC0000000) >> 30); }
         }
 
         public int Address
         {
-            get { return ( int ) ( _value & ~0xC0000000 ); }
+            get { return (int) (_value & ~0xC0000000); }
         }
     }
 }

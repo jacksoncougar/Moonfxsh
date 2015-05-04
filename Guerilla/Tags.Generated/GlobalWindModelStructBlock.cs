@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 156, Alignment = 4)]
     public class GlobalWindModelStructBlockBase : GuerillaBlock
     {
@@ -41,11 +43,21 @@ namespace Moonfish.Guerilla.Tags
         internal float gravityConstant;
         internal GloalWindPrimitivesBlock[] windPirmitives;
         internal byte[] invalidName_8;
-        public override int SerializedSize { get { return 156; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 156; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public GlobalWindModelStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -73,15 +85,17 @@ namespace Moonfish.Guerilla.Tags
             invalidName_8 = binaryReader.ReadBytes(4);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             windPirmitives = ReadBlockArrayData<GloalWindPrimitivesBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(windTilingScale);
                 binaryWriter.Write(windPrimaryHeadingPitchStrength);
@@ -103,7 +117,8 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(turbulanceRateOfChange);
                 binaryWriter.Write(turbulenceScaleXYZ);
                 binaryWriter.Write(gravityConstant);
-                nextAddress = Guerilla.WriteBlockArray<GloalWindPrimitivesBlock>(binaryWriter, windPirmitives, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GloalWindPrimitivesBlock>(binaryWriter, windPirmitives,
+                    nextAddress);
                 binaryWriter.Write(invalidName_8, 0, 4);
                 return nextAddress;
             }

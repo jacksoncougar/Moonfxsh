@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 40, Alignment = 4)]
     public class GlobalGeometrySectionInfoStructBlockBase : GuerillaBlock
     {
@@ -38,11 +40,21 @@ namespace Moonfish.Guerilla.Tags
         internal short softwarePlaneCount;
         internal short totalSubpartCont;
         internal SectionLightingFlags sectionLightingFlags;
-        public override int SerializedSize { get { return 40; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 40; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public GlobalGeometrySectionInfoStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -57,25 +69,27 @@ namespace Moonfish.Guerilla.Tags
             opaqueMaxNodesVertex = binaryReader.ReadByte();
             transparentMaxNodesVertex = binaryReader.ReadByte();
             shadowCastingRigidTriangleCount = binaryReader.ReadInt16();
-            geometryClassification = (GeometryClassification)binaryReader.ReadInt16();
-            geometryCompressionFlags = (GeometryCompressionFlags)binaryReader.ReadInt16();
+            geometryClassification = (GeometryClassification) binaryReader.ReadInt16();
+            geometryCompressionFlags = (GeometryCompressionFlags) binaryReader.ReadInt16();
             blamPointers.Enqueue(ReadBlockArrayPointer<GlobalGeometryCompressionInfoBlock>(binaryReader));
             hardwareNodeCount = binaryReader.ReadByte();
             nodeMapSize = binaryReader.ReadByte();
             softwarePlaneCount = binaryReader.ReadInt16();
             totalSubpartCont = binaryReader.ReadInt16();
-            sectionLightingFlags = (SectionLightingFlags)binaryReader.ReadInt16();
+            sectionLightingFlags = (SectionLightingFlags) binaryReader.ReadInt16();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             eMPTYSTRING = ReadBlockArrayData<GlobalGeometryCompressionInfoBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(totalVertexCount);
                 binaryWriter.Write(totalTriangleCount);
@@ -88,17 +102,19 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(opaqueMaxNodesVertex);
                 binaryWriter.Write(transparentMaxNodesVertex);
                 binaryWriter.Write(shadowCastingRigidTriangleCount);
-                binaryWriter.Write((Int16)geometryClassification);
-                binaryWriter.Write((Int16)geometryCompressionFlags);
-                nextAddress = Guerilla.WriteBlockArray<GlobalGeometryCompressionInfoBlock>(binaryWriter, eMPTYSTRING, nextAddress);
+                binaryWriter.Write((Int16) geometryClassification);
+                binaryWriter.Write((Int16) geometryCompressionFlags);
+                nextAddress = Guerilla.WriteBlockArray<GlobalGeometryCompressionInfoBlock>(binaryWriter, eMPTYSTRING,
+                    nextAddress);
                 binaryWriter.Write(hardwareNodeCount);
                 binaryWriter.Write(nodeMapSize);
                 binaryWriter.Write(softwarePlaneCount);
                 binaryWriter.Write(totalSubpartCont);
-                binaryWriter.Write((Int16)sectionLightingFlags);
+                binaryWriter.Write((Int16) sectionLightingFlags);
                 return nextAddress;
             }
         }
+
         internal enum GeometryClassification : short
         {
             Worldspace = 0,
@@ -107,6 +123,7 @@ using(binaryWriter.BaseStream.Pin())
             Skinned = 3,
             UnsupportedReimport = 4,
         };
+
         [FlagsAttribute]
         internal enum GeometryCompressionFlags : short
         {
@@ -114,6 +131,7 @@ using(binaryWriter.BaseStream.Pin())
             CompressedTexcoord = 2,
             CompressedSecondaryTexcoord = 4,
         };
+
         [FlagsAttribute]
         internal enum SectionLightingFlags : short
         {

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 92, Alignment = 4)]
     public class MagazinesBase : GuerillaBlock
     {
@@ -25,36 +27,46 @@ namespace Moonfish.Guerilla.Tags
         internal short roundsTotalMaximum;
         internal short roundsLoadedMaximum;
         internal byte[] invalidName_;
+
         /// <summary>
         /// the length of time it takes to load a single magazine into the weapon
         /// </summary>
         internal float reloadTimeSeconds;
+
         internal short roundsReloaded;
         internal byte[] invalidName_0;
+
         /// <summary>
         /// the length of time it takes to chamber the next round
         /// </summary>
         internal float chamberTimeSeconds;
+
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference reloadingEffect;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference reloadingDamageEffect;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference chamberingEffect;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference chamberingDamageEffect;
+        [TagReference("null")] internal Moonfish.Tags.TagReference reloadingEffect;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference reloadingDamageEffect;
+        [TagReference("null")] internal Moonfish.Tags.TagReference chamberingEffect;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference chamberingDamageEffect;
         internal MagazineObjects[] magazines;
-        public override int SerializedSize { get { return 92; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 92; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public MagazinesBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             roundsRechargedPerSecond = binaryReader.ReadInt16();
             roundsTotalInitial = binaryReader.ReadInt16();
             roundsTotalMaximum = binaryReader.ReadInt16();
@@ -73,17 +85,19 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<MagazineObjects>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             magazines = ReadBlockArrayData<MagazineObjects>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int32) flags);
                 binaryWriter.Write(roundsRechargedPerSecond);
                 binaryWriter.Write(roundsTotalInitial);
                 binaryWriter.Write(roundsTotalMaximum);
@@ -103,6 +117,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

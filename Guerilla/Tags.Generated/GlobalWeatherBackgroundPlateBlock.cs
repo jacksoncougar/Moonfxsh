@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,15 +17,13 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 936, Alignment = 4)]
     public class GlobalWeatherBackgroundPlateBlockBase : GuerillaBlock
     {
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference texture0;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference texture1;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference texture2;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference texture0;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference texture1;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference texture2;
         internal float platePositions0;
         internal float platePositions1;
         internal float platePositions2;
@@ -52,11 +51,21 @@ namespace Moonfish.Guerilla.Tags
         internal float mass2;
         internal float mass3;
         internal byte[] invalidName_;
-        public override int SerializedSize { get { return 936; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 936; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public GlobalWeatherBackgroundPlateBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -82,7 +91,7 @@ namespace Moonfish.Guerilla.Tags
             opacity0 = binaryReader.ReadSingle();
             opacity1 = binaryReader.ReadSingle();
             opacity2 = binaryReader.ReadSingle();
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             tintColor0 = binaryReader.ReadColorR8G8B8();
             tintColor1 = binaryReader.ReadColorR8G8B8();
             tintColor2 = binaryReader.ReadColorR8G8B8();
@@ -92,14 +101,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes(736);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(texture0);
                 binaryWriter.Write(texture1);
@@ -123,7 +134,7 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(opacity0);
                 binaryWriter.Write(opacity1);
                 binaryWriter.Write(opacity2);
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int32) flags);
                 binaryWriter.Write(tintColor0);
                 binaryWriter.Write(tintColor1);
                 binaryWriter.Write(tintColor2);
@@ -134,6 +145,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

@@ -4,13 +4,13 @@ using Moonfish.Guerilla;
 
 namespace Moonfish.Tags
 {
-    [GuerillaType( MoonfishFieldType.FieldWordBlockFlags )]
-    [StructLayout( LayoutKind.Sequential, Size = 2 )]
+    [GuerillaType(MoonfishFieldType.FieldWordBlockFlags)]
+    [StructLayout(LayoutKind.Sequential, Size = 2)]
     public struct BlockFlags16
     {
         public short flags;
 
-        public BlockFlags16( short flags )
+        public BlockFlags16(short flags)
         {
             this.flags = flags;
         }

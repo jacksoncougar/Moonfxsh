@@ -20,43 +20,43 @@ namespace Moonfish.Guerilla.Reflection
             Int,
         }
 
-        public EnumInfo( )
+        public EnumInfo()
         {
-            Attributes = new List<AttributeInfo>( );
-            ValueNames = new List<GuerillaName>( );
+            Attributes = new List<AttributeInfo>();
+            ValueNames = new List<GuerillaName>();
         }
 
-        public void Format( )
+        public void Format()
         {
-            var tokenDictionary = new TokenDictionary( );
-            for ( int i = 0; i < ValueNames.Count; i++ )
+            var tokenDictionary = new TokenDictionary();
+            for (int i = 0; i < ValueNames.Count; i++)
             {
-                ValueNames[ i ] = tokenDictionary.GenerateValidToken( GuerillaCs.ToTypeName( ValueNames[ i ] ) );
+                ValueNames[i] = tokenDictionary.GenerateValidToken(GuerillaCs.ToTypeName(ValueNames[i]));
             }
         }
 
-        public override string ToString( )
+        public override string ToString()
         {
-            var stringBuilder = new StringBuilder( );
-            foreach ( var attribute in Attributes )
+            var stringBuilder = new StringBuilder();
+            foreach (var attribute in Attributes)
             {
-                stringBuilder.AppendLine( attribute.ToString( ) );
+                stringBuilder.AppendLine(attribute.ToString());
             }
-            stringBuilder.AppendLine( string.Format( "{0} enum {1} : {2}",
-                AccessModifiers.ToTokenString(  ), Value.Name,
-                BaseType.ToString( ).ToLowerInvariant( ) ).Trim( ) );
-            stringBuilder.AppendLine( "{" );
+            stringBuilder.AppendLine(string.Format("{0} enum {1} : {2}",
+                AccessModifiers.ToTokenString(), Value.Name,
+                BaseType.ToString().ToLowerInvariant()).Trim());
+            stringBuilder.AppendLine("{");
 
-            var isFlags = Attributes.Any( x => x.AttributeType == typeof ( FlagsAttribute ) );
+            var isFlags = Attributes.Any(x => x.AttributeType == typeof (FlagsAttribute));
             var value = isFlags ? 1 : 0;
-            foreach ( var item in ValueNames )
+            foreach (var item in ValueNames)
             {
-                if ( item.HasDescription ) stringBuilder.AppendSummary( item.Description );
-                stringBuilder.AppendLine( string.Format( "{0} = {1},", GuerillaCs.ToTypeName( item.Name ), value ) );
+                if (item.HasDescription) stringBuilder.AppendSummary(item.Description);
+                stringBuilder.AppendLine(string.Format("{0} = {1},", GuerillaCs.ToTypeName(item.Name), value));
                 value = isFlags ? value << 1 : ++value;
             }
-            stringBuilder.AppendLine( "};" );
-            return stringBuilder.ToString( ).Trim( );
+            stringBuilder.AppendLine("};");
+            return stringBuilder.ToString().Trim();
         }
     }
 }

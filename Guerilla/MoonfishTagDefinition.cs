@@ -14,29 +14,29 @@ namespace Moonfish.Guerilla
 
         private const int DefaultMaximumElementCount = short.MaxValue;
 
-        private MoonfishTagDefinition( )
+        private MoonfishTagDefinition()
         {
             Alignment = 4;
-            Fields = new List<MoonfishTagField>( 0 );
+            Fields = new List<MoonfishTagField>(0);
             MaximumElementCount = DefaultMaximumElementCount;
         }
 
-        public MoonfishTagDefinition( string displayName, IEnumerable<MoonfishTagField> fieldList )
-            : this( )
+        public MoonfishTagDefinition(string displayName, IEnumerable<MoonfishTagField> fieldList)
+            : this()
         {
             DisplayName = displayName;
-            using ( var cSharpCode = new CSharpCodeProvider( ) )
+            using (var cSharpCode = new CSharpCodeProvider())
             {
                 var token = displayName;
-                token = new string( token.ToCharArray( ).Where( char.IsLetterOrDigit ).ToArray( ) );
-                token = cSharpCode.CreateValidIdentifier( token );
+                token = new string(token.ToCharArray().Where(char.IsLetterOrDigit).ToArray());
+                token = cSharpCode.CreateValidIdentifier(token);
                 Name = token;
             }
-            Fields = new List<MoonfishTagField>( fieldList );
+            Fields = new List<MoonfishTagField>(fieldList);
         }
 
-        public MoonfishTagDefinition( TagBlockDefinition definition )
-            : this( )
+        public MoonfishTagDefinition(TagBlockDefinition definition)
+            : this()
         {
             Name = definition.Name;
             DisplayName = definition.DisplayName;
@@ -44,82 +44,82 @@ namespace Moonfish.Guerilla
             Alignment = definition.LatestFieldSet.Alignment;
 
             var definitionFields = definition.LatestFieldSet.Fields;
-            Fields = new List<MoonfishTagField>( definitionFields.Count );
-            foreach ( var field in definitionFields )
+            Fields = new List<MoonfishTagField>(definitionFields.Count);
+            foreach (var field in definitionFields)
             {
-                var moonfishField = new MoonfishTagField( ( MoonfishFieldType ) field.type, field.Name );
+                var moonfishField = new MoonfishTagField((MoonfishFieldType) field.type, field.Name);
 
-                moonfishField.AssignCount( field.definition );
+                moonfishField.AssignCount(field.definition);
 
-                if ( field.Definition is TagBlockDefinition )
+                if (field.Definition is TagBlockDefinition)
                 {
-                    var fieldDefinition = ( TagBlockDefinition ) field.Definition;
-                    moonfishField.AssignDefinition( new MoonfishTagDefinition( fieldDefinition ) );
+                    var fieldDefinition = (TagBlockDefinition) field.Definition;
+                    moonfishField.AssignDefinition(new MoonfishTagDefinition(fieldDefinition));
                 }
-                if ( field.Definition is enum_definition )
+                if (field.Definition is enum_definition)
                 {
-                    var fieldDefinition = ( enum_definition ) field.Definition;
-                    moonfishField.AssignDefinition( new MoonfishTagEnumDefinition( fieldDefinition ) );
+                    var fieldDefinition = (enum_definition) field.Definition;
+                    moonfishField.AssignDefinition(new MoonfishTagEnumDefinition(fieldDefinition));
                 }
-                if ( field.Definition is tag_struct_definition )
+                if (field.Definition is tag_struct_definition)
                 {
-                    var fieldDefinition = ( tag_struct_definition ) field.Definition;
-                    moonfishField.AssignDefinition( new MoonfishTagStruct( fieldDefinition ) );
+                    var fieldDefinition = (tag_struct_definition) field.Definition;
+                    moonfishField.AssignDefinition(new MoonfishTagStruct(fieldDefinition));
                 }
-                if ( field.Definition is tag_data_definition )
+                if (field.Definition is tag_data_definition)
                 {
-                    var fieldDefinition = ( tag_data_definition ) field.Definition;
-                    moonfishField.AssignDefinition( new MoonfishTagDataDefinition( fieldDefinition ) );
+                    var fieldDefinition = (tag_data_definition) field.Definition;
+                    moonfishField.AssignDefinition(new MoonfishTagDataDefinition(fieldDefinition));
                 }
-                if ( field.Definition is tag_reference_definition )
+                if (field.Definition is tag_reference_definition)
                 {
-                    var fieldDefinition = ( tag_reference_definition ) field.Definition;
-                    moonfishField.AssignDefinition( new MoonfishTagReferenceDefinition( fieldDefinition ) );
+                    var fieldDefinition = (tag_reference_definition) field.Definition;
+                    moonfishField.AssignDefinition(new MoonfishTagReferenceDefinition(fieldDefinition));
                 }
 
-                Fields.Add( moonfishField );
+                Fields.Add(moonfishField);
             }
-            Fields = new List<MoonfishTagField>( Guerilla.PostProcess( Name, Fields ) );
+            Fields = new List<MoonfishTagField>(Guerilla.PostProcess(Name, Fields));
         }
 
-        public int CalculateSizeOfFieldSet( )
+        public int CalculateSizeOfFieldSet()
         {
-            return CalculateSizeOfFieldSet( Fields );
+            return CalculateSizeOfFieldSet(Fields);
         }
 
-        public static  int CalculateOffsetOfField(List<MoonfishTagField>fields, MoonfishTagField field )
+        public static int CalculateOffsetOfField(List<MoonfishTagField> fields, MoonfishTagField field)
         {
             var count = fields.IndexOf(field);
             return CalculateSizeOfFieldSet(fields.GetRange(0, count));
         }
 
-        public static int CalculateSizeOfField( MoonfishTagField field )
+        public static int CalculateSizeOfField(MoonfishTagField field)
         {
-            switch ( field.Type )
+            switch (field.Type)
             {
                 case MoonfishFieldType.FieldStruct:
                 {
-                    var struct_definition = ( MoonfishTagStruct ) field.Definition;
+                    var struct_definition = (MoonfishTagStruct) field.Definition;
                     var blockDefinition = struct_definition.Definition;
 
-                    return CalculateSizeOfFieldSet( blockDefinition.Fields );
+                    return CalculateSizeOfFieldSet(blockDefinition.Fields);
                 }
                 case MoonfishFieldType.FieldSkip:
                 case MoonfishFieldType.FieldPad:
                     return field.Count;
                 default:
-                    return field.Type.GetFieldSize( );
+                    return field.Type.GetFieldSize();
             }
         }
 
-        public static int CalculateSizeOfFieldSet( IReadOnlyList<MoonfishTagField> fields )
+        public static int CalculateSizeOfFieldSet(IReadOnlyList<MoonfishTagField> fields)
         {
             var totalFieldSetSize = 0;
-            for ( var i = 0; i < fields.Count; ++i )
+            for (var i = 0; i < fields.Count; ++i)
             {
-                var field = fields[ i ];
-                var fieldSize = CalculateSizeOfField( field );
-                if ( field.Type == MoonfishFieldType.FieldArrayStart )
+                var field = fields[i];
+                var fieldSize = CalculateSizeOfField(field);
+                if (field.Type == MoonfishFieldType.FieldArrayStart)
                 {
                     fieldSize = ProcessArrayField(fields, ref i);
                 }
@@ -128,21 +128,21 @@ namespace Moonfish.Guerilla
             return totalFieldSetSize;
         }
 
-        private static int ProcessArrayField( IReadOnlyList<MoonfishTagField> fields, ref int i )
+        private static int ProcessArrayField(IReadOnlyList<MoonfishTagField> fields, ref int i)
         {
-            var field = fields[ i ];
+            var field = fields[i];
             var arrayCount = field.Count;
             var elementSize = 0;
             do
             {
-                field = fields[ ++i ];
-                if ( field.Type == MoonfishFieldType.FieldArrayStart )
+                field = fields[++i];
+                if (field.Type == MoonfishFieldType.FieldArrayStart)
                 {
                     elementSize += ProcessArrayField(fields, ref i);
                 }
-                else elementSize += CalculateSizeOfField( field );
-            } while ( field.Type != MoonfishFieldType.FieldArrayEnd );
-            return elementSize * arrayCount;
+                else elementSize += CalculateSizeOfField(field);
+            } while (field.Type != MoonfishFieldType.FieldArrayEnd);
+            return elementSize*arrayCount;
         }
     }
 }

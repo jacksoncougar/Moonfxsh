@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 144, Alignment = 16)]
     public class RigidBodiesBlockBase : GuerillaBlock
     {
@@ -29,18 +31,22 @@ namespace Moonfish.Guerilla.Tags
         internal MotionType motionType;
         internal Moonfish.Tags.ShortBlockIndex1 noPhantomPowerAlt;
         internal Size size;
+
         /// <summary>
         /// 0.0 defaults to 1.0
         /// </summary>
         internal float inertiaTensorScale;
+
         /// <summary>
         /// this goes from 0-10 (10 is really, really high)
         /// </summary>
         internal float linearDamping;
+
         /// <summary>
         /// this goes from 0-10 (10 is really, really high)
         /// </summary>
         internal float angularDamping;
+
         internal OpenTK.Vector3 centerOffMassOffset;
         internal ShapeType shapeType;
         internal Moonfish.Tags.ShortBlockIndex2 shape;
@@ -53,16 +59,28 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal OpenTK.Vector3 intertiaTensorZ;
         internal byte[] invalidName_3;
+
         /// <summary>
         /// the bounding sphere for this rigid body will be outset by this much
         /// </summary>
         internal float boundingSpherePad;
+
         internal byte[] invalidName_4;
-        public override int SerializedSize { get { return 144; } }
-        public override int Alignment { get { return 16; } }
+
+        public override int SerializedSize
+        {
+            get { return 144; }
+        }
+
+        public override int Alignment
+        {
+            get { return 16; }
+        }
+
         public RigidBodiesBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -72,15 +90,15 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes(2);
             boudingSphereOffset = binaryReader.ReadVector3();
             boundingSphereRadius = binaryReader.ReadSingle();
-            flags = (Flags)binaryReader.ReadInt16();
-            motionType = (MotionType)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
+            motionType = (MotionType) binaryReader.ReadInt16();
             noPhantomPowerAlt = binaryReader.ReadShortBlockIndex1();
-            size = (Size)binaryReader.ReadInt16();
+            size = (Size) binaryReader.ReadInt16();
             inertiaTensorScale = binaryReader.ReadSingle();
             linearDamping = binaryReader.ReadSingle();
             angularDamping = binaryReader.ReadSingle();
             centerOffMassOffset = binaryReader.ReadVector3();
-            shapeType = (ShapeType)binaryReader.ReadInt16();
+            shapeType = (ShapeType) binaryReader.ReadInt16();
             shape = binaryReader.ReadShortBlockIndex2();
             massKg = binaryReader.ReadSingle();
             centerOfMass = binaryReader.ReadVector3();
@@ -95,14 +113,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_4 = binaryReader.ReadBytes(12);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(node);
                 binaryWriter.Write(region);
@@ -110,15 +130,15 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(boudingSphereOffset);
                 binaryWriter.Write(boundingSphereRadius);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Int16)motionType);
+                binaryWriter.Write((Int16) flags);
+                binaryWriter.Write((Int16) motionType);
                 binaryWriter.Write(noPhantomPowerAlt);
-                binaryWriter.Write((Int16)size);
+                binaryWriter.Write((Int16) size);
                 binaryWriter.Write(inertiaTensorScale);
                 binaryWriter.Write(linearDamping);
                 binaryWriter.Write(angularDamping);
                 binaryWriter.Write(centerOffMassOffset);
-                binaryWriter.Write((Int16)shapeType);
+                binaryWriter.Write((Int16) shapeType);
                 binaryWriter.Write(shape);
                 binaryWriter.Write(massKg);
                 binaryWriter.Write(centerOfMass);
@@ -134,16 +154,22 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {
             NoCollisionsWSelf = 1,
             OnlyCollideWEnv = 2,
             DisableEffectsThisRigidBodyWillNotGenerateImpactEffectsUnlessItHitsAnotherDynamicRigidBodyThatDoes = 4,
-            DoesNotInteractWEnvironmentSetThisFlagIfThisRigidBodiesWontTouchTheEnvironmentThisAllowsUsToOpenUpSomeOptimizations = 8,
-            BestEarlyMoverBodyIfYouHaveEitherOfTheEarlyMoverFlagsSetInTheObjectDefinitoinThisBodyWillBeChoosenAsTheOneToMakeEveryThingLocalToOtherwiseIPick = 16,
+
+            DoesNotInteractWEnvironmentSetThisFlagIfThisRigidBodiesWontTouchTheEnvironmentThisAllowsUsToOpenUpSomeOptimizations
+                = 8,
+
+            BestEarlyMoverBodyIfYouHaveEitherOfTheEarlyMoverFlagsSetInTheObjectDefinitoinThisBodyWillBeChoosenAsTheOneToMakeEveryThingLocalToOtherwiseIPick
+                = 16,
             HasNoPhantomPowerVersionDontCheckThisFlagWithoutTalkingToEamon = 32,
         };
+
         internal enum MotionType : short
         {
             Sphere = 0,
@@ -153,6 +179,7 @@ using(binaryWriter.BaseStream.Pin())
             Keyframed = 4,
             Fixed = 5,
         };
+
         internal enum Size : short
         {
             Default = 0,
@@ -163,6 +190,7 @@ using(binaryWriter.BaseStream.Pin())
             Huge = 5,
             ExtraHuge = 6,
         };
+
         internal enum ShapeType : short
         {
             Sphere = 0,

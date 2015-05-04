@@ -5,23 +5,23 @@ namespace Moonfish.Graphics
 {
     public class PanTrack : Track
     {
-        public PanTrack( Track track )
-            : base( track )
+        public PanTrack(Track track)
+            : base(track)
         {
         }
 
-        public void Pan( float x, float y )
+        public void Pan(float x, float y)
         {
             var worldMatrix = this.WorldMatrix;
             var rightVector = worldMatrix.Row0.Xyz;
             var upVector = worldMatrix.Row1.Xyz;
-            this.Position -= upVector * y;
-            this.Position -= rightVector * x;
+            this.Position -= upVector*y;
+            this.Position -= rightVector*x;
         }
 
-        public override void Update( params float[] input )
+        public override void Update(params float[] input)
         {
-            if ( input.Length >= 2 ) Pan( input[ 0 ], input[ 1 ] );
+            if (input.Length >= 2) Pan(input[0], input[1]);
         }
     }
 
@@ -30,24 +30,24 @@ namespace Moonfish.Graphics
         public float Delta { get; set; }
         public Range ZoomRange { get; set; }
 
-        public ZoomTrack( Track track )
-            : base( track )
+        public ZoomTrack(Track track)
+            : base(track)
         {
             Delta = 0.2f;
         }
 
-        public void Zoom( float input )
+        public void Zoom(float input)
         {
-            var zoomDisplacement = -this.Forward * input * Delta;
+            var zoomDisplacement = -this.Forward*input*Delta;
             var zoomCoordinate = this.Position + zoomDisplacement;
             Position += zoomDisplacement;
         }
 
-        public override void Update( params float[] input )
+        public override void Update(params float[] input)
         {
-            if ( input.Length == 2 ) Zoom( input[ 0 ] * input[ 1 ] );
-            if ( input.Length == 1 ) Zoom( input[ 0 ] );
-            else if ( input.Length > 0 ) Zoom( input[ 0 ] );
+            if (input.Length == 2) Zoom(input[0]*input[1]);
+            if (input.Length == 1) Zoom(input[0]);
+            else if (input.Length > 0) Zoom(input[0]);
         }
     }
 
@@ -56,54 +56,54 @@ namespace Moonfish.Graphics
         private float azimuth = 0;
         private float polar = 0;
 
-        public OrbitTrack( Track track )
-            : base( track )
+        public OrbitTrack(Track track)
+            : base(track)
         {
         }
 
-        public override void Update( params float[] input )
+        public override void Update(params float[] input)
         {
-            if ( input.Length >= 2 ) ArcRotate( input[ 0 ], input[ 1 ] );
+            if (input.Length >= 2) ArcRotate(input[0], input[1]);
         }
 
-        public void ArcRotate( float polarIncrement, float azimuthIncrement )
+        public void ArcRotate(float polarIncrement, float azimuthIncrement)
         {
-            azimuth += OpenTK.MathHelper.DegreesToRadians( azimuthIncrement );
-            polar += OpenTK.MathHelper.DegreesToRadians( polarIncrement );
+            azimuth += OpenTK.MathHelper.DegreesToRadians(azimuthIncrement);
+            polar += OpenTK.MathHelper.DegreesToRadians(polarIncrement);
 
             var worldMatrix = this.WorldMatrix;
             var upVector = worldMatrix.Row1.Xyz;
 
-            Rotation = Quaternion.FromAxisAngle( Vector3.UnitZ, polar );
-            Rotation *= Quaternion.FromAxisAngle( Vector3.UnitX, azimuth );
+            Rotation = Quaternion.FromAxisAngle(Vector3.UnitZ, polar);
+            Rotation *= Quaternion.FromAxisAngle(Vector3.UnitX, azimuth);
         }
 
         public override Matrix4 WorldMatrix
         {
             get
             {
-                var parentMatrix = ( Parent == null ? Matrix4.Identity : Parent.WorldMatrix );
+                var parentMatrix = (Parent == null ? Matrix4.Identity : Parent.WorldMatrix);
 
-                var translation_matrix = Matrix4.CreateTranslation( Position );
-                var rotation_matrix = Matrix4.CreateFromQuaternion( Rotation );
-                var scale_matrix = Matrix4.CreateScale( Scale );
+                var translation_matrix = Matrix4.CreateTranslation(Position);
+                var rotation_matrix = Matrix4.CreateFromQuaternion(Rotation);
+                var scale_matrix = Matrix4.CreateScale(Scale);
 
-                var transformMatrix = rotation_matrix * translation_matrix * scale_matrix;
+                var transformMatrix = rotation_matrix*translation_matrix*scale_matrix;
 
-                return parentMatrix * transformMatrix;
+                return parentMatrix*transformMatrix;
             }
         }
     }
 
     public class IdentityTrack : Track
     {
-        public IdentityTrack( )
+        public IdentityTrack()
         {
             Rotation = Quaternion.Identity;
-            Right = new Vector3( 1, 0, 0 );
-            Up = new Vector3( 0, 1, 0 );
-            Forward = new Vector3( 0, 0, 1 );
-            Position = new Vector3( 0, 0, 5 );
+            Right = new Vector3(1, 0, 0);
+            Up = new Vector3(0, 1, 0);
+            Forward = new Vector3(0, 0, 1);
+            Position = new Vector3(0, 0, 5);
         }
     }
 
@@ -117,19 +117,19 @@ namespace Moonfish.Graphics
 
         public override Matrix4 WorldMatrix
         {
-            get { return ( Parent == null ? Matrix4.Identity : Parent.WorldMatrix ) * base.WorldMatrix; }
+            get { return (Parent == null ? Matrix4.Identity : Parent.WorldMatrix)*base.WorldMatrix; }
         }
 
-        public Track( )
+        public Track()
         {
             Rotation = Quaternion.Identity;
-            Right = new Vector3( 1, 0, 0 );
-            Up = new Vector3( 0, 1, 0 );
-            Forward = new Vector3( 0, 0, 1 );
-            Position = new Vector3( 0, 0, 0 );
+            Right = new Vector3(1, 0, 0);
+            Up = new Vector3(0, 1, 0);
+            Forward = new Vector3(0, 0, 1);
+            Position = new Vector3(0, 0, 0);
         }
 
-        public Track( Track copy )
+        public Track(Track copy)
         {
             this.Position = copy.Position;
             this.Rotation = copy.Rotation;
@@ -138,7 +138,7 @@ namespace Moonfish.Graphics
             this.Forward = copy.Forward;
         }
 
-        public virtual void Update( params float[] input )
+        public virtual void Update(params float[] input)
         {
             return;
         }

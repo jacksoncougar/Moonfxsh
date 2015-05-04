@@ -5,10 +5,10 @@ namespace Moonfish.Guerilla.Preprocess
 {
     partial class ModelVariantRegionBlockBase
     {
-        [GuerillaPreProcessMethod( BlockName = "model_variant_region_block" )]
-        protected static void GuerillaPreProcessMethod( BinaryReader binaryReader, IList<tag_field> fields )
+        [GuerillaPreProcessMethod(BlockName = "model_variant_region_block")]
+        protected static void GuerillaPreProcessMethod(BinaryReader binaryReader, IList<tag_field> fields)
         {
-            ( ( enum_definition ) fields[ 5 ].Definition ).Options = new List<string>( new[]
+            ((enum_definition) fields[5].Definition).Options = new List<string>(new[]
             {
                 "no sorting",
                 "minus5#Closest",
@@ -22,7 +22,7 @@ namespace Moonfish.Guerilla.Preprocess
                 "plus3",
                 "plus4",
                 "plus5#Farthest",
-            } );
+            });
         }
     }
 }

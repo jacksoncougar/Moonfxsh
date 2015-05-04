@@ -8,8 +8,8 @@ using Moonfish.Guerilla;
 
 namespace Moonfish.Tags
 {
-    [GuerillaType( MoonfishFieldType.FieldTag )]
-    [StructLayout( LayoutKind.Sequential, Size = 4 )]
+    [GuerillaType(MoonfishFieldType.FieldTag)]
+    [StructLayout(LayoutKind.Sequential, Size = 4)]
     public partial struct TagClass : IEquatable<TagClass>, IEquatable<string>
     {
         private readonly byte a;
@@ -17,25 +17,25 @@ namespace Moonfish.Tags
         private readonly byte c;
         private readonly byte d;
 
-        public TagClass( params byte[] bytes )
+        public TagClass(params byte[] bytes)
         {
-            a = default( byte );
-            b = default( byte );
-            c = default( byte );
-            d = default( byte );
-            switch ( bytes.Length )
+            a = default(byte);
+            b = default(byte);
+            c = default(byte);
+            d = default(byte);
+            switch (bytes.Length)
             {
                 case 4:
-                    d = bytes[ 3 ];
+                    d = bytes[3];
                     goto case 3;
                 case 3:
-                    c = bytes[ 2 ];
+                    c = bytes[2];
                     goto case 2;
                 case 2:
-                    b = bytes[ 1 ];
+                    b = bytes[1];
                     goto case 1;
                 case 1:
-                    a = bytes[ 0 ];
+                    a = bytes[0];
                     break;
                 case 0: // Check if there are no bytes passed
                     break;
@@ -44,78 +44,78 @@ namespace Moonfish.Tags
             }
         }
 
-        public TagClass( int value )
-            : this( BitConverter.GetBytes( value ) )
+        public TagClass(int value)
+            : this(BitConverter.GetBytes(value))
         {
         }
-        
+
         public TagClass(string value)
         {
-            this = ( TagClass ) value;
+            this = (TagClass) value;
         }
 
-        public static explicit operator TagClass( string str )
+        public static explicit operator TagClass(string str)
         {
-            return new TagClass( Encoding.UTF8.GetBytes( new string( str.ToCharArray( ).Reverse( ).ToArray( ) ) ) );
+            return new TagClass(Encoding.UTF8.GetBytes(new string(str.ToCharArray().Reverse().ToArray())));
         }
 
-        public static explicit operator string( TagClass tagclass )
+        public static explicit operator string(TagClass tagclass)
         {
-            return tagclass.ToString( );
+            return tagclass.ToString();
         }
 
-        public static explicit operator TagClass( int integer )
+        public static explicit operator TagClass(int integer)
         {
-            return new TagClass( integer );
+            return new TagClass(integer);
         }
 
-        public static explicit operator int( TagClass type )
+        public static explicit operator int(TagClass type)
         {
-            return BitConverter.ToInt32( new[] {type.a, type.b, type.c, type.d}, 0 );
+            return BitConverter.ToInt32(new[] {type.a, type.b, type.c, type.d}, 0);
         }
 
-        public static bool operator ==( TagClass object1, TagClass object2 )
+        public static bool operator ==(TagClass object1, TagClass object2)
         {
-            return ( int ) object1 == ( int ) object2;
+            return (int) object1 == (int) object2;
         }
 
-        public static bool operator !=( TagClass object1, TagClass object2 )
+        public static bool operator !=(TagClass object1, TagClass object2)
         {
-            return ( int ) object1 != ( int ) object2;
+            return (int) object1 != (int) object2;
         }
 
-        public override bool Equals( object obj )
+        public override bool Equals(object obj)
         {
-            if ( !( obj is TagClass ) ) return false;
-            return this == ( TagClass ) obj;
+            if (!(obj is TagClass)) return false;
+            return this == (TagClass) obj;
         }
 
-        public override int GetHashCode( )
+        public override int GetHashCode()
         {
-            var i = ( int ) this;
-            return i.GetHashCode( );
+            var i = (int) this;
+            return i.GetHashCode();
         }
 
-        public override string ToString( )
+        public override string ToString()
         {
-            if ( a == 0xFF && b == 0xFF && c == 0xFF && d == 0xFF ) return "null";
-            return Encoding.UTF8.GetString( new[] {d, c, b, a} );
+            if (a == 0xFF && b == 0xFF && c == 0xFF && d == 0xFF) return "null";
+            return Encoding.UTF8.GetString(new[] {d, c, b, a});
         }
 
-        bool IEquatable<TagClass>.Equals( TagClass other )
+        bool IEquatable<TagClass>.Equals(TagClass other)
         {
             return this == other;
         }
 
-        bool IEquatable<string>.Equals( string other )
+        bool IEquatable<string>.Equals(string other)
         {
-            return this == ( TagClass ) other;
+            return this == (TagClass) other;
         }
 
-        public string ToTokenString( )
+        public string ToTokenString()
         {
-            var value = ToString( );
-            switch ( value )
+            var value = ToString();
+            switch (value)
             {
                 case "$#!+":
                     return "shit";
@@ -123,10 +123,10 @@ namespace Moonfish.Tags
                     return "cmnt";
             }
 
-            var chars = value.Where( x => ( char.IsLetterOrDigit( x ) ) ).ToArray( );
-            return new string( chars );
+            var chars = value.Where(x => (char.IsLetterOrDigit(x))).ToArray();
+            return new string(chars);
         }
 
-        public static readonly TagClass Null = new TagClass( 0xFF, 0xFF, 0xFF, 0xFF );
+        public static readonly TagClass Null = new TagClass(0xFF, 0xFF, 0xFF, 0xFF);
     }
 }

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,43 +17,40 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 116, Alignment = 4)]
     public class MaterialsSweetenersStructBlockBase : GuerillaBlock
     {
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundSweetenerSmall;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundSweetenerMedium;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundSweetenerLarge;
-        [TagReference("lsnd")]
-        internal Moonfish.Tags.TagReference soundSweetenerRolling;
-        [TagReference("lsnd")]
-        internal Moonfish.Tags.TagReference soundSweetenerGrinding;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundSweetenerMelee;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference invalidName_;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference effectSweetenerSmall;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference effectSweetenerMedium;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference effectSweetenerLarge;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference effectSweetenerRolling;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference effectSweetenerGrinding;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference effectSweetenerMelee;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference invalidName_0;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundSweetenerSmall;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundSweetenerMedium;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundSweetenerLarge;
+        [TagReference("lsnd")] internal Moonfish.Tags.TagReference soundSweetenerRolling;
+        [TagReference("lsnd")] internal Moonfish.Tags.TagReference soundSweetenerGrinding;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundSweetenerMelee;
+        [TagReference("null")] internal Moonfish.Tags.TagReference invalidName_;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference effectSweetenerSmall;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference effectSweetenerMedium;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference effectSweetenerLarge;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference effectSweetenerRolling;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference effectSweetenerGrinding;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference effectSweetenerMelee;
+        [TagReference("null")] internal Moonfish.Tags.TagReference invalidName_0;
         internal SweetenerInheritanceFlags sweetenerInheritanceFlags;
-        public override int SerializedSize { get { return 116; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 116; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public MaterialsSweetenersStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -70,17 +68,19 @@ namespace Moonfish.Guerilla.Tags
             effectSweetenerGrinding = binaryReader.ReadTagReference();
             effectSweetenerMelee = binaryReader.ReadTagReference();
             invalidName_0 = binaryReader.ReadTagReference();
-            sweetenerInheritanceFlags = (SweetenerInheritanceFlags)binaryReader.ReadInt32();
+            sweetenerInheritanceFlags = (SweetenerInheritanceFlags) binaryReader.ReadInt32();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(soundSweetenerSmall);
                 binaryWriter.Write(soundSweetenerMedium);
@@ -96,10 +96,11 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(effectSweetenerGrinding);
                 binaryWriter.Write(effectSweetenerMelee);
                 binaryWriter.Write(invalidName_0);
-                binaryWriter.Write((Int32)sweetenerInheritanceFlags);
+                binaryWriter.Write((Int32) sweetenerInheritanceFlags);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum SweetenerInheritanceFlags : int
         {

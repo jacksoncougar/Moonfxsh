@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class NewHudDashlightDataStructBlockBase : GuerillaBlock
     {
@@ -23,19 +25,31 @@ namespace Moonfish.Guerilla.Tags
         /// the cutoff for showing the reload dashlight
         /// </summary>
         internal short lowClipCutoff;
+
         /// <summary>
         /// the cutoff for showing the low ammo dashlight
         /// </summary>
         internal short lowAmmoCutoff;
+
         /// <summary>
         /// the ageCutoff for showing the low battery dashlight
         /// </summary>
         internal float ageCutoff;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public NewHudDashlightDataStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -44,14 +58,16 @@ namespace Moonfish.Guerilla.Tags
             ageCutoff = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(lowClipCutoff);
                 binaryWriter.Write(lowAmmoCutoff);

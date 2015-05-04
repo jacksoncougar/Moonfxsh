@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 76, Alignment = 4)]
     public class DamageEffectPlayerResponseBlockBase : GuerillaBlock
     {
@@ -24,15 +26,25 @@ namespace Moonfish.Guerilla.Tags
         internal ScreenFlashDefinitionStructBlock screenFlash;
         internal VibrationDefinitionStructBlock vibration;
         internal DamageEffectSoundEffectDefinitionBlock soundEffect;
-        public override int SerializedSize { get { return 76; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 76; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public DamageEffectPlayerResponseBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            responseType = (ResponseType)binaryReader.ReadInt16();
+            responseType = (ResponseType) binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             screenFlash = new ScreenFlashDefinitionStructBlock();
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(screenFlash.ReadFields(binaryReader)));
@@ -42,6 +54,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(soundEffect.ReadFields(binaryReader)));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -49,12 +62,13 @@ namespace Moonfish.Guerilla.Tags
             vibration.ReadPointers(binaryReader, blamPointers);
             soundEffect.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int16)responseType);
+                binaryWriter.Write((Int16) responseType);
                 binaryWriter.Write(invalidName_, 0, 2);
                 screenFlash.Write(binaryWriter);
                 vibration.Write(binaryWriter);
@@ -62,6 +76,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         internal enum ResponseType : short
         {
             Shielded = 0,

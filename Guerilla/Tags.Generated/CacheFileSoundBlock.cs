@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Shit = (TagClass)"$#!+";
+        public static readonly TagClass Shit = (TagClass) "$#!+";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class CacheFileSoundBlockBase : GuerillaBlock
     {
@@ -41,19 +43,29 @@ namespace Moonfish.Guerilla.Tags
         internal byte customPlaybackIndex;
         internal short extraInfoIndex;
         internal int maximumPlayTimeMs;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public CacheFileSoundBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt16();
-            soundClass = (SoundClass)binaryReader.ReadByte();
-            sampleRate = (SampleRate)binaryReader.ReadByte();
-            encoding = (Encoding)binaryReader.ReadByte();
-            compression = (Compression)binaryReader.ReadByte();
+            flags = (Flags) binaryReader.ReadInt16();
+            soundClass = (SoundClass) binaryReader.ReadByte();
+            sampleRate = (SampleRate) binaryReader.ReadByte();
+            encoding = (Encoding) binaryReader.ReadByte();
+            compression = (Compression) binaryReader.ReadByte();
             playbackIndex = binaryReader.ReadInt16();
             firstPitchRangeIndex = binaryReader.ReadInt16();
             pitchRangeCount = binaryReader.ReadByte();
@@ -64,20 +76,22 @@ namespace Moonfish.Guerilla.Tags
             maximumPlayTimeMs = binaryReader.ReadInt32();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Byte)soundClass);
-                binaryWriter.Write((Byte)sampleRate);
-                binaryWriter.Write((Byte)encoding);
-                binaryWriter.Write((Byte)compression);
+                binaryWriter.Write((Int16) flags);
+                binaryWriter.Write((Byte) soundClass);
+                binaryWriter.Write((Byte) sampleRate);
+                binaryWriter.Write((Byte) encoding);
+                binaryWriter.Write((Byte) compression);
                 binaryWriter.Write(playbackIndex);
                 binaryWriter.Write(firstPitchRangeIndex);
                 binaryWriter.Write(pitchRangeCount);
@@ -89,6 +103,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {
@@ -103,6 +118,7 @@ using(binaryWriter.BaseStream.Pin())
             DontUseSoundClassSpeakerFlag = 256,
             DontUseLipsyncData = 512,
         };
+
         internal enum SoundClass : byte
         {
             ProjectileImpact = 0,
@@ -160,18 +176,21 @@ using(binaryWriter.BaseStream.Pin())
             Test = 52,
             MultilingualTest = 53,
         };
+
         internal enum SampleRate : byte
         {
             InvalidName22KHz = 0,
             InvalidName44KHz = 1,
             InvalidName32KHz = 2,
         };
+
         internal enum Encoding : byte
         {
             Mono = 0,
             Stereo = 1,
             Codec = 2,
         };
+
         internal enum Compression : byte
         {
             NoneBigEndian = 0,

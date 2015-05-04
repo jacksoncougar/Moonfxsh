@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 36, Alignment = 4)]
     public class StructureBspDetailObjectDataBlockBase : GuerillaBlock
     {
@@ -25,11 +27,21 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalZReferenceVectorBlock[] zReferenceVectors;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 36; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 36; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public StructureBspDetailObjectDataBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -41,6 +53,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(3);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -49,15 +62,17 @@ namespace Moonfish.Guerilla.Tags
             counts = ReadBlockArrayData<GlobalDetailObjectCountsBlock>(binaryReader, blamPointers.Dequeue());
             zReferenceVectors = ReadBlockArrayData<GlobalZReferenceVectorBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<GlobalDetailObjectCellsBlock>(binaryWriter, cells, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GlobalDetailObjectBlock>(binaryWriter, instances, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GlobalDetailObjectCountsBlock>(binaryWriter, counts, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GlobalZReferenceVectorBlock>(binaryWriter, zReferenceVectors, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GlobalZReferenceVectorBlock>(binaryWriter, zReferenceVectors,
+                    nextAddress);
                 binaryWriter.Write(invalidName_, 0, 1);
                 binaryWriter.Write(invalidName_0, 0, 3);
                 return nextAddress;

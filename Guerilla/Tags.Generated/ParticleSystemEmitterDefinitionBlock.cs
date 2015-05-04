@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,11 +17,11 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 184, Alignment = 4)]
     public class ParticleSystemEmitterDefinitionBlockBase : GuerillaBlock
     {
-        [TagReference("pmov")]
-        internal Moonfish.Tags.TagReference particlePhysics;
+        [TagReference("pmov")] internal Moonfish.Tags.TagReference particlePhysics;
         internal ParticlePropertyScalarStructNewBlock particleEmissionRate;
         internal ParticlePropertyScalarStructNewBlock particleLifespan;
         internal ParticlePropertyScalarStructNewBlock particleVelocity;
@@ -32,16 +33,28 @@ namespace Moonfish.Guerilla.Tags
         internal ParticlePropertyScalarStructNewBlock emissionRadius;
         internal ParticlePropertyScalarStructNewBlock emissionAngle;
         internal OpenTK.Vector3 translationalOffset;
+
         /// <summary>
         /// particle initial velocity direction relative to the location's forward
         /// </summary>
         internal OpenTK.Vector2 relativeDirection;
+
         internal byte[] invalidName_;
-        public override int SerializedSize { get { return 184; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 184; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ParticleSystemEmitterDefinitionBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -60,7 +73,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(particleTint.ReadFields(binaryReader)));
             particleAlpha = new ParticlePropertyScalarStructNewBlock();
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(particleAlpha.ReadFields(binaryReader)));
-            emissionShape = (EmissionShape)binaryReader.ReadInt32();
+            emissionShape = (EmissionShape) binaryReader.ReadInt32();
             emissionRadius = new ParticlePropertyScalarStructNewBlock();
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(emissionRadius.ReadFields(binaryReader)));
             emissionAngle = new ParticlePropertyScalarStructNewBlock();
@@ -70,6 +83,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_ = binaryReader.ReadBytes(8);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -83,10 +97,11 @@ namespace Moonfish.Guerilla.Tags
             emissionRadius.ReadPointers(binaryReader, blamPointers);
             emissionAngle.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(particlePhysics);
                 particleEmissionRate.Write(binaryWriter);
@@ -96,7 +111,7 @@ using(binaryWriter.BaseStream.Pin())
                 particleSize.Write(binaryWriter);
                 particleTint.Write(binaryWriter);
                 particleAlpha.Write(binaryWriter);
-                binaryWriter.Write((Int32)emissionShape);
+                binaryWriter.Write((Int32) emissionShape);
                 emissionRadius.Write(binaryWriter);
                 emissionAngle.Write(binaryWriter);
                 binaryWriter.Write(translationalOffset);
@@ -105,6 +120,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         internal enum EmissionShape : int
         {
             Sprayer = 0,

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 88, Alignment = 4)]
     public class StructureBspDebugInfoBlockBase : GuerillaBlock
     {
@@ -23,11 +25,21 @@ namespace Moonfish.Guerilla.Tags
         internal StructureBspClusterDebugInfoBlock[] clusters;
         internal StructureBspFogPlaneDebugInfoBlock[] fogPlanes;
         internal StructureBspFogZoneDebugInfoBlock[] fogZones;
-        public override int SerializedSize { get { return 88; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 88; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public StructureBspDebugInfoBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -37,6 +49,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspFogZoneDebugInfoBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -44,15 +57,19 @@ namespace Moonfish.Guerilla.Tags
             fogPlanes = ReadBlockArrayData<StructureBspFogPlaneDebugInfoBlock>(binaryReader, blamPointers.Dequeue());
             fogZones = ReadBlockArrayData<StructureBspFogZoneDebugInfoBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 64);
-                nextAddress = Guerilla.WriteBlockArray<StructureBspClusterDebugInfoBlock>(binaryWriter, clusters, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<StructureBspFogPlaneDebugInfoBlock>(binaryWriter, fogPlanes, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<StructureBspFogZoneDebugInfoBlock>(binaryWriter, fogZones, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspClusterDebugInfoBlock>(binaryWriter, clusters,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspFogPlaneDebugInfoBlock>(binaryWriter, fogPlanes,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspFogZoneDebugInfoBlock>(binaryWriter, fogZones,
+                    nextAddress);
                 return nextAddress;
             }
         }

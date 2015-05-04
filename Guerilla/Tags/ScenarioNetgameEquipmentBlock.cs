@@ -8,12 +8,12 @@ namespace Moonfish.Guerilla.Tags
         {
             get
             {
-                var translationMatrix = Matrix4.CreateTranslation( this.position );
-                var rotationXMatrix = Matrix4.CreateRotationX( this.orientation.orientation.Z );
-                var rotationYMatrix = Matrix4.CreateRotationY( -this.orientation.orientation.Y );
-                var rotationZMatrix = Matrix4.CreateRotationZ( this.orientation.orientation.X );
-                var rotationMatrix = rotationZMatrix * rotationYMatrix * rotationXMatrix;
-                return Matrix4.CreateScale( 1 ) * rotationMatrix * translationMatrix;
+                var translationMatrix = Matrix4.CreateTranslation(this.position);
+                var rotationXMatrix = Matrix4.CreateRotationX(this.orientation.orientation.Z);
+                var rotationYMatrix = Matrix4.CreateRotationY(-this.orientation.orientation.Y);
+                var rotationZMatrix = Matrix4.CreateRotationZ(this.orientation.orientation.X);
+                var rotationMatrix = rotationZMatrix*rotationYMatrix*rotationXMatrix;
+                return Matrix4.CreateScale(1)*rotationMatrix*translationMatrix;
             }
         }
     };

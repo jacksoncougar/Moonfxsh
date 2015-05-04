@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Matg = (TagClass)"matg";
+        public static readonly TagClass Matg = (TagClass) "matg";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 644, Alignment = 4)]
     public class GlobalsBlockBase : GuerillaBlock
     {
@@ -53,23 +55,31 @@ namespace Moonfish.Guerilla.Tags
         internal MaterialsBlock[] materials;
         internal MultiplayerUiBlock[] multiplayerUI;
         internal MultiplayerColorBlock[] profileColors;
-        [TagReference("mulg")]
-        internal Moonfish.Tags.TagReference multiplayerGlobals;
+        [TagReference("mulg")] internal Moonfish.Tags.TagReference multiplayerGlobals;
         internal RuntimeLevelsDefinitionBlock[] runtimeLevelData;
         internal UiLevelsDefinitionBlock[] uiLevelData;
-        [TagReference("gldf")]
-        internal Moonfish.Tags.TagReference defaultGlobalLighting;
+        [TagReference("gldf")] internal Moonfish.Tags.TagReference defaultGlobalLighting;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 644; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 644; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public GlobalsBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             invalidName_ = binaryReader.ReadBytes(172);
-            language = (Language)binaryReader.ReadInt32();
+            language = (Language) binaryReader.ReadInt32();
             blamPointers.Enqueue(ReadBlockArrayPointer<HavokCleanupResourcesBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<CollisionDamageBlock>(binaryReader));
             blamPointers.Enqueue(ReadBlockArrayPointer<SoundGlobalsBlock>(binaryReader));
@@ -100,6 +110,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(252);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -116,9 +127,11 @@ namespace Moonfish.Guerilla.Tags
             grenades = ReadBlockArrayData<GrenadesBlock>(binaryReader, blamPointers.Dequeue());
             rasterizerData = ReadBlockArrayData<RasterizerDataBlock>(binaryReader, blamPointers.Dequeue());
             interfaceTags = ReadBlockArrayData<InterfaceTagReferences>(binaryReader, blamPointers.Dequeue());
-            weaponListUpdateWeaponListEnumInGameGlobalsH = ReadBlockArrayData<CheatWeaponsBlock>(binaryReader, blamPointers.Dequeue());
+            weaponListUpdateWeaponListEnumInGameGlobalsH = ReadBlockArrayData<CheatWeaponsBlock>(binaryReader,
+                blamPointers.Dequeue());
             cheatPowerups = ReadBlockArrayData<CheatPowerupsBlock>(binaryReader, blamPointers.Dequeue());
-            multiplayerInformation = ReadBlockArrayData<MultiplayerInformationBlock>(binaryReader, blamPointers.Dequeue());
+            multiplayerInformation = ReadBlockArrayData<MultiplayerInformationBlock>(binaryReader,
+                blamPointers.Dequeue());
             playerInformation = ReadBlockArrayData<PlayerInformationBlock>(binaryReader, blamPointers.Dequeue());
             playerRepresentation = ReadBlockArrayData<PlayerRepresentationBlock>(binaryReader, blamPointers.Dequeue());
             fallingDamage = ReadBlockArrayData<FallingDamageBlock>(binaryReader, blamPointers.Dequeue());
@@ -129,14 +142,16 @@ namespace Moonfish.Guerilla.Tags
             runtimeLevelData = ReadBlockArrayData<RuntimeLevelsDefinitionBlock>(binaryReader, blamPointers.Dequeue());
             uiLevelData = ReadBlockArrayData<UiLevelsDefinitionBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 172);
-                binaryWriter.Write((Int32)language);
-                nextAddress = Guerilla.WriteBlockArray<HavokCleanupResourcesBlock>(binaryWriter, havokCleanupResources, nextAddress);
+                binaryWriter.Write((Int32) language);
+                nextAddress = Guerilla.WriteBlockArray<HavokCleanupResourcesBlock>(binaryWriter, havokCleanupResources,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CollisionDamageBlock>(binaryWriter, collisionDamage, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SoundGlobalsBlock>(binaryWriter, soundGlobals, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<AiGlobalsBlock>(binaryWriter, aiGlobals, nextAddress);
@@ -149,24 +164,30 @@ using(binaryWriter.BaseStream.Pin())
                 nextAddress = Guerilla.WriteBlockArray<GrenadesBlock>(binaryWriter, grenades, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<RasterizerDataBlock>(binaryWriter, rasterizerData, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<InterfaceTagReferences>(binaryWriter, interfaceTags, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CheatWeaponsBlock>(binaryWriter, weaponListUpdateWeaponListEnumInGameGlobalsH, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CheatWeaponsBlock>(binaryWriter,
+                    weaponListUpdateWeaponListEnumInGameGlobalsH, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CheatPowerupsBlock>(binaryWriter, cheatPowerups, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<MultiplayerInformationBlock>(binaryWriter, multiplayerInformation, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PlayerInformationBlock>(binaryWriter, playerInformation, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PlayerRepresentationBlock>(binaryWriter, playerRepresentation, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MultiplayerInformationBlock>(binaryWriter, multiplayerInformation,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PlayerInformationBlock>(binaryWriter, playerInformation,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PlayerRepresentationBlock>(binaryWriter, playerRepresentation,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<FallingDamageBlock>(binaryWriter, fallingDamage, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<OldMaterialsBlock>(binaryWriter, oldMaterials, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<MaterialsBlock>(binaryWriter, materials, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<MultiplayerUiBlock>(binaryWriter, multiplayerUI, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<MultiplayerColorBlock>(binaryWriter, profileColors, nextAddress);
                 binaryWriter.Write(multiplayerGlobals);
-                nextAddress = Guerilla.WriteBlockArray<RuntimeLevelsDefinitionBlock>(binaryWriter, runtimeLevelData, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<RuntimeLevelsDefinitionBlock>(binaryWriter, runtimeLevelData,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<UiLevelsDefinitionBlock>(binaryWriter, uiLevelData, nextAddress);
                 binaryWriter.Write(defaultGlobalLighting);
                 binaryWriter.Write(invalidName_0, 0, 252);
                 return nextAddress;
             }
         }
+
         internal enum Language : int
         {
             English = 0,

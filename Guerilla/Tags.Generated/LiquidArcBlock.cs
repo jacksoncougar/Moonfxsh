@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 236, Alignment = 4)]
     public class LiquidArcBlockBase : GuerillaBlock
     {
@@ -27,10 +29,8 @@ namespace Moonfish.Guerilla.Tags
         internal float instanceSpreadAngleDegrees;
         internal float instanceRotationPeriodSeconds;
         internal byte[] invalidName_0;
-        [TagReference("foot")]
-        internal Moonfish.Tags.TagReference materialEffects;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference bitmap;
+        [TagReference("foot")] internal Moonfish.Tags.TagReference materialEffects;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference bitmap;
         internal byte[] invalidName_1;
         internal ScalarFunctionStructBlock horizontalRange;
         internal ScalarFunctionStructBlock verticalRange;
@@ -52,16 +52,26 @@ namespace Moonfish.Guerilla.Tags
         internal LiquidCoreBlock[] cores;
         internal ScalarFunctionStructBlock rangeScale;
         internal ScalarFunctionStructBlock brightnessScale;
-        public override int SerializedSize { get { return 236; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 236; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public LiquidArcBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt16();
-            spriteCount = (SpriteCount)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
+            spriteCount = (SpriteCount) binaryReader.ReadInt16();
             naturalLengthWorldUnits = binaryReader.ReadSingle();
             instances = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -89,7 +99,7 @@ namespace Moonfish.Guerilla.Tags
             octave8FrequencyCyclesSecond = binaryReader.ReadSingle();
             octave9FrequencyCyclesSecond = binaryReader.ReadSingle();
             invalidName_3 = binaryReader.ReadBytes(28);
-            octaveFlags = (OctaveFlags)binaryReader.ReadInt16();
+            octaveFlags = (OctaveFlags) binaryReader.ReadInt16();
             invalidName_4 = binaryReader.ReadBytes(2);
             blamPointers.Enqueue(ReadBlockArrayPointer<LiquidCoreBlock>(binaryReader));
             rangeScale = new ScalarFunctionStructBlock();
@@ -98,6 +108,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(brightnessScale.ReadFields(binaryReader)));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -108,13 +119,14 @@ namespace Moonfish.Guerilla.Tags
             rangeScale.ReadPointers(binaryReader, blamPointers);
             brightnessScale.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Int16)spriteCount);
+                binaryWriter.Write((Int16) flags);
+                binaryWriter.Write((Int16) spriteCount);
                 binaryWriter.Write(naturalLengthWorldUnits);
                 binaryWriter.Write(instances);
                 binaryWriter.Write(invalidName_, 0, 2);
@@ -139,7 +151,7 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(octave8FrequencyCyclesSecond);
                 binaryWriter.Write(octave9FrequencyCyclesSecond);
                 binaryWriter.Write(invalidName_3, 0, 28);
-                binaryWriter.Write((Int16)octaveFlags);
+                binaryWriter.Write((Int16) octaveFlags);
                 binaryWriter.Write(invalidName_4, 0, 2);
                 nextAddress = Guerilla.WriteBlockArray<LiquidCoreBlock>(binaryWriter, cores, nextAddress);
                 rangeScale.Write(binaryWriter);
@@ -147,6 +159,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {
@@ -155,6 +168,7 @@ using(binaryWriter.BaseStream.Pin())
             CollideWithStuff = 4,
             NoPerspectiveMidpoints = 8,
         };
+
         internal enum SpriteCount : short
         {
             InvalidName4Sprites = 0,
@@ -165,6 +179,7 @@ using(binaryWriter.BaseStream.Pin())
             InvalidName128Sprites = 5,
             InvalidName256Sprites = 6,
         };
+
         [FlagsAttribute]
         internal enum OctaveFlags : short
         {

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 40, Alignment = 4)]
     public class DecoratorPermutationsBlockBase : GuerillaBlock
     {
@@ -34,19 +36,29 @@ namespace Moonfish.Guerilla.Tags
         internal float baseMapTintPercentage;
         internal float lightmapTintPercentage;
         internal float windScale;
-        public override int SerializedSize { get { return 40; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 40; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public DecoratorPermutationsBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadStringID();
             shader = binaryReader.ReadByteBlockIndex1();
             invalidName_ = binaryReader.ReadBytes(3);
-            flags = (Flags)binaryReader.ReadByte();
-            fadeDistance = (FadeDistance)binaryReader.ReadByte();
+            flags = (Flags) binaryReader.ReadByte();
+            fadeDistance = (FadeDistance) binaryReader.ReadByte();
             index = binaryReader.ReadByte();
             distributionWeight = binaryReader.ReadByte();
             scale = binaryReader.ReadRange();
@@ -59,20 +71,22 @@ namespace Moonfish.Guerilla.Tags
             windScale = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(shader);
                 binaryWriter.Write(invalidName_, 0, 3);
-                binaryWriter.Write((Byte)flags);
-                binaryWriter.Write((Byte)fadeDistance);
+                binaryWriter.Write((Byte) flags);
+                binaryWriter.Write((Byte) fadeDistance);
                 binaryWriter.Write(index);
                 binaryWriter.Write(distributionWeight);
                 binaryWriter.Write(scale);
@@ -86,6 +100,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : byte
         {
@@ -93,6 +108,7 @@ using(binaryWriter.BaseStream.Pin())
             OnlyOnGround = 2,
             Upright = 4,
         };
+
         internal enum FadeDistance : byte
         {
             Close = 0,

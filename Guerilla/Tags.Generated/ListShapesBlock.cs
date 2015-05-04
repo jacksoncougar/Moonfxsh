@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,40 +17,54 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 8, Alignment = 4)]
     public class ListShapesBlockBase : GuerillaBlock
     {
         internal ShapeType shapeType;
         internal Moonfish.Tags.ShortBlockIndex2 shape;
         internal int collisionFilter;
-        public override int SerializedSize { get { return 8; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 8; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ListShapesBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            shapeType = (ShapeType)binaryReader.ReadInt16();
+            shapeType = (ShapeType) binaryReader.ReadInt16();
             shape = binaryReader.ReadShortBlockIndex2();
             collisionFilter = binaryReader.ReadInt32();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int16)shapeType);
+                binaryWriter.Write((Int16) shapeType);
                 binaryWriter.Write(shape);
                 binaryWriter.Write(collisionFilter);
                 return nextAddress;
             }
         }
+
         internal enum ShapeType : short
         {
             Sphere = 0,

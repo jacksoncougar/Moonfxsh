@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 48, Alignment = 4)]
     public class ScenarioLightStructBlockBase : GuerillaBlock
     {
@@ -31,18 +33,28 @@ namespace Moonfish.Guerilla.Tags
         internal float fieldOfViewDegrees;
         internal float falloffDistanceWorldUnits;
         internal float cutoffDistanceWorldUnitsFromFarPlane;
-        public override int SerializedSize { get { return 48; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 48; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ScenarioLightStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            type = (Type)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
-            lightmapType = (LightmapType)binaryReader.ReadInt16();
-            lightmapFlags = (LightmapFlags)binaryReader.ReadInt16();
+            type = (Type) binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
+            lightmapType = (LightmapType) binaryReader.ReadInt16();
+            lightmapFlags = (LightmapFlags) binaryReader.ReadInt16();
             lightmapHalfLife = binaryReader.ReadSingle();
             lightmapLightScale = binaryReader.ReadSingle();
             targetPoint = binaryReader.ReadVector3();
@@ -53,19 +65,21 @@ namespace Moonfish.Guerilla.Tags
             cutoffDistanceWorldUnitsFromFarPlane = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Int16)lightmapType);
-                binaryWriter.Write((Int16)lightmapFlags);
+                binaryWriter.Write((Int16) type);
+                binaryWriter.Write((Int16) flags);
+                binaryWriter.Write((Int16) lightmapType);
+                binaryWriter.Write((Int16) lightmapFlags);
                 binaryWriter.Write(lightmapHalfLife);
                 binaryWriter.Write(lightmapLightScale);
                 binaryWriter.Write(targetPoint);
@@ -77,6 +91,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         internal enum Type : short
         {
             Sphere = 0,
@@ -84,6 +99,7 @@ using(binaryWriter.BaseStream.Pin())
             Projective = 2,
             Pyramid = 3,
         };
+
         [FlagsAttribute]
         internal enum Flags : short
         {
@@ -91,6 +107,7 @@ using(binaryWriter.BaseStream.Pin())
             Unused = 2,
             CinematicOnly = 4,
         };
+
         internal enum LightmapType : short
         {
             UseLightTagSetting = 0,
@@ -98,6 +115,7 @@ using(binaryWriter.BaseStream.Pin())
             DynamicWithLightmaps = 2,
             LightmapsOnly = 3,
         };
+
         [FlagsAttribute]
         internal enum LightmapFlags : short
         {

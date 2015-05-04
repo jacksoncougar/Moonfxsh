@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,26 +17,35 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 136, Alignment = 4)]
     public class StructureBspWeatherPaletteBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
-        [TagReference("weat")]
-        internal Moonfish.Tags.TagReference weatherSystem;
+        [TagReference("weat")] internal Moonfish.Tags.TagReference weatherSystem;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
-        [TagReference("wind")]
-        internal Moonfish.Tags.TagReference wind;
+        [TagReference("wind")] internal Moonfish.Tags.TagReference wind;
         internal OpenTK.Vector3 windDirection;
         internal float windMagnitude;
         internal byte[] invalidName_2;
         internal Moonfish.Tags.String32 windScaleFunction;
-        public override int SerializedSize { get { return 136; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 136; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public StructureBspWeatherPaletteBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -51,14 +61,16 @@ namespace Moonfish.Guerilla.Tags
             windScaleFunction = binaryReader.ReadString32();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(weatherSystem);

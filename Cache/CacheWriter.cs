@@ -11,7 +11,7 @@ namespace Moonfish.Cache
     {
         public CacheStream cacheStream;
 
-        public CacheWriter( CacheStream stream )
+        public CacheWriter(CacheStream stream)
         {
             cacheStream = stream;
         }

@@ -7,13 +7,13 @@ namespace Moonfish.Guerilla
         public int MaximumSize { get; private set; }
         public int DataElementSize { get; set; }
 
-        private MoonfishTagDataDefinition( )
+        private MoonfishTagDataDefinition()
         {
             DataElementSize = 1;
         }
 
-        public MoonfishTagDataDefinition( tag_data_definition definition )
-            : this( )
+        public MoonfishTagDataDefinition(tag_data_definition definition)
+            : this()
         {
             Name = definition.Name;
             Alignment = definition.Alignment;

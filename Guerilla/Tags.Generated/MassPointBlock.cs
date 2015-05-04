@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 128, Alignment = 4)]
     public class MassPointBlockBase : GuerillaBlock
     {
@@ -36,18 +38,28 @@ namespace Moonfish.Guerilla.Tags
         internal float frictionPerpendicularScale;
         internal float radius;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 128; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 128; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public MassPointBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             name = binaryReader.ReadString32();
             poweredMassPoint = binaryReader.ReadShortBlockIndex1();
             modelNode = binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             relativeMass = binaryReader.ReadSingle();
             mass = binaryReader.ReadSingle();
             relativeDensity = binaryReader.ReadSingle();
@@ -55,7 +67,7 @@ namespace Moonfish.Guerilla.Tags
             position = binaryReader.ReadVector3();
             forward = binaryReader.ReadVector3();
             up = binaryReader.ReadVector3();
-            frictionType = (FrictionType)binaryReader.ReadInt16();
+            frictionType = (FrictionType) binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             frictionParallelScale = binaryReader.ReadSingle();
             frictionPerpendicularScale = binaryReader.ReadSingle();
@@ -63,19 +75,21 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(20);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(poweredMassPoint);
                 binaryWriter.Write(modelNode);
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int32) flags);
                 binaryWriter.Write(relativeMass);
                 binaryWriter.Write(mass);
                 binaryWriter.Write(relativeDensity);
@@ -83,7 +97,7 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(position);
                 binaryWriter.Write(forward);
                 binaryWriter.Write(up);
-                binaryWriter.Write((Int16)frictionType);
+                binaryWriter.Write((Int16) frictionType);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(frictionParallelScale);
                 binaryWriter.Write(frictionPerpendicularScale);
@@ -92,11 +106,13 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
             Metallic = 1,
         };
+
         internal enum FrictionType : short
         {
             Point = 0,

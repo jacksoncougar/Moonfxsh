@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class StructureBspSoundClusterBlockBase : GuerillaBlock
     {
@@ -23,11 +25,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal StructureSoundClusterPortalDesignators[] enclosingPortalDesignators;
         internal StructureSoundClusterInteriorClusterIndices[] interiorClusterIndices;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public StructureBspSoundClusterBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -37,21 +49,27 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<StructureSoundClusterInteriorClusterIndices>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
-            enclosingPortalDesignators = ReadBlockArrayData<StructureSoundClusterPortalDesignators>(binaryReader, blamPointers.Dequeue());
-            interiorClusterIndices = ReadBlockArrayData<StructureSoundClusterInteriorClusterIndices>(binaryReader, blamPointers.Dequeue());
+            enclosingPortalDesignators = ReadBlockArrayData<StructureSoundClusterPortalDesignators>(binaryReader,
+                blamPointers.Dequeue());
+            interiorClusterIndices = ReadBlockArrayData<StructureSoundClusterInteriorClusterIndices>(binaryReader,
+                blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(invalidName_0, 0, 2);
-                nextAddress = Guerilla.WriteBlockArray<StructureSoundClusterPortalDesignators>(binaryWriter, enclosingPortalDesignators, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<StructureSoundClusterInteriorClusterIndices>(binaryWriter, interiorClusterIndices, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureSoundClusterPortalDesignators>(binaryWriter,
+                    enclosingPortalDesignators, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureSoundClusterInteriorClusterIndices>(binaryWriter,
+                    interiorClusterIndices, nextAddress);
                 return nextAddress;
             }
         }

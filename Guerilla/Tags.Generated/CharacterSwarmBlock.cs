@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 40, Alignment = 4)]
     public class CharacterSwarmBlockBase : GuerillaBlock
     {
@@ -23,38 +25,56 @@ namespace Moonfish.Guerilla.Tags
         /// After the given number of deaths, the swarm scatters
         /// </summary>
         internal short scatterKilledCount;
+
         internal byte[] invalidName_;
+
         /// <summary>
         /// the distance from the target that the swarm scatters
         /// </summary>
         internal float scatterRadius;
+
         /// <summary>
         /// amount of time to remain scattered
         /// </summary>
         internal float scatterTime;
+
         internal float houndMinDistance;
         internal float houndMaxDistance;
+
         /// <summary>
         /// amount of randomness added to creature's throttle
         /// </summary>
         internal float perlinOffsetScale01;
+
         /// <summary>
         /// how fast the creature changes random offset to throttle
         /// </summary>
         internal Moonfish.Model.Range offsetPeriodS;
+
         /// <summary>
         /// a random offset lower then given threshold is made 0. (threshold of 1 = no movement)
         /// </summary>
         internal float perlinIdleMovementThreshold01;
+
         /// <summary>
         /// a random offset lower then given threshold is made 0. (threshold of 1 = no movement)
         /// </summary>
         internal float perlinCombatMovementThreshold01;
-        public override int SerializedSize { get { return 40; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 40; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public CharacterSwarmBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -70,14 +90,16 @@ namespace Moonfish.Guerilla.Tags
             perlinCombatMovementThreshold01 = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(scatterKilledCount);
                 binaryWriter.Write(invalidName_, 0, 2);

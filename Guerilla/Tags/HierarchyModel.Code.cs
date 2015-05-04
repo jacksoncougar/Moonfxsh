@@ -6,7 +6,7 @@ namespace Moonfish.Guerilla.Tags
     {
         public RenderModelBlock RenderModel
         {
-            get { return Halo2.GetReferenceObject( this.renderModel ); }
+            get { return Halo2.GetReferenceObject(this.renderModel); }
         }
     }
 
@@ -14,7 +14,7 @@ namespace Moonfish.Guerilla.Tags
     {
         public object ChildObject
         {
-            get { return Halo2.GetReferenceObject( this.childObject ); }
+            get { return Halo2.GetReferenceObject(this.childObject); }
         }
     }
 }

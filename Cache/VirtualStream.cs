@@ -8,7 +8,7 @@ using Moonfish.Guerilla.Tags;
 
 namespace Moonfish.Cache
 {
-    class VirtualStream : MemoryStream
+    internal class VirtualStream : MemoryStream
     {
         private readonly int _virtualOrigin;
 
@@ -24,23 +24,23 @@ namespace Moonfish.Cache
             _virtualOrigin = virtualOrigin;
         }
 
-        public override long Seek( long offset, SeekOrigin loc )
+        public override long Seek(long offset, SeekOrigin loc)
         {
-            return IsPointer( offset )
-                ? base.Seek( offset - _virtualOrigin, loc ) + _virtualOrigin
+            return IsPointer(offset)
+                ? base.Seek(offset - _virtualOrigin, loc) + _virtualOrigin
                 : base.Seek(offset, loc) + _virtualOrigin;
         }
 
         public override long Position
         {
-            get { return (int)base.Position + _virtualOrigin; }
+            get { return (int) base.Position + _virtualOrigin; }
             set { base.Position = IsPointer(value) ? value - _virtualOrigin : value; }
         }
 
         private bool IsPointer(long value)
         {
             // if 'value' is a Pointer
-            return ( value < 0 || value > Length );
+            return (value < 0 || value > Length);
         }
     }
 }

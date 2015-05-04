@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass PRTM = (TagClass)"PRTM";
+        public static readonly TagClass PRTM = (TagClass) "PRTM";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,28 +26,29 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 220, Alignment = 4)]
     public class ParticleModelBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal Orientation orientation;
         internal byte[] invalidName_;
-        [TagReference("shad")]
-        internal Moonfish.Tags.TagReference shader;
+        [TagReference("shad")] internal Moonfish.Tags.TagReference shader;
         internal ParticlePropertyScalarStructNewBlock scaleX;
         internal ParticlePropertyScalarStructNewBlock scaleY;
         internal ParticlePropertyScalarStructNewBlock scaleZ;
         internal ParticlePropertyScalarStructNewBlock rotation;
+
         /// <summary>
         /// effect, material effect or sound spawned when this particle collides with something
         /// </summary>
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference collisionEffect;
+        [TagReference("null")] internal Moonfish.Tags.TagReference collisionEffect;
+
         /// <summary>
         /// effect, material effect or sound spawned when this particle dies
         /// </summary>
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference deathEffect;
+        [TagReference("null")] internal Moonfish.Tags.TagReference deathEffect;
+
         internal EffectLocationsBlock[] locations;
         internal ParticleSystemDefinitionBlockNew[] attachedParticleSystems;
         internal ParticleModelsBlock[] models;
@@ -56,16 +58,26 @@ namespace Moonfish.Guerilla.Tags
         internal GlobalGeometryBlockInfoStructBlock geometrySectionInfo;
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
-        public override int SerializedSize { get { return 220; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 220; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ParticleModelBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
-            orientation = (Orientation)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
+            orientation = (Orientation) binaryReader.ReadInt32();
             invalidName_ = binaryReader.ReadBytes(16);
             shader = binaryReader.ReadTagReference();
             scaleX = new ParticlePropertyScalarStructNewBlock();
@@ -90,6 +102,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(8);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -98,20 +111,22 @@ namespace Moonfish.Guerilla.Tags
             scaleZ.ReadPointers(binaryReader, blamPointers);
             rotation.ReadPointers(binaryReader, blamPointers);
             locations = ReadBlockArrayData<EffectLocationsBlock>(binaryReader, blamPointers.Dequeue());
-            attachedParticleSystems = ReadBlockArrayData<ParticleSystemDefinitionBlockNew>(binaryReader, blamPointers.Dequeue());
+            attachedParticleSystems = ReadBlockArrayData<ParticleSystemDefinitionBlockNew>(binaryReader,
+                blamPointers.Dequeue());
             models = ReadBlockArrayData<ParticleModelsBlock>(binaryReader, blamPointers.Dequeue());
             rawVertices = ReadBlockArrayData<ParticleModelVerticesBlock>(binaryReader, blamPointers.Dequeue());
             indices = ReadBlockArrayData<ParticleModelIndicesBlock>(binaryReader, blamPointers.Dequeue());
             cachedData = ReadBlockArrayData<CachedDataBlock>(binaryReader, blamPointers.Dequeue());
             geometrySectionInfo.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int32)orientation);
+                binaryWriter.Write((Int32) flags);
+                binaryWriter.Write((Int32) orientation);
                 binaryWriter.Write(invalidName_, 0, 16);
                 binaryWriter.Write(shader);
                 scaleX.Write(binaryWriter);
@@ -121,9 +136,11 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(collisionEffect);
                 binaryWriter.Write(deathEffect);
                 nextAddress = Guerilla.WriteBlockArray<EffectLocationsBlock>(binaryWriter, locations, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ParticleSystemDefinitionBlockNew>(binaryWriter, attachedParticleSystems, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ParticleSystemDefinitionBlockNew>(binaryWriter,
+                    attachedParticleSystems, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ParticleModelsBlock>(binaryWriter, models, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ParticleModelVerticesBlock>(binaryWriter, rawVertices, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ParticleModelVerticesBlock>(binaryWriter, rawVertices,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ParticleModelIndicesBlock>(binaryWriter, indices, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CachedDataBlock>(binaryWriter, cachedData, nextAddress);
                 geometrySectionInfo.Write(binaryWriter);
@@ -132,6 +149,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -151,6 +169,7 @@ using(binaryWriter.BaseStream.Pin())
             BitmapAuthoredVertically = 8192,
             HasSweetener = 16384,
         };
+
         internal enum Orientation : int
         {
             ScreenFacing = 0,

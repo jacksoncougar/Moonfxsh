@@ -7,7 +7,7 @@ using OpenTK;
 
 namespace Moonfish.Guerilla.Tags
 {
-    [TypeConverter( typeof ( MarkerGroupConverter ) )]
+    [TypeConverter(typeof (MarkerGroupConverter))]
     public partial class RenderModelNodeBlock : ISelectable
     {
         public CollisionObject CollisionObject { get; set; }
@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
             Pose
         }
 
-        private void Initialize( )
+        private void Initialize()
         {
             Mode = DisplayMode.Pose;
             _pose = new Pose {rotation = defaultRotation, translation = defaultTranslation};
@@ -30,45 +30,45 @@ namespace Moonfish.Guerilla.Tags
 
         public Matrix4 WorldMatrix
         {
-            get { return CalculateWorldMatrix( Mode ); }
+            get { return CalculateWorldMatrix(Mode); }
             set
             {
-                switch ( Mode )
+                switch (Mode)
                 {
                     case DisplayMode.Rest:
-                        defaultTranslation = value.ExtractTranslation( );
-                        defaultRotation = value.ExtractRotation( );
+                        defaultTranslation = value.ExtractTranslation();
+                        defaultRotation = value.ExtractRotation();
                         break;
                     default:
-                        _pose.translation = value.ExtractTranslation( );
-                        _pose.rotation = value.ExtractRotation( );
+                        _pose.translation = value.ExtractTranslation();
+                        _pose.rotation = value.ExtractRotation();
                         break;
                 }
             }
         }
 
-        public Matrix4 CalculateWorldMatrix( DisplayMode displayMode )
+        public Matrix4 CalculateWorldMatrix(DisplayMode displayMode)
         {
-            var translation = CreateTranslation( displayMode );
-            var rotation = CreateFromQuaternion( displayMode );
-            return rotation * translation * Matrix4.Identity;
+            var translation = CreateTranslation(displayMode);
+            var rotation = CreateFromQuaternion(displayMode);
+            return rotation*translation*Matrix4.Identity;
         }
 
-        public Matrix4 CalculateInverseBindTransform( )
+        public Matrix4 CalculateInverseBindTransform()
         {
-            var translation = CreateTranslation( DisplayMode.Rest );
-            var rotation = CreateFromQuaternion( DisplayMode.Rest );
-            return ( rotation * translation * Matrix4.Identity ).Inverted( );
+            var translation = CreateTranslation(DisplayMode.Rest);
+            var rotation = CreateFromQuaternion(DisplayMode.Rest);
+            return (rotation*translation*Matrix4.Identity).Inverted();
         }
 
-        private Matrix4 CreateFromQuaternion( DisplayMode displayMode )
+        private Matrix4 CreateFromQuaternion(DisplayMode displayMode)
         {
-            return Matrix4.CreateFromQuaternion( displayMode == DisplayMode.Rest ? defaultRotation : _pose.rotation );
+            return Matrix4.CreateFromQuaternion(displayMode == DisplayMode.Rest ? defaultRotation : _pose.rotation);
         }
 
-        private Matrix4 CreateTranslation( DisplayMode displayMode )
+        private Matrix4 CreateTranslation(DisplayMode displayMode)
         {
-            return Matrix4.CreateTranslation( displayMode == DisplayMode.Rest ? defaultTranslation : _pose.translation );
+            return Matrix4.CreateTranslation(displayMode == DisplayMode.Rest ? defaultTranslation : _pose.translation);
         }
 
         private struct Pose

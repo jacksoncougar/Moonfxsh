@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 16, Alignment = 4)]
     public class SectorLinkBlockBase : GuerillaBlock
     {
@@ -27,17 +29,27 @@ namespace Moonfish.Guerilla.Tags
         internal short reverseLink;
         internal short leftSector;
         internal short rightSector;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public SectorLinkBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             vertex1 = binaryReader.ReadInt16();
             vertex2 = binaryReader.ReadInt16();
-            linkFlags = (LinkFlags)binaryReader.ReadInt16();
+            linkFlags = (LinkFlags) binaryReader.ReadInt16();
             hintIndex = binaryReader.ReadInt16();
             forwardLink = binaryReader.ReadInt16();
             reverseLink = binaryReader.ReadInt16();
@@ -45,18 +57,20 @@ namespace Moonfish.Guerilla.Tags
             rightSector = binaryReader.ReadInt16();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(vertex1);
                 binaryWriter.Write(vertex2);
-                binaryWriter.Write((Int16)linkFlags);
+                binaryWriter.Write((Int16) linkFlags);
                 binaryWriter.Write(hintIndex);
                 binaryWriter.Write(forwardLink);
                 binaryWriter.Write(reverseLink);
@@ -65,6 +79,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum LinkFlags : short
         {

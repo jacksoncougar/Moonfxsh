@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Moonfish.Tags
 {
-    [SuppressMessage( "ReSharper", "InconsistentNaming" )]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class LayoutAttribute : Attribute
     {
         public int Size;

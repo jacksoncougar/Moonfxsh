@@ -6,11 +6,11 @@ namespace Moonfish.Guerilla.Tags
 {
     public partial class GlobalGeometryPartBlockNew
     {
-        public void Draw( )
+        public void Draw()
         {
-            GL.DrawElements( PrimitiveType.TriangleStrip, stripLength, DrawElementsType.UnsignedShort,
-                ( IntPtr ) ( stripStartIndex * 2 ) );
-            OpenGL.ReportError( );
+            GL.DrawElements(PrimitiveType.TriangleStrip, stripLength, DrawElementsType.UnsignedShort,
+                (IntPtr) (stripStartIndex*2));
+            OpenGL.ReportError();
         }
     }
 }

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 156, Alignment = 4)]
     public class ScenarioStartingEquipmentBlockBase : GuerillaBlock
     {
@@ -25,32 +27,36 @@ namespace Moonfish.Guerilla.Tags
         internal GameType3 gameType3;
         internal GameType4 gameType4;
         internal byte[] invalidName_;
-        [TagReference("itmc")]
-        internal Moonfish.Tags.TagReference itemCollection1;
-        [TagReference("itmc")]
-        internal Moonfish.Tags.TagReference itemCollection2;
-        [TagReference("itmc")]
-        internal Moonfish.Tags.TagReference itemCollection3;
-        [TagReference("itmc")]
-        internal Moonfish.Tags.TagReference itemCollection4;
-        [TagReference("itmc")]
-        internal Moonfish.Tags.TagReference itemCollection5;
-        [TagReference("itmc")]
-        internal Moonfish.Tags.TagReference itemCollection6;
+        [TagReference("itmc")] internal Moonfish.Tags.TagReference itemCollection1;
+        [TagReference("itmc")] internal Moonfish.Tags.TagReference itemCollection2;
+        [TagReference("itmc")] internal Moonfish.Tags.TagReference itemCollection3;
+        [TagReference("itmc")] internal Moonfish.Tags.TagReference itemCollection4;
+        [TagReference("itmc")] internal Moonfish.Tags.TagReference itemCollection5;
+        [TagReference("itmc")] internal Moonfish.Tags.TagReference itemCollection6;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 156; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 156; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ScenarioStartingEquipmentBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
-            gameType1 = (GameType1)binaryReader.ReadInt16();
-            gameType2 = (GameType2)binaryReader.ReadInt16();
-            gameType3 = (GameType3)binaryReader.ReadInt16();
-            gameType4 = (GameType4)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt32();
+            gameType1 = (GameType1) binaryReader.ReadInt16();
+            gameType2 = (GameType2) binaryReader.ReadInt16();
+            gameType3 = (GameType3) binaryReader.ReadInt16();
+            gameType4 = (GameType4) binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(48);
             itemCollection1 = binaryReader.ReadTagReference();
             itemCollection2 = binaryReader.ReadTagReference();
@@ -61,20 +67,22 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(48);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)gameType1);
-                binaryWriter.Write((Int16)gameType2);
-                binaryWriter.Write((Int16)gameType3);
-                binaryWriter.Write((Int16)gameType4);
+                binaryWriter.Write((Int32) flags);
+                binaryWriter.Write((Int16) gameType1);
+                binaryWriter.Write((Int16) gameType2);
+                binaryWriter.Write((Int16) gameType3);
+                binaryWriter.Write((Int16) gameType4);
                 binaryWriter.Write(invalidName_, 0, 48);
                 binaryWriter.Write(itemCollection1);
                 binaryWriter.Write(itemCollection2);
@@ -86,12 +94,14 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
             NoGrenades = 1,
             PlasmaGrenades = 2,
         };
+
         internal enum GameType1 : short
         {
             NONE = 0,
@@ -110,6 +120,7 @@ using(binaryWriter.BaseStream.Pin())
             AllExceptCTF = 13,
             AllExceptCTFRace = 14,
         };
+
         internal enum GameType2 : short
         {
             NONE = 0,
@@ -128,6 +139,7 @@ using(binaryWriter.BaseStream.Pin())
             AllExceptCTF = 13,
             AllExceptCTFRace = 14,
         };
+
         internal enum GameType3 : short
         {
             NONE = 0,
@@ -146,6 +158,7 @@ using(binaryWriter.BaseStream.Pin())
             AllExceptCTF = 13,
             AllExceptCTFRace = 14,
         };
+
         internal enum GameType4 : short
         {
             NONE = 0,

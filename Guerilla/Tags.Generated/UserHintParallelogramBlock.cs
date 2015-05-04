@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 68, Alignment = 4)]
     public class UserHintParallelogramBlockBase : GuerillaBlock
     {
@@ -32,15 +34,25 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 point3;
         internal short referenceFrame2;
         internal byte[] invalidName_2;
-        public override int SerializedSize { get { return 68; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 68; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public UserHintParallelogramBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             point0 = binaryReader.ReadVector3();
             referenceFrame = binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
@@ -55,16 +67,18 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes(2);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int32) flags);
                 binaryWriter.Write(point0);
                 binaryWriter.Write(referenceFrame);
                 binaryWriter.Write(invalidName_, 0, 2);
@@ -80,6 +94,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

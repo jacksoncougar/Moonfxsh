@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,124 +17,160 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 204, Alignment = 4)]
     public class CharacterWeaponsBlockBase : GuerillaBlock
     {
         internal WeaponsFlags weaponsFlags;
-        [TagReference("weap")]
-        internal Moonfish.Tags.TagReference weapon;
+        [TagReference("weap")] internal Moonfish.Tags.TagReference weapon;
+
         /// <summary>
         /// we can only fire our weapon at targets within this distance
         /// </summary>
         internal float maximumFiringRangeWorldUnits;
+
         /// <summary>
         /// weapon will not be fired at target closer than given distance
         /// </summary>
         internal float minimumFiringRange;
+
         internal Moonfish.Model.Range normalCombatRangeWorldUnits;
+
         /// <summary>
         /// we offset our burst targets randomly by this range when firing at non-visible enemies (zero = never)
         /// </summary>
         internal float bombardmentRange;
+
         /// <summary>
         /// Specific target regions on a vehicle or unit will be fired upon only under the given distance
         /// </summary>
         internal float maxSpecialTargetDistanceWorldUnits;
+
         internal Moonfish.Model.Range timidCombatRangeWorldUnits;
         internal Moonfish.Model.Range aggressiveCombatRangeWorldUnits;
+
         /// <summary>
         /// we try to aim our shots super-ballistically if target is outside this range (zero = never)
         /// </summary>
         internal float superBallisticRange;
+
         /// <summary>
         /// At the min range, the min ballistic fraction is used, at the max, the max ballistic fraction is used
         /// </summary>
         internal Moonfish.Model.Range ballisticFiringBoundsWorldUnits;
+
         /// <summary>
         /// Controls speed and degree of arc. 0 = high, slow, 1 = low, fast
         /// </summary>
         internal Moonfish.Model.Range ballisticFractionBounds01;
+
         internal Moonfish.Model.Range firstBurstDelayTimeSeconds;
         internal float surpriseDelayTimeSeconds;
         internal float surpriseFireWildlyTimeSeconds;
         internal float deathFireWildlyChance01;
         internal float deathFireWildlyTimeSeconds;
+
         /// <summary>
         /// custom standing gun offset for overriding the default in the base actor
         /// </summary>
         internal OpenTK.Vector3 customStandGunOffset;
+
         /// <summary>
         /// custom crouching gun offset for overriding the default in the base actor
         /// </summary>
         internal OpenTK.Vector3 customCrouchGunOffset;
+
         /// <summary>
         /// the type of special weapon fire that we can use
         /// </summary>
         internal SpecialFireModeTheTypeOfSpecialWeaponFireThatWeCanUse specialFireMode;
+
         /// <summary>
         /// when we will decide to use our special weapon fire mode
         /// </summary>
         internal SpecialFireSituationWhenWeWillDecideToUseOurSpecialWeaponFireMode specialFireSituation;
+
         /// <summary>
         /// how likely we are to use our special weapon fire mode
         /// </summary>
         internal float specialFireChance01;
+
         /// <summary>
         /// how long we must wait between uses of our special weapon fire mode
         /// </summary>
         internal float specialFireDelaySeconds;
+
         /// <summary>
         /// damage modifier for special weapon fire (applied in addition to the normal damage modifier. zero = no change)
         /// </summary>
         internal float specialDamageModifier01;
+
         /// <summary>
         /// projectile error angle for special weapon fire (applied in addition to the normal error)
         /// </summary>
         internal float specialProjectileErrorDegrees;
+
         /// <summary>
         /// amount of ammo loaded into the weapon that we drop (in fractions of a clip, e.g. 0.3 to 0.5)
         /// </summary>
         internal Moonfish.Model.Range dropWeaponLoaded;
+
         /// <summary>
         /// total number of rounds in the weapon that we drop (ignored for energy weapons)
         /// </summary>
         internal int dropWeaponAmmo;
+
         /// <summary>
         /// Indicates starting and ending accuracies at normal difficulty
         /// </summary>
         internal Moonfish.Model.Range normalAccuracyBounds;
+
         /// <summary>
         /// The amount of time it takes the accuracy to go from starting to ending
         /// </summary>
         internal float normalAccuracyTime;
+
         /// <summary>
         /// Indicates starting and ending accuracies at heroic difficulty
         /// </summary>
         internal Moonfish.Model.Range heroicAccuracyBounds;
+
         /// <summary>
         /// The amount of time it takes the accuracy to go from starting to ending
         /// </summary>
         internal float heroicAccuracyTime;
+
         /// <summary>
         /// Indicates starting and ending accuracies at legendary difficulty
         /// </summary>
         internal Moonfish.Model.Range legendaryAccuracyBounds;
+
         /// <summary>
         /// The amount of time it takes the accuracy to go from starting to ending
         /// </summary>
         internal float legendaryAccuracyTime;
+
         internal CharacterFiringPatternBlock[] firingPatterns;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference weaponMeleeDamage;
-        public override int SerializedSize { get { return 204; } }
-        public override int Alignment { get { return 4; } }
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference weaponMeleeDamage;
+
+        public override int SerializedSize
+        {
+            get { return 204; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public CharacterWeaponsBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            weaponsFlags = (WeaponsFlags)binaryReader.ReadInt32();
+            weaponsFlags = (WeaponsFlags) binaryReader.ReadInt32();
             weapon = binaryReader.ReadTagReference();
             maximumFiringRangeWorldUnits = binaryReader.ReadSingle();
             minimumFiringRange = binaryReader.ReadSingle();
@@ -152,8 +189,9 @@ namespace Moonfish.Guerilla.Tags
             deathFireWildlyTimeSeconds = binaryReader.ReadSingle();
             customStandGunOffset = binaryReader.ReadVector3();
             customCrouchGunOffset = binaryReader.ReadVector3();
-            specialFireMode = (SpecialFireModeTheTypeOfSpecialWeaponFireThatWeCanUse)binaryReader.ReadInt16();
-            specialFireSituation = (SpecialFireSituationWhenWeWillDecideToUseOurSpecialWeaponFireMode)binaryReader.ReadInt16();
+            specialFireMode = (SpecialFireModeTheTypeOfSpecialWeaponFireThatWeCanUse) binaryReader.ReadInt16();
+            specialFireSituation =
+                (SpecialFireSituationWhenWeWillDecideToUseOurSpecialWeaponFireMode) binaryReader.ReadInt16();
             specialFireChance01 = binaryReader.ReadSingle();
             specialFireDelaySeconds = binaryReader.ReadSingle();
             specialDamageModifier01 = binaryReader.ReadSingle();
@@ -170,17 +208,19 @@ namespace Moonfish.Guerilla.Tags
             weaponMeleeDamage = binaryReader.ReadTagReference();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             firingPatterns = ReadBlockArrayData<CharacterFiringPatternBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)weaponsFlags);
+                binaryWriter.Write((Int32) weaponsFlags);
                 binaryWriter.Write(weapon);
                 binaryWriter.Write(maximumFiringRangeWorldUnits);
                 binaryWriter.Write(minimumFiringRange);
@@ -199,8 +239,8 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(deathFireWildlyTimeSeconds);
                 binaryWriter.Write(customStandGunOffset);
                 binaryWriter.Write(customCrouchGunOffset);
-                binaryWriter.Write((Int16)specialFireMode);
-                binaryWriter.Write((Int16)specialFireSituation);
+                binaryWriter.Write((Int16) specialFireMode);
+                binaryWriter.Write((Int16) specialFireSituation);
                 binaryWriter.Write(specialFireChance01);
                 binaryWriter.Write(specialFireDelaySeconds);
                 binaryWriter.Write(specialDamageModifier01);
@@ -213,11 +253,13 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(heroicAccuracyTime);
                 binaryWriter.Write(legendaryAccuracyBounds);
                 binaryWriter.Write(legendaryAccuracyTime);
-                nextAddress = Guerilla.WriteBlockArray<CharacterFiringPatternBlock>(binaryWriter, firingPatterns, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterFiringPatternBlock>(binaryWriter, firingPatterns,
+                    nextAddress);
                 binaryWriter.Write(weaponMeleeDamage);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum WeaponsFlags : int
         {
@@ -225,12 +267,14 @@ using(binaryWriter.BaseStream.Pin())
             MustCrouchToShoot = 2,
             UseExtendedSafeToSaveRange = 4,
         };
+
         internal enum SpecialFireModeTheTypeOfSpecialWeaponFireThatWeCanUse : short
         {
             None = 0,
             Overcharge = 1,
             SecondaryTrigger = 2,
         };
+
         internal enum SpecialFireSituationWhenWeWillDecideToUseOurSpecialWeaponFireMode : short
         {
             Never = 0,

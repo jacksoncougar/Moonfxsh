@@ -5,9 +5,9 @@ namespace Moonfish
 {
     public static class StreamExtensions
     {
-        public static IDisposable Pin( this Stream stream )
+        public static IDisposable Pin(this Stream stream)
         {
-            return new StreamPositionHandle( stream );
+            return new StreamPositionHandle(stream);
         }
 
         public class StreamPositionHandle : IDisposable
@@ -15,13 +15,13 @@ namespace Moonfish
             private readonly long _streamPosition;
             private readonly Stream _stream;
 
-            public StreamPositionHandle( Stream stream )
+            public StreamPositionHandle(Stream stream)
             {
                 _stream = stream;
                 _streamPosition = stream.Position;
             }
 
-            void IDisposable.Dispose( )
+            void IDisposable.Dispose()
             {
                 _stream.Position = _streamPosition;
             }

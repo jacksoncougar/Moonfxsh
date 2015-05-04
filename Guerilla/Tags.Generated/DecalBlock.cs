@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Deca = (TagClass)"deca";
+        public static readonly TagClass Deca = (TagClass) "deca";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,22 +26,26 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 172, Alignment = 4)]
     public class DecalBlockBase : GuerillaBlock
     {
         internal Flags flags;
+
         /// <summary>
         /// controls how the decal wraps onto surface geometry
         /// </summary>
         internal TypeControlsHowTheDecalWrapsOntoSurfaceGeometry type;
+
         internal Layer layer;
         internal short maxOverlappingCount;
-        [TagReference("deca")]
-        internal Moonfish.Tags.TagReference nextDecalInChain;
+        [TagReference("deca")] internal Moonfish.Tags.TagReference nextDecalInChain;
+
         /// <summary>
         /// 0 defaults to 0.125
         /// </summary>
         internal Moonfish.Model.Range radiusWorldUnits;
+
         internal float radiusOverlapRejectionMuliplier;
         internal Moonfish.Tags.ColourR8G8B8 colorLowerBounds;
         internal Moonfish.Tags.ColourR8G8B8 colorUpperBounds;
@@ -52,22 +57,31 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_2;
         internal byte[] invalidName_3;
         internal byte[] invalidName_4;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference bitmap;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference bitmap;
         internal byte[] invalidName_5;
         internal float maximumSpriteExtentPixels;
         internal byte[] invalidName_6;
-        public override int SerializedSize { get { return 172; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 172; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public DecalBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt16();
-            type = (TypeControlsHowTheDecalWrapsOntoSurfaceGeometry)binaryReader.ReadInt16();
-            layer = (Layer)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
+            type = (TypeControlsHowTheDecalWrapsOntoSurfaceGeometry) binaryReader.ReadInt16();
+            layer = (Layer) binaryReader.ReadInt16();
             maxOverlappingCount = binaryReader.ReadInt16();
             nextDecalInChain = binaryReader.ReadTagReference();
             radiusWorldUnits = binaryReader.ReadRange();
@@ -88,18 +102,20 @@ namespace Moonfish.Guerilla.Tags
             invalidName_6 = binaryReader.ReadBytes(4);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int16)flags);
-                binaryWriter.Write((Int16)type);
-                binaryWriter.Write((Int16)layer);
+                binaryWriter.Write((Int16) flags);
+                binaryWriter.Write((Int16) type);
+                binaryWriter.Write((Int16) layer);
                 binaryWriter.Write(maxOverlappingCount);
                 binaryWriter.Write(nextDecalInChain);
                 binaryWriter.Write(radiusWorldUnits);
@@ -121,6 +137,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {
@@ -135,6 +152,7 @@ using(binaryWriter.BaseStream.Pin())
             PreserveAspect = 256,
             UNUSED1 = 512,
         };
+
         internal enum TypeControlsHowTheDecalWrapsOntoSurfaceGeometry : short
         {
             Scratch = 0,
@@ -142,6 +160,7 @@ using(binaryWriter.BaseStream.Pin())
             Burn = 2,
             PaintedSign = 3,
         };
+
         internal enum Layer : short
         {
             LitAlphaBlendPrelight = 0,

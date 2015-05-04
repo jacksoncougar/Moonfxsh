@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class EffectAccelerationsBlockBase : GuerillaBlock
     {
@@ -26,16 +28,26 @@ namespace Moonfish.Guerilla.Tags
         internal float acceleration;
         internal float innerConeAngleDegrees;
         internal float outerConeAngleDegrees;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public EffectAccelerationsBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            createIn = (CreateIn)binaryReader.ReadInt16();
-            createIn0 = (CreateIn)binaryReader.ReadInt16();
+            createIn = (CreateIn) binaryReader.ReadInt16();
+            createIn0 = (CreateIn) binaryReader.ReadInt16();
             location = binaryReader.ReadShortBlockIndex1();
             invalidName_ = binaryReader.ReadBytes(2);
             acceleration = binaryReader.ReadSingle();
@@ -43,17 +55,19 @@ namespace Moonfish.Guerilla.Tags
             outerConeAngleDegrees = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int16)createIn);
-                binaryWriter.Write((Int16)createIn0);
+                binaryWriter.Write((Int16) createIn);
+                binaryWriter.Write((Int16) createIn0);
                 binaryWriter.Write(location);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(acceleration);
@@ -62,6 +76,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         internal enum CreateIn : short
         {
             AnyEnvironment = 0,
@@ -69,6 +84,7 @@ using(binaryWriter.BaseStream.Pin())
             WaterOnly = 2,
             SpaceOnly = 3,
         };
+
         internal enum CreateIn0 : short
         {
             EitherMode = 0,

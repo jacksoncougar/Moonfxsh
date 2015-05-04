@@ -4,7 +4,7 @@ namespace Moonfish.Graphics
 {
     public class Node
     {
-        public Node( )
+        public Node()
         {
             Position = Vector3.Zero;
             Rotation = Quaternion.Identity;
@@ -19,11 +19,11 @@ namespace Moonfish.Graphics
         {
             get
             {
-                var translation_matrix = Matrix4.CreateTranslation( Position );
-                var rotation_matrix = Matrix4.CreateFromQuaternion( Rotation );
-                var scale_matrix = Matrix4.CreateScale( Scale );
+                var translation_matrix = Matrix4.CreateTranslation(Position);
+                var rotation_matrix = Matrix4.CreateFromQuaternion(Rotation);
+                var scale_matrix = Matrix4.CreateScale(Scale);
 
-                return translation_matrix * rotation_matrix * scale_matrix;
+                return translation_matrix*rotation_matrix*scale_matrix;
             }
         }
     }

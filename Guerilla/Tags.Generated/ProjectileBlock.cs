@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Proj = (TagClass)"proj";
+        public static readonly TagClass Proj = (TagClass) "proj";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 232, Alignment = 4)]
     public class ProjectileBlockBase : GuerillaBlock
     {
@@ -33,103 +35,117 @@ namespace Moonfish.Guerilla.Tags
         internal ImpactNoise impactNoise;
         internal float aIPerceptionRadiusWorldUnits;
         internal float collisionRadiusWorldUnits;
+
         /// <summary>
         /// won't detonate before this time elapses
         /// </summary>
         internal float armingTimeSeconds;
+
         internal float dangerRadiusWorldUnits;
+
         /// <summary>
         /// detonation countdown (zero is untimed)
         /// </summary>
         internal Moonfish.Model.Range timerSeconds;
+
         /// <summary>
         /// detonates when slowed below this velocity
         /// </summary>
         internal float minimumVelocityWorldUnitsPerSecond;
+
         /// <summary>
         /// detonates after travelling this distance
         /// </summary>
         internal float maximumRangeWorldUnits;
+
         internal DetonationNoise detonationNoise;
         internal short superDetProjectileCount;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference detonationStarted;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference detonationEffectAirborne;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference detonationEffectGround;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference detonationDamage;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference attachedDetonationDamage;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference superDetonation;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference detonationStarted;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference detonationEffectAirborne;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference detonationEffectGround;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference detonationDamage;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference attachedDetonationDamage;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference superDetonation;
         internal SuperDetonationDamageStructBlock yourMomma;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference detonationSound;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference detonationSound;
         internal DamageReportingType damageReportingType;
         internal byte[] invalidName_;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference superAttachedDetonationDamage;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference superAttachedDetonationDamage;
+
         /// <summary>
         /// radius within we will generate material effects
         /// </summary>
         internal float materialEffectRadius;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference flybySound;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference impactEffect;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference impactDamage;
+
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference flybySound;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference impactEffect;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference impactDamage;
         internal float boardingDetonationTime;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference boardingDetonationDamage;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference boardingAttachedDetonationDamage;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference boardingDetonationDamage;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference boardingAttachedDetonationDamage;
+
         /// <summary>
         /// the proportion of normal gravity applied to the projectile when in air.
         /// </summary>
         internal float airGravityScale;
+
         /// <summary>
         /// the range over which damage is scaled when the projectile is in air.
         /// </summary>
         internal Moonfish.Model.Range airDamageRangeWorldUnits;
+
         /// <summary>
         /// the proportion of normal gravity applied to the projectile when in water.
         /// </summary>
         internal float waterGravityScale;
+
         /// <summary>
         /// the range over which damage is scaled when the projectile is in water.
         /// </summary>
         internal Moonfish.Model.Range waterDamageRangeWorldUnits;
+
         /// <summary>
         /// bullet's velocity when inflicting maximum damage
         /// </summary>
         internal float initialVelocityWorldUnitsPerSecond;
+
         /// <summary>
         /// bullet's velocity when inflicting minimum damage
         /// </summary>
         internal float finalVelocityWorldUnitsPerSecond;
+
         internal AngularVelocityLowerBoundStructBlock blah;
         internal float guidedAngularVelocityUpperDegreesPerSecond;
+
         /// <summary>
         /// what distance range the projectile goes from initial velocity to final velocity
         /// </summary>
         internal Moonfish.Model.Range accelerationRangeWorldUnits;
+
         internal byte[] invalidName_0;
         internal float targetedLeadingFraction;
         internal ProjectileMaterialResponseBlock[] materialResponses;
-        public override int SerializedSize { get { return 420; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 420; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ProjectileBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
-            detonationTimerStarts = (DetonationTimerStarts)binaryReader.ReadInt16();
-            impactNoise = (ImpactNoise)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt32();
+            detonationTimerStarts = (DetonationTimerStarts) binaryReader.ReadInt16();
+            impactNoise = (ImpactNoise) binaryReader.ReadInt16();
             aIPerceptionRadiusWorldUnits = binaryReader.ReadSingle();
             collisionRadiusWorldUnits = binaryReader.ReadSingle();
             armingTimeSeconds = binaryReader.ReadSingle();
@@ -137,7 +153,7 @@ namespace Moonfish.Guerilla.Tags
             timerSeconds = binaryReader.ReadRange();
             minimumVelocityWorldUnitsPerSecond = binaryReader.ReadSingle();
             maximumRangeWorldUnits = binaryReader.ReadSingle();
-            detonationNoise = (DetonationNoise)binaryReader.ReadInt16();
+            detonationNoise = (DetonationNoise) binaryReader.ReadInt16();
             superDetProjectileCount = binaryReader.ReadInt16();
             detonationStarted = binaryReader.ReadTagReference();
             detonationEffectAirborne = binaryReader.ReadTagReference();
@@ -148,7 +164,7 @@ namespace Moonfish.Guerilla.Tags
             yourMomma = new SuperDetonationDamageStructBlock();
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(yourMomma.ReadFields(binaryReader)));
             detonationSound = binaryReader.ReadTagReference();
-            damageReportingType = (DamageReportingType)binaryReader.ReadByte();
+            damageReportingType = (DamageReportingType) binaryReader.ReadByte();
             invalidName_ = binaryReader.ReadBytes(3);
             superAttachedDetonationDamage = binaryReader.ReadTagReference();
             materialEffectRadius = binaryReader.ReadSingle();
@@ -173,6 +189,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<ProjectileMaterialResponseBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -180,14 +197,15 @@ namespace Moonfish.Guerilla.Tags
             blah.ReadPointers(binaryReader, blamPointers);
             materialResponses = ReadBlockArrayData<ProjectileMaterialResponseBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
-                binaryWriter.Write((Int16)detonationTimerStarts);
-                binaryWriter.Write((Int16)impactNoise);
+                binaryWriter.Write((Int32) flags);
+                binaryWriter.Write((Int16) detonationTimerStarts);
+                binaryWriter.Write((Int16) impactNoise);
                 binaryWriter.Write(aIPerceptionRadiusWorldUnits);
                 binaryWriter.Write(collisionRadiusWorldUnits);
                 binaryWriter.Write(armingTimeSeconds);
@@ -195,7 +213,7 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(timerSeconds);
                 binaryWriter.Write(minimumVelocityWorldUnitsPerSecond);
                 binaryWriter.Write(maximumRangeWorldUnits);
-                binaryWriter.Write((Int16)detonationNoise);
+                binaryWriter.Write((Int16) detonationNoise);
                 binaryWriter.Write(superDetProjectileCount);
                 binaryWriter.Write(detonationStarted);
                 binaryWriter.Write(detonationEffectAirborne);
@@ -205,7 +223,7 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(superDetonation);
                 yourMomma.Write(binaryWriter);
                 binaryWriter.Write(detonationSound);
-                binaryWriter.Write((Byte)damageReportingType);
+                binaryWriter.Write((Byte) damageReportingType);
                 binaryWriter.Write(invalidName_, 0, 3);
                 binaryWriter.Write(superAttachedDetonationDamage);
                 binaryWriter.Write(materialEffectRadius);
@@ -226,10 +244,12 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(accelerationRangeWorldUnits);
                 binaryWriter.Write(invalidName_0, 0, 4);
                 binaryWriter.Write(targetedLeadingFraction);
-                nextAddress = Guerilla.WriteBlockArray<ProjectileMaterialResponseBlock>(binaryWriter, materialResponses, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ProjectileMaterialResponseBlock>(binaryWriter, materialResponses,
+                    nextAddress);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
@@ -245,6 +265,7 @@ using(binaryWriter.BaseStream.Pin())
             ROBOTRONSTEERING = 512,
             FasterWhenOwnedByPlayer = 1024,
         };
+
         internal enum DetonationTimerStarts : short
         {
             Immediately = 0,
@@ -252,6 +273,7 @@ using(binaryWriter.BaseStream.Pin())
             WhenAtRest = 2,
             AfterFirstBounceOffAnySurface = 3,
         };
+
         internal enum ImpactNoise : short
         {
             Silent = 0,
@@ -260,6 +282,7 @@ using(binaryWriter.BaseStream.Pin())
             Shout = 3,
             Quiet = 4,
         };
+
         internal enum DetonationNoise : short
         {
             Silent = 0,
@@ -268,6 +291,7 @@ using(binaryWriter.BaseStream.Pin())
             Shout = 3,
             Quiet = 4,
         };
+
         internal enum DamageReportingType : byte
         {
             TehGuardians11 = 0,

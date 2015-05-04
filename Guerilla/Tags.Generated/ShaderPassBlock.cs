@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Spas = (TagClass)"spas";
+        public static readonly TagClass Spas = (TagClass) "spas";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 36, Alignment = 4)]
     public class ShaderPassBlockBase : GuerillaBlock
     {
@@ -34,11 +36,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal ShaderPassImplementationBlock[] implementations;
         internal ShaderPassPostprocessDefinitionNewBlock[] postprocessDefinition;
-        public override int SerializedSize { get { return 36; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 36; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ShaderPassBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -50,25 +62,30 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<ShaderPassPostprocessDefinitionNewBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             documentation = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
             parameters = ReadBlockArrayData<ShaderPassParameterBlock>(binaryReader, blamPointers.Dequeue());
             implementations = ReadBlockArrayData<ShaderPassImplementationBlock>(binaryReader, blamPointers.Dequeue());
-            postprocessDefinition = ReadBlockArrayData<ShaderPassPostprocessDefinitionNewBlock>(binaryReader, blamPointers.Dequeue());
+            postprocessDefinition = ReadBlockArrayData<ShaderPassPostprocessDefinitionNewBlock>(binaryReader,
+                blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteData(binaryWriter, documentation, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ShaderPassParameterBlock>(binaryWriter, parameters, nextAddress);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(invalidName_0, 0, 2);
-                nextAddress = Guerilla.WriteBlockArray<ShaderPassImplementationBlock>(binaryWriter, implementations, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessDefinitionNewBlock>(binaryWriter, postprocessDefinition, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderPassImplementationBlock>(binaryWriter, implementations,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<ShaderPassPostprocessDefinitionNewBlock>(binaryWriter,
+                    postprocessDefinition, nextAddress);
                 return nextAddress;
             }
         }

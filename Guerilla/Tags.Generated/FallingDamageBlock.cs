@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,31 +17,36 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 104, Alignment = 4)]
     public class FallingDamageBlockBase : GuerillaBlock
     {
         internal byte[] invalidName_;
         internal Moonfish.Model.Range harmfulFallingDistanceWorldUnits;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference fallingDamage;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference fallingDamage;
         internal byte[] invalidName_0;
         internal float maximumFallingDistanceWorldUnits;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference distanceDamage;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference vehicleEnvironemtnCollisionDamageEffect;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference vehicleKilledUnitDamageEffect;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference vehicleCollisionDamage;
-        [TagReference("jpt!")]
-        internal Moonfish.Tags.TagReference flamingDeathDamage;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference distanceDamage;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference vehicleEnvironemtnCollisionDamageEffect;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference vehicleKilledUnitDamageEffect;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference vehicleCollisionDamage;
+        [TagReference("jpt!")] internal Moonfish.Tags.TagReference flamingDeathDamage;
         internal byte[] invalidName_1;
-        public override int SerializedSize { get { return 104; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 104; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public FallingDamageBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -57,14 +63,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(28);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 8);
                 binaryWriter.Write(harmfulFallingDistanceWorldUnits);

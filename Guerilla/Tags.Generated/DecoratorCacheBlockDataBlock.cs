@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 136, Alignment = 4)]
     public class DecoratorCacheBlockDataBlockBase : GuerillaBlock
     {
@@ -28,11 +30,21 @@ namespace Moonfish.Guerilla.Tags
         internal IndicesBlock[] spriteIndices;
         internal Moonfish.Tags.VertexBuffer spriteVertexBuffer;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 136; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 136; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public DecoratorCacheBlockDataBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -47,6 +59,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(16);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -56,10 +69,11 @@ namespace Moonfish.Guerilla.Tags
             spriteVertices = ReadBlockArrayData<SpriteVerticesBlock>(binaryReader, blamPointers.Dequeue());
             spriteIndices = ReadBlockArrayData<IndicesBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<DecoratorPlacementBlock>(binaryWriter, placements, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<DecalVerticesBlock>(binaryWriter, decalVertices, nextAddress);

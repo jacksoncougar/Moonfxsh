@@ -6,12 +6,12 @@ namespace Moonfish.Guerilla
     {
         public TagClass Class { get; private set; }
 
-        public MoonfishTagReferenceDefinition( tag_reference_definition definition )
+        public MoonfishTagReferenceDefinition(tag_reference_definition definition)
         {
             Class = definition.Class;
         }
 
-        public MoonfishTagReferenceDefinition( TagClass tagClass )
+        public MoonfishTagReferenceDefinition(TagClass tagClass)
         {
             Class = tagClass;
         }

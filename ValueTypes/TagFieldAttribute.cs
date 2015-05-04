@@ -2,7 +2,7 @@
 
 namespace Moonfish.Tags
 {
-    [AttributeUsage( AttributeTargets.All )]
+    [AttributeUsage(AttributeTargets.All)]
     public class TagFieldAttribute : Attribute
     {
         public bool usesCustomFunction = false;
@@ -13,11 +13,11 @@ namespace Moonfish.Tags
             get { return offset != -1; }
         }
 
-        public TagFieldAttribute( ) : this( -1 )
+        public TagFieldAttribute() : this(-1)
         {
         }
 
-        public TagFieldAttribute( int fieldOffset )
+        public TagFieldAttribute(int fieldOffset)
         {
             offset = fieldOffset;
         }

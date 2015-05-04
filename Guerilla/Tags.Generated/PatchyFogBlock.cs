@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Fpch = (TagClass)"fpch";
+        public static readonly TagClass Fpch = (TagClass) "fpch";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 80, Alignment = 4)]
     public class PatchyFogBlockBase : GuerillaBlock
     {
@@ -33,44 +35,61 @@ namespace Moonfish.Guerilla.Tags
         internal float rotationMultiplier01;
         internal float strafingMultiplier01;
         internal float zoomMultiplier01;
+
         /// <summary>
         /// 0 defaults to 1
         /// </summary>
         internal float noiseMapScale;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference noiseMap;
+
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference noiseMap;
+
         /// <summary>
         /// 0 defaults to 1
         /// </summary>
         internal float noiseVerticalScaleForward;
+
         /// <summary>
         /// 0 defaults to 1
         /// </summary>
         internal float noiseVerticalScaleUp;
+
         /// <summary>
         /// 0 defaults to 1
         /// </summary>
         internal float noiseOpacityScaleUp;
+
         internal float animationPeriodSeconds;
         internal Moonfish.Model.Range windVelocityWorldUnitsPerSecond;
+
         /// <summary>
         /// 0 defaults to 1
         /// </summary>
         internal Moonfish.Model.Range windPeriodSeconds;
+
         internal float windAccelerationWeight01;
         internal float windPerpendicularWeight01;
         internal float windConstantVelocityXWorldUnitsPerSecond;
         internal float windConstantVelocityYWorldUnitsPerSecond;
         internal float windConstantVelocityZWorldUnitsPerSecond;
-        public override int SerializedSize { get { return 80; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 80; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public PatchyFogBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             rotationMultiplier01 = binaryReader.ReadSingle();
             strafingMultiplier01 = binaryReader.ReadSingle();
@@ -90,16 +109,18 @@ namespace Moonfish.Guerilla.Tags
             windConstantVelocityZWorldUnitsPerSecond = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16) flags);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(rotationMultiplier01);
                 binaryWriter.Write(strafingMultiplier01);
@@ -120,6 +141,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : short
         {

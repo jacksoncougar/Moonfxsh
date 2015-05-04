@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,30 +17,37 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 80, Alignment = 4)]
     public class ShaderPropertiesBlockBase : GuerillaBlock
     {
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference diffuseMap;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference lightmapEmissiveMap;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference diffuseMap;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference lightmapEmissiveMap;
         internal Moonfish.Tags.ColourR8G8B8 lightmapEmissiveColor;
         internal float lightmapEmissivePower;
         internal float lightmapResolutionScale;
         internal float lightmapHalfLife;
         internal float lightmapDiffuseScale;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference alphaTestMap;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference translucentMap;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference alphaTestMap;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference translucentMap;
         internal Moonfish.Tags.ColourR8G8B8 lightmapTransparentColor;
         internal float lightmapTransparentAlpha;
         internal float lightmapFoliageScale;
-        public override int SerializedSize { get { return 80; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 80; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ShaderPropertiesBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -57,14 +65,16 @@ namespace Moonfish.Guerilla.Tags
             lightmapFoliageScale = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(diffuseMap);
                 binaryWriter.Write(lightmapEmissiveMap);

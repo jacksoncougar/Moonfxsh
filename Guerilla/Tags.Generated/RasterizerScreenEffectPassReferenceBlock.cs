@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 172, Alignment = 4)]
     public class RasterizerScreenEffectPassReferenceBlockBase : GuerillaBlock
     {
@@ -36,11 +38,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
         internal RasterizerScreenEffectConvolutionBlock[] convolution;
-        public override int SerializedSize { get { return 172; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 172; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public RasterizerScreenEffectPassReferenceBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -52,28 +64,34 @@ namespace Moonfish.Guerilla.Tags
             primary0AndSecondary0ImplementationIndex1 = binaryReader.ReadByte();
             primary0AndSecondary0ImplementationIndex2 = binaryReader.ReadByte();
             invalidName_0 = binaryReader.ReadBytes(64);
-            stage0Mode = (Stage0Mode)binaryReader.ReadInt16();
-            stage1Mode = (Stage1Mode)binaryReader.ReadInt16();
-            stage2Mode = (Stage2Mode)binaryReader.ReadInt16();
-            stage3Mode = (Stage3Mode)binaryReader.ReadInt16();
-            blamPointers.Enqueue(ReadBlockArrayPointer<RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock>(binaryReader));
-            target = (Target)binaryReader.ReadInt16();
+            stage0Mode = (Stage0Mode) binaryReader.ReadInt16();
+            stage1Mode = (Stage1Mode) binaryReader.ReadInt16();
+            stage2Mode = (Stage2Mode) binaryReader.ReadInt16();
+            stage3Mode = (Stage3Mode) binaryReader.ReadInt16();
+            blamPointers.Enqueue(
+                ReadBlockArrayPointer<RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock>(binaryReader));
+            target = (Target) binaryReader.ReadInt16();
             invalidName_1 = binaryReader.ReadBytes(2);
             invalidName_2 = binaryReader.ReadBytes(64);
             blamPointers.Enqueue(ReadBlockArrayPointer<RasterizerScreenEffectConvolutionBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             explanation = ReadDataByteArray(binaryReader, blamPointers.Dequeue());
-            advancedControl = ReadBlockArrayData<RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock>(binaryReader, blamPointers.Dequeue());
-            convolution = ReadBlockArrayData<RasterizerScreenEffectConvolutionBlock>(binaryReader, blamPointers.Dequeue());
+            advancedControl =
+                ReadBlockArrayData<RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock>(binaryReader,
+                    blamPointers.Dequeue());
+            convolution = ReadBlockArrayData<RasterizerScreenEffectConvolutionBlock>(binaryReader,
+                blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteData(binaryWriter, explanation, nextAddress);
                 binaryWriter.Write(layerPassIndexLeaveAs1UnlessDebugging);
@@ -83,18 +101,22 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(primary0AndSecondary0ImplementationIndex1);
                 binaryWriter.Write(primary0AndSecondary0ImplementationIndex2);
                 binaryWriter.Write(invalidName_0, 0, 64);
-                binaryWriter.Write((Int16)stage0Mode);
-                binaryWriter.Write((Int16)stage1Mode);
-                binaryWriter.Write((Int16)stage2Mode);
-                binaryWriter.Write((Int16)stage3Mode);
-                nextAddress = Guerilla.WriteBlockArray<RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock>(binaryWriter, advancedControl, nextAddress);
-                binaryWriter.Write((Int16)target);
+                binaryWriter.Write((Int16) stage0Mode);
+                binaryWriter.Write((Int16) stage1Mode);
+                binaryWriter.Write((Int16) stage2Mode);
+                binaryWriter.Write((Int16) stage3Mode);
+                nextAddress =
+                    Guerilla.WriteBlockArray<RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock>(
+                        binaryWriter, advancedControl, nextAddress);
+                binaryWriter.Write((Int16) target);
                 binaryWriter.Write(invalidName_1, 0, 2);
                 binaryWriter.Write(invalidName_2, 0, 64);
-                nextAddress = Guerilla.WriteBlockArray<RasterizerScreenEffectConvolutionBlock>(binaryWriter, convolution, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<RasterizerScreenEffectConvolutionBlock>(binaryWriter, convolution,
+                    nextAddress);
                 return nextAddress;
             }
         }
+
         internal enum Stage0Mode : short
         {
             Default = 0,
@@ -103,6 +125,7 @@ using(binaryWriter.BaseStream.Pin())
             FramebufferRelative = 3,
             Zero = 4,
         };
+
         internal enum Stage1Mode : short
         {
             Default = 0,
@@ -111,6 +134,7 @@ using(binaryWriter.BaseStream.Pin())
             FramebufferRelative = 3,
             Zero = 4,
         };
+
         internal enum Stage2Mode : short
         {
             Default = 0,
@@ -119,6 +143,7 @@ using(binaryWriter.BaseStream.Pin())
             FramebufferRelative = 3,
             Zero = 4,
         };
+
         internal enum Stage3Mode : short
         {
             Default = 0,
@@ -127,6 +152,7 @@ using(binaryWriter.BaseStream.Pin())
             FramebufferRelative = 3,
             Zero = 4,
         };
+
         internal enum Target : short
         {
             Framebuffer = 0,

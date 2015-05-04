@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Wigl = (TagClass)"wigl";
+        public static readonly TagClass Wigl = (TagClass) "wigl";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 452, Alignment = 4)]
     public class UserInterfaceSharedGlobalsDefinitionBlockBase : GuerillaBlock
     {
@@ -47,52 +49,31 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector4 overlayedInterfaceColor;
         internal byte[] invalidName_7;
         internal UiErrorCategoryBlock[] errors;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundTag;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundTag0;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundTag1;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundTag2;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundTag3;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundTag4;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundTag5;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundTag6;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundTag7;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundTag8;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundTag9;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference invalidName_8;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference soundTag10;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference invalidName_9;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference invalidName_10;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference invalidName_11;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference globalBitmapsTag;
-        [TagReference("unic")]
-        internal Moonfish.Tags.TagReference unicodeStringListTag;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundTag;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundTag0;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundTag1;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundTag2;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundTag3;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundTag4;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundTag5;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundTag6;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundTag7;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundTag8;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundTag9;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference invalidName_8;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference soundTag10;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference invalidName_9;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference invalidName_10;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference invalidName_11;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference globalBitmapsTag;
+        [TagReference("unic")] internal Moonfish.Tags.TagReference unicodeStringListTag;
         internal AnimationReferenceBlock[] screenAnimations;
         internal ShapeGroupReferenceBlock[] shapeGroups;
         internal PersistentBackgroundAnimationBlock[] animations;
         internal ListSkinReferenceBlock[] listItemSkins;
-        [TagReference("unic")]
-        internal Moonfish.Tags.TagReference buttonKeyTypeStrings;
-        [TagReference("unic")]
-        internal Moonfish.Tags.TagReference gameTypeStrings;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference invalidName_12;
+        [TagReference("unic")] internal Moonfish.Tags.TagReference buttonKeyTypeStrings;
+        [TagReference("unic")] internal Moonfish.Tags.TagReference gameTypeStrings;
+        [TagReference("null")] internal Moonfish.Tags.TagReference invalidName_12;
         internal SkillToRankMappingBlock[] skillMappings;
         internal FullScreenHeaderTextFont fullScreenHeaderTextFont;
         internal LargeDialogHeaderTextFont largeDialogHeaderTextFont;
@@ -107,14 +88,23 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector2 halfDialogButtonKeyTextBounds;
         internal OpenTK.Vector2 qtrDialogHeaderTextBounds;
         internal OpenTK.Vector2 qtrDialogButtonKeyTextBounds;
-        [TagReference("lsnd")]
-        internal Moonfish.Tags.TagReference mainMenuMusic;
+        [TagReference("lsnd")] internal Moonfish.Tags.TagReference mainMenuMusic;
         internal int musicFadeTimeMilliseconds;
-        public override int SerializedSize { get { return 452; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 452; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public UserInterfaceSharedGlobalsDefinitionBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -163,10 +153,10 @@ namespace Moonfish.Guerilla.Tags
             gameTypeStrings = binaryReader.ReadTagReference();
             invalidName_12 = binaryReader.ReadTagReference();
             blamPointers.Enqueue(ReadBlockArrayPointer<SkillToRankMappingBlock>(binaryReader));
-            fullScreenHeaderTextFont = (FullScreenHeaderTextFont)binaryReader.ReadInt16();
-            largeDialogHeaderTextFont = (LargeDialogHeaderTextFont)binaryReader.ReadInt16();
-            halfDialogHeaderTextFont = (HalfDialogHeaderTextFont)binaryReader.ReadInt16();
-            qtrDialogHeaderTextFont = (QtrDialogHeaderTextFont)binaryReader.ReadInt16();
+            fullScreenHeaderTextFont = (FullScreenHeaderTextFont) binaryReader.ReadInt16();
+            largeDialogHeaderTextFont = (LargeDialogHeaderTextFont) binaryReader.ReadInt16();
+            halfDialogHeaderTextFont = (HalfDialogHeaderTextFont) binaryReader.ReadInt16();
+            qtrDialogHeaderTextFont = (QtrDialogHeaderTextFont) binaryReader.ReadInt16();
             defaultTextColor = binaryReader.ReadVector4();
             fullScreenHeaderTextBounds = binaryReader.ReadVector2();
             fullScreenButtonKeyTextBounds = binaryReader.ReadVector2();
@@ -180,6 +170,7 @@ namespace Moonfish.Guerilla.Tags
             musicFadeTimeMilliseconds = binaryReader.ReadInt32();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -190,10 +181,11 @@ namespace Moonfish.Guerilla.Tags
             listItemSkins = ReadBlockArrayData<ListSkinReferenceBlock>(binaryReader, blamPointers.Dequeue());
             skillMappings = ReadBlockArrayData<SkillToRankMappingBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(invalidName_0, 0, 2);
@@ -232,18 +224,20 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(invalidName_11);
                 binaryWriter.Write(globalBitmapsTag);
                 binaryWriter.Write(unicodeStringListTag);
-                nextAddress = Guerilla.WriteBlockArray<AnimationReferenceBlock>(binaryWriter, screenAnimations, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<AnimationReferenceBlock>(binaryWriter, screenAnimations,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ShapeGroupReferenceBlock>(binaryWriter, shapeGroups, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PersistentBackgroundAnimationBlock>(binaryWriter, animations, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PersistentBackgroundAnimationBlock>(binaryWriter, animations,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ListSkinReferenceBlock>(binaryWriter, listItemSkins, nextAddress);
                 binaryWriter.Write(buttonKeyTypeStrings);
                 binaryWriter.Write(gameTypeStrings);
                 binaryWriter.Write(invalidName_12);
                 nextAddress = Guerilla.WriteBlockArray<SkillToRankMappingBlock>(binaryWriter, skillMappings, nextAddress);
-                binaryWriter.Write((Int16)fullScreenHeaderTextFont);
-                binaryWriter.Write((Int16)largeDialogHeaderTextFont);
-                binaryWriter.Write((Int16)halfDialogHeaderTextFont);
-                binaryWriter.Write((Int16)qtrDialogHeaderTextFont);
+                binaryWriter.Write((Int16) fullScreenHeaderTextFont);
+                binaryWriter.Write((Int16) largeDialogHeaderTextFont);
+                binaryWriter.Write((Int16) halfDialogHeaderTextFont);
+                binaryWriter.Write((Int16) qtrDialogHeaderTextFont);
                 binaryWriter.Write(defaultTextColor);
                 binaryWriter.Write(fullScreenHeaderTextBounds);
                 binaryWriter.Write(fullScreenButtonKeyTextBounds);
@@ -258,6 +252,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         internal enum FullScreenHeaderTextFont : short
         {
             Terminal = 0,
@@ -273,6 +268,7 @@ using(binaryWriter.BaseStream.Pin())
             MainMenuFont = 10,
             TextChatFont = 11,
         };
+
         internal enum LargeDialogHeaderTextFont : short
         {
             Terminal = 0,
@@ -288,6 +284,7 @@ using(binaryWriter.BaseStream.Pin())
             MainMenuFont = 10,
             TextChatFont = 11,
         };
+
         internal enum HalfDialogHeaderTextFont : short
         {
             Terminal = 0,
@@ -303,6 +300,7 @@ using(binaryWriter.BaseStream.Pin())
             MainMenuFont = 10,
             TextChatFont = 11,
         };
+
         internal enum QtrDialogHeaderTextFont : short
         {
             Terminal = 0,

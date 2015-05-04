@@ -10,34 +10,34 @@ namespace Moonfish.ResourceManagement
 
     public static class ResourceStreamStaticMethods
     {
-        public static BlamPointer ReadBlamPointer( this BinaryReader binaryReader, int elementSize )
+        public static BlamPointer ReadBlamPointer(this BinaryReader binaryReader, int elementSize)
         {
-            if ( binaryReader.BaseStream is ResourceStream )
+            if (binaryReader.BaseStream is ResourceStream)
             {
                 var stream = binaryReader.BaseStream as ResourceStream;
                 var offset = stream.Position;
-                binaryReader.BaseStream.Seek( 8, SeekOrigin.Current );
+                binaryReader.BaseStream.Seek(8, SeekOrigin.Current);
                 var resource =
                     stream.Resources.Where(
                         x =>
                             x.primaryLocator == offset &&
-                            x.type != Guerilla.Tags.GlobalGeometryBlockResourceBlockBase.Type.VertexBuffer )
-                        .SingleOrDefault( );
-                if ( resource == null )
+                            x.type != Guerilla.Tags.GlobalGeometryBlockResourceBlockBase.Type.VertexBuffer)
+                        .SingleOrDefault();
+                if (resource == null)
                 {
-                    return new BlamPointer( 0, 0, elementSize );
+                    return new BlamPointer(0, 0, elementSize);
                 }
                 else
                 {
-                    var count = resource.resourceDataSize / resource.secondaryLocator;
+                    var count = resource.resourceDataSize/resource.secondaryLocator;
                     var address = resource.resourceDataOffset + stream.HeaderSize;
                     var size = resource.secondaryLocator;
-                    return new BlamPointer( count, address, elementSize );
+                    return new BlamPointer(count, address, elementSize);
                 }
             }
             else
             {
-                return new BlamPointer( binaryReader.ReadInt32( ), binaryReader.ReadInt32( ), elementSize );
+                return new BlamPointer(binaryReader.ReadInt32(), binaryReader.ReadInt32(), elementSize);
             }
         }
     }
@@ -50,18 +50,18 @@ namespace Moonfish.ResourceManagement
 
         public int HeaderSize { get; private set; }
 
-        public ResourceStream( byte[] buffer, Guerilla.Tags.GlobalGeometryBlockInfoStructBlock blockInfo )
-            : base( buffer )
+        public ResourceStream(byte[] buffer, Guerilla.Tags.GlobalGeometryBlockInfoStructBlock blockInfo)
+            : base(buffer)
         {
             HeaderSize = blockInfo.sectionDataSize;
             Resources = blockInfo.resources;
         }
 
-        public byte[] GetResourceData( GlobalGeometryBlockResourceBlock resource )
+        public byte[] GetResourceData(GlobalGeometryBlockResourceBlock resource)
         {
-            this.Seek( resource.resourceDataOffset, SeekOrigin.Data );
+            this.Seek(resource.resourceDataOffset, SeekOrigin.Data);
             var buffer = new byte[resource.resourceDataSize];
-            this.Read( buffer, 0, buffer.Length );
+            this.Read(buffer, 0, buffer.Length);
             return buffer;
         }
 
@@ -71,16 +71,16 @@ namespace Moonfish.ResourceManagement
             Data,
         }
 
-        public long Seek( long offset, SeekOrigin loc )
+        public long Seek(long offset, SeekOrigin loc)
         {
-            switch ( loc )
+            switch (loc)
             {
                 case SeekOrigin.Header:
-                    return base.Seek( offset, System.IO.SeekOrigin.Begin );
+                    return base.Seek(offset, System.IO.SeekOrigin.Begin);
                 case SeekOrigin.Data:
-                    return base.Seek( HeaderSize + offset, System.IO.SeekOrigin.Begin );
+                    return base.Seek(HeaderSize + offset, System.IO.SeekOrigin.Begin);
             }
-            return base.Seek( offset, System.IO.SeekOrigin.Begin );
+            return base.Seek(offset, System.IO.SeekOrigin.Begin);
         }
     }
 }

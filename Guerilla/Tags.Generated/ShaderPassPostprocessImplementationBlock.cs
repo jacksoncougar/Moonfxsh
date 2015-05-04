@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 438, Alignment = 4)]
     public class ShaderPassPostprocessImplementationBlockBase : GuerillaBlock
     {
@@ -23,8 +25,7 @@ namespace Moonfish.Guerilla.Tags
         internal ShaderGpuStateReferenceStructBlock gPUConstantState;
         internal ShaderGpuStateReferenceStructBlock gPUVolatileState;
         internal ShaderGpuStateReferenceStructBlock gPUDefaultState;
-        [TagReference("vrtx")]
-        internal Moonfish.Tags.TagReference vertexShader;
+        [TagReference("vrtx")] internal Moonfish.Tags.TagReference vertexShader;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
@@ -41,11 +42,21 @@ namespace Moonfish.Guerilla.Tags
         internal PixelShaderConstantBlock[] pixelShaderConstants;
         internal byte[] invalidName_5;
         internal byte[] invalidName_6;
-        public override int SerializedSize { get { return 438; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 438; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ShaderPassPostprocessImplementationBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -76,6 +87,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_6 = binaryReader.ReadBytes(4);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -87,14 +99,16 @@ namespace Moonfish.Guerilla.Tags
             colorExterns = ReadBlockArrayData<ExternReferenceBlock>(binaryReader, blamPointers.Dequeue());
             switchExterns = ReadBlockArrayData<ExternReferenceBlock>(binaryReader, blamPointers.Dequeue());
             pixelShaderFragments = ReadBlockArrayData<PixelShaderFragmentBlock>(binaryReader, blamPointers.Dequeue());
-            pixelShaderPermutations = ReadBlockArrayData<PixelShaderPermutationBlock>(binaryReader, blamPointers.Dequeue());
+            pixelShaderPermutations = ReadBlockArrayData<PixelShaderPermutationBlock>(binaryReader,
+                blamPointers.Dequeue());
             pixelShaderCombiners = ReadBlockArrayData<PixelShaderCombinerBlock>(binaryReader, blamPointers.Dequeue());
             pixelShaderConstants = ReadBlockArrayData<PixelShaderConstantBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 gPUState.Write(binaryWriter);
                 gPUConstantState.Write(binaryWriter);
@@ -111,10 +125,14 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(bitmapParameterCount);
                 binaryWriter.Write(invalidName_3, 0, 2);
                 binaryWriter.Write(invalidName_4, 0, 240);
-                nextAddress = Guerilla.WriteBlockArray<PixelShaderFragmentBlock>(binaryWriter, pixelShaderFragments, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PixelShaderPermutationBlock>(binaryWriter, pixelShaderPermutations, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PixelShaderCombinerBlock>(binaryWriter, pixelShaderCombiners, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PixelShaderConstantBlock>(binaryWriter, pixelShaderConstants, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PixelShaderFragmentBlock>(binaryWriter, pixelShaderFragments,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PixelShaderPermutationBlock>(binaryWriter,
+                    pixelShaderPermutations, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PixelShaderCombinerBlock>(binaryWriter, pixelShaderCombiners,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PixelShaderConstantBlock>(binaryWriter, pixelShaderConstants,
+                    nextAddress);
                 binaryWriter.Write(invalidName_5, 0, 4);
                 binaryWriter.Write(invalidName_6, 0, 4);
                 return nextAddress;

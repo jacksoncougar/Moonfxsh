@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,12 +17,12 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 152, Alignment = 4)]
     public class LightVolumeVolumeBlockBase : GuerillaBlock
     {
         internal Flags flags;
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference bitmap;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference bitmap;
         internal int spriteCount4256;
         internal ScalarFunctionStructBlock offsetFunction;
         internal ScalarFunctionStructBlock radiusFunction;
@@ -39,15 +40,25 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_;
         internal LightVolumeRuntimeOffsetBlock[] invalidName_0;
         internal byte[] invalidName_1;
-        public override int SerializedSize { get { return 152; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 152; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public LightVolumeVolumeBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             bitmap = binaryReader.ReadTagReference();
             spriteCount4256 = binaryReader.ReadInt32();
             offsetFunction = new ScalarFunctionStructBlock();
@@ -73,6 +84,7 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(48);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -84,12 +96,13 @@ namespace Moonfish.Guerilla.Tags
             aspect = ReadBlockArrayData<LightVolumeAspectBlock>(binaryReader, blamPointers.Dequeue());
             invalidName_0 = ReadBlockArrayData<LightVolumeRuntimeOffsetBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int32) flags);
                 binaryWriter.Write(bitmap);
                 binaryWriter.Write(spriteCount4256);
                 offsetFunction.Write(binaryWriter);
@@ -106,11 +119,13 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(xBufferMaxIterations1256);
                 binaryWriter.Write(xDeltaMaxError000101);
                 binaryWriter.Write(invalidName_, 0, 4);
-                nextAddress = Guerilla.WriteBlockArray<LightVolumeRuntimeOffsetBlock>(binaryWriter, invalidName_0, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<LightVolumeRuntimeOffsetBlock>(binaryWriter, invalidName_0,
+                    nextAddress);
                 binaryWriter.Write(invalidName_1, 0, 48);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

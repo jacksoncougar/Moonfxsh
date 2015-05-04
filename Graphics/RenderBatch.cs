@@ -16,47 +16,47 @@ namespace Moonfish.Graphics
         public Dictionary<string, dynamic> Uniforms { get; private set; }
         public Dictionary<EnableCap, bool> RenderStates { get; private set; }
 
-        public void SetupGLRenderState( )
+        public void SetupGLRenderState()
         {
-            if ( ChangeState != null ) ChangeState( );
+            if (ChangeState != null) ChangeState();
         }
 
-        public void CleanupGLRenderState( )
+        public void CleanupGLRenderState()
         {
-            if ( RevertState != null ) RevertState( );
+            if (RevertState != null) RevertState();
         }
 
         public Action ChangeState { private get; set; }
         public Action RevertState { private get; set; }
 
-        public RenderBatch( )
-            : this( 0, 0, 0 )
+        public RenderBatch()
+            : this(0, 0, 0)
         {
         }
 
-        public RenderBatch( int attributeCount, int uniformCount, int stateCount )
+        public RenderBatch(int attributeCount, int uniformCount, int stateCount)
         {
-            Shader = new ShaderReference( ShaderReference.ReferenceType.System, 0 );
-            Attributes = new Dictionary<string, object>( attributeCount );
-            Uniforms = new Dictionary<string, object>( uniformCount );
-            RenderStates = new Dictionary<EnableCap, bool>( stateCount );
+            Shader = new ShaderReference(ShaderReference.ReferenceType.System, 0);
+            Attributes = new Dictionary<string, object>(attributeCount);
+            Uniforms = new Dictionary<string, object>(uniformCount);
+            RenderStates = new Dictionary<EnableCap, bool>(stateCount);
             PrimitiveType = PrimitiveType.TriangleStrip;
             DrawElementsType = DrawElementsType.UnsignedShort;
         }
 
-        public void AssignAttribute( string attributeName, dynamic value )
+        public void AssignAttribute(string attributeName, dynamic value)
         {
-            Attributes[ attributeName ] = value;
+            Attributes[attributeName] = value;
         }
 
-        public void AssignUniform( string uniformName, dynamic value )
+        public void AssignUniform(string uniformName, dynamic value)
         {
-            Uniforms[ uniformName ] = value;
+            Uniforms[uniformName] = value;
         }
 
-        public void AssignRenderState( EnableCap state, bool value )
+        public void AssignRenderState(EnableCap state, bool value)
         {
-            RenderStates[ state ] = value;
+            RenderStates[state] = value;
         }
     }
 }

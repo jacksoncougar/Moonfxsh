@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 4, Alignment = 4)]
     public class HudWidgetInputsStructBlockBase : GuerillaBlock
     {
@@ -23,36 +25,49 @@ namespace Moonfish.Guerilla.Tags
         internal Input2 input2;
         internal Input3 input3;
         internal Input4 input4;
-        public override int SerializedSize { get { return 4; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 4; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public HudWidgetInputsStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            input1 = (Input1)binaryReader.ReadByte();
-            input2 = (Input2)binaryReader.ReadByte();
-            input3 = (Input3)binaryReader.ReadByte();
-            input4 = (Input4)binaryReader.ReadByte();
+            input1 = (Input1) binaryReader.ReadByte();
+            input2 = (Input2) binaryReader.ReadByte();
+            input3 = (Input3) binaryReader.ReadByte();
+            input4 = (Input4) binaryReader.ReadByte();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Byte)input1);
-                binaryWriter.Write((Byte)input2);
-                binaryWriter.Write((Byte)input3);
-                binaryWriter.Write((Byte)input4);
+                binaryWriter.Write((Byte) input1);
+                binaryWriter.Write((Byte) input2);
+                binaryWriter.Write((Byte) input3);
+                binaryWriter.Write((Byte) input4);
                 return nextAddress;
             }
         }
+
         internal enum Input1 : byte
         {
             BASICZero = 0,
@@ -137,6 +152,7 @@ using(binaryWriter.BaseStream.Pin())
             InvalidName49 = 79,
             InvalidName50 = 80,
         };
+
         internal enum Input2 : byte
         {
             BASICZero = 0,
@@ -221,6 +237,7 @@ using(binaryWriter.BaseStream.Pin())
             InvalidName49 = 79,
             InvalidName50 = 80,
         };
+
         internal enum Input3 : byte
         {
             BASICZero = 0,
@@ -305,6 +322,7 @@ using(binaryWriter.BaseStream.Pin())
             InvalidName49 = 79,
             InvalidName50 = 80,
         };
+
         internal enum Input4 : byte
         {
             BASICZero = 0,

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Lsnd = (TagClass)"lsnd";
+        public static readonly TagClass Lsnd = (TagClass) "lsnd";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 44, Alignment = 4)]
     public class SoundLoopingBlockBase : GuerillaBlock
     {
@@ -32,25 +34,36 @@ namespace Moonfish.Guerilla.Tags
         internal float martysMusicTimeSeconds;
         internal float invalidName_;
         internal byte[] invalidName_0;
-        [TagReference("null")]
-        internal Moonfish.Tags.TagReference invalidName_1;
+        [TagReference("null")] internal Moonfish.Tags.TagReference invalidName_1;
+
         /// <summary>
         /// tracks play in parallel and loop continuously for the duration of the looping sound.
         /// </summary>
         internal LoopingSoundTrackBlock[] tracks;
+
         /// <summary>
         /// detailSounds play at random throughout the duration of the looping sound.
         /// </summary>
         internal LoopingSoundDetailBlock[] detailSounds;
-        public override int SerializedSize { get { return 44; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 44; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public SoundLoopingBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             martysMusicTimeSeconds = binaryReader.ReadSingle();
             invalidName_ = binaryReader.ReadSingle();
             invalidName_0 = binaryReader.ReadBytes(8);
@@ -59,18 +72,20 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<LoopingSoundDetailBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             tracks = ReadBlockArrayData<LoopingSoundTrackBlock>(binaryReader, blamPointers.Dequeue());
             detailSounds = ReadBlockArrayData<LoopingSoundDetailBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int32) flags);
                 binaryWriter.Write(martysMusicTimeSeconds);
                 binaryWriter.Write(invalidName_);
                 binaryWriter.Write(invalidName_0, 0, 8);
@@ -80,6 +95,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

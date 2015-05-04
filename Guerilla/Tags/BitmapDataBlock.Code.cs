@@ -11,36 +11,36 @@ namespace Moonfish.Guerilla.Tags
 
         public void LoadRawResources()
         {
-            ReadResourceData(out bitmapLOD1Bytes, lOD1TextureDataLength, lOD1TextureDataOffset );
-            ReadResourceData(out bitmapLOD2Bytes, lOD2TextureDataLength, lOD2TextureDataOffset );
-            ReadResourceData(out bitmapLOD3Bytes, lOD3TextureDataLength, lOD3TextureDataOffset );
+            ReadResourceData(out bitmapLOD1Bytes, lOD1TextureDataLength, lOD1TextureDataOffset);
+            ReadResourceData(out bitmapLOD2Bytes, lOD2TextureDataLength, lOD2TextureDataOffset);
+            ReadResourceData(out bitmapLOD3Bytes, lOD3TextureDataLength, lOD3TextureDataOffset);
         }
 
-        public byte[]  GetRawResourceBytes()
+        public byte[] GetRawResourceBytes()
         {
             using (
                 var stream =
-                    new MemoryStream( bitmapLOD1Bytes.Length + bitmapLOD2Bytes.Length + bitmapLOD3Bytes.Length ) )
+                    new MemoryStream(bitmapLOD1Bytes.Length + bitmapLOD2Bytes.Length + bitmapLOD3Bytes.Length))
             {
                 var offset = 0;
-                stream.Write(bitmapLOD1Bytes, offset, bitmapLOD1Bytes.Length );
+                stream.Write(bitmapLOD1Bytes, offset, bitmapLOD1Bytes.Length);
                 offset += bitmapLOD1Bytes.Length;
-                stream.Write( bitmapLOD2Bytes, offset, bitmapLOD2Bytes.Length );
+                stream.Write(bitmapLOD2Bytes, offset, bitmapLOD2Bytes.Length);
                 offset += bitmapLOD2Bytes.Length;
-                stream.Write( bitmapLOD3Bytes, offset, bitmapLOD3Bytes.Length );
-                return stream.GetBuffer( );
+                stream.Write(bitmapLOD3Bytes, offset, bitmapLOD3Bytes.Length);
+                return stream.GetBuffer();
             }
         }
 
-        private void ReadResourceData( out byte[] data, int dataLength, int dataAddress )
+        private void ReadResourceData(out byte[] data, int dataLength, int dataAddress)
         {
             Stream resource;
-            if ( Halo2.TryGettingResourceStream( dataAddress, out resource ) )
+            if (Halo2.TryGettingResourceStream(dataAddress, out resource))
             {
-                var pointer = ( ResourcePointer ) dataAddress;
-                resource.Seek( pointer.Address, SeekOrigin.Begin );
+                var pointer = (ResourcePointer) dataAddress;
+                resource.Seek(pointer.Address, SeekOrigin.Begin);
                 bitmapLOD1Bytes = new byte[dataLength];
-                resource.Read( bitmapLOD1Bytes, 0, dataLength );
+                resource.Read(bitmapLOD1Bytes, 0, dataLength);
             }
             data = new byte[0];
         }

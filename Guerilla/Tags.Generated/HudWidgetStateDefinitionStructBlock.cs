@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 20, Alignment = 4)]
     public class HudWidgetStateDefinitionStructBlockBase : GuerillaBlock
     {
@@ -31,45 +33,57 @@ namespace Moonfish.Guerilla.Tags
         internal byte clipCutoff;
         internal byte totalCutoff;
         internal byte[] invalidName_;
-        public override int SerializedSize { get { return 20; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 20; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public HudWidgetStateDefinitionStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            yUnitFlags = (YUnitFlags)binaryReader.ReadInt16();
-            yExtraFlags = (YExtraFlags)binaryReader.ReadInt16();
-            yWeaponFlags = (YWeaponFlags)binaryReader.ReadInt16();
-            yGameEngineStateFlags = (YGameEngineStateFlags)binaryReader.ReadInt16();
-            nUnitFlags = (NUnitFlags)binaryReader.ReadInt16();
-            nExtraFlags = (NExtraFlags)binaryReader.ReadInt16();
-            nWeaponFlags = (NWeaponFlags)binaryReader.ReadInt16();
-            nGameEngineStateFlags = (NGameEngineStateFlags)binaryReader.ReadInt16();
+            yUnitFlags = (YUnitFlags) binaryReader.ReadInt16();
+            yExtraFlags = (YExtraFlags) binaryReader.ReadInt16();
+            yWeaponFlags = (YWeaponFlags) binaryReader.ReadInt16();
+            yGameEngineStateFlags = (YGameEngineStateFlags) binaryReader.ReadInt16();
+            nUnitFlags = (NUnitFlags) binaryReader.ReadInt16();
+            nExtraFlags = (NExtraFlags) binaryReader.ReadInt16();
+            nWeaponFlags = (NWeaponFlags) binaryReader.ReadInt16();
+            nGameEngineStateFlags = (NGameEngineStateFlags) binaryReader.ReadInt16();
             ageCutoff = binaryReader.ReadByte();
             clipCutoff = binaryReader.ReadByte();
             totalCutoff = binaryReader.ReadByte();
             invalidName_ = binaryReader.ReadBytes(1);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int16)yUnitFlags);
-                binaryWriter.Write((Int16)yExtraFlags);
-                binaryWriter.Write((Int16)yWeaponFlags);
-                binaryWriter.Write((Int16)yGameEngineStateFlags);
-                binaryWriter.Write((Int16)nUnitFlags);
-                binaryWriter.Write((Int16)nExtraFlags);
-                binaryWriter.Write((Int16)nWeaponFlags);
-                binaryWriter.Write((Int16)nGameEngineStateFlags);
+                binaryWriter.Write((Int16) yUnitFlags);
+                binaryWriter.Write((Int16) yExtraFlags);
+                binaryWriter.Write((Int16) yWeaponFlags);
+                binaryWriter.Write((Int16) yGameEngineStateFlags);
+                binaryWriter.Write((Int16) nUnitFlags);
+                binaryWriter.Write((Int16) nExtraFlags);
+                binaryWriter.Write((Int16) nWeaponFlags);
+                binaryWriter.Write((Int16) nGameEngineStateFlags);
                 binaryWriter.Write(ageCutoff);
                 binaryWriter.Write(clipCutoff);
                 binaryWriter.Write(totalCutoff);
@@ -77,6 +91,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum YUnitFlags : short
         {
@@ -95,6 +110,7 @@ using(binaryWriter.BaseStream.Pin())
             ShieldEnabled = 4096,
             Dervish = 8192,
         };
+
         [FlagsAttribute]
         internal enum YExtraFlags : short
         {
@@ -104,6 +120,7 @@ using(binaryWriter.BaseStream.Pin())
             AutoaimVulnerable = 8,
             AutoaimInvincible = 16,
         };
+
         [FlagsAttribute]
         internal enum YWeaponFlags : short
         {
@@ -119,6 +136,7 @@ using(binaryWriter.BaseStream.Pin())
             Locking = 512,
             Locked = 1024,
         };
+
         [FlagsAttribute]
         internal enum YGameEngineStateFlags : short
         {
@@ -135,6 +153,7 @@ using(binaryWriter.BaseStream.Pin())
             PlayerIsArmingBomb = 1024,
             PlayerTalking = 2048,
         };
+
         [FlagsAttribute]
         internal enum NUnitFlags : short
         {
@@ -153,6 +172,7 @@ using(binaryWriter.BaseStream.Pin())
             ShieldEnabled = 4096,
             Dervish = 8192,
         };
+
         [FlagsAttribute]
         internal enum NExtraFlags : short
         {
@@ -162,6 +182,7 @@ using(binaryWriter.BaseStream.Pin())
             AutoaimVulnerable = 8,
             AutoaimInvincible = 16,
         };
+
         [FlagsAttribute]
         internal enum NWeaponFlags : short
         {
@@ -177,6 +198,7 @@ using(binaryWriter.BaseStream.Pin())
             Locking = 512,
             Locked = 1024,
         };
+
         [FlagsAttribute]
         internal enum NGameEngineStateFlags : short
         {

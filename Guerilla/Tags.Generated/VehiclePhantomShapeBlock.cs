@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 672, Alignment = 16)]
     public class VehiclePhantomShapeBlockBase : GuerillaBlock
     {
@@ -37,11 +39,21 @@ namespace Moonfish.Guerilla.Tags
         internal float z0;
         internal float z1;
         internal Multispheres[] multispheres;
-        public override int SerializedSize { get { return 672; } }
-        public override int Alignment { get { return 16; } }
+
+        public override int SerializedSize
+        {
+            get { return 672; }
+        }
+
+        public override int Alignment
+        {
+            get { return 16; }
+        }
+
         public VehiclePhantomShapeBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -52,13 +64,14 @@ namespace Moonfish.Guerilla.Tags
             invalidName_1 = binaryReader.ReadBytes(4);
             childShapesSize = binaryReader.ReadInt32();
             childShapesCapacity = binaryReader.ReadInt32();
-            childShapesStorage = new []{ new ChildShapesStorage(), new ChildShapesStorage(), new ChildShapesStorage(), new ChildShapesStorage() };
+            childShapesStorage = new[]
+            {new ChildShapesStorage(), new ChildShapesStorage(), new ChildShapesStorage(), new ChildShapesStorage()};
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childShapesStorage[0].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childShapesStorage[1].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childShapesStorage[2].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(childShapesStorage[3].ReadFields(binaryReader)));
             multisphereCount = binaryReader.ReadInt32();
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             invalidName_2 = binaryReader.ReadBytes(8);
             x0 = binaryReader.ReadSingle();
             x1 = binaryReader.ReadSingle();
@@ -66,13 +79,14 @@ namespace Moonfish.Guerilla.Tags
             y1 = binaryReader.ReadSingle();
             z0 = binaryReader.ReadSingle();
             z1 = binaryReader.ReadSingle();
-            multispheres = new []{ new Multispheres(), new Multispheres(), new Multispheres(), new Multispheres() };
+            multispheres = new[] {new Multispheres(), new Multispheres(), new Multispheres(), new Multispheres()};
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(multispheres[0].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(multispheres[1].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(multispheres[2].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(multispheres[3].ReadFields(binaryReader)));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -85,10 +99,11 @@ namespace Moonfish.Guerilla.Tags
             multispheres[2].ReadPointers(binaryReader, blamPointers);
             multispheres[3].ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(invalidName_, 0, 4);
                 binaryWriter.Write(size);
@@ -102,7 +117,7 @@ using(binaryWriter.BaseStream.Pin())
                 childShapesStorage[2].Write(binaryWriter);
                 childShapesStorage[3].Write(binaryWriter);
                 binaryWriter.Write(multisphereCount);
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int32) flags);
                 binaryWriter.Write(invalidName_2, 0, 8);
                 binaryWriter.Write(x0);
                 binaryWriter.Write(x1);
@@ -117,46 +132,61 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {
             HasAabbPhantom = 1,
             InvalidName = 2,
         };
+
         [LayoutAttribute(Size = 8, Alignment = 1)]
         public class ChildShapesStorage : GuerillaBlock
         {
             internal ShapeType shapeType;
             internal Moonfish.Tags.ShortBlockIndex2 shape;
             internal int collisionFilter;
-            public override int SerializedSize { get { return 8; } }
-            public override int Alignment { get { return 1; } }
+
+            public override int SerializedSize
+            {
+                get { return 8; }
+            }
+
+            public override int Alignment
+            {
+                get { return 1; }
+            }
+
             public ChildShapesStorage() : base()
             {
             }
+
             public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
             {
                 var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-                shapeType = (ShapeType)binaryReader.ReadInt16();
+                shapeType = (ShapeType) binaryReader.ReadInt16();
                 shape = binaryReader.ReadShortBlockIndex2();
                 collisionFilter = binaryReader.ReadInt32();
                 return blamPointers;
             }
+
             public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
             {
                 base.ReadPointers(binaryReader, blamPointers);
             }
+
             public override int Write(BinaryWriter binaryWriter, int nextAddress)
             {
                 base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+                using (binaryWriter.BaseStream.Pin())
                 {
-                    binaryWriter.Write((Int16)shapeType);
+                    binaryWriter.Write((Int16) shapeType);
                     binaryWriter.Write(shape);
                     binaryWriter.Write(collisionFilter);
                     return nextAddress;
                 }
             }
+
             internal enum ShapeType : short
             {
                 Sphere = 0,
@@ -177,6 +207,7 @@ using(binaryWriter.BaseStream.Pin())
                 Mopp = 15,
             };
         };
+
         [LayoutAttribute(Size = 144, Alignment = 1)]
         public class Multispheres : GuerillaBlock
         {
@@ -186,11 +217,21 @@ using(binaryWriter.BaseStream.Pin())
             internal byte[] invalidName_0;
             internal int numSpheres;
             internal FourVectorsStorage[] fourVectorsStorage;
-            public override int SerializedSize { get { return 144; } }
-            public override int Alignment { get { return 1; } }
+
+            public override int SerializedSize
+            {
+                get { return 144; }
+            }
+
+            public override int Alignment
+            {
+                get { return 1; }
+            }
+
             public Multispheres() : base()
             {
             }
+
             public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
             {
                 var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -199,17 +240,31 @@ using(binaryWriter.BaseStream.Pin())
                 count = binaryReader.ReadInt16();
                 invalidName_0 = binaryReader.ReadBytes(4);
                 numSpheres = binaryReader.ReadInt32();
-                fourVectorsStorage = new []{ new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage() };
-                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[0].ReadFields(binaryReader)));
-                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[1].ReadFields(binaryReader)));
-                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[2].ReadFields(binaryReader)));
-                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[3].ReadFields(binaryReader)));
-                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[4].ReadFields(binaryReader)));
-                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[5].ReadFields(binaryReader)));
-                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[6].ReadFields(binaryReader)));
-                blamPointers = new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[7].ReadFields(binaryReader)));
+                fourVectorsStorage = new[]
+                {
+                    new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(),
+                    new FourVectorsStorage(), new FourVectorsStorage(), new FourVectorsStorage(),
+                    new FourVectorsStorage()
+                };
+                blamPointers =
+                    new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[0].ReadFields(binaryReader)));
+                blamPointers =
+                    new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[1].ReadFields(binaryReader)));
+                blamPointers =
+                    new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[2].ReadFields(binaryReader)));
+                blamPointers =
+                    new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[3].ReadFields(binaryReader)));
+                blamPointers =
+                    new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[4].ReadFields(binaryReader)));
+                blamPointers =
+                    new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[5].ReadFields(binaryReader)));
+                blamPointers =
+                    new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[6].ReadFields(binaryReader)));
+                blamPointers =
+                    new Queue<BlamPointer>(blamPointers.Concat(fourVectorsStorage[7].ReadFields(binaryReader)));
                 return blamPointers;
             }
+
             public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
             {
                 base.ReadPointers(binaryReader, blamPointers);
@@ -222,10 +277,11 @@ using(binaryWriter.BaseStream.Pin())
                 fourVectorsStorage[6].ReadPointers(binaryReader, blamPointers);
                 fourVectorsStorage[7].ReadPointers(binaryReader, blamPointers);
             }
+
             public override int Write(BinaryWriter binaryWriter, int nextAddress)
             {
                 base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+                using (binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(invalidName_, 0, 4);
                     binaryWriter.Write(size);
@@ -243,16 +299,27 @@ using(binaryWriter.BaseStream.Pin())
                     return nextAddress;
                 }
             }
+
             [LayoutAttribute(Size = 16, Alignment = 1)]
             public class FourVectorsStorage : GuerillaBlock
             {
                 internal OpenTK.Vector3 sphere;
                 internal byte[] invalidName_;
-                public override int SerializedSize { get { return 16; } }
-                public override int Alignment { get { return 1; } }
+
+                public override int SerializedSize
+                {
+                    get { return 16; }
+                }
+
+                public override int Alignment
+                {
+                    get { return 1; }
+                }
+
                 public FourVectorsStorage() : base()
                 {
                 }
+
                 public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
                 {
                     var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -260,14 +327,16 @@ using(binaryWriter.BaseStream.Pin())
                     invalidName_ = binaryReader.ReadBytes(4);
                     return blamPointers;
                 }
+
                 public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
                 {
                     base.ReadPointers(binaryReader, blamPointers);
                 }
+
                 public override int Write(BinaryWriter binaryWriter, int nextAddress)
                 {
                     base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+                    using (binaryWriter.BaseStream.Pin())
                     {
                         binaryWriter.Write(sphere);
                         binaryWriter.Write(invalidName_, 0, 4);

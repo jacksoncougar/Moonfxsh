@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 16, Alignment = 4)]
     public class HudButtonIconBlockBase : GuerillaBlock
     {
@@ -23,20 +25,32 @@ namespace Moonfish.Guerilla.Tags
         /// sequenceIndex into the global hud icon bitmap
         /// </summary>
         internal short sequenceIndex;
+
         /// <summary>
         /// extra spacing beyond bitmap width for text alignment
         /// </summary>
         internal short widthOffset;
+
         internal Moonfish.Tags.Point offsetFromReferenceCorner;
         internal Moonfish.Tags.ColourA1R1G1B1 overrideIconColor;
         internal byte frameRate030;
         internal Flags flags;
         internal short textIndex;
-        public override int SerializedSize { get { return 16; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 16; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public HudButtonIconBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -45,29 +59,32 @@ namespace Moonfish.Guerilla.Tags
             offsetFromReferenceCorner = binaryReader.ReadPoint();
             overrideIconColor = binaryReader.ReadColourA1R1G1B1();
             frameRate030 = binaryReader.ReadByte();
-            flags = (Flags)binaryReader.ReadByte();
+            flags = (Flags) binaryReader.ReadByte();
             textIndex = binaryReader.ReadInt16();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(sequenceIndex);
                 binaryWriter.Write(widthOffset);
                 binaryWriter.Write(offsetFromReferenceCorner);
                 binaryWriter.Write(overrideIconColor);
                 binaryWriter.Write(frameRate030);
-                binaryWriter.Write((Byte)flags);
+                binaryWriter.Write((Byte) flags);
                 binaryWriter.Write(textIndex);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : byte
         {

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Hud = (TagClass)"hud#";
+        public static readonly TagClass Hud = (TagClass) "hud#";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,11 +26,11 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 92, Alignment = 4)]
     public class HudNumberBlockBase : GuerillaBlock
     {
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference digitsBitmap;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference digitsBitmap;
         internal byte bitmapDigitWidth;
         internal byte screenDigitWidth;
         internal byte xOffset;
@@ -38,11 +39,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte colonWidth;
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 92; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 92; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public HudNumberBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -57,14 +68,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(76);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(digitsBitmap);
                 binaryWriter.Write(bitmapDigitWidth);

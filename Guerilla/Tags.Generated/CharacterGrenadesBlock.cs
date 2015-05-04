@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,78 +17,104 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 60, Alignment = 4)]
     public class CharacterGrenadesBlockBase : GuerillaBlock
     {
         internal GrenadesFlags grenadesFlags;
+
         /// <summary>
         /// type of grenades that we throw^
         /// </summary>
         internal GrenadeTypeTypeOfGrenadesThatWeThrow grenadeType;
+
         /// <summary>
         /// how we throw our grenades
         /// </summary>
         internal TrajectoryTypeHowWeThrowOurGrenades trajectoryType;
+
         internal byte[] invalidName_;
+
         /// <summary>
         /// how many enemies must be within the radius of the grenade before we will consider throwing there
         /// </summary>
         internal short minimumEnemyCount;
+
         /// <summary>
         /// we consider enemies within this radius when determining where to throw
         /// </summary>
         internal float enemyRadiusWorldUnits;
+
         /// <summary>
         /// how fast we LIKE to throw our grenades
         /// </summary>
         internal float grenadeIdealVelocityWorldUnitsPerSecond;
+
         /// <summary>
         /// the fastest we can possibly throw our grenades
         /// </summary>
         internal float grenadeVelocityWorldUnitsPerSecond;
+
         /// <summary>
         /// ranges within which we will consider throwing a grenade
         /// </summary>
         internal Moonfish.Model.Range grenadeRangesWorldUnits;
+
         /// <summary>
         /// we won't throw if there are friendlies around our target within this range
         /// </summary>
         internal float collateralDamageRadiusWorldUnits;
+
         /// <summary>
         /// how likely we are to throw a grenade in one second
         /// </summary>
         internal float grenadeChance01;
+
         /// <summary>
         /// How long we have to wait after throwing a grenade before we can throw another one
         /// </summary>
         internal float grenadeThrowDelaySeconds;
+
         /// <summary>
         /// how likely we are to throw a grenade to flush out a target in one second
         /// </summary>
         internal float grenadeUncoverChance01;
+
         /// <summary>
         /// how likely we are to throw a grenade against a vehicle
         /// </summary>
         internal float antiVehicleGrenadeChance01;
+
         /// <summary>
         /// number of grenades that we start with
         /// </summary>
         internal int grenadeCount;
+
         /// <summary>
         /// how likely we are not to drop any grenades when we die, even if we still have some
         /// </summary>
         internal float dontDropGrenadesChance01;
-        public override int SerializedSize { get { return 60; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 60; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public CharacterGrenadesBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            grenadesFlags = (GrenadesFlags)binaryReader.ReadInt32();
-            grenadeType = (GrenadeTypeTypeOfGrenadesThatWeThrow)binaryReader.ReadInt16();
-            trajectoryType = (TrajectoryTypeHowWeThrowOurGrenades)binaryReader.ReadInt16();
+            grenadesFlags = (GrenadesFlags) binaryReader.ReadInt32();
+            grenadeType = (GrenadeTypeTypeOfGrenadesThatWeThrow) binaryReader.ReadInt16();
+            trajectoryType = (TrajectoryTypeHowWeThrowOurGrenades) binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             minimumEnemyCount = binaryReader.ReadInt16();
             enemyRadiusWorldUnits = binaryReader.ReadSingle();
@@ -103,18 +130,20 @@ namespace Moonfish.Guerilla.Tags
             dontDropGrenadesChance01 = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)grenadesFlags);
-                binaryWriter.Write((Int16)grenadeType);
-                binaryWriter.Write((Int16)trajectoryType);
+                binaryWriter.Write((Int32) grenadesFlags);
+                binaryWriter.Write((Int16) grenadeType);
+                binaryWriter.Write((Int16) trajectoryType);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(minimumEnemyCount);
                 binaryWriter.Write(enemyRadiusWorldUnits);
@@ -131,16 +160,19 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum GrenadesFlags : int
         {
             Flag1 = 1,
         };
+
         internal enum GrenadeTypeTypeOfGrenadesThatWeThrow : short
         {
             HumanFragmentation = 0,
             CovenantPlasma = 1,
         };
+
         internal enum TrajectoryTypeHowWeThrowOurGrenades : short
         {
             Toss = 0,

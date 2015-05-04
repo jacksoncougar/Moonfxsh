@@ -12,6 +12,6 @@ namespace Moonfish.Guerilla
 {
     public interface IGuerilla
     {
-        int Write( BinaryWriter binaryWriter, int nextAddress );
+        int Write(BinaryWriter binaryWriter, int nextAddress);
     }
 }

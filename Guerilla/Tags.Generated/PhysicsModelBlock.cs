@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Phmo = (TagClass)"phmo";
+        public static readonly TagClass Phmo = (TagClass) "phmo";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,19 +26,23 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 272, Alignment = 4)]
     public class PhysicsModelBlockBase : GuerillaBlock
     {
         internal Flags flags;
         internal float mass;
+
         /// <summary>
         /// 0 is default (1). LESS than 1 deactivates less aggressively. GREATER than 1 is more agressive.
         /// </summary>
         internal float lowFreqDeactivationScale;
+
         /// <summary>
         /// 0 is default (1). LESS than 1 deactivates less aggressively. GREATER than 1 is more agressive.
         /// </summary>
         internal float highFreqDeactivationScale;
+
         internal byte[] invalidName_;
         internal PhantomTypesBlock[] phantomTypes;
         internal PhysicsModelNodeConstraintEdgeBlock[] nodeEdges;
@@ -68,15 +73,25 @@ namespace Moonfish.Guerilla.Tags
         internal StiffSpringConstraintsBlock[] stiffSpringConstraints;
         internal PrismaticConstraintsBlock[] prismaticConstraints;
         internal PhantomsBlock[] phantoms;
-        public override int SerializedSize { get { return 272; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 272; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public PhysicsModelBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             mass = binaryReader.ReadSingle();
             lowFreqDeactivationScale = binaryReader.ReadSingle();
             highFreqDeactivationScale = binaryReader.ReadSingle();
@@ -112,6 +127,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<PhantomsBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -126,7 +142,8 @@ namespace Moonfish.Guerilla.Tags
             triangles = ReadBlockArrayData<TrianglesBlock>(binaryReader, blamPointers.Dequeue());
             polyhedra = ReadBlockArrayData<PolyhedraBlock>(binaryReader, blamPointers.Dequeue());
             polyhedronFourVectors = ReadBlockArrayData<PolyhedronFourVectorsBlock>(binaryReader, blamPointers.Dequeue());
-            polyhedronPlaneEquations = ReadBlockArrayData<PolyhedronPlaneEquationsBlock>(binaryReader, blamPointers.Dequeue());
+            polyhedronPlaneEquations = ReadBlockArrayData<PolyhedronPlaneEquationsBlock>(binaryReader,
+                blamPointers.Dequeue());
             massDistributions = ReadBlockArrayData<MassDistributionsBlock>(binaryReader, blamPointers.Dequeue());
             lists = ReadBlockArrayData<ListsBlock>(binaryReader, blamPointers.Dequeue());
             listShapes = ReadBlockArrayData<ListShapesBlock>(binaryReader, blamPointers.Dequeue());
@@ -139,24 +156,29 @@ namespace Moonfish.Guerilla.Tags
             importInfo = ReadBlockArrayData<GlobalTagImportInfoBlock>(binaryReader, blamPointers.Dequeue());
             errors = ReadBlockArrayData<GlobalErrorReportCategoriesBlock>(binaryReader, blamPointers.Dequeue());
             pointToPathCurves = ReadBlockArrayData<PointToPathCurveBlock>(binaryReader, blamPointers.Dequeue());
-            limitedHingeConstraints = ReadBlockArrayData<LimitedHingeConstraintsBlock>(binaryReader, blamPointers.Dequeue());
-            ballAndSocketConstraints = ReadBlockArrayData<BallAndSocketConstraintsBlock>(binaryReader, blamPointers.Dequeue());
-            stiffSpringConstraints = ReadBlockArrayData<StiffSpringConstraintsBlock>(binaryReader, blamPointers.Dequeue());
+            limitedHingeConstraints = ReadBlockArrayData<LimitedHingeConstraintsBlock>(binaryReader,
+                blamPointers.Dequeue());
+            ballAndSocketConstraints = ReadBlockArrayData<BallAndSocketConstraintsBlock>(binaryReader,
+                blamPointers.Dequeue());
+            stiffSpringConstraints = ReadBlockArrayData<StiffSpringConstraintsBlock>(binaryReader,
+                blamPointers.Dequeue());
             prismaticConstraints = ReadBlockArrayData<PrismaticConstraintsBlock>(binaryReader, blamPointers.Dequeue());
             phantoms = ReadBlockArrayData<PhantomsBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int32) flags);
                 binaryWriter.Write(mass);
                 binaryWriter.Write(lowFreqDeactivationScale);
                 binaryWriter.Write(highFreqDeactivationScale);
                 binaryWriter.Write(invalidName_, 0, 24);
                 nextAddress = Guerilla.WriteBlockArray<PhantomTypesBlock>(binaryWriter, phantomTypes, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PhysicsModelNodeConstraintEdgeBlock>(binaryWriter, nodeEdges, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PhysicsModelNodeConstraintEdgeBlock>(binaryWriter, nodeEdges,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<RigidBodiesBlock>(binaryWriter, rigidBodies, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<MaterialsBlock>(binaryWriter, materials, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SpheresBlock>(binaryWriter, spheres, nextAddress);
@@ -165,28 +187,40 @@ using(binaryWriter.BaseStream.Pin())
                 nextAddress = Guerilla.WriteBlockArray<BoxesBlock>(binaryWriter, boxes, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<TrianglesBlock>(binaryWriter, triangles, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<PolyhedraBlock>(binaryWriter, polyhedra, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PolyhedronFourVectorsBlock>(binaryWriter, polyhedronFourVectors, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PolyhedronPlaneEquationsBlock>(binaryWriter, polyhedronPlaneEquations, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<MassDistributionsBlock>(binaryWriter, massDistributions, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PolyhedronFourVectorsBlock>(binaryWriter, polyhedronFourVectors,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PolyhedronPlaneEquationsBlock>(binaryWriter,
+                    polyhedronPlaneEquations, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<MassDistributionsBlock>(binaryWriter, massDistributions,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ListsBlock>(binaryWriter, lists, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<ListShapesBlock>(binaryWriter, listShapes, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<MoppsBlock>(binaryWriter, mopps, nextAddress);
                 nextAddress = Guerilla.WriteData(binaryWriter, moppCodes, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<HingeConstraintsBlock>(binaryWriter, hingeConstraints, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<RagdollConstraintsBlock>(binaryWriter, ragdollConstraints, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<HingeConstraintsBlock>(binaryWriter, hingeConstraints,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<RagdollConstraintsBlock>(binaryWriter, ragdollConstraints,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<RegionsBlock>(binaryWriter, regions, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<NodesBlock>(binaryWriter, nodes, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<GlobalTagImportInfoBlock>(binaryWriter, importInfo, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<GlobalErrorReportCategoriesBlock>(binaryWriter, errors, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PointToPathCurveBlock>(binaryWriter, pointToPathCurves, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<LimitedHingeConstraintsBlock>(binaryWriter, limitedHingeConstraints, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<BallAndSocketConstraintsBlock>(binaryWriter, ballAndSocketConstraints, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<StiffSpringConstraintsBlock>(binaryWriter, stiffSpringConstraints, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<PrismaticConstraintsBlock>(binaryWriter, prismaticConstraints, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<GlobalErrorReportCategoriesBlock>(binaryWriter, errors,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PointToPathCurveBlock>(binaryWriter, pointToPathCurves,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<LimitedHingeConstraintsBlock>(binaryWriter,
+                    limitedHingeConstraints, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<BallAndSocketConstraintsBlock>(binaryWriter,
+                    ballAndSocketConstraints, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StiffSpringConstraintsBlock>(binaryWriter, stiffSpringConstraints,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<PrismaticConstraintsBlock>(binaryWriter, prismaticConstraints,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<PhantomsBlock>(binaryWriter, phantoms, nextAddress);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum Flags : int
         {

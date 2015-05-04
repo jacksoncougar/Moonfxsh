@@ -3,10 +3,10 @@ using Moonfish.Guerilla;
 
 namespace Moonfish.Tags
 {
-    [AttributeUsage( AttributeTargets.All, AllowMultiple = true )]
+    [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     internal class GuerillaTypeAttribute : Attribute
     {
-        public GuerillaTypeAttribute( MoonfishFieldType fieldType )
+        public GuerillaTypeAttribute(MoonfishFieldType fieldType)
         {
             FieldType = fieldType;
         }

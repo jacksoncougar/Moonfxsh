@@ -5,9 +5,9 @@ namespace Moonfish.Guerilla
 {
     public static class MoonfishFieldTypeExtensions
     {
-        public static int GetFieldSize( this MoonfishFieldType type )
+        public static int GetFieldSize(this MoonfishFieldType type)
         {
-            switch ( type )
+            switch (type)
             {
                     #region Standard Types
 
@@ -109,7 +109,7 @@ namespace Moonfish.Guerilla
                     return 32;
 
                 case MoonfishFieldType.FieldMoonfishIdent:
-                    return Marshal.SizeOf( typeof ( Moonfish.Tags.TagIdent ) );
+                    return Marshal.SizeOf(typeof (Moonfish.Tags.TagIdent));
 
                 case MoonfishFieldType.FieldUselessPad:
                 case MoonfishFieldType.FieldArrayStart:
@@ -119,7 +119,7 @@ namespace Moonfish.Guerilla
                 case MoonfishFieldType.FieldCustom:
                     return 0;
             }
-            throw new Exception( );
+            throw new Exception();
         }
     }
 

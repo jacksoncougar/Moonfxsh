@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Ugh = (TagClass)"ugh!";
+        public static readonly TagClass Ugh = (TagClass) "ugh!";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,6 +26,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 88, Alignment = 4)]
     public class SoundCacheFileGestaltBlockBase : GuerillaBlock
     {
@@ -39,11 +41,21 @@ namespace Moonfish.Guerilla.Tags
         internal SoundPermutationChunkBlock[] chunks;
         internal SoundGestaltPromotionsBlock[] promotions;
         internal SoundGestaltExtraInfoBlock[] extraInfos;
-        public override int SerializedSize { get { return 88; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 88; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public SoundCacheFileGestaltBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -60,36 +72,47 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<SoundGestaltExtraInfoBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             playbacks = ReadBlockArrayData<SoundGestaltPlaybackBlock>(binaryReader, blamPointers.Dequeue());
             scales = ReadBlockArrayData<SoundGestaltScaleBlock>(binaryReader, blamPointers.Dequeue());
             importNames = ReadBlockArrayData<SoundGestaltImportNamesBlock>(binaryReader, blamPointers.Dequeue());
-            pitchRangeParameters = ReadBlockArrayData<SoundGestaltPitchRangeParametersBlock>(binaryReader, blamPointers.Dequeue());
+            pitchRangeParameters = ReadBlockArrayData<SoundGestaltPitchRangeParametersBlock>(binaryReader,
+                blamPointers.Dequeue());
             pitchRanges = ReadBlockArrayData<SoundGestaltPitchRangesBlock>(binaryReader, blamPointers.Dequeue());
             permutations = ReadBlockArrayData<SoundGestaltPermutationsBlock>(binaryReader, blamPointers.Dequeue());
             customPlaybacks = ReadBlockArrayData<SoundGestaltCustomPlaybackBlock>(binaryReader, blamPointers.Dequeue());
-            runtimePermutationFlags = ReadBlockArrayData<SoundGestaltRuntimePermutationBitVectorBlock>(binaryReader, blamPointers.Dequeue());
+            runtimePermutationFlags = ReadBlockArrayData<SoundGestaltRuntimePermutationBitVectorBlock>(binaryReader,
+                blamPointers.Dequeue());
             chunks = ReadBlockArrayData<SoundPermutationChunkBlock>(binaryReader, blamPointers.Dequeue());
             promotions = ReadBlockArrayData<SoundGestaltPromotionsBlock>(binaryReader, blamPointers.Dequeue());
             extraInfos = ReadBlockArrayData<SoundGestaltExtraInfoBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 nextAddress = Guerilla.WriteBlockArray<SoundGestaltPlaybackBlock>(binaryWriter, playbacks, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SoundGestaltScaleBlock>(binaryWriter, scales, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SoundGestaltImportNamesBlock>(binaryWriter, importNames, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SoundGestaltPitchRangeParametersBlock>(binaryWriter, pitchRangeParameters, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SoundGestaltPitchRangesBlock>(binaryWriter, pitchRanges, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SoundGestaltPermutationsBlock>(binaryWriter, permutations, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SoundGestaltCustomPlaybackBlock>(binaryWriter, customPlaybacks, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SoundGestaltRuntimePermutationBitVectorBlock>(binaryWriter, runtimePermutationFlags, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltImportNamesBlock>(binaryWriter, importNames,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltPitchRangeParametersBlock>(binaryWriter,
+                    pitchRangeParameters, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltPitchRangesBlock>(binaryWriter, pitchRanges,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltPermutationsBlock>(binaryWriter, permutations,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltCustomPlaybackBlock>(binaryWriter, customPlaybacks,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltRuntimePermutationBitVectorBlock>(binaryWriter,
+                    runtimePermutationFlags, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SoundPermutationChunkBlock>(binaryWriter, chunks, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<SoundGestaltPromotionsBlock>(binaryWriter, promotions, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<SoundGestaltPromotionsBlock>(binaryWriter, promotions,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<SoundGestaltExtraInfoBlock>(binaryWriter, extraInfos, nextAddress);
                 return nextAddress;
             }

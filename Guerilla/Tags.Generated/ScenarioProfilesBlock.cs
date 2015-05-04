@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,29 +17,38 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 68, Alignment = 4)]
     public class ScenarioProfilesBlockBase : GuerillaBlock
     {
         internal Moonfish.Tags.String32 name;
         internal float startingHealthDamage01;
         internal float startingShieldDamage01;
-        [TagReference("weap")]
-        internal Moonfish.Tags.TagReference primaryWeapon;
+        [TagReference("weap")] internal Moonfish.Tags.TagReference primaryWeapon;
         internal short roundsLoaded;
         internal short roundsTotal;
-        [TagReference("weap")]
-        internal Moonfish.Tags.TagReference secondaryWeapon;
+        [TagReference("weap")] internal Moonfish.Tags.TagReference secondaryWeapon;
         internal short roundsLoaded0;
         internal short roundsTotal0;
         internal byte startingFragmentationGrenadeCount;
         internal byte startingPlasmaGrenadeCount;
         internal byte startingUnknownGrenadeCount;
         internal byte startingUnknownGrenadeCount0;
-        public override int SerializedSize { get { return 68; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 68; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ScenarioProfilesBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -57,14 +67,16 @@ namespace Moonfish.Guerilla.Tags
             startingUnknownGrenadeCount0 = binaryReader.ReadByte();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(name);
                 binaryWriter.Write(startingHealthDamage01);

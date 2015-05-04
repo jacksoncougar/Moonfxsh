@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,11 +17,11 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 140, Alignment = 4)]
     public class GlobalParticleSystemLiteBlockBase : GuerillaBlock
     {
-        [TagReference("bitm")]
-        internal Moonfish.Tags.TagReference sprites;
+        [TagReference("bitm")] internal Moonfish.Tags.TagReference sprites;
         internal float viewBoxWidth;
         internal float viewBoxHeight;
         internal float viewBoxDepth;
@@ -44,11 +45,21 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
-        public override int SerializedSize { get { return 140; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 140; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public GlobalParticleSystemLiteBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -68,7 +79,7 @@ namespace Moonfish.Guerilla.Tags
             geometryBlockInfo = new GlobalGeometryBlockInfoStructBlock();
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(geometryBlockInfo.ReadFields(binaryReader)));
             blamPointers.Enqueue(ReadBlockArrayPointer<ParticleSystemLiteDataBlock>(binaryReader));
-            type = (Type)binaryReader.ReadInt16();
+            type = (Type) binaryReader.ReadInt16();
             invalidName_ = binaryReader.ReadBytes(2);
             mininumOpacity = binaryReader.ReadSingle();
             maxinumOpacity = binaryReader.ReadSingle();
@@ -79,16 +90,18 @@ namespace Moonfish.Guerilla.Tags
             invalidName_2 = binaryReader.ReadBytes(4);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
             geometryBlockInfo.ReadPointers(binaryReader, blamPointers);
             particleSystemData = ReadBlockArrayData<ParticleSystemLiteDataBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(sprites);
                 binaryWriter.Write(viewBoxWidth);
@@ -104,8 +117,9 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(initialVelocity);
                 binaryWriter.Write(bitmapAnimationSpeed);
                 geometryBlockInfo.Write(binaryWriter);
-                nextAddress = Guerilla.WriteBlockArray<ParticleSystemLiteDataBlock>(binaryWriter, particleSystemData, nextAddress);
-                binaryWriter.Write((Int16)type);
+                nextAddress = Guerilla.WriteBlockArray<ParticleSystemLiteDataBlock>(binaryWriter, particleSystemData,
+                    nextAddress);
+                binaryWriter.Write((Int16) type);
                 binaryWriter.Write(invalidName_, 0, 2);
                 binaryWriter.Write(mininumOpacity);
                 binaryWriter.Write(maxinumOpacity);
@@ -117,6 +131,7 @@ using(binaryWriter.BaseStream.Pin())
                 return nextAddress;
             }
         }
+
         internal enum Type : short
         {
             Generic = 0,

@@ -5,6 +5,5 @@ namespace Moonfish.Guerilla.Tags
 {
     partial class StructureInstancedGeometryRenderInfoStructBlock
     {
-       
     }
 }

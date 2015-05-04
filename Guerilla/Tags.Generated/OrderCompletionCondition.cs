@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 56, Alignment = 4)]
     public class OrderCompletionConditionBase : GuerillaBlock
     {
@@ -30,15 +32,25 @@ namespace Moonfish.Guerilla.Tags
         internal short invalidName_0;
         internal byte[] invalidName_1;
         internal Flags flags;
-        public override int SerializedSize { get { return 56; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 56; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public OrderCompletionConditionBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            ruleType = (RuleType)binaryReader.ReadInt16();
+            ruleType = (RuleType) binaryReader.ReadInt16();
             squad = binaryReader.ReadShortBlockIndex1();
             squadGroup = binaryReader.ReadShortBlockIndex1();
             a = binaryReader.ReadInt16();
@@ -48,19 +60,21 @@ namespace Moonfish.Guerilla.Tags
             exitConditionScript = binaryReader.ReadString32();
             invalidName_0 = binaryReader.ReadInt16();
             invalidName_1 = binaryReader.ReadBytes(2);
-            flags = (Flags)binaryReader.ReadInt32();
+            flags = (Flags) binaryReader.ReadInt32();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int16)ruleType);
+                binaryWriter.Write((Int16) ruleType);
                 binaryWriter.Write(squad);
                 binaryWriter.Write(squadGroup);
                 binaryWriter.Write(a);
@@ -70,10 +84,11 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(exitConditionScript);
                 binaryWriter.Write(invalidName_0);
                 binaryWriter.Write(invalidName_1, 0, 2);
-                binaryWriter.Write((Int32)flags);
+                binaryWriter.Write((Int32) flags);
                 return nextAddress;
             }
         }
+
         internal enum RuleType : short
         {
             AOrGreaterAlive = 0,
@@ -98,6 +113,7 @@ using(binaryWriter.BaseStream.Pin())
             PlayerShotMoreThanXSecondsAgo = 19,
             GameSafeToSave = 20,
         };
+
         [FlagsAttribute]
         internal enum Flags : int
         {

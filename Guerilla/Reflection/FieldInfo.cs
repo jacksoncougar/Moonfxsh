@@ -6,9 +6,9 @@ namespace Moonfish.Guerilla.Reflection
 {
     public class FieldInfo
     {
-        public FieldInfo( )
+        public FieldInfo()
         {
-            Attributes = new List<AttributeInfo>( );
+            Attributes = new List<AttributeInfo>();
         }
 
         public List<AttributeInfo> Attributes { get; set; }
@@ -18,33 +18,33 @@ namespace Moonfish.Guerilla.Reflection
         public bool IsArray { get; set; }
         public int ArraySize { get; set; }
 
-        public override string ToString( )
+        public override string ToString()
         {
-            StringBuilder stringBuilder = new StringBuilder( );
+            StringBuilder stringBuilder = new StringBuilder();
             // write Summary
-            if ( Value.HasDescription ) stringBuilder.AppendSummary( Value.Description );
+            if (Value.HasDescription) stringBuilder.AppendSummary(Value.Description);
             // write Attributes
-            foreach ( var attribute in Attributes )
-                stringBuilder.AppendLine( attribute.ToString( ) );
+            foreach (var attribute in Attributes)
+                stringBuilder.AppendLine(attribute.ToString());
 
-            var typeString = GetTypeOutput( );
+            var typeString = GetTypeOutput();
 
             // write Field
-            stringBuilder.AppendLine( string.Format( "{0} {1}{2} {3};",
-                AccessModifiers.ToTokenString(  ),
-                typeString, IsArray ? "[]" : "", Value.Name ) );
+            stringBuilder.AppendLine(string.Format("{0} {1}{2} {3};",
+                AccessModifiers.ToTokenString(),
+                typeString, IsArray ? "[]" : "", Value.Name));
 
-            return stringBuilder.ToString( ).Trim( );
+            return stringBuilder.ToString().Trim();
         }
 
-        private string GetTypeOutput( )
+        private string GetTypeOutput()
         {
-            var type = Type.GetType( FieldTypeName );
-            if ( type != null )
+            var type = Type.GetType(FieldTypeName);
+            if (type != null)
             {
-                using ( var code = new Microsoft.CSharp.CSharpCodeProvider( ) )
+                using (var code = new Microsoft.CSharp.CSharpCodeProvider())
                 {
-                    return code.GetTypeOutput( new System.CodeDom.CodeTypeReference( type.FullName ) );
+                    return code.GetTypeOutput(new System.CodeDom.CodeTypeReference(type.FullName));
                 }
             }
             else return FieldTypeName;

@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,11 +17,11 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 284, Alignment = 4)]
     public class PlayerInformationBlockBase : GuerillaBlock
     {
-        [TagReference("unit")]
-        internal Moonfish.Tags.TagReference unused;
+        [TagReference("unit")] internal Moonfish.Tags.TagReference unused;
         internal byte[] invalidName_;
         internal float walkingSpeedWorldUnitsPerSecond;
         internal byte[] invalidName_0;
@@ -36,58 +37,64 @@ namespace Moonfish.Guerilla.Tags
         internal byte[] invalidName_1;
         internal OpenTK.Vector3 grenadeOrigin;
         internal byte[] invalidName_2;
+
         /// <summary>
         /// 1.0 prevents moving while stunned
         /// </summary>
         internal float stunMovementPenalty01;
+
         /// <summary>
         /// 1.0 prevents turning while stunned
         /// </summary>
         internal float stunTurningPenalty01;
+
         /// <summary>
         /// 1.0 prevents jumping while stunned
         /// </summary>
         internal float stunJumpingPenalty01;
+
         /// <summary>
         /// all stunning damage will last for at least this long
         /// </summary>
         internal float minimumStunTimeSeconds;
+
         /// <summary>
         /// no stunning damage will last for longer than this
         /// </summary>
         internal float maximumStunTimeSeconds;
+
         internal byte[] invalidName_3;
         internal Moonfish.Model.Range firstPersonIdleTimeSeconds;
         internal float firstPersonSkipFraction01;
         internal byte[] invalidName_4;
-        [TagReference("effe")]
-        internal Moonfish.Tags.TagReference coopRespawnEffect;
+        [TagReference("effe")] internal Moonfish.Tags.TagReference coopRespawnEffect;
         internal int binocularsZoomCount;
         internal Moonfish.Model.Range binocularsZoomRange;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference binocularsZoomInSound;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference binocularsZoomOutSound;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference binocularsZoomInSound;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference binocularsZoomOutSound;
         internal byte[] invalidName_5;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference activeCamouflageOn;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference activeCamouflageOff;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference activeCamouflageError;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference activeCamouflageReady;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference flashlightOn;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference flashlightOff;
-        [TagReference("snd!")]
-        internal Moonfish.Tags.TagReference iceCream;
-        public override int SerializedSize { get { return 284; } }
-        public override int Alignment { get { return 4; } }
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference activeCamouflageOn;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference activeCamouflageOff;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference activeCamouflageError;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference activeCamouflageReady;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference flashlightOn;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference flashlightOff;
+        [TagReference("snd!")] internal Moonfish.Tags.TagReference iceCream;
+
+        public override int SerializedSize
+        {
+            get { return 284; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public PlayerInformationBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -131,14 +138,16 @@ namespace Moonfish.Guerilla.Tags
             iceCream = binaryReader.ReadTagReference();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(unused);
                 binaryWriter.Write(invalidName_, 0, 28);

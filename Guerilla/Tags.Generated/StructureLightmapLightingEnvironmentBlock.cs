@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 220, Alignment = 4)]
     public class StructureLightmapLightingEnvironmentBlockBase : GuerillaBlock
     {
@@ -35,16 +37,31 @@ namespace Moonfish.Guerilla.Tags
         internal OpenTK.Vector3 proceduralParam0;
         internal OpenTK.Vector3 proceduralParam1Xyz;
         internal float proceduralParam1W;
-        public override int SerializedSize { get { return 220; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 220; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public StructureLightmapLightingEnvironmentBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
             samplePoint = binaryReader.ReadVector3();
-            redCoefficients = new []{ new RedCoefficients(), new RedCoefficients(), new RedCoefficients(), new RedCoefficients(), new RedCoefficients(), new RedCoefficients(), new RedCoefficients(), new RedCoefficients(), new RedCoefficients() };
+            redCoefficients = new[]
+            {
+                new RedCoefficients(), new RedCoefficients(), new RedCoefficients(), new RedCoefficients(),
+                new RedCoefficients(), new RedCoefficients(), new RedCoefficients(), new RedCoefficients(),
+                new RedCoefficients()
+            };
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(redCoefficients[0].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(redCoefficients[1].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(redCoefficients[2].ReadFields(binaryReader)));
@@ -54,7 +71,12 @@ namespace Moonfish.Guerilla.Tags
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(redCoefficients[6].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(redCoefficients[7].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(redCoefficients[8].ReadFields(binaryReader)));
-            greenCoefficients = new []{ new GreenCoefficients(), new GreenCoefficients(), new GreenCoefficients(), new GreenCoefficients(), new GreenCoefficients(), new GreenCoefficients(), new GreenCoefficients(), new GreenCoefficients(), new GreenCoefficients() };
+            greenCoefficients = new[]
+            {
+                new GreenCoefficients(), new GreenCoefficients(), new GreenCoefficients(), new GreenCoefficients(),
+                new GreenCoefficients(), new GreenCoefficients(), new GreenCoefficients(), new GreenCoefficients(),
+                new GreenCoefficients()
+            };
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(greenCoefficients[0].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(greenCoefficients[1].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(greenCoefficients[2].ReadFields(binaryReader)));
@@ -64,7 +86,12 @@ namespace Moonfish.Guerilla.Tags
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(greenCoefficients[6].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(greenCoefficients[7].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(greenCoefficients[8].ReadFields(binaryReader)));
-            blueCoefficients = new []{ new BlueCoefficients(), new BlueCoefficients(), new BlueCoefficients(), new BlueCoefficients(), new BlueCoefficients(), new BlueCoefficients(), new BlueCoefficients(), new BlueCoefficients(), new BlueCoefficients() };
+            blueCoefficients = new[]
+            {
+                new BlueCoefficients(), new BlueCoefficients(), new BlueCoefficients(), new BlueCoefficients(),
+                new BlueCoefficients(), new BlueCoefficients(), new BlueCoefficients(), new BlueCoefficients(),
+                new BlueCoefficients()
+            };
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(blueCoefficients[0].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(blueCoefficients[1].ReadFields(binaryReader)));
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(blueCoefficients[2].ReadFields(binaryReader)));
@@ -81,13 +108,14 @@ namespace Moonfish.Guerilla.Tags
             rotationSpeed = binaryReader.ReadSingle();
             bumpDirection = binaryReader.ReadVector3();
             colorTint = binaryReader.ReadColorR8G8B8();
-            proceduralOveride = (ProceduralOveride)binaryReader.ReadInt16();
-            flags = (Flags)binaryReader.ReadInt16();
+            proceduralOveride = (ProceduralOveride) binaryReader.ReadInt16();
+            flags = (Flags) binaryReader.ReadInt16();
             proceduralParam0 = binaryReader.ReadVector3();
             proceduralParam1Xyz = binaryReader.ReadVector3();
             proceduralParam1W = binaryReader.ReadSingle();
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -119,10 +147,11 @@ namespace Moonfish.Guerilla.Tags
             blueCoefficients[7].ReadPointers(binaryReader, blamPointers);
             blueCoefficients[8].ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(samplePoint);
                 redCoefficients[0].Write(binaryWriter);
@@ -159,14 +188,15 @@ using(binaryWriter.BaseStream.Pin())
                 binaryWriter.Write(rotationSpeed);
                 binaryWriter.Write(bumpDirection);
                 binaryWriter.Write(colorTint);
-                binaryWriter.Write((Int16)proceduralOveride);
-                binaryWriter.Write((Int16)flags);
+                binaryWriter.Write((Int16) proceduralOveride);
+                binaryWriter.Write((Int16) flags);
                 binaryWriter.Write(proceduralParam0);
                 binaryWriter.Write(proceduralParam1Xyz);
                 binaryWriter.Write(proceduralParam1W);
                 return nextAddress;
             }
         }
+
         internal enum ProceduralOveride : short
         {
             NoOveride = 0,
@@ -178,92 +208,132 @@ using(binaryWriter.BaseStream.Pin())
             SphereLight = 6,
             HemisphereLight = 7,
         };
+
         [FlagsAttribute]
         internal enum Flags : short
         {
             LeaveMeAlonePlease = 1,
         };
+
         [LayoutAttribute(Size = 4, Alignment = 1)]
         public class RedCoefficients : GuerillaBlock
         {
             internal float redCoefficient;
-            public override int SerializedSize { get { return 4; } }
-            public override int Alignment { get { return 1; } }
+
+            public override int SerializedSize
+            {
+                get { return 4; }
+            }
+
+            public override int Alignment
+            {
+                get { return 1; }
+            }
+
             public RedCoefficients() : base()
             {
             }
+
             public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
             {
                 var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
                 redCoefficient = binaryReader.ReadSingle();
                 return blamPointers;
             }
+
             public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
             {
                 base.ReadPointers(binaryReader, blamPointers);
             }
+
             public override int Write(BinaryWriter binaryWriter, int nextAddress)
             {
                 base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+                using (binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(redCoefficient);
                     return nextAddress;
                 }
             }
         };
+
         [LayoutAttribute(Size = 4, Alignment = 1)]
         public class GreenCoefficients : GuerillaBlock
         {
             internal float greenCoefficient;
-            public override int SerializedSize { get { return 4; } }
-            public override int Alignment { get { return 1; } }
+
+            public override int SerializedSize
+            {
+                get { return 4; }
+            }
+
+            public override int Alignment
+            {
+                get { return 1; }
+            }
+
             public GreenCoefficients() : base()
             {
             }
+
             public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
             {
                 var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
                 greenCoefficient = binaryReader.ReadSingle();
                 return blamPointers;
             }
+
             public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
             {
                 base.ReadPointers(binaryReader, blamPointers);
             }
+
             public override int Write(BinaryWriter binaryWriter, int nextAddress)
             {
                 base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+                using (binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(greenCoefficient);
                     return nextAddress;
                 }
             }
         };
+
         [LayoutAttribute(Size = 4, Alignment = 1)]
         public class BlueCoefficients : GuerillaBlock
         {
             internal float blueCoefficient;
-            public override int SerializedSize { get { return 4; } }
-            public override int Alignment { get { return 1; } }
+
+            public override int SerializedSize
+            {
+                get { return 4; }
+            }
+
+            public override int Alignment
+            {
+                get { return 1; }
+            }
+
             public BlueCoefficients() : base()
             {
             }
+
             public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
             {
                 var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
                 blueCoefficient = binaryReader.ReadSingle();
                 return blamPointers;
             }
+
             public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
             {
                 base.ReadPointers(binaryReader, blamPointers);
             }
+
             public override int Write(BinaryWriter binaryWriter, int nextAddress)
             {
                 base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+                using (binaryWriter.BaseStream.Pin())
                 {
                     binaryWriter.Write(blueCoefficient);
                     return nextAddress;

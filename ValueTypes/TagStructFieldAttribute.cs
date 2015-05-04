@@ -2,7 +2,7 @@
 
 namespace Moonfish.Tags
 {
-    [AttributeUsage( AttributeTargets.Field )]
+    [AttributeUsage(AttributeTargets.Field)]
     public class TagStructFieldAttribute : TagFieldAttribute
     {
     }

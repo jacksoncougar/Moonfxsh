@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 306, Alignment = 4)]
     public class ShaderPassPostprocessImplementationNewBlockBase : GuerillaBlock
     {
@@ -26,8 +28,7 @@ namespace Moonfish.Guerilla.Tags
         internal TagBlockIndexStructBlock psFragments;
         internal TagBlockIndexStructBlock psPermutations;
         internal TagBlockIndexStructBlock psCombiners;
-        [TagReference("vrtx")]
-        internal Moonfish.Tags.TagReference vertexShader;
+        [TagReference("vrtx")] internal Moonfish.Tags.TagReference vertexShader;
         internal byte[] invalidName_0;
         internal byte[] invalidName_1;
         internal byte[] invalidName_2;
@@ -43,11 +44,21 @@ namespace Moonfish.Guerilla.Tags
         internal TagBlockIndexStructBlock vertexConstantInfo;
         internal TagBlockIndexStructBlock renderStateInfo;
         internal TagBlockIndexStructBlock textureStateInfo;
-        public override int SerializedSize { get { return 306; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 306; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public ShaderPassPostprocessImplementationNewBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -93,6 +104,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers = new Queue<BlamPointer>(blamPointers.Concat(textureStateInfo.ReadFields(binaryReader)));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -114,10 +126,11 @@ namespace Moonfish.Guerilla.Tags
             renderStateInfo.ReadPointers(binaryReader, blamPointers);
             textureStateInfo.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 textures.Write(binaryWriter);
                 renderStates.Write(binaryWriter);

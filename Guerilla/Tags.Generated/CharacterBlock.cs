@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -12,9 +13,9 @@ namespace Moonfish.Tags
 {
     public partial struct TagClass
     {
-        public static readonly TagClass Char = (TagClass)"char";
+        public static readonly TagClass Char = (TagClass) "char";
     };
-};
+} ;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -25,23 +26,21 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 236, Alignment = 4)]
     public class CharacterBlockBase : GuerillaBlock
     {
         internal CharacterFlags characterFlags;
-        [TagReference("char")]
-        internal Moonfish.Tags.TagReference parentCharacter;
-        [TagReference("unit")]
-        internal Moonfish.Tags.TagReference unit;
+        [TagReference("char")] internal Moonfish.Tags.TagReference parentCharacter;
+        [TagReference("unit")] internal Moonfish.Tags.TagReference unit;
+
         /// <summary>
         /// Creature reference for swarm characters ONLY
         /// </summary>
-        [TagReference("crea")]
-        internal Moonfish.Tags.TagReference creature;
-        [TagReference("styl")]
-        internal Moonfish.Tags.TagReference style;
-        [TagReference("char")]
-        internal Moonfish.Tags.TagReference majorCharacter;
+        [TagReference("crea")] internal Moonfish.Tags.TagReference creature;
+
+        [TagReference("styl")] internal Moonfish.Tags.TagReference style;
+        [TagReference("char")] internal Moonfish.Tags.TagReference majorCharacter;
         internal CharacterVariantsBlock[] variants;
         internal CharacterGeneralBlock[] generalProperties;
         internal CharacterVitalityBlock[] vitalityProperties;
@@ -66,15 +65,25 @@ namespace Moonfish.Guerilla.Tags
         internal CharacterFiringPatternPropertiesBlock[] firingPatternProperties;
         internal CharacterGrenadesBlock[] grenadesProperties;
         internal CharacterVehicleBlock[] vehicleProperties;
-        public override int SerializedSize { get { return 236; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 236; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public CharacterBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
-            characterFlags = (CharacterFlags)binaryReader.ReadInt32();
+            characterFlags = (CharacterFlags) binaryReader.ReadInt32();
             parentCharacter = binaryReader.ReadTagReference();
             unit = binaryReader.ReadTagReference();
             creature = binaryReader.ReadTagReference();
@@ -106,6 +115,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<CharacterVehicleBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -130,48 +140,65 @@ namespace Moonfish.Guerilla.Tags
             boardingProperties = ReadBlockArrayData<CharacterBoardingBlock>(binaryReader, blamPointers.Dequeue());
             bossProperties = ReadBlockArrayData<CharacterBossBlock>(binaryReader, blamPointers.Dequeue());
             weaponsProperties = ReadBlockArrayData<CharacterWeaponsBlock>(binaryReader, blamPointers.Dequeue());
-            firingPatternProperties = ReadBlockArrayData<CharacterFiringPatternPropertiesBlock>(binaryReader, blamPointers.Dequeue());
+            firingPatternProperties = ReadBlockArrayData<CharacterFiringPatternPropertiesBlock>(binaryReader,
+                blamPointers.Dequeue());
             grenadesProperties = ReadBlockArrayData<CharacterGrenadesBlock>(binaryReader, blamPointers.Dequeue());
             vehicleProperties = ReadBlockArrayData<CharacterVehicleBlock>(binaryReader, blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
-                binaryWriter.Write((Int32)characterFlags);
+                binaryWriter.Write((Int32) characterFlags);
                 binaryWriter.Write(parentCharacter);
                 binaryWriter.Write(unit);
                 binaryWriter.Write(creature);
                 binaryWriter.Write(style);
                 binaryWriter.Write(majorCharacter);
                 nextAddress = Guerilla.WriteBlockArray<CharacterVariantsBlock>(binaryWriter, variants, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CharacterGeneralBlock>(binaryWriter, generalProperties, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CharacterVitalityBlock>(binaryWriter, vitalityProperties, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CharacterPlacementBlock>(binaryWriter, placementProperties, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CharacterPerceptionBlock>(binaryWriter, perceptionProperties, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterGeneralBlock>(binaryWriter, generalProperties,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterVitalityBlock>(binaryWriter, vitalityProperties,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterPlacementBlock>(binaryWriter, placementProperties,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterPerceptionBlock>(binaryWriter, perceptionProperties,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CharacterLookBlock>(binaryWriter, lookProperties, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CharacterMovementBlock>(binaryWriter, movementProperties, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterMovementBlock>(binaryWriter, movementProperties,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CharacterSwarmBlock>(binaryWriter, swarmProperties, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CharacterReadyBlock>(binaryWriter, readyProperties, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CharacterEngageBlock>(binaryWriter, engageProperties, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CharacterChargeBlock>(binaryWriter, chargeProperties, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CharacterEvasionBlock>(binaryWriter, evasionProperties, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterEvasionBlock>(binaryWriter, evasionProperties,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CharacterCoverBlock>(binaryWriter, coverProperties, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CharacterRetreatBlock>(binaryWriter, retreatProperties, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterRetreatBlock>(binaryWriter, retreatProperties,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CharacterSearchBlock>(binaryWriter, searchProperties, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CharacterPresearchBlock>(binaryWriter, preSearchProperties, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterPresearchBlock>(binaryWriter, preSearchProperties,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CharacterIdleBlock>(binaryWriter, idleProperties, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CharacterVocalizationBlock>(binaryWriter, vocalizationProperties, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CharacterBoardingBlock>(binaryWriter, boardingProperties, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterVocalizationBlock>(binaryWriter, vocalizationProperties,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterBoardingBlock>(binaryWriter, boardingProperties,
+                    nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<CharacterBossBlock>(binaryWriter, bossProperties, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CharacterWeaponsBlock>(binaryWriter, weaponsProperties, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CharacterFiringPatternPropertiesBlock>(binaryWriter, firingPatternProperties, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CharacterGrenadesBlock>(binaryWriter, grenadesProperties, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<CharacterVehicleBlock>(binaryWriter, vehicleProperties, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterWeaponsBlock>(binaryWriter, weaponsProperties,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterFiringPatternPropertiesBlock>(binaryWriter,
+                    firingPatternProperties, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterGrenadesBlock>(binaryWriter, grenadesProperties,
+                    nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<CharacterVehicleBlock>(binaryWriter, vehicleProperties,
+                    nextAddress);
                 return nextAddress;
             }
         }
+
         [FlagsAttribute]
         internal enum CharacterFlags : int
         {

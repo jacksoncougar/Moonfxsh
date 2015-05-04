@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 36, Alignment = 4)]
     public class AimAssistStructBlockBase : GuerillaBlock
     {
@@ -23,29 +25,44 @@ namespace Moonfish.Guerilla.Tags
         /// the maximum angle that autoaim works at full strength
         /// </summary>
         internal float autoaimAngleDegrees;
+
         /// <summary>
         /// the maximum distance that autoaim works at full strength
         /// </summary>
         internal float autoaimRangeWorldUnits;
+
         /// <summary>
         /// the maximum angle that magnetism works at full strength
         /// </summary>
         internal float magnetismAngleDegrees;
+
         /// <summary>
         /// the maximum distance that magnetism works at full strength
         /// </summary>
         internal float magnetismRangeWorldUnits;
+
         /// <summary>
         /// the maximum angle that a projectile is allowed to deviate from the gun barrel
         /// </summary>
         internal float deviationAngleDegrees;
+
         internal byte[] invalidName_;
         internal byte[] invalidName_0;
-        public override int SerializedSize { get { return 36; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 36; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public AimAssistStructBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -58,14 +75,16 @@ namespace Moonfish.Guerilla.Tags
             invalidName_0 = binaryReader.ReadBytes(12);
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 binaryWriter.Write(autoaimAngleDegrees);
                 binaryWriter.Write(autoaimRangeWorldUnits);

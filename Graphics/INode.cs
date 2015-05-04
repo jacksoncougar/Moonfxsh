@@ -16,7 +16,7 @@ namespace Moonfish.Graphics
 
     public static class NodeExtensions
     {
-        public static Matrix4 GetWorldMatrix( this INode node )
+        public static Matrix4 GetWorldMatrix(this INode node)
         {
             return node == null ? Matrix4.Identity : node.WorldMatrix;
         }

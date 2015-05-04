@@ -8,7 +8,7 @@ namespace Moonfish.Cache
         public readonly TagClass Parent;
         public readonly TagClass Class;
 
-        public TagClassHeirarchy( TagClass @class, TagClass parent, TagClass root )
+        public TagClassHeirarchy(TagClass @class, TagClass parent, TagClass root)
         {
             Root = root;
             Parent = parent;

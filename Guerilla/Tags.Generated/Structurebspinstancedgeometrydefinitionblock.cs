@@ -1,4 +1,5 @@
 // ReSharper disable All
+
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;
 using Moonfish.Tags;
@@ -16,6 +17,7 @@ namespace Moonfish.Guerilla.Tags
         {
         }
     };
+
     [LayoutAttribute(Size = 200, Alignment = 4)]
     public class StructureBspInstancedGeometryDefinitionBlockBase : GuerillaBlock
     {
@@ -27,11 +29,21 @@ namespace Moonfish.Guerilla.Tags
         internal CollisionBspPhysicsBlock[] bspPhysics;
         internal StructureBspLeafBlock[] renderLeaves;
         internal StructureBspSurfaceReferenceBlock[] surfaceReferences;
-        public override int SerializedSize { get { return 200; } }
-        public override int Alignment { get { return 4; } }
+
+        public override int SerializedSize
+        {
+            get { return 200; }
+        }
+
+        public override int Alignment
+        {
+            get { return 4; }
+        }
+
         public StructureBspInstancedGeometryDefinitionBlockBase() : base()
         {
         }
+
         public override Queue<BlamPointer> ReadFields(BinaryReader binaryReader)
         {
             var blamPointers = new Queue<BlamPointer>(base.ReadFields(binaryReader));
@@ -47,6 +59,7 @@ namespace Moonfish.Guerilla.Tags
             blamPointers.Enqueue(ReadBlockArrayPointer<StructureBspSurfaceReferenceBlock>(binaryReader));
             return blamPointers;
         }
+
         public override void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
             base.ReadPointers(binaryReader, blamPointers);
@@ -54,12 +67,14 @@ namespace Moonfish.Guerilla.Tags
             collisionInfo.ReadPointers(binaryReader, blamPointers);
             bspPhysics = ReadBlockArrayData<CollisionBspPhysicsBlock>(binaryReader, blamPointers.Dequeue());
             renderLeaves = ReadBlockArrayData<StructureBspLeafBlock>(binaryReader, blamPointers.Dequeue());
-            surfaceReferences = ReadBlockArrayData<StructureBspSurfaceReferenceBlock>(binaryReader, blamPointers.Dequeue());
+            surfaceReferences = ReadBlockArrayData<StructureBspSurfaceReferenceBlock>(binaryReader,
+                blamPointers.Dequeue());
         }
+
         public override int Write(BinaryWriter binaryWriter, int nextAddress)
         {
             base.Write(binaryWriter, nextAddress);
-using(binaryWriter.BaseStream.Pin())
+            using (binaryWriter.BaseStream.Pin())
             {
                 renderInfo.Write(binaryWriter);
                 binaryWriter.Write(checksum);
@@ -68,7 +83,8 @@ using(binaryWriter.BaseStream.Pin())
                 collisionInfo.Write(binaryWriter);
                 nextAddress = Guerilla.WriteBlockArray<CollisionBspPhysicsBlock>(binaryWriter, bspPhysics, nextAddress);
                 nextAddress = Guerilla.WriteBlockArray<StructureBspLeafBlock>(binaryWriter, renderLeaves, nextAddress);
-                nextAddress = Guerilla.WriteBlockArray<StructureBspSurfaceReferenceBlock>(binaryWriter, surfaceReferences, nextAddress);
+                nextAddress = Guerilla.WriteBlockArray<StructureBspSurfaceReferenceBlock>(binaryWriter,
+                    surfaceReferences, nextAddress);
                 return nextAddress;
             }
         }

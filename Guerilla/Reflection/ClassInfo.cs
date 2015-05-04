@@ -268,26 +268,35 @@ namespace Moonfish.Guerilla.Reflection
 
             foreach (var item in Fields)
             {
-                if (!item.IsArray||item.ArraySize > 0) continue;
-                // variable byte array (data)
-                if (Type.GetType(item.FieldTypeName) == typeof (byte))
+                if (item.IsArray && item.ArraySize == 0)
                 {
-                    body.AppendFormatLine(
-                        "{0} = ReadDataByteArray(binaryReader, blamPointers.Dequeue());", item.Value.Name);
-                }
-                // variable short array (data)
-                else if (Type.GetType(item.FieldTypeName) == typeof (short))
-                {
-                    body.AppendFormatLine(
-                        "{0} = ReadDataShortArray(binaryReader, blamPointers.Dequeue());", item.Value.Name);
-                }
-                // assume a TagBlock
-                else if (item.ArraySize == 0)
-                {
+                    // variable byte array (data)
+                    if (Type.GetType(item.FieldTypeName) == typeof (byte))
+                    {
+                        body.AppendFormatLine(
+                            "{0} = ReadDataByteArray(binaryReader, blamPointers.Dequeue());", item.Value.Name);
+                    }
+                    // variable short array (data)
+                    else if (Type.GetType(item.FieldTypeName) == typeof (short))
+                    {
+                        body.AppendFormatLine(
+                            "{0} = ReadDataShortArray(binaryReader, blamPointers.Dequeue());", item.Value.Name);
+                    }
+                    // assume a TagBlock
+                    else if (item.ArraySize == 0)
+                    {
 
-                    body.AppendFormatLine(
-                        "{1} = ReadBlockArrayData<{0}>(binaryReader, blamPointers.Dequeue());",
-                        item.FieldTypeName, item.Value.Name);
+                        body.AppendFormatLine(
+                            "{1} = ReadBlockArrayData<{0}>(binaryReader, blamPointers.Dequeue());",
+                            item.FieldTypeName, item.Value.Name);
+                    }
+                }
+                else
+                {
+                    if (Type.GetType(item.FieldTypeName) == null && EnumDefinitions.All(x => x.Value.Name != item.FieldTypeName))
+                    {
+                        body.AppendFormatLine("{0}.ReadPoiners(binaryReader, blamPointers);", item.Value.Name);
+                    }
                 }
             }
             Methods.Last().Body = body.ToString().TrimEnd();
@@ -364,7 +373,7 @@ namespace Moonfish.Guerilla.Reflection
                     {
                         body.AppendFormatLine("{0} = new {1}();", item.Value.Name,
                             item.FieldTypeName);
-                        body.AppendFormatLine("{0}.ReadFields(binaryReader);", item.Value.Name);
+                        body.AppendFormatLine("blamPointers.Concat({0}.ReadFields(binaryReader));", item.Value.Name);
                     }
                     else
                     {

@@ -24,7 +24,7 @@ namespace Moonfish.Guerilla.Reflection
                 new UsingInfo("System.IO"),
                 new UsingInfo("System.Collections.Generic"),
                 new UsingInfo("System.Linq")
-            };
+            };  
             Attributes = new List<AttributeInfo>();
             Fields = new List<FieldInfo>();
             Properties = new List<PropertyInfo>();
@@ -92,7 +92,7 @@ namespace Moonfish.Guerilla.Reflection
             get { return _value.Name; }
             set { _value.Name = value; }
         }
-
+            
         public string Description
         {
             get { return _value.Description; }

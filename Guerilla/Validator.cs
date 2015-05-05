@@ -167,7 +167,7 @@ namespace Moonfish.Guerilla
         private void ProcessArrayFields(IList<MoonfishTagField> fields, ElementArray elementArray,
             MoonfishTagField field, ref int i, ref int offset)
         {
-            var name = field.Name;
+            var name = field.Strings;
             ++i; //move past field_type._field_array_start
             for (var index = 0; index < field.Count; ++index)
             {

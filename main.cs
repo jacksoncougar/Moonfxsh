@@ -8,6 +8,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Moonfish.Guerilla;
+using Moonfish.Guerilla.CodeDom;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 
@@ -21,16 +22,15 @@ namespace Moonfish
         [STAThread]
         private static void Main()
         {
-            var converter = new GuerillaCs(Local.GuerillaPath);
-            foreach (var tag in Guerilla.Guerilla.h2Tags.Where(x=>x.Class == TagClass.Bitm))
+            //var converter = new GuerillaCs(Local.GuerillaPath);
+            foreach (var tag in Guerilla.Guerilla.h2Tags
+                .Where(x=>x.Class == TagClass.Bitm)
+                .Select(x=>new MoonfishTagGroup(x)))
             {
-                converter.DumpTagLayout(
-                    new MoonfishTagGroup(tag),
-                    Path.Combine(Local.ProjectDirectory, @"Guerilla\Debug\"));
-                Console.WriteLine("Exported: {0}", tag.Class);
+                GuerillaBlockClass blockClass = new GuerillaBlockClass(tag);
+                Application.Exit();
+                return;
             }
-            Application.Exit();
-            return;
 
 
             //StaticBenchmark.Begin();

@@ -139,6 +139,12 @@ namespace Moonfish.Guerilla
                     return reader.ReadFieldDefinition<tag_reference_definition>(this);
                 case field_type._field_data:
                     return reader.ReadFieldDefinition<tag_data_definition>(this);
+                case field_type._field_explanation:
+                {
+                    var value = Guerilla.ReadString(reader, definition);
+                    return value;
+                }
+                    break;
                 default:
                     return definition;
             }

@@ -83,6 +83,24 @@ namespace Moonfish.Guerilla.Reflection
 
         public static MethodInfo GenerateReadFieldsMethod(ClassInfo classInfo)
         {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             var method = new MethodInfo
             {
                 ClassName = "ReadFields",

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using Microsoft.CSharp;
 
 namespace Moonfish.Guerilla
@@ -75,6 +76,10 @@ namespace Moonfish.Guerilla
                 {
                     var fieldDefinition = (tag_reference_definition) field.Definition;
                     moonfishField.AssignDefinition(new MoonfishTagReferenceDefinition(fieldDefinition));
+                }
+                if (field.Definition is string)
+                {
+                    moonfishField.AssignDefinition((string)field.Definition);
                 }
 
                 Fields.Add(moonfishField);

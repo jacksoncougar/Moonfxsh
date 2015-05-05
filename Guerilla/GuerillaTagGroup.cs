@@ -1,4 +1,5 @@
 using System.IO;
+using Moonfish.Guerilla.Reflection;
 using Moonfish.Tags;
 using OpenTK.Audio;
 using OpenTK.Graphics;
@@ -8,7 +9,7 @@ namespace Moonfish.Guerilla
     public class MoonfishTagField
     {
         public MoonfishFieldType Type { get; private set; }
-        public string Name { get; private set; }
+        public GuerillaName Strings { get; private set; }
         public dynamic Definition { get; private set; }
 
         public int Count { get; private set; }
@@ -43,17 +44,22 @@ namespace Moonfish.Guerilla
             Definition = definition;
         }
 
-        public MoonfishTagField(MoonfishFieldType fieldType, string fieldName)
+        public MoonfishTagField(MoonfishFieldType fieldType, string fieldStrings)
         {
             Type = fieldType;
-            Name = fieldName;
+            Strings = fieldStrings;
         }
 
-        public MoonfishTagField(MoonfishFieldType fieldType, string fieldName, int count)
+        public MoonfishTagField(MoonfishFieldType fieldType, string fieldStrings, int count)
         {
             Type = fieldType;
-            Name = fieldName;
+            Strings = fieldStrings;
             AssignCount(count);
+        }
+
+        internal void AssignDefinition(string defintion)
+        {
+            Definition = defintion;
         }
     }
 

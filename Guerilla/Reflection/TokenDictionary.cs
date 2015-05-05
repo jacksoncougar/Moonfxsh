@@ -33,11 +33,9 @@ namespace Moonfish.Guerilla.Reflection
                 var salt = 0;
                 do
                 {
-                    if (Tokens.Contains(token))
-                    {
-                        validToken = string.Format("{0}{1}", token, salt);
-                    }
-                    else validToken = code.CreateValidIdentifier(token);
+                    validToken = Tokens.Contains(token)
+                        ? string.Format("{0}{1}", token, salt)
+                        : code.CreateEscapedIdentifier(token);
                     salt++;
                 } while (Tokens.Contains(validToken));
                 Tokens.Add(validToken);

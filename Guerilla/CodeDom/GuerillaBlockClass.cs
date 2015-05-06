@@ -263,6 +263,7 @@ namespace Moonfish.Guerilla.CodeDom
                     method.Statements.Add(fieldAssignment);
                 }
             }
+            method.Statements.Add(new CodeMethodReturnStatement(pointerQueueVariable));
             _targetClass.Members.Add(method);
         }
 

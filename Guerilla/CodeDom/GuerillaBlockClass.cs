@@ -141,33 +141,71 @@ namespace Moonfish.Guerilla.CodeDom
                 new CodeVariableDeclarationStatement(binaryReaderReference,
                    binaryReader, new CodeObjectCreateExpression(binaryReaderReference));
             method.Statements.Add(binaryReaderVariableDeclaration);
+            var binaryReaderVariable = new CodeVariableReferenceExpression(binaryReader);
 
             foreach (CodeObject codeObject in _targetClass.Members)
             {
                 if (!(codeObject is CodeMemberField)) continue;
-
-                // 
                 var field = (CodeMemberField)codeObject;
-
                
                 var systemType = Type.GetType(field.Type.BaseType);
-                if(systemType != null)
+                if (systemType != null)
                 {
-                    var methodName = BinaryIOReflection.GetBinaryReaderMethodName(systemType);
-                    var binaryReaderVariable = new CodeVariableReferenceExpression(binaryReader);
+                    //  Single dimensional arrays
+                    if (field.Type.ArrayRank == 1)
+                    {
+                        var fieldInitializer = (CodeArrayCreateExpression) field.InitExpression;
+                        var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
+                            field.Name);
+                        if (systemType == typeof (byte))
+                        {
+                            var methodName = StaticReflection.GetMemberName((BinaryReader item) => item.ReadBytes(0));
+                            var fieldAssignment = new CodeAssignStatement(fieldReference,
+                                new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
+                                    new CodePrimitiveExpression(fieldInitializer.Size)));
+                            method.Statements.Add(fieldAssignment);
+                        }
+                        else if (systemType == typeof (short))
+                        {
+                            var methodName = StaticReflection.GetMemberName((BinaryReader item) => item.ReadInt16());
+                            var loopVariable = new CodeVariableReferenceExpression("i");
+                            var forLoop = new CodeIterationStatement(
+                                new CodeAssignStatement(loopVariable, new CodePrimitiveExpression(0)),
+                                new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.LessThan,
+                                    new CodePrimitiveExpression(fieldInitializer.Size)),
+                                new CodeAssignStatement(loopVariable,
+                                    new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.Add,
+                                        new CodePrimitiveExpression(1))),
+                                new CodeStatement[]
+                                {
+                                    //  loop block
+                                    new CodeAssignStatement(
+                                        new CodeArrayIndexerExpression(fieldReference, loopVariable),
+                                        new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
+                                            new CodeArgumentReferenceExpression()))
+                                }
+                                );
+                            method.Statements.Add(forLoop);
+                        }
+                    }
+                    else
+                    {
+                        var methodName = BinaryIOReflection.GetBinaryReaderMethodName(systemType);
 
-                    //this.Name
-                    var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), field.Name);
-                    var fieldAssignment = new CodeAssignStatement(fieldReference,
-                        new CodeMethodInvokeExpression(binaryReaderVariable, methodName, new CodeArgumentReferenceExpression()));
-                    method.Statements.Add(fieldAssignment);
-
+                        //this.Name
+                        var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
+                            field.Name);
+                        var fieldAssignment = new CodeAssignStatement(fieldReference,
+                            new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
+                                new CodeArgumentReferenceExpression()));
+                        method.Statements.Add(fieldAssignment);
+                    }
                 }
             }
             _targetClass.Members.Add(method);
         }
 
-        private void GenerateFields(IList<MoonfishTagField> fields)
+        private void GenerateFields(IEnumerable<MoonfishTagField> fields)
         {
             foreach (var field in fields)
             {
@@ -388,7 +426,9 @@ namespace Moonfish.Guerilla.CodeDom
                     case MoonfishFieldType.FieldSkip:
                     case MoonfishFieldType.FieldPad:
                     {
-                        var member = GenerateCodeMemberField<byte>(field, MemberAttributes.Private);
+                        var member = GenerateCodeMemberField<byte[]>(field, MemberAttributes.Private);
+
+                        member.InitExpression = new CodeArrayCreateExpression(member.Type, field.Count);
                         _targetClass.Members.Add(member);
                     }
                         break;

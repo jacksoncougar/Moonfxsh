@@ -187,7 +187,7 @@ namespace Moonfish.Guerilla.CodeDom
                         method.Statements.Add(queueBlamPointer);
 
                     }
-                    //  instanced int16 array like data
+                    //  instanced Int16 array like data
                     else if (systemType == typeof (short))
                     {
                         var methodName = StaticReflection.GetMemberName((BinaryReader item) => item.ReadInt16());
@@ -219,12 +219,25 @@ namespace Moonfish.Guerilla.CodeDom
                                 new CodePrimitiveExpression(elementSize))));
                     }
                 }
+                //  like an inline struct where T : GuerillaBlock
+                else if (field.UserData.Contains("GuerillaBlock"))
+                {
+                    var concatMethodName =
+                        StaticReflection.GetMemberName(
+                            (Queue<BlamPointer> @class) => @class.Enqueue(new BlamPointer()));
+                    var methodName =
+                        StaticReflection.GetMemberName((GuerillaBlock item) => item.ReadFields(default(BinaryReader)));
+
+                    method.Statements.Add(new CodeAssignStatement(pointerQueueVariable,
+                        new CodeObjectCreateExpression(pointerQueueReference,
+                            new CodeMethodInvokeExpression(pointerQueueVariable, concatMethodName,
+                                new CodeMethodInvokeExpression(binaryReaderVariable, methodName)))));
+                }
                 //  like a simple value (int, byte, TagClass, TagIdent, etc.)
                 else if (systemType != null)
                 {
                     var methodName = BinaryIOReflection.GetBinaryReaderMethodName(systemType);
 
-                    //this.Name
                     var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
                         field.Name);
                     var fieldAssignment = new CodeAssignStatement(fieldReference,
@@ -241,7 +254,6 @@ namespace Moonfish.Guerilla.CodeDom
 
                     var methodName = BinaryIOReflection.GetBinaryReaderMethodName(baseType);
 
-                    //this.Name
                     var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
                         field.Name);
                     var fieldAssignment = new CodeAssignStatement(fieldReference,
@@ -266,7 +278,7 @@ namespace Moonfish.Guerilla.CodeDom
                             _tokenDictionary.GenerateValidToken(GenerateFieldName(field)));
                         member.CustomAttributes.Add(
                             new CodeAttributeDeclaration(new CodeTypeReference(typeof (TagReferenceAttribute)),
-                                new CodeAttributeArgument(new CodePrimitiveExpression(field.Definition.Class))));
+                                new CodeAttributeArgument(new CodePrimitiveExpression(field.Definition.Class.ToString()))));
                         GenerateSummary(member);
                         member.Attributes = MemberAttributes.Public;
                         _targetClass.Members.Add(member);
@@ -281,17 +293,27 @@ namespace Moonfish.Guerilla.CodeDom
                         GenerateSummary(member);
                         member.Attributes = MemberAttributes.Public;
                         member.UserData[0] = fieldBlockClass.Size;
+                        member.UserData["GuerillaBlock"] = true;
+                        member.InitExpression =
+                            new CodeArrayCreateExpression(
+                                new CodeTypeReference(fieldBlockClass._targetClass.Name, 1), 0);
                         _targetClass.Members.Add(member);
                         break;
                     }
                     case MoonfishFieldType.FieldStruct:
                     {
+                        var fieldBlockClass = new GuerillaBlockClass(field.Definition.Definition);
                         var member =
                             new CodeMemberField(
                                 ((GuerillaName) field.Definition.Name).Name.ToPascalCase().ToValidToken(),
                                 _tokenDictionary.GenerateValidToken(GenerateFieldName(field)));
+                        member.CustomAttributes.Add(
+                           new CodeAttributeDeclaration(new CodeTypeReference(typeof(TagReferenceAttribute)),
+                               new CodeAttributeArgument(new CodePrimitiveExpression(field.Definition.Class.ToString()))));
                         GenerateSummary(member);
                         member.Attributes = MemberAttributes.Public;
+                        member.UserData[0] = fieldBlockClass.Size;
+                        member.UserData["GuerillaBlock"] = true;
                         _targetClass.Members.Add(member);
                         break;
                     }

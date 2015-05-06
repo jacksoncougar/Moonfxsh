@@ -1,12 +1,14 @@
 ﻿using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using Moonfish.Guerilla.Reflection;
 using Moonfish.Tags;
+using Moonfish.Tags.BlamExtension;
 using OpenTK;
 
 namespace Moonfish.Guerilla.CodeDom
@@ -62,7 +64,7 @@ namespace Moonfish.Guerilla.CodeDom
         public GuerillaBlockClass(MoonfishTagGroup tag, IList<MoonfishTagGroup> tagGroups = null)
             : this(tag.Definition.Name.ToPascalCase().ToValidToken())
         {
-            var size = 0;
+            Size = tag.Definition.CalculateSizeOfFieldSet();
             var hasParent = tagGroups != null && tagGroups.Any(x => x.Class == tag.ParentClass);
             if (hasParent)
             {
@@ -74,22 +76,21 @@ namespace Moonfish.Guerilla.CodeDom
                 // loop through all the parents summing up thier sizes
                 while (hasParent)
                 {
-                    size += parentTag.Definition.CalculateSizeOfFieldSet();
+                    Size += parentTag.Definition.CalculateSizeOfFieldSet();
                     hasParent = tagGroups.Any(x => x.Class == parentTag.ParentClass);
                     if (hasParent)
                         parentTag = tagGroups.First(x => x.Class == parentTag.ParentClass);
                 }
             }
-            size = tag.Definition.CalculateSizeOfFieldSet();
 
-            Initialize(tag.Definition, size);
+            Initialize(tag.Definition, Size);
         }
 
         public GuerillaBlockClass(MoonfishTagDefinition definition)
             : this(definition.Name.ToPascalCase().ToValidToken())
         {
-            var size = definition.CalculateSizeOfFieldSet();
-            Initialize(definition, size);
+            Size = definition.CalculateSizeOfFieldSet();
+            Initialize(definition, Size);
         }
 
         private GuerillaBlockClass(string className)
@@ -136,70 +137,118 @@ namespace Moonfish.Guerilla.CodeDom
 
             //  BinaryReader binaryReader = new BinaryReader();
             const string binaryReader = "binaryReader";
-            var binaryReaderReference = new CodeTypeReference(typeof(BinaryReader));
+            var binaryReaderReference = new CodeTypeReference(typeof (BinaryReader));
             var binaryReaderVariableDeclaration =
                 new CodeVariableDeclarationStatement(binaryReaderReference,
-                   binaryReader, new CodeObjectCreateExpression(binaryReaderReference));
+                    binaryReader, new CodeObjectCreateExpression(binaryReaderReference));
             method.Statements.Add(binaryReaderVariableDeclaration);
             var binaryReaderVariable = new CodeVariableReferenceExpression(binaryReader);
+
+            //  Queue<BlamPointer> pointerQueue = new Queue<BlamPointer>();
+            const string pointerQueue = "pointerQueue";
+            var pointerQueueReference = new CodeTypeReference(typeof (Queue<BlamPointer>));
+            var pointerQueueVariableDeclaration = new CodeVariableDeclarationStatement(pointerQueueReference,
+                pointerQueue, new CodeObjectCreateExpression(pointerQueueReference));
+            method.Statements.Add(pointerQueueVariableDeclaration);
+            var pointerQueueVariable = new CodeVariableReferenceExpression(pointerQueue);
 
             foreach (CodeObject codeObject in _targetClass.Members)
             {
                 if (!(codeObject is CodeMemberField)) continue;
-                var field = (CodeMemberField)codeObject;
-               
-                var systemType = Type.GetType(field.Type.BaseType);
-                if (systemType != null)
-                {
-                    //  Single dimensional arrays
-                    if (field.Type.ArrayRank == 1)
-                    {
-                        var fieldInitializer = (CodeArrayCreateExpression) field.InitExpression;
-                        var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
-                            field.Name);
-                        if (systemType == typeof (byte))
-                        {
-                            var methodName = StaticReflection.GetMemberName((BinaryReader item) => item.ReadBytes(0));
-                            var fieldAssignment = new CodeAssignStatement(fieldReference,
-                                new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
-                                    new CodePrimitiveExpression(fieldInitializer.Size)));
-                            method.Statements.Add(fieldAssignment);
-                        }
-                        else if (systemType == typeof (short))
-                        {
-                            var methodName = StaticReflection.GetMemberName((BinaryReader item) => item.ReadInt16());
-                            var loopVariable = new CodeVariableReferenceExpression("i");
-                            var forLoop = new CodeIterationStatement(
-                                new CodeAssignStatement(loopVariable, new CodePrimitiveExpression(0)),
-                                new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.LessThan,
-                                    new CodePrimitiveExpression(fieldInitializer.Size)),
-                                new CodeAssignStatement(loopVariable,
-                                    new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.Add,
-                                        new CodePrimitiveExpression(1))),
-                                new CodeStatement[]
-                                {
-                                    //  loop block
-                                    new CodeAssignStatement(
-                                        new CodeArrayIndexerExpression(fieldReference, loopVariable),
-                                        new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
-                                            new CodeArgumentReferenceExpression()))
-                                }
-                                );
-                            method.Statements.Add(forLoop);
-                        }
-                    }
-                    else
-                    {
-                        var methodName = BinaryIOReflection.GetBinaryReaderMethodName(systemType);
+                var field = (CodeMemberField) codeObject;
 
-                        //this.Name
-                        var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
-                            field.Name);
+                var systemType = ReflectionMethods.GetType(field.Type.BaseType);
+                //  Single dimensional arrays
+                if (field.Type.ArrayRank == 1)
+                {
+                    var fieldInitializer = (CodeArrayCreateExpression) field.InitExpression;
+                    var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
+                        field.Name);
+                    //  fixed byte array like padding or skip data
+                    if (systemType == typeof (byte) && fieldInitializer.Size > 0)
+                    {
+                        var methodName = StaticReflection.GetMemberName((BinaryReader item) => item.ReadBytes(0));
                         var fieldAssignment = new CodeAssignStatement(fieldReference,
                             new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
-                                new CodeArgumentReferenceExpression()));
+                                new CodePrimitiveExpression(fieldInitializer.Size)));
                         method.Statements.Add(fieldAssignment);
                     }
+                    //  instanced byte array like data
+                    else if (systemType == typeof (byte))
+                    {
+                        var readBlamPointerMethodName =
+                            StaticReflection.GetMemberName(
+                                (BinaryReader @class) => @class.ReadBlamPointer(0));
+                        var queueMethodName =
+                            StaticReflection.GetMemberName(
+                                (Queue<BlamPointer> item) => item.Enqueue(new BlamPointer()));
+                        var queueBlamPointer = new CodeMethodInvokeExpression(pointerQueueVariable, queueMethodName,
+                            new CodeMethodInvokeExpression(binaryReaderVariable, readBlamPointerMethodName));
+                        method.Statements.Add(queueBlamPointer);
+
+                    }
+                    //  instanced int16 array like data
+                    else if (systemType == typeof (short))
+                    {
+                        var methodName = StaticReflection.GetMemberName((BinaryReader item) => item.ReadInt16());
+                        var loopVariable = new CodeVariableReferenceExpression("i");
+                        var forLoop = new CodeIterationStatement(
+                            new CodeAssignStatement(loopVariable, new CodePrimitiveExpression(0)),
+                            new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.LessThan,
+                                new CodePrimitiveExpression(fieldInitializer.Size)),
+                            new CodeAssignStatement(loopVariable,
+                                new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.Add,
+                                    new CodePrimitiveExpression(1))), new CodeAssignStatement(
+                                        new CodeArrayIndexerExpression(fieldReference, loopVariable),
+                                        new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
+                                            new CodeArgumentReferenceExpression())));
+                        method.Statements.Add(forLoop);
+                    }
+                    //  tagBlock array
+                    else
+                    {
+                        var concatMethodName =
+                            StaticReflection.GetMemberName(
+                                (Queue<BlamPointer> @class) => @class.Enqueue(new BlamPointer()));
+                        var methodName =
+                            StaticReflection.GetMemberName((BinaryReader item) => item.ReadBlamPointer(default(int)));
+                        var elementSize = (int) field.UserData[0];
+
+                        method.Statements.Add(new CodeMethodInvokeExpression(pointerQueueVariable, concatMethodName,
+                            new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
+                                new CodePrimitiveExpression(elementSize))));
+                    }
+                }
+                //  like a simple value (int, byte, TagClass, TagIdent, etc.)
+                else if (systemType != null)
+                {
+                    var methodName = BinaryIOReflection.GetBinaryReaderMethodName(systemType);
+
+                    //this.Name
+                    var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
+                        field.Name);
+                    var fieldAssignment = new CodeAssignStatement(fieldReference,
+                        new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
+                            new CodeArgumentReferenceExpression()));
+                    method.Statements.Add(fieldAssignment);
+                }
+                //  like an enum or flag value
+                else
+                {
+                    var typeDeclaration =
+                        _targetClass.Members.OfType<CodeTypeDeclaration>().Single(x => x.Name == field.Type.BaseType);
+                    var baseType = Type.GetType(typeDeclaration.BaseTypes[0].BaseType);
+
+                    var methodName = BinaryIOReflection.GetBinaryReaderMethodName(baseType);
+
+                    //this.Name
+                    var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
+                        field.Name);
+                    var fieldAssignment = new CodeAssignStatement(fieldReference,
+                        new CodeCastExpression(field.Type.BaseType,
+                            new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
+                                new CodeArgumentReferenceExpression())));
+                    method.Statements.Add(fieldAssignment);
                 }
             }
             _targetClass.Members.Add(method);
@@ -231,6 +280,7 @@ namespace Moonfish.Guerilla.CodeDom
                             _tokenDictionary.GenerateValidToken(GenerateFieldName(field)));
                         GenerateSummary(member);
                         member.Attributes = MemberAttributes.Public;
+                        member.UserData[0] = fieldBlockClass.Size;
                         _targetClass.Members.Add(member);
                         break;
                     }
@@ -538,5 +588,7 @@ namespace Moonfish.Guerilla.CodeDom
                 provider.GenerateCodeFromCompileUnit(_targetUnit, streamWriter, options);
             }
         }
+
+        public int Size { get; private set; }
     };
 }

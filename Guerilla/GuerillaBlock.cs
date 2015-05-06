@@ -17,7 +17,7 @@ namespace Moonfish.Guerilla
 
         public abstract int Alignment { get; }
         
-        public static BlamPointer ReadBlockArrayPointer<T>(BinaryReader binaryReader)
+        public BlamPointer ReadBlockArrayPointer<T>(BinaryReader binaryReader)
             where T : GuerillaBlock, new()
         {
             var ctor = GetObjectActivator<T>(typeof(T));
@@ -25,7 +25,7 @@ namespace Moonfish.Guerilla
             return ReadBlockArrayPointer(binaryReader, elementSize);
         }
 
-        public static BlamPointer ReadBlockArrayPointer(BinaryReader binaryReader, int elementSize)
+        public BlamPointer ReadBlockArrayPointer(BinaryReader binaryReader, int elementSize)
         {
             var blamPointer = binaryReader.ReadBlamPointer(elementSize);
             return blamPointer;

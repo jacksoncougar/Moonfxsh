@@ -221,7 +221,7 @@
     <Compile Include="Guerilla\Reflection\PropertyInfo.cs" />
     <Compile Include="Guerilla\Reflection\StringBuilderExtensions.cs" />
     <Compile Include="Guerilla\Reflection\StringExtensions.cs" />
-    <Compile Include="Guerilla\StaticReflection.cs" />
+    <Compile Include="Guerilla\Reflection\StaticReflection.cs" />
     <Compile Include="Guerilla\TagGroups.cs" />
     <Compile Include="Guerilla\Tags.Generated\ActorStartingLocationsBlock.cs">
       <SubType>Code</SubType>

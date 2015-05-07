@@ -24,7 +24,7 @@ namespace Moonfish
         {
             //var converter = new GuerillaCs(Local.GuerillaPath);
             foreach (var tag in Guerilla.Guerilla.h2Tags
-                .Where(x=>x.Class == TagClass.Weap)
+                .Where(x=>x.Class == TagClass.Scnr)
                 .Select(x=>new MoonfishTagGroup(x)))
             {
                 GuerillaBlockClass blockClass = new GuerillaBlockClass(tag);

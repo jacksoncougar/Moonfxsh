@@ -1,4 +1,4 @@
-// ReSharper disable All
+    // ReSharper disable All
 
 using Moonfish.Model;
 using Moonfish.Tags.BlamExtension;

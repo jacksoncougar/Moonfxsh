@@ -43,7 +43,7 @@ namespace Moonfish.Guerilla.CodeDom
 
         public GuerillaCommentCollection(string value)
         {
-            var lines = value.Split('*');
+            var lines = value.Split(new[] {'*'}, StringSplitOptions.RemoveEmptyEntries);
             Summary = lines[0];
             _itemDescriptions = new string[lines.Length - 1];
             for (int u = 0, v = 1; u < lines.Length - 1; ++u, ++v)

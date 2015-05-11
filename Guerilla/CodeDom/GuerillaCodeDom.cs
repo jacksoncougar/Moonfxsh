@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.CodeDom
                 "",
                 "YOUR MOM"
             };
-            return !invalidNames.Any(value.Equals);
+            return (!invalidNames.Any(value.Equals) || !string.IsNullOrWhiteSpace(value) || value.Length > 0) && !char.IsDigit(value[0]);
         }
         public static string ToPascalCase(this string value)
         {
@@ -66,7 +66,7 @@ namespace Moonfish.Guerilla.CodeDom
 
             return result;
         }
-        public static string ToValidToken(this string value)
+        public static string ToAlphaNumericToken(this string value)
         {
             var textInfo = new CultureInfo("en-US", false).TextInfo;
             var indices = new List<int>();

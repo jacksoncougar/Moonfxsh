@@ -42,5 +42,15 @@ namespace Moonfish.Guerilla.Reflection
                 return validToken;
             }
         }
+
+        internal bool Contains(string token)
+        {
+            return Tokens.Contains(token);
+        }
+
+        internal void Add(string token)
+        {
+            Tokens.Add(token);
+        }
     }
 }

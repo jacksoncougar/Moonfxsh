@@ -8,56 +8,50 @@ using Moonfish.ResourceManagement;
 
 namespace Moonfish.Tags
 {
-    namespace BlamExtension
-    {
-        internal static class BinaryReaderExtensions
-        {
-            public static void Write(this BinaryWriter binaryWriter, BlamPointer blamPointer)
-            {
-                binaryWriter.Write(blamPointer.ElementCount);
-                binaryWriter.Write(blamPointer.ElementCount > 0 ? blamPointer.StartAddress : 0);
-            }
-
-            public static BlamPointer ReadBlamPointer(this BinaryReader binaryReader, int elementSize)
-            {
-                var resourceStream = binaryReader.BaseStream as ResourceStream;
-                if (resourceStream == null)
-                {
-                    return new BlamPointer(binaryReader.ReadInt32(), binaryReader.ReadInt32(), elementSize);
-                }
-
-                var offset = resourceStream.Position;
-                binaryReader.BaseStream.Seek(8, SeekOrigin.Current);
-                var resource =
-                    resourceStream.Resources.SingleOrDefault(
-                        x =>
-                            x.primaryLocator == offset &&
-                            x.type != GlobalGeometryBlockResourceBlockBase.Type.VertexBuffer);
-
-                if (resource == null)
-                {
-                    return new BlamPointer(0, 0, elementSize);
-                }
-                if (resource.type == GlobalGeometryBlockResourceBlockBase.Type.TagData)
-                {
-                    var count = resource.resourceDataSize;
-                    var address = resource.resourceDataOffset + resourceStream.HeaderSize;
-                    var size = 1;
-                    return new BlamPointer(count, address, elementSize);
-                }
-                else
-                {
-                    var count = resource.resourceDataSize/resource.secondaryLocator;
-                    var address = resource.resourceDataOffset + resourceStream.HeaderSize;
-                    var size = resource.secondaryLocator;
-                    return new BlamPointer(count, address, elementSize);
-                }
-            }
-        }
-    }
-
     internal static class BinaryReaderExtensions
     {
+        public static void Write(this BinaryWriter binaryWriter, BlamPointer blamPointer)
+        {
+            binaryWriter.Write(blamPointer.ElementCount);
+            binaryWriter.Write(blamPointer.ElementCount > 0 ? blamPointer.StartAddress : 0);
+        }
+
+        public static BlamPointer ReadBlamPointer(this BinaryReader binaryReader, int elementSize)
+        {
+            var resourceStream = binaryReader.BaseStream as ResourceStream;
+            if (resourceStream == null)
+            {
+                return new BlamPointer(binaryReader.ReadInt32(), binaryReader.ReadInt32(), elementSize);
+            }
+
+            var offset = resourceStream.Position;
+            binaryReader.BaseStream.Seek(8, SeekOrigin.Current);
+            var resource =
+                resourceStream.Resources.SingleOrDefault(
+                    x =>
+                        x.primaryLocator == offset &&
+                        x.type != GlobalGeometryBlockResourceBlockBase.Type.VertexBuffer);
+
+            if (resource == null)
+            {
+                return new BlamPointer(0, 0, elementSize);
+            }
+            if (resource.type == GlobalGeometryBlockResourceBlockBase.Type.TagData)
+            {
+                var count = resource.resourceDataSize;
+                var address = resource.resourceDataOffset + resourceStream.HeaderSize;
+                var size = 1;
+                return new BlamPointer(count, address, elementSize);
+            }
+            else
+            {
+                var count = resource.resourceDataSize / resource.secondaryLocator;
+                var address = resource.resourceDataOffset + resourceStream.HeaderSize;
+                var size = resource.secondaryLocator;
+                return new BlamPointer(count, address, elementSize);
+            }
+        }
+
         public static VertexBuffer ReadVertexBuffer(this BinaryReader binaryReader)
         {
             var buffer = new VertexBuffer() {Type = binaryReader.ReadVertexAttributeType()};

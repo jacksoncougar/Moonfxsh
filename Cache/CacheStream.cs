@@ -321,7 +321,10 @@ namespace Moonfish
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            offset = CheckOffset(offset);
+            if (origin == SeekOrigin.Begin)
+            {
+                offset = CheckOffset(offset);
+            }
             base.Seek(offset, origin);
             return Position;
         }

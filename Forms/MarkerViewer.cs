@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
-using Moonfish.Tags.BlamExtension;
+
 using Point = System.Drawing.Point;
 
 namespace Moonfish.Graphics

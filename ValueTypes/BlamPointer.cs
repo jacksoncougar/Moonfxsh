@@ -34,6 +34,8 @@ namespace Moonfish.Tags
             get { return _endAddress; }
         }
 
+        public static BlamPointer Null { get { return new BlamPointer(0, 0, 0, 0); } }
+
         public IEnumerator<int> GetEnumerator()
         {
             for (var i = 0; i < ElementCount; ++i)
@@ -76,6 +78,11 @@ namespace Moonfish.Tags
         public override string ToString()
         {
             return string.Format("{0}:{1}", StartAddress, ElementCount);
+        }
+
+        internal static bool IsNull(BlamPointer pointer)
+        {
+            return pointer.ElementCount == 0 && pointer.StartAddress == 0;
         }
     }
 }

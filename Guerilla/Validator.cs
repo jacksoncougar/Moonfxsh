@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Moonfish.Cache;
 using Moonfish.Tags;
-using Moonfish.Tags.BlamExtension;
+
 
 namespace Moonfish.Guerilla
 {

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using Microsoft.CSharp;
 using Moonfish.Guerilla.Reflection;
 using Moonfish.Tags;
-using Moonfish.Tags.BlamExtension;
 using OpenTK;
 
 namespace Moonfish.Guerilla.CodeDom
@@ -62,32 +62,26 @@ namespace Moonfish.Guerilla.CodeDom
         }
 
         public GuerillaBlockClass(MoonfishTagGroup tag, IList<MoonfishTagGroup> tagGroups = null)
-            : this(tag.Definition.Name.ToPascalCase().ToValidToken())
+            : this(tag.Definition.Name.ToPascalCase().ToAlphaNumericToken())
         {
             Size = tag.Definition.CalculateSizeOfFieldSet();
             var hasParent = tagGroups != null && tagGroups.Any(x => x.Class == tag.ParentClass);
             if (hasParent)
             {
                 var parentTag = tagGroups.First(x => x.Class == tag.ParentClass);
-                _targetClass.BaseTypes.Clear();
-                _targetClass.BaseTypes.Add(
-                    new CodeTypeReference(parentTag.Definition.Name.ToPascalCase().ToValidToken()));
+                var parentClass = new GuerillaBlockClass(parentTag, tagGroups);
+                parentClass.GenerateCSharpCode();
+                _tokenDictionary = new TokenDictionary(parentClass._tokenDictionary);
+                _targetClass.BaseTypes[0] = new CodeTypeReference(parentClass._targetClass.Name);
 
-                // loop through all the parents summing up thier sizes
-                while (hasParent)
-                {
-                    Size += parentTag.Definition.CalculateSizeOfFieldSet();
-                    hasParent = tagGroups.Any(x => x.Class == parentTag.ParentClass);
-                    if (hasParent)
-                        parentTag = tagGroups.First(x => x.Class == parentTag.ParentClass);
-                }
+                Size += parentClass.Size;
             }
 
             Initialize(tag.Definition.Fields, Size, tag.Definition.Alignment);
         }
 
         public GuerillaBlockClass(MoonfishTagDefinition definition)
-            : this(definition.Name.ToPascalCase().ToValidToken())
+            : this(definition.Name.ToPascalCase().ToAlphaNumericToken())
         {
             Size = definition.CalculateSizeOfFieldSet();
             Initialize(definition.Fields, Size, definition.Alignment);
@@ -99,8 +93,8 @@ namespace Moonfish.Guerilla.CodeDom
 
             _tokenDictionary = new TokenDictionary();
             _targetUnit = new CodeCompileUnit();
-
-            var tagsCodeNamespace = new CodeNamespace("Moonfish.Guerilla.Tags");
+            var t = new CSharpCodeProvider();
+            var tagsCodeNamespace = new CodeNamespace("Moonfish.Guerilla.Tags.Experimental");
             tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("Moonfish.Tags"));
             tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("Moonfish.Model"));
             tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("System.IO"));
@@ -110,17 +104,19 @@ namespace Moonfish.Guerilla.CodeDom
             {
                 IsClass = true,
                 TypeAttributes = TypeAttributes.Public,
-                BaseTypes = {new CodeTypeReference(typeof (GuerillaBlock))}
+                BaseTypes = {new CodeTypeReference(typeof (GuerillaBlock)), new CodeTypeReference(typeof(IWriteQueueable).Name)}
             };
             tagsCodeNamespace.Types.Add(_targetClass);
             _targetUnit.Namespaces.Add(tagsCodeNamespace);
         }
 
-        private GuerillaBlockClass(string className, List<MoonfishTagField> fields):this(className)
+        private GuerillaBlockClass(string className, List<MoonfishTagField> fields) : this(className)
         {
             Size = MoonfishTagDefinition.CalculateSizeOfFieldSet(fields);
             Initialize(fields, Size, 1);
         }
+
+        public int Size { get; private set; }
 
         private void Initialize(List<MoonfishTagField> fields, int size, int alignment)
         {
@@ -129,7 +125,9 @@ namespace Moonfish.Guerilla.CodeDom
                 alignment);
             GenerateFields(fields);
             GenerateReadFieldsMethod();
-            GenerateCSharpCode();
+            GenerateReadInstancesMethod();
+            GenerateIWriteQueueableQueueWritesMethod();
+            GenerateWriteMethod();
         }
 
         private void GenerateReadFieldsMethod()
@@ -138,65 +136,92 @@ namespace Moonfish.Guerilla.CodeDom
             {
                 Name = "ReadFields",
                 Attributes = MemberAttributes.Override | MemberAttributes.Public,
-                ReturnType = new CodeTypeReference(typeof (BlamPointer[]))
+                ReturnType = new CodeTypeReference(typeof (Queue<BlamPointer>))
             };
+
+            //  loop iterator 
+            var loopVariable = new CodeVariableReferenceExpression("i");
+            var loopVariableDeclaration = new CodeVariableDeclarationStatement(typeof (int),
+                loopVariable.VariableName);
 
             //  BinaryReader binaryReader = new BinaryReader();
             const string binaryReader = "binaryReader";
             var binaryReaderReference = new CodeTypeReference(typeof (BinaryReader));
-            var binaryReaderVariableDeclaration =
-                new CodeVariableDeclarationStatement(binaryReaderReference,
-                    binaryReader, new CodeObjectCreateExpression(binaryReaderReference));
-            method.Statements.Add(binaryReaderVariableDeclaration);
-            var binaryReaderVariable = new CodeVariableReferenceExpression(binaryReader);
+
+            var binaryReaderParameterExpression = new CodeParameterDeclarationExpression(binaryReaderReference,
+                binaryReader);
+
+            var binaryReaderArgument = new CodeArgumentReferenceExpression(binaryReader);
+            method.Parameters.Add(binaryReaderParameterExpression);
 
             //  Queue<BlamPointer> pointerQueue = new Queue<BlamPointer>();
             const string pointerQueue = "pointerQueue";
             var pointerQueueReference = new CodeTypeReference(typeof (Queue<BlamPointer>));
-            var pointerQueueVariableDeclaration = new CodeVariableDeclarationStatement(pointerQueueReference,
-                pointerQueue, new CodeObjectCreateExpression(pointerQueueReference));
-            method.Statements.Add(pointerQueueVariableDeclaration);
             var pointerQueueVariable = new CodeVariableReferenceExpression(pointerQueue);
+
+            var concatMethodName =
+                StaticReflection.GetMemberName((Queue<BlamPointer> item) => item.Concat(new Queue<BlamPointer>()));
+
+            if (!_targetClass.BaseTypes.Contains(new CodeTypeReference(typeof (GuerillaBlock))))
+            {
+                method.Statements.Add(
+                    new CodeVariableDeclarationStatement(pointerQueueReference, pointerQueue,
+                        new CodeObjectCreateExpression(pointerQueueReference,
+                            new CodeMethodInvokeExpression(new CodeBaseReferenceExpression(), method.Name,
+                                binaryReaderArgument))));
+            }
+            else
+            {
+                method.Statements.Add(new CodeVariableDeclarationStatement(pointerQueueReference,
+                    pointerQueue, new CodeObjectCreateExpression(pointerQueueReference)));
+            }
 
             foreach (CodeObject codeObject in _targetClass.Members)
             {
                 if (!(codeObject is CodeMemberField)) continue;
                 var field = (CodeMemberField) codeObject;
 
+                var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
+                    field.Name);
                 var systemType = ReflectionMethods.GetType(field.Type.BaseType);
                 //  Single dimensional arrays
                 if (field.Type.ArrayRank == 1)
                 {
                     var fieldInitializer = (CodeArrayCreateExpression) field.InitExpression;
-                    var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
-                        field.Name);
                     var arraySize = fieldInitializer == null ? 0 : fieldInitializer.Size;
                     //  fixed byte array like padding or skip data
                     if (systemType == typeof (byte) && arraySize > 0)
                     {
                         var methodName = StaticReflection.GetMemberName((BinaryReader item) => item.ReadBytes(0));
-                        var fieldAssignment = new CodeAssignStatement(fieldReference,
-                            new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
-                                new CodePrimitiveExpression(arraySize)));
-                        method.Statements.Add(fieldAssignment);
+                        method.Statements.Add(new CodeAssignStatement(fieldReference,
+                            new CodeMethodInvokeExpression(binaryReaderArgument, methodName,
+                                new CodePrimitiveExpression(arraySize))));
                     }
                     // fixed struct array
                     else if (field.UserData.Contains("GuerillaBlock") && arraySize > 0)
                     {
                         var methodName =
-                            StaticReflection.GetMemberName((GuerillaBlock item) => item.ReadFields(default(BinaryReader)));
-                        var loopVariable = new CodeVariableReferenceExpression("i");
+                            StaticReflection.GetMemberName(
+                                (GuerillaBlock item) => item.ReadFields(default(BinaryReader)));
 
+                        if (!method.Statements.Contains(loopVariableDeclaration))
+                            method.Statements.Add(loopVariableDeclaration);
                         method.Statements.Add(new CodeIterationStatement(
                             new CodeAssignStatement(loopVariable, new CodePrimitiveExpression(0)),
                             new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.LessThan,
                                 new CodePrimitiveExpression(arraySize)),
                             new CodeAssignStatement(loopVariable,
                                 new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.Add,
-                                    new CodePrimitiveExpression(1))), new CodeAssignStatement(
-                                        new CodeArrayIndexerExpression(fieldReference, loopVariable),
-                                        new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
-                                            new CodeArgumentReferenceExpression()))));
+                                    new CodePrimitiveExpression(1))),
+                            // create new element
+                            new CodeAssignStatement(new CodeArrayIndexerExpression(fieldReference, loopVariable),
+                                new CodeObjectCreateExpression(field.Type.BaseType)),
+                            new CodeAssignStatement(pointerQueueVariable,
+                                new CodeObjectCreateExpression(pointerQueueReference,
+                                    new CodeMethodInvokeExpression(pointerQueueVariable, concatMethodName,
+                                        new CodeMethodInvokeExpression(
+                                            new CodeArrayIndexerExpression(fieldReference, loopVariable),
+                                            methodName, binaryReaderArgument))))));
                     }
                     //  instanced byte array like data
                     else if (systemType == typeof (byte))
@@ -207,17 +232,20 @@ namespace Moonfish.Guerilla.CodeDom
                         var queueMethodName =
                             StaticReflection.GetMemberName(
                                 (Queue<BlamPointer> item) => item.Enqueue(new BlamPointer()));
-                        var queueBlamPointer = new CodeMethodInvokeExpression(pointerQueueVariable, queueMethodName,
-                            new CodeMethodInvokeExpression(binaryReaderVariable, readBlamPointerMethodName));
-                        method.Statements.Add(queueBlamPointer);
 
+                        method.Statements.Add(new CodeMethodInvokeExpression(pointerQueueVariable, queueMethodName,
+                            new CodeMethodInvokeExpression(binaryReaderArgument, readBlamPointerMethodName,
+                                new CodePrimitiveExpression(1))));
                     }
                     //  instanced Int16 array like data
                     else if (systemType == typeof (short))
                     {
                         var methodName = StaticReflection.GetMemberName((BinaryReader item) => item.ReadInt16());
-                        var loopVariable = new CodeVariableReferenceExpression("i");
-                        var forLoop = new CodeIterationStatement(
+
+                        if (!method.Statements.Contains(loopVariableDeclaration))
+                            method.Statements.Add(loopVariableDeclaration);
+
+                        method.Statements.Add(new CodeIterationStatement(
                             new CodeAssignStatement(loopVariable, new CodePrimitiveExpression(0)),
                             new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.LessThan,
                                 new CodePrimitiveExpression(arraySize)),
@@ -225,50 +253,43 @@ namespace Moonfish.Guerilla.CodeDom
                                 new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.Add,
                                     new CodePrimitiveExpression(1))), new CodeAssignStatement(
                                         new CodeArrayIndexerExpression(fieldReference, loopVariable),
-                                        new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
-                                            new CodeArgumentReferenceExpression())));
-                        method.Statements.Add(forLoop);
+                                        new CodeMethodInvokeExpression(binaryReaderArgument, methodName,
+                                            new CodeArgumentReferenceExpression()))));
                     }
                     //  tagBlock array
                     else
                     {
-                        var concatMethodName =
+                        var enqueueMethodName =
                             StaticReflection.GetMemberName(
                                 (Queue<BlamPointer> @class) => @class.Enqueue(new BlamPointer()));
                         var methodName =
                             StaticReflection.GetMemberName((BinaryReader item) => item.ReadBlamPointer(default(int)));
                         var elementSize = (int) field.UserData[0];
 
-                        method.Statements.Add(new CodeMethodInvokeExpression(pointerQueueVariable, concatMethodName,
-                            new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
+                        method.Statements.Add(new CodeMethodInvokeExpression(pointerQueueVariable, enqueueMethodName,
+                            new CodeMethodInvokeExpression(binaryReaderArgument, methodName,
                                 new CodePrimitiveExpression(elementSize))));
                     }
                 }
                 //  like an inline struct where T : GuerillaBlock
                 else if (field.UserData.Contains("GuerillaBlock"))
                 {
-                    var concatMethodName =
-                        StaticReflection.GetMemberName(
-                            (Queue<BlamPointer> @class) => @class.Enqueue(new BlamPointer()));
                     var methodName =
                         StaticReflection.GetMemberName((GuerillaBlock item) => item.ReadFields(default(BinaryReader)));
 
                     method.Statements.Add(new CodeAssignStatement(pointerQueueVariable,
                         new CodeObjectCreateExpression(pointerQueueReference,
                             new CodeMethodInvokeExpression(pointerQueueVariable, concatMethodName,
-                                new CodeMethodInvokeExpression(binaryReaderVariable, methodName)))));
+                                new CodeMethodInvokeExpression(fieldReference, methodName, binaryReaderArgument)))));
                 }
                 //  like a simple value (int, byte, TagClass, TagIdent, etc.)
                 else if (systemType != null)
                 {
                     var methodName = BinaryIOReflection.GetBinaryReaderMethodName(systemType);
 
-                    var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
-                        field.Name);
-                    var fieldAssignment = new CodeAssignStatement(fieldReference,
-                        new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
-                            new CodeArgumentReferenceExpression()));
-                    method.Statements.Add(fieldAssignment);
+                    method.Statements.Add(new CodeAssignStatement(fieldReference,
+                        new CodeMethodInvokeExpression(binaryReaderArgument, methodName,
+                            new CodeArgumentReferenceExpression())));
                 }
                 //  like an enum or flag value
                 else
@@ -279,16 +300,412 @@ namespace Moonfish.Guerilla.CodeDom
 
                     var methodName = BinaryIOReflection.GetBinaryReaderMethodName(baseType);
 
-                    var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
-                        field.Name);
-                    var fieldAssignment = new CodeAssignStatement(fieldReference,
+                    method.Statements.Add(new CodeAssignStatement(fieldReference,
                         new CodeCastExpression(field.Type.BaseType,
-                            new CodeMethodInvokeExpression(binaryReaderVariable, methodName,
-                                new CodeArgumentReferenceExpression())));
-                    method.Statements.Add(fieldAssignment);
+                            new CodeMethodInvokeExpression(binaryReaderArgument, methodName,
+                                new CodeArgumentReferenceExpression()))));
                 }
             }
             method.Statements.Add(new CodeMethodReturnStatement(pointerQueueVariable));
+            _targetClass.Members.Add(method);
+        }
+
+        private void GenerateReadInstancesMethod()
+        {
+            var method = new CodeMemberMethod
+            {
+                Name = "ReadInstances",
+                Attributes = MemberAttributes.Override | MemberAttributes.Public,
+                ReturnType = new CodeTypeReference(typeof (void))
+            };
+
+            //  loop iterator 
+            var loopVariable = new CodeVariableReferenceExpression("i");
+            var loopVariableDeclaration = new CodeVariableDeclarationStatement(typeof (int),
+                loopVariable.VariableName);
+
+            //  BinaryReader binaryReader = new BinaryReader();
+            const string binaryReader = "binaryReader";
+            var binaryReaderParameterExpression =
+                new CodeParameterDeclarationExpression(new CodeTypeReference(typeof (BinaryReader)),
+                    binaryReader);
+            var binaryReaderArgument = new CodeArgumentReferenceExpression(binaryReader);
+            method.Parameters.Add(binaryReaderParameterExpression);
+
+            //  Queue<BlamPointer> pointerQueue = new Queue<BlamPointer>();
+            const string pointerQueue = "pointerQueue";
+            var pointerQueueParameterDeclaration =
+                new CodeParameterDeclarationExpression(new CodeTypeReference(typeof (Queue<BlamPointer>)),
+                    pointerQueue);
+            var pointerQueueArgument = new CodeArgumentReferenceExpression(pointerQueue);
+            method.Parameters.Add(pointerQueueParameterDeclaration);
+
+            method.Statements.Add(new CodeMethodInvokeExpression(new CodeBaseReferenceExpression(), method.Name,
+                binaryReaderArgument, pointerQueueArgument));
+
+            foreach (CodeObject codeObject in _targetClass.Members)
+            {
+                if (!(codeObject is CodeMemberField)) continue;
+                var field = (CodeMemberField) codeObject;
+
+                var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
+                    field.Name);
+
+                var systemType = ReflectionMethods.GetType(field.Type.BaseType);
+                //  Single dimensional arrays
+                if (field.Type.ArrayRank == 1)
+                {
+                    var fieldInitializer = (CodeArrayCreateExpression) field.InitExpression;
+                    var arraySize = fieldInitializer == null ? 0 : fieldInitializer.Size;
+                    //  fixed byte array like padding or skip data
+                    if (systemType == typeof (byte) && arraySize > 0)
+                    {
+                        continue;
+                    }
+                    // fixed struct array
+                    if (field.UserData.Contains("GuerillaBlock") && arraySize > 0)
+                    {
+                        var methodName =
+                            StaticReflection.GetMemberName(
+                                (GuerillaBlock item) =>
+                                    item.ReadInstances(default(BinaryReader), new Queue<BlamPointer>()));
+
+                        //  add loop iterator variable if needed
+                        if (!method.Statements.Contains(loopVariableDeclaration))
+                            method.Statements.Add(loopVariableDeclaration);
+
+                        method.Statements.Add(new CodeIterationStatement(
+                            new CodeAssignStatement(loopVariable, new CodePrimitiveExpression(0)),
+                            new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.LessThan,
+                                new CodePrimitiveExpression(arraySize)),
+                            new CodeAssignStatement(loopVariable,
+                                new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.Add,
+                                    new CodePrimitiveExpression(1))), new CodeExpressionStatement(
+                                        new CodeMethodInvokeExpression(
+                                            new CodeArrayIndexerExpression(fieldReference, loopVariable), methodName,
+                                            binaryReaderArgument, pointerQueueArgument))));
+                    }
+                    //  instanced byte array like data
+                    else if (systemType == typeof (byte))
+                    {
+                        var readDataMethodName =
+                            StaticReflection.GetMemberName(
+                                (GuerillaBlock @class) =>
+                                    @class.ReadDataByteArray(new BinaryReader(Stream.Null), new BlamPointer()));
+
+                        var dequeueMethodName =
+                            StaticReflection.GetMemberName(
+                                (Queue<BlamPointer> item) => item.Dequeue());
+
+                        method.Statements.Add(new CodeAssignStatement(fieldReference,
+                            new CodeMethodInvokeExpression(new CodeBaseReferenceExpression(), readDataMethodName,
+                                binaryReaderArgument,
+                                new CodeMethodInvokeExpression(pointerQueueArgument, dequeueMethodName))));
+                    }
+                    //  instanced Int16 array like data
+                    else if (systemType == typeof (short))
+                    {
+                        var readDataMethodName =
+                            StaticReflection.GetMemberName(
+                                (GuerillaBlock @class) =>
+                                    @class.ReadDataShortArray(new BinaryReader(Stream.Null), new BlamPointer()));
+
+                        var dequeueMethodName =
+                            StaticReflection.GetMemberName(
+                                (Queue<BlamPointer> item) => item.Dequeue());
+
+                        method.Statements.Add(new CodeAssignStatement(fieldReference,
+                            new CodeMethodInvokeExpression(new CodeBaseReferenceExpression(), readDataMethodName,
+                                binaryReaderArgument,
+                                new CodeMethodInvokeExpression(pointerQueueArgument, dequeueMethodName))));
+                    }
+                    //  tagBlock array
+                    else
+                    {
+                        var readDataMethodName =
+                            StaticReflection.GetMemberName((GuerillaBlock item) =>
+                                item.ReadBlockArrayData<GuerillaBlock>(new BinaryReader(Stream.Null), new BlamPointer())
+                                );
+
+                        var dequeueMethodName =
+                            StaticReflection.GetMemberName(
+                                (Queue<BlamPointer> item) => item.Dequeue());
+
+                        method.Statements.Add(new CodeAssignStatement(fieldReference, new CodeMethodInvokeExpression(
+                            new CodeMethodReferenceExpression(new CodeBaseReferenceExpression(), readDataMethodName,
+                                new CodeTypeReference(field.Type.BaseType)), binaryReaderArgument,
+                            new CodeMethodInvokeExpression(pointerQueueArgument, dequeueMethodName))));
+                    }
+                }
+                //  like an inline struct where T : GuerillaBlock
+                else if (field.UserData.Contains("GuerillaBlock"))
+                {
+                    var readInstancesMethodName = StaticReflection.GetMemberName((GuerillaBlock item) =>
+                        item.ReadInstances(new BinaryReader(Stream.Null), new Queue<BlamPointer>()));
+
+                    method.Statements.Add(new CodeMethodInvokeExpression(fieldReference, readInstancesMethodName,
+                        binaryReaderArgument,
+                        pointerQueueArgument));
+                }
+            }
+            _targetClass.Members.Add(method);
+        }
+
+        private void GenerateIWriteQueueableQueueWritesMethod()
+        {
+            var method = new CodeMemberMethod
+            {
+                Name = "QueueWrites",
+                Attributes = MemberAttributes.Override | MemberAttributes.Public,
+                ReturnType = new CodeTypeReference(typeof (void)),
+            };
+
+            //  loop iterator 
+            var loopVariable = new CodeVariableReferenceExpression("i");
+            var loopVariableDeclaration = new CodeVariableDeclarationStatement(typeof (int),
+                loopVariable.VariableName);
+
+            //  add QueueableBinaryWriter parameter
+            const string queueableBinaryWriter = "queueableBinaryWriter";
+            var queueableBinaryWriterParameterDeclaration =
+                new CodeParameterDeclarationExpression(new CodeTypeReference(typeof (QueueableBinaryWriter)),
+                    queueableBinaryWriter);
+            var queueableBinaryWriterArgument = new CodeArgumentReferenceExpression(queueableBinaryWriter);
+
+            method.Parameters.Add(queueableBinaryWriterParameterDeclaration);
+
+            //  add base.Invoke call
+            method.Statements.Add(new CodeMethodInvokeExpression(new CodeBaseReferenceExpression(), method.Name,
+                queueableBinaryWriterArgument));
+
+            foreach (CodeObject codeObject in _targetClass.Members)
+            {
+                if (!(codeObject is CodeMemberField)) continue;
+                var field = (CodeMemberField) codeObject;
+
+                //  get the field as a variable
+                var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
+                    field.Name);
+                var systemType = ReflectionMethods.GetType(field.Type.BaseType);
+
+                //  Single dimensional arrays
+                if (field.Type.ArrayRank == 1)
+                {
+                    var fieldInitializer = (CodeArrayCreateExpression) field.InitExpression;
+                    var arraySize = fieldInitializer == null ? 0 : fieldInitializer.Size;
+
+                    //  fixed byte array like padding or skip data
+                    if (systemType == typeof (byte) && arraySize > 0)
+                    {
+                        // this is not an instance field so ignore it
+                        continue;
+                    }
+                    // fixed struct array
+                    else if (field.UserData.Contains("GuerillaBlock") && arraySize > 0)
+                    {
+                        var methodName =
+                            StaticReflection.GetMemberName(
+                                (IWriteQueueable item) => item.QueueWrites(null));
+
+                        //  add loop iterator variable if needed
+                        if (!method.Statements.Contains(loopVariableDeclaration))
+                            method.Statements.Add(loopVariableDeclaration);
+
+                        //  loop through the array and call the method on each item
+                        method.Statements.Add(new CodeIterationStatement(
+                            new CodeAssignStatement(loopVariable, new CodePrimitiveExpression(0)),
+                            new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.LessThan,
+                                new CodePrimitiveExpression(arraySize)),
+                            new CodeAssignStatement(loopVariable,
+                                new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.Add,
+                                    new CodePrimitiveExpression(1))), new CodeExpressionStatement(
+                                        new CodeMethodInvokeExpression(new CodeArrayIndexerExpression(fieldReference, loopVariable), methodName,
+                                            queueableBinaryWriterArgument))));
+                    }
+                    //  instanced byte array like data
+                    else if (systemType == typeof (byte))
+                    {
+                        var methodName =
+                            StaticReflection.GetMemberName(
+                                (QueueableBinaryWriter item) => item.QueueWrite(new byte[0]));
+
+                        method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
+                            fieldReference));
+                    }
+                    //  instanced Int16 array like data
+                    else if (systemType == typeof (short))
+                    {
+                        var methodName =
+                            StaticReflection.GetMemberName(
+                                (QueueableBinaryWriter item) => item.QueueWrite(new short[0]));
+
+                        method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
+                            fieldReference));
+                    }
+                    //  tagBlock array
+                    else
+                    {
+                        var methodName =
+                            StaticReflection.GetMemberName(
+                                (QueueableBinaryWriter item) => item.QueueWrite(new GuerillaBlock[0]));
+
+                        method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
+                                fieldReference));
+                    }
+                }
+                //  like an inline struct where T : GuerillaBlock
+                else if (field.UserData.Contains("GuerillaBlock"))
+                {
+                    var methodName =
+                        StaticReflection.GetMemberName(
+                            (IWriteQueueable item) => item.QueueWrites(null));
+
+                    method.Statements.Add(new CodeMethodInvokeExpression(fieldReference, methodName,
+                        queueableBinaryWriterArgument));
+                }
+            }
+            _targetClass.Members.Add(method);
+        }
+
+        private void GenerateWriteMethod()
+        {
+            var method = new CodeMemberMethod
+            {
+                Name = "Write_",
+                Attributes = MemberAttributes.Override | MemberAttributes.Public,
+                ReturnType = new CodeTypeReference(typeof (void)),
+            };
+
+            //  loop iterator 
+            var loopVariable = new CodeVariableReferenceExpression("i");
+            var loopVariableDeclaration = new CodeVariableDeclarationStatement(typeof (int),
+                loopVariable.VariableName);
+
+            //  add QueueableBinaryWriter parameter
+            const string queueableBinaryWriter = "queueableBinaryWriter";
+            var queueableBinaryWriterParameterDeclaration =
+                new CodeParameterDeclarationExpression(new CodeTypeReference(typeof (QueueableBinaryWriter)),
+                    queueableBinaryWriter);
+            var queueableBinaryWriterArgument = new CodeArgumentReferenceExpression(queueableBinaryWriter);
+
+            method.Parameters.Add(queueableBinaryWriterParameterDeclaration);
+
+            //  add base.Invoke call
+            method.Statements.Add(new CodeMethodInvokeExpression(new CodeBaseReferenceExpression(), method.Name,
+                queueableBinaryWriterArgument));
+
+            foreach (CodeObject codeObject in _targetClass.Members)
+            {
+                if (!(codeObject is CodeMemberField)) continue;
+                var field = (CodeMemberField) codeObject;
+
+                //  get the field as a variable
+                var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),
+                    field.Name);
+                var systemType = ReflectionMethods.GetType(field.Type.BaseType);
+
+                //  Single dimensional arrays
+                if (field.Type.ArrayRank == 1)
+                {
+                    var fieldInitializer = (CodeArrayCreateExpression) field.InitExpression;
+                    var arraySize = fieldInitializer == null ? 0 : fieldInitializer.Size;
+
+                    //  fixed byte array like padding or skip data
+                    if (systemType == typeof (byte) && arraySize > 0)
+                    {
+                        var methodName =
+                            StaticReflection.GetMemberName((QueueableBinaryWriter item) => item.Write(new byte[0]));
+
+                        method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
+                            fieldReference));
+                    }
+                    // fixed struct array
+                    else if (field.UserData.Contains("GuerillaBlock") && arraySize > 0)
+                    {
+                        var methodName =
+                            StaticReflection.GetMemberName((GuerillaBlock item) => item.Write_(null));
+
+                        //  add loop iterator variable if needed
+                        if (!method.Statements.Contains(loopVariableDeclaration))
+                            method.Statements.Add(loopVariableDeclaration);
+
+                        //  loop through the array and call the method on each item
+                        method.Statements.Add(new CodeIterationStatement(
+                            new CodeAssignStatement(loopVariable, new CodePrimitiveExpression(0)),
+                            new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.LessThan,
+                                new CodePrimitiveExpression(arraySize)),
+                            new CodeAssignStatement(loopVariable,
+                                new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.Add,
+                                    new CodePrimitiveExpression(1))), new CodeExpressionStatement(
+                                        new CodeMethodInvokeExpression(
+                                            new CodeArrayIndexerExpression(fieldReference, loopVariable), methodName,
+                                            queueableBinaryWriterArgument))));
+                    }
+                    //  instanced byte array like data
+                    else if (systemType == typeof (byte))
+                    {
+                        var writePointerMethodName =
+                            StaticReflection.GetMemberName(
+                                (QueueableBinaryWriter item) => item.WritePointer(new byte[0]));
+
+                        method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument,
+                            writePointerMethodName,
+                            fieldReference));
+                    }
+                    //  instanced Int16 array like data
+                    else if (systemType == typeof (short))
+                    {
+                        var writePointerMethodName =
+                            StaticReflection.GetMemberName(
+                                (QueueableBinaryWriter item) => item.WritePointer(new short[0]));
+
+                        method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument,
+                            writePointerMethodName,
+                            fieldReference));
+                    }
+                    //  tagBlock array
+                    else
+                    {
+                        var writePointerMethodName =
+                            StaticReflection.GetMemberName(
+                                (QueueableBinaryWriter item) => item.WritePointer(new GuerillaBlock[0]));
+
+                        method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument,
+                            writePointerMethodName,
+                            fieldReference));
+                    }
+                }
+                //  like an inline struct where T : GuerillaBlock
+                else if (field.UserData.Contains("GuerillaBlock"))
+                {
+                    var methodName =
+                        StaticReflection.GetMemberName(
+                            (GuerillaBlock item) => item.Write_(null));
+
+                    method.Statements.Add(new CodeMethodInvokeExpression(fieldReference, methodName,
+                        queueableBinaryWriterArgument));
+                }
+                //  like a simple value (int, byte, TagClass, TagIdent, etc.)
+                else if (systemType != null)
+                {
+                    var methodName = BinaryIOReflection.GetBinaryWriterMethodName(systemType);
+
+                    method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
+                        fieldReference));
+                }
+                //  like an enum or flag value
+                else
+                {
+                    var typeDeclaration =
+                        _targetClass.Members.OfType<CodeTypeDeclaration>().Single(x => x.Name == field.Type.BaseType);
+                    var baseType = Type.GetType(typeDeclaration.BaseTypes[0].BaseType);
+
+                    var methodName = BinaryIOReflection.GetBinaryWriterMethodName(baseType);
+
+                    method.Statements.Add(new CodeMethodInvokeExpression(queueableBinaryWriterArgument, methodName,
+                        new CodeCastExpression(baseType, fieldReference)));
+                }
+            }
             _targetClass.Members.Add(method);
         }
 
@@ -313,6 +730,7 @@ namespace Moonfish.Guerilla.CodeDom
                     case MoonfishFieldType.FieldBlock:
                     {
                         var fieldBlockClass = new GuerillaBlockClass(field.Definition);
+                        fieldBlockClass.GenerateCSharpCode();
                         var typeName = fieldBlockClass._targetClass.Name;
                         var member = new CodeMemberField(typeName + "[]",
                             _tokenDictionary.GenerateValidToken(GenerateFieldName(field)));
@@ -329,14 +747,16 @@ namespace Moonfish.Guerilla.CodeDom
                     case MoonfishFieldType.FieldStruct:
                     {
                         var fieldBlockClass = new GuerillaBlockClass(field.Definition.Definition);
+                        fieldBlockClass.GenerateCSharpCode();
                         var member =
                             new CodeMemberField(
-                                ((GuerillaName) field.Definition.Name).Name.ToPascalCase().ToValidToken(),
+                                fieldBlockClass._targetClass.Name,
                                 _tokenDictionary.GenerateValidToken(GenerateFieldName(field)));
                         GenerateSummary(member);
                         member.Attributes = MemberAttributes.Public;
                         member.UserData[0] = fieldBlockClass.Size;
                         member.UserData["GuerillaBlock"] = true;
+                        member.InitExpression = new CodeObjectCreateExpression(fieldBlockClass._targetClass.Name);
                         _targetClass.Members.Add(member);
                         break;
                     }
@@ -366,94 +786,7 @@ namespace Moonfish.Guerilla.CodeDom
                     case MoonfishFieldType.FieldEnum:
                     case MoonfishFieldType.FieldLongEnum:
                     {
-                        var fieldTypeName = field.Strings.Name.ToPascalCase().ToValidToken();
-                        CodeTypeDeclaration typeDeclaration;
-                        switch (field.Type)
-                        {
-                            case MoonfishFieldType.FieldByteFlags:
-                                typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
-                                {
-                                    IsEnum = true,
-                                    BaseTypes = {new CodeTypeReference(typeof (byte))}
-                                };
-                                typeDeclaration.CustomAttributes.Add(
-                                    new CodeAttributeDeclaration(new CodeTypeReference(typeof (FlagsAttribute))));
-                                break;
-                            case MoonfishFieldType.FieldWordFlags:
-                                typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
-                                {
-                                    IsEnum = true,
-                                    BaseTypes = {new CodeTypeReference(typeof (short))}
-                                };
-                                typeDeclaration.CustomAttributes.Add(
-                                    new CodeAttributeDeclaration(new CodeTypeReference(typeof (FlagsAttribute))));
-                                break;
-                            case MoonfishFieldType.FieldLongFlags:
-                                typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
-                                {
-                                    IsEnum = true,
-                                    BaseTypes = {new CodeTypeReference(typeof (int))}
-                                };
-                                typeDeclaration.CustomAttributes.Add(
-                                    new CodeAttributeDeclaration(new CodeTypeReference(typeof (FlagsAttribute))));
-                                break;
-                            case MoonfishFieldType.FieldCharEnum:
-                                typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
-                                {
-                                    IsEnum = true,
-                                    BaseTypes = {new CodeTypeReference(typeof (byte))}
-                                };
-                                break;
-                            case MoonfishFieldType.FieldEnum:
-                                typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
-                                {
-                                    IsEnum = true,
-                                    BaseTypes = {new CodeTypeReference(typeof (short))}
-                                };
-                                break;
-                            case MoonfishFieldType.FieldLongEnum:
-                                typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
-                                {
-                                    IsEnum = true,
-                                    BaseTypes = {new CodeTypeReference(typeof (int))}
-                                };
-                                break;
-                            default:
-                                continue;
-                        }
-                        var comments = PullComments();
-                        var memberComments = comments.Descriptions.ToList();
-                        var enumDefintion = (MoonfishTagEnumDefinition) field.Definition;
-                        for (var index = 0; index < enumDefintion.Names.Count; index++)
-                        {
-                            var value = enumDefintion.Names[index];
-                            var comment = index < memberComments.Count ? memberComments[index] : null;
-                            var member = new CodeMemberField
-                            {
-                                Name = value.ToPascalCase().ToValidToken()
-                            };
-                            if (comment != null)
-                                member.Comments.AddRange(
-                                    new[]
-                                    {
-                                        new CodeCommentStatement("<summary>", true),
-                                        new CodeCommentStatement(comment.Trim(), true),
-                                        new CodeCommentStatement("</summary>", true)
-                                    });
-                            typeDeclaration.Members.Add(member);
-                        }
-                        var fieldMember = new CodeMemberField(new CodeTypeReference(typeDeclaration.Name),
-                            _tokenDictionary.GenerateValidToken(GenerateFieldName(field)));
-                        if (comments.HasSummary)
-                            typeDeclaration.Comments.AddRange(new[]
-                            {
-                                new CodeCommentStatement("<summary>", true),
-                                new CodeCommentStatement(comments.Summary.Trim(), true),
-                                new CodeCommentStatement("</summary>", true)
-                            });
-                        fieldMember.Attributes = MemberAttributes.Public;
-                        _targetClass.Members.Add(typeDeclaration);
-                        _targetClass.Members.Add(fieldMember);
+                        GenerateEnumField(field);
                         break;
                     }
                     case MoonfishFieldType.FieldByteBlockFlags:
@@ -516,8 +849,7 @@ namespace Moonfish.Guerilla.CodeDom
                         var endIndex = FindArrayEndIndex(fields, startIndex) - 1;
 
                         var arrayFields = fields.GetRange(startIndex, endIndex - startIndex);
-                        var arrayStruct = new GuerillaBlockClass(GenerateFieldName(field), arrayFields);
-                        var t= _targetClass.GetType();
+                        var arrayStruct = new GuerillaBlockClass(GenerateFieldName(field) + "Block", arrayFields);
 
                         var member =
                             new CodeMemberField(
@@ -529,6 +861,7 @@ namespace Moonfish.Guerilla.CodeDom
                         member.UserData["GuerillaBlock"] = true;
                         member.InitExpression = new CodeArrayCreateExpression(member.Type.BaseType, field.Count);
                         _targetClass.Members.Add(member);
+                        _targetClass.Members.Add(arrayStruct._targetClass);
 
                         var remainingFields = fields.GetRange(endIndex + 1, fields.Count - endIndex - 1);
 
@@ -556,8 +889,9 @@ namespace Moonfish.Guerilla.CodeDom
                     }
                     default:
                     {
+                        var generateFieldName = GenerateFieldName(field);
                         var member = new CodeMemberField(ValueTypeDictionary[field.Type],
-                            _tokenDictionary.GenerateValidToken(GenerateFieldName(field)))
+                            _tokenDictionary.GenerateValidToken(generateFieldName))
                         {
                             Attributes = MemberAttributes.Public
                         };
@@ -568,6 +902,124 @@ namespace Moonfish.Guerilla.CodeDom
                     }
                 }
             }
+        }
+
+        private void GenerateEnumField(MoonfishTagField field)
+        {
+            var nameToken = new StringBuilder(field.Strings.Name.ToPascalCase().ToAlphaNumericToken());
+            var typeToken = "";
+            switch (field.Type)
+            {
+                case MoonfishFieldType.FieldCharEnum:
+                case MoonfishFieldType.FieldEnum:
+                case MoonfishFieldType.FieldLongEnum:
+                    typeToken = "Enum";
+                    break;
+            }
+            var fieldTypeName =
+                _tokenDictionary.Contains(nameToken.ToString())
+                    ? _targetClass.Name.Replace("Block", "") + nameToken + typeToken
+                    : nameToken + typeToken;
+            _tokenDictionary.Add(fieldTypeName);
+            var fieldName = string.IsNullOrWhiteSpace(typeToken) ? fieldTypeName : fieldTypeName.Replace(typeToken, "");
+            CodeTypeDeclaration typeDeclaration;
+            var flagsAttributeDeclaration = new CodeAttributeDeclaration(new CodeTypeReference(typeof (FlagsAttribute)));
+            switch (field.Type)
+            {
+                case MoonfishFieldType.FieldByteFlags:
+                    typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
+                    {
+                        IsEnum = true,
+                        BaseTypes = {new CodeTypeReference(typeof (byte))}
+                    };
+                    typeDeclaration.CustomAttributes.Add(
+                        flagsAttributeDeclaration);
+                    break;
+                case MoonfishFieldType.FieldWordFlags:
+                    typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
+                    {
+                        IsEnum = true,
+                        BaseTypes = {new CodeTypeReference(typeof (short))}
+                    };
+                    typeDeclaration.CustomAttributes.Add(
+                        flagsAttributeDeclaration);
+                    break;
+                case MoonfishFieldType.FieldLongFlags:
+                    typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
+                    {
+                        IsEnum = true,
+                        BaseTypes = {new CodeTypeReference(typeof (int))}
+                    };
+                    typeDeclaration.CustomAttributes.Add(
+                        flagsAttributeDeclaration);
+                    break;
+                case MoonfishFieldType.FieldCharEnum:
+                    typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
+                    {
+                        IsEnum = true,
+                        BaseTypes = {new CodeTypeReference(typeof (byte))}
+                    };
+                    break;
+                case MoonfishFieldType.FieldEnum:
+                    typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
+                    {
+                        IsEnum = true,
+                        BaseTypes = {new CodeTypeReference(typeof (short))}
+                    };
+                    break;
+                case MoonfishFieldType.FieldLongEnum:
+                    typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
+                    {
+                        IsEnum = true,
+                        BaseTypes = {new CodeTypeReference(typeof (int))}
+                    };
+                    break;
+                default:
+                    return;
+            }
+            var isFlags = typeDeclaration.CustomAttributes.Contains(flagsAttributeDeclaration);
+
+            var comments = PullComments();
+            var memberComments = comments.Descriptions.ToList();
+            var enumDefintion = (MoonfishTagEnumDefinition) field.Definition;
+            var enumTokenDictionary = new TokenDictionary();
+            if (isFlags)
+                typeDeclaration.Members.Add(new CodeMemberField
+                {
+                    Name = "None",
+                    InitExpression = new CodePrimitiveExpression(0)
+                });
+            for (var index = 0; index < enumDefintion.Names.Count; index++)
+            {
+                var value = enumDefintion.Names[index];
+                var comment = index < memberComments.Count ? memberComments[index] : null;
+                var member = new CodeMemberField
+                {
+                    Name = enumTokenDictionary.GenerateValidToken(GenerateFieldName(value))
+                };
+                if (comment != null)
+                    member.Comments.AddRange(
+                        new[]
+                        {
+                            new CodeCommentStatement("<summary>", true),
+                            new CodeCommentStatement(comment.Trim(), true),
+                            new CodeCommentStatement("</summary>", true)
+                        });
+                member.InitExpression = new CodePrimitiveExpression(isFlags ? 1 << index : index);
+                typeDeclaration.Members.Add(member);
+            }
+            var fieldMember = new CodeMemberField(new CodeTypeReference(typeDeclaration.Name),
+                _tokenDictionary.GenerateValidToken(fieldName));
+            if (comments.HasSummary)
+                typeDeclaration.Comments.AddRange(new[]
+                {
+                    new CodeCommentStatement("<summary>", true),
+                    new CodeCommentStatement(comments.Summary.Trim(), true),
+                    new CodeCommentStatement("</summary>", true)
+                });
+            fieldMember.Attributes = MemberAttributes.Public;
+            _targetClass.Members.Add(typeDeclaration);
+            _targetClass.Members.Add(fieldMember);
         }
 
         private static int FindArrayEndIndex(IList<MoonfishTagField> fields, int startIndex)
@@ -600,23 +1052,36 @@ namespace Moonfish.Guerilla.CodeDom
             return member;
         }
 
+        private static string GenerateFieldName(string name, MemberAttributes attributes = MemberAttributes.Public)
+        {
+            var token = name.IsValidIdentifier() ? name : "_invalid Name";
+
+            return attributes.HasFlag(MemberAttributes.Public)
+                ? token.ToPascalCase().ToAlphaNumericToken()
+                : token.ToCamelCase().ToAlphaNumericToken();
+        }
+
         private static string GenerateFieldName(MoonfishTagField field,
             MemberAttributes attributes = MemberAttributes.Public)
         {
             string token;
             try
             {
-                token = field.Strings.Name.IsValidIdentifier()
+                token = field.Strings.Name.ToAlphaNumericToken().IsValidIdentifier()
                     ? field.Strings.Name
-                    : field.Definition != null ? field.Definition.Name : "_invalid Name";
+                    : field.Definition != null
+                        ? ((string) field.Definition.Name).ToAlphaNumericToken().IsValidIdentifier()
+                            ? field.Definition.Name
+                            : "_invalid Name"
+                        : "_invalid Name";
             }
             catch (Exception e)
             {
                 token = "_invalid Name";
             }
             return attributes.HasFlag(MemberAttributes.Public)
-                ? token.ToPascalCase().ToValidToken()
-                : token.ToCamelCase().ToValidToken();
+                ? token.ToPascalCase().ToAlphaNumericToken()
+                : token.ToCamelCase().ToAlphaNumericToken();
         }
 
         private static void GenerateSummary(CodeTypeMember member)
@@ -627,7 +1092,7 @@ namespace Moonfish.Guerilla.CodeDom
                     new[]
                     {
                         new CodeCommentStatement("<summary>", true),
-                        new CodeCommentStatement(comment.Summary, true),
+                        new CodeCommentStatement(comment.Summary.Trim(), true),
                         new CodeCommentStatement("</summary>", true)
                     });
         }
@@ -661,7 +1126,7 @@ namespace Moonfish.Guerilla.CodeDom
 
         public void GenerateCSharpCode()
         {
-            var provider = CodeDomProvider.CreateProvider("CSharp");
+            var provider = new CSharpCodeProvider();
             var options = new CodeGeneratorOptions
             {
                 BracingStyle = "C",
@@ -674,7 +1139,5 @@ namespace Moonfish.Guerilla.CodeDom
                 provider.GenerateCodeFromCompileUnit(_targetUnit, streamWriter, options);
             }
         }
-
-        public int Size { get; private set; }
     };
 }

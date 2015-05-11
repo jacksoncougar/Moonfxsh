@@ -6,8 +6,21 @@ namespace Moonfish.Guerilla.Reflection
         private string _name;
         private string _range;
 
-        public GuerillaName(string value)
+        public GuerillaName(string value, bool trimParentheticalStatements = true)
         {
+            if (trimParentheticalStatements)
+            {
+                var startIndex = value.IndexOf('(');
+                var endIndex = value.IndexOf(')');
+                while (startIndex > 0 && endIndex > 0)
+                {
+                    var count = endIndex + 1 - startIndex;
+                    value = value.Remove(startIndex, count);
+                    startIndex = value.IndexOf('(');
+                    endIndex = value.IndexOf(')');
+                }
+            }
+
             var hasDescription = value.Contains("#");
             var hasRange = value.Contains(":");
             var hasStar = value.Contains("*");

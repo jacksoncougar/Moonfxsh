@@ -16,6 +16,16 @@ namespace Moonfish.Guerilla
             return Guerilla.AlignmentOf(block.GetType());
         }
 
+        public static void Write(this Stream output, GuerillaBlock block)
+        {
+            var queueableBinaryWriter = new QueueableBinaryWriter(output, 
+                (int) output.Position + block.SerializedSize);
+
+            block.QueueWrites(queueableBinaryWriter);
+            block.Write_(queueableBinaryWriter);
+            queueableBinaryWriter.WriteQueue();
+        }
+
         public static void Write(this GuerillaBlock block, BinaryWriter binaryWriter)
         {
             binaryWriter.WritePadding(block.Alignment);

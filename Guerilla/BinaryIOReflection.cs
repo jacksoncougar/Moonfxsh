@@ -44,6 +44,20 @@ namespace Moonfish.Guerilla
             return methodCache;
         }
 
+        private static Dictionary<Type, string> CreateWriteMethodCache<T>()
+        {
+            var totalMethods = FindAllMethodsByReturnValue<T>();
+
+            var methodCache = new Dictionary<Type, string>(totalMethods.Count());
+            foreach (var item in totalMethods)
+            {
+                var parameters = item.Parameters();
+                methodCache[parameters.Count > 1 ? parameters[1].ParameterType : parameters[0].ParameterType] =
+                    item.Name;
+            }
+            return methodCache;
+        }
+            
         private static Dictionary<Type, Delegate> CreateMethodDelegateCache<T>()
         {
             var totalMethods = FindAllMethods<T>();
@@ -54,6 +68,43 @@ namespace Moonfish.Guerilla
                 methodCache[item.ReturnType] = item.DelegateForCallMethod();
             }
             return methodCache;
+        }
+
+        private static List<MethodInfo> FindAllMethodsByReturnValue<T>()
+        {
+            var types = Assembly.GetExecutingAssembly().GetTypes();
+            // get BinaryReader extension methods from the executing assembly 
+            var extensionMethods = (from type in types
+                where type.IsSealed && !type.IsGenericType && !type.IsNested
+                from method in type.GetMethods(BindingFlags.Static
+                                               | BindingFlags.Public | BindingFlags.NonPublic)
+                where method.IsDefined(typeof (ExtensionAttribute), false)
+                where method.ReturnType == typeof (void)
+                where method.Name == "Write"
+                where method.Parameters().Count > 1 && method.Parameters()[0].ParameterType == typeof (T)
+                select method).ToList();
+
+            // trim this down further to one of each return type
+            extensionMethods = (from method in extensionMethods
+                group method by method.Parameters()[1].ParameterType
+                into g
+                select g.First()).ToList();
+
+            var provider = new CSharpCodeProvider();
+
+            var methods = (from method in typeof (T).GetMethods()
+                where method.ReturnType == typeof (void)
+                where method.Parameters().Count > 0
+                where method.Name == "Write"
+                select method).ToList();
+            methods = (from method in methods
+                group method by method.Parameters()[0].ParameterType
+                into g
+                select g.First()).ToList();
+            var totalMethods = methods.Union(extensionMethods).ToList();
+
+            provider.Dispose();
+            return totalMethods;
         }
 
         private static List<MethodInfo> FindAllMethods<T>()
@@ -97,7 +148,7 @@ namespace Moonfish.Guerilla
         public static void CacheMethods()
         {
             _binaryReaderMethods = CreateMethodCache<BinaryReader>();
-            _binaryWriterMethods = CreateMethodCache<BinaryWriter>();
+            _binaryWriterMethods = CreateWriteMethodCache<BinaryWriter>();
             BinaryReaderMethodDelegates = CreateMethodDelegateCache<BinaryReader>();
         }
     }

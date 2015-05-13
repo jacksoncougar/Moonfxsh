@@ -167,6 +167,7 @@
     <Compile Include="Graphics\Track.cs" />
     <Compile Include="Graphics\VertexFunctions.cs" />
     <Compile Include="Guerilla\BinaryIOReflection.cs" />
+    <Compile Include="Guerilla\CodeDom\GuerillaBlockClassBase.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaCodeDom.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaCommentCollection.cs" />
     <Compile Include="Guerilla\Debug\ActorStartingLocationsBlock.generated.cs" />
@@ -238,9 +239,7 @@
     <Compile Include="Guerilla\Debug\ScenarioAtmosphericFogPalette.generated.cs" />
     <Compile Include="Guerilla\Debug\ScenarioBipedBlock.generated.cs" />
     <Compile Include="Guerilla\Debug\ScenarioBipedPaletteBlock.generated.cs" />
-    <Compile Include="Guerilla\Debug\ScenarioBlock.generated.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Guerilla\Debug\ScenarioBlock.generated.cs" />
     <Compile Include="Guerilla\Debug\ScenarioBspSwitchTransitionVolumeBlock.generated.cs" />
     <Compile Include="Guerilla\Debug\ScenarioBspSwitchTriggerVolumeBlock.generated.cs" />
     <Compile Include="Guerilla\Debug\ScenarioChildScenarioBlock.generated.cs" />

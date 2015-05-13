@@ -2,65 +2,21 @@
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using Microsoft.CSharp;
 using Moonfish.Guerilla.Reflection;
 using Moonfish.Tags;
-using OpenTK;
 
 namespace Moonfish.Guerilla.CodeDom
 {
-    internal class GuerillaBlockClass
+    [SuppressMessage("ReSharper", "BitwiseOperatorOnEnumWithoutFlags")]
+    internal class GuerillaBlockClass : GuerillaBlockClassBase
     {
-        private static readonly Dictionary<MoonfishFieldType, Type> ValueTypeDictionary;
-        private static GuerillaCommentCollection _comments = new GuerillaCommentCollection();
         private readonly string _outputFileName;
-        private readonly CodeTypeDeclaration _targetClass;
-        private readonly CodeCompileUnit _targetUnit;
-        private readonly TokenDictionary _tokenDictionary;
-
-        static GuerillaBlockClass()
-        {
-            BinaryIOReflection.CacheMethods();
-            var assembly = typeof (StringIdent).Assembly;
-            var query = from type in assembly.GetTypes()
-                where type.GetCustomAttributes(typeof (GuerillaTypeAttribute), false).Any()
-                select type;
-            var valueTypes = query.ToArray();
-            ValueTypeDictionary = new Dictionary<MoonfishFieldType, Type>(valueTypes.Count());
-            foreach (var type in valueTypes)
-            {
-                var guerillaTypeAttributes =
-                    (GuerillaTypeAttribute[]) type.GetCustomAttributes(typeof (GuerillaTypeAttribute), false);
-                foreach (var guerillaType in guerillaTypeAttributes)
-                {
-                    ValueTypeDictionary.Add(guerillaType.FieldType, type);
-                }
-            }
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldAngle, typeof (float));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldRealEulerAngles_3D, typeof (Vector3));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldCharInteger, typeof (byte));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldShortInteger, typeof (short));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldShortBounds, typeof (int));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldLongInteger, typeof (int));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldReal, typeof (float));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldRealFraction, typeof (float));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldRealFractionBounds, typeof (Vector2));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldRealPoint_2D, typeof (Vector2));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldRealVector_3D, typeof (Vector3));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldRealVector_2D, typeof (Vector2));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldRealPoint_3D, typeof (Vector3));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldRealEulerAngles_2D, typeof (Vector2));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldRealPlane_2D, typeof (Vector3));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldRealPlane_3D, typeof (Vector4));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldRealQuaternion, typeof (Quaternion));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldRealArgbColor, typeof (Vector4));
-            ValueTypeDictionary.Add(MoonfishFieldType.FieldRectangle_2D, typeof (Vector2));
-        }
-
+        
         public GuerillaBlockClass(MoonfishTagGroup tag, IList<MoonfishTagGroup> tagGroups = null)
             : this(tag.Definition.Name.ToPascalCase().ToAlphaNumericToken())
         {
@@ -71,8 +27,8 @@ namespace Moonfish.Guerilla.CodeDom
                 var parentTag = tagGroups.First(x => x.Class == tag.ParentClass);
                 var parentClass = new GuerillaBlockClass(parentTag, tagGroups);
                 parentClass.GenerateCSharpCode();
-                _tokenDictionary = new TokenDictionary(parentClass._tokenDictionary);
-                _targetClass.BaseTypes[0] = new CodeTypeReference(parentClass._targetClass.Name);
+                TokenDictionary = new TokenDictionary(parentClass.TokenDictionary);
+                TargetClass.BaseTypes[0] = new CodeTypeReference(parentClass.TargetClass.Name);
 
                 Size += parentClass.Size;
             }
@@ -81,33 +37,22 @@ namespace Moonfish.Guerilla.CodeDom
         }
 
         public GuerillaBlockClass(MoonfishTagDefinition definition)
-            : this(definition.Name.ToPascalCase().ToAlphaNumericToken())
+            : this( definition.Name.ToPascalCase().ToAlphaNumericToken())
         {
             Size = definition.CalculateSizeOfFieldSet();
             Initialize(definition.Fields, Size, definition.Alignment);
         }
 
-        private GuerillaBlockClass(string className)
+        private GuerillaBlockClass(string className) : base(className)
         {
             _outputFileName = string.Format("{0}.generated.cs", className);
-
-            _tokenDictionary = new TokenDictionary();
-            _targetUnit = new CodeCompileUnit();
-            var t = new CSharpCodeProvider();
-            var tagsCodeNamespace = new CodeNamespace("Moonfish.Guerilla.Tags.Experimental");
-            tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("Moonfish.Tags"));
-            tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("Moonfish.Model"));
-            tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("System.IO"));
-            tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("System.Collections.Generic"));
-            tagsCodeNamespace.Imports.Add(new CodeNamespaceImport("System.Linq"));
-            _targetClass = new CodeTypeDeclaration(className)
+            TargetClass.IsClass = true;
+            TargetClass.BaseTypes.Clear();
+            TargetClass.BaseTypes.AddRange(new[]
             {
-                IsClass = true,
-                TypeAttributes = TypeAttributes.Public,
-                BaseTypes = {new CodeTypeReference(typeof (GuerillaBlock)), new CodeTypeReference(typeof(IWriteQueueable).Name)}
-            };
-            tagsCodeNamespace.Types.Add(_targetClass);
-            _targetUnit.Namespaces.Add(tagsCodeNamespace);
+                new CodeTypeReference(typeof (GuerillaBlock)), 
+                new CodeTypeReference(typeof (IWriteQueueable).Name)
+            });
         }
 
         private GuerillaBlockClass(string className, List<MoonfishTagField> fields) : this(className)
@@ -162,7 +107,7 @@ namespace Moonfish.Guerilla.CodeDom
             var concatMethodName =
                 StaticReflection.GetMemberName((Queue<BlamPointer> item) => item.Concat(new Queue<BlamPointer>()));
 
-            if (!_targetClass.BaseTypes.Contains(new CodeTypeReference(typeof (GuerillaBlock))))
+            if (!TargetClass.BaseTypes.Contains(new CodeTypeReference(typeof (GuerillaBlock))))
             {
                 method.Statements.Add(
                     new CodeVariableDeclarationStatement(pointerQueueReference, pointerQueue,
@@ -176,7 +121,7 @@ namespace Moonfish.Guerilla.CodeDom
                     pointerQueue, new CodeObjectCreateExpression(pointerQueueReference)));
             }
 
-            foreach (CodeObject codeObject in _targetClass.Members)
+            foreach (CodeObject codeObject in TargetClass.Members)
             {
                 if (!(codeObject is CodeMemberField)) continue;
                 var field = (CodeMemberField) codeObject;
@@ -295,7 +240,7 @@ namespace Moonfish.Guerilla.CodeDom
                 else
                 {
                     var typeDeclaration =
-                        _targetClass.Members.OfType<CodeTypeDeclaration>().Single(x => x.Name == field.Type.BaseType);
+                        TargetClass.Members.OfType<CodeTypeDeclaration>().Single(x => x.Name == field.Type.BaseType);
                     var baseType = Type.GetType(typeDeclaration.BaseTypes[0].BaseType);
 
                     var methodName = BinaryIOReflection.GetBinaryReaderMethodName(baseType);
@@ -307,7 +252,7 @@ namespace Moonfish.Guerilla.CodeDom
                 }
             }
             method.Statements.Add(new CodeMethodReturnStatement(pointerQueueVariable));
-            _targetClass.Members.Add(method);
+            TargetClass.Members.Add(method);
         }
 
         private void GenerateReadInstancesMethod()
@@ -343,7 +288,7 @@ namespace Moonfish.Guerilla.CodeDom
             method.Statements.Add(new CodeMethodInvokeExpression(new CodeBaseReferenceExpression(), method.Name,
                 binaryReaderArgument, pointerQueueArgument));
 
-            foreach (CodeObject codeObject in _targetClass.Members)
+            foreach (CodeObject codeObject in TargetClass.Members)
             {
                 if (!(codeObject is CodeMemberField)) continue;
                 var field = (CodeMemberField) codeObject;
@@ -448,7 +393,7 @@ namespace Moonfish.Guerilla.CodeDom
                         pointerQueueArgument));
                 }
             }
-            _targetClass.Members.Add(method);
+            TargetClass.Members.Add(method);
         }
 
         private void GenerateIWriteQueueableQueueWritesMethod()
@@ -478,7 +423,7 @@ namespace Moonfish.Guerilla.CodeDom
             method.Statements.Add(new CodeMethodInvokeExpression(new CodeBaseReferenceExpression(), method.Name,
                 queueableBinaryWriterArgument));
 
-            foreach (CodeObject codeObject in _targetClass.Members)
+            foreach (CodeObject codeObject in TargetClass.Members)
             {
                 if (!(codeObject is CodeMemberField)) continue;
                 var field = (CodeMemberField) codeObject;
@@ -564,7 +509,7 @@ namespace Moonfish.Guerilla.CodeDom
                         queueableBinaryWriterArgument));
                 }
             }
-            _targetClass.Members.Add(method);
+            TargetClass.Members.Add(method);
         }
 
         private void GenerateWriteMethod()
@@ -594,7 +539,7 @@ namespace Moonfish.Guerilla.CodeDom
             method.Statements.Add(new CodeMethodInvokeExpression(new CodeBaseReferenceExpression(), method.Name,
                 queueableBinaryWriterArgument));
 
-            foreach (CodeObject codeObject in _targetClass.Members)
+            foreach (CodeObject codeObject in TargetClass.Members)
             {
                 if (!(codeObject is CodeMemberField)) continue;
                 var field = (CodeMemberField) codeObject;
@@ -697,7 +642,7 @@ namespace Moonfish.Guerilla.CodeDom
                 else
                 {
                     var typeDeclaration =
-                        _targetClass.Members.OfType<CodeTypeDeclaration>().Single(x => x.Name == field.Type.BaseType);
+                        TargetClass.Members.OfType<CodeTypeDeclaration>().Single(x => x.Name == field.Type.BaseType);
                     var baseType = Type.GetType(typeDeclaration.BaseTypes[0].BaseType);
 
                     var methodName = BinaryIOReflection.GetBinaryWriterMethodName(baseType);
@@ -706,7 +651,7 @@ namespace Moonfish.Guerilla.CodeDom
                         new CodeCastExpression(baseType, fieldReference)));
                 }
             }
-            _targetClass.Members.Add(method);
+            TargetClass.Members.Add(method);
         }
 
         private void GenerateFields(List<MoonfishTagField> fields)
@@ -717,47 +662,42 @@ namespace Moonfish.Guerilla.CodeDom
                 {
                     case MoonfishFieldType.FieldTagReference:
                     {
-                        var member = new CodeMemberField(typeof (TagReference),
-                            _tokenDictionary.GenerateValidToken(GenerateFieldName(field)));
+                        var member = new CodeMemberField(typeof (TagReference), GenerateFieldName(field));
                         member.CustomAttributes.Add(
                             new CodeAttributeDeclaration(new CodeTypeReference(typeof (TagReferenceAttribute)),
                                 new CodeAttributeArgument(new CodePrimitiveExpression(field.Definition.Class.ToString()))));
                         GenerateSummary(member);
                         member.Attributes = MemberAttributes.Public;
-                        _targetClass.Members.Add(member);
+                        TargetClass.Members.Add(member);
                         break;
                     }
                     case MoonfishFieldType.FieldBlock:
                     {
                         var fieldBlockClass = new GuerillaBlockClass(field.Definition);
                         fieldBlockClass.GenerateCSharpCode();
-                        var typeName = fieldBlockClass._targetClass.Name;
-                        var member = new CodeMemberField(typeName + "[]",
-                            _tokenDictionary.GenerateValidToken(GenerateFieldName(field)));
+                        var typeName = fieldBlockClass.TargetClass.Name;
+                        var member = new CodeMemberField(typeName + "[]", GenerateFieldName(field));
                         GenerateSummary(member);
                         member.Attributes = MemberAttributes.Public;
                         member.UserData[0] = fieldBlockClass.Size;
                         member.UserData["GuerillaBlock"] = true;
                         member.InitExpression =
                             new CodeArrayCreateExpression(
-                                new CodeTypeReference(fieldBlockClass._targetClass.Name, 1), 0);
-                        _targetClass.Members.Add(member);
+                                new CodeTypeReference(fieldBlockClass.TargetClass.Name, 1), 0);
+                        TargetClass.Members.Add(member);
                         break;
                     }
                     case MoonfishFieldType.FieldStruct:
                     {
                         var fieldBlockClass = new GuerillaBlockClass(field.Definition.Definition);
                         fieldBlockClass.GenerateCSharpCode();
-                        var member =
-                            new CodeMemberField(
-                                fieldBlockClass._targetClass.Name,
-                                _tokenDictionary.GenerateValidToken(GenerateFieldName(field)));
+                        var member = new CodeMemberField(fieldBlockClass.TargetClass.Name, GenerateFieldName(field));
                         GenerateSummary(member);
                         member.Attributes = MemberAttributes.Public;
                         member.UserData[0] = fieldBlockClass.Size;
                         member.UserData["GuerillaBlock"] = true;
-                        member.InitExpression = new CodeObjectCreateExpression(fieldBlockClass._targetClass.Name);
-                        _targetClass.Members.Add(member);
+                        member.InitExpression = new CodeObjectCreateExpression(fieldBlockClass.TargetClass.Name);
+                        TargetClass.Members.Add(member);
                         break;
                     }
                     case MoonfishFieldType.FieldData:
@@ -765,11 +705,10 @@ namespace Moonfish.Guerilla.CodeDom
                         var type = ((MoonfishTagDataDefinition) field.Definition).DataElementSize == 1
                             ? typeof (byte[])
                             : typeof (short[]);
-                        var member = new CodeMemberField(type,
-                            _tokenDictionary.GenerateValidToken(GenerateFieldName(field)));
+                        var member = new CodeMemberField(type, GenerateFieldName(field));
                         GenerateSummary(member);
                         member.Attributes = MemberAttributes.Public;
-                        _targetClass.Members.Add(member);
+                        TargetClass.Members.Add(member);
                         break;
                     }
                     case MoonfishFieldType.FieldExplanation:
@@ -792,55 +731,55 @@ namespace Moonfish.Guerilla.CodeDom
                     case MoonfishFieldType.FieldByteBlockFlags:
                     {
                         var member = GenerateCodeMemberField<BlockFlags8>(field);
-                        _targetClass.Members.Add(member);
+                        TargetClass.Members.Add(member);
                     }
                         break;
                     case MoonfishFieldType.FieldWordBlockFlags:
                     {
                         var member = GenerateCodeMemberField<BlockFlags16>(field);
-                        _targetClass.Members.Add(member);
+                        TargetClass.Members.Add(member);
                     }
                         break;
                     case MoonfishFieldType.FieldLongBlockFlags:
                     {
                         var member = GenerateCodeMemberField<BlockFlags32>(field);
-                        _targetClass.Members.Add(member);
+                        TargetClass.Members.Add(member);
                     }
                         break;
                     case MoonfishFieldType.FieldCharBlockIndex1:
                     {
                         var member = GenerateCodeMemberField<ByteBlockIndex1>(field);
-                        _targetClass.Members.Add(member);
+                        TargetClass.Members.Add(member);
                     }
                         break;
                     case MoonfishFieldType.FieldShortBlockIndex1:
                     {
                         var member = GenerateCodeMemberField<ShortBlockIndex1>(field);
-                        _targetClass.Members.Add(member);
+                        TargetClass.Members.Add(member);
                     }
                         break;
                     case MoonfishFieldType.FieldLongBlockIndex1:
                     {
                         var member = GenerateCodeMemberField<LongBlockIndex1>(field);
-                        _targetClass.Members.Add(member);
+                        TargetClass.Members.Add(member);
                     }
                         break;
                     case MoonfishFieldType.FieldCharBlockIndex2:
                     {
                         var member = GenerateCodeMemberField<ByteBlockIndex2>(field);
-                        _targetClass.Members.Add(member);
+                        TargetClass.Members.Add(member);
                     }
                         break;
                     case MoonfishFieldType.FieldShortBlockIndex2:
                     {
                         var member = GenerateCodeMemberField<ShortBlockIndex2>(field);
-                        _targetClass.Members.Add(member);
+                        TargetClass.Members.Add(member);
                     }
                         break;
                     case MoonfishFieldType.FieldLongBlockIndex2:
                     {
                         var member = GenerateCodeMemberField<LongBlockIndex2>(field);
-                        _targetClass.Members.Add(member);
+                        TargetClass.Members.Add(member);
                     }
                         break;
                     case MoonfishFieldType.FieldArrayStart:
@@ -853,15 +792,17 @@ namespace Moonfish.Guerilla.CodeDom
 
                         var member =
                             new CodeMemberField(
-                                arrayStruct._targetClass.Name + "[]",
-                                _tokenDictionary.GenerateValidToken(GenerateFieldName(field)));
+                                arrayStruct.TargetClass.Name + "[]",
+                                TokenDictionary.GenerateValidToken(GenerateFieldName(field)));
                         GenerateSummary(member);
                         member.Attributes = MemberAttributes.Public;
                         member.UserData[0] = arrayStruct.Size;
                         member.UserData["GuerillaBlock"] = true;
                         member.InitExpression = new CodeArrayCreateExpression(member.Type.BaseType, field.Count);
-                        _targetClass.Members.Add(member);
-                        _targetClass.Members.Add(arrayStruct._targetClass);
+
+                        if (!Contains(arrayStruct.TargetClass))
+                            TargetClass.Members.Add(arrayStruct.TargetClass);
+                        TargetClass.Members.Add(member);
 
                         var remainingFields = fields.GetRange(endIndex + 1, fields.Count - endIndex - 1);
 
@@ -878,7 +819,7 @@ namespace Moonfish.Guerilla.CodeDom
                         var member = GenerateCodeMemberField<byte[]>(field, MemberAttributes.Private);
 
                         member.InitExpression = new CodeArrayCreateExpression(member.Type, field.Count);
-                        _targetClass.Members.Add(member);
+                        TargetClass.Members.Add(member);
                     }
                         break;
                     case MoonfishFieldType.FieldUselessPad:
@@ -889,15 +830,14 @@ namespace Moonfish.Guerilla.CodeDom
                     }
                     default:
                     {
-                        var generateFieldName = GenerateFieldName(field);
                         var member = new CodeMemberField(ValueTypeDictionary[field.Type],
-                            _tokenDictionary.GenerateValidToken(generateFieldName))
+                            GenerateFieldName(field))
                         {
                             Attributes = MemberAttributes.Public
                         };
                         GenerateSummary(member);
 
-                        _targetClass.Members.Add(member);
+                        TargetClass.Members.Add(member);
                         break;
                     }
                 }
@@ -906,120 +846,24 @@ namespace Moonfish.Guerilla.CodeDom
 
         private void GenerateEnumField(MoonfishTagField field)
         {
-            var nameToken = new StringBuilder(field.Strings.Name.ToPascalCase().ToAlphaNumericToken());
-            var typeToken = "";
-            switch (field.Type)
+            var enumBlockClass = new GuerillaEnumBlockClass(this, field);
+            var fieldMember = new CodeMemberField(
+                new CodeTypeReference(enumBlockClass.TargetClass.Name),
+                GenerateName(MemberAttributes.Public, null, false, field.Strings.Name, TargetClass.Name.Replace("Block", "") + enumBlockClass.GetFieldName())
+                )
             {
-                case MoonfishFieldType.FieldCharEnum:
-                case MoonfishFieldType.FieldEnum:
-                case MoonfishFieldType.FieldLongEnum:
-                    typeToken = "Enum";
-                    break;
-            }
-            var fieldTypeName =
-                _tokenDictionary.Contains(nameToken.ToString())
-                    ? _targetClass.Name.Replace("Block", "") + nameToken + typeToken
-                    : nameToken + typeToken;
-            _tokenDictionary.Add(fieldTypeName);
-            var fieldName = string.IsNullOrWhiteSpace(typeToken) ? fieldTypeName : fieldTypeName.Replace(typeToken, "");
-            CodeTypeDeclaration typeDeclaration;
-            var flagsAttributeDeclaration = new CodeAttributeDeclaration(new CodeTypeReference(typeof (FlagsAttribute)));
-            switch (field.Type)
-            {
-                case MoonfishFieldType.FieldByteFlags:
-                    typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
-                    {
-                        IsEnum = true,
-                        BaseTypes = {new CodeTypeReference(typeof (byte))}
-                    };
-                    typeDeclaration.CustomAttributes.Add(
-                        flagsAttributeDeclaration);
-                    break;
-                case MoonfishFieldType.FieldWordFlags:
-                    typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
-                    {
-                        IsEnum = true,
-                        BaseTypes = {new CodeTypeReference(typeof (short))}
-                    };
-                    typeDeclaration.CustomAttributes.Add(
-                        flagsAttributeDeclaration);
-                    break;
-                case MoonfishFieldType.FieldLongFlags:
-                    typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
-                    {
-                        IsEnum = true,
-                        BaseTypes = {new CodeTypeReference(typeof (int))}
-                    };
-                    typeDeclaration.CustomAttributes.Add(
-                        flagsAttributeDeclaration);
-                    break;
-                case MoonfishFieldType.FieldCharEnum:
-                    typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
-                    {
-                        IsEnum = true,
-                        BaseTypes = {new CodeTypeReference(typeof (byte))}
-                    };
-                    break;
-                case MoonfishFieldType.FieldEnum:
-                    typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
-                    {
-                        IsEnum = true,
-                        BaseTypes = {new CodeTypeReference(typeof (short))}
-                    };
-                    break;
-                case MoonfishFieldType.FieldLongEnum:
-                    typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
-                    {
-                        IsEnum = true,
-                        BaseTypes = {new CodeTypeReference(typeof (int))}
-                    };
-                    break;
-                default:
-                    return;
-            }
-            var isFlags = typeDeclaration.CustomAttributes.Contains(flagsAttributeDeclaration);
+                Attributes = MemberAttributes.Public
+            };
+            if (!Contains(enumBlockClass.TargetClass))
+                TargetClass.Members.Add(enumBlockClass.TargetClass);
+            TargetClass.Members.Add(fieldMember);
+        }
 
-            var comments = PullComments();
-            var memberComments = comments.Descriptions.ToList();
-            var enumDefintion = (MoonfishTagEnumDefinition) field.Definition;
-            var enumTokenDictionary = new TokenDictionary();
-            if (isFlags)
-                typeDeclaration.Members.Add(new CodeMemberField
-                {
-                    Name = "None",
-                    InitExpression = new CodePrimitiveExpression(0)
-                });
-            for (var index = 0; index < enumDefintion.Names.Count; index++)
-            {
-                var value = enumDefintion.Names[index];
-                var comment = index < memberComments.Count ? memberComments[index] : null;
-                var member = new CodeMemberField
-                {
-                    Name = enumTokenDictionary.GenerateValidToken(GenerateFieldName(value))
-                };
-                if (comment != null)
-                    member.Comments.AddRange(
-                        new[]
-                        {
-                            new CodeCommentStatement("<summary>", true),
-                            new CodeCommentStatement(comment.Trim(), true),
-                            new CodeCommentStatement("</summary>", true)
-                        });
-                member.InitExpression = new CodePrimitiveExpression(isFlags ? 1 << index : index);
-                typeDeclaration.Members.Add(member);
-            }
-            var fieldMember = new CodeMemberField(new CodeTypeReference(typeDeclaration.Name),
-                _tokenDictionary.GenerateValidToken(fieldName));
-            if (comments.HasSummary)
-                typeDeclaration.Comments.AddRange(new[]
-                {
-                    new CodeCommentStatement("<summary>", true),
-                    new CodeCommentStatement(comments.Summary.Trim(), true),
-                    new CodeCommentStatement("</summary>", true)
-                });
-            fieldMember.Attributes = MemberAttributes.Public;
-            _targetClass.Members.Add(typeDeclaration);
-            _targetClass.Members.Add(fieldMember);
+        private bool Contains(CodeTypeDeclaration targetClass)
+        {
+            return
+                TargetClass.Members.OfType<CodeTypeDeclaration>()
+                    .Any(typeDeclaration => typeDeclaration.Name == targetClass.Name);
         }
 
         private static int FindArrayEndIndex(IList<MoonfishTagField> fields, int startIndex)
@@ -1043,70 +887,12 @@ namespace Moonfish.Guerilla.CodeDom
         private CodeMemberField GenerateCodeMemberField<T>(MoonfishTagField field,
             MemberAttributes attributes = MemberAttributes.Public)
         {
-            var member = new CodeMemberField(typeof (T),
-                _tokenDictionary.GenerateValidToken(GenerateFieldName(field, attributes)))
+            var member = new CodeMemberField(typeof (T), GenerateFieldName(field, attributes))
             {
                 Attributes = attributes
             };
             GenerateSummary(member);
             return member;
-        }
-
-        private static string GenerateFieldName(string name, MemberAttributes attributes = MemberAttributes.Public)
-        {
-            var token = name.IsValidIdentifier() ? name : "_invalid Name";
-
-            return attributes.HasFlag(MemberAttributes.Public)
-                ? token.ToPascalCase().ToAlphaNumericToken()
-                : token.ToCamelCase().ToAlphaNumericToken();
-        }
-
-        private static string GenerateFieldName(MoonfishTagField field,
-            MemberAttributes attributes = MemberAttributes.Public)
-        {
-            string token;
-            try
-            {
-                token = field.Strings.Name.ToAlphaNumericToken().IsValidIdentifier()
-                    ? field.Strings.Name
-                    : field.Definition != null
-                        ? ((string) field.Definition.Name).ToAlphaNumericToken().IsValidIdentifier()
-                            ? field.Definition.Name
-                            : "_invalid Name"
-                        : "_invalid Name";
-            }
-            catch (Exception e)
-            {
-                token = "_invalid Name";
-            }
-            return attributes.HasFlag(MemberAttributes.Public)
-                ? token.ToPascalCase().ToAlphaNumericToken()
-                : token.ToCamelCase().ToAlphaNumericToken();
-        }
-
-        private static void GenerateSummary(CodeTypeMember member)
-        {
-            var comment = PullComments();
-            if (comment.HasSummary)
-                member.Comments.AddRange(
-                    new[]
-                    {
-                        new CodeCommentStatement("<summary>", true),
-                        new CodeCommentStatement(comment.Summary.Trim(), true),
-                        new CodeCommentStatement("</summary>", true)
-                    });
-        }
-
-        private static void PushComments(string value)
-        {
-            _comments = new GuerillaCommentCollection(value);
-        }
-
-        private static GuerillaCommentCollection PullComments()
-        {
-            var copy = _comments.CreateCopy();
-            _comments = new GuerillaCommentCollection();
-            return copy;
         }
 
         public void AddReadOnlyIntProperty(string name, int value)
@@ -1121,7 +907,7 @@ namespace Moonfish.Guerilla.CodeDom
             serializedSizeProperty.GetStatements.Add(
                 new CodeMethodReturnStatement(new CodePrimitiveExpression(value)));
 
-            _targetClass.Members.Add(serializedSizeProperty);
+            TargetClass.Members.Add(serializedSizeProperty);
         }
 
         public void GenerateCSharpCode()
@@ -1136,7 +922,7 @@ namespace Moonfish.Guerilla.CodeDom
             var filename = Path.Combine(Local.ProjectDirectory, Path.Combine("Guerilla\\Debug\\", _outputFileName));
             using (var streamWriter = new StreamWriter(File.Create(filename)))
             {
-                provider.GenerateCodeFromCompileUnit(_targetUnit, streamWriter, options);
+                provider.GenerateCodeFromCompileUnit(TargetUnit, streamWriter, options);
             }
         }
     };

@@ -18,7 +18,8 @@ namespace Moonfish.Guerilla.CodeDom
                 "EMPTY_STRING",
                 "EMPTYSTRING",
                 "",
-                "YOUR MOM"
+                "YOUR MOM",
+                "..."
             };
             return (!invalidNames.Any(value.Equals) || !string.IsNullOrWhiteSpace(value) || value.Length > 0) && !char.IsDigit(value[0]);
         }
@@ -66,12 +67,12 @@ namespace Moonfish.Guerilla.CodeDom
 
             return result;
         }
+
         public static string ToAlphaNumericToken(this string value)
         {
-            var textInfo = new CultureInfo("en-US", false).TextInfo;
-            var indices = new List<int>();
-
-            return new string(value.Where(Char.IsLetterOrDigit).ToArray());
+            value = new string(value.Where(char.IsLetterOrDigit).ToArray());
+            if (string.IsNullOrWhiteSpace(value)) return value;
+            return char.IsDigit(value[0]) ? "_" + value : value;
         }
 
         public static string Name(this Type type)

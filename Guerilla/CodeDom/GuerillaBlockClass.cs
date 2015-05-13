@@ -44,7 +44,7 @@ namespace Moonfish.Guerilla.CodeDom
                 IsStruct = true,
                 Members =
                 {
-                    new CodeMemberField(typeof (TagClass).Name(), tag.Class.ToTokenString())
+                    new CodeMemberField(typeof (TagClass).Name(), tag.Class.ToTokenString().ToPascalCase())
                     {
                         Attributes = MemberAttributes.Public | MemberAttributes.Static,
                         InitExpression =
@@ -943,7 +943,7 @@ namespace Moonfish.Guerilla.CodeDom
                 BlankLinesBetweenMembers = false,
                 VerbatimOrder = false
             };
-            var filename = Path.Combine(Local.ProjectDirectory, Path.Combine("Guerilla\\Debug\\", _outputFileName));
+            var filename = Path.Combine(Local.ProjectDirectory, Path.Combine("Guerilla\\Tags.Generated\\", _outputFileName));
             using (var streamWriter = new StreamWriter(File.Create(filename)))
             {
                 provider.GenerateCodeFromCompileUnit(TargetUnit, streamWriter, options);

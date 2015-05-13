@@ -80,6 +80,7 @@ namespace Moonfish.Graphics
 
                     if (workingBitmap.BitmapDataFlags.HasFlag(BitmapDataBlock.Flags.Compressed))
                     {
+                        OpenGL.ReportError();
                         GL.CompressedTexImage2D(
                             TextureTarget.Texture2D, 0, pixelInternalFormat, width, height, 0,
                             (int) (bytesPerPixel*width*height), surfaceData);
@@ -295,16 +296,16 @@ namespace Moonfish.Graphics
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
                 case BitmapDataBlock.FormatEnum.A8r8g8b8:
-                    pixelFormat = PixelInternalFormat.Rgba8;
+                    pixelFormat = PixelInternalFormat.Rgb;
                     break;
                 case BitmapDataBlock.FormatEnum.A8y8:
-                    pixelFormat = PixelInternalFormat.Rgba8;
+                    pixelFormat = PixelInternalFormat.Rgb;
                     break;
                 case BitmapDataBlock.FormatEnum.Argbfp32:
-                    pixelFormat = PixelInternalFormat.Rgba8;
+                    pixelFormat = PixelInternalFormat.Rgb;
                     break;
                 case BitmapDataBlock.FormatEnum.Ay8:
-                    pixelFormat = PixelInternalFormat.Rgba8;
+                    pixelFormat = PixelInternalFormat.Rgb;
                     break;
                 case BitmapDataBlock.FormatEnum.Dxt1:
                     pixelFormat = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
@@ -316,28 +317,28 @@ namespace Moonfish.Graphics
                     pixelFormat = PixelInternalFormat.CompressedRgbaS3tcDxt5Ext;
                     break;
                 case BitmapDataBlock.FormatEnum.G8b8:
-                    pixelFormat = PixelInternalFormat.Rgba8;
+                    pixelFormat = PixelInternalFormat.Rgb;
                     break;
                 case BitmapDataBlock.FormatEnum.P8:
-                    pixelFormat = PixelInternalFormat.Rgba8;
+                    pixelFormat = PixelInternalFormat.Rgb;
                     break;
                 case BitmapDataBlock.FormatEnum.P8bump:
-                    pixelFormat = PixelInternalFormat.Rgba8;
+                    pixelFormat = PixelInternalFormat.Rgb;
                     break;
                 case BitmapDataBlock.FormatEnum.R5g6b5:
-                    pixelFormat = PixelInternalFormat.Rgba8;
+                    pixelFormat = PixelInternalFormat.Rgb;
                     break;
                 case BitmapDataBlock.FormatEnum.Rgbfp16:
-                    pixelFormat = PixelInternalFormat.Rgba8;
+                    pixelFormat = PixelInternalFormat.Rgb;
                     break;
                 case BitmapDataBlock.FormatEnum.Rgbfp32:
-                    pixelFormat = PixelInternalFormat.Rgba8;
+                    pixelFormat = PixelInternalFormat.Rgb;
                     break;
                 case BitmapDataBlock.FormatEnum.V8u8:
-                    pixelFormat = PixelInternalFormat.Rgba8;
+                    pixelFormat = PixelInternalFormat.Rgb;
                     break;
                 case BitmapDataBlock.FormatEnum.X8r8g8b8:
-                    pixelFormat = PixelInternalFormat.Rgba8;
+                    pixelFormat = PixelInternalFormat.Rgb;
                     break;
                 case BitmapDataBlock.FormatEnum.Y8:
                     pixelFormat = PixelInternalFormat.Luminance8;

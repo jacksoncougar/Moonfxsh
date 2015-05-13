@@ -23,8 +23,6 @@ namespace Moonfish
         [STAThread]
         private static void Main()
         {
-            GuerillaCodeDom.GenerateGuerillaCode();
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Gizmo());

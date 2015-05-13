@@ -46,11 +46,9 @@ namespace Moonfish.Guerilla.CodeDom
             : base(GenerateClassName(parentClass, field))
         {
             _field = field;
-            TargetClass = ConstructCodeTypeDeclaration(field, TargetClass.Name);
+            bool isFlags;
+            TargetClass = ConstructCodeTypeDeclaration(field, TargetClass.Name, out isFlags);
 
-            var isFlags =
-                TargetClass.CustomAttributes.Contains(
-                    new CodeAttributeDeclaration(new CodeTypeReference(typeof (FlagsAttribute))));
 
             var comments = PullComments();
             var memberComments = comments.Descriptions.ToList();
@@ -104,12 +102,13 @@ namespace Moonfish.Guerilla.CodeDom
                 });
         }
 
-        private static CodeTypeDeclaration ConstructCodeTypeDeclaration(MoonfishTagField field, string fieldTypeName)
+        private static CodeTypeDeclaration ConstructCodeTypeDeclaration(MoonfishTagField field, string fieldTypeName, out bool isFlags)
         {
             CodeTypeDeclaration typeDeclaration;
             switch (field.Type)
             {
                 case MoonfishFieldType.FieldByteFlags:
+                    isFlags = true;
                     typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
                     {
                         IsEnum = true,
@@ -119,6 +118,7 @@ namespace Moonfish.Guerilla.CodeDom
                         new CodeAttributeDeclaration(new CodeTypeReference(typeof (FlagsAttribute))));
                     break;
                 case MoonfishFieldType.FieldWordFlags:
+                    isFlags = true;
                     typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
                     {
                         IsEnum = true,
@@ -128,6 +128,7 @@ namespace Moonfish.Guerilla.CodeDom
                         new CodeAttributeDeclaration(new CodeTypeReference(typeof (FlagsAttribute))));
                     break;
                 case MoonfishFieldType.FieldLongFlags:
+                    isFlags = true;
                     typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
                     {
                         IsEnum = true,
@@ -137,6 +138,7 @@ namespace Moonfish.Guerilla.CodeDom
                         new CodeAttributeDeclaration(new CodeTypeReference(typeof (FlagsAttribute))));
                     break;
                 case MoonfishFieldType.FieldCharEnum:
+                    isFlags = false;
                     typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
                     {
                         IsEnum = true,
@@ -144,6 +146,7 @@ namespace Moonfish.Guerilla.CodeDom
                     };
                     break;
                 case MoonfishFieldType.FieldEnum:
+                    isFlags = false;
                     typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
                     {
                         IsEnum = true,
@@ -151,6 +154,7 @@ namespace Moonfish.Guerilla.CodeDom
                     };
                     break;
                 case MoonfishFieldType.FieldLongEnum:
+                    isFlags = false;
                     typeDeclaration = new CodeTypeDeclaration(fieldTypeName)
                     {
                         IsEnum = true,

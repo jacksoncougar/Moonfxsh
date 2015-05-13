@@ -8,8 +8,8 @@ namespace Moonfish.Guerilla.Tags
     {
         public void Draw()
         {
-            GL.DrawElements(PrimitiveType.TriangleStrip, stripLength, DrawElementsType.UnsignedShort,
-                (IntPtr) (stripStartIndex*2));
+            GL.DrawElements(PrimitiveType.TriangleStrip, StripLength, DrawElementsType.UnsignedShort,
+                (IntPtr) (StripStartIndex*2));
             OpenGL.ReportError();
         }
     }

@@ -84,7 +84,7 @@ namespace Moonfish.Guerilla
                         if (!(tag.Class == validateTag.Class)) continue;
 
                         var metaTableMemory = map.DefaultMemoryBlock;
-                        if (tag.Class == TagClass.Sbsp || tag.Class == TagClass.Ltmp)
+                        if (tag.Class == (TagClass)"sbsp" || tag.Class == (TagClass)"ltmp")
                         {
                             metaTableMemory =
                                 map.StructureMemoryBlocks[map.StructureMemoryBlockBindings[tag.Identifier]];

@@ -4,12 +4,12 @@
     {
         public byte Length
         {
-            get { return (byte) ((blockIndexData & 0xFF00) >> 9); }
+            get { return (byte) ((BlockIndexData & 0xFF00) >> 9); }
         }
 
         public byte Index
         {
-            get { return (byte) (blockIndexData & 0xFF); }
+            get { return (byte) (BlockIndexData & 0xFF); }
         }
     }
 }

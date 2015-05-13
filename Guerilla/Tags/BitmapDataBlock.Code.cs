@@ -11,9 +11,9 @@ namespace Moonfish.Guerilla.Tags
 
         public void LoadRawResources()
         {
-            ReadResourceData(out bitmapLOD1Bytes, lOD1TextureDataLength, lOD1TextureDataOffset);
-            ReadResourceData(out bitmapLOD2Bytes, lOD2TextureDataLength, lOD2TextureDataOffset);
-            ReadResourceData(out bitmapLOD3Bytes, lOD3TextureDataLength, lOD3TextureDataOffset);
+            ReadResourceData(out bitmapLOD1Bytes, LOD1TextureDataLength, LOD1TextureDataOffset);
+            ReadResourceData(out bitmapLOD2Bytes, LOD2TextureDataLength, LOD2TextureDataOffset);
+            ReadResourceData(out bitmapLOD3Bytes, LOD3TextureDataLength, LOD3TextureDataOffset);
         }
 
         public byte[] GetRawResourceBytes()

@@ -26,11 +26,11 @@ namespace Moonfish.Graphics
             this.Level = levelBlock;
             ClusterObjects = new List<RenderObject>();
             InstancedGeometryObjects = new List<RenderObject>();
-            foreach (var cluster in this.Level.clusters)
+            foreach (var cluster in this.Level.Clusters)
             {
                 ClusterObjects.Add(new RenderObject(cluster));
             }
-            foreach (var item in this.Level.instancedGeometriesDefinitions)
+            foreach (var item in this.Level.InstancedGeometriesDefinitions)
             {
                 InstancedGeometryObjects.Add(new RenderObject(item));
             }
@@ -100,42 +100,42 @@ namespace Moonfish.Graphics
 
         public void LoadScenario(CacheStream map)
         {
-            var ident = map.Index.Select(TagClass.Scnr, "").First().Identifier;
+            var ident = map.Index.Select((TagClass)"scnr", "").First().Identifier;
             scenario = (ScenarioBlock) map.Deserialize(ident);
 
             LoadInstances(
-                scenario.scenery.Select(x => (IH2ObjectInstance) x).ToList(),
-                scenario.sceneryPalette.Select(x => (IH2ObjectPalette) x).ToList());
+                scenario.Scenery.Select(x => (IH2ObjectInstance) x).ToList(),
+                scenario.SceneryPalette.Select(x => (IH2ObjectPalette) x).ToList());
             LoadInstances(
-                scenario.crates.Select(x => (IH2ObjectInstance) x).ToList(),
-                scenario.cratesPalette.Select(x => (IH2ObjectPalette) x).ToList());
+                scenario.Crates.Select(x => (IH2ObjectInstance) x).ToList(),
+                scenario.CratesPalette.Select(x => (IH2ObjectPalette) x).ToList());
             LoadInstances(
-                scenario.weapons.Select(x => (IH2ObjectInstance) x).ToList(),
-                scenario.weaponPalette.Select(x => (IH2ObjectPalette) x).ToList());
+                scenario.Weapons.Select(x => (IH2ObjectInstance) x).ToList(),
+                scenario.WeaponPalette.Select(x => (IH2ObjectPalette) x).ToList());
             LoadNetgameEquipment(
-                scenario.netgameEquipment.Select(x => x).ToList());
+                scenario.NetgameEquipment.Select(x => x).ToList());
 
             Log.Info(GL.GetError().ToString());
         }
 
         private void LoadNetgameEquipment(List<ScenarioNetgameEquipmentBlock> list)
         {
-            foreach (var item in list.Where(x => !TagIdent.IsNull(x.itemVehicleCollection.Ident)
+            foreach (var item in list.Where(x => !TagIdent.IsNull(x.ItemVehicleCollection.Ident)
                                                  &&
-                                                 (x.itemVehicleCollection.Class.ToString() == "vehc" ||
-                                                  x.itemVehicleCollection.Class.ToString() == "itmc")))
+                                                 (x.ItemVehicleCollection.Class.ToString() == "vehc" ||
+                                                  x.ItemVehicleCollection.Class.ToString() == "itmc")))
             {
                 try
                 {
-                    Add(item.itemVehicleCollection.Ident, new ScenarioObject(Halo2.GetReferenceObject<ModelBlock>(
+                    Add(item.ItemVehicleCollection.Ident, new ScenarioObject(Halo2.GetReferenceObject<ModelBlock>(
                         Halo2.GetReferenceObject<ObjectBlock>(
-                            item.itemVehicleCollection.Class.ToString() == "itmc"
-                                ? Halo2.GetReferenceObject<ItemCollectionBlock>(item.itemVehicleCollection)
-                                    .itemPermutations.First()
-                                    .item
-                                : Halo2.GetReferenceObject<VehicleCollectionBlock>(item.itemVehicleCollection)
-                                    .vehiclePermutations.First()
-                                    .vehicle).model))
+                            item.ItemVehicleCollection.Class.ToString() == "itmc"
+                                ? Halo2.GetReferenceObject<ItemCollectionBlock>(item.ItemVehicleCollection)
+                                    .ItemPermutations.First()
+                                    .Item
+                                : Halo2.GetReferenceObject<VehicleCollectionBlock>(item.ItemVehicleCollection)
+                                    .VehiclePermutations.First()
+                                    .Vehicle).Model))
                     {
                         WorldMatrix = item.WorldMatrix
                     }
@@ -158,7 +158,7 @@ namespace Moonfish.Graphics
             foreach (var item in join)
             {
                 Add(item.Object.Ident, new ScenarioObject(
-                    Halo2.GetReferenceObject<ModelBlock>(Halo2.GetReferenceObject<ObjectBlock>(item.Object).model))
+                    Halo2.GetReferenceObject<ModelBlock>(Halo2.GetReferenceObject<ObjectBlock>(item.Object).Model))
                 {
                     WorldMatrix = item.instance.WorldMatrix
                 }

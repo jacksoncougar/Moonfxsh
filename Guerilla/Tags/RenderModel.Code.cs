@@ -17,21 +17,21 @@ namespace Moonfish.Guerilla.Tags
     {
         void IResourceBlock.LoadRawResources()
         {
-            var source = Halo2.GetResourceBlock(geometryBlockInfo);
+            var source = Halo2.GetResourceBlock(GeometryBlockInfo);
             using (var binaryReader = new BinaryReader(source))
             {
-                sectionData = new[] {new RenderModelSectionDataBlock()};
-                sectionData[0].Read(binaryReader);
+                SectionData = new[] {new RenderModelSectionDataBlock()};
+                SectionData[0].Read(binaryReader);
 
                 var vertexBufferResources = source.Resources.Where(
-                    x => x.type == GlobalGeometryBlockResourceBlockBase.Type.VertexBuffer).ToArray();
-                foreach (var buffer in sectionData[0].section.vertexBuffers)
-                    if (buffer.vertexBuffer.Type == VertexAttributeType.None)
+                    x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer).ToArray();
+                foreach (var buffer in SectionData[0].Section.VertexBuffers)
+                    if (buffer.VertexBuffer.Type == VertexAttributeType.None)
                     {
                     }
-                for (var i = 0; i < sectionData[0].section.vertexBuffers.Length; i++)
+                for (var i = 0; i < SectionData[0].Section.VertexBuffers.Length; i++)
                 {
-                    sectionData[0].section.vertexBuffers[i].vertexBuffer.Data =
+                    SectionData[0].Section.VertexBuffers[i].VertexBuffer.Data =
                         source.GetResourceData(vertexBufferResources[i]);
                 }
             }
@@ -48,10 +48,10 @@ namespace Moonfish.Guerilla.Tags
         public Vector4 ExtractTexcoordScaling()
         {
             return new Vector4(
-                texcoordBoundsX.Min,
-                texcoordBoundsX.Max,
-                texcoordBoundsY.Min,
-                texcoordBoundsY.Max
+                TexcoordBoundsX.Min,
+                TexcoordBoundsX.Max,
+                TexcoordBoundsX.Min,
+                TexcoordBoundsX.Max
                 );
         }
 
@@ -68,56 +68,21 @@ namespace Moonfish.Guerilla.Tags
 
         public Vector3 ToHalfExtents()
         {
-            return new Vector3(positionBoundsX.Length/2, positionBoundsY.Length/2, positionBoundsZ.Length/2);
+            return new Vector3(PositionBoundsX.Length/2, PositionBoundsY.Length/2, PositionBoundsZ.Length/2);
         }
     };
 
     [TypeConverter(typeof (MarkerGroupConverter))]
     partial class RenderModelMarkerBlock
     {
-        public byte RegionIndex
-        {
-            get { return regionIndex; }
-            set { regionIndex = value; }
-        }
-
-        public byte PermutationIndex
-        {
-            get { return permutationIndex; }
-            set { permutationIndex = value; }
-        }
-
-        public byte NodeIndex
-        {
-            get { return nodeIndex; }
-            set { nodeIndex = value; }
-        }
-
-        public Vector3 Translation
-        {
-            get { return translation; }
-            set { translation = value; }
-        }
-
-        public Quaternion Rotation
-        {
-            get { return rotation; }
-            set { rotation = value; }
-        }
-
-        public float Scale
-        {
-            get { return scale.NearlyEqual(0) ? 1 : scale; }
-            set { scale = value; }
-        }
 
         public Matrix4 WorldMatrix
         {
             get
             {
-                var translationMatrix = Matrix4.CreateTranslation(translation);
-                var rotationMatrix = Matrix4.CreateFromQuaternion(rotation);
-                var scaleMatrix = Matrix4.CreateScale(scale);
+                var translationMatrix = Matrix4.CreateTranslation(Translation);
+                var rotationMatrix = Matrix4.CreateFromQuaternion(Rotation);
+                var scaleMatrix = Matrix4.CreateScale(Scale);
                 return scaleMatrix*rotationMatrix*translationMatrix;
             }
         }
@@ -126,10 +91,6 @@ namespace Moonfish.Guerilla.Tags
     [TypeConverter(typeof (MarkerGroupConverter))]
     partial class RenderModelMarkerGroupBlock
     {
-        public RenderModelMarkerBlock[] Markers
-        {
-            get { return markers; }
-        }
     };
 
     internal class MarkerGroupConverter : ExpandableObjectConverter
@@ -140,7 +101,7 @@ namespace Moonfish.Guerilla.Tags
             if (destinationType == typeof (string) && value is RenderModelNodeBlock)
             {
                 var markerGroup = ((RenderModelNodeBlock) value);
-                return markerGroup.name.ToString();
+                return markerGroup.Name.ToString();
             }
             return base.ConvertTo(context, culture, value, destinationType);
         }

@@ -18,27 +18,18 @@ namespace Moonfish.ResourceManagement
                 var offset = stream.Position;
                 binaryReader.BaseStream.Seek(8, SeekOrigin.Current);
                 var resource =
-                    stream.Resources.Where(
-                        x =>
-                            x.primaryLocator == offset &&
-                            x.type != Guerilla.Tags.GlobalGeometryBlockResourceBlockBase.Type.VertexBuffer)
-                        .SingleOrDefault();
+                    stream.Resources
+                        .SingleOrDefault(x => x.PrimaryLocator == offset &&
+                                              x.Type != GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer);
                 if (resource == null)
                 {
                     return new BlamPointer(0, 0, elementSize);
                 }
-                else
-                {
-                    var count = resource.resourceDataSize/resource.secondaryLocator;
-                    var address = resource.resourceDataOffset + stream.HeaderSize;
-                    var size = resource.secondaryLocator;
-                    return new BlamPointer(count, address, elementSize);
-                }
+                var count = resource.ResourceDataSize/resource.SecondaryLocator;
+                var address = resource.ResourceDataOffset + stream.HeaderSize;
+                return new BlamPointer(count, address, elementSize);
             }
-            else
-            {
-                return new BlamPointer(binaryReader.ReadInt32(), binaryReader.ReadInt32(), elementSize);
-            }
+            return new BlamPointer(binaryReader.ReadInt32(), binaryReader.ReadInt32(), elementSize);
         }
     }
 
@@ -53,14 +44,14 @@ namespace Moonfish.ResourceManagement
         public ResourceStream(byte[] buffer, Guerilla.Tags.GlobalGeometryBlockInfoStructBlock blockInfo)
             : base(buffer)
         {
-            HeaderSize = blockInfo.sectionDataSize;
-            Resources = blockInfo.resources;
+            HeaderSize = blockInfo.SectionDataSize;
+            Resources = blockInfo.Resources;
         }
 
         public byte[] GetResourceData(GlobalGeometryBlockResourceBlock resource)
         {
-            this.Seek(resource.resourceDataOffset, SeekOrigin.Data);
-            var buffer = new byte[resource.resourceDataSize];
+            this.Seek(resource.ResourceDataOffset, SeekOrigin.Data);
+            var buffer = new byte[resource.ResourceDataSize];
             this.Read(buffer, 0, buffer.Length);
             return buffer;
         }

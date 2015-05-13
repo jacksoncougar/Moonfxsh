@@ -124,11 +124,11 @@ namespace Moonfish
         {
             Stream resourceStream = mapStream;
             if (blockInfo.ResourceLocation != ResourceSource.Local
-                && !TryGettingResourceStream(blockInfo.blockOffset, out resourceStream))
+                && !TryGettingResourceStream(blockInfo.BlockOffset, out resourceStream))
                 return null;
             resourceStream.Position = blockInfo.ResourceOffset + 8;
-            var buffer = new byte[blockInfo.blockSize - 8];
-            resourceStream.Read(buffer, 0, blockInfo.blockSize - 8);
+            var buffer = new byte[blockInfo.BlockSize - 8];
+            resourceStream.Read(buffer, 0, blockInfo.BlockSize - 8);
             return new ResourceStream(buffer, blockInfo);
         }
 

@@ -22,16 +22,16 @@ namespace Moonfish.Graphics
 
         public GlobalGeometryPartBlockNew[] Parts { get; private set; }
 
-        public Mesh(GlobalGeometrySectionStructBlockBase section,
-            GlobalGeometryCompressionInfoBlockBase compressionInfo) :
-                this(section.parts,
-                    section.stripIndices.Select(x => x.index).ToArray(),
-                    section.vertexBuffers.Select(x => x.vertexBuffer).ToArray(), compressionInfo)
+        public Mesh(GlobalGeometrySectionStructBlock section,
+            GlobalGeometryCompressionInfoBlock compressionInfo) :
+                this(section.Parts,
+                    section.StripIndices.Select(x => x.Index).ToArray(),
+                    section.VertexBuffers.Select(x => x.VertexBuffer).ToArray(), compressionInfo)
         {
         }
 
         public Mesh(GlobalGeometryPartBlockNew[] parts, short[] indices, IList<VertexBuffer> vertexArrayBufferData,
-            GlobalGeometryCompressionInfoBlockBase compressionInfo)
+            GlobalGeometryCompressionInfoBlock compressionInfo)
         {
             Parts = parts;
             TriangleBatch = new TriangleBatch();
@@ -40,7 +40,7 @@ namespace Moonfish.Graphics
         }
 
         private void BufferVertexAttributeData(IList<VertexBuffer> vertexBuffers,
-            GlobalGeometryCompressionInfoBlockBase compressionInfo)
+            GlobalGeometryCompressionInfoBlock compressionInfo)
         {
             using (TriangleBatch.Begin())
             {
@@ -95,7 +95,7 @@ namespace Moonfish.Graphics
         }
 
         private static byte[] Unpack(byte[] data, VertexAttributeType attributeType,
-            GlobalGeometryCompressionInfoBlockBase compressionInfo, out int stride)
+            GlobalGeometryCompressionInfoBlock compressionInfo, out int stride)
         {
             var packedElementSize = attributeType.GetSize();
             stride = (3*sizeof (float)) + (4*sizeof (float)) + 4;
@@ -114,14 +114,14 @@ namespace Moonfish.Graphics
                         while (binaryReader.BaseStream.Position < data.Length)
                         {
                             var x = VertexFunctions.Unpack(binaryReader.ReadInt16(),
-                                compressionInfo.positionBoundsX.Min,
-                                compressionInfo.positionBoundsX.Max);
+                                compressionInfo.PositionBoundsX.Min,
+                                compressionInfo.PositionBoundsX.Max);
                             var y = VertexFunctions.Unpack(binaryReader.ReadInt16(),
-                                compressionInfo.positionBoundsY.Min,
-                                compressionInfo.positionBoundsY.Max);
+                                compressionInfo.PositionBoundsY.Min,
+                                compressionInfo.PositionBoundsY.Max);
                             var z = VertexFunctions.Unpack(binaryReader.ReadInt16(),
-                                compressionInfo.positionBoundsZ.Min,
-                                compressionInfo.positionBoundsZ.Max);
+                                compressionInfo.PositionBoundsZ.Min,
+                                compressionInfo.PositionBoundsZ.Max);
                             binaryWriter.Write(x);
                             binaryWriter.Write(y);
                             binaryWriter.Write(z);

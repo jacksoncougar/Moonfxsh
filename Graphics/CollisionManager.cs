@@ -56,9 +56,9 @@ namespace Moonfish.Graphics
             foreach (var collisionObject in scenarioObject.Markers.Select(marker => new ScenarioCollisionObject
             {
                 CollisionShape = new BoxShape(0.015f),
-                WorldTransform = Matrix4.CreateFromQuaternion(marker.rotation)*
-                                 Matrix4.CreateTranslation(marker.translation)*
-                                 scenarioObject.Nodes.GetWorldMatrix(marker.nodeIndex),
+                WorldTransform = Matrix4.CreateFromQuaternion(marker.Rotation)*
+                                 Matrix4.CreateTranslation(marker.Translation)*
+                                 scenarioObject.Nodes.GetWorldMatrix(marker.NodeIndex),
                 UserObject = marker,
                 ParentObject = scenarioObject
             }))
@@ -69,20 +69,20 @@ namespace Moonfish.Graphics
 
         internal void LoadScenarioCollision(ScenarioStructureBspBlock structureBSP)
         {
-            foreach (var cluster in structureBSP.clusters)
+            foreach (var cluster in structureBSP.Clusters)
             {
                 var vertices =
-                    new Vector3[cluster.clusterData[0].section.vertexBuffers[0].vertexBuffer.Data.Length/12];
+                    new Vector3[cluster.ClusterData[0].Section.VertexBuffers[0].VertexBuffer.Data.Length/12];
                 for (var i = 0; i < vertices.Length; ++i)
                 {
-                    var data = cluster.clusterData[0].section.vertexBuffers[0].vertexBuffer.Data;
+                    var data = cluster.ClusterData[0].Section.VertexBuffers[0].VertexBuffer.Data;
                     vertices[i] = new Vector3(
                         BitConverter.ToSingle(data, i*12 + 0),
                         BitConverter.ToSingle(data, i*12 + 4),
                         BitConverter.ToSingle(data, i*12 + 8));
                 }
                 var triangleIndexVertexArray = new TriangleIndexVertexArray(
-                    cluster.clusterData[0].section.stripIndices.Select(x => (int) x.index).ToArray(), vertices);
+                    cluster.ClusterData[0].Section.StripIndices.Select(x => (int) x.Index).ToArray(), vertices);
 
                 var collisionObject = new CollisionObject
                 {

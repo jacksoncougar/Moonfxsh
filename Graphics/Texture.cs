@@ -24,40 +24,40 @@ namespace Moonfish.Graphics
             GL.ActiveTexture(textureUnit);
             OpenGL.ReportError();
 
-            var workingBitmap = bitmapCollection.bitmaps[0];
-            byte[] buffer = new byte[workingBitmap.lOD1TextureDataLength];
+            var workingBitmap = bitmapCollection.Bitmaps[0];
+            byte[] buffer = new byte[workingBitmap.LOD1TextureDataLength];
 
             Stream resourceStream;
-            if (!Halo2.TryGettingResourceStream(workingBitmap.lOD1TextureDataOffset, out resourceStream))
+            if (!Halo2.TryGettingResourceStream(workingBitmap.LOD1TextureDataOffset, out resourceStream))
             {
                 return;
             }
 
             using (resourceStream.Pin())
             {
-                resourceStream.Position = workingBitmap.lOD1TextureDataOffset & ~0xC0000000;
+                resourceStream.Position = workingBitmap.LOD1TextureDataOffset & ~0xC0000000;
                 resourceStream.Read(buffer, 0, buffer.Length);
             }
 
-            var width = workingBitmap.widthPixels;
-            var height = workingBitmap.heightPixels;
-            var bytesPerPixel = ParseBitapPixelDataSize(workingBitmap.format)/8.0f;
+            var width = workingBitmap.Width;
+            var height = workingBitmap.Height;
+            var bytesPerPixel = ParseBitapPixelDataSize(workingBitmap.Format)/8.0f;
 
-            if (workingBitmap.flags.HasFlag(BitmapDataBlockBase.Flags.Palettized))
+            if (workingBitmap.BitmapDataFlags.HasFlag(BitmapDataBlock.Flags.Palettized))
             {
                 textureMagFilter = TextureMagFilter.Nearest;
                 textureMinFilter = TextureMinFilter.Nearest;
             }
-            if (workingBitmap.flags.HasFlag(BitmapDataBlockBase.Flags.Swizzled))
+            if (workingBitmap.BitmapDataFlags.HasFlag(BitmapDataBlock.Flags.Swizzled))
             {
                 buffer = Swizzler.Swizzle(buffer, (int) bytesPerPixel, width, height, 1);
             }
-            PixelInternalFormat pixelInternalFormat = ParseBitmapPixelInternalFormat(workingBitmap.format);
+            PixelInternalFormat pixelInternalFormat = ParseBitmapPixelInternalFormat(workingBitmap.Format);
 
 
-            switch (workingBitmap.type)
+            switch (workingBitmap.Type)
             {
-                case BitmapDataBlockBase.TypeDeterminesBitmapGeometry.Texture2D:
+                case BitmapDataBlock.TypeEnum.Texture2D:
                 {
                     textureTarget = TextureTarget.Texture2D;
                     GL.BindTexture(TextureTarget.Texture2D, this.handle);
@@ -78,7 +78,7 @@ namespace Moonfish.Graphics
                     byte[] surfaceData = new byte[(int) (bytesPerPixel*width*height)];
                     Array.Copy(buffer, 0, surfaceData, 0, surfaceData.Length);
 
-                    if (workingBitmap.flags.HasFlag(BitmapDataBlockBase.Flags.Compressed))
+                    if (workingBitmap.BitmapDataFlags.HasFlag(BitmapDataBlock.Flags.Compressed))
                     {
                         GL.CompressedTexImage2D(
                             TextureTarget.Texture2D, 0, pixelInternalFormat, width, height, 0,
@@ -88,8 +88,8 @@ namespace Moonfish.Graphics
                     }
                     else
                     {
-                        var pixelFormat = ParseBitapPixelFormat(workingBitmap.format);
-                        var pixelType = ParseBitapPixelType(workingBitmap.format);
+                        var pixelFormat = ParseBitapPixelFormat(workingBitmap.Format);
+                        var pixelType = ParseBitapPixelType(workingBitmap.Format);
                         GL.TexImage2D(TextureTarget.Texture2D, 0, pixelInternalFormat, width, height, 0, pixelFormat,
                             pixelType, surfaceData);
 
@@ -97,7 +97,7 @@ namespace Moonfish.Graphics
                     }
                 }
                     break;
-                case BitmapDataBlockBase.TypeDeterminesBitmapGeometry.Cubemap:
+                case BitmapDataBlock.TypeEnum.Cubemap:
                 {
                     textureTarget = TextureTarget.TextureCubeMap;
                     GL.BindTexture(TextureTarget.TextureCubeMap, this.handle);
@@ -131,7 +131,7 @@ namespace Moonfish.Graphics
                         Array.Copy(buffer, stride*i, surfaceData, 0, surfaceData.Length);
 
 
-                        if (workingBitmap.flags.HasFlag(BitmapDataBlockBase.Flags.Compressed))
+                        if (workingBitmap.BitmapDataFlags.HasFlag(BitmapDataBlock.Flags.Compressed))
                         {
                             GL.CompressedTexImage2D(
                                 cube[i], 0, pixelInternalFormat, width, height, 0,
@@ -141,8 +141,8 @@ namespace Moonfish.Graphics
                         }
                         else
                         {
-                            var pixelFormat = ParseBitapPixelFormat(workingBitmap.format);
-                            var pixelType = ParseBitapPixelType(workingBitmap.format);
+                            var pixelFormat = ParseBitapPixelFormat(workingBitmap.Format);
+                            var pixelType = ParseBitapPixelType(workingBitmap.Format);
                             GL.TexImage2D(cube[i], 0, pixelInternalFormat, width, height, 0, pixelFormat, pixelType,
                                 surfaceData);
 
@@ -166,33 +166,33 @@ namespace Moonfish.Graphics
         }
 
         private PixelType ParseBitapPixelType(
-            BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally format)
+            BitmapDataBlock.FormatEnum format)
         {
             switch (format)
             {
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A1r5g5b5:
+                case BitmapDataBlock.FormatEnum.A1r5g5b5:
                     return PixelType.UnsignedShort5551;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A4r4g4b4:
+                case BitmapDataBlock.FormatEnum.A4r4g4b4:
                     return PixelType.UnsignedShort4444;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.R5g6b5:
+                case BitmapDataBlock.FormatEnum.R5g6b5:
                     return PixelType.UnsignedShort565;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8y8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.V8u8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.G8b8:
+                case BitmapDataBlock.FormatEnum.A8y8:
+                case BitmapDataBlock.FormatEnum.V8u8:
+                case BitmapDataBlock.FormatEnum.G8b8:
                     return PixelType.UnsignedShort;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.P8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Y8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.P8Bump:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Ay8:
+                case BitmapDataBlock.FormatEnum.A8:
+                case BitmapDataBlock.FormatEnum.P8:
+                case BitmapDataBlock.FormatEnum.Y8:
+                case BitmapDataBlock.FormatEnum.P8bump:
+                case BitmapDataBlock.FormatEnum.Ay8:
                     return PixelType.UnsignedByte;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8r8g8b8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.X8r8g8b8:
+                case BitmapDataBlock.FormatEnum.A8r8g8b8:
+                case BitmapDataBlock.FormatEnum.X8r8g8b8:
                     return PixelType.UnsignedInt;
                 default:
                     throw new FormatException("Unsupported Texture Format");
@@ -200,37 +200,37 @@ namespace Moonfish.Graphics
         }
 
         private PixelFormat ParseBitapPixelFormat(
-            BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally format)
+            BitmapDataBlock.FormatEnum format)
         {
             switch (format)
             {
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A1r5g5b5:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A4r4g4b4:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Argbfp32:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8r8g8b8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.X8r8g8b8:
+                case BitmapDataBlock.FormatEnum.A1r5g5b5:
+                case BitmapDataBlock.FormatEnum.A4r4g4b4:
+                case BitmapDataBlock.FormatEnum.Argbfp32:
+                case BitmapDataBlock.FormatEnum.A8r8g8b8:
+                case BitmapDataBlock.FormatEnum.X8r8g8b8:
                     return PixelFormat.Rgba;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.R5g6b5:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Rgbfp16:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Rgbfp32:
+                case BitmapDataBlock.FormatEnum.R5g6b5:
+                case BitmapDataBlock.FormatEnum.Rgbfp16:
+                case BitmapDataBlock.FormatEnum.Rgbfp32:
                     return PixelFormat.Rgb;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8y8:
+                case BitmapDataBlock.FormatEnum.A8y8:
                     return PixelFormat.LuminanceAlpha;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.V8u8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.G8b8:
+                case BitmapDataBlock.FormatEnum.V8u8:
+                case BitmapDataBlock.FormatEnum.G8b8:
                     return PixelFormat.Rg;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8:
+                case BitmapDataBlock.FormatEnum.A8:
                     return PixelFormat.Alpha;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.P8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.P8Bump:
+                case BitmapDataBlock.FormatEnum.P8:
+                case BitmapDataBlock.FormatEnum.P8bump:
                     return PixelFormat.Red;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Y8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Ay8:
+                case BitmapDataBlock.FormatEnum.Y8:
+                case BitmapDataBlock.FormatEnum.Ay8:
                     return PixelFormat.Luminance;
                 default:
                     throw new FormatException("Unsupported Texture Format");
@@ -238,41 +238,41 @@ namespace Moonfish.Graphics
         }
 
         private float ParseBitapPixelDataSize(
-            BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally format)
+            BitmapDataBlock.FormatEnum format)
         {
             switch (format)
             {
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A1r5g5b5:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A4r4g4b4:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.R5g6b5:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8y8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.V8u8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.G8b8:
+                case BitmapDataBlock.FormatEnum.A1r5g5b5:
+                case BitmapDataBlock.FormatEnum.A4r4g4b4:
+                case BitmapDataBlock.FormatEnum.R5g6b5:
+                case BitmapDataBlock.FormatEnum.A8y8:
+                case BitmapDataBlock.FormatEnum.V8u8:
+                case BitmapDataBlock.FormatEnum.G8b8:
                     return 16;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.P8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.P8Bump:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Y8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Ay8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Dxt3:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Dxt5:
+                case BitmapDataBlock.FormatEnum.A8:
+                case BitmapDataBlock.FormatEnum.P8:
+                case BitmapDataBlock.FormatEnum.P8bump:
+                case BitmapDataBlock.FormatEnum.Y8:
+                case BitmapDataBlock.FormatEnum.Ay8:
+                case BitmapDataBlock.FormatEnum.Dxt3:
+                case BitmapDataBlock.FormatEnum.Dxt5:
                     return 8;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Dxt1:
+                case BitmapDataBlock.FormatEnum.Dxt1:
                     return 4;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8r8g8b8:
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.X8r8g8b8:
+                case BitmapDataBlock.FormatEnum.A8r8g8b8:
+                case BitmapDataBlock.FormatEnum.X8r8g8b8:
                     return 32;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Argbfp32:
+                case BitmapDataBlock.FormatEnum.Argbfp32:
                     return 128;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Rgbfp16:
+                case BitmapDataBlock.FormatEnum.Rgbfp16:
                     return 48;
 
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Rgbfp32:
+                case BitmapDataBlock.FormatEnum.Rgbfp32:
                     return 96;
                 default:
                     throw new FormatException("Unsupported Texture Format");
@@ -280,66 +280,66 @@ namespace Moonfish.Graphics
         }
 
         internal PixelInternalFormat ParseBitmapPixelInternalFormat(
-            BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally format)
+            BitmapDataBlock.FormatEnum format)
         {
             PixelInternalFormat pixelFormat;
             switch (format)
             {
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A1r5g5b5:
+                case BitmapDataBlock.FormatEnum.A1r5g5b5:
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A4r4g4b4:
+                case BitmapDataBlock.FormatEnum.A4r4g4b4:
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8:
+                case BitmapDataBlock.FormatEnum.A8:
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8r8g8b8:
+                case BitmapDataBlock.FormatEnum.A8r8g8b8:
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.A8y8:
+                case BitmapDataBlock.FormatEnum.A8y8:
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Argbfp32:
+                case BitmapDataBlock.FormatEnum.Argbfp32:
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Ay8:
+                case BitmapDataBlock.FormatEnum.Ay8:
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Dxt1:
+                case BitmapDataBlock.FormatEnum.Dxt1:
                     pixelFormat = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Dxt3:
+                case BitmapDataBlock.FormatEnum.Dxt3:
                     pixelFormat = PixelInternalFormat.CompressedRgbaS3tcDxt3Ext;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Dxt5:
+                case BitmapDataBlock.FormatEnum.Dxt5:
                     pixelFormat = PixelInternalFormat.CompressedRgbaS3tcDxt5Ext;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.G8b8:
+                case BitmapDataBlock.FormatEnum.G8b8:
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.P8:
+                case BitmapDataBlock.FormatEnum.P8:
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.P8Bump:
+                case BitmapDataBlock.FormatEnum.P8bump:
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.R5g6b5:
+                case BitmapDataBlock.FormatEnum.R5g6b5:
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Rgbfp16:
+                case BitmapDataBlock.FormatEnum.Rgbfp16:
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Rgbfp32:
+                case BitmapDataBlock.FormatEnum.Rgbfp32:
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.V8u8:
+                case BitmapDataBlock.FormatEnum.V8u8:
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.X8r8g8b8:
+                case BitmapDataBlock.FormatEnum.X8r8g8b8:
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
-                case BitmapDataBlockBase.FormatDeterminesHowPixelsAreRepresentedInternally.Y8:
+                case BitmapDataBlock.FormatEnum.Y8:
                     pixelFormat = PixelInternalFormat.Luminance8;
                     break;
                 default:

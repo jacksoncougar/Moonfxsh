@@ -11,7 +11,7 @@ namespace Moonfish.Graphics
 
         public Matrix4 ParentWorldMatrix
         {
-            get { return _nodes.GetWorldMatrix(marker.nodeIndex); }
+            get { return _nodes.GetWorldMatrix(marker.NodeIndex); }
         }
 
         public Matrix4 WorldMatrix
@@ -21,7 +21,7 @@ namespace Moonfish.Graphics
                 var translationMatrix = Matrix4.CreateTranslation(marker.Translation);
                 var rotationMatrix = Matrix4.CreateFromQuaternion(marker.Rotation);
                 var scaleMatrix = Matrix4.CreateScale(marker.Scale);
-                return scaleMatrix*rotationMatrix*translationMatrix*_nodes.GetWorldMatrix(marker.nodeIndex);
+                return scaleMatrix*rotationMatrix*translationMatrix*_nodes.GetWorldMatrix(marker.NodeIndex);
             }
         }
 
@@ -43,7 +43,7 @@ namespace Moonfish.Graphics
             var translation = matrix.ExtractTranslation();
             var rotation = matrix.ExtractRotation();
             marker.Translation = translation;
-            marker.rotation = rotation;
+            marker.Rotation = rotation;
             if (MarkerUpdated != null) MarkerUpdated(this, null);
             if (MarkerUpdatedCallback != null) MarkerUpdatedCallback(WorldMatrix);
         }

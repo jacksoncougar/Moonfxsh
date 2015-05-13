@@ -23,37 +23,36 @@ namespace Moonfish
         [STAThread]
         private static void Main()
         {
-            //var converter = new GuerillaCs(Local.GuerillaPath);
-            //var tags = Guerilla.Guerilla.h2Tags
-            //    .Select(x => new MoonfishTagGroup(x)).ToList();
-            //foreach (var tag in tags.Where(x => x.Class == TagClass.Scnr))
-            //{
-            //    var blockClass = new GuerillaBlockClass(tag, tags);
-            //    blockClass.GenerateCSharpCode();
-            //}
+            var tags = Guerilla.Guerilla.h2Tags
+                .Select(x => new MoonfishTagGroup(x)).ToList();
+            foreach (var tag in tags)
+            {
+                var blockClass = new GuerillaBlockClass(tag, tags);
+                blockClass.GenerateCSharpCode();
+            }
 
             var map = new CacheStream(@"C:\Users\stem\Documents\modding\headlong.map");
 
-            var test = new Guerilla.Tags.Experimental.ScenarioBlock();
+            //var test = new Guerilla.Tags.Experimental.ScenarioBlock();
 
-            map.Seek(map.Index.First(x => x.Class == TagClass.Scnr).Identifier);
+            //map.Seek(map.Index.First(x => x.Class == TagClass.Scnr).Identifier);
 
-            StaticBenchmark.Begin("test.Read()");
-            var binaryReader = new BinaryReader(map);
-            test.Read(binaryReader);
-            StaticBenchmark.End();
+            //StaticBenchmark.Begin("test.Read()");
+            //var binaryReader = new BinaryReader(map);
+            //test.Read(binaryReader);
+            //StaticBenchmark.End();
 
-            var memoryStream = new MemoryStream();
-            binaryReader = new BinaryReader(memoryStream, Encoding.Default, true);
-            StaticBenchmark.Begin("test.Write()");
-            for (int i = 0; i < 3000; ++i)
-            {
-                memoryStream.Position = 0;
-                memoryStream.Write(test);
-                memoryStream.Position = 0;
-                test.Read(binaryReader);
-            }
-            StaticBenchmark.End();
+            //var memoryStream = new MemoryStream();
+            //binaryReader = new BinaryReader(memoryStream, Encoding.Default, true);
+            //StaticBenchmark.Begin("test.Write()");
+            //for (int i = 0; i < 3000; ++i)
+            //{
+            //    memoryStream.Position = 0;
+            //    memoryStream.Write(test);
+            //    memoryStream.Position = 0;
+            //    test.Read(binaryReader);
+            //}
+            //StaticBenchmark.End();
             var stop = 0;
             //map.Seek(map.Index.ScenarioIdent);
 

@@ -31,13 +31,13 @@ namespace Moonfish.Graphics
         {
             this.shader = shader;
             //  Load bitmap classes and transfer data into glTextures
-            Textures = new List<Texture>(shader.postprocessDefinition[0].bitmaps.Length);
-            foreach (var item in shader.postprocessDefinition[0].bitmaps)
+            Textures = new List<Texture>(shader.PostprocessDefinition[0].Bitmaps.Length);
+            foreach (var item in shader.PostprocessDefinition[0].Bitmaps)
             {
                 var texture = new Texture();
-                if (!TagIdent.IsNull(item.bitmapGroup))
+                if (!TagIdent.IsNull(item.BitmapGroup))
                 {
-                    var bitmapBlock = (BitmapBlock) map.Deserialize(item.bitmapGroup);
+                    var bitmapBlock = (BitmapBlock) map.Deserialize(item.BitmapGroup);
                     texture.Load(bitmapBlock, map);
                 }
                 Textures.Add(texture);
@@ -45,16 +45,16 @@ namespace Moonfish.Graphics
 
             //  Load shader template class and load shader passes
 
-            var shaderTemplateIdent = (TagIdent) shader.postprocessDefinition[0].shaderTemplateIndex;
-            this.shaderTemplate = map.Deserialize(shaderTemplateIdent) as ShaderTemplateBlock;
+            var shaderTemplateIdent = (TagIdent) shader.PostprocessDefinition[0].ShaderTemplateIndex;
+            this.shaderTemplate = (ShaderTemplateBlock) map.Deserialize(shaderTemplateIdent);
 
-            this.shaderPasses = new ShaderPassBlock[shaderTemplate.postprocessDefinition[0].passes.Length];
-            this.shaderPassPaths = new string[shaderTemplate.postprocessDefinition[0].passes.Length];
+            this.shaderPasses = new ShaderPassBlock[shaderTemplate.PostprocessDefinition[0].Passes.Length];
+            this.shaderPassPaths = new string[shaderTemplate.PostprocessDefinition[0].Passes.Length];
             for (int i = 0; i < shaderPasses.Length; ++i)
             {
-                var item = shaderTemplate.postprocessDefinition[0].passes[i];
-                shaderPasses[i] = map.Deserialize(item.pass.Ident) as ShaderPassBlock;
-                shaderPassPaths[i] = item.pass.ToString();
+                var item = shaderTemplate.PostprocessDefinition[0].Passes[i];
+                shaderPasses[i] = map.Deserialize(item.Pass.Ident) as ShaderPassBlock;
+                shaderPassPaths[i] = item.Pass.ToString();
             }
         }
 
@@ -68,31 +68,31 @@ namespace Moonfish.Graphics
             ActiveShaderPassIndex = index;
             if (ActiveShaderPassIndex < 0) return;
 
-            var template = shaderTemplate.postprocessDefinition[0];
-            var activePass = shaderTemplate.postprocessDefinition[0].passes[ActiveShaderPassIndex];
-            var implementations = template.implementations.ToList()
-                .GetRange(activePass.implementations.Index, activePass.implementations.Length);
-            var remappings = template.remappings.ToList();
+            var template = shaderTemplate.PostprocessDefinition[0];
+            var activePass = shaderTemplate.PostprocessDefinition[0].Passes[ActiveShaderPassIndex];
+            var implementations = template.Implementations.ToList()
+                .GetRange(activePass.Implementations.Index, activePass.Implementations.Length);
+            var remappings = template.Remappings.ToList();
             for (int implementationIndex = 0; implementationIndex < implementations.Count; ++implementationIndex)
             {
-                var shaderPass = shaderPasses[ActiveShaderPassIndex].postprocessDefinition[0];
-                var shaderPassImplementation = shaderPass.implementations[implementationIndex];
-                for (int i = 0; i < shaderPassImplementation.textures.Length; ++i)
+                var shaderPass = shaderPasses[ActiveShaderPassIndex].PostprocessDefinition[0];
+                var shaderPassImplementation = shaderPass.Implementations[implementationIndex];
+                for (int i = 0; i < shaderPassImplementation.Textures.Length; ++i)
                 {
-                    var texture = shaderPass.textures[shaderPassImplementation.textures.Index + i];
-                    var bitmap = texture.bitmapParameterIndex;
+                    var texture = shaderPass.Textures[shaderPassImplementation.Textures.Index + i];
+                    var bitmap = texture.BitmapParameterIndex;
                     if (bitmap == byte.MaxValue) continue;
 
-                    var textureStage = texture.textureStageIndex;
+                    var texturestage = texture.TextureStageIndex;
 
                     OpenGL.ReportError();
-                    GL.ActiveTexture(TextureUnit.Texture1 + textureStage);
+                    GL.ActiveTexture(TextureUnit.Texture1 + texturestage);
                     OpenGL.ReportError();
                     var bitmapString =
-                        shader.postprocessDefinition[0].bitmaps[
-                            remappings[implementations[implementationIndex].bitmaps.Index + bitmap].sourceIndex]
-                            .bitmapGroup.ToString();
-                    Textures[remappings[implementations[implementationIndex].bitmaps.Index + bitmap].sourceIndex]
+                        shader.PostprocessDefinition[0].Bitmaps[
+                            remappings[implementations[implementationIndex].Bitmaps.Index + bitmap].SourceIndex]
+                            .BitmapGroup.ToString();
+                    Textures[remappings[implementations[implementationIndex].Bitmaps.Index + bitmap].SourceIndex]
                         .Bind();
                     OpenGL.ReportError();
                 }

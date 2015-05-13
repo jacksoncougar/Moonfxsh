@@ -29,25 +29,24 @@ namespace Moonfish.Tags
             var resource =
                 resourceStream.Resources.SingleOrDefault(
                     x =>
-                        x.primaryLocator == offset &&
-                        x.type != GlobalGeometryBlockResourceBlockBase.Type.VertexBuffer);
+                        x.PrimaryLocator == offset &&
+                        x.Type != GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer);
 
             if (resource == null)
             {
                 return new BlamPointer(0, 0, elementSize);
             }
-            if (resource.type == GlobalGeometryBlockResourceBlockBase.Type.TagData)
+            if (resource.Type == GlobalGeometryBlockResourceBlock.TypeEnum.TagData)
             {
-                var count = resource.resourceDataSize;
-                var address = resource.resourceDataOffset + resourceStream.HeaderSize;
+                var count = resource.ResourceDataSize;
+                var address = resource.ResourceDataOffset + resourceStream.HeaderSize;
                 var size = 1;
                 return new BlamPointer(count, address, elementSize);
             }
             else
             {
-                var count = resource.resourceDataSize / resource.secondaryLocator;
-                var address = resource.resourceDataOffset + resourceStream.HeaderSize;
-                var size = resource.secondaryLocator;
+                var count = resource.ResourceDataSize / resource.SecondaryLocator;
+                var address = resource.ResourceDataOffset + resourceStream.HeaderSize;
                 return new BlamPointer(count, address, elementSize);
             }
         }

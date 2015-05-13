@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Moonfish.Graphics;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
@@ -36,7 +37,7 @@ namespace Moonfish.Guerilla.Tags
     {
         TagReference IH2ObjectPalette.ObjectReference
         {
-            get { return this.name; }
+            get { return Name; }
         }
     }
 
@@ -44,7 +45,7 @@ namespace Moonfish.Guerilla.Tags
     {
         TagReference IH2ObjectPalette.ObjectReference
         {
-            get { return this.name; }
+            get { return Name; }
         }
     }
 
@@ -52,7 +53,7 @@ namespace Moonfish.Guerilla.Tags
     {
         TagReference IH2ObjectPalette.ObjectReference
         {
-            get { return this.name; }
+            get { return Name; }
         }
     }
 
@@ -60,7 +61,7 @@ namespace Moonfish.Guerilla.Tags
     {
         TagReference IH2ObjectPalette.ObjectReference
         {
-            get { return this.name; }
+            get { return Name; }
         }
     }
 
@@ -68,7 +69,7 @@ namespace Moonfish.Guerilla.Tags
     {
         TagReference IH2ObjectPalette.ObjectReference
         {
-            get { return this.name; }
+            get { return Name; }
         }
     }
 
@@ -93,17 +94,17 @@ namespace Moonfish.Guerilla.Tags
 
         ShortBlockIndex1 IH2ObjectInstance.NameIndex
         {
-            get { return this.name; }
+            get { return Name; }
         }
 
         ShortBlockIndex1 IH2ObjectInstance.PaletteIndex
         {
-            get { return this.type; }
+            get { return Type; }
         }
 
         ScenarioObjectDatumStructBlock IH2ObjectInstance.ObjectDatum
         {
-            get { return this.objectData; }
+            get { return ObjectData; }
         }
 
         Matrix4 IH2ObjectInstance.WorldMatrix
@@ -111,13 +112,13 @@ namespace Moonfish.Guerilla.Tags
             get
             {
                 var worldMatrix = Matrix4.Identity;
-                var translationMatrix = Matrix4.CreateTranslation(objectData.position);
-                var rotationXMatrix = Matrix4.CreateRotationX(this.objectData.rotation.Z);
-                var rotationYMatrix = Matrix4.CreateRotationY(-this.objectData.rotation.Y);
-                var rotationZMatrix = Matrix4.CreateRotationZ(this.objectData.rotation.X);
-                var scaleMatrix = Matrix4.CreateScale(this.objectData.scale == 0 ? 1 : this.objectData.scale);
+                var translationMatrix = Matrix4.CreateTranslation(ObjectData.Position);
+                var rotationXMatrix = Matrix4.CreateRotationX(ObjectData.Rotation.Z);
+                var rotationYMatrix = Matrix4.CreateRotationY(-ObjectData.Rotation.Y);
+                var rotationZMatrix = Matrix4.CreateRotationZ(ObjectData.Rotation.X);
+                var scaleMatrix = Matrix4.CreateScale(ObjectData.Scale.NearlyEqual(0) ? 1 : ObjectData.Scale);
                 return
-                    worldMatrix *= rotationZMatrix*rotationYMatrix*rotationXMatrix*translationMatrix*scaleMatrix;
+                    worldMatrix*rotationZMatrix*rotationYMatrix*rotationXMatrix*translationMatrix*scaleMatrix;
             }
         }
     }
@@ -126,17 +127,17 @@ namespace Moonfish.Guerilla.Tags
     {
         ShortBlockIndex1 IH2ObjectInstance.NameIndex
         {
-            get { return this.name; }
+            get { return Name; }
         }
 
         ShortBlockIndex1 IH2ObjectInstance.PaletteIndex
         {
-            get { return this.type; }
+            get { return Type; }
         }
 
         ScenarioObjectDatumStructBlock IH2ObjectInstance.ObjectDatum
         {
-            get { return this.objectData; }
+            get { return ObjectData; }
         }
 
         Matrix4 IH2ObjectInstance.WorldMatrix
@@ -144,13 +145,13 @@ namespace Moonfish.Guerilla.Tags
             get
             {
                 var worldMatrix = Matrix4.Identity;
-                var translationMatrix = Matrix4.CreateTranslation(objectData.position);
-                var rotationXMatrix = Matrix4.CreateRotationX(this.objectData.rotation.Z);
-                var rotationYMatrix = Matrix4.CreateRotationY(-this.objectData.rotation.Y);
-                var rotationZMatrix = Matrix4.CreateRotationZ(this.objectData.rotation.X);
-                var scaleMatrix = Matrix4.CreateScale(this.objectData.scale == 0 ? 1 : this.objectData.scale);
+                var translationMatrix = Matrix4.CreateTranslation(ObjectData.Position);
+                var rotationXMatrix = Matrix4.CreateRotationX(ObjectData.Rotation.Z);
+                var rotationYMatrix = Matrix4.CreateRotationY(-ObjectData.Rotation.Y);
+                var rotationZMatrix = Matrix4.CreateRotationZ(ObjectData.Rotation.X);
+                var scaleMatrix = Matrix4.CreateScale(ObjectData.Scale.NearlyEqual(0) ? 1 : ObjectData.Scale);
                 return
-                    worldMatrix *= rotationZMatrix*rotationYMatrix*rotationXMatrix*translationMatrix*scaleMatrix;
+                    worldMatrix * rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
             }
         }
     }
@@ -159,17 +160,17 @@ namespace Moonfish.Guerilla.Tags
     {
         ShortBlockIndex1 IH2ObjectInstance.NameIndex
         {
-            get { return this.name; }
+            get { return Name; }
         }
 
         ShortBlockIndex1 IH2ObjectInstance.PaletteIndex
         {
-            get { return this.type; }
+            get { return Type; }
         }
 
         ScenarioObjectDatumStructBlock IH2ObjectInstance.ObjectDatum
         {
-            get { return this.objectData; }
+            get { return ObjectData; }
         }
 
         Matrix4 IH2ObjectInstance.WorldMatrix
@@ -177,13 +178,13 @@ namespace Moonfish.Guerilla.Tags
             get
             {
                 var worldMatrix = Matrix4.Identity;
-                var translationMatrix = Matrix4.CreateTranslation(objectData.position);
-                var rotationXMatrix = Matrix4.CreateRotationX(this.objectData.rotation.Z);
-                var rotationYMatrix = Matrix4.CreateRotationY(-this.objectData.rotation.Y);
-                var rotationZMatrix = Matrix4.CreateRotationZ(this.objectData.rotation.X);
-                var scaleMatrix = Matrix4.CreateScale(this.objectData.scale == 0 ? 1 : this.objectData.scale);
+                var translationMatrix = Matrix4.CreateTranslation(ObjectData.Position);
+                var rotationXMatrix = Matrix4.CreateRotationX(ObjectData.Rotation.Z);
+                var rotationYMatrix = Matrix4.CreateRotationY(-ObjectData.Rotation.Y);
+                var rotationZMatrix = Matrix4.CreateRotationZ(ObjectData.Rotation.X);
+                var scaleMatrix = Matrix4.CreateScale(ObjectData.Scale.NearlyEqual(0) ? 1 : ObjectData.Scale);
                 return
-                    worldMatrix *= rotationZMatrix*rotationYMatrix*rotationXMatrix*translationMatrix*scaleMatrix;
+                    worldMatrix * rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
             }
         }
     }
@@ -192,17 +193,17 @@ namespace Moonfish.Guerilla.Tags
     {
         ShortBlockIndex1 IH2ObjectInstance.NameIndex
         {
-            get { return this.name; }
+            get { return Name; }
         }
 
         ShortBlockIndex1 IH2ObjectInstance.PaletteIndex
         {
-            get { return this.type; }
+            get { return Type; }
         }
 
         ScenarioObjectDatumStructBlock IH2ObjectInstance.ObjectDatum
         {
-            get { return this.objectData; }
+            get { return ObjectData; }
         }
 
         Matrix4 IH2ObjectInstance.WorldMatrix
@@ -210,13 +211,13 @@ namespace Moonfish.Guerilla.Tags
             get
             {
                 var worldMatrix = Matrix4.Identity;
-                var translationMatrix = Matrix4.CreateTranslation(objectData.position);
-                var rotationXMatrix = Matrix4.CreateRotationX(this.objectData.rotation.Z);
-                var rotationYMatrix = Matrix4.CreateRotationY(-this.objectData.rotation.Y);
-                var rotationZMatrix = Matrix4.CreateRotationZ(this.objectData.rotation.X);
-                var scaleMatrix = Matrix4.CreateScale(this.objectData.scale == 0 ? 1 : this.objectData.scale);
+                var translationMatrix = Matrix4.CreateTranslation(ObjectData.Position);
+                var rotationXMatrix = Matrix4.CreateRotationX(ObjectData.Rotation.Z);
+                var rotationYMatrix = Matrix4.CreateRotationY(-ObjectData.Rotation.Y);
+                var rotationZMatrix = Matrix4.CreateRotationZ(ObjectData.Rotation.X);
+                var scaleMatrix = Matrix4.CreateScale(ObjectData.Scale.NearlyEqual(0) ? 1 : ObjectData.Scale);
                 return
-                    worldMatrix *= rotationZMatrix*rotationYMatrix*rotationXMatrix*translationMatrix*scaleMatrix;
+                    worldMatrix * rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
             }
         }
     }
@@ -225,17 +226,17 @@ namespace Moonfish.Guerilla.Tags
     {
         ShortBlockIndex1 IH2ObjectInstance.NameIndex
         {
-            get { return base.name; }
+            get { return Name; }
         }
 
         ShortBlockIndex1 IH2ObjectInstance.PaletteIndex
         {
-            get { return this.type; }
+            get { return Type; }
         }
 
         ScenarioObjectDatumStructBlock IH2ObjectInstance.ObjectDatum
         {
-            get { return this.objectData; }
+            get { return ObjectData; }
         }
 
         Matrix4 IH2ObjectInstance.WorldMatrix
@@ -243,13 +244,13 @@ namespace Moonfish.Guerilla.Tags
             get
             {
                 var worldMatrix = Matrix4.Identity;
-                var translationMatrix = Matrix4.CreateTranslation(objectData.position);
-                var rotationXMatrix = Matrix4.CreateRotationX(this.objectData.rotation.Z);
-                var rotationYMatrix = Matrix4.CreateRotationY(-this.objectData.rotation.Y);
-                var rotationZMatrix = Matrix4.CreateRotationZ(this.objectData.rotation.X);
-                var scaleMatrix = Matrix4.CreateScale(this.objectData.scale == 0 ? 1 : this.objectData.scale);
+                var translationMatrix = Matrix4.CreateTranslation(ObjectData.Position);
+                var rotationXMatrix = Matrix4.CreateRotationX(ObjectData.Rotation.Z);
+                var rotationYMatrix = Matrix4.CreateRotationY(-ObjectData.Rotation.Y);
+                var rotationZMatrix = Matrix4.CreateRotationZ(ObjectData.Rotation.X);
+                var scaleMatrix = Matrix4.CreateScale(ObjectData.Scale.NearlyEqual(0) ? 1 : ObjectData.Scale);
                 return
-                    worldMatrix *= rotationZMatrix*rotationYMatrix*rotationXMatrix*translationMatrix*scaleMatrix;
+                    worldMatrix * rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
             }
         }
     };

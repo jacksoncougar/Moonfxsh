@@ -29,20 +29,29 @@ namespace Moonfish.Guerilla.Reflection
         {
             using (var code = new CSharpCodeProvider())
             {
-                var validToken = "";
+                token = code.CreateEscapedIdentifier(token);
+                var validToken = token;
                 var salt = 0;
                 do
                 {
-                    if (Tokens.Contains(token))
-                    {
-                        validToken = string.Format("{0}{1}", token, salt);
-                    }
-                    else validToken = code.CreateValidIdentifier(token);
+                    validToken = Tokens.Contains(validToken)
+                        ? string.Format("{0}{1}", token, salt)
+                        : token;
                     salt++;
-                } while (Tokens.Contains(validToken));
+                } while (!string.IsNullOrWhiteSpace(validToken) && Tokens.Contains(validToken));
                 Tokens.Add(validToken);
                 return validToken;
             }
+        }
+
+        internal bool Contains(string token)
+        {
+            return Tokens.Contains(token);
+        }
+
+        internal void Add(string token)
+        {
+            Tokens.Add(token);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
-using Moonfish.Tags.BlamExtension;
+
 using Point = System.Drawing.Point;
 
 namespace Moonfish.Graphics
@@ -57,15 +57,17 @@ namespace Moonfish.Graphics
         private void SaveMarkerData()
         {
             var selectedItem = Scene.ObjectManager[SelectedTag].FirstOrDefault();
+            var renderModel = selectedItem.Model.RenderModel.Get<RenderModelBlock>();
+
             if (selectedItem == null) return;
 
             var markerEnumerator =
-                selectedItem.Model.RenderModel.markerGroups.SelectMany(x => x.Markers).GetEnumerator();
+                renderModel.MarkerGroups.SelectMany(x => x.Markers).GetEnumerator();
 
             BinaryReader binaryReader = new BinaryReader(Map);
             BinaryWriter binaryWriter = new BinaryWriter(Map);
 
-            Map.Seek(selectedItem.Model.renderModel.Ident);
+            Map.Seek(selectedItem.Model.RenderModel.Ident);
             Map.Seek(88, SeekOrigin.Current);
             var markerGroups = binaryReader.ReadBlamPointer(12);
             foreach (var group in markerGroups)
@@ -77,9 +79,9 @@ namespace Moonfish.Graphics
                     if (!markerEnumerator.MoveNext()) return;
                     var data = markerEnumerator.Current;
                     Map.Seek(marker + 4, SeekOrigin.Begin);
-                    binaryWriter.Write(data.translation);
-                    binaryWriter.Write(data.rotation);
-                    binaryWriter.Write(data.scale);
+                    binaryWriter.Write(data.Translation);
+                    binaryWriter.Write(data.Rotation);
+                    binaryWriter.Write(data.Scale);
                 }
             }
         }
@@ -228,21 +230,22 @@ namespace Moonfish.Graphics
         private void LoadModel(TagIdent ident)
         {
             var model = (ModelBlock) (Map.Deserialize(ident));
+            var renderModel = model.RenderModel.Get<RenderModelBlock>();
 
             var scenarioObject = new ScenarioObject(model);
             Scene.ObjectManager.Add(ident, scenarioObject);
 
-            Scene.ProgramManager.LoadMaterials(model.RenderModel.materials.Select(x => x.shader.Ident), Map);
+            Scene.ProgramManager.LoadMaterials(renderModel.Materials.Select(x => x.Shader.Ident), Map);
             Scene.CollisionManager.LoadScenarioObjectCollision(Scene.ObjectManager[ident].First());
 
             var @object = Scene.ObjectManager[ident].First();
 
-            propertyGrid1.SelectedObject = @object.Model.RenderModel.markerGroups;
+            propertyGrid1.SelectedObject = renderModel.MarkerGroups;
             glControl1.Controls.Clear();
-            foreach (var markerGroup in @object.Model.RenderModel.markerGroups)
+            foreach (var markerGroup in renderModel.MarkerGroups)
             {
-                var name = markerGroup.name.ToString();
-                foreach (var marker in markerGroup.markers)
+                var name = markerGroup.Name.ToString();
+                foreach (var marker in markerGroup.Markers)
                 {
                     glControl1.Controls.Add(
                         new FloatingLabel

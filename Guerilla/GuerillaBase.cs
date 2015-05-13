@@ -364,17 +364,16 @@ namespace Moonfish.Guerilla
             return memberName.ToString();
         }
 
+        private static StringBuilder _str = new StringBuilder(0x1000);
+
         public static string ReadString(BinaryReader reader, int address)
         {
-            var str = "";
-
+            _str.Clear();
             // Check if address is smaller than the base address of the executable.
             if (address < BaseAddress)
             {
                 // The string is stored in the h2 language library.
-                var sb = new StringBuilder(0x1000);
-                LoadString(H2LangLib, (uint) address, sb, sb.Capacity);
-                str = sb.ToString();
+                LoadString(H2LangLib, (uint)address, _str, _str.Capacity);
             }
             else if (address > BaseAddress && (address - BaseAddress) < (int) reader.BaseStream.Length)
             {
@@ -384,11 +383,11 @@ namespace Moonfish.Guerilla
                 // Read the string from the executable.
                 char b;
                 while ((b = reader.ReadChar()) != '\0')
-                    str += b;
+                    _str.Append(b);
             }
 
             // Return the string buffer.
-            return str;
+            return _str.ToString();
         }
     }
 }

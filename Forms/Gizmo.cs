@@ -66,18 +66,19 @@ namespace Moonfish.Graphics
 
             Open(Path.Combine(Local.MapsDirectory, "headlong.map"));
 
-            var identifier = Map.Index.Select(TagClass.Hlmt, "banshee").First().Identifier;
+            var identifier = Map.Index.Select((TagClass) "hlmt", "banshee").First().Identifier;
 
             var @object = (ModelBlock) Map.Deserialize(identifier);
             var i = 0;
-            foreach (IResourceBlock section in @object.RenderModel.sections)
+            foreach (IResourceBlock section in @object.RenderModel.Get<RenderModelBlock>().Sections)
             {
                 section.LoadRawResources();
                 ++i;
             }
             var scenarioObject = new ScenarioObject(@object);
             Scene.ObjectManager.Add(identifier, scenarioObject);
-            Scene.ProgramManager.LoadMaterials(@object.RenderModel.materials.Select(x => x.shader.Ident), Map);
+            Scene.ProgramManager.LoadMaterials(
+                @object.RenderModel.Get<RenderModelBlock>().Materials.Select(x => x.Shader.Ident), Map);
             Scene.ProgramManager.Materials.First().Value.UsePass(0);
             Scene.CollisionManager.LoadScenarioObjectCollision(
                 Scene.ObjectManager[identifier].First());

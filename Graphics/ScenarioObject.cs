@@ -84,29 +84,30 @@ namespace Moonfish.Graphics
         {
             Model = model;
 
-            if (model.RenderModel == null) return;
+            var renderModel = (RenderModelBlock) model.RenderModel.Get();
+            if (renderModel == null) return;
 
             CollisionObject = new CollisionObject
             {
                 UserObject = this,
                 CollisionFlags = CollisionFlags.StaticObject,
-                CollisionShape = new BoxShape(Model.RenderModel.compressionInfo[0].ToHalfExtents())
+                CollisionShape = new BoxShape(renderModel.CompressionInfo[0].ToHalfExtents())
             };
 
             _collisionSpaceMatrix =
                 Matrix4.CreateTranslation(
-                    Model.RenderModel.compressionInfo[0].ToObjectMatrix().ExtractTranslation());
+                    renderModel.CompressionInfo[0].ToObjectMatrix().ExtractTranslation());
             _worldMatrix = Matrix4.Identity;
 
-            foreach (var section in model.RenderModel.sections)
+            foreach (var section in renderModel.Sections)
             {
-                var mesh = new Mesh(section.sectionData[0].section, model.RenderModel.compressionInfo[0])
+                var mesh = new Mesh(section.SectionData[0].Section, renderModel.CompressionInfo[0])
                 {
                     SectionBlock = section
                 };
                 SectionBuffers.Add(mesh);
             }
-            Nodes = new List<RenderModelNodeBlock>(model.RenderModel.nodes);
+            Nodes = new List<RenderModelNodeBlock>(renderModel.Nodes);
         }
 
         public StringIdent ActivePermuation { get; set; }
@@ -119,15 +120,16 @@ namespace Moonfish.Graphics
                     foreach (var renderBatch in RenderBatches()) yield return renderBatch;
                 if (Flags.HasFlag(RenderFlags.RenderMarkers))
                 {
-                    var markersEnumerator = Model.RenderModel.markerGroups.SelectMany(x => x.markers).ToList();
+                    var renderModel = (RenderModelBlock)Model.RenderModel.Get();
+                    var markersEnumerator = renderModel.MarkerGroups.SelectMany(x => x.Markers).ToList();
                     var elementIndices =
                         Enumerable.Range(0, markersEnumerator.Count).Select(Convert.ToUInt16).ToArray();
 
                     var positionData = new List<Vector3>();
                     foreach (var marker in markersEnumerator)
                     {
-                        var nodeIndex = marker.nodeIndex;
-                        var translation = marker.translation;
+                        var nodeIndex = marker.NodeIndex;
+                        var translation = marker.Translation;
                         var transformedPosition = Vector3.Transform(translation, Nodes.GetWorldMatrix(nodeIndex));
 
                         positionData.Add(transformedPosition);
@@ -164,8 +166,8 @@ namespace Moonfish.Graphics
 
                     foreach (var node in Nodes)
                     {
-                        var transformedPosition = Vector3.Transform(node.defaultTranslation,
-                            Nodes.GetWorldMatrix(node.parentNode));
+                        var transformedPosition = Vector3.Transform(node.DefaultTranslation,
+                            Nodes.GetWorldMatrix(node.ParentNode));
 
                         positionData.Add(transformedPosition);
                     }
@@ -202,7 +204,7 @@ namespace Moonfish.Graphics
 
         public IEnumerable<RenderModelMarkerBlock> Markers
         {
-            get { return Model.RenderModel.markerGroups.SelectMany(x => x.Markers); }
+            get { return ((RenderModelBlock)Model.RenderModel.Get()).MarkerGroups.SelectMany(x => x.Markers); }
         }
 
         public ModelBlock Model { get; set; }
@@ -272,15 +274,17 @@ namespace Moonfish.Graphics
 
         private Matrix4 CalculateWorldMatrix(RenderModelMarkerBlock markerBlock)
         {
-            if (!Model.RenderModel.markerGroups.SelectMany(x => x.Markers).Contains(markerBlock))
+            if (
+                !((RenderModelBlock) Model.RenderModel.Get()).MarkerGroups.SelectMany(x => x.Markers)
+                    .Contains(markerBlock))
                 throw new ArgumentOutOfRangeException();
 
-            return markerBlock.WorldMatrix*Nodes.GetWorldMatrix(markerBlock.nodeIndex);
+            return markerBlock.WorldMatrix*Nodes.GetWorldMatrix(markerBlock.NodeIndex);
         }
 
         private Matrix4 CalculateWorldMatrix(RenderModelNodeBlock nodeBlock)
         {
-            if (!Model.RenderModel.nodes.Contains(nodeBlock))
+            if (!((RenderModelBlock)Model.RenderModel.Get()).Nodes.Contains(nodeBlock))
                 throw new ArgumentOutOfRangeException();
 
             return Nodes.GetWorldMatrix(nodeBlock);
@@ -288,30 +292,31 @@ namespace Moonfish.Graphics
 
         private IEnumerable<RenderBatch> RenderBatches()
         {
-            foreach (var region in Model.RenderModel.regions)
+            var renderModelBlock = ((RenderModelBlock)Model.RenderModel.Get());
+            foreach (var region in renderModelBlock.Regions)
             {
-                var sectionIndex = region.permutations[0].l6SectionIndexHollywood;
+                var sectionIndex = region.Permutations[0].L6SectionIndex;
                 var mesh = SectionBuffers[sectionIndex];
 
                 foreach (var part in mesh.Parts)
                 {
-                    var extents = Model.RenderModel.compressionInfo[0].ToObjectMatrix();
-                    var texcoordRange = Model.RenderModel.compressionInfo[0].ExtractTexcoordScaling();
+                    var extents = renderModelBlock.CompressionInfo[0].ToObjectMatrix();
+                    var texcoordRange = renderModelBlock.CompressionInfo[0].ExtractTexcoordScaling();
 
                     var batch = new RenderBatch
                     {
-                        ElementStartIndex = part.stripStartIndex*sizeof (ushort),
-                        ElementLength = part.stripLength
+                        ElementStartIndex = part.StripStartIndex*sizeof (ushort),
+                        ElementLength = part.StripLength
                     };
 
                     batch.AssignUniform("TexcoordRangeUniform", texcoordRange);
                     batch.AssignUniform("WorldMatrixUniform", WorldMatrix);
-                    for (int i = 0; i < mesh.SectionBlock.sectionData[0].nodeMap.Length; ++i)
+                    for (int i = 0; i < mesh.SectionBlock.SectionData[0].NodeMap.Length; ++i)
                     {
                         var inverseBindPoseMatrix =
-                            Nodes.GetInverseBindPoseTransfrom(mesh.SectionBlock.sectionData[0].nodeMap[i].nodeIndex);
+                            Nodes.GetInverseBindPoseTransfrom(mesh.SectionBlock.SectionData[0].NodeMap[i].NodeIndex);
                         var poseMatrix =
-                            Nodes.GetPoseTransfrom(mesh.SectionBlock.sectionData[0].nodeMap[i].nodeIndex);
+                            Nodes.GetPoseTransfrom(mesh.SectionBlock.SectionData[0].NodeMap[i].NodeIndex);
                         var final = inverseBindPoseMatrix*poseMatrix;
 
                         batch.AssignUniform(string.Format("BoneMatrices[{0}]", i), final);
@@ -319,7 +324,7 @@ namespace Moonfish.Graphics
 
                     batch.Shader = new ShaderReference(
                         ShaderReference.ReferenceType.Halo2,
-                        (int) Model.RenderModel.materials[part.material].shader.Ident);
+                        (int)renderModelBlock.Materials[part.Material].Shader.Ident);
                     batch.PrimitiveType = PrimitiveType.TriangleStrip;
                     batch.BatchObject = mesh.TriangleBatch;
                     batch.ChangeState = delegate() { GL.PointSize(10.0f); };

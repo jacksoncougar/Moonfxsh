@@ -20,5 +20,13 @@ namespace Moonfish.Tags
         {
             return string.Format("{0}, {1}", Class, Ident);
         }
+        public T Get<T>() where T : GuerillaBlock
+        {
+            return Halo2.GetReferenceObject(this);
+        }
+        public object Get()
+        {
+            return Get<GuerillaBlock>();
+        }
     }
 }

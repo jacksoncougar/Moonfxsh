@@ -15,7 +15,7 @@ namespace Moonfish.Guerilla.Preprocess
         {
             var field = new MoonfishTagField(MoonfishFieldType.FieldBlock, "Sounds");
             var soundTagReferenceField = new MoonfishTagField(MoonfishFieldType.FieldTagReference, "Sound*");
-            soundTagReferenceField.AssignDefinition(new MoonfishTagReferenceDefinition(TagClass.Snd));
+            soundTagReferenceField.AssignDefinition(new MoonfishTagReferenceDefinition((TagClass)"snd!"));
             field.AssignDefinition(new MoonfishTagDefinition("Moonfish Sound References Block",
                 new List<MoonfishTagField>
                 {

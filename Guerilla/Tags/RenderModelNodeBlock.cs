@@ -23,7 +23,7 @@ namespace Moonfish.Guerilla.Tags
         private void Initialize()
         {
             Mode = DisplayMode.Pose;
-            _pose = new Pose {rotation = defaultRotation, translation = defaultTranslation};
+            _pose = new Pose {rotation = DefaultRotation, translation = DefaultTranslation};
         }
 
         private Pose _pose;
@@ -36,8 +36,8 @@ namespace Moonfish.Guerilla.Tags
                 switch (Mode)
                 {
                     case DisplayMode.Rest:
-                        defaultTranslation = value.ExtractTranslation();
-                        defaultRotation = value.ExtractRotation();
+                        DefaultTranslation = value.ExtractTranslation();
+                        DefaultRotation = value.ExtractRotation();
                         break;
                     default:
                         _pose.translation = value.ExtractTranslation();
@@ -63,12 +63,12 @@ namespace Moonfish.Guerilla.Tags
 
         private Matrix4 CreateFromQuaternion(DisplayMode displayMode)
         {
-            return Matrix4.CreateFromQuaternion(displayMode == DisplayMode.Rest ? defaultRotation : _pose.rotation);
+            return Matrix4.CreateFromQuaternion(displayMode == DisplayMode.Rest ? DefaultRotation : _pose.rotation);
         }
 
         private Matrix4 CreateTranslation(DisplayMode displayMode)
         {
-            return Matrix4.CreateTranslation(displayMode == DisplayMode.Rest ? defaultTranslation : _pose.translation);
+            return Matrix4.CreateTranslation(displayMode == DisplayMode.Rest ? DefaultTranslation : _pose.translation);
         }
 
         private struct Pose

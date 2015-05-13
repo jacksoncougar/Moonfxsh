@@ -16,7 +16,7 @@ namespace Moonfish.Compiler
         {
             var rootDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 "Halo 2 Modding");
-            foreach (var tag in cache.Index.Where(x => x.Class == TagClass.Bitm))
+            foreach (var tag in cache.Index.Where(x => x.Class == (TagClass)"bitm"))
             {
                 var path = Path.Combine(rootDirectory, Path.ChangeExtension(tag.Path, tag.Class.ToTokenString()));
 

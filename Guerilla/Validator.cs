@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Moonfish.Cache;
 using Moonfish.Tags;
-using Moonfish.Tags.BlamExtension;
+
 
 namespace Moonfish.Guerilla
 {
@@ -84,7 +84,7 @@ namespace Moonfish.Guerilla
                         if (!(tag.Class == validateTag.Class)) continue;
 
                         var metaTableMemory = map.DefaultMemoryBlock;
-                        if (tag.Class == TagClass.Sbsp || tag.Class == TagClass.Ltmp)
+                        if (tag.Class == (TagClass)"sbsp" || tag.Class == (TagClass)"ltmp")
                         {
                             metaTableMemory =
                                 map.StructureMemoryBlocks[map.StructureMemoryBlockBindings[tag.Identifier]];
@@ -167,7 +167,7 @@ namespace Moonfish.Guerilla
         private void ProcessArrayFields(IList<MoonfishTagField> fields, ElementArray elementArray,
             MoonfishTagField field, ref int i, ref int offset)
         {
-            var name = field.Name;
+            var name = field.Strings;
             ++i; //move past field_type._field_array_start
             for (var index = 0; index < field.Count; ++index)
             {

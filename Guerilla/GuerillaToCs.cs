@@ -363,7 +363,7 @@ namespace Moonfish.Guerilla
                         StaticReflection.GetMemberName((LayoutAttribute layout) => layout.Size), size,
                         StaticReflection.GetMemberName((LayoutAttribute layout) => layout.Alignment), 1)
                 },
-                Name = ToTypeName(fields[0].Name),
+                Name = ToTypeName(fields[0].Strings),
                 AccessModifiers = AccessModifiers.Public,
                 BaseClass = new ClassInfo("GuerillaBlock"),
                 Properties =
@@ -420,7 +420,7 @@ namespace Moonfish.Guerilla
                                     "\"" + field.Definition.Class + "\"")
                             },
                             AccessModifiers = AccessModifiers.Internal,
-                            Value = field.Name,
+                            Value = field.Strings,
                             FieldTypeName = _valueTypeDictionary[field.Type].FullName
                         };
                         @class.Fields.Add(fieldInfo);
@@ -431,7 +431,7 @@ namespace Moonfish.Guerilla
                         fieldInfo = new FieldInfo
                         {
                             Value =
-                                IsValidFieldName(field.Name.ToUpper()) ? field.Name : field.Definition.DisplayName,
+                                IsValidFieldName(field.Strings.Name.ToUpper()) ? field.Strings : field.Definition.DisplayName,
                             AccessModifiers = AccessModifiers.Internal
                         };
 
@@ -451,8 +451,8 @@ namespace Moonfish.Guerilla
                         fieldInfo = new FieldInfo
                         {
                             Value =
-                                IsValidFieldName(field.Name.ToUpper())
-                                    ? field.Name
+                                IsValidFieldName(field.Strings.Name.ToUpper())
+                                    ? field.Strings
                                     : field.Definition.Definition.DisplayName,
                             AccessModifiers = AccessModifiers.Internal
                         };
@@ -471,7 +471,7 @@ namespace Moonfish.Guerilla
                     {
                         fieldInfo = new FieldInfo
                         {
-                            Value = field.Name,
+                            Value = field.Strings,
                             AccessModifiers = AccessModifiers.Internal,
                             FieldTypeName =
                                 ((MoonfishTagDataDefinition) field.Definition).DataElementSize == 1
@@ -502,7 +502,7 @@ namespace Moonfish.Guerilla
                     {
                         var enumInfo = new EnumInfo
                         {
-                            Value = ToTypeName(field.Name),
+                            Value = ToTypeName(field.Strings),
                             AccessModifiers = AccessModifiers.Internal
                         };
                         var enumDefinition = (MoonfishTagEnumDefinition) field.Definition;
@@ -534,7 +534,7 @@ namespace Moonfish.Guerilla
                         @class.EnumDefinitions.Add(enumInfo);
                         fieldInfo = new FieldInfo
                         {
-                            Value = field.Name,
+                            Value = field.Strings,
                             AccessModifiers = AccessModifiers.Internal,
                             FieldTypeName = ToTypeName(enumInfo.Value)
                         };
@@ -554,7 +554,7 @@ namespace Moonfish.Guerilla
                     {
                         fieldInfo = new FieldInfo
                         {
-                            Value = field.Name,
+                            Value = field.Strings,
                             AccessModifiers = AccessModifiers.Internal,
                             FieldTypeName = _valueTypeDictionary[field.Type].FullName
                         };
@@ -587,7 +587,7 @@ namespace Moonfish.Guerilla
 
                         fieldInfo = new FieldInfo
                         {
-                            Value = field.Name,
+                            Value = field.Strings,
                             AccessModifiers = AccessModifiers.Internal,
                             FieldTypeName = @class.ClassDefinitions.Last().Name,
                             ArraySize = field.Count,
@@ -607,7 +607,7 @@ namespace Moonfish.Guerilla
                     {
                         fieldInfo = new FieldInfo
                         {
-                            Value = field.Name,
+                            Value = field.Strings,
                             AccessModifiers = AccessModifiers.Internal,
                             FieldTypeName = typeof (Byte).FullName,
                             ArraySize = field.Count,
@@ -620,7 +620,7 @@ namespace Moonfish.Guerilla
                     {
                         fieldInfo = new FieldInfo
                         {
-                            Value = field.Name,
+                            Value = field.Strings,
                             AccessModifiers = AccessModifiers.Internal,
                             FieldTypeName = typeof (Byte).FullName,
                             ArraySize = field.Count,
@@ -639,7 +639,7 @@ namespace Moonfish.Guerilla
                     {
                         fieldInfo = new FieldInfo
                         {
-                            Value = field.Name,
+                            Value = field.Strings,
                             AccessModifiers = AccessModifiers.Internal,
                             FieldTypeName = _valueTypeDictionary[field.Type].AssemblyQualifiedName
                         };

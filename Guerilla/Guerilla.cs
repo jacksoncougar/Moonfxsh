@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Fasterflect;
 using Moonfish.Tags;
-using Moonfish.Tags.BlamExtension;
+
 
 namespace Moonfish.Guerilla
 {

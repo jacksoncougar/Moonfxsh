@@ -17,8 +17,8 @@ namespace Moonfish.Graphics
             if (!list.Contains(node)) throw new ArgumentOutOfRangeException();
 
             var worldMatrix = node.WorldMatrix;
-            if (node.parentNode < 0) return worldMatrix;
-            return worldMatrix*list.GetWorldMatrix(list[node.parentNode]);
+            if (node.ParentNode < 0) return worldMatrix;
+            return worldMatrix*list.GetWorldMatrix(list[node.ParentNode]);
         }
 
 
@@ -32,8 +32,8 @@ namespace Moonfish.Graphics
             if (!list.Contains(node)) throw new ArgumentOutOfRangeException();
 
             var worldMatrix = node.WorldMatrix;
-            if (node.parentNode < 0) return worldMatrix;
-            return worldMatrix*list.GetWorldMatrix(list[node.parentNode]);
+            if (node.ParentNode < 0) return worldMatrix;
+            return worldMatrix*list.GetWorldMatrix(list[node.ParentNode]);
         }
 
         public static Matrix4 GetBindPoseTransfrom(this IList<RenderModelNodeBlock> list, int index)
@@ -46,8 +46,8 @@ namespace Moonfish.Graphics
             if (!list.Contains(node)) throw new ArgumentOutOfRangeException();
 
             var inverseBindPoseTransfrom = node.CalculateWorldMatrix(RenderModelNodeBlock.DisplayMode.Rest);
-            if (node.parentNode < 0) return inverseBindPoseTransfrom;
-            return list.GetBindPoseTransfrom(list[node.parentNode])*inverseBindPoseTransfrom;
+            if (node.ParentNode < 0) return inverseBindPoseTransfrom;
+            return list.GetBindPoseTransfrom(list[node.ParentNode])*inverseBindPoseTransfrom;
         }
 
         public static Matrix4 GetInverseBindPoseTransfrom(this IList<RenderModelNodeBlock> list, int index)
@@ -61,8 +61,8 @@ namespace Moonfish.Graphics
             if (!list.Contains(node)) throw new ArgumentOutOfRangeException();
 
             var inverseBindPoseTransfrom = node.CalculateInverseBindTransform();
-            if (node.parentNode < 0) return inverseBindPoseTransfrom;
-            return list.GetInverseBindPoseTransfrom(list[node.parentNode])*inverseBindPoseTransfrom;
+            if (node.ParentNode < 0) return inverseBindPoseTransfrom;
+            return list.GetInverseBindPoseTransfrom(list[node.ParentNode])*inverseBindPoseTransfrom;
         }
 
         public static void SetWorldMatrix(this IList<RenderModelNodeBlock> list, int index, Matrix4 value)
@@ -75,9 +75,9 @@ namespace Moonfish.Graphics
         {
             if (!list.Contains(node)) throw new ArgumentOutOfRangeException();
 
-            var matrix = node.parentNode < 0
+            var matrix = node.ParentNode < 0
                 ? value
-                : value*list.GetWorldMatrix(list[node.parentNode]).Inverted();
+                : value*list.GetWorldMatrix(list[node.ParentNode]).Inverted();
 
             node.WorldMatrix = matrix;
         }

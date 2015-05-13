@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using Fasterflect;
 using JetBrains.Annotations;
 using Microsoft.CSharp;
 using Moonfish.Guerilla.Reflection;

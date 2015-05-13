@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Fasterflect;
 using Microsoft.CSharp;
 using Moonfish.Guerilla.Reflection;
 using Moonfish.Tags;
@@ -16,7 +17,7 @@ namespace Moonfish.Guerilla.CodeDom
     internal class GuerillaBlockClass : GuerillaBlockClassBase
     {
         private readonly string _outputFileName;
-        
+
         public GuerillaBlockClass(MoonfishTagGroup tag, IList<MoonfishTagGroup> tagGroups = null)
             : this(tag.Definition.Name.ToPascalCase().ToAlphaNumericToken())
         {
@@ -32,6 +33,28 @@ namespace Moonfish.Guerilla.CodeDom
 
                 Size += parentClass.Size;
             }
+            TargetClass.CustomAttributes.Add(
+                new CodeAttributeDeclaration(new CodeTypeReference(typeof (TagClassAttribute).Name()),
+                    new CodeAttributeArgument(new CodePrimitiveExpression(tag.Class.ToString()))));
+
+            var codeNamespace = new CodeNamespace("Moonfish.Tags");
+            codeNamespace.Types.Add(new CodeTypeDeclaration(typeof (TagClass).Name())
+            {
+                IsPartial = true,
+                IsStruct = true,
+                Members =
+                {
+                    new CodeMemberField(typeof (TagClass).Name(), tag.Class.ToTokenString())
+                    {
+                        Attributes = MemberAttributes.Public | MemberAttributes.Static,
+                        InitExpression =
+                            new CodeCastExpression(typeof (TagClass).Name(),
+                                new CodePrimitiveExpression(tag.Class.ToString()))
+                    }
+                }
+            });
+            TargetUnit.Namespaces.Add(codeNamespace);
+            TargetClass.IsPartial = true;
 
             Initialize(tag.Definition.Fields, Size, tag.Definition.Alignment);
         }
@@ -40,6 +63,7 @@ namespace Moonfish.Guerilla.CodeDom
             : this( definition.Name.ToPascalCase().ToAlphaNumericToken())
         {
             Size = definition.CalculateSizeOfFieldSet();
+            TargetClass.IsPartial = true;
             Initialize(definition.Fields, Size, definition.Alignment);
         }
 
@@ -50,7 +74,7 @@ namespace Moonfish.Guerilla.CodeDom
             TargetClass.BaseTypes.Clear();
             TargetClass.BaseTypes.AddRange(new[]
             {
-                new CodeTypeReference(typeof (GuerillaBlock)), 
+                new CodeTypeReference(typeof (GuerillaBlock).Name()), 
                 new CodeTypeReference(typeof (IWriteQueueable).Name)
             });
         }

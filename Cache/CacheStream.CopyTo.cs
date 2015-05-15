@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 
@@ -11,6 +10,9 @@ namespace Moonfish
 {
     partial class CacheStream
     {
+        private static readonly Dictionary<ResourcePointer, ResourcePointer> ShiftData =
+            new Dictionary<ResourcePointer, ResourcePointer>(1000);
+
         public void SaveTo(Stream outputStream)
         {
             StaticBenchmark.Begin();
@@ -21,35 +23,88 @@ namespace Moonfish
             }
 
             //  reserve 2048 bytes for the header
-            //  the header is already there so ignore this and move to offset 2048
 
             Seek(2048, SeekOrigin.Begin);
             outputStream.Seek(2048, SeekOrigin.Begin);
 
-            //  process the sound resources
+            //  process sound resources
 
             CopySoundResources(outputStream);
 
-            //  process the model resources 
+            //  process model resources 
 
             CopyModelResources(outputStream);
 
             //  process ltmp & sbsp resources
 
             CopyStructureResources(outputStream);
+
+            //  process DECR resources
+
+            CopyDecoratorResources(outputStream);
+
+            //  process PRTM resources
+
+            CopyParticleModelResources(outputStream);
+
+            //  process Lipsync resources
+
+            CopyLipsyncResources(outputStream);
+
+            //  process animation resources
+
+            CopyAnimationResources(outputStream);
+
+
             StaticBenchmark.Sample();
             StaticBenchmark.Clear();
         }
 
+        private void CopyAnimationResources(Stream outputStream)
+        {
+            foreach (var jmadBlock in Index.Where(x => x.Class == TagClass.Jmad)
+                .Select(x => (ModelAnimationGraphBlock)Deserialize(x.Identifier)))
+            {
+            }
+        }
+
+        private void CopyLipsyncResources(Stream outputStream)
+        {
+            var ughData = Index.First(x => x.Class == TagClass.Ugh);
+            var ughBlock = (SoundCacheFileGestaltBlock)Deserialize(ughData.Identifier);
+            foreach (var soundGestaltExtraInfoBlock in ughBlock.ExtraInfos)
+            {
+                CopyResource(outputStream, soundGestaltExtraInfoBlock);
+            }
+        }
+
+        private void CopyParticleModelResources(Stream outputStream)
+        {
+            foreach (var prtmBlock  in Index.Where(x => x.Class == TagClass.PRTM)
+                .Select(x => (ParticleModelBlock) Deserialize(x.Identifier)))
+            {
+                CopyResource(outputStream, prtmBlock);
+            }
+        }
+
+        private void CopyDecoratorResources(Stream outputStream)
+        {
+            foreach (var decrBlock  in Index.Where(x => x.Class == TagClass.DECR)
+                .Select(x => (DecoratorSetBlock)Deserialize(x.Identifier)))
+            {
+                CopyResource(outputStream, decrBlock);
+            }
+        }
+
         private void CopyStructureResources(Stream outputStream)
         {
-            var scnrBlock = (ScenarioBlock)Deserialize(Index.ScenarioIdent);
+            var scnrBlock = (ScenarioBlock) Deserialize(Index.ScenarioIdent);
             foreach (var scenarioStructureBspReferenceBlock in scnrBlock.StructureBSPs)
             {
                 var sbspReference = scenarioStructureBspReferenceBlock.StructureBSP;
                 var ltmpReference = scenarioStructureBspReferenceBlock.StructureLightmap;
 
-                var sbspBlock = (ScenarioStructureBspBlock)Deserialize(sbspReference.Ident);
+                var sbspBlock = (ScenarioStructureBspBlock) Deserialize(sbspReference.Ident);
                 foreach (var structureBspClusterBlock in sbspBlock.Clusters)
                 {
                     CopyResource(outputStream, structureBspClusterBlock);
@@ -61,7 +116,7 @@ namespace Moonfish
                 if (!TagIdent.IsNull(ltmpReference.Ident))
                 {
                     var ltmpBlock = (ScenarioStructureLightmapBlock) Deserialize(ltmpReference.Ident);
-                    foreach (var result in ltmpBlock.LightmapGroups.SelectMany(x=>x.GeometryBuckets))
+                    foreach (var result in ltmpBlock.LightmapGroups.SelectMany(x => x.GeometryBuckets))
                     {
                         CopyResource(outputStream, result);
                     }
@@ -97,7 +152,6 @@ namespace Moonfish
 
         private void CopySoundResources(Stream outputStream)
         {
-            
             var ughData = Index.First(x => x.Class == TagClass.Ugh);
             var ughBlock = (SoundCacheFileGestaltBlock) Deserialize(ughData.Identifier);
             foreach (var soundPermutationChunkBlock in ughBlock.Chunks)
@@ -110,21 +164,52 @@ namespace Moonfish
         {
             var address = resourceBlock.GetResourcePointer();
             var length = resourceBlock.GetResourceLength();
-            if (address.Source == Halo2.ResourceSource.Local)
+            switch (address.Source)
             {
-                //  the resource has already been copied
-                if (address < GetFilePosition()) return;
-
-                if(address % 512 != 0)
-                {
-
-                }
-                if (address > GetFilePosition() )
-                {
-                }
-                var size = Padding.Pad(length, 512);
-                this.BufferedCopyBytesTo(size, outputStream);
+                case Halo2.ResourceSource.Local:
+                    CopyLocalResource(outputStream, resourceBlock, address, length);
+                    break;
+                case Halo2.ResourceSource.Tag:
+                    throw new NotImplementedException();
+                    break;
+                default:
+                    //  we don't need to do anything with external resources
+                    return;
             }
+        }
+
+        private void CopyLocalResource(Stream outputStream, IResourceBlock resourceBlock, ResourcePointer address,
+            int length)
+        {
+            //  the resource has already been copied
+            if (address < GetFilePosition())
+            {
+                //  if this is true then we've already handled this resource so use the 
+                //  new address
+                ResourcePointer newAddress;
+                if (ShiftData.TryGetValue(address, out newAddress))
+                {
+                    resourceBlock.SetResourcePointer(newAddress);
+                    return;
+                }
+                //  has the resource already been copied? Has it been moved?
+                //  well, shit.
+                throw new InvalidDataException();
+            }
+            //  this is not strictly an error but it should be treated as such
+            if (address > GetFilePosition())
+            {
+                Debug.WriteLineIf(address > GetFilePosition(), "Warning: address > GetFilePosition()");
+                this.Seek(address);
+            }
+            Debug.WriteLineIf(address%512 != 0, "Warning: address % 512 != 0");
+
+            var position = outputStream.Position;
+            ShiftData[address] = (int) position;
+            resourceBlock.SetResourcePointer((int) position);
+
+            var size = Padding.Pad(length, 512);
+            this.BufferedCopyBytesTo(size, outputStream);
         }
     }
 }

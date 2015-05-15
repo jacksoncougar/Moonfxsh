@@ -23,8 +23,10 @@ namespace Moonfish
         [STAThread]
         private static void Main()
         {
+            GuerillaCodeDom.GenerateGuerillaCode();
             var map = new CacheStream(Path.Combine(Local.MapsDirectory, @"singleplayer\05a_deltaapproach.map"));
-            map.SaveTo(Stream.Null);
+            var output = new FileStream(Path.Combine(Local.MapsDirectory, @"output.map"), FileMode.Create, FileAccess.Write, FileShare.None, 4 * 1024, FileOptions.SequentialScan);
+            map.SaveTo(output);
 
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);

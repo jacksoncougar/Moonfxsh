@@ -10,6 +10,14 @@ namespace Moonfish
             return new StreamPositionHandle(stream);
         }
 
+        public static long Seek(this Stream stream, int address)
+        {
+            var position = stream.Position;
+            if (position == address) return position;
+            var offset = address - position;
+            return stream.Seek(offset, SeekOrigin.Current);
+        }
+
         public static void BufferedCopyBytesTo(this Stream stream, int size, Stream output)
         {
             const int blockSize = 1024 * 4;

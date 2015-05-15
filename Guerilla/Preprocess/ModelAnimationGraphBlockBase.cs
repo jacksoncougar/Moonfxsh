@@ -23,13 +23,13 @@ namespace Moonfish.Guerilla.Preprocess
                     new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Unknown6")
                 }));
 
-            var rawBlock = new MoonfishTagField(MoonfishFieldType.FieldBlock, "Xbox Unknown Animation Block");
+            var rawBlock = new MoonfishTagField(MoonfishFieldType.FieldBlock, "Xbox Animation Data Block");
             rawBlock.AssignDefinition(new MoonfishTagDefinition("Moonfish Xbox Animation Raw Block",
                 new List<MoonfishTagField>
                 {
                     new MoonfishTagField(MoonfishFieldType.FieldMoonfishIdent, "Owner Tag"),
                     new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Block Size"),
-                    new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Block Length"),
+                    new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Block Offset"),
                     new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Unknown"),
                     new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Unknown1"),
                 }));

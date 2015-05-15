@@ -21,7 +21,10 @@
 
         public Halo2.ResourceSource Source
         {
-            get { return (Halo2.ResourceSource) ((_value & 0xC0000000) >> 30); }
+            get
+            {
+                return (Halo2.ResourceSource) ((_value & 0xE0000000) >> 29);
+            }
         }
 
         public int Address

@@ -14,15 +14,17 @@ namespace Moonfish
 {
     /// <summary>
     ///     This static class holds all globals for Halo 2 and useful methods
+    ///     This isn't actuall how the enum is setup in Halo 2: I'm just inserting an extra flag
     /// </summary>
     public static class Halo2
     {
         public enum ResourceSource
         {
             Local = 0,
-            MainMenu = 1,
-            Shared = 2,
-            SinglePlayerShared = 3
+            Tag = 1,
+            MainMenu = 2,
+            Shared = 4,
+            SinglePlayerShared = 6
         }
 
         public const int NullPtr = 0;

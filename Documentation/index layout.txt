@@ -3,11 +3,13 @@
 *	Vista doesn't use memory addresses for the following address-values. 
 *	(they are instead 0-based from the index-address)
 *  
-*  0x00    Address to Classes array		Int32
-*  0x04    Classes array length			Int32
-*  0x08    Address to Tags array		Int32
-*  0x0C    Scenario						TagIdent
-*  0x10    Match-Globals				TagIdent
-*  0x14    ~unknown						Int32
-*  0x18    Tags array length			Int32
-*  0xC0    'sgat'						char[4]
+| Offset | Label					  | Type           |
+|--------|----------------------------|----------------|
+|  0x00  |  Address to Classes array  |		Int32	   |
+|  0x04  |  Classes array length	  |		Int32	   |
+|  0x08  |  Address to Tags array	  |		Int32	   |
+|  0x0C  |  Scenario				  |		TagIdent   |
+|  0x10  |  Match-Globals			  |		TagIdent   |
+|  0x14  |  ~unknown				  |		Int32	   |
+|  0x18  |  Tags array length		  |		Int32	   |
+|  0xC0  |  'sgat'					  |		char[4]	   |

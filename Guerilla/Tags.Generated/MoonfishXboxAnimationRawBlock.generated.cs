@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla.Tags
     {
         public Moonfish.Tags.TagIdent OwnerTag;
         public int BlockSize;
-        public int BlockLength;
+        public int BlockOffset;
         public int Unknown;
         public int Unknown1;
         public override int SerializedSize

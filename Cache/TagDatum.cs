@@ -23,7 +23,6 @@ namespace Moonfish
             return base.GetHashCode();
         }
 
-
         public static bool operator ==(TagDatum first, TagDatum second)
         {
             return first.Class == second.Class

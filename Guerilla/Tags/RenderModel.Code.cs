@@ -2,9 +2,6 @@
 using OpenTK;
 using System;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using Moonfish.Graphics;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
@@ -15,31 +12,24 @@ namespace Moonfish.Guerilla.Tags
 
     partial class RenderModelSectionBlock : IResourceBlock
     {
-        void IResourceBlock.LoadRawResources()
+        public ResourcePointer GetResourcePointer(int index = 0)
         {
-            var source = Halo2.GetResourceBlock(GeometryBlockInfo);
-            using (var binaryReader = new BinaryReader(source))
-            {
-                SectionData = new[] {new RenderModelSectionDataBlock()};
-                SectionData[0].Read(binaryReader);
-
-                var vertexBufferResources = source.Resources.Where(
-                    x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer).ToArray();
-                foreach (var buffer in SectionData[0].Section.VertexBuffers)
-                    if (buffer.VertexBuffer.Type == VertexAttributeType.None)
-                    {
-                    }
-                for (var i = 0; i < SectionData[0].Section.VertexBuffers.Length; i++)
-                {
-                    SectionData[0].Section.VertexBuffers[i].VertexBuffer.Data =
-                        source.GetResourceData(vertexBufferResources[i]);
-                }
-            }
+            return GeometryBlockInfo.BlockOffset;
         }
 
-        byte[] IResourceBlock.GetRawResourceBytes()
+        public int GetResourceLength(int index = 0)
         {
-            throw new NotImplementedException();
+            return GeometryBlockInfo.BlockSize;
+        }
+
+        public void SetResourcePointer(ResourcePointer pointer, int index = 0)
+        {
+            GeometryBlockInfo.BlockOffset = pointer;
+        }
+
+        public void SetResourceLength(int length, int index = 0)
+        {
+            GeometryBlockInfo.BlockSize = length;
         }
     }
 

@@ -27,7 +27,7 @@ namespace Moonfish.Guerilla.CodeDom
             {
                 var parentTag = tagGroups.First(x => x.Class == tag.ParentClass);
                 var parentClass = new GuerillaBlockClass(parentTag, tagGroups);
-                parentClass.GenerateCSharpCode();
+                parentClass.GenerateCSharpCode(Path.Combine(Local.ProjectDirectory, "Guerilla\\Tags.Generated\\"));
                 TokenDictionary = new TokenDictionary(parentClass.TokenDictionary);
                 TargetClass.BaseTypes[0] = new CodeTypeReference(parentClass.TargetClass.Name);
 
@@ -209,21 +209,16 @@ namespace Moonfish.Guerilla.CodeDom
                     //  instanced Int16 array like data
                     else if (systemType == typeof (short))
                     {
-                        var methodName = StaticReflection.GetMemberName((BinaryReader item) => item.ReadInt16());
+                        var readBlamPointerMethodName =
+                            StaticReflection.GetMemberName(
+                                (BinaryReader @class) => @class.ReadBlamPointer(0));
+                        var queueMethodName =
+                            StaticReflection.GetMemberName(
+                                (Queue<BlamPointer> item) => item.Enqueue(new BlamPointer()));
 
-                        if (!method.Statements.Contains(loopVariableDeclaration))
-                            method.Statements.Add(loopVariableDeclaration);
-
-                        method.Statements.Add(new CodeIterationStatement(
-                            new CodeAssignStatement(loopVariable, new CodePrimitiveExpression(0)),
-                            new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.LessThan,
-                                new CodePrimitiveExpression(arraySize)),
-                            new CodeAssignStatement(loopVariable,
-                                new CodeBinaryOperatorExpression(loopVariable, CodeBinaryOperatorType.Add,
-                                    new CodePrimitiveExpression(1))), new CodeAssignStatement(
-                                        new CodeArrayIndexerExpression(fieldReference, loopVariable),
-                                        new CodeMethodInvokeExpression(binaryReaderArgument, methodName,
-                                            new CodeArgumentReferenceExpression()))));
+                        method.Statements.Add(new CodeMethodInvokeExpression(pointerQueueVariable, queueMethodName,
+                            new CodeMethodInvokeExpression(binaryReaderArgument, readBlamPointerMethodName,
+                                new CodePrimitiveExpression(2))));
                     }
                     //  tagBlock array
                     else
@@ -698,7 +693,7 @@ namespace Moonfish.Guerilla.CodeDom
                     case MoonfishFieldType.FieldBlock:
                     {
                         var fieldBlockClass = new GuerillaBlockClass(field.Definition);
-                        fieldBlockClass.GenerateCSharpCode();
+                        fieldBlockClass.GenerateCSharpCode(Path.Combine(Local.ProjectDirectory, "Guerilla\\Tags.Generated\\"));
                         var typeName = fieldBlockClass.TargetClass.Name;
                         var member = new CodeMemberField(typeName + "[]", GenerateFieldName(field));
                         GenerateSummary(member);
@@ -714,7 +709,7 @@ namespace Moonfish.Guerilla.CodeDom
                     case MoonfishFieldType.FieldStruct:
                     {
                         var fieldBlockClass = new GuerillaBlockClass(field.Definition.Definition);
-                        fieldBlockClass.GenerateCSharpCode();
+                        fieldBlockClass.GenerateCSharpCode(Path.Combine(Local.ProjectDirectory, "Guerilla\\Tags.Generated\\"));
                         var member = new CodeMemberField(fieldBlockClass.TargetClass.Name, GenerateFieldName(field));
                         GenerateSummary(member);
                         member.Attributes = MemberAttributes.Public;
@@ -934,7 +929,7 @@ namespace Moonfish.Guerilla.CodeDom
             TargetClass.Members.Add(serializedSizeProperty);
         }
 
-        public void GenerateCSharpCode()
+        public void GenerateCSharpCode(string directory)
         {
             var provider = new CSharpCodeProvider();
             var options = new CodeGeneratorOptions
@@ -943,7 +938,7 @@ namespace Moonfish.Guerilla.CodeDom
                 BlankLinesBetweenMembers = false,
                 VerbatimOrder = false
             };
-            var filename = Path.Combine(Local.ProjectDirectory, Path.Combine("Guerilla\\Tags.Generated\\", _outputFileName));
+            var filename = Path.Combine(directory, _outputFileName);
             using (var streamWriter = new StreamWriter(File.Create(filename)))
             {
                 provider.GenerateCodeFromCompileUnit(TargetUnit, streamWriter, options);

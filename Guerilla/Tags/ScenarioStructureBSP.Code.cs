@@ -51,10 +51,6 @@ namespace Moonfish.Tags
 
 namespace Moonfish.Guerilla.Tags
 {
-    partial class StructureBspClusterBlock
-    {
-    }
-
     public partial class GlobalGeometryBlockInfoStructBlock
     {
         public int ResourceOffset

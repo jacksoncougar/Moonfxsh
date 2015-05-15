@@ -23,9 +23,12 @@ namespace Moonfish
         [STAThread]
         private static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Gizmo());
+            var map = new CacheStream(Path.Combine(Local.MapsDirectory, @"singleplayer\05a_deltaapproach.map"));
+            map.SaveTo(Stream.Null);
+
+            //Application.EnableVisualStyles();
+            //Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new Gizmo());
         }
     }
 }

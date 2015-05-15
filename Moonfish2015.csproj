@@ -168,6 +168,7 @@
     <Compile Include="Guerilla\CodeDom\GuerillaCodeDom.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaCommentCollection.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaEnumBlockClass.cs" />
+    <Compile Include="Cache\CacheStream.CopyTo.cs" />
     <Compile Include="Guerilla\Tags.Generated\ActorStartingLocationsBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\AdditionalNodeDataBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\AiAnimationReferenceBlock.generated.cs" />
@@ -1187,6 +1188,13 @@
     <Compile Include="Guerilla\Reflection\TokenDictionary.cs" />
     <Compile Include="Guerilla\Reflection\TokenInfo.cs" />
     <Compile Include="Guerilla\Reflection\UsingInfo.cs" />
+    <Compile Include="Guerilla\Tags\DecoratorCacheBlockBlock.cs" />
+    <Compile Include="Guerilla\Tags\GlobalWaterDefinitionsBlock.cs" />
+    <Compile Include="Guerilla\Tags\LightmapVertexBufferBucketBlock.cs" />
+    <Compile Include="Guerilla\Tags\PrtInfoBlock.cs" />
+    <Compile Include="Guerilla\Tags\SoundGestaltExtraInfoBlock.cs" />
+    <Compile Include="Guerilla\Tags\SoundPermutationChunkBlock.cs" />
+    <Compile Include="Guerilla\Tags\StructureBspClusterBlock.cs" />
     <Compile Include="ValueTypes\BinaryWriterExtensions.cs" />
     <Compile Include="ValueTypes\LayoutAttribute.cs" />
     <Compile Include="ValueTypes\TagBlockFieldAttribute.cs" />

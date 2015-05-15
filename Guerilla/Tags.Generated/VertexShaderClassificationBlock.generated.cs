@@ -40,11 +40,7 @@ namespace Moonfish.Guerilla.Tags
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.fieldpad = binaryReader.ReadBytes(4);
-            int i;
-            for (i = 0; (i < 0); i = (i + 1))
-            {
-                this.CompiledShader[i] = binaryReader.ReadInt16();
-            }
+            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(2));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(1));
             this.fieldpad0 = binaryReader.ReadBytes(8);
             return pointerQueue;

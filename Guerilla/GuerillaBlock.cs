@@ -91,10 +91,12 @@ namespace Moonfish.Guerilla
             {
                 var offset = blamPointer.StartAddress - binaryReader.BaseStream.Position;
                 binaryReader.BaseStream.Seek(offset, SeekOrigin.Current);
+#if DEBUGEXTREME
                 var cacheStream = binaryReader.BaseStream as CacheStream;
                 if (cacheStream != null)
                     Console.WriteLine(@"type: {0}, local-offset: {1}, file-address: {2}", typeof (T).Name(), offset,
                         cacheStream.GetFilePosition());
+#endif
             }
             var pointerArray = new Queue<BlamPointer>[blamPointer.ElementCount];
 

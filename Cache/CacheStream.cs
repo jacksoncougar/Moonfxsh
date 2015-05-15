@@ -1,24 +1,24 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Forms;
 using Fasterflect;
 using Moonfish.Cache;
 using Moonfish.Guerilla;
+using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish
 {
-    /// <summary>
-    ///     A minimalist class to load essential data which can be used to parse a retail cache map.
-    /// </summary>
-    public class CacheStream : FileStream
+    public partial class CacheStream : FileStream
     {
-        private readonly Dictionary<TagIdent, dynamic> _deserializedTagCache;
+        private readonly Dictionary<TagIdent, GuerillaBlock> _deserializedTagCache;
         private readonly Dictionary<TagIdent, string> _tagHashDictionary;
         private readonly HaloVersion BuildVersion;
 
@@ -180,9 +180,21 @@ namespace Moonfish
                 ActiveAllocation(StructureCache.VirtualStructureCache0);
             }
 
-            _deserializedTagCache = new Dictionary<TagIdent, dynamic>(Index.Count);
+            _deserializedTagCache = new Dictionary<TagIdent, GuerillaBlock>(Index.Count);
             _tagHashDictionary = new Dictionary<TagIdent, string>(Index.Count);
             Halo2.ActiveMap(this);
+        }
+
+        public TagDatum GetOwner(int address)
+        {
+            foreach (var data in Index)
+            {
+                var start = VirtualAddressToFileOffset(data.VirtualAddress);
+                var length = data.Length;
+                if (address >= start && address < start + length)
+                    return data;
+            }
+            return new TagDatum();
         }
 
         public TagIndex Index { get; private set; }
@@ -277,9 +289,9 @@ namespace Moonfish
 
         public GuerillaBlock Deserialize(TagIdent ident)
         {
-            object deserializedTag;
+            GuerillaBlock deserializedTag;
             if (_deserializedTagCache.TryGetValue(ident, out deserializedTag))
-                return (GuerillaBlock)deserializedTag;
+                return deserializedTag;
 
             var type = Halo2.GetTypeOf(Index[ident].Class);
             if (type == null) return null;
@@ -316,6 +328,11 @@ namespace Moonfish
 
         public long Seek(TagIdent tagident)
         {
+            if (Index[tagident].Class == TagClass.Sbsp || Index[tagident].Class == TagClass.Ltmp)
+            {
+                var index = StructureMemoryBlockBindings[tagident];
+                ActiveAllocation(StructureCache.VirtualStructureCache0 + index);
+            }
             return Seek(Index[tagident].VirtualAddress, SeekOrigin.Begin);
         }
 
@@ -424,7 +441,9 @@ namespace Moonfish
             if (ActiveStructureMemoryAllocation.ContainsVirtualOffset(value))
             {
                 return ActiveStructureMemoryAllocation.GetOffset(value);
-            }
+            } 
+            foreach (var block in StructureMemoryBlocks.Where(block => block.ContainsVirtualOffset(value)))
+                return block.GetOffset(value);
             throw new InvalidOperationException();
         }
     }

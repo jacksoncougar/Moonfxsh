@@ -226,29 +226,41 @@ namespace Moonfish
 
     public static class StaticBenchmark
     {
+        static List<long> _samples;
         private static readonly Stopwatch Timer = new Stopwatch();
         private static string _functionName;
         public static string Result { get; private set; }
 
-        public static void Begin(string functionName)
+        public static void SetCapacity(int size)
         {
+            _samples = new List<long>(size);
+        }
+
+        public static void Begin(string functionName = "")
+        {
+            _samples = _samples ?? new List<long>();
             _functionName = functionName;
             Timer.Start();
         }
 
-        public static void End()
+        public static void Sample()
         {
             Timer.Stop();
-            Result = Timer.ElapsedMilliseconds > 1
-                ? string.Format("{0}ms", Timer.ElapsedMilliseconds)
-                : string.Format("{0}ticks", Timer.ElapsedTicks);
+            if (_samples.Count >= _samples.Capacity)
+                _samples.Clear();
+            _samples.Add(Timer.ElapsedTicks);
             Timer.Reset();
-            Console.WriteLine(@"{0}: {1}", _functionName, Result);
         }
 
-        public new static string ToString()
+        public static void Clear()
         {
-            return Result;
+            var average = _samples.Sum() / _samples.Count;
+            var timeSpan = new TimeSpan(average);
+
+            Result = string.Format("Average call time: {0}", timeSpan.Milliseconds < 1
+                ? string.Format("{0}ticks", timeSpan.Ticks)
+                : string.Format("{0}ms", timeSpan.Milliseconds));
+            _samples.Clear();
         }
     }
 

@@ -1,34 +1,46 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
 
 namespace Moonfish.Guerilla.Tags
 {
-    partial class BitmapDataBlock : IResourceBlock
+    partial class BitmapDataBlock 
     {
-        public byte[] bitmapLOD1Bytes;
-        public byte[] bitmapLOD2Bytes;
-        public byte[] bitmapLOD3Bytes;
+        private byte[] _bitmapLOD1Bytes;
+        private byte[] _bitmapLOD2Bytes;
+        private byte[] _bitmapLOD3Bytes;
 
-        public void LoadRawResources()
+        public void SetResource(byte[] data, int index = 0)
         {
-            ReadResourceData(out bitmapLOD1Bytes, LOD1TextureDataLength, LOD1TextureDataOffset);
-            ReadResourceData(out bitmapLOD2Bytes, LOD2TextureDataLength, LOD2TextureDataOffset);
-            ReadResourceData(out bitmapLOD3Bytes, LOD3TextureDataLength, LOD3TextureDataOffset);
+            switch (index)
+            {
+                case 0:
+                    _bitmapLOD1Bytes = data;
+                    break;
+                case 1:
+                    _bitmapLOD2Bytes = data;
+                    break;
+                case 2:
+                    _bitmapLOD3Bytes = data;
+                    break;
+                default:
+                    return;
+            }
         }
 
-        public byte[] GetRawResourceBytes()
+        public byte[] GetResource(int index = 0)
         {
-            using (
-                var stream =
-                    new MemoryStream(bitmapLOD1Bytes.Length + bitmapLOD2Bytes.Length + bitmapLOD3Bytes.Length))
+            switch (index)
             {
-                var offset = 0;
-                stream.Write(bitmapLOD1Bytes, offset, bitmapLOD1Bytes.Length);
-                offset += bitmapLOD1Bytes.Length;
-                stream.Write(bitmapLOD2Bytes, offset, bitmapLOD2Bytes.Length);
-                offset += bitmapLOD2Bytes.Length;
-                stream.Write(bitmapLOD3Bytes, offset, bitmapLOD3Bytes.Length);
-                return stream.GetBuffer();
+                case 0:
+                    return _bitmapLOD1Bytes;
+                case 1:
+                    return _bitmapLOD2Bytes;
+                case 2:
+                    return _bitmapLOD3Bytes;
+                default:
+                    return null;
             }
         }
 
@@ -39,8 +51,8 @@ namespace Moonfish.Guerilla.Tags
             {
                 var pointer = (ResourcePointer) dataAddress;
                 resource.Seek(pointer.Address, SeekOrigin.Begin);
-                bitmapLOD1Bytes = new byte[dataLength];
-                resource.Read(bitmapLOD1Bytes, 0, dataLength);
+                _bitmapLOD1Bytes = new byte[dataLength];
+                resource.Read(_bitmapLOD1Bytes, 0, dataLength);
             }
             data = new byte[0];
         }

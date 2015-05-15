@@ -1,9 +1,12 @@
-﻿using Moonfish.ResourceManagement;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Moonfish.Guerilla.Tags
 {
-    partial class StructureInstancedGeometryRenderInfoStructBlock : IResourceBlock
+    public partial class SoundGestaltExtraInfoBlock : IResourceBlock
     {
         public ResourcePointer GetResourcePointer(int index = 0)
         {

@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Moonfish.Debug
+namespace Moonfish.Debug_
 {
     public class MemoryRead
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Moonfish.Tags;
 
@@ -12,7 +13,8 @@ namespace Moonfish.Guerilla.CodeDom
             var tags = Guerilla.h2Tags.Select(x => new MoonfishTagGroup(x)).ToList();
             foreach (var blockClass in tags.Select(tag => new GuerillaBlockClass(tag, tags)))
             {
-                blockClass.GenerateCSharpCode();
+                blockClass.GenerateCSharpCode(Path.Combine(Local.ProjectDirectory, @"Guerilla\Tags.Generated\"));
+                Console.WriteLine(@"Generated: {0}", blockClass.TargetClass.Name);
             }
         }
 

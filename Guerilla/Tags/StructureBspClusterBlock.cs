@@ -1,9 +1,6 @@
-﻿using Moonfish.ResourceManagement;
-using System.IO;
-
-namespace Moonfish.Guerilla.Tags
+﻿namespace Moonfish.Guerilla.Tags
 {
-    partial class StructureInstancedGeometryRenderInfoStructBlock : IResourceBlock
+    partial class StructureBspClusterBlock : IResourceBlock
     {
         public ResourcePointer GetResourcePointer(int index = 0)
         {

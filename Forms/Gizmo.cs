@@ -72,7 +72,6 @@ namespace Moonfish.Graphics
             var i = 0;
             foreach (IResourceBlock section in @object.RenderModel.Get<RenderModelBlock>().Sections)
             {
-                section.LoadRawResources();
                 ++i;
             }
             var scenarioObject = new ScenarioObject(@object);

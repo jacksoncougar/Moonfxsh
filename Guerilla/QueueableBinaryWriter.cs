@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Fasterflect;
 using JetBrains.Annotations;
+using Moonfish.Cache;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla
@@ -97,12 +99,12 @@ namespace Moonfish.Guerilla
                 //  cache.
                 if (!BlamPointer.IsNull(item.Pointer) && BaseStream.Position != item.Pointer.StartAddress)
                 {
-                    var offset = item.Pointer.StartAddress - BaseStream.Position;
-                    BaseStream.Seek(offset, SeekOrigin.Current);
+                    BaseStream.Seek(item.Pointer.StartAddress);
 #if DEBUG
+                    var offset = item.Pointer.StartAddress - BaseStream.Position;
                     var cacheStream = BaseStream as CacheStream;
 
-                    System.Diagnostics.Debug.WriteLine(@"type: {0}, local-offset: {1}, file-address: {2}",
+                    Debug.WriteLine(@"type: {0}, local-offset: {1}, file-address: {2}",
                         item.ReferenceField.GetType().Name(), offset,
                         cacheStream != null ? cacheStream.GetFilePosition() : BaseStream.Position);
 #endif

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Moonfish.Cache;
 using Moonfish.Guerilla.Tags;
 using OpenTK.Graphics.OpenGL;
 

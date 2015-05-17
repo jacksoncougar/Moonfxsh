@@ -1,20 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using System.Windows.Forms;
 using Fasterflect;
-using Moonfish.Cache;
 using Moonfish.Guerilla;
-using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
-using OpenTK.Graphics.OpenGL;
 
-namespace Moonfish
+namespace Moonfish.Cache
 {
     public partial class CacheStream : FileStream
     {
@@ -40,8 +34,10 @@ namespace Moonfish
         public readonly MapType Type;
         private readonly int tagCacheLength;
 
+        private IndexInfoStruct IndexInfo;
+
         public CacheStream(string filename)
-            : base(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite, 1024)
+            : base(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 1024)
         {
             //HEADER
             var binaryReader = new BinaryReader(this, Encoding.UTF8);
@@ -50,14 +46,17 @@ namespace Moonfish
             if (binaryReader.ReadTagClass() != (TagClass) "head")
                 throw new InvalidDataException("Not a halo-map file");
 
-            base.Seek(42, SeekOrigin.Begin);
-            BuildVersion = (HaloVersion) binaryReader.ReadInt32();
+            var engineVersion = binaryReader.ReadInt32();
+            var fileSize = binaryReader.ReadInt32();
 
-            base.Seek(16, SeekOrigin.Begin);
-            var indexAddress = binaryReader.ReadInt32();
-            var indexLength = binaryReader.ReadInt32();
-            tagCacheLength = binaryReader.ReadInt32();
+            base.Seek(4, SeekOrigin.Current); // skip forwards 4 bytes
+            IndexInfo = new IndexInfoStruct(binaryReader);
 
+            base.Seek(0x24, SeekOrigin.Begin);
+            var versionCheck = binaryReader.ReadInt32();
+            BuildVersion = versionCheck != 0 ? HaloVersion.PC_RETAIL : HaloVersion.XBOX_RETAIL;
+
+            base.Seek(28, SeekOrigin.Begin);
 
             if (BuildVersion == HaloVersion.PC_RETAIL)
                 base.Seek(12, SeekOrigin.Current);
@@ -102,17 +101,17 @@ namespace Moonfish
             Halo2.Strings.Assign(new List<string>(Strings));
 
             //  INDEX
-            base.Seek(indexAddress, SeekOrigin.Begin);
+            base.Seek(IndexInfo.IndexOffset, SeekOrigin.Begin);
 
             Index = new TagIndex(this, paths);
 
             // Calculate File-pointer magic
-            var secondaryMagic = Index[Index.GlobalsIdent].VirtualAddress - (indexAddress + indexLength);
+            var secondaryMagic = Index[Index.GlobalsIdent].VirtualAddress - (IndexInfo.IndexOffset + IndexInfo.IndexLength);
 
             DefaultMemoryBlock = new VirtualMappedAddress
             {
                 Address = Index[0].VirtualAddress,
-                Length = tagCacheLength,
+                Length = IndexInfo.MetaAllocationLength,
                 Magic = secondaryMagic
             };
 
@@ -187,12 +186,13 @@ namespace Moonfish
 
         public TagDatum GetOwner(int address)
         {
-            foreach (var data in Index)
+            foreach (var data in from data in Index
+                let start = VirtualAddressToFileOffset(data.VirtualAddress)
+                let length = data.Length
+                where address >= start && address < start + length
+                select data)
             {
-                var start = VirtualAddressToFileOffset(data.VirtualAddress);
-                var length = data.Length;
-                if (address >= start && address < start + length)
-                    return data;
+                return data;
             }
             return new TagDatum();
         }
@@ -277,7 +277,6 @@ namespace Moonfish
             using (var sha1 = new SHA1CryptoServiceProvider())
             {
                 var hash = Convert.ToBase64String(sha1.ComputeHash(GetInternalTagMeta(ident)));
-                //Console.WriteLine(hash);
                 return hash;
             }
         }

@@ -36,5 +36,12 @@ namespace Moonfish
         {
             return !(first == second);
         }
+
+        internal static bool IsNull(TagDatum data)
+        {
+            return
+                TagClass.IsNullOrZero(data.Class) && data.Identifier == TagIdent.NullIdentifier && data.Length == 0 &&
+                data.VirtualAddress == 0;
+        }
     }
 }

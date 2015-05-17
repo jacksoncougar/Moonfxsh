@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Moonfish.Cache;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using OpenTK.Graphics.OpenGL;

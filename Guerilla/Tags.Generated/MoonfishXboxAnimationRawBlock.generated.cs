@@ -42,7 +42,7 @@ namespace Moonfish.Guerilla.Tags
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
             this.OwnerTag = binaryReader.ReadTagIdent();
             this.BlockSize = binaryReader.ReadInt32();
-            this.BlockLength = binaryReader.ReadInt32();
+            this.BlockOffset = binaryReader.ReadInt32();
             this.Unknown = binaryReader.ReadInt32();
             this.Unknown1 = binaryReader.ReadInt32();
             return pointerQueue;
@@ -60,7 +60,7 @@ namespace Moonfish.Guerilla.Tags
             base.Write_(queueableBinaryWriter);
             queueableBinaryWriter.Write(this.OwnerTag);
             queueableBinaryWriter.Write(this.BlockSize);
-            queueableBinaryWriter.Write(this.BlockLength);
+            queueableBinaryWriter.Write(this.BlockOffset);
             queueableBinaryWriter.Write(this.Unknown);
             queueableBinaryWriter.Write(this.Unknown1);
         }

@@ -89,6 +89,7 @@
   <ItemGroup>
     <Compile Include="Cache\CacheStream.cs" />
     <Compile Include="Cache\CacheWriter.cs" />
+    <Compile Include="Cache\CacheStream.IndexInfo.cs" />
     <Compile Include="Cache\StructureCache.cs" />
     <Compile Include="Cache\TagClassHeirarchy.cs" />
     <Compile Include="Cache\TagDatum.cs" />

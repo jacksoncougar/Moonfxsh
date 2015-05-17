@@ -128,5 +128,10 @@ namespace Moonfish.Tags
         }
 
         public static readonly TagClass Null = new TagClass(0xFF, 0xFF, 0xFF, 0xFF);
+
+        public static bool IsNullOrZero(TagClass @class)
+        {
+            return @class == Null || (int)@class == 0;
+        }
     }
 }

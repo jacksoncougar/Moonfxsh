@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 
-namespace Moonfish
+namespace Moonfish.Cache
 {
     partial class CacheStream
     {
@@ -16,7 +17,9 @@ namespace Moonfish
         public void SaveTo(Stream outputStream)
         {
             StaticBenchmark.Begin();
+
             //  bring all the tags into the cache
+
             foreach (var tagData in Index)
             {
                 Deserialize(tagData.Identifier);
@@ -55,16 +58,64 @@ namespace Moonfish
 
             CopyAnimationResources(outputStream);
 
+            //  process sbsp & ltmp meta
+
+            //CopyStructureMeta(outputStream);
+
+            //  process string128 table
+
+            //  process stringID index & table
+
+            //  process path table & index
+
+            //  process unicode index & table
+
+            //  process 'crazy' data
+
+            //  process bitmap resources
+
+            //  process index
+
+            //  process meta table
+
 
             StaticBenchmark.Sample();
             StaticBenchmark.Clear();
         }
 
+        private void CopyStructureMeta(Stream outputStream)
+        {
+            var scnrBlock = (ScenarioBlock)Deserialize(Index.ScenarioIdent);
+            foreach (var scenarioStructureBspReferenceBlock in scnrBlock.StructureBSPs)
+            {
+                var virtualMemoryStream = new VirtualStream(-2146516992);
+
+                var sbspReference = scenarioStructureBspReferenceBlock.StructureBSP;
+                var ltmpReference = scenarioStructureBspReferenceBlock.StructureLightmap;
+
+                //  only copy valid references
+                
+                if (TagIdent.IsNull(sbspReference.Ident)) continue;
+                var sbspBlock = (ScenarioStructureBspBlock)Deserialize(sbspReference.Ident);
+                virtualMemoryStream.Write(sbspBlock);
+
+                //  only copy valid references
+
+                if (TagIdent.IsNull(ltmpReference.Ident)) continue;
+                var ltmpBlock = (ScenarioStructureLightmapBlock)Deserialize(ltmpReference.Ident);
+                virtualMemoryStream.Write(ltmpBlock);
+
+                virtualMemoryStream.BufferedCopyBytesTo((int) virtualMemoryStream.Length, outputStream);
+            }
+        }
+
         private void CopyAnimationResources(Stream outputStream)
         {
-            foreach (var jmadBlock in Index.Where(x => x.Class == TagClass.Jmad)
-                .Select(x => (ModelAnimationGraphBlock)Deserialize(x.Identifier)))
+            foreach (var moonfishXboxAnimationRawBlock in Index.Where(x => x.Class == TagClass.Jmad)
+                .Select(x => (ModelAnimationGraphBlock) Deserialize(x.Identifier))
+                .SelectMany(jmadBlock => jmadBlock.XboxAnimationDataBlock))
             {
+                CopyResource(outputStream, moonfishXboxAnimationRawBlock);
             }
         }
 

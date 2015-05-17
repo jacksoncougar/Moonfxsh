@@ -24,16 +24,23 @@ namespace Moonfish.Cache
             }
 
             _data = new List<TagDatum>(new TagDatum[datumArrayCount]);
-            for (var i = 0; i < datumArrayCount; i++)
+            for (var i = 0; i < datumArrayCount && i < paths.Count; i++)
             {
-                _data[i] = new TagDatum
+                TagDatum data;
+                do
                 {
-                    Class = binaryReader.ReadTagClass(),
-                    Identifier = (TagIdent) binaryReader.ReadInt32(),
-                    VirtualAddress = binaryReader.ReadInt32(),
-                    Length = binaryReader.ReadInt32(),
-                    Path = paths[i]
-                };
+                    data = new TagDatum
+                    {
+                        Class = binaryReader.ReadTagClass(),
+                        Identifier = (TagIdent) binaryReader.ReadInt32(),
+                        VirtualAddress = binaryReader.ReadInt32(),
+                        Length = binaryReader.ReadInt32(),
+                    };
+
+
+                } while (TagDatum.IsNull(data));
+                data.Path = paths[i];
+                _data[i] = data;
             }
         }
 

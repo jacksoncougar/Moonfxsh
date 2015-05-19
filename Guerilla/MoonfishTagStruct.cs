@@ -8,6 +8,12 @@ namespace Moonfish.Guerilla
         public TagClass Class { get; private set; }
         public MoonfishTagDefinition Definition { get; private set; }
 
+        public MoonfishTagStruct(MoonfishTagDefinition definition)
+        {
+            Name = definition.Name;
+            Class = TagClass.Empty;
+            Definition = definition;
+        }
         public MoonfishTagStruct(tag_struct_definition definition)
         {
             Name = definition.Name;

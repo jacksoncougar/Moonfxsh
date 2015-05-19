@@ -7,13 +7,13 @@ namespace Moonfish.Cache
     {
         protected const int HeaderSize = 32;
 
-        protected int classArrayAddress;
-        protected int classArrayCount;
-        protected int datumArrayAddress;
+        public int classArrayAddress;
+        public int classArrayCount;
+        public int datumArrayAddress;
         public TagIdent ScenarioIdent { get; private set; }
         public TagIdent GlobalsIdent { get; private set; }
-        private int _noodleValue;
-        protected int datumArrayCount;
+        public int _noodleValue;
+        public int datumArrayCount;
         private readonly TagClass fourCC;
 
         protected TagIndexBase(CacheStream cache)

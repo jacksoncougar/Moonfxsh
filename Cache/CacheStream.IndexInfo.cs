@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,12 +17,31 @@ namespace Moonfish.Cache
             public int MetaAllocationLength;
             public int TotalAllocationLength;
 
-            public IndexInfoStruct(BinaryReader binaryReader)
+            private IndexInfoStruct(Stream stream)
             {
-                IndexOffset = binaryReader.ReadInt32();
-                IndexLength = binaryReader.ReadInt32();
-                MetaAllocationLength = binaryReader.ReadInt32();
-                TotalAllocationLength = binaryReader.ReadInt32();
+                using (var binaryReader = new BinaryReader(stream, Encoding.Default, true))
+                {
+                    IndexOffset = binaryReader.ReadInt32();
+                    IndexLength = binaryReader.ReadInt32();
+                    MetaAllocationLength = binaryReader.ReadInt32();
+                    TotalAllocationLength = binaryReader.ReadInt32();
+                }
+            }
+
+            public static IndexInfoStruct DeserializeFrom(Stream stream)
+            {
+                return new IndexInfoStruct(stream);
+            }
+
+            public void SerializeTo(Stream stream)
+            {
+                using (var binaryWriter = new BinaryWriter(stream, Encoding.Default, true))
+                {
+                    binaryWriter.Write(IndexOffset);
+                    binaryWriter.Write(IndexLength);
+                    binaryWriter.Write(MetaAllocationLength);
+                    binaryWriter.Write(TotalAllocationLength);
+                }
             }
         }
     }

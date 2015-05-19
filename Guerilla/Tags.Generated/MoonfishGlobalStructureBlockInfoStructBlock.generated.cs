@@ -16,15 +16,17 @@ namespace Moonfish.Guerilla.Tags
     using System.Collections.Generic;
     using System.Linq;
     
-    public partial class HsSourceFilesBlock : GuerillaBlock, IWriteQueueable
+    public partial class MoonfishGlobalStructureBlockInfoStructBlock : GuerillaBlock, IWriteQueueable
     {
-        public Moonfish.Tags.String32 Name;
-        public byte[] Source;
+        public int BlockOffset;
+        public int BlockLength;
+        public int BlockAddress;
+        public int FieldLongInteger;
         public override int SerializedSize
         {
             get
             {
-                return 40;
+                return 16;
             }
         }
         public override int Alignment
@@ -37,25 +39,27 @@ namespace Moonfish.Guerilla.Tags
         public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
-            this.Name = binaryReader.ReadString32();
-            pointerQueue.Enqueue(binaryReader.ReadBlamPointer(1));
+            this.BlockOffset = binaryReader.ReadInt32();
+            this.BlockLength = binaryReader.ReadInt32();
+            this.BlockAddress = binaryReader.ReadInt32();
+            this.FieldLongInteger = binaryReader.ReadInt32();
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
         {
             base.ReadInstances(binaryReader, pointerQueue);
-            this.Source = base.ReadDataByteArray(binaryReader, pointerQueue.Dequeue());
         }
         public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
         {
             base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.Source);
         }
         public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
         {
             base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(this.Name);
-            queueableBinaryWriter.WritePointer(this.Source);
+            queueableBinaryWriter.Write(this.BlockOffset);
+            queueableBinaryWriter.Write(this.BlockLength);
+            queueableBinaryWriter.Write(this.BlockAddress);
+            queueableBinaryWriter.Write(this.FieldLongInteger);
         }
     }
 }

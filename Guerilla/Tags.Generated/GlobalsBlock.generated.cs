@@ -50,7 +50,7 @@ namespace Moonfish.Guerilla.Tags
         public UiLevelsDefinitionBlock[] UiLevelData = new UiLevelsDefinitionBlock[0];
         [Moonfish.Tags.TagReferenceAttribute("gldf")]
         public Moonfish.Tags.TagReference DefaultGlobalLighting;
-        private byte[] fieldpad0 = new byte[252];
+        public MoonfishGlobalUnicodeBlockInfoStructBlock UnicodeBlockInfo = new MoonfishGlobalUnicodeBlockInfoStructBlock();
         public override int SerializedSize
         {
             get
@@ -97,7 +97,7 @@ namespace Moonfish.Guerilla.Tags
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(8));
             pointerQueue.Enqueue(binaryReader.ReadBlamPointer(24));
             this.DefaultGlobalLighting = binaryReader.ReadTagReference();
-            this.fieldpad0 = binaryReader.ReadBytes(252);
+            pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(pointerQueue.Concat(this.UnicodeBlockInfo.ReadFields(binaryReader)));
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
@@ -128,6 +128,7 @@ namespace Moonfish.Guerilla.Tags
             this.ProfileColors = base.ReadBlockArrayData<MultiplayerColorBlock>(binaryReader, pointerQueue.Dequeue());
             this.RuntimeLevelData = base.ReadBlockArrayData<RuntimeLevelsDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
             this.UiLevelData = base.ReadBlockArrayData<UiLevelsDefinitionBlock>(binaryReader, pointerQueue.Dequeue());
+            this.UnicodeBlockInfo.ReadInstances(binaryReader, pointerQueue);
         }
         public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
         {
@@ -157,6 +158,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.QueueWrite(this.ProfileColors);
             queueableBinaryWriter.QueueWrite(this.RuntimeLevelData);
             queueableBinaryWriter.QueueWrite(this.UiLevelData);
+            this.UnicodeBlockInfo.QueueWrites(queueableBinaryWriter);
         }
         public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
         {
@@ -190,7 +192,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.WritePointer(this.RuntimeLevelData);
             queueableBinaryWriter.WritePointer(this.UiLevelData);
             queueableBinaryWriter.Write(this.DefaultGlobalLighting);
-            queueableBinaryWriter.Write(this.fieldpad0);
+            this.UnicodeBlockInfo.Write_(queueableBinaryWriter);
         }
         public enum LanguageEnum : int
         {

@@ -22,6 +22,75 @@ namespace Moonfish.Guerilla.Preprocess
                     soundTagReferenceField
                 }));
             fields[8] = field;
+            var unicodeStruct = new MoonfishTagField(MoonfishFieldType.FieldStruct, "UnicodeBlockInfo");
+            unicodeStruct.AssignDefinition(new MoonfishTagStruct(new MoonfishTagDefinition("MoonfishGlobalUnicodeBlockInfoStructBlock", new[]
+            {
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 8), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "English String Count"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "English String Table Length"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "English String Index Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "English String Table Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 4), 
+                
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 8), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Japanese String Count"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Japanese String Table Length"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Japanese String Index Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Japanese String Table Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 4), 
+                
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 8), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Dutch String Count"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Dutch String Table Length"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Dutch String Index Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Dutch String Table Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 4), 
+                
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 8), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "French String Count"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "French String Table Length"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "French String Index Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "French String Table Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 4), 
+                
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 8), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Spanish String Count"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Spanish String Table Length"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Spanish String Index Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Spanish String Table Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 4), 
+                
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 8), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Italian String Count"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Italian String Table Length"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Italian String Index Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Italian String Table Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 4), 
+                
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 8), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Korean String Count"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Korean String Table Length"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Korean String Index Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Korean String Table Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 4), 
+                
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 8), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Chinese String Count"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Chinese String Table Length"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Chinese String Index Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Chinese String Table Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 4), 
+                
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 8), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Portuguese String Count"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Portuguese String Table Length"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Portuguese String Index Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldLongInteger, "Portuguese String Table Address"), 
+                new MoonfishTagField(MoonfishFieldType.FieldPad, "", 4), 
+            })));
+            fields.RemoveAt(fields.Count - 2);
+            fields.Insert(fields.Count - 1, unicodeStruct);
+
             return fields;
         }
     }

@@ -11,6 +11,8 @@ namespace Moonfish
         public int Length;
         public string Path;
 
+        public const int SizeInBytes = 16;
+
         public override bool Equals(object obj)
         {
             if (obj is TagDatum)

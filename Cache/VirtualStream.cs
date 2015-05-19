@@ -10,31 +10,31 @@ namespace Moonfish.Cache
 {
     internal class VirtualStream : MemoryStream
     {
-        private readonly int _virtualOrigin;
+        public int VirtualOrigin { get; private set; }
 
         public VirtualStream(byte[] buffer, int virtualOrigin)
             : base(
                 buffer)
         {
-            _virtualOrigin = virtualOrigin;
+            VirtualOrigin = virtualOrigin;
         }
 
         public VirtualStream(int virtualOrigin)
         {
-            _virtualOrigin = virtualOrigin;
+            VirtualOrigin = virtualOrigin;
         }
 
         public override long Seek(long offset, SeekOrigin loc)
         {
-            return IsPointer(offset)
-                ? base.Seek(offset - _virtualOrigin, loc) + _virtualOrigin
-                : base.Seek(offset, loc) + _virtualOrigin;
+            return IsPointer(offset) && loc == SeekOrigin.Begin
+                ? base.Seek(offset - VirtualOrigin, loc) + VirtualOrigin
+                : base.Seek(offset, loc) + VirtualOrigin;
         }
 
         public override long Position
         {
-            get { return (int) base.Position + _virtualOrigin; }
-            set { base.Position = IsPointer(value) ? value - _virtualOrigin : value; }
+            get { return (int) base.Position + VirtualOrigin; }
+            set { base.Position = IsPointer(value) ? value - VirtualOrigin : value; }
         }
 
         private bool IsPointer(long value)

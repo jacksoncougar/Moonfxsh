@@ -137,7 +137,7 @@ namespace Moonfish
 
         public static bool LoadResource(CacheStream map)
         {
-            switch (map.Type)
+            switch (map.Header.Type)
             {
                 case MapType.Shared:
                     resourceShared = map;
@@ -262,7 +262,7 @@ namespace Moonfish
 
             Result = string.Format("Average call time: {0}", timeSpan.Milliseconds < 1
                 ? string.Format("{0}ticks", timeSpan.Ticks)
-                : string.Format("{0}ms", timeSpan.Milliseconds));
+                : string.Format("{0}ms", timeSpan.TotalMilliseconds));
             _samples.Clear();
         }
     }

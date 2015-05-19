@@ -5,56 +5,66 @@ using System.Runtime.Remoting.Messaging;
 
 namespace Moonfish.Guerilla.Tags
 {
-    partial class BitmapDataBlock 
+    partial class BitmapDataBlock : IResourceBlock
     {
-        private byte[] _bitmapLOD1Bytes;
-        private byte[] _bitmapLOD2Bytes;
-        private byte[] _bitmapLOD3Bytes;
-
-        public void SetResource(byte[] data, int index = 0)
+        public ResourcePointer GetResourcePointer(int index = 0)
         {
             switch (index)
             {
                 case 0:
-                    _bitmapLOD1Bytes = data;
-                    break;
+                    return LOD1TextureDataOffset;
                 case 1:
-                    _bitmapLOD2Bytes = data;
-                    break;
+                    return LOD2TextureDataOffset;
                 case 2:
-                    _bitmapLOD3Bytes = data;
-                    break;
-                default:
-                    return;
+                    return LOD3TextureDataOffset;
             }
+            return 0;
         }
 
-        public byte[] GetResource(int index = 0)
+        public int GetResourceLength(int index = 0)
         {
             switch (index)
             {
                 case 0:
-                    return _bitmapLOD1Bytes;
+                    return LOD1TextureDataLength;
                 case 1:
-                    return _bitmapLOD2Bytes;
+                    return LOD2TextureDataLength;
                 case 2:
-                    return _bitmapLOD3Bytes;
-                default:
-                    return null;
+                    return LOD3TextureDataLength;
+            }
+            return 0;
+        }
+
+        public void SetResourcePointer(ResourcePointer pointer, int index = 0)
+        {
+            switch (index)
+            {
+                case 0:
+                    LOD1TextureDataOffset = pointer;
+                    break;
+                case 1:
+                    LOD2TextureDataOffset = pointer;
+                    break;
+                case 2:
+                    LOD3TextureDataOffset = pointer;
+                    break;
             }
         }
 
-        private void ReadResourceData(out byte[] data, int dataLength, int dataAddress)
+        public void SetResourceLength(int length, int index = 0)
         {
-            Stream resource;
-            if (Halo2.TryGettingResourceStream(dataAddress, out resource))
+            switch (index)
             {
-                var pointer = (ResourcePointer) dataAddress;
-                resource.Seek(pointer.Address, SeekOrigin.Begin);
-                _bitmapLOD1Bytes = new byte[dataLength];
-                resource.Read(_bitmapLOD1Bytes, 0, dataLength);
+                case 0:
+                    LOD1TextureDataLength = length;
+                    break;
+                case 1:
+                    LOD2TextureDataLength = length;
+                    break;
+                case 2:
+                    LOD3TextureDataLength = length;
+                    break;
             }
-            data = new byte[0];
         }
     }
 }

@@ -31,5 +31,10 @@
         {
             get { return (int) (_value & ~0xC0000000); }
         }
+
+        public override string ToString()
+        {
+            return _value.ToString();
+        }
     }
 }

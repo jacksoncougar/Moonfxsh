@@ -10,6 +10,8 @@ namespace Moonfish
             return new StreamPositionHandle(stream);
         }
 
+
+
         public static long Seek(this Stream stream, int address)
         {
             var position = stream.Position;
@@ -29,10 +31,10 @@ namespace Moonfish
 
             for (var index = 0; index < blockCount; ++index)
             {
-                stream.Read(buffer0, 0, buffer0.Length);
+                if (stream.Read(buffer0, 0, buffer0.Length) < buffer0.Length) throw new IOException();
                 output.Write(buffer0, 0, buffer0.Length);
             }
-            stream.Read(buffer0, 0, remainder);
+            if (stream.Read(buffer0, 0, remainder) < remainder) throw new IOException();
             output.Write(buffer0, 0, remainder);
         }
 

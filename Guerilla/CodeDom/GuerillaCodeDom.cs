@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Moonfish.Cache;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.CodeDom
 {
-    internal static class GuerillaCodeDom
+    public static class GuerillaCodeDom
     {
         public static void GenerateGuerillaCode()
         {
@@ -83,6 +84,39 @@ namespace Moonfish.Guerilla.CodeDom
             value = new string(value.Where(char.IsLetterOrDigit).ToArray());
             if (string.IsNullOrWhiteSpace(value)) return value;
             return char.IsDigit(value[0]) ? "_" + value : value;
+        }
+
+        public static void GenerateGuerillaCode(params TagClass[] classes)
+        {
+            var tags = Guerilla.h2Tags.Select(x => new MoonfishTagGroup(x)).ToList();
+            foreach (
+                var blockClass in
+                    tags.Where(x => classes.Any(y => y == x.Class)).Select(tag => new GuerillaBlockClass(tag, tags)))
+            {
+                blockClass.GenerateCSharpCode(Path.Combine(Local.ProjectDirectory, @"Guerilla\Tags.Generated\"));
+                Console.WriteLine(@"Generated: {0}", blockClass.TargetClass.Name);
+            }
+        }
+
+        public static IEnumerable<CacheStream> GetAllMaps()
+        {
+            var filenames = Directory.GetFiles(Local.MapsDirectory, "*.map", SearchOption.AllDirectories);
+            foreach (var filename in filenames)
+            {
+                CacheStream testmap = null;
+                try
+                {
+                    testmap = new CacheStream(filename);
+                }
+                catch (InvalidDataException)
+                {
+                    continue;
+                }
+                using (testmap)
+                {
+                    yield return testmap;
+                }
+            }
         }
     }
 }

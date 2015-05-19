@@ -1,5 +1,6 @@
 ﻿using Moonfish.Graphics;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using Moonfish.Compiler;
@@ -8,6 +9,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Fasterflect;
 using Moonfish.Cache;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.CodeDom;
@@ -24,31 +26,23 @@ namespace Moonfish
         [STAThread]
         private static void Main()
         {
-            using (StreamWriter writer = new StreamWriter(File.Create(Path.Combine(Local.MapsDirectory, "info.txt"))))
+            using (var map = new Moonfish.Cache.CacheStream(Path.Combine(Local.MapsDirectory, @"singleplayer\05a_deltaapproach.map")))
+            using (var output = new FileStream(Path.Combine(Local.MapsDirectory, @"output.map"), FileMode.Create,
+                    FileAccess.Write, FileShare.ReadWrite, 4 * 1024, FileOptions.SequentialScan))
             {
-                var filenames = Directory.GetFiles(Local.MapsDirectory, "*.map", SearchOption.AllDirectories);
-                foreach (var file in filenames)
-                {   
-                    try
-                    {
-                        using (var cache = new CacheStream(file))
-                        {
-                            BinaryReader binaryReader = new BinaryReader(cache);
-                            var offset = 12;
-                            cache.Seek(offset, SeekOrigin.Begin);
-                            writer.WriteLine("{0} offset {1} = {2}", cache.MapName, offset, binaryReader.ReadInt32());
-                        }
-                    }
-                    catch (InvalidDataException)
-                    {
-                        // ignored
-                    }
+                //var globals = (GlobalsBlock)map.Deserialize(map.Index.GlobalsIdent);
+                map.SaveTo(output);
+            }
+            {
+                var test = new Moonfish.Cache.CacheStream(Path.Combine(Local.MapsDirectory, @"output.map"));
+                test.Seek(test.Index.GlobalsIdent);
+                var position = test.GetFilePosition();
+
+                foreach (var data in test.Index)
+                {
+                    test.Deserialize(data.Identifier);
                 }
             }
-
-            var map = new CacheStream(Path.Combine(Local.MapsDirectory, @"singleplayer\05a_deltaapproach.map"));
-            var output = new FileStream(Path.Combine(Local.MapsDirectory, @"output.map"), FileMode.Create, FileAccess.Write, FileShare.None, 4 * 1024, FileOptions.SequentialScan);
-            map.SaveTo(output);
 
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);

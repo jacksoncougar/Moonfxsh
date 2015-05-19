@@ -88,8 +88,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\CacheStream.cs" />
+    <Compile Include="Cache\CacheStream.Header.cs" />
+    <Compile Include="Cache\CacheStream.PathsInfo.cs" />
+    <Compile Include="Cache\CacheStream.StringIdentInfo.cs" />
     <Compile Include="Cache\CacheWriter.cs" />
     <Compile Include="Cache\CacheStream.IndexInfo.cs" />
+    <Compile Include="Cache\StructureAllocationHeader.cs" />
     <Compile Include="Cache\StructureCache.cs" />
     <Compile Include="Cache\TagClassHeirarchy.cs" />
     <Compile Include="Cache\TagDatum.cs" />
@@ -170,6 +174,7 @@
     <Compile Include="Guerilla\CodeDom\GuerillaCommentCollection.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaEnumBlockClass.cs" />
     <Compile Include="Cache\CacheStream.CopyTo.cs" />
+    <Compile Include="Guerilla\Preprocess\ScenarioStructureBspReferenceBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\ActorStartingLocationsBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\AdditionalNodeDataBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\AiAnimationReferenceBlock.generated.cs" />
@@ -560,6 +565,8 @@
     <Compile Include="Guerilla\Tags.Generated\ModelVariantPermutationBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\ModelVariantRegionBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\ModelVariantStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MoonfishGlobalStructureBlockInfoStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MoonfishGlobalUnicodeBlockInfoStructBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\MoonfishSoundReferencesBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\MoonfishXboxAnimationRawBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\MoonfishXboxAnimationUnknownBlock.generated.cs" />
@@ -1266,6 +1273,8 @@
     <Compile Include="ValueTypes\VertexBuffer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\CacheStream.StringsInfo.cs" />
+    <Compile Include="Cache\CacheStream.SharedInfoStruct.cs" />
     <None Include="data\fragment.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

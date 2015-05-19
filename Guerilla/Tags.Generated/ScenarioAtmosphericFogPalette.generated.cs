@@ -18,6 +18,9 @@ namespace Moonfish.Guerilla.Tags
     
     public partial class ScenarioAtmosphericFogPalette : GuerillaBlock, IWriteQueueable
     {
+        /// <summary>
+        /// Editing Fog palette data will not behave as expected with split scenarios.
+        /// </summary>
         public Moonfish.Tags.StringIdent Name;
         /// <summary>
         /// EMPTY STRING

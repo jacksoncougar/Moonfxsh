@@ -113,7 +113,7 @@ namespace Moonfish.Guerilla
                         stringWriter.Flush();
                     }
 
-                    Console.WriteLine(@"Parsed ({0})", map.MapName);
+                    Console.WriteLine(@"Parsed ({0})", map.Header.Name);
                 }
             }
             stringWriter.Close();

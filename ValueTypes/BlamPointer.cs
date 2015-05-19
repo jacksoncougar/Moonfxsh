@@ -19,9 +19,9 @@ namespace Moonfish.Tags
         public BlamPointer(int count, int address, int elementsize, int alignment = 4)
         {
             ElementCount = count;
-            StartAddress = Padding.Pad(address, alignment);
+            StartAddress = Padding.Align(address, alignment);
             ElementSize = elementsize;
-            _endAddress = address + ElementSize*ElementCount;
+            _endAddress = StartAddress + ElementSize * ElementCount;
         }
 
         public int PointedSize

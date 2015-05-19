@@ -69,7 +69,7 @@ namespace Moonfish.Guerilla
 
         private void Enqueue(short[] data)
         {
-            var blamPointer = new BlamPointer(data.Length, _queueAddress, 1);
+            var blamPointer = new BlamPointer(data.Length, _queueAddress, 2);
             var dataQueueItem = new ShortDataQueueItem(data) { Pointer = blamPointer };
             _lookupDictionary[data] = dataQueueItem;
             _queue.Enqueue(dataQueueItem);
@@ -99,15 +99,18 @@ namespace Moonfish.Guerilla
                 //  cache.
                 if (!BlamPointer.IsNull(item.Pointer) && BaseStream.Position != item.Pointer.StartAddress)
                 {
-                    BaseStream.Seek(item.Pointer.StartAddress);
 #if DEBUG
                     var offset = item.Pointer.StartAddress - BaseStream.Position;
+                    if (offset < 0)
+                    {
+                        }
                     var cacheStream = BaseStream as CacheStream;
 
                     Debug.WriteLine(@"type: {0}, local-offset: {1}, file-address: {2}",
                         item.ReferenceField.GetType().Name(), offset,
                         cacheStream != null ? cacheStream.GetFilePosition() : BaseStream.Position);
 #endif
+                    BaseStream.Seek(item.Pointer.StartAddress);
                 }
 
                 var dataQueueItem = item as ByteDataQueueItem;

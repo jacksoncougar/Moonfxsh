@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Fasterflect;
 using Moonfish.Guerilla;
+using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 
 namespace Moonfish.Cache
@@ -14,187 +15,123 @@ namespace Moonfish.Cache
     {
         private readonly Dictionary<TagIdent, GuerillaBlock> _deserializedTagCache;
         private readonly Dictionary<TagIdent, string> _tagHashDictionary;
-        private readonly HaloVersion BuildVersion;
-
         public readonly VirtualMappedAddress DefaultMemoryBlock;
-
-        /// <summary>
-        ///     name of this cache (is not used in anything, just compiled into the header)
-        /// </summary>
-        public readonly string MapName;
-
-        /// <summary>
-        ///     path of the scenario (local directory path storing the resources of this map when decompiled)
-        /// </summary>
-        public readonly string Scenario;
-
+        
         public readonly string[] Strings;
         public readonly Dictionary<TagIdent, int> StructureMemoryBlockBindings;
         public readonly List<VirtualMappedAddress> StructureMemoryBlocks;
-        public readonly MapType Type;
-        private readonly int tagCacheLength;
-
-        private IndexInfoStruct IndexInfo;
+        public readonly CacheHeader Header;
 
         public CacheStream(string filename)
-            : base(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 1024)
+            : base(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 8*1024)  
         {
             //HEADER
             var binaryReader = new BinaryReader(this, Encoding.UTF8);
 
-            base.Seek(0, SeekOrigin.Begin);
-            if (binaryReader.ReadTagClass() != (TagClass) "head")
-                throw new InvalidDataException("Not a halo-map file");
+            Header = CacheHeader.DeserializeFrom(this);
 
-            var engineVersion = binaryReader.ReadInt32();
-            var fileSize = binaryReader.ReadInt32();
-
-            base.Seek(4, SeekOrigin.Current); // skip forwards 4 bytes
-            IndexInfo = new IndexInfoStruct(binaryReader);
-
-            base.Seek(0x24, SeekOrigin.Begin);
-            var versionCheck = binaryReader.ReadInt32();
-            BuildVersion = versionCheck != 0 ? HaloVersion.PC_RETAIL : HaloVersion.XBOX_RETAIL;
-
-            base.Seek(28, SeekOrigin.Begin);
-
-            if (BuildVersion == HaloVersion.PC_RETAIL)
-                base.Seek(12, SeekOrigin.Current);
-
-            // Read maptype
-            using (this.Pin())
-            {
-                base.Seek(320, SeekOrigin.Begin);
-                Type = (MapType) binaryReader.ReadInt32();
-            }
-
-            base.Seek(332, SeekOrigin.Current);
-
-            var stringTableLength = binaryReader.ReadInt32();
-            base.Seek(4, SeekOrigin.Current);
-            var stringTableAddress = binaryReader.ReadInt32();
-
-            base.Seek(36, SeekOrigin.Current);
-
-            MapName = binaryReader.ReadFixedString(32);
-
-            base.Seek(4, SeekOrigin.Current);
-
-            Scenario = binaryReader.ReadFixedString(256);
-
-            base.Seek(4, SeekOrigin.Current);
-            var pathsCount = binaryReader.ReadInt32();
-            var pathsTableAddress = binaryReader.ReadInt32();
-            var pathsTableLength = binaryReader.ReadInt32();
-
-
-            base.Seek(pathsTableAddress, SeekOrigin.Begin);
-            var paths = Encoding.UTF8.GetString(binaryReader.ReadBytes(pathsTableLength - 1)).Split(char.MinValue);
+            base.Seek(Header.PathsInfo.PathTableAddress, SeekOrigin.Begin);
+            var paths = Encoding.UTF8.GetString(binaryReader.ReadBytes(Header.PathsInfo.PathTableLength - 1)).Split(char.MinValue);
 
             Halo2.Paths.Assign(paths);
 
             //STRINGS
 
-            Seek(stringTableAddress, SeekOrigin.Begin);
-            Strings = Encoding.UTF8.GetString(binaryReader.ReadBytes(stringTableLength - 1)).Split(char.MinValue);
+            base.Seek(Header.StringsInfo.StringTableAddress, SeekOrigin.Begin);
+            Strings = Encoding.UTF8.GetString(binaryReader.ReadBytes(Header.StringsInfo.StringTableLength - 1)).Split(char.MinValue);
 
             Halo2.Strings.Assign(new List<string>(Strings));
 
             //  INDEX
-            base.Seek(IndexInfo.IndexOffset, SeekOrigin.Begin);
+            base.Seek(Header.IndexInfo.IndexOffset, SeekOrigin.Begin);
 
             Index = new TagIndex(this, paths);
 
             // Calculate File-pointer magic
-            var secondaryMagic = Index[Index.GlobalsIdent].VirtualAddress - (IndexInfo.IndexOffset + IndexInfo.IndexLength);
+            var secondaryMagic = Index[Index.GlobalsIdent].VirtualAddress -
+                                 (Header.IndexInfo.IndexOffset + Header.IndexInfo.IndexLength);
 
             DefaultMemoryBlock = new VirtualMappedAddress
             {
                 Address = Index[0].VirtualAddress,
-                Length = IndexInfo.MetaAllocationLength,
+                Length = Header.IndexInfo.MetaAllocationLength,
                 Magic = secondaryMagic
             };
 
             /* Intent: read the sbsp and lightmap address and lengths from the scenario tag 
              * and store them in the Tags array.
              */
-            if (BuildVersion == HaloVersion.XBOX_RETAIL)
+
+            base.Seek(Index[Index.ScenarioIdent].VirtualAddress - secondaryMagic + 528, SeekOrigin.Begin);
+            var count = binaryReader.ReadInt32();
+            var address = binaryReader.ReadInt32();
+
+            StructureMemoryBlockBindings = new Dictionary<TagIdent, int>(count*2);
+            StructureMemoryBlocks = new List<VirtualMappedAddress>(count);
+            for (var i = 0; i < count; ++i)
             {
-                base.Seek(Index[Index.ScenarioIdent].VirtualAddress - secondaryMagic + 528, SeekOrigin.Begin);
-                var count = binaryReader.ReadInt32();
-                var address = binaryReader.ReadInt32();
+                base.Seek(address - secondaryMagic + i * 68, SeekOrigin.Begin);
+                var structureBlockOffset = binaryReader.ReadInt32();
+                var structureBlockLength = binaryReader.ReadInt32();
+                var structureBlockAddress = binaryReader.ReadInt32();
+                base.Seek(8, SeekOrigin.Current);
+                var sbspIdentifier = binaryReader.ReadTagIdent();
+                base.Seek(4, SeekOrigin.Current);
+                var ltmpIdentifier = binaryReader.ReadTagIdent();
 
-                StructureMemoryBlockBindings = new Dictionary<TagIdent, int>(count*2);
-                StructureMemoryBlocks = new List<VirtualMappedAddress>(count);
-                for (var i = 0; i < count; ++i)
+                base.Seek(structureBlockOffset, SeekOrigin.Begin);
+
+
+                var blockLength = binaryReader.ReadInt32();
+                var sbspVirtualAddress = binaryReader.ReadInt32();
+                var ltmpVirtualAddress = binaryReader.ReadInt32();
+                var sbsp = binaryReader.ReadTagClass();
+
+                var hasLightmapData = !TagIdent.IsNull(ltmpIdentifier);
+
+                var sbspLength = hasLightmapData ? ltmpVirtualAddress - sbspVirtualAddress : blockLength;
+
+                var ltmpLength = blockLength - sbspLength;
+
+                var block = new VirtualMappedAddress
                 {
-                    base.Seek(address - secondaryMagic + i*68, SeekOrigin.Begin);
-                    var structureBlockOffset = binaryReader.ReadInt32();
-                    var structureBlockLength = binaryReader.ReadInt32();
-                    var structureBlockAddress = binaryReader.ReadInt32();
-                    base.Seek(8, SeekOrigin.Current);
-                    var sbspIdentifier = binaryReader.ReadTagIdent();
-                    base.Seek(4, SeekOrigin.Current);
-                    var ltmpIdentifier = binaryReader.ReadTagIdent();
+                    Address = structureBlockAddress,
+                    Length = structureBlockLength,
+                    Magic = structureBlockAddress - structureBlockOffset
+                };
 
-                    base.Seek(structureBlockOffset, SeekOrigin.Begin);
+                var sbspDatum = Index[sbspIdentifier];
+                sbspDatum.VirtualAddress = sbspVirtualAddress;
+                sbspDatum.Length = sbspLength;
+                Index.Update(sbspIdentifier, sbspDatum);
 
+                StructureMemoryBlocks.Add(block);
+                var index = StructureMemoryBlocks.Count - 1;
+                StructureMemoryBlockBindings[sbspIdentifier] = index;
 
-                    var blockLength = binaryReader.ReadInt32();
-                    var sbspVirtualAddress = binaryReader.ReadInt32();
-                    var ltmpVirtualAddress = binaryReader.ReadInt32();
-                    var sbsp = binaryReader.ReadTagClass();
-
-                    var hasLightmapData = !TagIdent.IsNull(ltmpIdentifier);
-
-                    var sbspLength = hasLightmapData ? ltmpVirtualAddress - sbspVirtualAddress : blockLength;
-
-                    var ltmpLength = blockLength - sbspLength;
-
-                    var block = new VirtualMappedAddress
-                    {
-                        Address = structureBlockAddress,
-                        Length = structureBlockLength,
-                        Magic = structureBlockAddress - structureBlockOffset
-                    };
-
-                    var sbspDatum = Index[sbspIdentifier];
-                    sbspDatum.VirtualAddress = sbspVirtualAddress;
-                    sbspDatum.Length = sbspLength;
-                    Index.Update(sbspIdentifier, sbspDatum);
-
-                    StructureMemoryBlocks.Add(block);
-                    var index = StructureMemoryBlocks.Count - 1;
-                    StructureMemoryBlockBindings[sbspIdentifier] = index;
-
-                    if (hasLightmapData)
-                    {
-                        var ltmpDatum = Index[ltmpIdentifier];
-                        ltmpDatum.VirtualAddress = ltmpVirtualAddress;
-                        ltmpDatum.Length = ltmpLength;
-                        Index.Update(ltmpIdentifier, ltmpDatum);
-                        StructureMemoryBlockBindings[ltmpIdentifier] = index;
-                    }
+                if (hasLightmapData)
+                {
+                    var ltmpDatum = Index[ltmpIdentifier];
+                    ltmpDatum.VirtualAddress = ltmpVirtualAddress;
+                    ltmpDatum.Length = ltmpLength;
+                    Index.Update(ltmpIdentifier, ltmpDatum);
+                    StructureMemoryBlockBindings[ltmpIdentifier] = index;
                 }
+
                 ActiveAllocation(StructureCache.VirtualStructureCache0);
             }
+
 
             _deserializedTagCache = new Dictionary<TagIdent, GuerillaBlock>(Index.Count);
             _tagHashDictionary = new Dictionary<TagIdent, string>(Index.Count);
             Halo2.ActiveMap(this);
+
+            Initialize();
         }
 
-        public TagDatum GetOwner(int address)
+        private void Initialize()
         {
-            foreach (var data in from data in Index
-                let start = VirtualAddressToFileOffset(data.VirtualAddress)
-                let length = data.Length
-                where address >= start && address < start + length
-                select data)
-            {
-                return data;
-            }
-            return new TagDatum();
+            // Unicode
         }
 
         public TagIndex Index { get; private set; }
@@ -210,6 +147,19 @@ namespace Moonfish.Cache
         }
 
         private VirtualMappedAddress ActiveStructureMemoryAllocation { get; set; }
+
+        public TagDatum GetOwner(int address)
+        {
+            foreach (var data in from data in Index
+                let start = VirtualAddressToFileOffset(data.VirtualAddress)
+                let length = data.Length
+                where address >= start && address < start + length
+                select data)
+            {
+                return data;
+            }
+            return new TagDatum();
+        }
 
         public void Add<T>(T item, string tagName) where T : GuerillaBlock
         {
@@ -247,7 +197,7 @@ namespace Moonfish.Cache
                 if (datum.Identifier == ident)
                 {
                     var alignment = Guerilla.Guerilla.AlignmentOf(Halo2.GetTypeOf(Index[ident].Class));
-                    datum.VirtualAddress = binaryWriter.BaseStream.Pad(alignment);
+                    datum.VirtualAddress = binaryWriter.BaseStream.Align(alignment);
                     binaryWriter.Write(new byte[size]);
                     datum.Length = size;
                     Index.Update(datum.Identifier, datum);
@@ -258,8 +208,8 @@ namespace Moonfish.Cache
                     var length = binaryWriter.BaseStream.Length;
                     binaryWriter.Write(data);
                     binaryWriter.Seek(0, SeekOrigin.End);
-                    length = (int)binaryWriter.BaseStream.Length - length;
-                    datum.Length = (int)length;
+                    length = (int) binaryWriter.BaseStream.Length - length;
+                    datum.Length = (int) length;
                     Index.Update(datum.Identifier, datum);
                 }
             }
@@ -332,7 +282,10 @@ namespace Moonfish.Cache
                 var index = StructureMemoryBlockBindings[tagident];
                 ActiveAllocation(StructureCache.VirtualStructureCache0 + index);
             }
-            return Seek(Index[tagident].VirtualAddress, SeekOrigin.Begin);
+            var offset = Header.Version == HaloVersion.XBOX_RETAIL
+                ? Index[tagident].VirtualAddress
+                : Header.IndexInfo.IndexOffset + Index[tagident].VirtualAddress;
+            return Seek(offset, SeekOrigin.Begin);
         }
 
         public override long Seek(long offset, SeekOrigin origin)
@@ -361,13 +314,13 @@ namespace Moonfish.Cache
             const int blockSize = 512;
             var buffer = new byte[blockSize];
 
-            var word_count = ((int) Length - 2048)/sizeof (uint);
-            var pass_count = word_count/(blockSize/4);
-            var remainder = word_count%pass_count;
+            var wordCount = ((int) Length - 2048)/sizeof (uint);
+            var passCount = wordCount/(blockSize/4);
+            var remainder = wordCount%passCount;
 
             Position = 2048;
             var checksum = 0;
-            for (var pass = 0; pass < pass_count; pass++)
+            for (var pass = 0; pass < passCount; pass++)
             {
                 Read(buffer, 0, blockSize);
                 for (var index = 0; index < blockSize/sizeof (uint); index += 4)
@@ -440,7 +393,7 @@ namespace Moonfish.Cache
             if (ActiveStructureMemoryAllocation.ContainsVirtualOffset(value))
             {
                 return ActiveStructureMemoryAllocation.GetOffset(value);
-            } 
+            }
             foreach (var block in StructureMemoryBlocks.Where(block => block.ContainsVirtualOffset(value)))
                 return block.GetOffset(value);
             throw new InvalidOperationException();

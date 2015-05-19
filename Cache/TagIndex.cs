@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Moonfish.Tags;
+using OpenTK;
 
 namespace Moonfish.Cache
 {
@@ -46,7 +47,7 @@ namespace Moonfish.Cache
 
         public TagDatum this[TagIdent ident]
         {
-            get { return this[ident.Index]; }
+            get { return this[ident.Index % 10000]; }
         }
 
         public TagDatum this[int index]
@@ -87,16 +88,19 @@ namespace Moonfish.Cache
                 select item;
         }
 
-        protected unsafe byte[] Serialize(int address)
+        public const int VirtualBaseAddress = -2147086368;
+
+        public void SerializeTo(Stream outputStream)
         {
             // Calculate size of arrays
-            var sizeOfTagClassHeirarchyArray = _classes.Count*sizeof (TagClassHeirarchy);
+            var sizeOfTagClassHeirarchyArray = _classes.Count * TagClassHeirarchy.SizeInBytes;
             const int sizeOfTagDatum = 16;
-            var sizeOfTagDatumArray = _data.Count*sizeOfTagDatum;
+            var sizeOfTagDatumArray = _data.Count * sizeOfTagDatum;
 
             // Create buffer and writer
+            var buffer = new byte[GetSize()];
             var stream =
-                new VirtualStream(new byte[HeaderSize + sizeOfTagClassHeirarchyArray + sizeOfTagDatumArray], address);
+                new VirtualStream(buffer, VirtualBaseAddress);
             var binaryWriter = new BinaryWriter(stream);
 
             // move past the header
@@ -118,19 +122,16 @@ namespace Moonfish.Cache
                 WriteTagDatum(binaryWriter, tagDatum);
             }
 
-            // 
-            binaryWriter.WritePadding(512);
-
             // Serialise header and update address
             var headerBytes = SerializeHeader();
 
             stream.Seek(0, SeekOrigin.Begin);
             binaryWriter.Write(headerBytes);
 
-            return stream.GetBuffer();
+            outputStream.Write(buffer, 0, buffer.Length);
         }
 
-        protected byte[] SerializePaths()
+        public byte[] SerializePaths()
         {
             var length = _data.Sum(x => Encoding.UTF8.GetByteCount(x.Path) + 1);
             var stream = new MemoryStream(new byte[length]);
@@ -174,6 +175,16 @@ namespace Moonfish.Cache
             last.Identifier++;
             Update(last.Identifier, last);
             return newDatum;
+        }
+
+        public int GetSize()
+        {
+            return
+                Padding.Align(
+                    HeaderSize
+                    + classArrayCount*TagClassHeirarchy.SizeInBytes
+                    + datumArrayCount*TagDatum.SizeInBytes,
+                    512);
         }
     }
 }

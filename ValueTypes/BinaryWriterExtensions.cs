@@ -103,9 +103,9 @@ namespace Moonfish.Tags
         public static void Write(this BinaryWriter binaryWriter, Quaternion value)
         {
             binaryWriter.Write(value.W);
-            binaryWriter.Write(value.X);
-            binaryWriter.Write(value.Y);
             binaryWriter.Write(value.Z);
+            binaryWriter.Write(value.Y);
+            binaryWriter.Write(value.X);
         }
 
         public static void Write(this BinaryWriter binaryWriter, Vector4 value)
@@ -133,8 +133,8 @@ namespace Moonfish.Tags
         {
             binaryWriter.Write(value.A);
             binaryWriter.Write(value.R);
-            binaryWriter.Write(value.B);
             binaryWriter.Write(value.G);
+            binaryWriter.Write(value.B);
         }
 
         public static void Write(this BinaryWriter binaryWriter, ColourR8G8B8 value)

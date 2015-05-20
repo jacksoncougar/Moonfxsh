@@ -143,7 +143,10 @@ namespace Moonfish.Cache
                 var value = (int) base.Position;
                 return TryConvertOffsetToPointer(ref value) ? value : base.Position;
             }
-            set { base.Position = CheckOffset(value); }
+            set
+            {
+                base.Position = CheckOffset(value);
+            }
         }
 
         private VirtualMappedAddress ActiveStructureMemoryAllocation { get; set; }
@@ -384,7 +387,7 @@ namespace Moonfish.Cache
             return false;
         }
 
-        private int VirtualAddressToFileOffset(int value)
+        public int VirtualAddressToFileOffset(int value)
         {
             if (DefaultMemoryBlock.ContainsVirtualOffset(value))
             {

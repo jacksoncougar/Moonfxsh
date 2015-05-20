@@ -19,7 +19,6 @@ namespace Moonfish.Cache
 
         public void SaveTo(Stream outputStream)
         {
-            StaticBenchmark.Begin();
 
             var newHeader = Header.CreateShallowCopy();
 
@@ -29,6 +28,8 @@ namespace Moonfish.Cache
             {
                 Deserialize(tagData.Identifier);
             }
+
+            StaticBenchmark.Begin();
 
             //  reserve 2048 bytes for the header
 

@@ -26,17 +26,22 @@ namespace Moonfish
         [STAThread]
         private static void Main()
         {
-            using (var map = new Moonfish.Cache.CacheStream(Path.Combine(Local.MapsDirectory, @"singleplayer\05a_deltaapproach.map")))
-            using (var output = new FileStream(Path.Combine(Local.MapsDirectory, @"output.map"), FileMode.Create,
+            using (var map = new Moonfish.Cache.CacheStream(Path.Combine(Local.MapsDirectory, @"output.map")))
+            using (var output = new FileStream(Path.Combine(Local.MapsDirectory, @"output1.map"), FileMode.Create,
                     FileAccess.Write, FileShare.ReadWrite, 4 * 1024, FileOptions.SequentialScan))
             {
-                //var globals = (GlobalsBlock)map.Deserialize(map.Index.GlobalsIdent);
                 map.SaveTo(output);
-            }
+            } 
+            return;
             {
                 var test = new Moonfish.Cache.CacheStream(Path.Combine(Local.MapsDirectory, @"output.map"));
                 test.Seek(test.Index.GlobalsIdent);
                 var position = test.GetFilePosition();
+
+                var buggery = test.GetOwner(187923790);
+                //test.Deserialize(buggery.Identifier);
+
+                var localOffset = 187923790 - test.VirtualAddressToFileOffset(buggery.VirtualAddress);
 
                 foreach (var data in test.Index)
                 {

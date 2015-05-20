@@ -171,7 +171,7 @@ namespace Moonfish.Cache
             };
 
             //  calculate the size of the Unicode table-index & tables to the nearest 512 aligned block
-            var alignedIndexSize = Padding.Align(globalsBlock.UnicodeBlockInfo.EnglishStringCount * sizeof (int), 512);
+            var alignedIndexSize = Padding.Align(globalsBlock.UnicodeBlockInfo.EnglishStringCount * sizeof(int) * 2, 512);
             var alignedTableSize = Padding.Align(globalsBlock.UnicodeBlockInfo.EnglishStringTableLength, 512);
 
             //  move the stream to the start of the unicode data
@@ -255,7 +255,7 @@ namespace Moonfish.Cache
         private void GenerateTableIndex(Stream outputStream, IReadOnlyList<string> values )
         {
             //  the buffer size is calculated for writing an offset to each string
-            var bufferSize = Strings.Length * sizeof (int);
+            var bufferSize = values.Count * sizeof(int);
             var indexBuffer = new byte[bufferSize];
             using (var binaryWriter = new BinaryWriter(new MemoryStream(indexBuffer)))
             {

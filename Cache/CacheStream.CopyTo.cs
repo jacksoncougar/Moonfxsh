@@ -29,8 +29,6 @@ namespace Moonfish.Cache
                 Deserialize(tagData.Identifier);
             }
 
-            StaticBenchmark.Begin();
-
             //  reserve 2048 bytes for the header
 
             Seek(2048, SeekOrigin.Begin);
@@ -116,8 +114,6 @@ namespace Moonfish.Cache
             newHeader.SerializeTo(outputStream);
 
 
-            StaticBenchmark.Sample();
-            StaticBenchmark.Clear();
         }
 
         private void CopyMeta(Stream outputStream, int address, out int metaDataSize)

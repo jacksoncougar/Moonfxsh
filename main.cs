@@ -27,6 +27,15 @@ namespace Moonfish
         private static void Main()
         {
             CacheStream map = new CacheStream(Path.Combine(Local.MapsDirectory, @"output1.map"));
+            var scenario = (ScenarioBlock) map.Deserialize(map.Index.ScenarioIdent);
+            var crates = scenario.Crates.ToList();
+            crates.AddRange(crates);
+            crates.AddRange(crates);
+            crates.AddRange(crates);
+            crates.AddRange(crates);
+            crates.AddRange(crates);
+            crates.AddRange(crates);
+            scenario.Crates = crates.ToArray();
             map.Save();
 
             //Application.EnableVisualStyles();
@@ -34,7 +43,7 @@ namespace Moonfish
             //Application.Run(new Gizmo());
         }
 
-        private static void Save(this CacheStream map)
+        private static CacheStream Save(this CacheStream map)
         {
             var filename = Path.Combine(Local.MapsDirectory, @"temp.map");
             FileStream copyStream = new FileStream(filename, FileMode.Create,
@@ -46,7 +55,7 @@ namespace Moonfish
             }
             File.Delete(map.Name);
             File.Move(filename, map.Name);
-            map = new CacheStream(map.Name);
+            return new CacheStream(map.Name);
         }
     }
 }

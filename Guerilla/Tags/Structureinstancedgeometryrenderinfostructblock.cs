@@ -24,5 +24,10 @@ namespace Moonfish.Guerilla.Tags
         {
             GeometryBlockInfo.BlockSize = length;
         }
+
+        public void LoadSectionData()
+        {
+            RenderData = new[] {new StructureBspClusterDataBlockNew {Section = GeometryBlockInfo.LoadSectionData()}};
+        }
     }
 }

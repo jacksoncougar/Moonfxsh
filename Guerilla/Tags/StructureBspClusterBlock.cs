@@ -21,5 +21,10 @@
         {
             GeometryBlockInfo.BlockSize = length;
         }
+
+        public void LoadSectionData()
+        {
+            ClusterData = new[] {new StructureBspClusterDataBlockNew {Section = GeometryBlockInfo.LoadSectionData()}};
+        }
     }
 }

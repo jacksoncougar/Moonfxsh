@@ -2,6 +2,8 @@
 using OpenTK;
 using System;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
@@ -30,6 +32,11 @@ namespace Moonfish.Guerilla.Tags
         public void SetResourceLength(int length, int index = 0)
         {
             GeometryBlockInfo.BlockSize = length;
+        }
+
+        public void LoadSectionData()
+        {
+            SectionData = new[] {new RenderModelSectionDataBlock {Section = GeometryBlockInfo.LoadSectionData()}};
         }
     }
 

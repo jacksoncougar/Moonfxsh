@@ -538,5 +538,20 @@ namespace Moonfish.Cache
             var size = Padding.Align(length, 512);
             this.BufferedCopyBytesTo(size, outputStream);
         }
+
+        private static CacheStream Save(CacheStream map)
+        {
+            var filename = Path.Combine(Local.MapsDirectory, @"temp.map");
+            FileStream copyStream = new FileStream(filename, FileMode.Create,
+                FileAccess.Write, FileShare.ReadWrite, 4 * 1024, FileOptions.SequentialScan);
+            using(copyStream)
+            using (map)
+            {
+                map.SaveTo(copyStream);
+            }
+            File.Delete(map.Name);
+            File.Move(filename, map.Name);
+            return new CacheStream(map.Name);
+        }
     }
 }

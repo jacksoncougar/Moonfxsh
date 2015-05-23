@@ -31,14 +31,14 @@ namespace Moonfish.Cache
             Header = CacheHeader.DeserializeFrom(this);
 
             base.Seek(Header.PathsInfo.PathTableAddress, SeekOrigin.Begin);
-            var paths = Encoding.UTF8.GetString(binaryReader.ReadBytes(Header.PathsInfo.PathTableLength - 1)).Split(char.MinValue);
+            var paths = Encoding.UTF8.GetString(binaryReader.ReadBytes(Header.PathsInfo.PathTableLength - 1)).Split(Char.MinValue);
 
             Halo2.Paths.Assign(paths);
 
             //STRINGS
 
             base.Seek(Header.StringsInfo.StringTableAddress, SeekOrigin.Begin);
-            Strings = Encoding.UTF8.GetString(binaryReader.ReadBytes(Header.StringsInfo.StringTableLength - 1)).Split(char.MinValue);
+            Strings = Encoding.UTF8.GetString(binaryReader.ReadBytes(Header.StringsInfo.StringTableLength - 1)).Split(Char.MinValue);
 
             Halo2.Strings.Assign(new List<string>(Strings));
 

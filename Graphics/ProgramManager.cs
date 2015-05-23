@@ -35,12 +35,11 @@ namespace Moonfish.Graphics
             LoadDefaultShader();
             LoadSystemShader();
             LoadScreenShader();
+            LoadLightmapShader();
         }
 
         public void LoadMaterials(IEnumerable<TagIdent> shaders, CacheStream map)
         {
-            Materials.ToList().ForEach(x => x.Value.Dispose());
-            Materials.Clear();
             foreach (var shader in shaders)
             {
                 var shaderBlock = (ShaderBlock) map.Deserialize(shader);
@@ -107,7 +106,7 @@ namespace Moonfish.Graphics
             OpenGL.ReportError();
 
             //GL.BindAttribLocation(defaultProgram.ID, 3, "colour"); OpenGL.ReportError();
-            defaultProgram.Link(new List<Shader>(2) {vertex_shader, fragment_shader});
+            defaultProgram.Link(new List<Shader>(2) { vertex_shader, fragment_shader });
             OpenGL.ReportError();
             var loc = GL.GetAttribLocation(defaultProgram.Ident, "worldMatrix");
             Shaders["default"] = defaultProgram;
@@ -125,6 +124,45 @@ namespace Moonfish.Graphics
             Shaders["default"].SetUniform(p8NormalMapUniform, 3);
             Shaders["default"].SetUniform(diffuseMapUniform, 1);
             Shaders["default"].SetUniform(environmentMapUniform, 2);
+        }
+
+        private void LoadLightmapShader()
+        {
+            Program defaultProgram;
+            var vertex_shader = new Shader("data/lightmap.vert", ShaderType.VertexShader);
+            var fragment_shader = new Shader("data/fragment.frag", ShaderType.FragmentShader);
+            defaultProgram = new Program("lightmapped");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 0, "position");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 3, "texcoord");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 4, "normal");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 5, "tangent");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 6, "bitangent");
+            OpenGL.ReportError();
+            GL.BindAttribLocation(defaultProgram.Ident, 7, "colour");
+            OpenGL.ReportError();
+
+            defaultProgram.Link(new List<Shader>(2) { vertex_shader, fragment_shader });
+            OpenGL.ReportError();
+            Shaders[defaultProgram.Name] = defaultProgram;
+
+
+            LoadNormalMapPalette();
+
+            var p8NormalColourUniform = Shaders["default"].GetUniformLocation("P8NormalColour");
+            var p8NormalMapUniform = Shaders["default"].GetUniformLocation("P8NormalMap");
+            var diffuseMapUniform = Shaders["default"].GetUniformLocation("DiffuseMap");
+            var environmentMapUniform = Shaders["default"].GetUniformLocation("EnvironmentMap");
+
+            Shaders["default"].Use();
+            Shaders["default"].SetUniform(p8NormalColourUniform, 2);
+            Shaders["default"].SetUniform(p8NormalMapUniform, 3);
+            Shaders["default"].SetUniform(diffuseMapUniform, 1);
+            Shaders["default"].SetUniform(environmentMapUniform, 0);
         }
 
         private void LoadNormalMapPalette()
@@ -221,9 +259,8 @@ namespace Moonfish.Graphics
                     MaterialShader material;
                     if (this.Materials.TryGetValue((TagIdent) reference.Ident, out material))
                     {
-                        material.UsePass(0);
+                        material.UsePass(6);
                     }
-
                     return this.Shaders["default"];
                 case ShaderReference.ReferenceType.System:
                     return this.Shaders["system"];
@@ -239,6 +276,16 @@ namespace Moonfish.Graphics
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        public void LoadMaterials(IEnumerable<GlobalGeometryMaterialBlock> materials, CacheStream cacheStream)
+        {
+            foreach (var globalGeometryMaterialBlock in materials)
+            {
+                var shaderBlock = globalGeometryMaterialBlock.Shader.Get<ShaderBlock>();
+                var material = new MaterialShader(shaderBlock, cacheStream);
+                Materials[globalGeometryMaterialBlock.Shader.Ident] = material;
+            }
         }
     };
 }

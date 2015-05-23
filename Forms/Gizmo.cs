@@ -75,13 +75,10 @@ namespace Moonfish.Graphics
             {
                 ++i;
             }
+
+            Scene.ObjectManager.ProgramManager = Scene.ProgramManager;
+            Scene.ObjectManager.LoadScenario(Map);
             var scenarioObject = new ScenarioObject(@object);
-            Scene.ObjectManager.Add(identifier, scenarioObject);
-            Scene.ProgramManager.LoadMaterials(
-                @object.RenderModel.Get<RenderModelBlock>().Materials.Select(x => x.Shader.Ident), Map);
-            Scene.ProgramManager.Materials.First().Value.UsePass(0);
-            Scene.CollisionManager.LoadScenarioObjectCollision(
-                Scene.ObjectManager[identifier].First());
 
             propertyGrid1.SelectedObject = scenarioObject.Nodes[0];
 

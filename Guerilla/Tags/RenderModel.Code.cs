@@ -36,7 +36,25 @@ namespace Moonfish.Guerilla.Tags
 
         public void LoadSectionData()
         {
-            SectionData = new[] {new RenderModelSectionDataBlock {Section = GeometryBlockInfo.LoadSectionData()}};
+            var resourceStream = Halo2.GetResourceBlock(GeometryBlockInfo);
+            if (resourceStream == null) return;
+
+            var sectionBlock = new RenderModelSectionDataBlock();
+            using (var binaryReader = new BinaryReader(resourceStream))
+            {
+                sectionBlock.Read(binaryReader);
+
+                var vertexBufferResources = GeometryBlockInfo.Resources.Where(
+                    x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer).ToArray();
+                for (var i = 0;
+                    i < sectionBlock.Section.VertexBuffers.Length && i < vertexBufferResources.Length;
+                    ++i)
+                {
+                    sectionBlock.Section.VertexBuffers[i].VertexBuffer.Data =
+                        resourceStream.GetResourceData(vertexBufferResources[i]);
+                }
+            }
+            SectionData = new[] {sectionBlock};
         }
     }
 

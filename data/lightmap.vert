@@ -1,8 +1,6 @@
 ﻿#version 140
 
 in vec4 position;
-in vec3 boneIndices;
-in vec3 boneWeights;
 in vec2 texcoord;
 in int normal;
 in int tangent;
@@ -17,8 +15,6 @@ uniform vec4 LightPositionUniform;
 uniform mat4 ViewProjectionMatrixUniform;
 uniform mat4 ViewMatrixUniform; 
 uniform vec4 TexcoordRangeUniform;
-
-uniform mat4 BoneMatrices[64];
 
 flat out vec4 DiffuseColour;
 out vec3 LightPosition_worldspace;
@@ -69,11 +65,7 @@ vec3 unpack(in int packedVector)
 
 void main()
 {
-	vec3 weights = boneWeights;
-	if(length(weights) < 1) weights = vec3(1.0, 0.0, 0.0);
-	vec4 transformedPosition = position;// (BoneMatrices[int(boneIndices.x)] * position) * boneWeights.x;
-	//transformedPosition  += (BoneMatrices[int(boneIndices.y)] * position) * boneWeights.y;
-	//transformedPosition  += (BoneMatrices[int(boneIndices.z)] * position) * boneWeights.z;
+	vec4 transformedPosition = position;
 	mat3 normalMatrix = mat3(ViewMatrixUniform);	
 
 	LightPosition_worldspace = LightPositionUniform.xyz;
@@ -100,8 +92,8 @@ void main()
 	LightDirection_tangentspace = TBN * LightDirection_cameraspace;
 	EyeDirection_tangentspace = TBN * EyeDirection_cameraspace;
 
-	VertexTexcoord_texturespace = texcoord;// vec2(unpack(texcoord.s, TexcoordRangeUniform.xy), unpack(texcoord.t, TexcoordRangeUniform.zw));
-	
+	VertexTexcoord_texturespace = texcoord;
+
 	DiffuseColour  = colour;
     gl_Position = ViewProjectionMatrixUniform * transformedPosition;
 }

@@ -8,92 +8,65 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {
-    public class LevelManager
+    public class MeshManager
     {
-        private Program shaded, system;
+        public ProgramManager ProgramManager { get; set; }
+        private readonly Dictionary<TagIdent, List<ScenarioObject>> _objectInstances;
+        private ScenarioBlock _scenario;
 
+        public MeshManager()
+        {
+            _objectInstances = new Dictionary<TagIdent, List<ScenarioObject>>();
+            ClusterObjects = new List<RenderObject>();
+            InstancedGeometryObjects = new List<RenderObject>();
+        }
+
+        private CollisionManager Collision { get; set; }
         public ScenarioStructureBspBlock Level { get; private set; }
         public List<RenderObject> ClusterObjects { get; private set; }
         public List<RenderObject> InstancedGeometryObjects { get; private set; }
-
-        public LevelManager(params Program[] programs)
-        {
-            shaded = programs.Length > 0 ? programs[0] : null;
-            system = programs.Length > 1 ? programs[1] : null;
-        }
-
-        public void LoadScenarioStructure(ScenarioStructureBspBlock levelBlock)
-        {
-            this.Level = levelBlock;
-            ClusterObjects = new List<RenderObject>();
-            InstancedGeometryObjects = new List<RenderObject>();
-            foreach (var cluster in this.Level.Clusters)
-            {
-                ClusterObjects.Add(new RenderObject(cluster));
-            }
-            foreach (var item in this.Level.InstancedGeometriesDefinitions)
-            {
-                InstancedGeometryObjects.Add(new RenderObject(item));
-            }
-        }
-
-        public void RenderLevel()
-        {
-            //if (Level == null) return;
-
-            //var worldMatrixAttribute = shaded.GetAttributeLocation("worldMatrix");
-            //var objectMatrixAttribute = shaded.GetAttributeLocation("objectExtents");
-
-            //shaded.SetAttribute(worldMatrixAttribute, Matrix4.Identity);
-            //shaded.SetAttribute(objectMatrixAttribute, Matrix4.Identity);
-
-            //foreach (var item in ClusterObjects)
-            //    item.Render(shaded);
-            //foreach (var instance in this.Level.instancedGeometryInstances)
-            //{
-            //    shaded.SetAttribute(worldMatrixAttribute, instance.WorldMatrix);
-            //    InstancedGeometryObjects[(int)instance.instanceDefinition].Render(shaded);
-            //}
-        }
-    }
-
-    public class MeshManager
-    {
-        private CollisionManager Collision { get; set; }
-
-        private ScenarioBlock scenario;
-        private readonly Dictionary<TagIdent, List<ScenarioObject>> objectInstances;
 
         public IEnumerable<ScenarioObject> this[TagIdent ident]
         {
             get
             {
                 List<ScenarioObject> instances;
-                if (objectInstances.TryGetValue(ident, out instances))
+                if (_objectInstances.TryGetValue(ident, out instances))
                     return instances;
                 return Enumerable.Empty<ScenarioObject>();
             }
         }
 
+        public void LoadScenarioStructure(ScenarioStructureBspBlock levelBlock, CacheStream cacheStream)
+        {
+            Level = levelBlock;
+            ClusterObjects = new List<RenderObject>();
+            InstancedGeometryObjects = new List<RenderObject>();
+            foreach (var cluster in Level.Clusters)
+            {
+                ClusterObjects.Add(new RenderObject(cluster));
+            }
+            foreach (var item in Level.InstancedGeometriesDefinitions)
+            {
+                InstancedGeometryObjects.Add(new RenderObject(item));
+            }
+            ProgramManager.LoadMaterials(Level.Materials, cacheStream);
+        }
+
         internal void Add(TagIdent ident, ScenarioObject @object)
         {
             List<ScenarioObject> instanceList;
-            if (!objectInstances.TryGetValue(ident, out instanceList))
+            if (!_objectInstances.TryGetValue(ident, out instanceList))
             {
-                instanceList = objectInstances[ident] = new List<ScenarioObject>();
+                instanceList = _objectInstances[ident] = new List<ScenarioObject>();
             }
             instanceList.Add(@object);
         }
 
-        public MeshManager()
-        {
-            objectInstances = new Dictionary<TagIdent, List<ScenarioObject>>();
-        }
-
         public void LoadCollision(CollisionManager collision)
         {
-            this.Collision = collision;
-            foreach (var item in objectInstances.SelectMany(x => x.Value))
+            Collision = collision;
+            foreach (var item in _objectInstances.SelectMany(x => x.Value))
             {
                 Collision.World.AddCollisionObject(item.CollisionObject);
             }
@@ -101,20 +74,22 @@ namespace Moonfish.Graphics
 
         public void LoadScenario(CacheStream map)
         {
-            var ident = map.Index.Select((TagClass)"scnr", "").First().Identifier;
-            scenario = (ScenarioBlock) map.Deserialize(ident);
+            var ident = map.Index.Select((TagClass) "scnr", "").First().Identifier;
+            _scenario = (ScenarioBlock) map.Deserialize(ident);
+
+            LoadScenarioStructure((ScenarioStructureBspBlock) _scenario.StructureBSPs.First().StructureBSP.Get(), map);
 
             LoadInstances(
-                scenario.Scenery.Select(x => (IH2ObjectInstance) x).ToList(),
-                scenario.SceneryPalette.Select(x => (IH2ObjectPalette) x).ToList());
+                _scenario.Scenery.Select(x => (IH2ObjectInstance) x).ToList(),
+                _scenario.SceneryPalette.Select(x => (IH2ObjectPalette) x).ToList());
             LoadInstances(
-                scenario.Crates.Select(x => (IH2ObjectInstance) x).ToList(),
-                scenario.CratesPalette.Select(x => (IH2ObjectPalette) x).ToList());
+                _scenario.Crates.Select(x => (IH2ObjectInstance) x).ToList(),
+                _scenario.CratesPalette.Select(x => (IH2ObjectPalette) x).ToList());
             LoadInstances(
-                scenario.Weapons.Select(x => (IH2ObjectInstance) x).ToList(),
-                scenario.WeaponPalette.Select(x => (IH2ObjectPalette) x).ToList());
+                _scenario.Weapons.Select(x => (IH2ObjectInstance) x).ToList(),
+                _scenario.WeaponPalette.Select(x => (IH2ObjectPalette) x).ToList());
             LoadNetgameEquipment(
-                scenario.NetgameEquipment.Select(x => x).ToList());
+                _scenario.NetgameEquipment.Select(x => x).ToList());
 
             Log.Info(GL.GetError().ToString());
         }
@@ -169,9 +144,21 @@ namespace Moonfish.Graphics
 
         public void Draw(ProgramManager programManager)
         {
-            foreach (var batch in objectInstances.SelectMany(x => x.Value).SelectMany(x => x.Batches))
+            DrawLevel();
+            return;
+            foreach (var batch in _objectInstances.SelectMany(x => x.Value).SelectMany(x => x.Batches))
             {
                 Draw(programManager, batch);
+            }
+        }
+
+        private void DrawLevel()
+        {
+            foreach (var batch in ClusterObjects.SelectMany(x => x.Batches))
+            {
+                var index = batch.Shader.Ident;
+                batch.Shader.Ident = (int)Level.Materials[index].Shader.Ident;
+                Draw(ProgramManager, batch);
             }
         }
 
@@ -211,7 +198,7 @@ namespace Moonfish.Graphics
 
         public void Draw(TagIdent item)
         {
-            if (objectInstances.ContainsKey(item))
+            if (_objectInstances.ContainsKey(item))
             {
                 //IRenderable @object = objects[item] as IRenderable;
                 //@object.Render( new[] { program, systemProgram } );
@@ -225,12 +212,12 @@ namespace Moonfish.Graphics
 
         internal void Remove(TagIdent item)
         {
-            this.objectInstances.Remove(item);
+            _objectInstances.Remove(item);
         }
 
         internal void Clear()
         {
-            this.objectInstances.Clear();
+            _objectInstances.Clear();
         }
     }
 }

@@ -101,6 +101,7 @@ namespace Moonfish.Graphics
 
             foreach (var section in renderModel.Sections)
             {
+                section.LoadSectionData();
                 var mesh = new Mesh(section.SectionData[0].Section, renderModel.CompressionInfo[0])
                 {
                     SectionBlock = section

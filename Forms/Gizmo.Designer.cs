@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
 using OpenTK;
+using OpenTK.Graphics;
 
 namespace Moonfish.Graphics
 {
@@ -37,7 +38,7 @@ namespace Moonfish.Graphics
             this.lblRenderTime = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-            this.glControl1 = new OpenTK.GLControl();
+            this.glControl1 = new OpenTK.GLControl(new GraphicsMode());
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();

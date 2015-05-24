@@ -67,20 +67,9 @@ namespace Moonfish.Graphics
 
             Open(Path.Combine(Local.MapsDirectory, "headlong.map"));
 
-            var identifier = Map.Index.Select((TagClass) "hlmt", "banshee").First().Identifier;
-
-            var @object = (ModelBlock) Map.Deserialize(identifier);
-            var i = 0;
-            foreach (IResourceBlock section in @object.RenderModel.Get<RenderModelBlock>().Sections)
-            {
-                ++i;
-            }
-
             Scene.ObjectManager.ProgramManager = Scene.ProgramManager;
             Scene.ObjectManager.LoadScenario(Map);
-            var scenarioObject = new ScenarioObject(@object);
 
-            propertyGrid1.SelectedObject = scenarioObject.Nodes[0];
 
             //  firing this method is meant to load the view-projection matrix values into 
             //  the shader uniforms, and initalizes the camera

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
@@ -55,18 +57,35 @@ namespace Moonfish.Graphics
                 else GL.Disable(state);
             }
         }
-        [Conditional("DEBUG")]
-        internal static void ReportError()
+
+        private static readonly DebugProc callback;
+        private static StringBuilder messageString = new StringBuilder(1000);
+        private static Timer timer = new Timer();
+
+        static OpenGL( )
         {
-            GL.Arb.DebugMessageCallback(Callback, IntPtr.Zero);
-            var error = GL.GetError();
-            if (error != ErrorCode.NoError)
-                throw new GraphicsException(error.ToString());
+            timer.Interval = 2000;
+            callback = Callback;
+            timer.Tick += delegate
+            {
+                if ( messageString.Length > 0 )
+                {
+                    Debug.WriteLine( messageString );
+                    messageString.Clear( );
+                }
+            };
+            timer.Start();
+            GL.DebugMessageCallback(callback, IntPtr.Zero);
         }
 
         private static void Callback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam)
         {
-            throw new NotImplementedException();
+            messageString.AppendLine( System.Runtime.InteropServices.Marshal.PtrToStringAnsi( message, length ) );
+            if ( messageString.Length + length > messageString.Capacity )
+            {
+                Debug.WriteLine(messageString);
+                messageString.Clear( );
+            }
         }
     }
 }

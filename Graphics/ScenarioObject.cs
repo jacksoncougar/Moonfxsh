@@ -84,31 +84,69 @@ namespace Moonfish.Graphics
         {
             Model = model;
 
-            var renderModel = (RenderModelBlock) model.RenderModel.Get();
-            if (renderModel == null) return;
+            RenderModel = (RenderModelBlock)model.RenderModel.Get();
+            if (RenderModel == null) return;
 
             CollisionObject = new CollisionObject
             {
                 UserObject = this,
                 CollisionFlags = CollisionFlags.StaticObject,
-                CollisionShape = new BoxShape(renderModel.CompressionInfo[0].ToHalfExtents())
+                CollisionShape = new BoxShape(RenderModel.CompressionInfo[0].ToHalfExtents())
             };
 
             _collisionSpaceMatrix =
                 Matrix4.CreateTranslation(
-                    renderModel.CompressionInfo[0].ToObjectMatrix().ExtractTranslation());
+                    RenderModel.CompressionInfo[0].ToObjectMatrix().ExtractTranslation());
             _worldMatrix = Matrix4.Identity;
 
-            foreach (var section in renderModel.Sections)
+            LoadSections(RenderModel.L3SectionGroupIndex);
+
+            Nodes = new List<RenderModelNodeBlock>(RenderModel.Nodes);
+        }
+
+        private void LoadSections( byte sectionGroupIndex )
+        {
+            foreach ( var sectionBuffer in SectionBuffers )
             {
-                section.LoadSectionData();
-                var mesh = new Mesh(section.SectionData[0].Section, renderModel.CompressionInfo[0])
-                {
-                    SectionBlock = section
-                };
-                SectionBuffers.Add(mesh);
+                sectionBuffer.Dispose(  );
             }
-            Nodes = new List<RenderModelNodeBlock>(renderModel.Nodes);
+            foreach ( var renderModelRegionBlock in RenderModel.Regions )
+            {
+                foreach ( var renderModelPermutationBlock in renderModelRegionBlock.Permutations )
+                {
+                    RenderModelSectionBlock section;
+                    switch ( sectionGroupIndex )
+                    {
+                        case 0:
+                            section = RenderModel.Sections[ renderModelPermutationBlock.L1SectionIndex ];
+                            break;
+                        case 1:
+                            section = RenderModel.Sections[ renderModelPermutationBlock.L2SectionIndex ];
+                            break;
+                        case 2:
+                            section = RenderModel.Sections[ renderModelPermutationBlock.L3SectionIndex ];
+                            break;
+                        case 3:
+                            section = RenderModel.Sections[ renderModelPermutationBlock.L4SectionIndex ];
+                            break;
+                        case 4:
+                            section = RenderModel.Sections[ renderModelPermutationBlock.L5SectionIndex ];
+                            break;
+                        case 5:
+                            section = RenderModel.Sections[ renderModelPermutationBlock.L6SectionIndex ];
+                            break;
+                        default:
+                            continue;
+                    }
+
+                    section.LoadSectionData( );
+                    var mesh = new Mesh( section.SectionData[ 0 ].Section, RenderModel.CompressionInfo[ 0 ] )
+                    {
+                        SectionBlock = section
+                    };
+                    SectionBuffers.Add( mesh );
+                }
+            }
         }
 
         public StringIdent ActivePermuation { get; set; }
@@ -153,8 +191,6 @@ namespace Moonfish.Graphics
 
                     batch.AssignUniform("WorldMatrixUniform", Matrix4.Identity);
                     batch.AssignAttribute("Colour", new ColorF(Color.Red).RGBA);
-                    batch.AssignRenderState(EnableCap.DepthTest, false);
-                    batch.AssignRenderState(EnableCap.VertexProgramPointSize, true);
                     batch.BatchObject = _markersBatch;
                     yield return batch;
                 }
@@ -191,8 +227,6 @@ namespace Moonfish.Graphics
 
                     batch.AssignUniform("WorldMatrixUniform", Matrix4.Identity);
                     batch.AssignAttribute("Colour", new ColorF(Color.White).RGBA);
-                    batch.AssignRenderState(EnableCap.DepthTest, false);
-                    batch.AssignRenderState(EnableCap.VertexProgramPointSize, true);
                     batch.BatchObject = _nodesBatch;
                     yield return batch;
                 }
@@ -209,6 +243,7 @@ namespace Moonfish.Graphics
         }
 
         public ModelBlock Model { get; set; }
+        public RenderModelBlock RenderModel { get; set; }
 
         [TypeConverter(typeof (ExpandableObjectConverter))]
         public List<RenderModelNodeBlock> Nodes { get; private set; }
@@ -291,45 +326,40 @@ namespace Moonfish.Graphics
             return Nodes.GetWorldMatrix(nodeBlock);
         }
 
-        private IEnumerable<RenderBatch> RenderBatches()
+        private IEnumerable<RenderBatch> RenderBatches( )
         {
-            var renderModelBlock = ((RenderModelBlock)Model.RenderModel.Get());
-            foreach (var region in renderModelBlock.Regions)
+            foreach ( var sectionBuffer in SectionBuffers )
             {
-                var sectionIndex = region.Permutations[0].L6SectionIndex;
-                var mesh = SectionBuffers[sectionIndex];
+                var mesh = sectionBuffer;
 
-                foreach (var part in mesh.Parts)
+                foreach ( var part in mesh.Parts )
                 {
-                    var extents = renderModelBlock.CompressionInfo[0].ToObjectMatrix();
-                    var texcoordRange = renderModelBlock.CompressionInfo[0].ExtractTexcoordScaling();
+                    var texcoordRange = RenderModel.CompressionInfo[ 0 ].ExtractTexcoordScaling( );
 
                     var batch = new RenderBatch
                     {
-                        ElementStartIndex = part.StripStartIndex*sizeof (ushort),
+                        ElementStartIndex = part.StripStartIndex * sizeof ( ushort ),
                         ElementLength = part.StripLength
                     };
 
-                    batch.AssignUniform("TexcoordRangeUniform", texcoordRange);
-                    batch.AssignUniform("WorldMatrixUniform", WorldMatrix);
-                    for (int i = 0; i < mesh.SectionBlock.SectionData[0].NodeMap.Length; ++i)
+                    batch.AssignUniform( "TexcoordRangeUniform", texcoordRange );
+                    batch.AssignUniform( "WorldMatrixUniform", WorldMatrix );
+                    for ( int i = 0; i < mesh.SectionBlock.SectionData[ 0 ].NodeMap.Length; ++i )
                     {
                         var inverseBindPoseMatrix =
-                            Nodes.GetInverseBindPoseTransfrom(mesh.SectionBlock.SectionData[0].NodeMap[i].NodeIndex);
+                            Nodes.GetInverseBindPoseTransfrom( mesh.SectionBlock.SectionData[ 0 ].NodeMap[ i ].NodeIndex );
                         var poseMatrix =
-                            Nodes.GetPoseTransfrom(mesh.SectionBlock.SectionData[0].NodeMap[i].NodeIndex);
-                        var final = inverseBindPoseMatrix*poseMatrix;
+                            Nodes.GetPoseTransfrom( mesh.SectionBlock.SectionData[ 0 ].NodeMap[ i ].NodeIndex );
+                        var final = inverseBindPoseMatrix * poseMatrix;
 
-                        batch.AssignUniform(string.Format("BoneMatrices[{0}]", i), final);
+                        batch.AssignUniform( string.Format( "BoneMatrices[{0}]", i ), final );
                     }
 
                     batch.Shader = new ShaderReference(
                         ShaderReference.ReferenceType.Halo2,
-                        (int)renderModelBlock.Materials[part.Material].Shader.Ident);
+                        ( int ) RenderModel.Materials[ part.Material ].Shader.Ident );
                     batch.PrimitiveType = PrimitiveType.TriangleStrip;
                     batch.BatchObject = mesh.TriangleBatch;
-                    batch.ChangeState = delegate() { GL.PointSize(10.0f); };
-                    batch.RevertState = delegate() { GL.PointSize(1.0f); };
 
                     yield return batch;
                 }

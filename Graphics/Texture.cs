@@ -26,10 +26,6 @@ namespace Moonfish.Graphics
             TextureMagFilter textureMagFilter = TextureMagFilter.Linear,
             TextureMinFilter textureMinFilter = TextureMinFilter.Linear)
         {
-            GL.ActiveTexture(textureUnit);
-
-            OpenGL.ReportError();
-
             var workingBitmap = bitmapCollection.Bitmaps[0];
             var buffer = workingBitmap.GetResourceData();
 
@@ -55,37 +51,28 @@ namespace Moonfish.Graphics
                 {
                     textureTarget = TextureTarget.Texture2D;
                     GL.BindTexture(TextureTarget.Texture2D, handle);
-                    OpenGL.ReportError();
                     GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
                         (int) textureMagFilter);
-                    OpenGL.ReportError();
                     GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
                         (int) textureMinFilter);
-                    OpenGL.ReportError();
                     GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS,
                         (int) TextureWrapMode.Repeat);
-                    OpenGL.ReportError();
                     GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT,
                         (int) TextureWrapMode.Repeat);
-                    OpenGL.ReportError();
 
                     var surfaceData = new byte[(int) (bytesPerPixel * width * height)];
                     Array.Copy(buffer, 0, surfaceData, 0, surfaceData.Length);
 
                     if (workingBitmap.BitmapDataFlags.HasFlag(BitmapDataBlock.Flags.Compressed))
                     {
-                        OpenGL.ReportError();
                         GL.CompressedTexImage2D(
                             TextureTarget.Texture2D, 0, pixelInternalFormat, width, height, 0,
                             (int) (bytesPerPixel * width * height), surfaceData);
                         GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
                         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
                             (int) TextureMagFilter.Linear);
-                        OpenGL.ReportError();
                         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
                             (int) TextureMinFilter.LinearMipmapLinear);
-
-                        OpenGL.ReportError();
                     }
                     else
                     {
@@ -93,8 +80,6 @@ namespace Moonfish.Graphics
                         var pixelType = ParseBitapPixelType(workingBitmap.Format);
                         GL.TexImage2D(TextureTarget.Texture2D, 0, pixelInternalFormat, width, height, 0, pixelFormat,
                             pixelType, surfaceData);
-
-                        OpenGL.ReportError();
                     }
                 }
                     break;
@@ -112,7 +97,6 @@ namespace Moonfish.Graphics
                         (int) TextureWrapMode.ClampToEdge);
                     GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR,
                         (int) TextureWrapMode.ClampToEdge);
-                    OpenGL.ReportError();
 
                     TextureTarget[] cube =
                     {
@@ -123,7 +107,6 @@ namespace Moonfish.Graphics
                         TextureTarget.TextureCubeMapPositiveZ,
                         TextureTarget.TextureCubeMapNegativeZ
                     };
-                    OpenGL.ReportError();
 
                     for (var i = 0; i < 6; ++i)
                     {
@@ -137,8 +120,6 @@ namespace Moonfish.Graphics
                             GL.CompressedTexImage2D(
                                 cube[i], 0, pixelInternalFormat, width, height, 0,
                                 (int) (bytesPerPixel * width * height), surfaceData);
-
-                            OpenGL.ReportError();
                         }
                         else
                         {
@@ -146,8 +127,6 @@ namespace Moonfish.Graphics
                             var pixelType = ParseBitapPixelType(workingBitmap.Format);
                             GL.TexImage2D(cube[i], 0, pixelInternalFormat, width, height, 0, pixelFormat, pixelType,
                                 surfaceData);
-
-                            OpenGL.ReportError();
                         }
                     }
                 }
@@ -156,8 +135,6 @@ namespace Moonfish.Graphics
                     GL.DeleteTexture(handle);
                     break;
             }
-
-            OpenGL.ReportError();
         }
 
         public void Bind()

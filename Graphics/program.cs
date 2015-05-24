@@ -63,7 +63,6 @@ namespace Moonfish.Graphics
             {
                 _attributes[name] = location = GL.GetAttribLocation(Ident, name);
 #if DEBUG
-                OpenGL.ReportError();
 #endif
             }
             return location;
@@ -73,7 +72,6 @@ namespace Moonfish.Graphics
         {
             GL.VertexAttrib4(location + 0, value);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -81,7 +79,6 @@ namespace Moonfish.Graphics
         {
             GL.VertexAttrib4(location + 0, values);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -92,7 +89,6 @@ namespace Moonfish.Graphics
             GL.VertexAttrib4(location + 2, value.Row2);
             GL.VertexAttrib4(location + 3, value.Row3);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -103,7 +99,6 @@ namespace Moonfish.Graphics
             {
                 location = _uniforms[name] = GL.GetUniformLocation(Ident, name);
 #if DEBUG
-                OpenGL.ReportError();
 #endif
             }
             return location;
@@ -114,7 +109,6 @@ namespace Moonfish.Graphics
             var indices = new int[names.Length];
             GL.GetUniformIndices(Ident, names.Length, names, indices);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
             return indices;
         }
@@ -124,7 +118,6 @@ namespace Moonfish.Graphics
             int[] offsets = new int[indices.Length];
             GL.GetActiveUniforms(Ident, indices.Length, indices, ActiveUniformParameter.UniformOffset, offsets);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
             return offsets;
         }
@@ -133,7 +126,6 @@ namespace Moonfish.Graphics
         {
             GL.UniformMatrix4(location, false, ref value);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -141,7 +133,6 @@ namespace Moonfish.Graphics
         {
             GL.UniformMatrix4(location, false, ref value);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -149,7 +140,6 @@ namespace Moonfish.Graphics
         {
             GL.UniformMatrix3(location, false, ref value);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -157,7 +147,6 @@ namespace Moonfish.Graphics
         {
             GL.UniformMatrix3(location, false, ref value);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -165,7 +154,6 @@ namespace Moonfish.Graphics
         {
             GL.Uniform3(location, ref value);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -173,7 +161,6 @@ namespace Moonfish.Graphics
         {
             GL.Uniform3(location, ref value);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -181,7 +168,6 @@ namespace Moonfish.Graphics
         {
             GL.Uniform4(location, ref value);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -189,7 +175,6 @@ namespace Moonfish.Graphics
         {
             GL.Uniform4(location, ref value);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -197,7 +182,6 @@ namespace Moonfish.Graphics
         {
             GL.Uniform1(location, value);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -205,8 +189,12 @@ namespace Moonfish.Graphics
         {
             GL.Uniform1(location, value);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
+        }
+
+        public void Assign( )
+        {
+            GL.UseProgram(Ident);
         }
 
 

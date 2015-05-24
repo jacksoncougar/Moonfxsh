@@ -32,8 +32,6 @@ namespace Moonfish.Graphics.Primitives
             GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 0, IntPtr.Zero);
             GL.EnableVertexAttribArray(0);
             var colourAttribute = ScreenspaceProgram.GetAttributeLocation("Colour");
-            GL.PointSize(pointSize);
-            GL.Enable(EnableCap.VertexProgramPointSize);
             var worldMatrixUniform = ScreenspaceProgram.GetUniformLocation("WorldMatrixUniform");
             using (ScreenspaceProgram.Use())
             {
@@ -41,10 +39,8 @@ namespace Moonfish.Graphics.Primitives
                 Program.SetAttribute(colourAttribute, new ColorF(Color.FromArgb(color.ToArgb())).RGBA);
                 GL.DrawArrays(PrimitiveType.Points, 0, 1);
             }
-            GL.PointSize(1.0f);
             GL.DeleteBuffer(arrayBuffer);
             GL.DeleteVertexArray(vao);
-            OpenGL.ReportError();
         }
 
         public static void DrawPoint(Vector3 point, Color color, float pointSize)
@@ -58,14 +54,12 @@ namespace Moonfish.Graphics.Primitives
                 BufferUsageHint.StreamDraw);
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, IntPtr.Zero);
             GL.EnableVertexAttribArray(0);
-            GL.PointSize(pointSize);
             var colourAttribute = DebugProgram.GetAttributeLocation("Colour");
             using (DebugProgram.Use())
             {
                 Program.SetAttribute(colourAttribute, new ColorF(Color.FromArgb(color.ToArgb())).RGBA);
                 GL.DrawArrays(PrimitiveType.Points, 0, 1);
             }
-            GL.PointSize(1);
             GL.Finish();
             GL.DeleteBuffer(arrayBuffer);
             GL.DeleteVertexArray(vao);

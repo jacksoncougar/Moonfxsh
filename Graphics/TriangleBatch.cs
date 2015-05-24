@@ -32,7 +32,6 @@ namespace Moonfish.Graphics
             GL.BufferData(BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.DynamicDraw);
 
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -110,7 +109,6 @@ namespace Moonfish.Graphics
             GL.VertexAttribIPointer(index, count, type, stride, (IntPtr) offset);
             GL.EnableVertexAttribArray(index);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -120,7 +118,6 @@ namespace Moonfish.Graphics
             GL.VertexAttribPointer(index, count, type, normalised, stride, offset);
             GL.EnableVertexAttribArray(index);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -128,7 +125,6 @@ namespace Moonfish.Graphics
         {
             var buffer = GL.GenBuffer();
 #if DEBUG
-            OpenGL.ReportError();
 #endif
             _buffers.Add(buffer);
             return buffer;
@@ -138,7 +134,6 @@ namespace Moonfish.Graphics
         {
             GL.BindBuffer(target, buffer);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -149,7 +144,6 @@ namespace Moonfish.Graphics
             GL.BufferData(BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.StaticDraw);
 
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -159,7 +153,6 @@ namespace Moonfish.Graphics
             GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr) offset, dataSize, data);
 
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -169,7 +162,6 @@ namespace Moonfish.Graphics
                 BufferUsageHint.DynamicDraw);
 
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -179,7 +171,6 @@ namespace Moonfish.Graphics
                 BufferUsageHint.DynamicDraw);
 
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -197,7 +188,6 @@ namespace Moonfish.Graphics
                 GL.DeleteVertexArray(_vao);
                 GL.DeleteBuffers(_buffers.Count, _buffers.ToArray());
 #if DEBUG
-                OpenGL.ReportError();
 #endif
             }
             _disposed = true;

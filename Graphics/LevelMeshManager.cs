@@ -46,14 +46,12 @@ namespace Moonfish.Graphics
                 if (program == null) return;
 
                 var usingProgram = program.Use();
-                OpenGL.ReportError();
 
                 GL.BindVertexArray(batch.BatchObject.VertexArrayObjectIdent);
                 foreach (var attribute in batch.Attributes.Select(x => new { Name = x.Key, x.Value }))
                 {
                     var attributeLocation = program.GetAttributeLocation(attribute.Name);
                     Program.SetAttribute(attributeLocation, attribute.Value);
-                    OpenGL.ReportError();
                 }
                 foreach (var uniform in batch.Uniforms.Select(x => new { Name = x.Key, x.Value }))
                 {
@@ -66,19 +64,13 @@ namespace Moonfish.Graphics
                             ? OpenGL.Enable(state.Capability)
                             : OpenGL.Disable(state.Capability)).ToList();
 
-                OpenGL.ReportError();
-
                 batch.SetupGLRenderState();
-                OpenGL.ReportError();
                 GL.DrawElements(batch.PrimitiveType, batch.ElementLength, batch.DrawElementsType, batch.ElementStartIndex);
-                OpenGL.ReportError();
                 batch.CleanupGLRenderState();
-                OpenGL.ReportError();
 
                 // Cleanup states
                 foreach (var state in openGLStates) state.Dispose();
                 usingProgram.Dispose();
-                OpenGL.ReportError();
             }
         }
     }

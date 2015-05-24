@@ -53,17 +53,10 @@ namespace Moonfish.Graphics
 
         public void UsePass(int index, Dictionary<TagIdent, Texture> textures )
         {
-            OpenGL.ReportError();
             ActiveShaderPassIndex = index;
             if (ActiveShaderPassIndex < 0)
             {
                 return;
-            }
-            //  hacky cleanup
-            for (int i = 0; i < 5; i++)
-            {
-                GL.ActiveTexture(TextureUnit.Texture1 + i);
-                GL.BindTexture(TextureTarget.Texture2D, 0);
             }
 
             var template = shaderTemplate.PostprocessDefinition[0];
@@ -84,9 +77,7 @@ namespace Moonfish.Graphics
 
                     var texturestage = texture.TextureStageIndex;
 
-                    OpenGL.ReportError();
                     GL.ActiveTexture(TextureUnit.Texture1 + texturestage);
-                    OpenGL.ReportError();
 #if DEBUG
                     var bitmapString =
                         shader.PostprocessDefinition[0].Bitmaps[
@@ -98,7 +89,6 @@ namespace Moonfish.Graphics
                         shader.PostprocessDefinition[0].Bitmaps[
                             remappings[implementations[implementationIndex].Bitmaps.Index + bitmap].SourceIndex]
                             .BitmapGroup].Bind();
-                    OpenGL.ReportError();
                 }
                 break;
             }

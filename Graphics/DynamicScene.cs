@@ -24,7 +24,7 @@ namespace Moonfish.Graphics
             SelectedObjectChanged += OnSelectedObjectChanged;
             foreach (var item in MousePole.CollisionObjects)
                 CollisionManager.World.AddCollisionObject(item);
-            ;
+            
 #if DEBUG
             GLDebug.DebugProgram = ProgramManager.SystemProgram;
             GLDebug.ScreenspaceProgram = ProgramManager.ScreenProgram;

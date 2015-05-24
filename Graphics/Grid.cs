@@ -99,22 +99,16 @@ namespace Moonfish.Graphics
         {
             // generate buffers
             VertexArrayBufferId = GL.GenVertexArray();
-            OpenGL.ReportError();
             ArrayBufferId = GL.GenBuffer();
-            OpenGL.ReportError();
             IndexBufferId = GL.GenBuffer();
-            OpenGL.ReportError();
 
             // bind VAO
             GL.BindVertexArray(VertexArrayBufferId);
-            OpenGL.ReportError();
 
             // bind and buffer array buffer
             GL.BindBuffer(BufferTarget.ArrayBuffer, ArrayBufferId);
-            OpenGL.ReportError();
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr) (Vertices.Length*12), Vertices,
                 BufferUsageHint.StaticDraw);
-            OpenGL.ReportError();
 
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
 
@@ -198,7 +192,6 @@ namespace Moonfish.Graphics
 
             // unbind buffers
             GL.BindVertexArray(0);
-            OpenGL.ReportError();
         }
 
         public override void Draw()

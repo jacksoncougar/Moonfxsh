@@ -40,15 +40,10 @@ namespace Moonfish.Graphics
             Camera.ViewMatrixChanged += Camera_ViewMatrixChanged;
             Camera.Viewport.ViewportChanged += Viewport_ViewportChanged;
 
-            OpenGL.ReportError();
             GL.ClearColor(Color.FromArgb(~Colours.Green.ToArgb()));
-            OpenGL.ReportError();
             GL.FrontFace(FrontFaceDirection.Ccw);
-            OpenGL.ReportError();
             GL.Enable(EnableCap.CullFace);
-            OpenGL.ReportError();
             GL.Enable(EnableCap.DepthTest);
-            OpenGL.ReportError();
         }
 
         private void Viewport_ViewportChanged(object sender, Viewport.ViewportEventArgs e)
@@ -117,18 +112,17 @@ namespace Moonfish.Graphics
             //Console.WriteLine("Draw()");
 
             ObjectManager.Draw(ProgramManager);
-            var program = ProgramManager.GetProgram(new ShaderReference(ShaderReference.ReferenceType.System, 0));
-            using (program.Use())
-            {
-                var colourUniform = program.GetUniformLocation("Colour");
-                program.SetUniform(colourUniform, new ColorF(Color.Black).RGBA);
-                //Grid.Draw();
-            }
+            //var program = ProgramManager.GetProgram(new ShaderReference(ShaderReference.ReferenceType.System, 0));
+            //using (program.Use())
+            //{
+            //    var colourUniform = program.GetUniformLocation("Colour");
+            //    program.SetUniform(colourUniform, new ColorF(Color.Black).RGBA);
+            //    //Grid.Draw();
+            //}
         }
 
         public virtual void Update()
         {
-            GL.PointSize(1.0f);
             //Console.WriteLine("Update()");
 
             //var R = OpenTK.Matrix4.CreateRotationX( rotation );

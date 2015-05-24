@@ -174,13 +174,11 @@ namespace Moonfish.Graphics
             var program = programManager.GetProgram(batch.Shader, programName);
             if (program == null) return;
 
-            program.Use();
             GL.BindVertexArray(batch.BatchObject.VertexArrayObjectIdent);
             foreach (var attribute in batch.Attributes.Select(x => new {Name = x.Key, x.Value}))
             {
                 var attributeLocation = program.GetAttributeLocation(attribute.Name);
                 Program.SetAttribute(attributeLocation, attribute.Value);
-                OpenGL.ReportError();
             }
             foreach (var uniform in batch.Uniforms.Select(x => new {Name = x.Key, x.Value}))
             {

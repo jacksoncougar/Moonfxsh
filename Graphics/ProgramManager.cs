@@ -47,14 +47,10 @@ namespace Moonfish.Graphics
             var vertex_shader = new Shader("data/sys_vertex.vert", ShaderType.VertexShader);
             var fragment_shader = new Shader("data/sys_fragment.frag", ShaderType.FragmentShader);
             var defaultProgram = new Program("system");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 0, "Position");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 1, "Colour");
-            OpenGL.ReportError();
 
             defaultProgram.Link(new List<Shader>(2) {vertex_shader, fragment_shader});
-            OpenGL.ReportError();
             Shaders["system"] = defaultProgram;
         }
 
@@ -63,14 +59,10 @@ namespace Moonfish.Graphics
             var vertex_shader = new Shader("data/viewscreen.vert", ShaderType.VertexShader);
             var fragment_shader = new Shader("data/sys_fragment.frag", ShaderType.FragmentShader);
             var defaultProgram = new Program("screen");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 0, "Position");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 1, "Colour");
-            OpenGL.ReportError();
 
             defaultProgram.Link(new List<Shader>(2) {vertex_shader, fragment_shader});
-            OpenGL.ReportError();
             Shaders["screen"] = defaultProgram;
         }
 
@@ -80,27 +72,17 @@ namespace Moonfish.Graphics
             var vertex_shader = new Shader("data/vertex.vert", ShaderType.VertexShader);
             var fragment_shader = new Shader("data/fragment.frag", ShaderType.FragmentShader);
             defaultProgram = new Program("shaded");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 0, "position");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 1, "boneIndices");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 2, "boneWeights");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 3, "texcoord");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 4, "normal");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 5, "tangent");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 6, "bitangent");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 7, "colour");
-            OpenGL.ReportError();
 
             //GL.BindAttribLocation(defaultProgram.ID, 3, "colour"); OpenGL.ReportError();
             defaultProgram.Link(new List<Shader>(2) { vertex_shader, fragment_shader });
-            OpenGL.ReportError();
             var loc = GL.GetAttribLocation(defaultProgram.Ident, "worldMatrix");
             Shaders["default"] = defaultProgram;
 
@@ -125,22 +107,14 @@ namespace Moonfish.Graphics
             var vertex_shader = new Shader("data/lightmap.vert", ShaderType.VertexShader);
             var fragment_shader = new Shader("data/fragment.frag", ShaderType.FragmentShader);
             defaultProgram = new Program("lightmapped");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 0, "position");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 1, "texcoord");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 2, "normal");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 3, "tangent");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 4, "bitangent");
-            OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 5, "colour");
-            OpenGL.ReportError();
 
             defaultProgram.Link(new List<Shader>(2) { vertex_shader, fragment_shader });
-            OpenGL.ReportError();
             Shaders[defaultProgram.Name] = defaultProgram;
 
 
@@ -244,25 +218,48 @@ namespace Moonfish.Graphics
             GL.BindTexture(TextureTarget.Texture1D, NormalMapPaletteTexture);
         }
 
-        public Program GetProgram(ShaderReference reference, string shaderName = null)
+        public bool ChangedProgram;
+        private Program _activeProgram;
+        private Program ActiveProgram
         {
-            switch (reference.Type)
+            get { return _activeProgram; }
+            set
+            {
+                ChangedProgram = ActiveProgram != value;
+
+                if ( ChangedProgram )
+                {
+                    _activeProgram = value;
+                    ActiveProgram.Assign( );
+                }
+            }
+        }
+
+        public Program GetProgram( ShaderReference reference, string shaderName = null )
+        {
+            switch ( reference.Type )
             {
                 case ShaderReference.ReferenceType.Halo2:
                     MaterialShader material;
-                    var tagIdent = (TagIdent) reference.Ident;
-                    if (this.Materials.TryGetValue(tagIdent, out material))
+                    var tagIdent = ( TagIdent ) reference.Ident;
+                    if ( Materials.TryGetValue( tagIdent, out material ) )
                     {
-                        material.UsePass(0, LoadedTextures);
+                        material.UsePass( 0, LoadedTextures );
                         Program shaderProgram;
-                        if (shaderName != null && Shaders.TryGetValue(shaderName, out shaderProgram))
-                            return shaderProgram;
+                        if ( shaderName != null && Shaders.TryGetValue( shaderName, out shaderProgram ) )
+                        {
+                            ActiveProgram = shaderProgram;
+                            break;
+                        }
                     }
-                    return this.Shaders["default"];
+                    ActiveProgram = Shaders[ "default" ];
+                    break;
+
                 case ShaderReference.ReferenceType.System:
-                    return this.Shaders["system"];
+                    ActiveProgram = Shaders[ "system" ];
+                    break;
             }
-            return null;
+            return ActiveProgram;
         }
 
         public IEnumerator<Program> GetEnumerator()

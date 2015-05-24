@@ -59,9 +59,12 @@ namespace Moonfish.Graphics
             if (ProgramManager.ScreenProgram != null)
             {
                 var viewMatrixUniform = ProgramManager.ScreenProgram.GetUniformLocation("OrthoProjectionMatrixUniform");
-                ProgramManager.ScreenProgram.SetUniform(viewMatrixUniform,
-                    Matrix4.CreateOrthographicOffCenter(0, e.Viewport.Width, e.Viewport.Height, 0, 0.0f, 100.0f));
-                //ProgramManager.ScreenProgram.SetUniform(viewMatrixUniform, Matrix4.CreateOrthographic(e.Viewport.Width, -e.Viewport.Height, 0.0f, 100.0f));
+                using (ProgramManager.ScreenProgram.Use())
+                {
+                    ProgramManager.ScreenProgram.SetUniform(viewMatrixUniform,
+                   Matrix4.CreateOrthographicOffCenter(0, e.Viewport.Width, e.Viewport.Height, 0, 0.0f, 100.0f));
+                }
+               //ProgramManager.ScreenProgram.SetUniform(viewMatrixUniform, Matrix4.CreateOrthographic(e.Viewport.Width, -e.Viewport.Height, 0.0f, 100.0f));
             }
 #endif
         }

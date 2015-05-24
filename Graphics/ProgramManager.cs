@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Moonfish.Cache;
@@ -36,17 +37,6 @@ namespace Moonfish.Graphics
             LoadSystemShader();
             LoadScreenShader();
             LoadLightmapShader();
-        }
-
-        public void LoadMaterials(IEnumerable<TagIdent> shaders, CacheStream map)
-        {
-            foreach (var shader in shaders)
-            {
-                var shaderBlock = (ShaderBlock) map.Deserialize(shader);
-                var material = new MaterialShader(shaderBlock, map);
-                material.UsePass(0);
-                Materials[shader] = material;
-            }
         }
 
         private void LoadSystemShader()
@@ -153,16 +143,16 @@ namespace Moonfish.Graphics
 
             LoadNormalMapPalette();
 
-            var p8NormalColourUniform = Shaders["default"].GetUniformLocation("P8NormalColour");
-            var p8NormalMapUniform = Shaders["default"].GetUniformLocation("P8NormalMap");
-            var diffuseMapUniform = Shaders["default"].GetUniformLocation("DiffuseMap");
-            var environmentMapUniform = Shaders["default"].GetUniformLocation("EnvironmentMap");
+            var p8NormalColourUniform = Shaders[defaultProgram.Name].GetUniformLocation("P8NormalColour");
+            var p8NormalMapUniform = Shaders[defaultProgram.Name].GetUniformLocation("P8NormalMap");
+            var diffuseMapUniform = Shaders[defaultProgram.Name].GetUniformLocation("DiffuseMap");
+            var environmentMapUniform = Shaders[defaultProgram.Name].GetUniformLocation("EnvironmentMap");
 
-            Shaders["default"].Use();
-            Shaders["default"].SetUniform(p8NormalColourUniform, 2);
-            Shaders["default"].SetUniform(p8NormalMapUniform, 3);
-            Shaders["default"].SetUniform(diffuseMapUniform, 1);
-            Shaders["default"].SetUniform(environmentMapUniform, 0);
+            Shaders[defaultProgram.Name].Use();
+            Shaders[defaultProgram.Name].SetUniform(p8NormalColourUniform, 0);
+            Shaders[defaultProgram.Name].SetUniform(p8NormalMapUniform, 3);
+            Shaders[defaultProgram.Name].SetUniform(diffuseMapUniform, 1);
+            Shaders[defaultProgram.Name].SetUniform(environmentMapUniform, 4);
         }
 
         private void LoadNormalMapPalette()
@@ -251,15 +241,19 @@ namespace Moonfish.Graphics
             GL.BindTexture(TextureTarget.Texture1D, NormalMapPaletteTexture);
         }
 
-        public Program GetProgram(ShaderReference reference)
+        public Program GetProgram(ShaderReference reference, string shaderName = null)
         {
             switch (reference.Type)
             {
                 case ShaderReference.ReferenceType.Halo2:
                     MaterialShader material;
-                    if (this.Materials.TryGetValue((TagIdent) reference.Ident, out material))
+                    var tagIdent = (TagIdent) reference.Ident;
+                    if (this.Materials.TryGetValue(tagIdent, out material))
                     {
-                        material.UsePass(6);
+                        material.UsePass(0);
+                        Program shaderProgram;
+                        if (shaderName != null && Shaders.TryGetValue(shaderName, out shaderProgram))
+                            return shaderProgram;
                     }
                     return this.Shaders["default"];
                 case ShaderReference.ReferenceType.System:
@@ -278,13 +272,15 @@ namespace Moonfish.Graphics
             return this.GetEnumerator();
         }
 
-        public void LoadMaterials(IEnumerable<GlobalGeometryMaterialBlock> materials, CacheStream cacheStream)
+        public void LoadMaterials(IList<GlobalGeometryMaterialBlock> materials, CacheStream cacheStream, IList<int> indices = null )
         {
-            foreach (var globalGeometryMaterialBlock in materials)
+            for (int index = 0; index < materials.Count; index++)
             {
+                var globalGeometryMaterialBlock = materials[index];
                 var shaderBlock = globalGeometryMaterialBlock.Shader.Get<ShaderBlock>();
                 var material = new MaterialShader(shaderBlock, cacheStream);
-                Materials[globalGeometryMaterialBlock.Shader.Ident] = material;
+
+                Materials[indices != null && index < indices.Count ? (TagIdent)indices[index] : globalGeometryMaterialBlock.Shader.Ident] = material;
             }
         }
     };

@@ -47,12 +47,12 @@ namespace Moonfish.Graphics
                 var attribute = 0;
                 for (int i = 0; i < vertexBuffers.Count; ++i)
                 {
-                    if (!Enum.IsDefined(typeof (VertexAttributeType), vertexBuffers[i].Type)) continue;
-
                     TriangleBatch.BindBuffer(BufferTarget.ArrayBuffer, TriangleBatch.GenerateBuffer());
 
                     var attributeType = vertexBuffers[i].Type;
-                    int attributeSize;
+                    int attributeSize = attributeType.GetSize();
+                    if (!Enum.IsDefined(typeof(VertexAttributeType), vertexBuffers[i].Type))
+                        continue;
                     var data = Unpack(vertexBuffers[i].Data, vertexBuffers[i].Type, compressionInfo,
                         out attributeSize);
                     TriangleBatch.BufferVertexAttributeData(data);
@@ -86,7 +86,7 @@ namespace Moonfish.Graphics
                                 attributeSize);
                             break;
                         case VertexAttributeType.TextureCoordinateFloat:
-                            TriangleBatch.VertexAttribArray(attribute++, 2, VertexAttribPointerType.Float, false,
+                            TriangleBatch.VertexAttribArray(attribute++, 2, VertexAttribPointerType.Float, true,
                                 attributeSize);
                             break;
                     }

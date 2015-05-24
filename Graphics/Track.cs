@@ -33,7 +33,7 @@ namespace Moonfish.Graphics
         public ZoomTrack(Track track)
             : base(track)
         {
-            Delta = 0.2f;
+            Delta = 0.8f;
         }
 
         public void Zoom(float input)

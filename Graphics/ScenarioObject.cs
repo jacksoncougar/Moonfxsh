@@ -57,7 +57,7 @@ namespace Moonfish.Graphics
         {
             ActivePermuation = StringIdent.Zero;
             Nodes = new List<RenderModelNodeBlock>();
-            Flags = RenderFlags.RenderMarkers | RenderFlags.RenderMesh | RenderFlags.RenderNodes;
+            Flags =  RenderFlags.RenderMesh;
 
             _nodesBatch = new TriangleBatch();
             using (_nodesBatch.Begin())

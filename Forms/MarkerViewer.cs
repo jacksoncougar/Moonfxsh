@@ -236,7 +236,7 @@ namespace Moonfish.Graphics
             var scenarioObject = new ScenarioObject(model);
             Scene.ObjectManager.Add(ident, scenarioObject);
 
-            Scene.ProgramManager.LoadMaterials(renderModel.Materials.Select(x => x.Shader.Ident), Map);
+            //Scene.ProgramManager.LoadMaterials(renderModel.Materials.Select(x => x.Shader.Ident), Map);
             Scene.CollisionManager.LoadScenarioObjectCollision(Scene.ObjectManager[ident].First());
 
             var @object = Scene.ObjectManager[ident].First();

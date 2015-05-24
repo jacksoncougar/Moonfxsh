@@ -64,10 +64,17 @@ namespace Moonfish.Graphics
             Textures = new List<Texture>();
         }
 
-        public void UsePass(int index)
+        public TagReference UsePass(int index)
         {
+            OpenGL.ReportError();
             ActiveShaderPassIndex = index;
-            if (ActiveShaderPassIndex < 0) return;
+            if (ActiveShaderPassIndex < 0) return new TagReference();
+
+            for (int i = 0; i < 5; i++)
+            {
+                GL.ActiveTexture(TextureUnit.Texture1 + i);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
+            }
 
             var template = shaderTemplate.PostprocessDefinition[0];
             var activePass = shaderTemplate.PostprocessDefinition[0].Passes[ActiveShaderPassIndex];
@@ -82,23 +89,28 @@ namespace Moonfish.Graphics
                 {
                     var texture = shaderPass.Textures[shaderPassImplementation.Textures.Index + i];
                     var bitmap = texture.BitmapParameterIndex;
-                    if (bitmap == byte.MaxValue) continue;
+                    if (bitmap == byte.MaxValue) 
+                        continue;
 
                     var texturestage = texture.TextureStageIndex;
 
                     OpenGL.ReportError();
                     GL.ActiveTexture(TextureUnit.Texture1 + texturestage);
                     OpenGL.ReportError();
+#if DEBUG
                     var bitmapString =
                         shader.PostprocessDefinition[0].Bitmaps[
                             remappings[implementations[implementationIndex].Bitmaps.Index + bitmap].SourceIndex]
                             .BitmapGroup.ToString();
+#endif
+
                     Textures[remappings[implementations[implementationIndex].Bitmaps.Index + bitmap].SourceIndex]
                         .Bind();
                     OpenGL.ReportError();
                 }
                 break;
             }
+            return activePass.Pass;
         }
 
         public void Dispose()

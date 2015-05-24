@@ -94,6 +94,6 @@ void main()
 
 	VertexTexcoord_texturespace = texcoord;
 
-	DiffuseColour  = colour;
+	DiffuseColour = vec4(1, 1, 1, 1);
     gl_Position = ViewProjectionMatrixUniform * transformedPosition;
 }

@@ -81,20 +81,20 @@ namespace Moonfish.Graphics
 
             LoadInstances(
                 _scenario.Scenery.Select(x => (IH2ObjectInstance) x).ToList(),
-                _scenario.SceneryPalette.Select(x => (IH2ObjectPalette) x).ToList());
+                _scenario.SceneryPalette.Select(x => (IH2ObjectPalette)x).ToList(), map);
             LoadInstances(
                 _scenario.Crates.Select(x => (IH2ObjectInstance) x).ToList(),
-                _scenario.CratesPalette.Select(x => (IH2ObjectPalette) x).ToList());
+                _scenario.CratesPalette.Select(x => (IH2ObjectPalette)x).ToList(), map);
             LoadInstances(
                 _scenario.Weapons.Select(x => (IH2ObjectInstance) x).ToList(),
-                _scenario.WeaponPalette.Select(x => (IH2ObjectPalette) x).ToList());
+                _scenario.WeaponPalette.Select(x => (IH2ObjectPalette) x).ToList(), map);
             LoadNetgameEquipment(
-                _scenario.NetgameEquipment.Select(x => x).ToList());
+                _scenario.NetgameEquipment.Select(x => x).ToList(), map);
 
             Log.Info(GL.GetError().ToString());
         }
 
-        private void LoadNetgameEquipment(List<ScenarioNetgameEquipmentBlock> list)
+        private void LoadNetgameEquipment(List<ScenarioNetgameEquipmentBlock> list, CacheStream cacheStream)
         {
             foreach (var item in list.Where(x => !TagIdent.IsNull(x.ItemVehicleCollection.Ident)
                                                  &&
@@ -103,7 +103,7 @@ namespace Moonfish.Graphics
             {
                 try
                 {
-                    Add(item.ItemVehicleCollection.Ident, new ScenarioObject(Halo2.GetReferenceObject<ModelBlock>(
+                    var scenarioObject = new ScenarioObject(Halo2.GetReferenceObject<ModelBlock>(
                         Halo2.GetReferenceObject<ObjectBlock>(
                             item.ItemVehicleCollection.Class.ToString() == "itmc"
                                 ? Halo2.GetReferenceObject<ItemCollectionBlock>(item.ItemVehicleCollection)
@@ -114,8 +114,10 @@ namespace Moonfish.Graphics
                                     .Vehicle).Model))
                     {
                         WorldMatrix = item.WorldMatrix
-                    }
-                        );
+                    };
+                    var renderModel = scenarioObject.Model.RenderModel.Get<RenderModelBlock>();
+                    ProgramManager.LoadMaterials(renderModel.Materials, cacheStream);
+                    Add(item.ItemVehicleCollection.Ident, scenarioObject);
                 }
                 catch (NullReferenceException)
                 {
@@ -123,7 +125,7 @@ namespace Moonfish.Graphics
             }
         }
 
-        private void LoadInstances(List<IH2ObjectInstance> instances, List<IH2ObjectPalette> objectPalette)
+        private void LoadInstances(List<IH2ObjectInstance> instances, List<IH2ObjectPalette> objectPalette, CacheStream cacheStream)
         {
             var join = (from instance in instances
                 join palette in objectPalette on (int) instance.PaletteIndex equals objectPalette.IndexOf(palette)
@@ -133,22 +135,26 @@ namespace Moonfish.Graphics
 
             foreach (var item in join)
             {
-                Add(item.Object.Ident, new ScenarioObject(
+                var scenarioObject = new ScenarioObject(
                     Halo2.GetReferenceObject<ModelBlock>(Halo2.GetReferenceObject<ObjectBlock>(item.Object).Model))
                 {
                     WorldMatrix = item.instance.WorldMatrix
-                }
-                    );
+                };
+                var renderModel = scenarioObject.Model.RenderModel.Get<RenderModelBlock>();
+                ProgramManager.LoadMaterials(renderModel.Materials, cacheStream);
+                Add(item.Object.Ident, scenarioObject);
             }
         }
 
         public void Draw(ProgramManager programManager)
         {
             DrawLevel();
-            return;
-            foreach (var batch in _objectInstances.SelectMany(x => x.Value).SelectMany(x => x.Batches))
+            foreach (var item in _objectInstances.SelectMany(x => x.Value).Select(x =>new { x, x.Batches}))
             {
-                Draw(programManager, batch);
+                foreach (var renderBatch in item.Batches)
+                {
+                    Draw(programManager, renderBatch);
+                }
             }
         }
 
@@ -158,42 +164,30 @@ namespace Moonfish.Graphics
             {
                 var index = batch.Shader.Ident;
                 batch.Shader.Ident = (int)Level.Materials[index].Shader.Ident;
-                Draw(ProgramManager, batch);
+                Draw(ProgramManager, batch, "lightmapped");
             }
         }
 
-        public void Draw(ProgramManager programManager, RenderBatch batch)
+        public void Draw(ProgramManager programManager, RenderBatch batch, string programName = null)
         {
             if (batch.BatchObject == null) return;
-            var program = programManager.GetProgram(batch.Shader);
+            var program = programManager.GetProgram(batch.Shader, programName);
             if (program == null) return;
 
-            var usingProgram = program.Use();
-
+            program.Use();
             GL.BindVertexArray(batch.BatchObject.VertexArrayObjectIdent);
             foreach (var attribute in batch.Attributes.Select(x => new {Name = x.Key, x.Value}))
             {
                 var attributeLocation = program.GetAttributeLocation(attribute.Name);
                 Program.SetAttribute(attributeLocation, attribute.Value);
+                OpenGL.ReportError();
             }
             foreach (var uniform in batch.Uniforms.Select(x => new {Name = x.Key, x.Value}))
             {
                 var uniformLocation = program.GetUniformLocation(uniform.Name);
                 program.SetUniform(uniformLocation, uniform.Value);
             }
-            var openGLStates =
-                batch.RenderStates.Select(x => new {Capability = x.Key, Enabled = x.Value})
-                    .Select(state => state.Enabled
-                        ? OpenGL.Enable(state.Capability)
-                        : OpenGL.Disable(state.Capability)).ToList();
-
-            batch.SetupGLRenderState();
             GL.DrawElements(batch.PrimitiveType, batch.ElementLength, batch.DrawElementsType, batch.ElementStartIndex);
-            batch.CleanupGLRenderState();
-
-            // Cleanup states
-            foreach (var state in openGLStates) state.Dispose();
-            usingProgram.Dispose();
         }
 
         public void Draw(TagIdent item)

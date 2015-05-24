@@ -100,8 +100,8 @@ void main()
 	LightDirection_tangentspace = TBN * LightDirection_cameraspace;
 	EyeDirection_tangentspace = TBN * EyeDirection_cameraspace;
 
-	VertexTexcoord_texturespace = texcoord;// vec2(unpack(texcoord.s, TexcoordRangeUniform.xy), unpack(texcoord.t, TexcoordRangeUniform.zw));
+	VertexTexcoord_texturespace = vec2(unpack(texcoord.s, TexcoordRangeUniform.xy), unpack(texcoord.t, TexcoordRangeUniform.zw));
 	
 	DiffuseColour  = colour;
-    gl_Position = ViewProjectionMatrixUniform * transformedPosition;
+    gl_Position = ViewProjectionMatrixUniform * WorldMatrixUniform * transformedPosition;
 }

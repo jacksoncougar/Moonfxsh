@@ -119,6 +119,7 @@
     <Compile Include="Graphics\Input\GizmoBase.cs" />
     <Compile Include="Graphics\Input\RotationGizmo.cs" />
     <Compile Include="Graphics\Input\TranslationGizmo.cs" />
+    <Compile Include="Graphics\LevelMeshManager.cs" />
     <Compile Include="Graphics\MathHelper.cs" />
     <Compile Include="Graphics\Primitives\Debug.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\Track.cs" />
     <Compile Include="Graphics\VertexFunctions.cs" />
+    <Compile Include="Graphics\Viewport.cs" />
     <Compile Include="Guerilla\BinaryIOReflection.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaBlockClassBase.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaCodeDom.cs" />
@@ -1295,7 +1297,9 @@
     <None Include="data\sys_vertex.vert">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="data\vertex.vert" />
+    <None Include="data\vertex.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="data\viewscreen.vert">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

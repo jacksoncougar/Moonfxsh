@@ -218,7 +218,7 @@ namespace Moonfish.Graphics
                     return PixelFormat.Rgb;
 
                 case BitmapDataBlock.FormatEnum.A8y8:
-                    return PixelFormat.LuminanceAlpha;
+                    return PixelFormat.Rg;
 
                 case BitmapDataBlock.FormatEnum.V8u8:
                 case BitmapDataBlock.FormatEnum.G8b8:

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
@@ -56,9 +58,15 @@ namespace Moonfish.Graphics
 
         internal static void ReportError()
         {
+            GL.Arb.DebugMessageCallback(Callback, IntPtr.Zero);
             var error = GL.GetError();
             if (error != ErrorCode.NoError)
                 throw new GraphicsException(error.ToString());
+        }
+
+        private static void Callback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -146,7 +146,7 @@ namespace Moonfish.Graphics
         {
             var dataSize = (IntPtr) (Marshal.SizeOf(typeof (T))*data.Length);
 
-            GL.BufferData(BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.DynamicDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.StaticDraw);
 
 #if DEBUG
             OpenGL.ReportError();

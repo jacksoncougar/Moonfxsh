@@ -55,7 +55,7 @@ namespace Moonfish.Graphics
                 else GL.Disable(state);
             }
         }
-
+        [Conditional("DEBUG")]
         internal static void ReportError()
         {
             GL.Arb.DebugMessageCallback(Callback, IntPtr.Zero);

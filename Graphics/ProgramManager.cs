@@ -29,10 +29,13 @@ namespace Moonfish.Graphics
 
         public Dictionary<TagIdent, MaterialShader> Materials { get; set; }
 
+        public Dictionary<TagIdent, Texture> LoadedTextures { get; set; }
+
         public ProgramManager()
         {
             Materials = new Dictionary<TagIdent, MaterialShader>();
             Shaders = new Dictionary<string, Program>();
+            LoadedTextures = new Dictionary<TagIdent, Texture>();
             LoadDefaultShader();
             LoadSystemShader();
             LoadScreenShader();
@@ -125,15 +128,15 @@ namespace Moonfish.Graphics
             OpenGL.ReportError();
             GL.BindAttribLocation(defaultProgram.Ident, 0, "position");
             OpenGL.ReportError();
-            GL.BindAttribLocation(defaultProgram.Ident, 3, "texcoord");
+            GL.BindAttribLocation(defaultProgram.Ident, 1, "texcoord");
             OpenGL.ReportError();
-            GL.BindAttribLocation(defaultProgram.Ident, 4, "normal");
+            GL.BindAttribLocation(defaultProgram.Ident, 2, "normal");
             OpenGL.ReportError();
-            GL.BindAttribLocation(defaultProgram.Ident, 5, "tangent");
+            GL.BindAttribLocation(defaultProgram.Ident, 3, "tangent");
             OpenGL.ReportError();
-            GL.BindAttribLocation(defaultProgram.Ident, 6, "bitangent");
+            GL.BindAttribLocation(defaultProgram.Ident, 4, "bitangent");
             OpenGL.ReportError();
-            GL.BindAttribLocation(defaultProgram.Ident, 7, "colour");
+            GL.BindAttribLocation(defaultProgram.Ident, 5, "colour");
             OpenGL.ReportError();
 
             defaultProgram.Link(new List<Shader>(2) { vertex_shader, fragment_shader });
@@ -152,7 +155,7 @@ namespace Moonfish.Graphics
             Shaders[defaultProgram.Name].SetUniform(p8NormalColourUniform, 0);
             Shaders[defaultProgram.Name].SetUniform(p8NormalMapUniform, 3);
             Shaders[defaultProgram.Name].SetUniform(diffuseMapUniform, 1);
-            Shaders[defaultProgram.Name].SetUniform(environmentMapUniform, 4);
+            Shaders[defaultProgram.Name].SetUniform(environmentMapUniform, 2);
         }
 
         private void LoadNormalMapPalette()
@@ -250,7 +253,7 @@ namespace Moonfish.Graphics
                     var tagIdent = (TagIdent) reference.Ident;
                     if (this.Materials.TryGetValue(tagIdent, out material))
                     {
-                        material.UsePass(0);
+                        material.UsePass(0, LoadedTextures);
                         Program shaderProgram;
                         if (shaderName != null && Shaders.TryGetValue(shaderName, out shaderProgram))
                             return shaderProgram;
@@ -278,7 +281,18 @@ namespace Moonfish.Graphics
             {
                 var globalGeometryMaterialBlock = materials[index];
                 var shaderBlock = globalGeometryMaterialBlock.Shader.Get<ShaderBlock>();
-                var material = new MaterialShader(shaderBlock, cacheStream);
+                ShaderPostprocessBitmapNewBlock[] textures;
+                var material = new MaterialShader(shaderBlock, cacheStream, out textures);
+                foreach (var shaderPostprocessBitmapNewBlock in textures)
+                {
+                    if (shaderPostprocessBitmapNewBlock.BitmapGroup == TagIdent.NullIdentifier 
+                        || LoadedTextures.ContainsKey(shaderPostprocessBitmapNewBlock.BitmapGroup))
+                        continue;
+                    var texture = new Texture();
+                    
+                    texture.Load(shaderPostprocessBitmapNewBlock.BitmapGroup.Get<BitmapBlock>());
+                    LoadedTextures[shaderPostprocessBitmapNewBlock.BitmapGroup] = texture;
+                }
 
                 Materials[indices != null && index < indices.Count ? (TagIdent)indices[index] : globalGeometryMaterialBlock.Shader.Ident] = material;
             }

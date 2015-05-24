@@ -78,7 +78,7 @@ namespace Moonfish.Graphics
             _scenario = (ScenarioBlock) map.Deserialize(ident);
 
             LoadScenarioStructure((ScenarioStructureBspBlock) _scenario.StructureBSPs.First().StructureBSP.Get(), map);
-
+            
             LoadInstances(
                 _scenario.Scenery.Select(x => (IH2ObjectInstance) x).ToList(),
                 _scenario.SceneryPalette.Select(x => (IH2ObjectPalette)x).ToList(), map);

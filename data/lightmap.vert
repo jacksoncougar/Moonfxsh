@@ -5,8 +5,10 @@ in vec2 texcoord;
 in int normal;
 in int tangent;
 in int bitangent;
-in vec4 colour; 
+in vec2 lightmapCoord; 
+in vec2 radiosityCoord; 
 
+uniform int lightmapBitmapIndex;
 
 uniform mat4 WorldMatrixUniform;
 uniform mat4 ObjectSpaceMatrixUniform;
@@ -29,6 +31,7 @@ smooth out vec3 EyeDirection_tangentspace;
 smooth out vec3 LightDirection_tangentspace;
 
 smooth out vec2 VertexTexcoord_texturespace;
+smooth out vec2 LightmapTexcoord_texturespace;
 
 float unpack(in float value, in vec2 bounds)
 {
@@ -93,7 +96,8 @@ void main()
 	EyeDirection_tangentspace = TBN * EyeDirection_cameraspace;
 
 	VertexTexcoord_texturespace = texcoord;
+	LightmapTexcoord_texturespace = lightmapCoord;
 
-	DiffuseColour = colour;
-    gl_Position = ViewProjectionMatrixUniform * transformedPosition;
+	DiffuseColour = vec4(lightmapCoord.x, lightmapCoord.y, 0, 0);
+    gl_Position = ViewProjectionMatrixUniform * WorldMatrixUniform * transformedPosition;
 }

@@ -49,7 +49,7 @@ namespace Moonfish.Graphics.Input
             OnWorldMatrixChanged(ref beforeMatrix, ref afterMatrix);
         }
 
-        protected override void Transform(SceneMouseMoveEventArgs args)
+        protected override void Transform(SceneMouseEventArgs args)
         {
             if (selectedAxis == Axis.None) return;
             var camera = args.Camera;
@@ -57,7 +57,7 @@ namespace Moonfish.Graphics.Input
             var originScreenspace = camera.Project(position);
             var axisNormal = GetAxisNormal(selectedAxis);
             var translation_screenspace = CalculateScreenspaceTranslation(originScreenspace,
-                camera.Project(position + axisNormal), new Vector2(args.X, args.Y));
+                camera.Project(position + axisNormal), args.ScreenCoordinates);
 
             var near = camera.UnProject(originScreenspace + translation_screenspace);
             var far = camera.UnProject(originScreenspace + translation_screenspace, -0.01f);
@@ -151,7 +151,7 @@ namespace Moonfish.Graphics.Input
             OnWorldMatrixChanged(ref beforeMatrix, ref afterMatrix);
         }
 
-        protected override void Transform(SceneMouseMoveEventArgs args)
+        protected override void Transform(SceneMouseEventArgs args)
         {
             if (selectedAxis == Axis.None) return;
 
@@ -159,10 +159,10 @@ namespace Moonfish.Graphics.Input
             var originScreenspace = camera.Project(_pivot);
             var axisNormal = GetAxisNormal(selectedAxis);
             var translation_screenspace = CalculateScreenspaceTranslation(originScreenspace,
-                camera.Project(position + axisNormal), new Vector2(args.X, args.Y));
+                camera.Project(position + axisNormal), args.ScreenCoordinates);
 
-            var near = camera.UnProject(new Vector2(args.X, args.Y));
-            var far = camera.UnProject(new Vector2(args.X, args.Y), -0.01f);
+            var near = camera.UnProject(args.ScreenCoordinates);
+            var far = camera.UnProject(args.ScreenCoordinates, -0.01f);
 
             var mouseRay = new Ray(near, far);
 

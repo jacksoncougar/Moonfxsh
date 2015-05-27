@@ -50,7 +50,7 @@ namespace Moonfish.Graphics
 
         private void glControl1_Load(object sender, EventArgs e)
         {
-            Scene = new DynamicScene();
+            Scene = new DynamicScene(glControl1);
             Application.Idle += HandleApplicationIdle;
             Scene.OnFrameReady += Scene_OnFrameReady;
 
@@ -65,11 +65,11 @@ namespace Moonfish.Graphics
             glControl1.MouseUp += Scene.OnMouseUp;
             glControl1.MouseClick += Scene.OnMouseClick;
 
-            Open(Path.Combine(Local.MapsDirectory, "headlong.map"));
+            Open(Path.Combine(Local.MapsDirectory, "derelict.map"));
 
             Scene.ObjectManager.ProgramManager = Scene.ProgramManager;
+            Scene.ObjectManager.Collision = Scene.CollisionManager;
             Scene.ObjectManager.LoadScenario(Map);
-
 
             //  firing this method is meant to load the view-projection matrix values into 
             //  the shader uniforms, and initalizes the camera
@@ -121,7 +121,6 @@ namespace Moonfish.Graphics
                 UpdateState();
                 Scene.Update();
                 Scene.RenderFrame();
-                propertyGrid1.Refresh();
             }
         }
 

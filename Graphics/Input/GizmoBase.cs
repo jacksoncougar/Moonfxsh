@@ -12,7 +12,7 @@ namespace Moonfish.Graphics.Input
         private readonly EventHandler<SceneMouseEventArgs> _mouseDownXDelegate;
         private readonly EventHandler<SceneMouseEventArgs> _mouseDownYDelegate;
         private readonly EventHandler<SceneMouseEventArgs> _mouseDownZDelegate;
-        private readonly EventHandler<SceneMouseMoveEventArgs> _mouseMoveDelegate;
+        private readonly EventHandler<SceneMouseEventArgs> _mouseMoveDelegate;
         private readonly EventHandler<SceneMouseEventArgs> _mouseUpDelegate;
         private readonly ClickableCollisionObject _forwardCollisionObject;
         private readonly ClickableCollisionObject _rightCollisionObject;
@@ -49,7 +49,7 @@ namespace Moonfish.Graphics.Input
             _mouseDownYDelegate = delegate(object sender, SceneMouseEventArgs args) { SelectAxis(Axis.Up, args); };
             _mouseDownZDelegate =
                 delegate(object sender, SceneMouseEventArgs args) { SelectAxis(Axis.Forward, args); };
-            _mouseMoveDelegate = delegate(object sender, SceneMouseMoveEventArgs args) { Transform(args); };
+            _mouseMoveDelegate = delegate(object sender, SceneMouseEventArgs args) { Transform(args); };
             _mouseUpDelegate = delegate { Commit(); };
             AssignCollisionObjectFunctions();
 
@@ -212,36 +212,36 @@ namespace Moonfish.Graphics.Input
             }
         }
 
-        protected abstract void Transform(SceneMouseMoveEventArgs args);
+        protected abstract void Transform(SceneMouseEventArgs args);
 
         private void AssignCollisionObjectFunctions()
         {
-            _upCollisionObject.OnMouseMove += _mouseMoveDelegate;
-            _rightCollisionObject.OnMouseMove += _mouseMoveDelegate;
-            _forwardCollisionObject.OnMouseMove += _mouseMoveDelegate;
+            _upCollisionObject.MouseMove += _mouseMoveDelegate;
+            _rightCollisionObject.MouseMove += _mouseMoveDelegate;
+            _forwardCollisionObject.MouseMove += _mouseMoveDelegate;
 
-            _upCollisionObject.OnMouseDown += _mouseDownYDelegate;
-            _rightCollisionObject.OnMouseDown += _mouseDownXDelegate;
-            _forwardCollisionObject.OnMouseDown += _mouseDownZDelegate;
+            _upCollisionObject.MouseDown += _mouseDownYDelegate;
+            _rightCollisionObject.MouseDown += _mouseDownXDelegate;
+            _forwardCollisionObject.MouseDown += _mouseDownZDelegate;
 
-            _upCollisionObject.OnMouseUp += _mouseUpDelegate;
-            _rightCollisionObject.OnMouseUp += _mouseUpDelegate;
-            _forwardCollisionObject.OnMouseUp += _mouseUpDelegate;
+            _upCollisionObject.MouseUp += _mouseUpDelegate;
+            _rightCollisionObject.MouseUp += _mouseUpDelegate;
+            _forwardCollisionObject.MouseUp += _mouseUpDelegate;
         }
 
         private void ClearCollisionObjectFunctions()
         {
-            _upCollisionObject.OnMouseMove -= _mouseMoveDelegate;
-            _rightCollisionObject.OnMouseMove -= _mouseMoveDelegate;
-            _forwardCollisionObject.OnMouseMove -= _mouseMoveDelegate;
+            _upCollisionObject.MouseMove -= _mouseMoveDelegate;
+            _rightCollisionObject.MouseMove -= _mouseMoveDelegate;
+            _forwardCollisionObject.MouseMove -= _mouseMoveDelegate;
 
-            _upCollisionObject.OnMouseDown -= _mouseDownYDelegate;
-            _rightCollisionObject.OnMouseDown -= _mouseDownXDelegate;
-            _forwardCollisionObject.OnMouseDown -= _mouseDownZDelegate;
+            _upCollisionObject.MouseDown -= _mouseDownYDelegate;
+            _rightCollisionObject.MouseDown -= _mouseDownXDelegate;
+            _forwardCollisionObject.MouseDown -= _mouseDownZDelegate;
 
-            _upCollisionObject.OnMouseUp -= _mouseUpDelegate;
-            _rightCollisionObject.OnMouseUp -= _mouseUpDelegate;
-            _forwardCollisionObject.OnMouseUp -= _mouseUpDelegate;
+            _upCollisionObject.MouseUp -= _mouseUpDelegate;
+            _rightCollisionObject.MouseUp -= _mouseUpDelegate;
+            _forwardCollisionObject.MouseUp -= _mouseUpDelegate;
         }
 
         private void GenerateModel()

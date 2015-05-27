@@ -7,42 +7,42 @@ namespace Moonfish.Graphics
 {
     public class RenderObject
     {
-        protected List<Mesh> SectionBuffers;
+        protected List<Mesh> sectionBuffers;
 
-        public RenderObject()
+        public RenderObject( )
         {
-            SectionBuffers = new List<Mesh>();
+            sectionBuffers = new List<Mesh>( );
         }
 
-        public RenderObject(StructureBspClusterBlock item)
+        public RenderObject( StructureBspClusterBlock item )
         {
-            item.LoadClusterData();
-            SectionBuffers = new List<Mesh>(new[] {new Mesh(item.ClusterData[0].Section, null)});
+            item.LoadClusterData( );
+            sectionBuffers = new List<Mesh>( new[] {new Mesh( item.ClusterData[ 0 ].Section, null )} );
         }
 
-        public RenderObject(StructureBspInstancedGeometryDefinitionBlock item)
+        public RenderObject( StructureBspInstancedGeometryDefinitionBlock item )
         {
-            item.RenderInfo.LoadRenderData();
-            SectionBuffers = new List<Mesh>(new[] {new Mesh(item.RenderInfo.RenderData[0].Section, null)});
+            item.RenderInfo.LoadRenderData( );
+            sectionBuffers = new List<Mesh>( new[] {new Mesh( item.RenderInfo.RenderData[ 0 ].Section, null )} );
         }
 
         public IEnumerable<RenderBatch> Batches
         {
             get
             {
-                foreach (var sectionBuffer in SectionBuffers)
+                foreach ( var sectionBuffer in sectionBuffers )
                 {
-                    foreach (var globalGeometryPartBlockNew in sectionBuffer.Parts)
+                    foreach ( var globalGeometryPartBlockNew in sectionBuffer.Parts )
                     {
                         var batch = new RenderBatch
                         {
-                            ElementStartIndex = globalGeometryPartBlockNew.StripStartIndex * sizeof (ushort),
+                            ElementStartIndex = globalGeometryPartBlockNew.StripStartIndex * sizeof ( ushort ),
                             ElementLength = globalGeometryPartBlockNew.StripLength
                         };
 
-                        batch.AssignUniform("WorldMatrixUniform", Matrix4.Identity);
-                        batch.Shader = new ShaderReference(ShaderReference.ReferenceType.Halo2,
-                            globalGeometryPartBlockNew.Material);
+                        batch.AssignUniform( "WorldMatrixUniform", Matrix4.Identity );
+                        batch.Shader = new ShaderReference( ShaderReference.ReferenceType.Halo2,
+                            globalGeometryPartBlockNew.Material );
                         batch.PrimitiveType = PrimitiveType.Triangles;
                         batch.BatchObject = sectionBuffer.TriangleBatch;
 

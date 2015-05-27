@@ -96,7 +96,7 @@ namespace Moonfish.Graphics
             return worldCoordinate;
         }
 
-        public static Vector3 ReProject(this Camera camera, Vector2 viewportCoordinates, float depth,
+        public static Vector3 Project(this Camera camera, Vector2 viewportCoordinates, float depth,
             ProjectionTarget projectionTarget = ProjectionTarget.World)
         {
             //  map depth to -1 to 1

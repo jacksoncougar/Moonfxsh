@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using BulletSharp;
 using Moonfish.Graphics.Input;
 using Moonfish.Guerilla.Tags;
@@ -11,60 +13,60 @@ namespace Moonfish.Graphics
     {
         public CollisionWorld World { get; private set; }
 
-        public CollisionManager(Program debug)
+        public CollisionManager( Program debug )
         {
-            var defaultCollisionConfiguration = new DefaultCollisionConfiguration();
-            var collisionDispatcher = new CollisionDispatcher(defaultCollisionConfiguration);
-            var broadphase = new DbvtBroadphase();
-            this.World = new CollisionWorld(collisionDispatcher, broadphase, defaultCollisionConfiguration);
-            if (debug != null)
-                this.World.DebugDrawer = new BulletDebugDrawer(debug);
+            var defaultCollisionConfiguration = new DefaultCollisionConfiguration( );
+            var collisionDispatcher = new CollisionDispatcher( defaultCollisionConfiguration );
+            var broadphase = new DbvtBroadphase( );
+            this.World = new CollisionWorld( collisionDispatcher, broadphase, defaultCollisionConfiguration );
+            if ( debug != null )
+                this.World.DebugDrawer = new BulletDebugDrawer( debug );
         }
 
         /// <summary>
         /// Kludge
         /// </summary>
-        public void Update()
+        public void Update( )
         {
-            foreach (var collisionObject in World.CollisionObjectArray)
-            {
-                var scenarioObject = collisionObject as ScenarioCollisionObject;
-                if (scenarioObject != null)
-                {
-                    var matrix = scenarioObject.ParentObject.CalculateChildWorldMatrix(scenarioObject.UserObject);
-                    scenarioObject.WorldTransform = matrix;
-                }
-            }
-            World.PerformDiscreteCollisionDetection();
+            World.PerformDiscreteCollisionDetection( );
         }
 
-        public void LoadScenarioObjectCollision(ScenarioObject scenarioObject)
+        public void LoadScenarioObjectCollision( ScenarioObject scenarioObject )
         {
-            for (var index = 0; index < scenarioObject.Nodes.Count; index++)
+            for ( var index = 0; index < scenarioObject.Nodes.Count; index++ )
             {
-                var node = scenarioObject.Nodes[index];
+                var node = scenarioObject.Nodes[ index ];
                 var collisionObject = new ScenarioCollisionObject
                 {
-                    CollisionShape = new BoxShape(0.015f),
-                    WorldTransform = scenarioObject.Nodes.GetWorldMatrix(node),
+                    CollisionShape = new BoxShape( 0.015f ),
+                    WorldTransform = scenarioObject.Nodes.GetWorldMatrix( node ),
                     UserObject = node,
                     ParentObject = scenarioObject
                 };
                 node.CollisionObject = collisionObject;
-                World.AddCollisionObject(collisionObject);
+                World.AddCollisionObject( collisionObject );
             }
-            foreach (var collisionObject in scenarioObject.Markers.Select(marker => new ScenarioCollisionObject
+            foreach ( var collisionObject in scenarioObject.Markers.Select( marker => new ScenarioCollisionObject
             {
-                CollisionShape = new BoxShape(0.015f),
-                WorldTransform = Matrix4.CreateFromQuaternion(marker.Rotation)*
-                                 Matrix4.CreateTranslation(marker.Translation)*
-                                 scenarioObject.Nodes.GetWorldMatrix(marker.NodeIndex),
+                CollisionShape = new BoxShape( 0.015f ),
+                WorldTransform = Matrix4.CreateFromQuaternion( marker.Rotation ) *
+                                 Matrix4.CreateTranslation( marker.Translation ) *
+                                 scenarioObject.Nodes.GetWorldMatrix( marker.NodeIndex ),
                 UserObject = marker,
                 ParentObject = scenarioObject
-            }))
+            } ) )
             {
-                World.AddCollisionObject(collisionObject);
+                World.AddCollisionObject(collisionObject, (short)CollisionGroup.Objects, (short)(CollisionGroup.Objects & CollisionGroup.Level));
             }
+        }
+
+        [Flags]
+        private enum CollisionGroup : short
+        {
+
+            None = 0,
+            Level = 1,
+            Objects = 2,
         }
 
         internal void LoadScenarioCollision(ScenarioStructureBspBlock structureBSP)
@@ -81,17 +83,16 @@ namespace Moonfish.Graphics
                         BitConverter.ToSingle(data, i*12 + 4),
                         BitConverter.ToSingle(data, i*12 + 8));
                 }
-                var triangleIndexVertexArray = new TriangleIndexVertexArray(
-                    cluster.ClusterData[0].Section.StripIndices.Select(x => (int) x.Index).ToArray(), vertices);
 
+                var indices = cluster.ClusterData[ 0 ].Section.StripIndices.Select( x =>  (int)x.Index ).ToArray( );
+                
                 var collisionObject = new CollisionObject
                 {
-                    CollisionShape = new BvhTriangleMeshShape(triangleIndexVertexArray, true),
-                    CollisionFlags = CollisionFlags.StaticObject
+                    CollisionShape = new BvhTriangleMeshShape(new TriangleIndexVertexArray(indices, vertices), true, true),
+                    CollisionFlags = CollisionFlags.StaticObject,
                 };
 
-                World.AddCollisionObject(collisionObject, CollisionFilterGroups.StaticFilter,
-                    CollisionFilterGroups.AllFilter);
+                World.AddCollisionObject(collisionObject, (short)CollisionGroup.Level, (short)(CollisionGroup.Objects));
             }
         }
     }

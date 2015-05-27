@@ -36,14 +36,8 @@ namespace Moonfish.Graphics
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Gizmo));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblRenderTime = new System.Windows.Forms.ToolStripStatusLabel();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-            this.glControl1 = new OpenTK.GLControl(new GraphicsMode());
+            this.glControl1 = new OpenTK.GLControl();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -63,31 +57,6 @@ namespace Moonfish.Graphics
             this.lblRenderTime.Tag = "Frame Time: {0}ms";
             this.lblRenderTime.Text = "Frame Time: 0ms";
             // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.propertyGrid1);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.glControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(686, 425);
-            this.splitContainer1.SplitterDistance = 228;
-            this.splitContainer1.TabIndex = 6;
-            // 
-            // propertyGrid1
-            // 
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(228, 425);
-            this.propertyGrid1.TabIndex = 6;
-            // 
             // glControl1
             // 
             this.glControl1.BackColor = System.Drawing.Color.Black;
@@ -95,8 +64,8 @@ namespace Moonfish.Graphics
             this.glControl1.Location = new System.Drawing.Point(0, 0);
             this.glControl1.Margin = new System.Windows.Forms.Padding(0);
             this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(454, 425);
-            this.glControl1.TabIndex = 5;
+            this.glControl1.Size = new System.Drawing.Size(686, 425);
+            this.glControl1.TabIndex = 6;
             this.glControl1.VSync = false;
             // 
             // Gizmo
@@ -104,17 +73,13 @@ namespace Moonfish.Graphics
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(686, 447);
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.glControl1);
             this.Controls.Add(this.statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Gizmo";
             this.Text = "Moonfish 2015 : Debug";
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -124,8 +89,6 @@ namespace Moonfish.Graphics
 
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel lblRenderTime;
-        private SplitContainer splitContainer1;
-        private PropertyGrid propertyGrid1;
         private GLControl glControl1;
 
     }

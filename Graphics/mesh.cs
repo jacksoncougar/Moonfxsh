@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Moonfish.Guerilla.Tags;
+using Moonfish.Model;
 using Moonfish.Tags;
 using OpenTK.Graphics.OpenGL;
 
@@ -45,57 +46,64 @@ namespace Moonfish.Graphics
             using (TriangleBatch.Begin())
             {
                 var attribute = 0;
-                for (int i = 0; i < vertexBuffers.Count; ++i)
+                for ( int i = 0; i < vertexBuffers.Count; ++i )
                 {
-                    if (!Enum.IsDefined(typeof (VertexAttributeType), vertexBuffers[i].Type)) continue;
+                    if ( !Enum.IsDefined( typeof ( VertexAttributeType ), vertexBuffers[ i ].Type ) ) continue;
 
-                    TriangleBatch.BindBuffer(BufferTarget.ArrayBuffer, TriangleBatch.GenerateBuffer());
+                    TriangleBatch.BindBuffer( BufferTarget.ArrayBuffer, TriangleBatch.GenerateBuffer( ) );
 
-                    var attributeType = vertexBuffers[i].Type;
+                    var attributeType = vertexBuffers[ i ].Type;
                     int attributeSize;
-                    var data = Unpack(vertexBuffers[i].Data, vertexBuffers[i].Type, compressionInfo,
-                        out attributeSize);
+
+                    var data = Unpack( vertexBuffers[ i ].Data, vertexBuffers[ i ].Type, compressionInfo,
+                        out attributeSize );
+
 #if DEBUG
-                    if (attributeType == VertexAttributeType.TextureCoordinateFloat)
+                    if ( attributeType == VertexAttributeType.TextureCoordinateFloat )
                     {
-                        float[] debugFloats = new float[data.Length / (attributeSize / 4)];
-                        Buffer.BlockCopy(data, 0, debugFloats, 0, data.Length);
+                        float[] debugFloats = new float[data.Length / ( attributeSize / 4 )];
+                        Buffer.BlockCopy( data, 0, debugFloats, 0, data.Length );
                     }
 #endif
 
-                    TriangleBatch.BufferVertexAttributeData(data);
+                    TriangleBatch.BufferVertexAttributeData( data );
 
-                    switch (attributeType)
+                    switch ( attributeType )
                     {
                         case VertexAttributeType.CoordinateWithDoubleNode:
                         case VertexAttributeType.CoordinateCompressed:
                         case VertexAttributeType.CoordinateWithSingleNode:
                         case VertexAttributeType.CoordinateWithTripleNode:
-                            TriangleBatch.VertexAttribArray(attribute++, 3, VertexAttribPointerType.Float, false,
-                                attributeSize);
-                            TriangleBatch.VertexAttribArray(attribute++, 4, VertexAttribPointerType.Byte, false,
-                                attributeSize, sizeof (float)*3);
-                            TriangleBatch.VertexAttribArray(attribute++, 4, VertexAttribPointerType.Float, false,
-                                attributeSize, sizeof (float)*3 + sizeof (byte)*4);
+                            TriangleBatch.VertexAttribArray( attribute++, 3, VertexAttribPointerType.Float, false,
+                                attributeSize );
+                            TriangleBatch.VertexAttribArray( attribute++, 4, VertexAttribPointerType.Byte, false,
+                                attributeSize, sizeof ( float ) * 3 );
+                            TriangleBatch.VertexAttribArray( attribute++, 4, VertexAttribPointerType.Float, false,
+                                attributeSize, sizeof ( float ) * 3 + sizeof ( byte ) * 4 );
                             break;
                         case VertexAttributeType.TextureCoordinateCompressed:
-                            TriangleBatch.VertexAttribArray(attribute++, 2, VertexAttribPointerType.Short, false,
-                                attributeSize);
+                            TriangleBatch.VertexAttribArray( attribute++, 2, VertexAttribPointerType.Short, false,
+                                attributeSize );
                             break;
                         case VertexAttributeType.TangentSpaceUnitVectorsCompressed:
-                            TriangleBatch.VertexAttribArray(attribute++, 1, VertexAttribIntegerType.Int, attributeSize);
-                            TriangleBatch.VertexAttribArray(attribute++, 1, VertexAttribIntegerType.Int, attributeSize,
-                                4);
-                            TriangleBatch.VertexAttribArray(attribute++, 1, VertexAttribIntegerType.Int, attributeSize,
-                                8);
+                            TriangleBatch.VertexAttribArray( attribute++, 1, VertexAttribIntegerType.Int, attributeSize );
+                            TriangleBatch.VertexAttribArray( attribute++, 1, VertexAttribIntegerType.Int, attributeSize,
+                                4 );
+                            TriangleBatch.VertexAttribArray( attribute++, 1, VertexAttribIntegerType.Int, attributeSize,
+                                8 );
                             break;
                         case VertexAttributeType.CoordinateFloat:
-                            TriangleBatch.VertexAttribArray(attribute++, 3, VertexAttribPointerType.Float, false,
-                                attributeSize);
+                            TriangleBatch.VertexAttribArray( attribute++, 3, VertexAttribPointerType.Float, false,
+                                attributeSize );
                             break;
                         case VertexAttributeType.TextureCoordinateFloat:
-                            TriangleBatch.VertexAttribArray(attribute++, 2, VertexAttribPointerType.Float, false,
-                                attributeSize);
+                            TriangleBatch.VertexAttribArray( attribute++, 2, VertexAttribPointerType.Float, false,
+                                attributeSize );
+                            break;
+                        case VertexAttributeType.LightmapUVCoordinateOneXbox:
+                        case VertexAttributeType.LightmapUVCoordinateTwoXbox:
+                            TriangleBatch.VertexAttribArray( attribute++, 2, VertexAttribPointerType.Short, true,
+                                attributeSize );
                             break;
                     }
                 }
@@ -220,46 +228,5 @@ namespace Moonfish.Graphics
         {
             return ((IEnumerable<TriangleBatch>) this).GetEnumerator();
         }
-    }
-
-
-    public static class VertexAttributeTypeExtensions
-    {
-        public static byte GetSize(this VertexAttributeType attributeType)
-        {
-            var value = (short) attributeType;
-            var size = (byte) (value & 0x00FF);
-            return size;
-        }
-
-        public static VertexAttributeType ReadVertexAttributeType(this BinaryReader binaryReader)
-        {
-            var msb = binaryReader.ReadByte();
-            var lsb = binaryReader.ReadByte();
-            var type = (VertexAttributeType) (msb << 8 | lsb);
-            return type;
-        }
-    }
-
-    public enum VertexAttributeType : short
-    {
-        None = 0x0000,
-        CoordinateFloat = 0x010C,
-        CoordinateCompressed = 0x0206,
-        CoordinateWithSingleNode = 0x0408,
-        CoordinateWithDoubleNode = 0x060C,
-        CoordinateWithTripleNode = 0x080C,
-
-        TextureCoordinateFloatPc = 0x1708,
-        TextureCoordinateFloat = 0x1808,
-        TextureCoordinateCompressed = 0x1904,
-
-        TangentSpaceUnitVectorsFloat = 0x1924,
-        TangentSpaceUnitVectorsCompressed = 0x1B0C,
-
-        LightmapUvCoordinateOne = 0x1F08,
-        LightmapUvCoordinateTwo = 0x3008,
-
-        DiffuseColour = 0x350C,
     }
 }

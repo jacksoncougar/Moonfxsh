@@ -17,7 +17,7 @@ namespace Moonfish.Graphics
         void OnMouseMove(Object sender, SceneMouseEventArgs e);
         void OnMouseUp(Object sender, SceneMouseEventArgs e);
         void OnMouseClick(Object sender, SceneMouseEventArgs e);
-        void OnMouseCaptureChanged(Object sender, EventArgs e);
+        void OnMouseCaptureChanged(Object sender, SceneMouseEventArgs e);
     }
 
     public class SelectEventArgs : EventArgs

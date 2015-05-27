@@ -29,13 +29,13 @@ namespace Moonfish.Graphics
 
         public Dictionary<TagIdent, MaterialShader> Materials { get; set; }
 
-        public Dictionary<TagIdent, Texture> LoadedTextures { get; set; }
+        public Dictionary<TagIdent, List<Texture>> LoadedTextureArrays { get; set; }
 
         public ProgramManager()
         {
             Materials = new Dictionary<TagIdent, MaterialShader>();
             Shaders = new Dictionary<string, Program>();
-            LoadedTextures = new Dictionary<TagIdent, Texture>();
+            LoadedTextureArrays = new Dictionary<TagIdent, List<Texture>>();
             LoadDefaultShader();
             LoadSystemShader();
             LoadScreenShader();
@@ -103,33 +103,32 @@ namespace Moonfish.Graphics
 
         private void LoadLightmapShader()
         {
-            Program defaultProgram;
             var vertex_shader = new Shader("data/lightmap.vert", ShaderType.VertexShader);
-            var fragment_shader = new Shader("data/fragment.frag", ShaderType.FragmentShader);
-            defaultProgram = new Program("lightmapped");
+            var fragment_shader = new Shader("data/lightmap.frag", ShaderType.FragmentShader);
+            var defaultProgram = new Program("lightmapped");
             GL.BindAttribLocation(defaultProgram.Ident, 0, "position");
             GL.BindAttribLocation(defaultProgram.Ident, 1, "texcoord");
             GL.BindAttribLocation(defaultProgram.Ident, 2, "normal");
             GL.BindAttribLocation(defaultProgram.Ident, 3, "tangent");
             GL.BindAttribLocation(defaultProgram.Ident, 4, "bitangent");
-            GL.BindAttribLocation(defaultProgram.Ident, 5, "colour");
+            GL.BindAttribLocation(defaultProgram.Ident, 5, "lightmapCoord");
+            GL.BindAttribLocation(defaultProgram.Ident, 6, "radiosityCoord");
 
             defaultProgram.Link(new List<Shader>(2) { vertex_shader, fragment_shader });
             Shaders[defaultProgram.Name] = defaultProgram;
-
-
-            LoadNormalMapPalette();
 
             var p8NormalColourUniform = Shaders[defaultProgram.Name].GetUniformLocation("P8NormalColour");
             var p8NormalMapUniform = Shaders[defaultProgram.Name].GetUniformLocation("P8NormalMap");
             var diffuseMapUniform = Shaders[defaultProgram.Name].GetUniformLocation("DiffuseMap");
             var environmentMapUniform = Shaders[defaultProgram.Name].GetUniformLocation("EnvironmentMap");
+            var lightmapUniform = Shaders[defaultProgram.Name].GetUniformLocation("lightmap");
 
             Shaders[defaultProgram.Name].Use();
             Shaders[defaultProgram.Name].SetUniform(p8NormalColourUniform, 0);
             Shaders[defaultProgram.Name].SetUniform(p8NormalMapUniform, 3);
             Shaders[defaultProgram.Name].SetUniform(diffuseMapUniform, 1);
             Shaders[defaultProgram.Name].SetUniform(environmentMapUniform, 2);
+            Shaders[defaultProgram.Name].SetUniform(lightmapUniform, 4);
         }
 
         private void LoadNormalMapPalette()
@@ -237,6 +236,9 @@ namespace Moonfish.Graphics
 
         public Program GetProgram( ShaderReference reference, string shaderName = null )
         {
+            if (reference == null)
+                return ActiveProgram = Shaders["lightmapped"];
+
             switch ( reference.Type )
             {
                 case ShaderReference.ReferenceType.Halo2:
@@ -244,7 +246,7 @@ namespace Moonfish.Graphics
                     var tagIdent = ( TagIdent ) reference.Ident;
                     if ( Materials.TryGetValue( tagIdent, out material ) )
                     {
-                        material.UsePass( 0, LoadedTextures );
+                        material.UsePass( 0, LoadedTextureArrays );
                         Program shaderProgram;
                         if ( shaderName != null && Shaders.TryGetValue( shaderName, out shaderProgram ) )
                         {
@@ -282,16 +284,40 @@ namespace Moonfish.Graphics
                 var material = new MaterialShader(shaderBlock, cacheStream, out textures);
                 foreach (var shaderPostprocessBitmapNewBlock in textures)
                 {
-                    if (shaderPostprocessBitmapNewBlock.BitmapGroup == TagIdent.NullIdentifier 
-                        || LoadedTextures.ContainsKey(shaderPostprocessBitmapNewBlock.BitmapGroup))
-                        continue;
-                    var texture = new Texture();
-                    
-                    texture.Load(shaderPostprocessBitmapNewBlock.BitmapGroup.Get<BitmapBlock>());
-                    LoadedTextures[shaderPostprocessBitmapNewBlock.BitmapGroup] = texture;
+                    LoadTexture( shaderPostprocessBitmapNewBlock.BitmapGroup );
                 }
 
                 Materials[indices != null && index < indices.Count ? (TagIdent)indices[index] : globalGeometryMaterialBlock.Shader.Ident] = material;
+            }
+        }
+
+        public void LoadTexture(TagIdent bitmapGroup)
+        {
+            if (bitmapGroup == TagIdent.NullIdentifier)
+                return;
+            var texture = new Texture();
+
+            texture.Load(bitmapGroup.Get<BitmapBlock>().Bitmaps[0]);
+            if (!LoadedTextureArrays.ContainsKey(bitmapGroup))
+                LoadedTextureArrays[bitmapGroup] = new List<Texture>();
+            if (LoadedTextureArrays[bitmapGroup].Contains(texture)) return;
+            LoadedTextureArrays[bitmapGroup].Add(texture);
+        }
+
+        public void LoadTextureGroup(TagIdent bitmapGroup)
+        {
+            if (bitmapGroup == TagIdent.NullIdentifier)
+                return;
+
+            foreach ( var bitmapDataBlock in bitmapGroup.Get<BitmapBlock>().Bitmaps )
+            {
+                var texture = new Texture();
+                texture.Load(bitmapDataBlock);
+
+                if (!LoadedTextureArrays.ContainsKey(bitmapGroup))
+                    LoadedTextureArrays[bitmapGroup] = new List<Texture>();
+                if (LoadedTextureArrays[bitmapGroup].Contains(texture)) return;
+                LoadedTextureArrays[bitmapGroup].Add(texture);
             }
         }
     };

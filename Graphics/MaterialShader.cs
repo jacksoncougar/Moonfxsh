@@ -51,7 +51,7 @@ namespace Moonfish.Graphics
         {
         }
 
-        public void UsePass(int index, Dictionary<TagIdent, Texture> textures )
+        public void UsePass(int index, Dictionary<TagIdent, List<Texture>> textures)
         {
             ActiveShaderPassIndex = index;
             if (ActiveShaderPassIndex < 0)
@@ -88,7 +88,7 @@ namespace Moonfish.Graphics
                     textures[
                         shader.PostprocessDefinition[0].Bitmaps[
                             remappings[implementations[implementationIndex].Bitmaps.Index + bitmap].SourceIndex]
-                            .BitmapGroup].Bind();
+                            .BitmapGroup].First().Bind();
                 }
                 break;
             }

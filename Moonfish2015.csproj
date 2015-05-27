@@ -136,10 +136,12 @@
     <Compile Include="Graphics\Input\GizmoBase.cs" />
     <Compile Include="Graphics\Input\RotationGizmo.cs" />
     <Compile Include="Graphics\Input\TranslationGizmo.cs" />
+    <Compile Include="Graphics\IRenderable.cs" />
     <Compile Include="Graphics\LevelMeshManager.cs" />
     <Compile Include="Graphics\MathHelper.cs" />
     <Compile Include="Graphics\Primitives\Debug.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
+    <Compile Include="Graphics\ShaderReference.cs" />
     <Compile Include="Graphics\TriangleBatch.cs" />
     <Compile Include="Graphics\BulletDebugDrawer.cs" />
     <Compile Include="Graphics\Camera.cs" />
@@ -185,6 +187,7 @@
     <Compile Include="Graphics\Swizzler.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\Track.cs" />
+    <Compile Include="Graphics\VertexAttributeType.cs" />
     <Compile Include="Graphics\VertexFunctions.cs" />
     <Compile Include="Graphics\Viewport.cs" />
     <Compile Include="Guerilla\BinaryIOReflection.cs" />
@@ -1220,6 +1223,7 @@
     <Compile Include="Guerilla\Tags\DecoratorCacheBlockBlock.cs" />
     <Compile Include="Guerilla\Tags\DecoratorSetBlock.cs" />
     <Compile Include="Guerilla\Tags\GlobalWaterDefinitionsBlock.cs" />
+    <Compile Include="Guerilla\Tags\LightmapGeometrySectionBlock.cs" />
     <Compile Include="Guerilla\Tags\LightmapVertexBufferBucketBlock.cs" />
     <Compile Include="Guerilla\Tags\MoonfishXboxAnimationRawBlock.cs" />
     <Compile Include="Guerilla\Tags\ParticleModelBlock.cs" />
@@ -1299,6 +1303,9 @@
     <None Include="data\fragment.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="data\lightmap.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="data\lightmap.vert">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -1336,7 +1343,6 @@
     <Content Include="Documentation\vertex_resource_raw.txt" />
     <Content Include="icon.ico" />
     <Content Include="license.txt" />
-    <Content Include="opengl32.dll" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\Gizmo.resx">

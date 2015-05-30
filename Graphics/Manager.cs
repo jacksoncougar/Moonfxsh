@@ -48,7 +48,7 @@ namespace Moonfish.Graphics
             }
             foreach ( var item in Level.InstancedGeometriesDefinitions )
             {
-                InstancedGeometryObjects.Add( new RenderObject( item ) );
+                //InstancedGeometryObjects.Add( new RenderObject( item ) );
             }
             ProgramManager.LoadMaterials( Level.Materials, cacheStream );
         }
@@ -84,21 +84,20 @@ namespace Moonfish.Graphics
                 ( ScenarioStructureLightmapBlock ) scenarioStructureBspReferenceBlock.StructureLightmap.Get( ), map );
 
 
-            LoadInstances(
-                _scenario.Scenery.Select( x => ( IH2ObjectInstance ) x ).ToList( ),
-                _scenario.SceneryPalette.Select( x => ( IH2ObjectPalette ) x ).ToList( ), map );
-            LoadInstances(
-                _scenario.Crates.Select( x => ( IH2ObjectInstance ) x ).ToList( ),
-                _scenario.CratesPalette.Select( x => ( IH2ObjectPalette ) x ).ToList( ), map );
-            LoadInstances(
-                _scenario.Weapons.Select( x => ( IH2ObjectInstance ) x ).ToList( ),
-                _scenario.WeaponPalette.Select( x => ( IH2ObjectPalette ) x ).ToList( ), map );
-            LoadNetgameEquipment(
-                _scenario.NetgameEquipment.Select( x => x ).ToList( ), map );
+            //LoadInstances(
+            //    _scenario.Scenery.Select( x => ( IH2ObjectInstance ) x ).ToList( ),
+            //    _scenario.SceneryPalette.Select( x => ( IH2ObjectPalette ) x ).ToList( ), map );
+            //LoadInstances(
+            //    _scenario.Crates.Select( x => ( IH2ObjectInstance ) x ).ToList( ),
+            //    _scenario.CratesPalette.Select( x => ( IH2ObjectPalette ) x ).ToList( ), map );
+            //LoadInstances(
+            //    _scenario.Weapons.Select( x => ( IH2ObjectInstance ) x ).ToList( ),
+            //    _scenario.WeaponPalette.Select( x => ( IH2ObjectPalette ) x ).ToList( ), map );
+            //LoadNetgameEquipment(
+            //    _scenario.NetgameEquipment.Select( x => x ).ToList( ), map );
 
             Collision.LoadScenarioCollision( scenarioStructureBspBlock );
             LoadCollision(  );
-            Log.Info( GL.GetError( ).ToString( ) );
         }
 
         private ScenarioStructureLightmapBlock lightmapBlock;
@@ -196,10 +195,13 @@ namespace Moonfish.Graphics
             }
             foreach ( var structureBspInstancedGeometryInstancesBlock in Level.InstancedGeometryInstances )
             {
+                var shortBlockIndex1 = structureBspInstancedGeometryInstancesBlock.InstanceDefinition;
+                var instancedGeometryObject = shortBlockIndex1 < InstancedGeometryObjects.Count
+                    ? InstancedGeometryObjects[ shortBlockIndex1 ]
+                    : null;
+                if ( instancedGeometryObject == null ) continue;
                 foreach (
-                    var renderBatch in
-                        InstancedGeometryObjects[ structureBspInstancedGeometryInstancesBlock.InstanceDefinition ]
-                            .Batches )
+                    var renderBatch in instancedGeometryObject.Batches )
                 {
                     var index = renderBatch.Shader.Ident;
                     renderBatch.Shader.Ident = ( int ) Level.Materials[ index ].Shader.Ident;

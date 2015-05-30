@@ -14,6 +14,7 @@ namespace Moonfish.Graphics
         private Stopwatch Timer { get; set; }
         public Camera Camera { get; set; }
 
+
         private Vector3 lightPosition = new Vector3(3.8f, 3.0F, 3.5f);
         private float rotation = 0;
 
@@ -28,6 +29,7 @@ namespace Moonfish.Graphics
 
         public virtual void Initialize()
         {
+            
             Console.WriteLine(GL.GetString(StringName.Version));
             Timer = new Stopwatch();
             Camera = new Camera();

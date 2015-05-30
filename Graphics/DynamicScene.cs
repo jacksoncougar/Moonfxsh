@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Threading;
 using BulletSharp;
 using Moonfish.Graphics.Input;
@@ -11,6 +12,8 @@ namespace Moonfish.Graphics
 {
     public partial class DynamicScene : Scene
     {
+        public ConvexHullCaster caster;
+
         private GLControl _graphicsContext;
 
         public CollisionManager CollisionManager { get; set; }
@@ -21,11 +24,15 @@ namespace Moonfish.Graphics
 
         public DynamicScene()
         {
+            caster = new ConvexHullCaster(  );
             DrawDebugCollision = false;
             CollisionManager = new CollisionManager(ProgramManager.SystemProgram);
             MousePole = new TranslationGizmo();
             Camera.CameraUpdated += MousePole.OnCameraUpdate;
             SelectedObjectChanged += OnSelectedObjectChanged;
+            SelectedObjectChanged += caster.OnSelectedObjectChanged;
+            MouseMove += caster.OnMouseMove;
+            MouseUp += caster.OnMouseUp;
             foreach (var item in MousePole.CollisionObjects)
                 CollisionManager.World.AddCollisionObject(item);
             
@@ -42,27 +49,27 @@ namespace Moonfish.Graphics
 
         private void OnSelectedObjectChanged(object seneder, SelectEventArgs e)
         {
-            if (e.SelectedObject == null)
-            {
-                MousePole.DropHandlers();
-                MousePole.Show(false);
-                return;
-            }
-            var item = e.SelectedObject as CollisionObject;
-            if (item != null)
-            {
-                var scenarioObject = item.UserObject as ScenarioObject;
-                if ( scenarioObject == null ) return;
+            //if (e.SelectedObject == null)
+            //{
+            //    MousePole.DropHandlers();
+            //    MousePole.Show(false);
+            //    return;
+            //}
+            //var item = e.SelectedObject as CollisionObject;
+            //if (item != null)
+            //{
+            //    var scenarioObject = item.UserObject as ScenarioObject;
+            //    if ( scenarioObject == null ) return;
 
-                MousePole.Show(true);
-                MousePole.DropHandlers();
-                MousePole.WorldMatrix = item.WorldTransform;
-                MousePole.WorldMatrixChanged +=
-                    delegate(object sender, MatrixChangedEventArgs args)
-                    {
-                        scenarioObject.WorldMatrix = args.Matrix.ClearScale(  );
-                    };
-            }
+            //    MousePole.Show(true);
+            //    MousePole.DropHandlers();
+            //    MousePole.WorldMatrix = item.WorldTransform;
+            //    MousePole.WorldMatrixChanged +=
+            //        delegate(object sender, MatrixChangedEventArgs args)
+            //        {
+            //            scenarioObject.WorldMatrix = args.Matrix.ClearScale(  );
+            //        };
+            //}
         }
 
         public override void Draw(float delta)
@@ -72,6 +79,8 @@ namespace Moonfish.Graphics
 
             if (DrawDebugCollision)
                 CollisionManager.World.DebugDrawWorld();
+
+            GLDebug.DrawPoint( caster.debugPoint, Color.Red, 5 );
         }
 
         public override void Update()

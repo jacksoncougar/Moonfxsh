@@ -55,11 +55,16 @@ namespace Moonfish.Graphics.Primitives
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, IntPtr.Zero);
             GL.EnableVertexAttribArray(0);
             var colourAttribute = DebugProgram.GetAttributeLocation("Colour");
+            var worldMatrixUniform = DebugProgram.GetUniformLocation("WorldMatrixUniform");
+            GL.Disable( EnableCap.DepthTest );
+            GL.PointSize( 5f );
             using (DebugProgram.Use())
             {
+                DebugProgram.SetUniform(worldMatrixUniform, Matrix4.Identity);
                 Program.SetAttribute(colourAttribute, new ColorF(Color.FromArgb(color.ToArgb())).RGBA);
                 GL.DrawArrays(PrimitiveType.Points, 0, 1);
             }
+            GL.Enable( EnableCap.DepthTest );
             GL.Finish();
             GL.DeleteBuffer(arrayBuffer);
             GL.DeleteVertexArray(vao);

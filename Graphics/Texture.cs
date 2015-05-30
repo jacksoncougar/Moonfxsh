@@ -186,7 +186,7 @@ namespace Moonfish.Graphics
 
                 case BitmapDataBlock.FormatEnum.A8r8g8b8:
                 case BitmapDataBlock.FormatEnum.X8r8g8b8:
-                    return PixelType.UnsignedInt;
+                    return PixelType.UnsignedByte;
                 default:
                     throw new FormatException( "Unsupported Texture Format" );
             }
@@ -288,7 +288,7 @@ namespace Moonfish.Graphics
                     pixelFormat = PixelInternalFormat.Rgba8;
                     break;
                 case BitmapDataBlock.FormatEnum.A8r8g8b8:
-                    pixelFormat = PixelInternalFormat.Rgb;
+                    pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 case BitmapDataBlock.FormatEnum.A8y8:
                     pixelFormat = PixelInternalFormat.Rgb;

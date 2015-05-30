@@ -131,6 +131,8 @@
     </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="GlobalStrings.cs" />
+    <Compile Include="Graphics\CollisionGroup.cs" />
+    <Compile Include="Graphics\ConvexHullCaster.cs" />
     <Compile Include="Graphics\INode.cs" />
     <Compile Include="Graphics\Input\ClickableCollisionObject.cs" />
     <Compile Include="Graphics\Input\GizmoBase.cs" />
@@ -139,7 +141,7 @@
     <Compile Include="Graphics\IRenderable.cs" />
     <Compile Include="Graphics\LevelMeshManager.cs" />
     <Compile Include="Graphics\MathHelper.cs" />
-    <Compile Include="Graphics\Primitives\Debug.cs" />
+    <Compile Include="Graphics\Primitives\GLDebug.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
     <Compile Include="Graphics\ShaderReference.cs" />
     <Compile Include="Graphics\TriangleBatch.cs" />
@@ -167,7 +169,6 @@
     <Compile Include="Graphics\Manager.cs" />
     <Compile Include="Graphics\MarkerWrapper.cs" />
     <Compile Include="Graphics\MaterialShader.cs" />
-    <Compile Include="Graphics\Maths.cs" />
     <Compile Include="Graphics\Mesh.cs" />
     <Compile Include="Graphics\MoonfishColours.cs" />
     <Compile Include="Graphics\Conic.cs" />

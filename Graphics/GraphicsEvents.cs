@@ -58,9 +58,7 @@ namespace Moonfish.Graphics
             MouseButtons button)
         {
             // Project the mouse coordinates into world-space at the far z-plane
-            var distantWorldPoint = Maths.Project(camera.ViewMatrix, camera.ProjectionMatrix,
-                new Vector3(mouseViewportCoordinates.X, mouseViewportCoordinates.Y, 1f),
-                (Rectangle) camera.Viewport).Xyz;
+            var distantWorldPoint = camera.UnProject(mouseViewportCoordinates, 1);
 
             // Produce a ray originating at the camera and pointing towards the distant world point^
             Camera = camera;
@@ -68,11 +66,11 @@ namespace Moonfish.Graphics
             this.MouseRay = new Ray(camera.Position, distantWorldPoint);
             this.MouseRayFarPoint = (distantWorldPoint - camera.Position).Length;
             this.Button = button;
-            this.WorldCoordinates = mouseWorldCoordinates;
+            this.WorldCoordinates = distantWorldPoint;
         }
     }
 
-    public delegate void SelectedObjectChangedEventHandler(object seneder, SelectEventArgs e);
+    public delegate void SelectedObjectChangedEventHandler(object sender, SelectEventArgs e);
 
     public delegate void MouseMoveEventHandler(object sender, SceneMouseEventArgs e);
 

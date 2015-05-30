@@ -30,7 +30,7 @@ void main()
 	float lightPower = 1.0;
 	float specularPower = 32.0;
 
-	float index = texture(P8NormalMap, VertexTexcoord_texturespace.st);
+	float index = texture(P8NormalMap, VertexTexcoord_texturespace.st).x;
 	vec3 textureNormal_tangentspace = normalize(texture(P8NormalColour, index).rgb * 2.0 - 1.0);
 
 	vec4 diffuseColour = texture(DiffuseMap, VertexTexcoord_texturespace.st);

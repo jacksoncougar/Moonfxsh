@@ -65,7 +65,7 @@ namespace Moonfish.Graphics
             glControl1.MouseUp += Scene.OnMouseUp;
             glControl1.MouseClick += Scene.OnMouseClick;
 
-            Open(Path.Combine(Local.MapsDirectory, "derelict.map"));
+            Open(Path.Combine(Local.MapsDirectory, "05a_deltaapproach.map"));
 
             Scene.ObjectManager.ProgramManager = Scene.ProgramManager;
             Scene.ObjectManager.Collision = Scene.CollisionManager;

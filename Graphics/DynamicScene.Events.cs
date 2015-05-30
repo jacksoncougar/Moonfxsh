@@ -20,16 +20,14 @@ namespace Moonfish.Graphics
         {
             var mouse = new
             {
-                Close = Camera.Project( new Vector2( e.X, e.Y ), depth: -1 ),
-                Far = Camera.Project( new Vector2( e.X, e.Y ), depth: 1 )
+                Close = Camera.UnProject( new Vector2( e.X, e.Y), -1.0f ),
+                Far = Camera.UnProject(new Vector2(e.X, e.Y), 1.0f)
             };
 
             var callback = new ClosestRayResultCallback( mouse.Close, mouse.Far )
             {
-
-                CollisionFilterGroup = CollisionFilterGroups.AllFilter
+                CollisionFilterMask = ( CollisionFilterGroups ) CollisionGroup.Level
             };
-            CollisionManager.World.PerformDiscreteCollisionDetection( );
             CollisionManager.World.RayTest( mouse.Close, mouse.Far, callback );
 
             if ( e.Button == MouseButtons.Left && callback.HasHit )
@@ -58,20 +56,24 @@ namespace Moonfish.Graphics
             MouseMove += clickableCollisionObject.OnMouseMove;
             MouseUp += clickableCollisionObject.OnMouseUp;
             MouseClick += clickableCollisionObject.OnMouseClick;
+            clickableCollisionObject.MouseUp += delegate( object sender, SceneMouseEventArgs args )
+            {
+                MouseMove -= clickableCollisionObject.OnMouseMove;
+                MouseClick -= clickableCollisionObject.OnMouseClick;
+                MouseUp -= clickableCollisionObject.OnMouseUp;
+            };
         }
 
         public void OnMouseUp(object sender, MouseEventArgs e)
         {
             if (MouseUp != null)
                 MouseUp(this, new SceneMouseEventArgs(Camera, new Vector2(e.X, e.Y), default(Vector3), e.Button));
-            MouseMove = null;
-            MouseUp = null;
-            MouseClick = null;
         }
 
         public void OnMouseMove(object sender, MouseEventArgs e)
         {
-            if (MouseMove != null) MouseMove(this, new SceneMouseEventArgs(Camera, new Vector2(e.X, e.Y), default(Vector3), e.Button));
+            if (MouseMove != null) 
+                MouseMove(this, new SceneMouseEventArgs(Camera, new Vector2(e.X, e.Y), default(Vector3), e.Button));
         }
 
         public void OnMouseClick(object sender, MouseEventArgs e)

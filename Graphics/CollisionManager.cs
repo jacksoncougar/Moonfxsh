@@ -60,15 +60,6 @@ namespace Moonfish.Graphics
             }
         }
 
-        [Flags]
-        private enum CollisionGroup : short
-        {
-
-            None = 0,
-            Level = 1,
-            Objects = 2,
-        }
-
         internal void LoadScenarioCollision(ScenarioStructureBspBlock structureBSP)
         {
             foreach (var cluster in structureBSP.Clusters)

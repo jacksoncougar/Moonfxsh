@@ -173,8 +173,7 @@ namespace Moonfish.Graphics
             {
                 control.Visible = tsBtnLabels.Checked;
                 var marker = (MarkerWrapper) control.Tag;
-                var location = Scene.Camera.UnProject(marker.ParentWorldMatrix.ExtractTranslation(),
-                    Maths.ProjectionTarget.View);
+                var location = Scene.Camera.Project( marker.ParentWorldMatrix.ExtractTranslation( ) );
                 control.Location = new Point((int) location.X, (int) location.Y);
             }
             Scene.DrawDebugCollision = debugDrawToolStripMenuItem.Checked;

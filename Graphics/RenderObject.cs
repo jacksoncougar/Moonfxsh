@@ -40,7 +40,7 @@ namespace Moonfish.Graphics
                             ElementLength = globalGeometryPartBlockNew.StripLength
                         };
 
-                        batch.AssignUniform( "WorldMatrixUniform", Matrix4.Identity );
+                        batch.AssignUniform("WorldMatrixUniform", Matrix4.Identity);
                         batch.Shader = new ShaderReference( ShaderReference.ReferenceType.Halo2,
                             globalGeometryPartBlockNew.Material );
                         batch.PrimitiveType = PrimitiveType.Triangles;

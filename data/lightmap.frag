@@ -14,7 +14,7 @@ smooth in vec3 EyeDirection_tangentspace;
 smooth in vec3 LightDirection_tangentspace;
 
 smooth in vec2 VertexTexcoord_texturespace;
-smooth in vec2 LightmapTexcoord_texturespace;
+smooth in vec3 LightmapTexcoord_texturespace;
 
 in vec3 LightPosition_worldspace;
 
@@ -23,12 +23,16 @@ uniform sampler2D DiffuseMap;
 uniform samplerCube EnvironmentMap;
 uniform sampler2D P8NormalMap;
 uniform sampler2D lightmap;
+uniform sampler1DArray lightmapPalette;
 
 out vec4 frag_color; 
 
 void main()
 {
-	float lightmapPaletteIndex = texture(lightmap, LightmapTexcoord_texturespace).r;
+	float lightmapColourIndex = texture(lightmap, LightmapTexcoord_texturespace.st).r;
+	float g = LightmapTexcoord_texturespace.p;
+	float actuallayer = floor(g + 0.5);
+	vec4 lightmapPaletteColour = texture(lightmapPalette, vec2(lightmapColourIndex, actuallayer) );
 	vec4 lightColor = vec4(1.0, 1.0, 1.0, 1.0);
 	float lightPower = 1.0;
 	float specularPower = 32.0;
@@ -59,5 +63,5 @@ void main()
 		// Specular : reflective highlight, like a mirror
 		(environmentColour * diffuseColour.a * lightColor * lightPower * pow(cosAlpha, specularPower));
 
-	frag_color = clamp(color * lightmapPaletteIndex, 0.0, 1.0);
+	frag_color = clamp(color * lightmapPaletteColour, 0, 1);
 }

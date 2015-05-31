@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Moonfish.Guerilla.Tags;
 using OpenTK.Graphics.OpenGL;
 
@@ -21,7 +22,7 @@ namespace Moonfish.Graphics
             GC.SuppressFinalize( this );
         }
 
-        public void Load( BitmapDataBlock workingBitmap, TextureUnit textureUnit = TextureUnit.Texture0,
+        public void Load( BitmapDataBlock workingBitmap,
             TextureMagFilter textureMagFilter = TextureMagFilter.Linear,
             TextureMinFilter textureMinFilter = TextureMinFilter.Linear )
         {
@@ -154,8 +155,7 @@ namespace Moonfish.Graphics
 
         public void Bind( )
         {
-            if ( textureTarget == TextureTarget.Texture2D || textureTarget == TextureTarget.TextureCubeMap )
-                GL.BindTexture( textureTarget, handle );
+            GL.BindTexture( textureTarget, handle );
         }
 
         private PixelType ParseBitapPixelType(
@@ -175,7 +175,7 @@ namespace Moonfish.Graphics
                 case BitmapDataBlock.FormatEnum.A8y8:
                 case BitmapDataBlock.FormatEnum.V8u8:
                 case BitmapDataBlock.FormatEnum.G8b8:
-                    return PixelType.UnsignedShort;
+                    return PixelType.UnsignedByte;
 
                 case BitmapDataBlock.FormatEnum.A8:
                 case BitmapDataBlock.FormatEnum.P8:
@@ -216,7 +216,7 @@ namespace Moonfish.Graphics
                     return PixelFormat.Rg;
 
                 case BitmapDataBlock.FormatEnum.A8:
-                    return PixelFormat.Alpha;
+                    return PixelFormat.Red;
 
                 case BitmapDataBlock.FormatEnum.P8:
                 case BitmapDataBlock.FormatEnum.P8bump:
@@ -224,7 +224,7 @@ namespace Moonfish.Graphics
 
                 case BitmapDataBlock.FormatEnum.Y8:
                 case BitmapDataBlock.FormatEnum.Ay8:
-                    return PixelFormat.Luminance;
+                    return PixelFormat.Red;
                 default:
                     throw new FormatException( "Unsupported Texture Format" );
             }
@@ -279,25 +279,25 @@ namespace Moonfish.Graphics
             switch ( format )
             {
                 case BitmapDataBlock.FormatEnum.A1r5g5b5:
-                    pixelFormat = PixelInternalFormat.Rgba8;
+                    pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 case BitmapDataBlock.FormatEnum.A4r4g4b4:
-                    pixelFormat = PixelInternalFormat.Rgba8;
+                    pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 case BitmapDataBlock.FormatEnum.A8:
-                    pixelFormat = PixelInternalFormat.Rgba8;
+                    pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 case BitmapDataBlock.FormatEnum.A8r8g8b8:
                     pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 case BitmapDataBlock.FormatEnum.A8y8:
-                    pixelFormat = PixelInternalFormat.Rgb;
+                    pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 case BitmapDataBlock.FormatEnum.Argbfp32:
-                    pixelFormat = PixelInternalFormat.Rgb;
+                    pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 case BitmapDataBlock.FormatEnum.Ay8:
-                    pixelFormat = PixelInternalFormat.Rgb;
+                    pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 case BitmapDataBlock.FormatEnum.Dxt1:
                     pixelFormat = PixelInternalFormat.CompressedRgbaS3tcDxt1Ext;
@@ -309,31 +309,31 @@ namespace Moonfish.Graphics
                     pixelFormat = PixelInternalFormat.CompressedRgbaS3tcDxt5Ext;
                     break;
                 case BitmapDataBlock.FormatEnum.G8b8:
-                    pixelFormat = PixelInternalFormat.Rgb;
+                    pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 case BitmapDataBlock.FormatEnum.P8:
-                    pixelFormat = PixelInternalFormat.Rgb;
+                    pixelFormat = PixelInternalFormat.R8;
                     break;
                 case BitmapDataBlock.FormatEnum.P8bump:
-                    pixelFormat = PixelInternalFormat.Rgb;
+                    pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 case BitmapDataBlock.FormatEnum.R5g6b5:
-                    pixelFormat = PixelInternalFormat.Rgb;
+                    pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 case BitmapDataBlock.FormatEnum.Rgbfp16:
-                    pixelFormat = PixelInternalFormat.Rgb;
+                    pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 case BitmapDataBlock.FormatEnum.Rgbfp32:
-                    pixelFormat = PixelInternalFormat.Rgb;
+                    pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 case BitmapDataBlock.FormatEnum.V8u8:
-                    pixelFormat = PixelInternalFormat.Rgb;
+                    pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 case BitmapDataBlock.FormatEnum.X8r8g8b8:
-                    pixelFormat = PixelInternalFormat.Rgb;
+                    pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 case BitmapDataBlock.FormatEnum.Y8:
-                    pixelFormat = PixelInternalFormat.Luminance8;
+                    pixelFormat = PixelInternalFormat.Rgba;
                     break;
                 default:
                     throw new FormatException( "Unsupported Texture Format" );
@@ -349,6 +349,37 @@ namespace Moonfish.Graphics
                 GL.DeleteTexture( handle );
             }
             disposed = true;
+        }
+
+        public void LoadLightmapPallete( IList<byte[]> colourDataList )
+        {
+
+            
+            textureTarget = TextureTarget.Texture1DArray;
+            if(GL.GetError(  ) != ErrorCode.NoError) throw new Exception();
+            GL.BindTexture(TextureTarget.Texture1DArray, handle);
+            
+            GL.TexParameter(TextureTarget.Texture1DArray, TextureParameterName.TextureMagFilter,
+                (int)TextureMagFilter.Linear);
+            
+            GL.TexParameter(TextureTarget.Texture1DArray, TextureParameterName.TextureMinFilter,
+                (int)TextureMinFilter.Linear);
+            
+            GL.TexParameter(TextureTarget.Texture1DArray, TextureParameterName.TextureWrapS,
+                (int)TextureWrapMode.Repeat);
+            
+            GL.TexParameter(TextureTarget.Texture1DArray, TextureParameterName.TextureWrapT,
+                (int)TextureWrapMode.Repeat);
+            
+
+            GL.TexStorage2D(TextureTarget2d.Texture1DArray, 1, SizedInternalFormat.Rgba8, 256, colourDataList.Count);
+            
+
+            for ( var i = 0; i < colourDataList.Count; ++i )
+            {
+                GL.TexSubImage2D(TextureTarget.Texture1DArray, 0, 0, i, 256, 1, PixelFormat.Bgra, PixelType.UnsignedByte,
+                    colourDataList[i]); OpenGL.GetError();
+            }
         }
     }
 }

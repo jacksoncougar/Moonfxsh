@@ -102,6 +102,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>packages\DockPanelSuite.2.9.0.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\CacheStream.cs" />
@@ -1232,6 +1235,7 @@
     <Compile Include="Guerilla\Tags\SoundGestaltExtraInfoBlock.cs" />
     <Compile Include="Guerilla\Tags\SoundPermutationChunkBlock.cs" />
     <Compile Include="Guerilla\Tags\StructureBspClusterBlock.cs" />
+    <Compile Include="Guerilla\Tags\StructureLightmapPaletteColorBlock.cs" />
     <Compile Include="ValueTypes\BinaryWriterExtensions.cs" />
     <Compile Include="ValueTypes\LayoutAttribute.cs" />
     <Compile Include="ValueTypes\TagBlockFieldAttribute.cs" />

@@ -32,6 +32,8 @@ namespace Moonfish.Graphics
 
         public Dictionary<TagIdent, List<Texture>> LoadedTextureArrays { get; set; }
 
+        public Texture lightmapPaletteTexture { get; set; }
+
         public ProgramManager()
         {
             Materials = new Dictionary<TagIdent, MaterialShader>();
@@ -123,6 +125,7 @@ namespace Moonfish.Graphics
             var diffuseMapUniform = Shaders[defaultProgram.Name].GetUniformLocation("DiffuseMap");
             var environmentMapUniform = Shaders[defaultProgram.Name].GetUniformLocation("EnvironmentMap");
             var lightmapUniform = Shaders[defaultProgram.Name].GetUniformLocation("lightmap");
+            var lightmapPaletteUniform = Shaders[defaultProgram.Name].GetUniformLocation("lightmapPalette");
 
             Shaders[defaultProgram.Name].Use();
             Shaders[defaultProgram.Name].SetUniform(p8NormalColourUniform, 0);
@@ -130,6 +133,7 @@ namespace Moonfish.Graphics
             Shaders[defaultProgram.Name].SetUniform(diffuseMapUniform, 1);
             Shaders[defaultProgram.Name].SetUniform(environmentMapUniform, 2);
             Shaders[defaultProgram.Name].SetUniform(lightmapUniform, 4);
+            Shaders[defaultProgram.Name].SetUniform(lightmapPaletteUniform, 5);
         }
 
         private void LoadNormalMapPalette()
@@ -304,8 +308,8 @@ namespace Moonfish.Graphics
             if (LoadedTextureArrays[bitmapGroup].Contains(texture)) return;
             LoadedTextureArrays[bitmapGroup].Add(texture);
         }
-
-        public void LoadTextureGroup(TagIdent bitmapGroup)
+        
+        public void LoadTextureGroup(TagIdent bitmapGroup, TextureMinFilter minFilter= TextureMinFilter.Linear, TextureMagFilter magFilter = TextureMagFilter.Linear)
         {
             if (bitmapGroup == TagIdent.NullIdentifier)
                 return;
@@ -313,13 +317,22 @@ namespace Moonfish.Graphics
             foreach ( var bitmapDataBlock in bitmapGroup.Get<BitmapBlock>().Bitmaps )
             {
                 var texture = new Texture();
-                texture.Load(bitmapDataBlock);
+                texture.Load(bitmapDataBlock, magFilter, minFilter ); OpenGL.GetError();
 
                 if (!LoadedTextureArrays.ContainsKey(bitmapGroup))
                     LoadedTextureArrays[bitmapGroup] = new List<Texture>();
                 if (LoadedTextureArrays[bitmapGroup].Contains(texture)) return;
                 LoadedTextureArrays[bitmapGroup].Add(texture);
             }
+        }
+
+        public void LoadLightmapPallete( byte[][] colourPaletteData )
+        {
+            var texture = new Texture(); OpenGL.GetError();
+            texture.LoadLightmapPallete(colourPaletteData); OpenGL.GetError();
+            lightmapPaletteTexture = texture;
+            GL.ActiveTexture(TextureUnit.Texture0 + 5); OpenGL.GetError();
+            texture.Bind(); OpenGL.GetError();
         }
     };
 }

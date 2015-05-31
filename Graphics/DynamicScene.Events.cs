@@ -26,7 +26,7 @@ namespace Moonfish.Graphics
 
             var callback = new ClosestRayResultCallback( mouse.Close, mouse.Far )
             {
-                CollisionFilterMask = ( CollisionFilterGroups ) CollisionGroup.Level
+                CollisionFilterMask = ( CollisionFilterGroups ) CollisionGroup.Objects
             };
             CollisionManager.World.RayTest( mouse.Close, mouse.Far, callback );
 

@@ -44,6 +44,8 @@ namespace Moonfish.Graphics
             GL.ValidateProgram(Ident);
             int valid;
             GL.GetProgram(Ident, GetProgramParameterName.ValidateStatus, out valid);
+            int activeUniforms;
+            GL.GetProgram(Ident, GetProgramParameterName.ActiveUniforms, out activeUniforms);
             if (valid == 0)
             {
                 string program_log = GL.GetProgramInfoLog(Ident);
@@ -201,6 +203,7 @@ namespace Moonfish.Graphics
         public IDisposable Use()
         {
             GL.UseProgram(Ident);
+            var erorr = GL.GetError( );
             return new Handle(0);
         }
 

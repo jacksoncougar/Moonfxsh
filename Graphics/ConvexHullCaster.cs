@@ -54,11 +54,11 @@ namespace Moonfish.Graphics
 
         public void OnMouseMove(object sender, SceneMouseEventArgs e)
         {
-            //debugPoint = e.WorldCoordinates;
             var dynamicScene = sender as DynamicScene;
             if (dynamicScene == null) return;
-            //if ( selectedCollisionObject == null ) return;
-
+            if (selectedCollisionObject == null) return;
+            var scenarioObject = selectedCollisionObject.UserObject as ScenarioObject;
+            if (scenarioObject == null) return;
 
             var mouse = new
             {
@@ -68,16 +68,16 @@ namespace Moonfish.Graphics
 
             ClosestRayResultCallback callback = new ClosestRayResultCallback( mouse.Close, mouse.Far )
             {
-                CollisionFilterGroup = ( CollisionFilterGroups ) CollisionGroup.Objects
-
+                CollisionFilterGroup = (CollisionFilterGroups)CollisionGroup.Level,
+                CollisionFilterMask = (CollisionFilterGroups)CollisionGroup.Level
             };
-            //var convexShape = selectedCollisionObject.CollisionShape.IsConvex
-            //    ? ( ConvexShape ) selectedCollisionObject.CollisionShape
-            //    : null;
+            var convexShape = selectedCollisionObject.CollisionShape.IsConvex
+                ? ( ConvexShape ) selectedCollisionObject.CollisionShape
+                : null;
 
-           // debugPoint = e.WorldCoordinates;
             var from = e.Camera.WorldMatrix;
             var to = e.Camera.WorldMatrix * Matrix4.CreateTranslation( 0, 0, 100 );
+
             dynamicScene.CollisionManager.World.RayTest(mouse.Close, mouse.Far, callback);
 
             if ( callback.HasHit )
@@ -85,6 +85,8 @@ namespace Moonfish.Graphics
                 debugPoint = callback.HitPointWorld;
                 Console.WriteLine("hit");
                 var worldTransform = Matrix4.CreateTranslation(callback.HitPointWorld);
+                selectedCollisionObject.WorldTransform = worldTransform;
+                scenarioObject.WorldMatrix = worldTransform;
             }
         }
 

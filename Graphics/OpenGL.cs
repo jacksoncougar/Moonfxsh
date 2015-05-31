@@ -59,13 +59,22 @@ namespace Moonfish.Graphics
         }
 
         private static readonly DebugProc callback;
+        private static readonly DebugProcKhr arbCallback;
         private static StringBuilder messageString = new StringBuilder(1000);
         private static Timer timer = new Timer();
+
+        [Conditional("DEBUG")]
+        public static void GetError( )
+        {
+            var errorCode = GL.GetError();
+            if (errorCode != ErrorCode.NoError) throw new Exception(string.Format( "OpenGL Error: {0}", errorCode ));
+        }
 
         static OpenGL( )
         {
             timer.Interval = 2000;
             callback = Callback;
+            arbCallback = Callback;
             timer.Tick += delegate
             {
                 if ( messageString.Length > 0 )
@@ -76,6 +85,8 @@ namespace Moonfish.Graphics
             };
             timer.Start();
             GL.DebugMessageCallback(callback, IntPtr.Zero);
+            GL.Khr.DebugMessageCallback(arbCallback, IntPtr.Zero);
+            GL.GetError( );
         }
 
         private static void Callback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam)

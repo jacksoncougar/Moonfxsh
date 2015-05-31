@@ -56,7 +56,7 @@ namespace Moonfish.Graphics
                 ParentObject = scenarioObject
             } ) )
             {
-                World.AddCollisionObject(collisionObject, (short)CollisionGroup.Objects, (short)(CollisionGroup.Objects & CollisionGroup.Level));
+                World.AddCollisionObject(collisionObject, (short)CollisionGroup.Objects, (short)(CollisionGroup.Objects | CollisionGroup.Level));
             }
         }
 

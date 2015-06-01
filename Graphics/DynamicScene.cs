@@ -5,7 +5,6 @@ using BulletSharp;
 using Moonfish.Graphics.Input;
 using Moonfish.Graphics.Primitives;
 using Moonfish.Guerilla.Tags;
-using OpenTK;
 using OpenTK.Graphics;
 
 namespace Moonfish.Graphics
@@ -13,8 +12,6 @@ namespace Moonfish.Graphics
     public partial class DynamicScene : Scene
     {
         public ConvexHullCaster caster;
-
-        private GLControl _graphicsContext;
 
         public CollisionManager CollisionManager { get; set; }
 
@@ -41,12 +38,7 @@ namespace Moonfish.Graphics
             GLDebug.ScreenspaceProgram = ProgramManager.ScreenProgram;
 #endif
         }
-
-        public DynamicScene(GLControl graphicsContext) : this()
-        {
-            _graphicsContext = graphicsContext;
-        }
-
+        
         private void OnSelectedObjectChanged(object seneder, SelectEventArgs e)
         {
             //if (e.SelectedObject == null)
@@ -80,7 +72,12 @@ namespace Moonfish.Graphics
             if (DrawDebugCollision)
                 CollisionManager.World.DebugDrawWorld();
 
-            GLDebug.DrawPoint( caster.debugPoint, Color.Red, 5 );
+#if DEBUG
+            GLDebug.DrawLine( caster.debugPoint0, caster.debugPoint1, Color.Red, 5 );
+            GLDebug.DrawPoint(caster.debugPoint2, Color.GreenYellow, 5);
+#endif
+            //GLDebug.DrawPoint(caster.debugPoint2, Color.Gold, 5);
+            //GLDebug.DrawPoint(caster.debugPoint3, Color.DodgerBlue, 5);
         }
 
         public override void Update()

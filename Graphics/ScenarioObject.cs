@@ -60,21 +60,34 @@ namespace Moonfish.Graphics
             Model = model;
 
             RenderModel = ( RenderModelBlock ) model.RenderModel.Get( );
-            if ( RenderModel == null ) return;
 
-            CollisionObject = new ClickableCollisionObject
+            if ( RenderModel == null )
             {
-                UserObject = this,
-                CollisionFlags = CollisionFlags.StaticObject,
-                CollisionShape = new BoxShape( RenderModel.CompressionInfo[ 0 ].ToHalfExtents( ) )
-            };
+
+                CollisionObject = new ClickableCollisionObject
+                {
+                    UserObject = this,
+                    CollisionFlags = CollisionFlags.StaticObject,
+                    CollisionShape = new BoxShape( 0 )
+                };
+                return;
+            }
+            else
+            {
+                CollisionObject = new ClickableCollisionObject
+                {
+                    UserObject = this,
+                    CollisionFlags = CollisionFlags.StaticObject,
+                    CollisionShape = new BoxShape( RenderModel.CompressionInfo[ 0 ].ToHalfExtents( ) )
+                };
+            }
 
             _collisionSpaceMatrix =
                 Matrix4.CreateTranslation(
                     RenderModel.CompressionInfo[ 0 ].ToObjectMatrix( ).ExtractTranslation( ) );
             _worldMatrix = Matrix4.Identity;
 
-            LoadSections( RenderModel.L3SectionGroupIndex );
+            LoadSections( 5 );
 
             Nodes = new List<RenderModelNodeBlock>( RenderModel.Nodes );
         }
@@ -310,6 +323,11 @@ namespace Moonfish.Graphics
         private void SetWorldMatrix( RenderModelNodeBlock nodeBlock, Matrix4 value )
         {
             Nodes.SetWorldMatrix( nodeBlock, value );
+        }
+
+        public void AssignWorldTransform( Matrix4 worldTransformMatrix4 )
+        {
+            _worldMatrix = _collisionSpaceMatrix.Inverted() * worldTransformMatrix4;
         }
     }
 }

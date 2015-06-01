@@ -29,10 +29,10 @@ out vec4 frag_color;
 
 void main()
 {
-	float lightmapColourIndex = texture(lightmap, LightmapTexcoord_texturespace.st).r;
+	vec4 lightmapColourIndex = texture(lightmap, LightmapTexcoord_texturespace.st);
 	float g = LightmapTexcoord_texturespace.p;
 	float actuallayer = floor(g + 0.5);
-	vec4 lightmapPaletteColour = texture(lightmapPalette, vec2(lightmapColourIndex, actuallayer) );
+	//vec4 lightmapPaletteColour = texture(lightmapPalette, vec2(lightmapColourIndex, actuallayer) );
 	vec4 lightColor = vec4(1.0, 1.0, 1.0, 1.0);
 	float lightPower = 1.0;
 	float specularPower = 32.0;
@@ -63,5 +63,5 @@ void main()
 		// Specular : reflective highlight, like a mirror
 		(environmentColour * diffuseColour.a * lightColor * lightPower * pow(cosAlpha, specularPower));
 
-	frag_color = clamp(color * lightmapPaletteColour, 0, 1);
+	frag_color = clamp(color * lightmapColourIndex, 0, 1);
 }

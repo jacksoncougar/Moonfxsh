@@ -57,11 +57,13 @@ namespace Moonfish.Graphics
                 else GL.Disable(state);
             }
         }
-
+        
+#if DEBUG
         private static readonly DebugProc callback;
         private static readonly DebugProcKhr arbCallback;
         private static StringBuilder messageString = new StringBuilder(1000);
         private static Timer timer = new Timer();
+#endif
 
         [Conditional("DEBUG")]
         public static void GetError( )
@@ -72,6 +74,7 @@ namespace Moonfish.Graphics
 
         static OpenGL( )
         {
+#if DEBUG
             timer.Interval = 2000;
             callback = Callback;
             arbCallback = Callback;
@@ -87,16 +90,19 @@ namespace Moonfish.Graphics
             GL.DebugMessageCallback(callback, IntPtr.Zero);
             GL.Khr.DebugMessageCallback(arbCallback, IntPtr.Zero);
             GL.GetError( );
+#endif
         }
 
         private static void Callback(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam)
         {
+#if DEBUG
             messageString.AppendLine( System.Runtime.InteropServices.Marshal.PtrToStringAnsi( message, length ) );
             if ( messageString.Length + length > messageString.Capacity )
             {
                 Debug.WriteLine(messageString);
                 messageString.Clear( );
             }
+#endif
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -50,44 +51,141 @@ namespace Moonfish.Graphics
             throw new NotImplementedException();
         }
 
-        public Vector3 debugPoint;
+        public class ClosestNotMeConvexResultCallback : ClosestConvexResultCallback
+        {
+            private readonly CollisionObject _collisionObject;
 
-        public void OnMouseMove(object sender, SceneMouseEventArgs e)
+            public ClosestNotMeConvexResultCallback(CollisionObject collisionObject, Vector3 convexFromWorld, Vector3 convexToWorld ) : base( convexFromWorld, convexToWorld )
+            {
+                _collisionObject = collisionObject;
+            }
+
+            public override bool NeedsCollision( BroadphaseProxy proxy0 )
+            {
+                if (proxy0.ClientObject == _collisionObject) return false;
+                return base.NeedsCollision( proxy0 );
+            }
+        }
+
+        public class ClosestNotMeRayResultCallback : ClosestRayResultCallback
+        {
+            private readonly CollisionObject _collisionObject;
+
+            public ClosestNotMeRayResultCallback(CollisionObject collisionObject, Vector3 rayFromWorld, Vector3 rayToWorld)
+                : base(rayFromWorld, rayToWorld)
+            {
+                _collisionObject = collisionObject;
+            }
+
+            public override bool NeedsCollision( BroadphaseProxy proxy0 )
+            {
+                if (proxy0.ClientObject == _collisionObject) return false;
+                return base.NeedsCollision( proxy0 );
+            }
+        }
+
+        public Vector3 debugPoint0;
+        public Vector3 debugPoint1;
+        public Vector3 debugPoint2;
+        public Vector3 debugPoint3;
+
+        public void OnMouseMove( object sender, SceneMouseEventArgs e )
         {
             var dynamicScene = sender as DynamicScene;
-            if (dynamicScene == null) return;
-            if (selectedCollisionObject == null) return;
+            if ( dynamicScene == null ) return;
+            if ( selectedCollisionObject == null ) return;
             var scenarioObject = selectedCollisionObject.UserObject as ScenarioObject;
-            if (scenarioObject == null) return;
+            if ( scenarioObject == null ) return;
 
             var mouse = new
             {
-                Close = e.Camera.UnProject(new Vector2(e.ScreenCoordinates.X, e.ScreenCoordinates.Y), depth: -1),
-                Far = e.Camera.UnProject(new Vector2(e.ScreenCoordinates.X, e.ScreenCoordinates.Y), depth: 1)
+                Close = e.Camera.UnProject( new Vector2( e.ScreenCoordinates.X, e.ScreenCoordinates.Y ), depth: -1 ),
+                Far = e.Camera.UnProject( new Vector2( e.ScreenCoordinates.X, e.ScreenCoordinates.Y ), depth: 1 )
             };
 
-            ClosestRayResultCallback callback = new ClosestRayResultCallback( mouse.Close, mouse.Far )
+            var rayCallback = new ClosestNotMeRayResultCallback(selectedCollisionObject, mouse.Close, mouse.Far)
             {
                 CollisionFilterGroup = (CollisionFilterGroups)CollisionGroup.Level,
-                CollisionFilterMask = (CollisionFilterGroups)CollisionGroup.Level
+                CollisionFilterMask = (CollisionFilterGroups)(CollisionGroup.Level | CollisionGroup.Objects)
             };
+
+
+            dynamicScene.CollisionManager.World.RayTest(mouse.Close, mouse.Far, rayCallback );
+            if (!rayCallback.HasHit) return;
+
+            debugPoint0 = rayCallback.HitPointWorld;
+            var groundNormal = rayCallback.HitNormalWorld;
+            var objectNormal = selectedCollisionObject.WorldTransform.Column2.Xyz.Normalized(  );
+            var objectRight =  selectedCollisionObject.WorldTransform.Column0.Xyz.Normalized(  );
+            var objectForward =  selectedCollisionObject.WorldTransform.Column1.Xyz.Normalized(  );
+            var cosTheta = Vector3.Dot( groundNormal, objectNormal );
+            var angle = ( float ) Math.Acos( cosTheta );
+            var angle2 = Vector3.CalculateAngle(groundNormal, objectNormal);
+            var axis = Vector3.Cross(objectNormal, groundNormal);
+            Matrix4 _T;
+            if ( angle2 > 0.01f )
+            {
+                var X = Vector3.Dot( groundNormal, objectRight ) < Vector3.Dot( groundNormal, objectForward )
+                    ? objectRight
+                    : objectForward;
+                var Y = Vector3.Cross( groundNormal, X );
+                X = Vector3.Cross( Y, groundNormal );
+                Debug.WriteLine( angle2 );
+                _T = new Matrix4(
+                    new Vector4( X ),
+                    new Vector4( Y ),
+                    new Vector4( groundNormal ),
+                    new Vector4( 0, 0, 0, 1 ) );
+                debugPoint1 = debugPoint0 + Vector3.Transform( objectNormal, _T ) * 10f;
+            }
+            else _T = selectedCollisionObject.WorldTransform.ClearTranslation( );
+
+            var destination = debugPoint0 =  rayCallback.HitPointWorld;
+
+            var convexCallback = new ClosestNotMeConvexResultCallback(selectedCollisionObject, selectedCollisionObject.WorldTransform.ExtractTranslation(), destination)
+            {
+                CollisionFilterGroup = ( CollisionFilterGroups ) CollisionGroup.Level,
+                CollisionFilterMask = (CollisionFilterGroups)(CollisionGroup.Level | CollisionGroup.Objects)
+            };
+
+            
             var convexShape = selectedCollisionObject.CollisionShape.IsConvex
                 ? ( ConvexShape ) selectedCollisionObject.CollisionShape
                 : null;
 
-            var from = e.Camera.WorldMatrix;
-            var to = e.Camera.WorldMatrix * Matrix4.CreateTranslation( 0, 0, 100 );
 
-            dynamicScene.CollisionManager.World.RayTest(mouse.Close, mouse.Far, callback);
 
-            if ( callback.HasHit )
+            var fromTranslation = Matrix4.CreateTranslation(e.Camera.WorldMatrix.ExtractTranslation(  ));
+            var fromRotation = selectedCollisionObject.WorldTransform.ClearTranslation( );
+            var from = _T * fromTranslation;
+            var to = _T * Matrix4.CreateTranslation(destination);
+
+            dynamicScene.CollisionManager.World.ConvexSweepTest( convexShape, from, to, convexCallback );
+
+            if ( convexCallback.HasHit )
             {
-                debugPoint = callback.HitPointWorld;
                 Console.WriteLine("hit");
-                var worldTransform = Matrix4.CreateTranslation(callback.HitPointWorld);
-                selectedCollisionObject.WorldTransform = worldTransform;
-                scenarioObject.WorldMatrix = worldTransform;
+
+                Vector3 linVel;
+                Vector3 angVel;
+                TransformUtil.CalculateVelocity(from, to, 1.0f, out linVel, out angVel);
+                Matrix4 T;
+                TransformUtil.IntegrateTransform(from, linVel, angVel, convexCallback.ClosestHitFraction, out T);
+
+                debugPoint2 = T.ExtractTranslation(  );
+                debugPoint3 = convexCallback.HitPointWorld + convexCallback.HitNormalWorld;
+
+                selectedCollisionObject.WorldTransform = T;
+                scenarioObject.AssignWorldTransform( T );
             }
+        }
+
+        private Matrix4 Transform(Vector3 translation, Vector3 scale, Quaternion rotation )
+        {
+            var T = Matrix4.CreateTranslation(translation);
+            var S = Matrix4.CreateScale(scale);
+            var R = Matrix4.CreateFromQuaternion(rotation);
+            return S * R * T;
         }
 
         public void OnMouseUp(object sender, SceneMouseEventArgs e)

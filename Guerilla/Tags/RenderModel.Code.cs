@@ -73,11 +73,11 @@ namespace Moonfish.Guerilla.Tags
         public Matrix4 ToObjectMatrix()
         {
             Matrix4 extents_matrix = new Matrix4(
-                new Vector4(12, 0.0f, 0.0f, 0.0f),
-                new Vector4(0.0f, 1, 0.0f, 0.0f),
-                new Vector4(0.0f, 0.0f, 1, 0.0f),
-                new Vector4(0, 0, 0, 1.0f)
-                );
+                 new Vector4(PositionBoundsX.Length / 2, 0.0f, 0.0f, 0.0f),
+                 new Vector4(0.0f, PositionBoundsY.Length / 2, 0.0f, 0.0f),
+                 new Vector4(0.0f, 0.0f, PositionBoundsZ.Length / 2, 0.0f),
+                 new Vector4(PositionBoundsX.Min + PositionBoundsX.Length / 2, PositionBoundsY.Min + PositionBoundsY.Length / 2, PositionBoundsZ.Min + PositionBoundsZ.Length / 2, 1.0f)
+                 );
             return extents_matrix;
         }
 

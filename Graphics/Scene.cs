@@ -49,7 +49,6 @@ namespace Moonfish.Graphics
             GL.Enable( EnableCap.DebugOutput );
             GL.Enable( EnableCap.DebugOutputSynchronous );
 #endif
-            GL.PolygonMode(MaterialFace.Back, PolygonMode.Line);
         }
 
         private void Viewport_ViewportChanged(object sender, Viewport.ViewportEventArgs e)

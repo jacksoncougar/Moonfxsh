@@ -36,7 +36,6 @@ namespace Moonfish.Graphics
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Gizmo));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblRenderTime = new System.Windows.Forms.ToolStripStatusLabel();
-            this.glControl1 = new OpenTK.GLControl();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,23 +56,11 @@ namespace Moonfish.Graphics
             this.lblRenderTime.Tag = "Frame Time: {0}ms";
             this.lblRenderTime.Text = "Frame Time: 0ms";
             // 
-            // glControl1
-            // 
-            this.glControl1.BackColor = System.Drawing.Color.Black;
-            this.glControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.glControl1.Location = new System.Drawing.Point(0, 0);
-            this.glControl1.Margin = new System.Windows.Forms.Padding(0);
-            this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(686, 425);
-            this.glControl1.TabIndex = 6;
-            this.glControl1.VSync = false;
-            // 
             // Gizmo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(686, 447);
-            this.Controls.Add(this.glControl1);
             this.Controls.Add(this.statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Gizmo";
@@ -89,7 +76,6 @@ namespace Moonfish.Graphics
 
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel lblRenderTime;
-        private GLControl glControl1;
 
     }
 }

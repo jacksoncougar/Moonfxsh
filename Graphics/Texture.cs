@@ -351,35 +351,63 @@ namespace Moonfish.Graphics
             disposed = true;
         }
 
-        public void LoadLightmapPallete( IList<byte[]> colourDataList )
+        public bool LoadPalettedTexture( BitmapDataBlock bitmapBlock, byte[] paletteData,
+            TextureMagFilter textureMagFilter, TextureMinFilter textureMinFilter )
         {
+            if ( bitmapBlock.Format != BitmapDataBlock.FormatEnum.P8 &&
+                 bitmapBlock.Format != BitmapDataBlock.FormatEnum.P8bump )
+                return false;
+            textureTarget = TextureTarget.Texture2D;
 
-            
-            textureTarget = TextureTarget.Texture1DArray;
-            if(GL.GetError(  ) != ErrorCode.NoError) throw new Exception();
-            GL.BindTexture(TextureTarget.Texture1DArray, handle);
-            
-            GL.TexParameter(TextureTarget.Texture1DArray, TextureParameterName.TextureMagFilter,
-                (int)TextureMagFilter.Linear);
-            
-            GL.TexParameter(TextureTarget.Texture1DArray, TextureParameterName.TextureMinFilter,
-                (int)TextureMinFilter.Linear);
-            
-            GL.TexParameter(TextureTarget.Texture1DArray, TextureParameterName.TextureWrapS,
-                (int)TextureWrapMode.Repeat);
-            
-            GL.TexParameter(TextureTarget.Texture1DArray, TextureParameterName.TextureWrapT,
-                (int)TextureWrapMode.Repeat);
-            
+            GL.BindTexture( TextureTarget.Texture2D, handle );
+            OpenGL.GetError( );
 
-            GL.TexStorage2D(TextureTarget2d.Texture1DArray, 1, SizedInternalFormat.Rgba8, 256, colourDataList.Count);
-            
+            GL.TexParameter( textureTarget, TextureParameterName.TextureMagFilter,
+                ( int ) textureMagFilter );
+            OpenGL.GetError( );
 
-            for ( var i = 0; i < colourDataList.Count; ++i )
+            GL.TexParameter( textureTarget, TextureParameterName.TextureMinFilter,
+                ( int ) textureMinFilter );
+            OpenGL.GetError( );
+
+            GL.TexParameter( textureTarget, TextureParameterName.TextureWrapS,
+                ( int ) TextureWrapMode.Repeat );
+            OpenGL.GetError( );
+
+            GL.TexParameter( textureTarget, TextureParameterName.TextureWrapT,
+                ( int ) TextureWrapMode.Repeat );
+            OpenGL.GetError( );
+
+
+            GL.TexStorage2D( ( TextureTarget2d ) textureTarget, 1, SizedInternalFormat.Rgba8, bitmapBlock.Width,
+                bitmapBlock.Height );
+            OpenGL.GetError( );
+
+            var indexData = bitmapBlock.GetResourceData( 0 );
+            var texelData = new byte[indexData.Length * 4];
+
+            for ( var i = 0; i < indexData.Length; ++i )
             {
-                GL.TexSubImage2D(TextureTarget.Texture1DArray, 0, 0, i, 256, 1, PixelFormat.Bgra, PixelType.UnsignedByte,
-                    colourDataList[i]); OpenGL.GetError();
+                var paletteIndex = indexData[ i ] * 4;
+                var texelIndex = i * 4;
+                texelData[ texelIndex + 0 ] = paletteData[ paletteIndex + 0 ];
+                texelData[ texelIndex + 1 ] = paletteData[ paletteIndex + 1 ];
+                texelData[ texelIndex + 2 ] = paletteData[ paletteIndex + 2 ];
+                texelData[ texelIndex + 3 ] = paletteData[ paletteIndex + 3 ];
             }
+            if ( bitmapBlock.BitmapDataFlags.HasFlag( BitmapDataBlock.Flags.Swizzled ) )
+            {
+                texelData = Swizzler.Swizzle( texelData, ( int ) ( 4 ),
+                    bitmapBlock.Width, bitmapBlock.Height );
+            }
+
+            GL.TexSubImage2D( textureTarget, 0, 0, 0, bitmapBlock.Width, bitmapBlock.Height, PixelFormat.Bgra,
+                PixelType.UnsignedByte, texelData );
+            OpenGL.GetError( );
+
+            GL.GenerateMipmap( GenerateMipmapTarget.Texture2D );
+            OpenGL.GetError( );
+            return true;
         }
-    }
+    };
 }

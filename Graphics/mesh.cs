@@ -22,19 +22,23 @@ namespace Moonfish.Graphics
         private bool _disposed;
 
         public GlobalGeometryPartBlockNew[] Parts { get; private set; }
+        public GlobalSubpartsBlock[] SubParts { get; private set; }
 
-        public Mesh(GlobalGeometrySectionStructBlock section,
-            GlobalGeometryCompressionInfoBlock compressionInfo) :
-                this(section.Parts,
-                    section.StripIndices.Select(x => x.Index).ToArray(),
-                    section.VertexBuffers.Select(x => x.VertexBuffer).ToArray(), compressionInfo)
+
+        public Mesh( GlobalGeometrySectionStructBlock section,
+            GlobalGeometryCompressionInfoBlock compressionInfo ) :
+                this( section.Parts,
+                    section.Subparts,
+                    section.StripIndices.Select( x => x.Index ).ToArray( ),
+                    section.VertexBuffers.Select( x => x.VertexBuffer ).ToArray( ), compressionInfo )
         {
         }
 
-        public Mesh(GlobalGeometryPartBlockNew[] parts, short[] indices, IList<VertexBuffer> vertexArrayBufferData,
+        public Mesh(GlobalGeometryPartBlockNew[] parts, GlobalSubpartsBlock[] subParts, short[] indices, IList<VertexBuffer> vertexArrayBufferData,
             GlobalGeometryCompressionInfoBlock compressionInfo)
         {
             Parts = parts;
+            SubParts = subParts;
             TriangleBatch = new TriangleBatch();
             BufferElementArrayData(indices);
             BufferVertexAttributeData(vertexArrayBufferData, compressionInfo);
@@ -48,7 +52,8 @@ namespace Moonfish.Graphics
                 var attribute = 0;
                 for ( int i = 0; i < vertexBuffers.Count; ++i )
                 {
-                    if ( !Enum.IsDefined( typeof ( VertexAttributeType ), vertexBuffers[ i ].Type ) ) continue;
+                    if ( !Enum.IsDefined( typeof ( VertexAttributeType ), vertexBuffers[ i ].Type ) ) 
+                        continue;
 
                     TriangleBatch.BindBuffer( BufferTarget.ArrayBuffer, TriangleBatch.GenerateBuffer( ) );
 
@@ -105,6 +110,7 @@ namespace Moonfish.Graphics
                             TriangleBatch.VertexAttribArray( attribute++, 2, VertexAttribPointerType.Short, true,
                                 attributeSize );
                             break;
+                        default: throw new Exception();
                     }
                 }
             }

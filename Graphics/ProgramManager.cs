@@ -8,6 +8,7 @@ using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Input;
 
 namespace Moonfish.Graphics
 {
@@ -33,12 +34,14 @@ namespace Moonfish.Graphics
         public Dictionary<TagIdent, List<Texture>> LoadedTextureArrays { get; set; }
 
         public Texture lightmapPaletteTexture { get; set; }
+        public Dictionary<Tuple<int, int>, Texture> lightmapTextures { get; set; }
 
         public ProgramManager()
         {
             Materials = new Dictionary<TagIdent, MaterialShader>();
             Shaders = new Dictionary<string, Program>();
             LoadedTextureArrays = new Dictionary<TagIdent, List<Texture>>();
+            lightmapTextures = new Dictionary<Tuple<int, int>, Texture>();
             LoadDefaultShader();
             LoadSystemShader();
             LoadScreenShader();
@@ -326,13 +329,29 @@ namespace Moonfish.Graphics
             }
         }
 
-        public void LoadLightmapPallete( byte[][] colourPaletteData )
+        public Texture GetLightmapTexture( int bitmapIndex, int paletteIndex )
         {
-            var texture = new Texture(); OpenGL.GetError();
-            texture.LoadLightmapPallete(colourPaletteData); OpenGL.GetError();
-            lightmapPaletteTexture = texture;
-            GL.ActiveTexture(TextureUnit.Texture0 + 5); OpenGL.GetError();
-            texture.Bind(); OpenGL.GetError();
+            return lightmapTextures[ new Tuple<int, int>( bitmapIndex, paletteIndex ) ];
+        }
+
+        public void LoadPalettedTextureGroup( int bitmapIndex, int paletteIndex, BitmapDataBlock bitmapDataBlock,
+            StructureLightmapPaletteColorBlock colourPaletteData, TextureMagFilter textureMagFilter,
+            TextureMinFilter textureMinFilter )
+        {
+            var texture = new Texture( );
+            var paletteData = colourPaletteData.GetColourPaletteData( );
+            texture.LoadPalettedTexture( bitmapDataBlock, paletteData, textureMagFilter, textureMinFilter );
+            OpenGL.GetError( );
+
+            var key = new Tuple<int, int>( bitmapIndex, paletteIndex );
+
+            if ( lightmapTextures.ContainsKey( key ) )
+            {
+                lightmapTextures[ key ].Dispose( );
+                lightmapTextures[ key ] = texture;
+            }
+            else
+                lightmapTextures[key] = texture;
         }
     };
 }

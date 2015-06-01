@@ -202,7 +202,7 @@ namespace Moonfish.Graphics
                          scenarioStructureLightmapBlock.LightmapGroups[0].ClusterRenderInfo[i].PaletteIndex;
                 foreach ( var batch in ClusterObjects[ i ].Batches )
                 {
-                    DrawLightmappedBatch( batch, paletteIndex, bitmapGroup, bitmapIndex );
+                    DrawLightmappedBatch( batch, paletteIndex, bitmapIndex );
                 }
             }
             for ( var i = 0; i < Level.InstancedGeometryInstances.Length; ++i )
@@ -216,12 +216,12 @@ namespace Moonfish.Graphics
                 foreach (var renderBatch in InstancedGeometryObjects[instance.InstanceDefinition].Batches)
                 {
                     renderBatch.AssignUniform( "WorldMatrixUniform", instance.WorldMatrix );
-                    DrawLightmappedBatch(renderBatch, paletteIndex, bitmapGroup, bitmapIndex);
+                    DrawLightmappedBatch(renderBatch, paletteIndex, bitmapIndex);
                 }
             }
         }
 
-        private void DrawLightmappedBatch( RenderBatch batch, byte paletteIndex, TagReference bitmapGroup, short bitmapIndex )
+        private void DrawLightmappedBatch( RenderBatch batch, byte paletteIndex, short bitmapIndex )
         {
             var index = batch.Shader.Ident;
             batch.Shader.Ident = ( int ) Level.Materials[ index ].Shader.Ident;
@@ -231,10 +231,13 @@ namespace Moonfish.Graphics
             if (program == null) return;
 
             batch.AssignUniform( "LightmapPaletteIndexUniform", ( float ) paletteIndex );
-            var submaps = ProgramManager.LoadedTextureArrays[ bitmapGroup.Ident ];
-            GL.ActiveTexture( TextureUnit.Texture0 + 4 );
-            submaps[ bitmapIndex ].Bind( );
 
+            if ( bitmapIndex >= 0 )
+            {
+                var texture = ProgramManager.GetLightmapTexture(bitmapIndex, paletteIndex);
+                GL.ActiveTexture( TextureUnit.Texture0 + 4 );
+                texture.Bind();
+            }
 
             GL.BindVertexArray( batch.BatchObject.VertexArrayObjectIdent );
             foreach ( var attribute in batch.Attributes.Select( x => new {Name = x.Key, x.Value} ) )
@@ -254,11 +257,12 @@ namespace Moonfish.Graphics
         private void LoadInstances( List<IH2ObjectInstance> instances, List<IH2ObjectPalette> objectPalette,
             CacheStream cacheStream )
         {
-            var join = ( from instance in instances
-                join palette in objectPalette on ( int ) instance.PaletteIndex equals objectPalette.IndexOf( palette )
-                    into gj
-                from items in gj.DefaultIfEmpty( )
-                select new {instance, Object = items.ObjectReference} ).ToArray( );
+            var join =
+                ( instances.Where( x => x.PaletteIndex >= 0 )
+                    .GroupJoin( objectPalette, instance => ( int ) instance.PaletteIndex,
+                        objectPalette.IndexOf, ( instance, gj ) => new {instance, gj} )
+                    .SelectMany( @t => @t.gj.DefaultIfEmpty( ),
+                        ( @t, items ) => new {@t.instance, Object = items.ObjectReference} ) ).ToArray( );
 
             foreach ( var item in join )
             {
@@ -268,7 +272,8 @@ namespace Moonfish.Graphics
                     WorldMatrix = item.instance.WorldMatrix
                 };
                 var renderModel = scenarioObject.Model.RenderModel.Get<RenderModelBlock>( );
-                ProgramManager.LoadMaterials( renderModel.Materials, cacheStream );
+                if (renderModel != null)
+                    ProgramManager.LoadMaterials(renderModel.Materials, cacheStream);
                 Add( item.Object.Ident, scenarioObject );
             }
         }
@@ -312,11 +317,30 @@ namespace Moonfish.Graphics
 
             foreach ( var structureLightmapGroupBlock in scenarioStructureLightmapBlock.LightmapGroups )
             {
-                var colourPaletteData = structureLightmapGroupBlock.SectionPalette.Select( x => x.GetColourPaletteData( ) ).ToArray(  );
-                ProgramManager.LoadTextureGroup(structureLightmapGroupBlock.BitmapGroup.Ident, TextureMinFilter.Nearest, TextureMagFilter.Nearest);
+                var bitmapBlock = structureLightmapGroupBlock.BitmapGroup.Get<BitmapBlock>( );
+                foreach ( var lightmapGeometryRenderInfoBlock in structureLightmapGroupBlock.ClusterRenderInfo )
+                {
+                    GenerateTextureFromLightmapPalette(lightmapGeometryRenderInfoBlock, structureLightmapGroupBlock, bitmapBlock);
+                }
+                foreach ( var lightmapGeometryRenderInfoBlock in structureLightmapGroupBlock.InstanceRenderInfo )
+                {
+                    GenerateTextureFromLightmapPalette( lightmapGeometryRenderInfoBlock, structureLightmapGroupBlock, bitmapBlock );
+                }
                 OpenGL.GetError( );
-                ProgramManager.LoadLightmapPallete( colourPaletteData );
             }
+        }
+
+        private void GenerateTextureFromLightmapPalette( LightmapGeometryRenderInfoBlock lightmapGeometryRenderInfoBlock,
+            StructureLightmapGroupBlock structureLightmapGroupBlock, BitmapBlock bitmapBlock )
+        {
+            var bitmapIndex = lightmapGeometryRenderInfoBlock.BitmapIndex;
+            var paletteIndex = lightmapGeometryRenderInfoBlock.PaletteIndex;
+            if (paletteIndex == byte.MaxValue || bitmapIndex < 0) return;
+
+            var colourPaletteData = structureLightmapGroupBlock.SectionPalette[ paletteIndex ];
+            var bitmapDataBlock = bitmapBlock.Bitmaps[ bitmapIndex ];
+            ProgramManager.LoadPalettedTextureGroup( bitmapIndex, paletteIndex, bitmapDataBlock,
+                colourPaletteData, TextureMagFilter.Linear, TextureMinFilter.LinearMipmapLinear );
         }
     }
 }

@@ -7,12 +7,15 @@ using System.Windows.Forms;
 using Moonfish.Cache;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
+using OpenTK;
+using OpenTK.Graphics;
 using Point = System.Drawing.Point;
 
 namespace Moonfish.Graphics
 {
     public partial class Gizmo : Form
     {
+        private GLControl glControl1;
         private DynamicScene Scene { get; set; }
         private CacheStream Map { get; set; }
         private TagIdent SelectedTag { get; set; }
@@ -45,12 +48,41 @@ namespace Moonfish.Graphics
         public Gizmo()
         {
             InitializeComponent();
+            LoadGLControl( );
+            LoadDock( );
             glControl1.Load += glControl1_Load;
+        }
+
+        private void LoadDock( )
+        {
+                
+        }
+
+        private void LoadGLControl( )
+        {
+#if DEBUG
+            glControl1 = new GLControl( GraphicsMode.Default, 3, 3, GraphicsContextFlags.Debug );
+#else
+            glControl1 = new GLControl();
+#endif
+            // 
+            // glControl1
+            // 
+            glControl1.BackColor = Color.Black;
+            glControl1.Dock = DockStyle.Fill;
+            glControl1.Location = new Point(0, 0);
+            glControl1.Margin = new System.Windows.Forms.Padding(0);
+            glControl1.Name = "glControl1";
+            glControl1.Size = new Size(686, 425);
+            glControl1.TabIndex = 6;
+            glControl1.VSync = false;
+
+            Controls.Add(glControl1);
         }
 
         private void glControl1_Load(object sender, EventArgs e)
         {
-            Scene = new DynamicScene(glControl1);
+            Scene = new DynamicScene();
             Application.Idle += HandleApplicationIdle;
             Scene.OnFrameReady += Scene_OnFrameReady;
 
@@ -65,7 +97,7 @@ namespace Moonfish.Graphics
             glControl1.MouseUp += Scene.OnMouseUp;
             glControl1.MouseClick += Scene.OnMouseClick;
 
-            Open(Path.Combine(Local.MapsDirectory, "05a_deltaapproach.map"));
+            Open(Path.Combine(Local.MapsDirectory, "headlong.map"));
 
             Scene.ObjectManager.ProgramManager = Scene.ProgramManager;
             Scene.ObjectManager.Collision = Scene.CollisionManager;

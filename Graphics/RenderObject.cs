@@ -32,6 +32,7 @@ namespace Moonfish.Graphics
             {
                 foreach ( var sectionBuffer in sectionBuffers )
                 {
+
                     foreach ( var globalGeometryPartBlockNew in sectionBuffer.Parts )
                     {
                         var batch = new RenderBatch
@@ -40,10 +41,14 @@ namespace Moonfish.Graphics
                             ElementLength = globalGeometryPartBlockNew.StripLength
                         };
 
-                        batch.AssignUniform("WorldMatrixUniform", Matrix4.Identity);
+                        batch.AssignUniform( "WorldMatrixUniform", Matrix4.Identity );
                         batch.Shader = new ShaderReference( ShaderReference.ReferenceType.Halo2,
                             globalGeometryPartBlockNew.Material );
-                        batch.PrimitiveType = PrimitiveType.Triangles;
+                        batch.PrimitiveType =
+                            globalGeometryPartBlockNew.GlobalGeometryPartNewFlags.HasFlag(
+                                GlobalGeometryPartBlockNew.Flags.OverrideTriangleList )
+                                ? PrimitiveType.Triangles
+                                : PrimitiveType.TriangleStrip;
                         batch.BatchObject = sectionBuffer.TriangleBatch;
 
                         yield return batch;
@@ -51,5 +56,5 @@ namespace Moonfish.Graphics
                 }
             }
         }
-    }
+    };
 }

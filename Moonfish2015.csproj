@@ -126,6 +126,12 @@
     <Compile Include="Compiler\Decompiler.cs" />
     <Compile Include="Debug\Memory.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Forms\DockingGLPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\DockingGLPanel.Designer.cs">
+      <DependentUpon>DockingGLPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ShaderViewer.cs">
       <SubType>Form</SubType>
     </Compile>

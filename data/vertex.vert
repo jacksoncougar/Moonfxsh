@@ -4,10 +4,11 @@ in vec4 position;
 in vec3 boneIndices;
 in vec3 boneWeights;
 in vec2 texcoord;
-in int normal;
-in int tangent;
-in int bitangent;
+in vec3 normal;
+in vec3 tangent;
+in vec3 bitangent;
 in vec4 colour; 
+in mat4 instanceWorldMatrix;
 
 
 uniform mat4 WorldMatrixUniform;
@@ -77,16 +78,16 @@ void main()
 	mat3 normalMatrix = mat3(ViewMatrixUniform);	
 
 	LightPosition_worldspace = LightPositionUniform.xyz;
-	vec3 vertexPosition_cameraspace = (ViewMatrixUniform * WorldMatrixUniform * transformedPosition).xyz;
+	vec3 vertexPosition_cameraspace = (ViewMatrixUniform * instanceWorldMatrix * transformedPosition).xyz;
 
 	EyeDirection_cameraspace = -vertexPosition_cameraspace;
 
 	vec3 lightPosition_cameraspace = (ViewMatrixUniform * LightPositionUniform).xyz;
 	LightDirection_cameraspace = lightPosition_cameraspace + EyeDirection_cameraspace;
 	
-	vec3 vertexNormal_cameraspace =  normalMatrix * unpack(normal);
-	vec3 vertexTangent_cameraspace = normalMatrix * unpack(tangent);
-	vec3 vertexBitangent_cameraspace = normalMatrix *  unpack(bitangent);
+	vec3 vertexNormal_cameraspace =  normalMatrix * normal;
+	vec3 vertexTangent_cameraspace = normalMatrix * tangent;
+	vec3 vertexBitangent_cameraspace = normalMatrix *  bitangent;
 
 	VertexReflection_worldspace = reflect(vertexPosition_cameraspace, vertexNormal_cameraspace);
 	
@@ -96,12 +97,12 @@ void main()
 		vertexNormal_cameraspace
 	));
 	
-	VertexPosition_worldspace = vec3(WorldMatrixUniform * transformedPosition);
+	VertexPosition_worldspace = vec3(instanceWorldMatrix * transformedPosition);
 	LightDirection_tangentspace = TBN * LightDirection_cameraspace;
 	EyeDirection_tangentspace = TBN * EyeDirection_cameraspace;
 
 	VertexTexcoord_texturespace = vec2(unpack(texcoord.s, TexcoordRangeUniform.xy), unpack(texcoord.t, TexcoordRangeUniform.zw));
 	
 	DiffuseColour  = colour;
-    gl_Position = ViewProjectionMatrixUniform * WorldMatrixUniform * transformedPosition;
+    gl_Position = ViewProjectionMatrixUniform * instanceWorldMatrix * transformedPosition;
 }

@@ -176,12 +176,12 @@ namespace Moonfish.Graphics
             GL.BindAttribLocation( defaultProgram.Ident, 3, "texcoord" );
             GL.BindAttribLocation( defaultProgram.Ident, 4, "normal" );
             GL.BindAttribLocation( defaultProgram.Ident, 5, "tangent" );
-            GL.BindAttribLocation( defaultProgram.Ident, 6, "bitangent" );
-            GL.BindAttribLocation( defaultProgram.Ident, 7, "colour" );
+            GL.BindAttribLocation(defaultProgram.Ident, 6, "bitangent");
+            GL.BindAttribLocation(defaultProgram.Ident, 7, "colour");
+            GL.BindAttribLocation(defaultProgram.Ident, 8, "instanceWorldMatrix");
 
             //GL.BindAttribLocation(defaultProgram.ID, 3, "colour"); OpenGL.ReportError();
             defaultProgram.Link( new List<Shader>( 2 ) {vertex_shader, fragment_shader} );
-            var loc = GL.GetAttribLocation( defaultProgram.Ident, "worldMatrix" );
             Shaders[ "default" ] = defaultProgram;
 
 
@@ -205,16 +205,17 @@ namespace Moonfish.Graphics
             var fragment_shader = new Shader( "data/lightmap.frag", ShaderType.FragmentShader );
             var defaultProgram = new Program( "lightmapped" );
             GL.BindAttribLocation( defaultProgram.Ident, 0, "position" );
-            GL.BindAttribLocation( defaultProgram.Ident, 1, "texcoord" );
-            GL.BindAttribLocation( defaultProgram.Ident, 2, "normal" );
-            GL.BindAttribLocation( defaultProgram.Ident, 3, "tangent" );
-            GL.BindAttribLocation( defaultProgram.Ident, 4, "bitangent" );
-            GL.BindAttribLocation( defaultProgram.Ident, 5, "lightmapCoord" );
-            GL.BindAttribLocation( defaultProgram.Ident, 6, "radiosityCoord" );
+            GL.BindAttribLocation( defaultProgram.Ident, 3, "texcoord" );
+            GL.BindAttribLocation( defaultProgram.Ident, 4, "normal" );
+            GL.BindAttribLocation( defaultProgram.Ident, 5, "tangent" );
+            GL.BindAttribLocation( defaultProgram.Ident, 6, "bitangent" );
+            GL.BindAttribLocation( defaultProgram.Ident, 7, "lightmapCoord" );
+            GL.BindAttribLocation( defaultProgram.Ident, 8, "radiosityCoord" );
+
 
             defaultProgram.Link( new List<Shader>( 2 ) {vertex_shader, fragment_shader} );
-            Shaders[ defaultProgram.Name ] = defaultProgram;
-
+            Shaders[defaultProgram.Name] = defaultProgram;
+            
             var p8NormalColourUniform = Shaders[ defaultProgram.Name ].GetUniformLocation( "P8NormalColour" );
             var p8NormalMapUniform = Shaders[ defaultProgram.Name ].GetUniformLocation( "P8NormalMap" );
             var diffuseMapUniform = Shaders[ defaultProgram.Name ].GetUniformLocation( "DiffuseMap" );

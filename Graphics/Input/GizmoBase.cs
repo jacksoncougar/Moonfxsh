@@ -207,7 +207,7 @@ namespace Moonfish.Graphics.Input
             var colours = GetColours();
             using (_batch.Begin())
             {
-                _batch.BindBuffer(BufferTarget.ArrayBuffer, _batch.BufferIdents[1]);
+                _batch.BindBuffer(BufferTarget.ArrayBuffer, _batch.GetOrGenerateBuffer( "colours" ));
                 _batch.BufferVertexAttributeData(colours);
             }
         }
@@ -253,13 +253,13 @@ namespace Moonfish.Graphics.Input
             var indices = new short[] {0, 1, 2, 3, 4, 5};
             using (_batch.Begin())
             {
-                _batch.BindBuffer(BufferTarget.ArrayBuffer, _batch.GenerateBuffer());
+                _batch.BindBuffer(BufferTarget.ArrayBuffer, _batch.GenerateBuffer("coordinates"));
                 _batch.BufferVertexAttributeData(coordinates);
                 _batch.VertexAttribArray(0, 3, VertexAttribPointerType.Float);
-                _batch.BindBuffer(BufferTarget.ArrayBuffer, _batch.GenerateBuffer());
+                _batch.BindBuffer(BufferTarget.ArrayBuffer, _batch.GenerateBuffer("colours"));
                 _batch.BufferVertexAttributeData(colours);
                 _batch.VertexAttribArray(1, 4, VertexAttribPointerType.Float);
-                _batch.BindBuffer(BufferTarget.ElementArrayBuffer, _batch.GenerateBuffer());
+                _batch.BindBuffer(BufferTarget.ElementArrayBuffer, _batch.GenerateBuffer("elements"));
                 _batch.BufferElementArrayData(indices);
             }
             Model = new RenderBatch

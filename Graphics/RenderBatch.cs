@@ -12,6 +12,8 @@ namespace Moonfish.Graphics
         public DrawElementsType DrawElementsType { get; set; }
         public int ElementStartIndex { get; set; }
         public int ElementLength { get; set; }
+        public int InstanceCount { get; set; }
+
         public Dictionary<string, dynamic> Attributes { get; private set; }
         public Dictionary<string, dynamic> Uniforms { get; private set; }
         public Dictionary<EnableCap, bool> RenderStates { get; private set; }

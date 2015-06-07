@@ -40,7 +40,6 @@ namespace Moonfish.Graphics
                             ElementStartIndex = globalGeometryPartBlockNew.StripStartIndex * sizeof ( ushort ),
                             ElementLength = globalGeometryPartBlockNew.StripLength
                         };
-
                         batch.AssignUniform( "WorldMatrixUniform", Matrix4.Identity );
                         batch.Shader = new ShaderReference( ShaderReference.ReferenceType.Halo2,
                             globalGeometryPartBlockNew.Material );

@@ -30,7 +30,7 @@ namespace Moonfish.Graphics
         public virtual void Initialize()
         {
             
-            Console.WriteLine(GL.GetString(StringName.Version));
+            Debug.WriteLine(GL.GetString(StringName.Version));
             Timer = new Stopwatch();
             Camera = new Camera();
             ObjectManager = new MeshManager();

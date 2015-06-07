@@ -11,7 +11,7 @@ namespace Moonfish.Graphics
             return (((value + ushortHalf)*ushortMaxInverse)*(max - min)) + min;
         }
 
-        private static Vector3 UnpackVectorInt(int packedVector)
+        public static Vector3 UnpackVectorInt(int packedVector)
         {
             var xComponent = (packedVector & 0x7ff);
             if ((xComponent & 0x400) == 0x400)

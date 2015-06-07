@@ -70,7 +70,7 @@ namespace Moonfish.Graphics
         {
             using ( TriangleBatch.Begin( ) )
             {
-                TriangleBatch.BindBuffer(BufferTarget.ElementArrayBuffer, TriangleBatch.GenerateBuffer("elements"));
+                TriangleBatch.BindBuffer(BufferTarget.ElementArrayBuffer, TriangleBatch.GenerateBuffer());
                 TriangleBatch.BufferElementArrayData( indices );
             }
         }
@@ -96,7 +96,7 @@ namespace Moonfish.Graphics
 
 #endif
 
-                    TriangleBatch.BindBuffer(BufferTarget.ArrayBuffer, TriangleBatch.GenerateBuffer(attributeType.ToString()));
+                    TriangleBatch.BindBuffer(BufferTarget.ArrayBuffer, TriangleBatch.GenerateBuffer());
                     TriangleBatch.BufferVertexAttributeData( data );
 
                     switch ( attributeType )
@@ -121,7 +121,7 @@ namespace Moonfish.Graphics
                                 attributeSize, Vector3.SizeInBytes * 0 );
                             TriangleBatch.VertexAttribArray( 5, 3, VertexAttribPointerType.Float, false,
                                 attributeSize, Vector3.SizeInBytes * 1 );
-                            TriangleBatch.VertexAttribArray( 7, 3, VertexAttribPointerType.Float, false,
+                            TriangleBatch.VertexAttribArray( 6, 3, VertexAttribPointerType.Float, false,
                                 attributeSize, Vector3.SizeInBytes * 2 );
                             break;
                         case VertexAttributeType.CoordinateFloat:

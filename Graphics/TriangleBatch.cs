@@ -70,6 +70,7 @@ namespace Moonfish.Graphics
 
         private readonly int _vao;
         private readonly List<int> _buffers;
+        private Dictionary<string, int> _namedBufferIndices; 
 
         public TriangleBatch(int vertexArrayObjectident, IEnumerable<int> buffers)
         {
@@ -79,6 +80,7 @@ namespace Moonfish.Graphics
 
         public TriangleBatch()
         {
+            _namedBufferIndices = new Dictionary<string, int>();
             _buffers = new List<int>();
             _vao = GL.GenVertexArray();
         }
@@ -191,6 +193,17 @@ namespace Moonfish.Graphics
 #endif
             }
             _disposed = true;
+        }
+
+        public int GetOrGenerateBuffer( string bufferName )
+        {
+            int index;
+            return _namedBufferIndices.TryGetValue( bufferName, out index ) ? _buffers[ index ] : GenerateBuffer( );
+        }
+
+        public void VertexAttribDivisor( int index, int divisor )
+        {
+            GL.VertexAttribDivisor( index, divisor );
         }
     }
 }

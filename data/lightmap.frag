@@ -63,5 +63,5 @@ void main()
 		// Specular : reflective highlight, like a mirror
 		(environmentColour * diffuseColour.a * lightColor * lightPower * pow(cosAlpha, specularPower));
 
-	frag_color = clamp(color * lightmapColourIndex, 0, 1);
+	frag_color =  clamp(color * lightmapColourIndex, 0, 1);
 }

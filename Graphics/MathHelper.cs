@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using OpenTK;
@@ -80,7 +81,7 @@ namespace Moonfish.Graphics
         private static Vector3 UnProjectToViewspace( Matrix4 projectionMatrix,
             Vector2 viewportCoordinates, float depth, Rectangle viewport )
         {
-            Console.WriteLine( viewportCoordinates );
+            Debug.WriteLine( viewportCoordinates );
             // Calculate 'Normalised Device Coordinates'
             // Range: x, y, z [-1:1]
             var x = ( viewportCoordinates.X - viewport.Left ) / viewport.Width * 2.0f - 1.0f;

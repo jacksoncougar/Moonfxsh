@@ -2,9 +2,9 @@
 
 in vec4 position;
 in vec2 texcoord;
-in int normal;
-in int tangent;
-in int bitangent;
+in vec3 normal;
+in vec3 tangent;
+in vec3 bitangent;
 in vec2 lightmapCoord; 
 in vec2 radiosityCoord; 
 
@@ -80,9 +80,9 @@ void main()
 	vec3 lightPosition_cameraspace = (ViewMatrixUniform * LightPositionUniform).xyz;
 	LightDirection_cameraspace = lightPosition_cameraspace + EyeDirection_cameraspace;
 	
-	vec3 vertexNormal_cameraspace =  normalMatrix * unpack(normal);
-	vec3 vertexTangent_cameraspace = normalMatrix * unpack(tangent);
-	vec3 vertexBitangent_cameraspace = normalMatrix *  unpack(bitangent);
+	vec3 vertexNormal_cameraspace =  normalMatrix * normal;
+	vec3 vertexTangent_cameraspace = normalMatrix * tangent;
+	vec3 vertexBitangent_cameraspace = normalMatrix *  bitangent;
 
 	VertexReflection_worldspace = reflect(vertexPosition_cameraspace, vertexNormal_cameraspace);
 	
@@ -99,6 +99,6 @@ void main()
 	VertexTexcoord_texturespace = texcoord;
 	LightmapTexcoord_texturespace = vec3(lightmapCoord.x, lightmapCoord.y, LightmapPaletteIndexUniform);
 
-	DiffuseColour = vec4(LightmapPaletteIndexUniform / 31, 0, 0, 0);
+	DiffuseColour = vec4(vec3(radiosityCoord,0) + vec3(1,1,1) / 2, 0);
     gl_Position = ViewProjectionMatrixUniform * WorldMatrixUniform * transformedPosition;
 }

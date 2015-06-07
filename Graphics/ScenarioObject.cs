@@ -55,7 +55,7 @@ namespace Moonfish.Graphics
         }
 
         public ScenarioObject( ModelBlock model )
-            : this( )
+            : this(  )
         {
             Model = model;
 
@@ -87,9 +87,18 @@ namespace Moonfish.Graphics
                     RenderModel.CompressionInfo[ 0 ].ToObjectMatrix( ).ExtractTranslation( ) );
             _worldMatrix = Matrix4.Identity;
 
-            LoadSections( 5 );
+            LoadSections(5);
+            RenderBatches = GetRenderBatches();
 
             Nodes = new List<RenderModelNodeBlock>( RenderModel.Nodes );
+        }
+
+        public List<RenderBatch> RenderBatches { get; private set; }
+
+        public void AssignInstanceMatrices( Matrix4[] instanceWorldMatrices )
+        {
+            InstanceWorldMatrices = instanceWorldMatrices;
+            RenderBatches = GetRenderBatches( );
         }
 
         public StringIdent ActivePermuation { get; set; }
@@ -99,7 +108,7 @@ namespace Moonfish.Graphics
             get
             {
                 if ( Flags.HasFlag( RenderFlags.RenderMesh ) )
-                    foreach ( var renderBatch in RenderBatches( ) ) yield return renderBatch;
+                    foreach ( var renderBatch in RenderBatches ) yield return renderBatch;
                 if ( Flags.HasFlag( RenderFlags.RenderMarkers ) )
                 {
                     var renderModel = ( RenderModelBlock ) Model.RenderModel.Get( );
@@ -280,7 +289,67 @@ namespace Moonfish.Graphics
             }
         }
 
-        private IEnumerable<RenderBatch> RenderBatches( )
+        private unsafe List<RenderBatch> GetRenderBatches()
+        {
+            var collectionBatches =
+                new List<RenderBatch>(sectionBuffers.SelectMany(x => x.Parts).Count());
+
+            foreach (var sectionBuffer in sectionBuffers)
+            {
+                var mesh = sectionBuffer;
+
+                foreach (var part in mesh.Parts)
+                {
+                    var batch = new RenderBatch
+                    {
+                        ElementStartIndex = part.StripStartIndex * sizeof(ushort),
+                        ElementLength = part.StripLength,
+                        Shader = new ShaderReference(
+                            ShaderReference.ReferenceType.Halo2,
+                            (int)RenderModel.Materials[part.Material].Shader.Ident),
+                        PrimitiveType = PrimitiveType.TriangleStrip,
+                        BatchObject = mesh.TriangleBatch
+                    };
+                    var texcoordRange = RenderModel.CompressionInfo[0].ExtractTexcoordScaling();
+                    batch.AssignUniform("TexcoordRangeUniform", texcoordRange);
+                    batch.AssignUniform("WorldMatrixUniform", WorldMatrix);
+
+                    if (InstanceWorldMatrices != null && InstanceWorldMatrices.Length > 0)
+                    {
+                        using (batch.BatchObject.Begin())
+                        {
+
+                            batch.BatchObject.BindBuffer(BufferTarget.ArrayBuffer,
+                                batch.BatchObject.GetOrGenerateBuffer("instance data"));
+                            batch.InstanceCount = InstanceWorldMatrices.Length;
+                            batch.BatchObject.BufferVertexAttributeData(InstanceWorldMatrices);
+
+                            var stride = sizeof(Matrix4);
+                            var sizeOfVector4 = sizeof(Vector4);
+                            batch.BatchObject.VertexAttribArray(8, 4, VertexAttribPointerType.Float, false, stride,
+                                sizeOfVector4 * 0);
+                            batch.BatchObject.VertexAttribArray(9, 4, VertexAttribPointerType.Float, false, stride,
+                                sizeOfVector4 * 1);
+                            batch.BatchObject.VertexAttribArray(10, 4, VertexAttribPointerType.Float, false, stride,
+                                sizeOfVector4 * 2);
+                            batch.BatchObject.VertexAttribArray(11, 4, VertexAttribPointerType.Float, false, stride,
+                                sizeOfVector4 * 3);
+
+                            batch.BatchObject.VertexAttribDivisor(8, 1);
+                            batch.BatchObject.VertexAttribDivisor(9, 1);
+                            batch.BatchObject.VertexAttribDivisor(10, 1);
+                            batch.BatchObject.VertexAttribDivisor(11, 1);
+                        }
+                    }
+                    collectionBatches.Add(batch);
+                }
+            }
+            return collectionBatches;
+        }
+
+        public Matrix4[] InstanceWorldMatrices { get; set; }
+
+        private IEnumerable<RenderBatch> _RenderBatches( )
         {
             foreach ( var sectionBuffer in sectionBuffers )
             {
@@ -328,6 +397,16 @@ namespace Moonfish.Graphics
         public void AssignWorldTransform( Matrix4 worldTransformMatrix4 )
         {
             _worldMatrix = _collisionSpaceMatrix.Inverted() * worldTransformMatrix4;
+        }
+
+        internal void AssignInstanceWorldTransform(int instance, Matrix4 worldMatrix4)
+        {
+            InstanceWorldMatrices[ instance ] = _collisionSpaceMatrix.Inverted( ) * worldMatrix4;
+        }
+
+        public void Update( )
+        {
+            RenderBatches = GetRenderBatches();
         }
     }
 }

@@ -166,7 +166,7 @@ namespace Moonfish.Graphics
 
             if ( convexCallback.HasHit )
             {
-                Console.WriteLine("hit");
+                Debug.WriteLine("hit");
 
                 Vector3 linVel;
                 Vector3 angVel;
@@ -178,7 +178,7 @@ namespace Moonfish.Graphics
                 debugPoint3 = convexCallback.HitPointWorld + convexCallback.HitNormalWorld;
 
                 selectedCollisionObject.WorldTransform = T;
-                scenarioObject.AssignWorldTransform( T );
+                scenarioObject.AssignInstanceWorldTransform(selectedCollisionObject.UserIndex, T );
             }
         }
 

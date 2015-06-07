@@ -37,10 +37,10 @@ namespace Moonfish.Graphics
             base.Draw( delta );
             ObjectManager.Draw( ProgramManager, MousePole.Model );
 
-            //if (DrawDebugCollision)
-            //CollisionManager.World.DebugDrawWorld();
-
 #if DEBUG
+            if ( DrawDebugCollision || true )
+                CollisionManager.World.DebugDrawWorld( );
+
             GLDebug.DrawLine( caster.debugPoint0, caster.debugPoint1, Color.Red, 5 );
             GLDebug.DrawPoint(caster.debugPoint2, Color.GreenYellow, 5);
 #endif
@@ -50,7 +50,8 @@ namespace Moonfish.Graphics
 
         public override void Update( )
         {
-            //CollisionManager.Update();
+            ObjectManager.Update( );
+            CollisionManager.Update();
             base.Update( );
         }
 

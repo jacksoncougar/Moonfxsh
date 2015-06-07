@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BulletSharp;
 using Moonfish.Cache;
+using Moonfish.Graphics.Input;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {
     public class MeshManager
     {
-        private readonly Dictionary<TagIdent, List<ScenarioObject>> _objectInstances;
+        private readonly Dictionary<TagIdent, ScenarioObject> _objectInstances;
         private ScenarioBlock _scenario;
         private ScenarioStructureLightmapBlock _lightmapBlock;
 
         public MeshManager( )
         {
-            _objectInstances = new Dictionary<TagIdent, List<ScenarioObject>>( );
+            _objectInstances = new Dictionary<TagIdent, ScenarioObject>( );
             ClusterObjects = new List<RenderObject>( );
             InstancedGeometryObjects = new List<RenderObject>( );
         }
@@ -25,14 +28,14 @@ namespace Moonfish.Graphics
         public CollisionManager Collision { get; set; }
         public List<RenderObject> InstancedGeometryObjects { get; private set; }
 
-        public IEnumerable<ScenarioObject> this[ TagIdent ident ]
+        public ScenarioObject this[ TagIdent ident ]
         {
             get
             {
-                List<ScenarioObject> instances;
+                ScenarioObject instances;
                 if ( _objectInstances.TryGetValue( ident, out instances ) )
                     return instances;
-                return Enumerable.Empty<ScenarioObject>( );
+                return null;
             }
         }
 
@@ -42,13 +45,9 @@ namespace Moonfish.Graphics
         public void Draw( ProgramManager programManager )
         {
             DrawLightmap( _lightmapBlock );
-            //DrawLevel( );
-            foreach ( var item in _objectInstances.SelectMany( x => x.Value ).Select( x => new {x, x.Batches} ) )
+            foreach (var renderBatch in _objectInstances.Select(x => x.Value).SelectMany(x => x.Batches))
             {
-                foreach ( var renderBatch in item.Batches )
-                {
-                    Draw( programManager, renderBatch );
-                }
+                Draw( programManager, renderBatch );
             }
         }
 
@@ -73,7 +72,7 @@ namespace Moonfish.Graphics
                 var uniformLocation = program.GetUniformLocation( uniform.Name );
                 program.SetUniform( uniformLocation, uniform.Value );
             }
-            GL.DrawElements( batch.PrimitiveType, batch.ElementLength, batch.DrawElementsType, batch.ElementStartIndex );
+            GL.DrawElementsInstanced( batch.PrimitiveType, batch.ElementLength, batch.DrawElementsType, (IntPtr)batch.ElementStartIndex, batch.InstanceCount );
         }
 
         public void Draw( TagIdent item )
@@ -92,9 +91,22 @@ namespace Moonfish.Graphics
 
         public void LoadCollision( )
         {
-            foreach ( var item in _objectInstances.SelectMany( x => x.Value ) )
+            foreach ( var item in _objectInstances.Select( x => x.Value ) )
             {
-                Collision.World.AddCollisionObject( item.CollisionObject );
+                for ( int index = 0; index < item.InstanceWorldMatrices.Length; index++ )
+                {
+                    var instanceWorldMatrix = item.InstanceWorldMatrices[ index ];
+
+                    CollisionObject collisionObject = new ClickableCollisionObject( );
+                    collisionObject.CollisionShape =
+                        new BoxShape( item.RenderModel.CompressionInfo[ 0 ].ToHalfExtents( ) );
+                    collisionObject.WorldTransform = Matrix4.CreateTranslation(
+                        item.RenderModel.CompressionInfo[ 0 ].ToObjectMatrix( ).ExtractTranslation( ) ) *
+                                                     instanceWorldMatrix;
+                    collisionObject.UserIndex = index;
+                    collisionObject.UserObject = item;
+                    Collision.World.AddCollisionObject( collisionObject );
+                }
             }
         }
 
@@ -103,16 +115,15 @@ namespace Moonfish.Graphics
             var ident = map.Index.Select( ( TagClass ) "scnr", "" ).First( ).Identifier;
             _scenario = ( ScenarioBlock ) map.Deserialize( ident );
 
-            var scenarioStructureBspReferenceBlock = _scenario.StructureBSPs.First( );
+            var scenarioStructureBspReferenceBlock = _scenario.StructureBSPs.First();
             var scenarioStructureBspBlock =
-                ( ScenarioStructureBspBlock ) scenarioStructureBspReferenceBlock.StructureBSP.Get( );
-            LoadScenarioStructure( scenarioStructureBspBlock, map );
+                (ScenarioStructureBspBlock)scenarioStructureBspReferenceBlock.StructureBSP.Get();
+            LoadScenarioStructure(scenarioStructureBspBlock, map);
             LoadScenarioLightmap(
-                ( ScenarioStructureLightmapBlock ) scenarioStructureBspReferenceBlock.StructureLightmap.Get( ) );
-
+                (ScenarioStructureLightmapBlock)scenarioStructureBspReferenceBlock.StructureLightmap.Get());
             LoadInstances(
-                _scenario.Scenery.Select( x => ( IH2ObjectInstance ) x ).ToList( ),
-                _scenario.SceneryPalette.Select( x => ( IH2ObjectPalette ) x ).ToList( ), map );
+                _scenario.Scenery.Select(x => (IH2ObjectInstance)x).ToList(),
+                _scenario.SceneryPalette.Select(x => (IH2ObjectPalette)x).ToList(), map);
             LoadInstances(
                 _scenario.Crates.Select( x => ( IH2ObjectInstance ) x ).ToList( ),
                 _scenario.CratesPalette.Select( x => ( IH2ObjectPalette ) x ).ToList( ), map );
@@ -144,12 +155,7 @@ namespace Moonfish.Graphics
 
         internal void Add( TagIdent ident, ScenarioObject @object )
         {
-            List<ScenarioObject> instanceList;
-            if ( !_objectInstances.TryGetValue( ident, out instanceList ) )
-            {
-                instanceList = _objectInstances[ ident ] = new List<ScenarioObject>( );
-            }
-            instanceList.Add( @object );
+            _objectInstances[ident] = (@object);
         }
 
         internal void Clear( )
@@ -275,55 +281,56 @@ namespace Moonfish.Graphics
         private void LoadInstances( List<IH2ObjectInstance> instances, List<IH2ObjectPalette> objectPalette,
             CacheStream cacheStream )
         {
-            var join =
-                ( instances.Where( x => x.PaletteIndex >= 0 )
-                    .GroupJoin( objectPalette, instance => ( int ) instance.PaletteIndex,
-                        objectPalette.IndexOf, ( instance, gj ) => new {instance, gj} )
-                    .SelectMany( @t => @t.gj.DefaultIfEmpty( ),
-                        ( @t, items ) => new {@t.instance, Object = items.ObjectReference} ) ).ToArray( );
+            var objects = objectPalette.Where( x => x.ObjectReference.Ident != TagIdent.NullIdentifier );
 
-            foreach ( var item in join )
+            foreach ( var h2ObjectPalette in objects )
             {
+                var palette = h2ObjectPalette;
+                var h2ObjectInstances = instances;
+                var instanceInformation =
+                    h2ObjectInstances.Where( x => x.PaletteIndex == objectPalette.IndexOf( palette ) );
+
                 var scenarioObject = new ScenarioObject(
-                    Halo2.GetReferenceObject<ModelBlock>( Halo2.GetReferenceObject<ObjectBlock>( item.Object ).Model ) )
-                {
-                    WorldMatrix = item.instance.WorldMatrix
-                };
+                    Halo2.GetReferenceObject<ModelBlock>(
+                        Halo2.GetReferenceObject<ObjectBlock>( h2ObjectPalette.ObjectReference ).Model ) );
+                var matrix4s = instanceInformation.Select( x=>x.WorldMatrix ).ToList(  );
+                scenarioObject.AssignInstanceMatrices( matrix4s.ToArray(  ) );
+
                 var renderModel = scenarioObject.Model.RenderModel.Get<RenderModelBlock>( );
                 if ( renderModel != null )
                     ProgramManager.LoadMaterials( renderModel.Materials, cacheStream );
-                Add( item.Object.Ident, scenarioObject );
+
+                Add( h2ObjectPalette.ObjectReference.Ident, scenarioObject );
             }
         }
 
         private void LoadNetgameEquipment( List<ScenarioNetgameEquipmentBlock> list, CacheStream cacheStream )
         {
-            foreach ( var item in list.Where( x => !TagIdent.IsNull( x.ItemVehicleCollection.Ident )
-                                                   &&
-                                                   ( x.ItemVehicleCollection.Class.ToString( ) == "vehc" ||
-                                                     x.ItemVehicleCollection.Class.ToString( ) == "itmc" ) ) )
+            var objects =
+                list.Where( x => x.ItemVehicleCollection.Ident != TagIdent.NullIdentifier )
+                    .Select( x => x.ItemVehicleCollection )
+                    .Distinct( );
+
+            foreach ( var tagReference in objects )
             {
-                try
-                {
-                    var scenarioObject = new ScenarioObject( Halo2.GetReferenceObject<ModelBlock>(
-                        Halo2.GetReferenceObject<ObjectBlock>(
-                            item.ItemVehicleCollection.Class.ToString( ) == "itmc"
-                                ? Halo2.GetReferenceObject<ItemCollectionBlock>( item.ItemVehicleCollection )
-                                    .ItemPermutations.First( )
-                                    .Item
-                                : Halo2.GetReferenceObject<VehicleCollectionBlock>( item.ItemVehicleCollection )
-                                    .VehiclePermutations.First( )
-                                    .Vehicle ).Model ) )
-                    {
-                        WorldMatrix = item.WorldMatrix
-                    };
-                    var renderModel = scenarioObject.Model.RenderModel.Get<RenderModelBlock>( );
-                    ProgramManager.LoadMaterials( renderModel.Materials, cacheStream );
-                    Add( item.ItemVehicleCollection.Ident, scenarioObject );
-                }
-                catch ( NullReferenceException )
-                {
-                }
+                var block = tagReference;
+                var intanceWorldMatrices =
+                    list.Where( x => x.ItemVehicleCollection.Ident == block.Ident ).Select( x => x.WorldMatrix );
+
+                var collectionBlock = block.Class == TagClass.Itmc
+                    ? block.Get<ItemCollectionBlock>( ).ItemPermutations[ 0 ].Item.Get<ObjectBlock>( ).Model
+                    : block.Get<VehicleCollectionBlock>( ).VehiclePermutations[ 0 ].Vehicle.Get<ObjectBlock>( ).Model;
+
+                var scenarioObject = new ScenarioObject(
+                    Halo2.GetReferenceObject<ModelBlock>(
+                        collectionBlock));
+                scenarioObject.AssignInstanceMatrices(intanceWorldMatrices.ToArray());
+
+                var renderModel = scenarioObject.Model.RenderModel.Get<RenderModelBlock>();
+                if (renderModel != null)
+                    ProgramManager.LoadMaterials(renderModel.Materials, cacheStream);
+
+                Add(block.Ident, scenarioObject);
             }
         }
 
@@ -347,6 +354,14 @@ namespace Moonfish.Graphics
                         bitmapBlock );
                 }
                 OpenGL.GetError( );
+            }
+        }
+
+        public void Update( )
+        {
+            foreach ( var objectInstance in _objectInstances.Select( x=>x.Value ) )
+            {
+                objectInstance.Update( );
             }
         }
     }

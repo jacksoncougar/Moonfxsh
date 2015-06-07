@@ -103,6 +103,5 @@ void main()
 
 	VertexTexcoord_texturespace = vec2(unpack(texcoord.s, TexcoordRangeUniform.xy), unpack(texcoord.t, TexcoordRangeUniform.zw));
 	
-	DiffuseColour  = colour;
     gl_Position = ViewProjectionMatrixUniform * instanceWorldMatrix * transformedPosition;
 }

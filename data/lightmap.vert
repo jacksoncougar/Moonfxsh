@@ -2,9 +2,9 @@
 
 in vec4 position;
 in vec2 texcoord;
-in vec3 normal;
-in vec3 tangent;
-in vec3 bitangent;
+in int normal;
+in int tangent;
+in int bitangent;
 in vec2 lightmapCoord; 
 in vec2 radiosityCoord; 
 
@@ -80,9 +80,9 @@ void main()
 	vec3 lightPosition_cameraspace = (ViewMatrixUniform * LightPositionUniform).xyz;
 	LightDirection_cameraspace = lightPosition_cameraspace + EyeDirection_cameraspace;
 	
-	vec3 vertexNormal_cameraspace =  normalMatrix * normal;
-	vec3 vertexTangent_cameraspace = normalMatrix * tangent;
-	vec3 vertexBitangent_cameraspace = normalMatrix *  bitangent;
+	vec3 vertexNormal_cameraspace =  normalMatrix * unpack(normal);
+	vec3 vertexTangent_cameraspace = normalMatrix * unpack(tangent);
+	vec3 vertexBitangent_cameraspace = normalMatrix *  unpack(bitangent);
 
 	VertexReflection_worldspace = reflect(vertexPosition_cameraspace, vertexNormal_cameraspace);
 	

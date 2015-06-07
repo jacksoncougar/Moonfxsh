@@ -43,41 +43,13 @@ namespace Moonfish.Graphics
         {
             DrawLightmap( _lightmapBlock );
             //DrawLevel( );
-            foreach ( var item in _objectInstances.Select( x => x.Value ) )
+            foreach ( var item in _objectInstances.SelectMany( x => x.Value ).Select( x => new {x, x.Batches} ) )
             {
-                foreach (var renderBatch in item.First().RenderBatches())
+                foreach ( var renderBatch in item.Batches )
                 {
-                    Draw(programManager, renderBatch);
+                    Draw( programManager, renderBatch );
                 }
             }
-        }
-
-        private static void DrawInstances( ProgramManager programManager, RenderBatch batch, string programName = null )
-        {
-            if ( batch.BatchObject == null ) return;
-
-            var program = programManager.GetProgram( batch.Shader, programName );
-
-            if ( program == null ) return;
-
-            // Begin Render Setup
-
-            GL.BindVertexArray( batch.BatchObject.VertexArrayObjectIdent );
-            foreach ( var attribute in batch.Attributes.Select( x => new {Name = x.Key, x.Value} ) )
-            {
-                var attributeLocation = program.GetAttributeLocation( attribute.Name );
-                Program.SetAttribute( attributeLocation, attribute.Value );
-            }
-            foreach ( var uniform in batch.Uniforms.Select( x => new {Name = x.Key, x.Value} ) )
-            {
-                var uniformLocation = program.GetUniformLocation( uniform.Name );
-                program.SetUniform( uniformLocation, uniform.Value );
-            }
-
-            GL.DrawElements( batch.PrimitiveType, batch.ElementLength, batch.DrawElementsType,
-                batch.ElementStartIndex);
-
-            GL.BindVertexArray(0);
         }
 
         public void Draw( ProgramManager programManager, RenderBatch batch, string programName = null )
@@ -189,11 +161,45 @@ namespace Moonfish.Graphics
         {
             _objectInstances.Remove( item );
         }
-        
+
+        private void DrawLevel( )
+        {
+            for ( var i = 0; i < ClusterObjects.Count; ++i )
+            {
+                foreach ( var batch in ClusterObjects[ i ].Batches )
+                {
+                    var index = batch.Shader.Ident;
+                    batch.Shader.Ident = ( int ) Level.Materials[ index ].Shader.Ident;
+                    var paletteIndex =
+                        _lightmapBlock.LightmapGroups[ 0 ].ClusterRenderInfo[ i ].PaletteIndex;
+                    batch.AssignUniform( "LightmapPaletteIndexUniform", ( float ) paletteIndex );
+                    Draw( ProgramManager, batch, "lightmapped" );
+                }
+            }
+            foreach ( var structureBspInstancedGeometryInstancesBlock in Level.InstancedGeometryInstances )
+            {
+                var shortBlockIndex1 = structureBspInstancedGeometryInstancesBlock.InstanceDefinition;
+                var instancedGeometryObject = shortBlockIndex1 < InstancedGeometryObjects.Count
+                    ? InstancedGeometryObjects[ shortBlockIndex1 ]
+                    : null;
+                if ( instancedGeometryObject == null ) continue;
+                foreach (
+                    var renderBatch in instancedGeometryObject.Batches )
+                {
+                    var index = renderBatch.Shader.Ident;
+                    renderBatch.Shader.Ident = ( int ) Level.Materials[ index ].Shader.Ident;
+                    renderBatch.Uniforms[ "WorldMatrixUniform" ] =
+                        structureBspInstancedGeometryInstancesBlock.WorldMatrix;
+                    Draw( ProgramManager, renderBatch, "lightmapped" );
+                }
+            }
+        }
+
         private void DrawLightmap( ScenarioStructureLightmapBlock scenarioStructureLightmapBlock )
         {
             for ( var i = 0; i < ClusterObjects.Count; ++i )
             {
+                var bitmapGroup = scenarioStructureLightmapBlock.LightmapGroups[ 0 ].BitmapGroup;
                 var bitmapIndex =
                     scenarioStructureLightmapBlock.LightmapGroups[ 0 ].ClusterRenderInfo[ i ].BitmapIndex;
                 var paletteIndex =
@@ -206,6 +212,7 @@ namespace Moonfish.Graphics
             for ( var i = 0; i < Level.InstancedGeometryInstances.Length; ++i )
             {
                 var instance = Level.InstancedGeometryInstances[ i ];
+                var bitmapGroup = scenarioStructureLightmapBlock.LightmapGroups[ 0 ].BitmapGroup;
                 var bitmapIndex =
                     scenarioStructureLightmapBlock.LightmapGroups[ 0 ].InstanceRenderInfo[ i ].BitmapIndex;
                 var paletteIndex =
@@ -265,27 +272,27 @@ namespace Moonfish.Graphics
                 colourPaletteData, TextureMagFilter.Linear, TextureMinFilter.LinearMipmapLinear );
         }
 
-        private void LoadInstances(IList<IH2ObjectInstance> instances, IList<IH2ObjectPalette> objectPalette,
+        private void LoadInstances( List<IH2ObjectInstance> instances, List<IH2ObjectPalette> objectPalette,
             CacheStream cacheStream )
         {
-            var objects = objectPalette.Where( x => x.ObjectReference.Ident != TagIdent.NullIdentifier );
+            var join =
+                ( instances.Where( x => x.PaletteIndex >= 0 )
+                    .GroupJoin( objectPalette, instance => ( int ) instance.PaletteIndex,
+                        objectPalette.IndexOf, ( instance, gj ) => new {instance, gj} )
+                    .SelectMany( @t => @t.gj.DefaultIfEmpty( ),
+                        ( @t, items ) => new {@t.instance, Object = items.ObjectReference} ) ).ToArray( );
 
-            foreach ( var h2ObjectPalette in objects )
+            foreach ( var item in join )
             {
-                var palette = h2ObjectPalette;
-                var h2ObjectInstances = instances;
-                var instanceInformation =
-                    h2ObjectInstances.Where(x => x.PaletteIndex == objectPalette.IndexOf(palette));
-
                 var scenarioObject = new ScenarioObject(
-                    Halo2.GetReferenceObject<ModelBlock>(
-                        Halo2.GetReferenceObject<ObjectBlock>( h2ObjectPalette.ObjectReference ).Model ) );
-
-                var renderModel = scenarioObject.Model.RenderModel.Get<RenderModelBlock>();
-                if (renderModel != null)
-                    ProgramManager.LoadMaterials(renderModel.Materials, cacheStream);
-
-                Add(h2ObjectPalette.ObjectReference.Ident, scenarioObject);
+                    Halo2.GetReferenceObject<ModelBlock>( Halo2.GetReferenceObject<ObjectBlock>( item.Object ).Model ) )
+                {
+                    WorldMatrix = item.instance.WorldMatrix
+                };
+                var renderModel = scenarioObject.Model.RenderModel.Get<RenderModelBlock>( );
+                if ( renderModel != null )
+                    ProgramManager.LoadMaterials( renderModel.Materials, cacheStream );
+                Add( item.Object.Ident, scenarioObject );
             }
         }
 

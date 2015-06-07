@@ -41,11 +41,13 @@ namespace Moonfish.Graphics
 
             using (Begin())
             {
-                BindBuffer(BufferTarget.ArrayBuffer, GenerateBuffer("coordinates"));
+                GenerateBuffer();
+                BindBuffer(BufferTarget.ArrayBuffer, BufferIdents.Last());
                 VertexAttribArray(0, 3, VertexAttribPointerType.Float);
                 BufferVertexAttributeData(coordinates);
 
-                BindBuffer(BufferTarget.ElementArrayBuffer, GenerateBuffer("elements"));
+                GenerateBuffer();
+                BindBuffer(BufferTarget.ElementArrayBuffer, BufferIdents.Last());
                 BufferElementArrayData(indices);
             }
         }
@@ -66,7 +68,7 @@ namespace Moonfish.Graphics
 
             using (Begin())
             {
-                BindBuffer( BufferTarget.ArrayBuffer, GetOrGenerateBuffer( "coordinates" ) );
+                BindBuffer(BufferTarget.ArrayBuffer, BufferIdents.First());
                 BufferVertexAttributeData(coordinates);
             }
         }

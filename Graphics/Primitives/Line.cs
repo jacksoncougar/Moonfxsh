@@ -9,10 +9,10 @@ namespace Moonfish.Graphics.Primitives
         {
             using (Begin())
             {
-                BindBuffer(BufferTarget.ArrayBuffer, GenerateBuffer("coordinates"));
+                BindBuffer(BufferTarget.ArrayBuffer, GenerateBuffer());
                 VertexAttribArray(0, 3, VertexAttribPointerType.Float);
                 BufferVertexAttributeData(new[] {start, end});
-                BindBuffer(BufferTarget.ElementArrayBuffer, GenerateBuffer("elements"));
+                BindBuffer(BufferTarget.ElementArrayBuffer, GenerateBuffer());
                 BufferElementArrayData(new short[] {0, 1});
             }
         }

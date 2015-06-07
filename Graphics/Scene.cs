@@ -134,13 +134,13 @@ namespace Moonfish.Graphics
             //rotation += OpenTK.MathHelper.DegreesToRadians( 0.03f );
             //rotation = rotation > Maths.Pi2 ? 0 : rotation;
             //var l = OpenTK.Vector3.Transform( lightPosition, R ); //Console.WriteLine(rotation);
-            foreach (var program in ProgramManager)
-            {
-                var lightPositionAttribute = program.GetUniformLocation("LightPositionUniform");
+            //foreach (var program in ProgramManager)
+            //{
+            //    var lightPositionAttribute = program.GetUniformLocation("LightPositionUniform");
 
-                using (program.Use())
-                    program.SetUniform(lightPositionAttribute, new Vector4(lightPosition));
-            }
+            //    using (program.Use())
+            //        program.SetUniform(lightPositionAttribute, new Vector4(lightPosition));
+            //}
             Camera.Update();
         }
     };

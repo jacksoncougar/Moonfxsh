@@ -8,6 +8,7 @@ namespace Moonfish.Graphics
 {
     public partial class DynamicScene
     {
+        public event EventHandler<KeyEventArgs> KeyDown;
         public event EventHandler<SceneMouseEventArgs> MouseDown;
         public event EventHandler<SceneMouseEventArgs> MouseMove;
         public event EventHandler<SceneMouseEventArgs> MouseUp;
@@ -56,7 +57,7 @@ namespace Moonfish.Graphics
             MouseMove += clickableCollisionObject.OnMouseMove;
             MouseUp += clickableCollisionObject.OnMouseUp;
             MouseClick += clickableCollisionObject.OnMouseClick;
-            clickableCollisionObject.MouseUp += delegate( object sender, SceneMouseEventArgs args )
+            clickableCollisionObject.MouseUp += delegate
             {
                 MouseMove -= clickableCollisionObject.OnMouseMove;
                 MouseClick -= clickableCollisionObject.OnMouseClick;
@@ -86,6 +87,12 @@ namespace Moonfish.Graphics
         public void OnMouseCaptureChanged(object sender, EventArgs e)
         {
             //if( this.MouseCaptureChanged != null ) this.MouseCaptureChanged( this, e );
+        }
+
+        public void OnKeyDown( object sender, KeyEventArgs e )
+        {
+            if ( KeyDown != null )
+                KeyDown( sender, e );
         }
     }
 }

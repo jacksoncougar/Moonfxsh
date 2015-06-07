@@ -175,7 +175,7 @@
     <Compile Include="Graphics\GraphicsEvents.cs" />
     <Compile Include="Graphics\GraphicsExtensions.cs" />
     <Compile Include="Graphics\Grid.cs" />
-    <Compile Include="Graphics\Manager.cs" />
+    <Compile Include="Graphics\MeshManager.cs" />
     <Compile Include="Graphics\MarkerWrapper.cs" />
     <Compile Include="Graphics\MaterialShader.cs" />
     <Compile Include="Graphics\Mesh.cs" />

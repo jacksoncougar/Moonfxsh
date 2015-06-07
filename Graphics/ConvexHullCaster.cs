@@ -5,8 +5,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using BulletSharp;
 using Moonfish.Graphics.Primitives;
+using Moonfish.Guerilla.Tags;
 using OpenTK;
 
 namespace Moonfish.Graphics
@@ -114,15 +116,16 @@ namespace Moonfish.Graphics
             if (!rayCallback.HasHit) return;
 
             debugPoint0 = rayCallback.HitPointWorld;
+
             var groundNormal = rayCallback.HitNormalWorld;
+
             var objectNormal = selectedCollisionObject.WorldTransform.Column2.Xyz.Normalized(  );
             var objectRight =  selectedCollisionObject.WorldTransform.Column0.Xyz.Normalized(  );
             var objectForward =  selectedCollisionObject.WorldTransform.Column1.Xyz.Normalized(  );
-            var cosTheta = Vector3.Dot( groundNormal, objectNormal );
-            var angle = ( float ) Math.Acos( cosTheta );
+
+
             var angle2 = Vector3.CalculateAngle(groundNormal, objectNormal);
-            var axis = Vector3.Cross(objectNormal, groundNormal);
-            Matrix4 _T;
+            Matrix4 t;
             if ( angle2 > 0.01f )
             {
                 var X = Vector3.Dot( groundNormal, objectRight ) < Vector3.Dot( groundNormal, objectForward )
@@ -130,15 +133,14 @@ namespace Moonfish.Graphics
                     : objectForward;
                 var Y = Vector3.Cross( groundNormal, X );
                 X = Vector3.Cross( Y, groundNormal );
-                Debug.WriteLine( angle2 );
-                _T = new Matrix4(
+                t = new Matrix4(
                     new Vector4( X ),
                     new Vector4( Y ),
                     new Vector4( groundNormal ),
                     new Vector4( 0, 0, 0, 1 ) );
-                debugPoint1 = debugPoint0 + Vector3.Transform( objectNormal, _T ) * 10f;
+                debugPoint1 = debugPoint0 + Vector3.Transform( objectNormal, t ) * 10f;
             }
-            else _T = selectedCollisionObject.WorldTransform.ClearTranslation( );
+            else t = selectedCollisionObject.WorldTransform.ClearTranslation( );
 
             var destination = debugPoint0 =  rayCallback.HitPointWorld;
 
@@ -157,8 +159,8 @@ namespace Moonfish.Graphics
 
             var fromTranslation = Matrix4.CreateTranslation(e.Camera.WorldMatrix.ExtractTranslation(  ));
             var fromRotation = selectedCollisionObject.WorldTransform.ClearTranslation( );
-            var from = _T * fromTranslation;
-            var to = _T * Matrix4.CreateTranslation(destination);
+            var from = t * fromTranslation;
+            var to = t * Matrix4.CreateTranslation(destination);
 
             dynamicScene.CollisionManager.World.ConvexSweepTest( convexShape, from, to, convexCallback );
 
@@ -201,6 +203,34 @@ namespace Moonfish.Graphics
         public void OnMouseCaptureChanged(object sender, SceneMouseEventArgs e)
         {
             throw new NotImplementedException();
+        }
+
+        public void OnKeyDown( object sender, KeyEventArgs e )
+        {
+            float delta = 0.00f;
+            switch ( e.KeyCode )
+            {
+                case Keys.Q: delta = -0.1f;
+                    break;
+                case Keys.E: delta = 0.1f;
+                    break;
+                default:
+                    return;
+            } 
+            
+            if ( selectedCollisionObject == null ) return;
+            var scenarioObject = selectedCollisionObject.UserObject as ScenarioObject;
+            if ( scenarioObject == null ) return;
+
+            var upAxis = selectedCollisionObject.WorldTransform.Row2.Xyz.Normalized();
+            var existingRotation = selectedCollisionObject.WorldTransform.ExtractRotation( );
+            Debug.WriteLine(upAxis);
+            var R = Quaternion.FromAxisAngle( upAxis, delta );
+            var T = selectedCollisionObject.WorldTransform;
+            var transform = Matrix4.CreateFromQuaternion(existingRotation) * Matrix4.CreateFromQuaternion(R) * T.ClearRotation();
+
+            selectedCollisionObject.WorldTransform = transform;
+            scenarioObject.AssignWorldTransform(transform);
         }
     }
 }

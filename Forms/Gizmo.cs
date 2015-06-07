@@ -96,6 +96,7 @@ namespace Moonfish.Graphics
             glControl1.MouseMove += Scene.OnMouseMove;
             glControl1.MouseUp += Scene.OnMouseUp;
             glControl1.MouseClick += Scene.OnMouseClick;
+            glControl1.KeyDown += Scene.caster.OnKeyDown;
 
             Open(Path.Combine(Local.MapsDirectory, "headlong.map"));
 

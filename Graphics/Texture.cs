@@ -57,6 +57,12 @@ namespace Moonfish.Graphics
                         pixelInternalFormat );
 
                     break;
+                    case BitmapDataBlock.TypeEnum.Texture3D:
+
+                    LoadTexture2D(textureMagFilter, textureMinFilter, bytesPerPixel, width, height, buffer,
+                        workingBitmap, pixelInternalFormat);
+
+                    break;
                 default:
                     GL.DeleteTexture( handle );
                     break;

@@ -104,10 +104,10 @@ namespace Moonfish.Graphics.Primitives
                 GL.BindVertexArray( line.VertexArrayObjectIdent );
                 Program.SetAttribute( colourAttribute, new ColorF( Color.FromArgb( color.ToArgb( ) ) ).RGBA );
                 DebugProgram.SetUniform( worldMatrixUniform, Matrix4.Identity );
-                GL.LineWidth( lineWidth );
+                //GL.LineWidth( lineWidth );
                 GL.DrawArrays( PrimitiveType.Lines, 0, 2 );
                 GL.Finish( );
-                GL.LineWidth( 1.0f );
+                //GL.LineWidth( 1.0f );
             }
             line.Dispose( );
         }

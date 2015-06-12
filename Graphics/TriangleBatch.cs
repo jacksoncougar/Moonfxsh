@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL;
 
@@ -139,11 +140,11 @@ namespace Moonfish.Graphics
 #endif
         }
 
-        public void BufferVertexAttributeData<T>(T[] data) where T : struct
+        public void BufferVertexAttributeData<T>(T[] data, BufferUsageHint bufferUsageHint  = BufferUsageHint.StaticDraw) where T : struct
         {
             var dataSize = (IntPtr) (Marshal.SizeOf(typeof (T))*data.Length);
 
-            GL.BufferData(BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, dataSize, data, bufferUsageHint);
 
 #if DEBUG
 #endif
@@ -198,7 +199,12 @@ namespace Moonfish.Graphics
         public int GetOrGenerateBuffer( string bufferName )
         {
             int index;
-            return _namedBufferIndices.TryGetValue( bufferName, out index ) ? _buffers[ index ] : GenerateBuffer( );
+            var key = bufferName.ToLower();
+            if ( _namedBufferIndices.TryGetValue( key, out index ) )
+                return _buffers[ index ];
+
+            _namedBufferIndices[ key ] = _buffers.Count;
+            return GenerateBuffer( );
         }
 
         public void VertexAttribDivisor( int index, int divisor )

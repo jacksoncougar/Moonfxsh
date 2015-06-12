@@ -208,7 +208,7 @@ namespace Moonfish.Graphics.Input
             using (_batch.Begin())
             {
                 _batch.BindBuffer(BufferTarget.ArrayBuffer, _batch.BufferIdents[1]);
-                _batch.BufferVertexAttributeData(colours);
+                _batch.BufferVertexAttributeData(colours, BufferUsageHint.StaticDraw );
             }
         }
 
@@ -254,10 +254,10 @@ namespace Moonfish.Graphics.Input
             using (_batch.Begin())
             {
                 _batch.BindBuffer(BufferTarget.ArrayBuffer, _batch.GenerateBuffer());
-                _batch.BufferVertexAttributeData(coordinates);
+                _batch.BufferVertexAttributeData(coordinates, BufferUsageHint.StaticDraw );
                 _batch.VertexAttribArray(0, 3, VertexAttribPointerType.Float);
                 _batch.BindBuffer(BufferTarget.ArrayBuffer, _batch.GenerateBuffer());
-                _batch.BufferVertexAttributeData(colours);
+                _batch.BufferVertexAttributeData(colours, BufferUsageHint.StaticDraw );
                 _batch.VertexAttribArray(1, 4, VertexAttribPointerType.Float);
                 _batch.BindBuffer(BufferTarget.ElementArrayBuffer, _batch.GenerateBuffer());
                 _batch.BufferElementArrayData(indices);

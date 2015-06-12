@@ -11,7 +11,7 @@ namespace Moonfish.Graphics.Primitives
             {
                 BindBuffer(BufferTarget.ArrayBuffer, GenerateBuffer());
                 VertexAttribArray(0, 3, VertexAttribPointerType.Float);
-                BufferVertexAttributeData(new[] {start, end});
+                BufferVertexAttributeData(new[] {start, end}, BufferUsageHint.StaticDraw );
                 BindBuffer(BufferTarget.ElementArrayBuffer, GenerateBuffer());
                 BufferElementArrayData(new short[] {0, 1});
             }

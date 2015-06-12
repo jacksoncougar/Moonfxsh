@@ -128,7 +128,7 @@ namespace Moonfish.Graphics
                     using ( _markersBatch.Begin( ) )
                     {
                         _markersBatch.BindBuffer( BufferTarget.ArrayBuffer, _markersBatch.BufferIdents.First( ) );
-                        _markersBatch.BufferVertexAttributeData( positionData.ToArray( ) );
+                        _markersBatch.BufferVertexAttributeData( positionData.ToArray( ), BufferUsageHint.StaticDraw );
                         _markersBatch.BindBuffer( BufferTarget.ElementArrayBuffer, _markersBatch.BufferIdents.Last( ) );
                         _markersBatch.BufferElementArrayData( elementIndices );
                     }
@@ -164,7 +164,7 @@ namespace Moonfish.Graphics
                     using ( _nodesBatch.Begin( ) )
                     {
                         _nodesBatch.BindBuffer( BufferTarget.ArrayBuffer, _nodesBatch.BufferIdents.First( ) );
-                        _nodesBatch.BufferVertexAttributeData( positionData.ToArray( ) );
+                        _nodesBatch.BufferVertexAttributeData( positionData.ToArray( ), BufferUsageHint.StaticDraw );
                         _nodesBatch.BindBuffer( BufferTarget.ElementArrayBuffer, _nodesBatch.BufferIdents.Last( ) );
                         _nodesBatch.BufferElementArrayData( elementIndices );
                     }
@@ -322,7 +322,7 @@ namespace Moonfish.Graphics
                             batch.BatchObject.BindBuffer(BufferTarget.ArrayBuffer,
                                 batch.BatchObject.GetOrGenerateBuffer("instance data"));
                             batch.InstanceCount = InstanceWorldMatrices.Length;
-                            batch.BatchObject.BufferVertexAttributeData(InstanceWorldMatrices);
+                            batch.BatchObject.BufferVertexAttributeData(InstanceWorldMatrices, BufferUsageHint.StaticDraw );
 
                             var stride = sizeof(Matrix4);
                             var sizeOfVector4 = sizeof(Vector4);

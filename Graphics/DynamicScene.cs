@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using Moonfish.Graphics.Input;
 using Moonfish.Graphics.Primitives;
+using OpenTK.Graphics.ES10;
 
 namespace Moonfish.Graphics
 {
@@ -41,8 +42,8 @@ namespace Moonfish.Graphics
             if ( DrawDebugCollision || true )
                 CollisionManager.World.DebugDrawWorld( );
 
-            GLDebug.DrawLine( caster.debugPoint0, caster.debugPoint1, Color.Red, 5 );
-            GLDebug.DrawPoint(caster.debugPoint2, Color.GreenYellow, 5);
+            GLDebug.DrawPoints( Color.Red, 5.0f );
+            GLDebug.DrawLines( Color.Yellow, 1.0f );
 #endif
             //GLDebug.DrawPoint(caster.debugPoint2, Color.Gold, 5);
             //GLDebug.DrawPoint(caster.debugPoint3, Color.DodgerBlue, 5);

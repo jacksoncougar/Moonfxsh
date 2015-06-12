@@ -98,7 +98,7 @@ namespace Moonfish.Graphics
             glControl1.MouseClick += Scene.OnMouseClick;
             glControl1.KeyDown += Scene.caster.OnKeyDown;
 
-            Open(Path.Combine(Local.MapsDirectory, "headlong.map"));
+            Open(Path.Combine(Local.MapsDirectory, "deltatap.map"));
 
             Scene.ObjectManager.ProgramManager = Scene.ProgramManager;
             Scene.ObjectManager.Collision = Scene.CollisionManager;

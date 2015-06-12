@@ -97,7 +97,7 @@ namespace Moonfish.Graphics
 #endif
 
                     TriangleBatch.BindBuffer(BufferTarget.ArrayBuffer, TriangleBatch.GenerateBuffer());
-                    TriangleBatch.BufferVertexAttributeData( data );
+                    TriangleBatch.BufferVertexAttributeData( data, BufferUsageHint.StaticDraw );
 
                     switch ( attributeType )
                     {
@@ -226,7 +226,7 @@ namespace Moonfish.Graphics
             }
         }
 
-        private static byte[] UnpackNormals( byte[] data, VertexAttributeType attributeType, ref int stride )
+        public static byte[] UnpackNormals( byte[] data, VertexAttributeType attributeType, ref int stride )
         {
             switch ( attributeType )
             {

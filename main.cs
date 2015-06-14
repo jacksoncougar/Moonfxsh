@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Fasterflect;
 using Moonfish.Cache;
+using Moonfish.Forms;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.CodeDom;
 using Moonfish.Guerilla.Tags;
@@ -28,7 +29,7 @@ namespace Moonfish
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Gizmo());
+            Application.Run(new MainForm());
         }
     }
 }

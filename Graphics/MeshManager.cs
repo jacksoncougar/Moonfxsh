@@ -93,7 +93,7 @@ namespace Moonfish.Graphics
         {
             foreach ( var item in _objectInstances.Select( x => x.Value ) )
             {
-                for ( int index = 0; index < item.InstanceWorldMatrices.Length; index++ )
+                for ( int index = 0; index < item.InstanceWorldMatrices.Count; index++ )
                 {
                     var instanceWorldMatrix = item.InstanceWorldMatrices[ index ];
 
@@ -363,6 +363,25 @@ namespace Moonfish.Graphics
             {
                 objectInstance.Update( );
             }
+        }
+
+        public void AddInstance( TagIdent ident, out int instanceIdent, out ScenarioObject instanceScenarioObject )
+        {
+            instanceScenarioObject = this[ident];
+            var instanceWorldMatrix = Matrix4.Identity;
+            instanceIdent = instanceScenarioObject.InstanceWorldMatrices.Count;
+
+            instanceScenarioObject.InstanceWorldMatrices.Add(instanceWorldMatrix);
+
+            CollisionObject collisionObject = new ClickableCollisionObject();
+            collisionObject.CollisionShape =
+                new BoxShape(instanceScenarioObject.RenderModel.CompressionInfo[0].ToHalfExtents());
+            collisionObject.WorldTransform = Matrix4.CreateTranslation(
+                instanceScenarioObject.RenderModel.CompressionInfo[0].ToObjectMatrix().ExtractTranslation()) *
+                                             instanceWorldMatrix;
+            collisionObject.UserIndex = instanceIdent;
+            collisionObject.UserObject = instanceScenarioObject;
+            Collision.World.AddCollisionObject(collisionObject);
         }
     }
 }

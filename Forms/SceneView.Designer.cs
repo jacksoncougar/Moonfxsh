@@ -1,11 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
-using OpenTK;
-using OpenTK.Graphics;
 
-namespace Moonfish.Graphics
+namespace Moonfish.Forms
 {
-    partial class Gizmo
+    partial class SceneView
     {
         /// <summary>
         /// Required designer variable.
@@ -33,7 +31,7 @@ namespace Moonfish.Graphics
         /// </summary>
         private void InitializeComponent( )
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Gizmo));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SceneView));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblRenderTime = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1.SuspendLayout();
@@ -43,9 +41,9 @@ namespace Moonfish.Graphics
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblRenderTime});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 425);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 365);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(686, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(738, 22);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -56,14 +54,14 @@ namespace Moonfish.Graphics
             this.lblRenderTime.Tag = "Frame Time: {0}ms";
             this.lblRenderTime.Text = "Frame Time: 0ms";
             // 
-            // Gizmo
+            // ScenarioEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(686, 447);
+            this.ClientSize = new System.Drawing.Size(738, 387);
             this.Controls.Add(this.statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Gizmo";
+            this.Name = "SceneView";
             this.Text = "Moonfish 2015 : Debug";
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();

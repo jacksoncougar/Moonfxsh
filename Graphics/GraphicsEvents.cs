@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using Moonfish.Collision;
 using OpenTK;
+using OpenTK.Input;
+using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 
 namespace Moonfish.Graphics
 {

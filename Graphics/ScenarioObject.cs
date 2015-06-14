@@ -97,7 +97,8 @@ namespace Moonfish.Graphics
 
         public void AssignInstanceMatrices( Matrix4[] instanceWorldMatrices )
         {
-            InstanceWorldMatrices = instanceWorldMatrices;
+            InstanceWorldMatrices = new List<Matrix4>(instanceWorldMatrices);
+            InstanceBasisMatrices = new List<Matrix4>(Enumerable.Repeat( Matrix4.Identity, instanceWorldMatrices.Length ));
             RenderBatches = GetRenderBatches( );
         }
 
@@ -314,15 +315,15 @@ namespace Moonfish.Graphics
                     batch.AssignUniform("TexcoordRangeUniform", texcoordRange);
                     batch.AssignUniform("WorldMatrixUniform", WorldMatrix);
 
-                    if (InstanceWorldMatrices != null && InstanceWorldMatrices.Length > 0)
+                    if (InstanceWorldMatrices != null && InstanceWorldMatrices.Count > 0)
                     {
                         using (batch.BatchObject.Begin())
                         {
 
                             batch.BatchObject.BindBuffer(BufferTarget.ArrayBuffer,
                                 batch.BatchObject.GetOrGenerateBuffer("instance data"));
-                            batch.InstanceCount = InstanceWorldMatrices.Length;
-                            batch.BatchObject.BufferVertexAttributeData(InstanceWorldMatrices, BufferUsageHint.StaticDraw );
+                            batch.InstanceCount = InstanceWorldMatrices.Count;
+                            batch.BatchObject.BufferVertexAttributeData(InstanceWorldMatrices.Zip(InstanceBasisMatrices, (worldMatrix, basisMatrix) => worldMatrix * basisMatrix).ToArray(  ), BufferUsageHint.StaticDraw);
 
                             var stride = sizeof(Matrix4);
                             var sizeOfVector4 = sizeof(Vector4);
@@ -347,7 +348,10 @@ namespace Moonfish.Graphics
             return collectionBatches;
         }
 
-        public Matrix4[] InstanceWorldMatrices { get; set; }
+
+
+        public List<Matrix4> InstanceBasisMatrices { get; set; }
+        public List<Matrix4> InstanceWorldMatrices { get; set; }
 
         private IEnumerable<RenderBatch> _RenderBatches( )
         {

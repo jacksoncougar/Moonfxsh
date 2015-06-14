@@ -93,10 +93,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\OpenTK.GLControl.1.1.1589.5942\lib\NET40\OpenTK.GLControl.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -105,6 +108,7 @@
     <Reference Include="WeifenLuo.WinFormsUI.Docking">
       <HintPath>packages\DockPanelSuite.2.9.0.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\CacheStream.cs" />
@@ -126,11 +130,17 @@
     <Compile Include="Compiler\Decompiler.cs" />
     <Compile Include="Debug\Memory.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Forms\DockingGLPanel.cs">
-      <SubType>Component</SubType>
+    <Compile Include="Forms\MainForm.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\DockingGLPanel.Designer.cs">
-      <DependentUpon>DockingGLPanel.cs</DependentUpon>
+    <Compile Include="Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ObjectListView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectListView.Designer.cs">
+      <DependentUpon>ObjectListView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ShaderViewer.cs">
       <SubType>Form</SubType>
@@ -160,11 +170,11 @@
     <Compile Include="Graphics\DynamicScene.cs" />
     <Compile Include="Graphics\DynamicScene.Events.cs" />
     <Compile Include="Graphics\Interfaces.cs" />
-    <Compile Include="Forms\Gizmo.cs">
+    <Compile Include="Forms\SceneView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Gizmo.Designer.cs">
-      <DependentUpon>Gizmo.cs</DependentUpon>
+    <Compile Include="Forms\SceneView.Designer.cs">
+      <DependentUpon>SceneView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MarkerViewer.cs">
       <SubType>Form</SubType>
@@ -1356,8 +1366,14 @@
     <Content Include="license.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\Gizmo.resx">
-      <DependentUpon>Gizmo.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectListView.resx">
+      <DependentUpon>ObjectListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SceneView.resx">
+      <DependentUpon>SceneView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MarkerViewer.resx">
       <DependentUpon>MarkerViewer.cs</DependentUpon>

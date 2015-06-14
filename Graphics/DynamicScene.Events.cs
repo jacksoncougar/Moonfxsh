@@ -17,6 +17,14 @@ namespace Moonfish.Graphics
 
         public event SelectedObjectChangedEventHandler SelectedObjectChanged;
 
+        public void SelectedObject( object selectedObject )
+        {
+            if (SelectedObjectChanged != null)
+            {
+                SelectedObjectChanged(this, new SelectEventArgs(selectedObject));
+            }
+        }
+
         public void OnMouseDown( object sender, MouseEventArgs e )
         {
             var mouse = new

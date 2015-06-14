@@ -7,10 +7,14 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Input;
 using BulletSharp;
 using Moonfish.Graphics.Primitives;
 using Moonfish.Guerilla.Tags;
 using OpenTK;
+using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
+using Mouse = OpenTK.Input.Mouse;
+using MouseButton = OpenTK.Input.MouseButton;
 
 namespace Moonfish.Graphics
 {
@@ -25,13 +29,13 @@ namespace Moonfish.Graphics
         public void OnSelectedObjectChanged( object sender, SelectEventArgs e )
         {
             var item = e.SelectedObject as CollisionObject;
-            if ( item == null )
+            if (item == null || item == selectedCollisionObject)
             {
                 selectedCollisionObject = null;
                 return;
             }
             var scenarioObject = item.UserObject as ScenarioObject;
-            if ( scenarioObject == null )
+            if (scenarioObject == null)
             {
                 selectedCollisionObject = null;
                 return;
@@ -91,7 +95,7 @@ namespace Moonfish.Graphics
 
                 var collisionObject = rayResult.CollisionObject;
 
-                if (collisionObject != null)
+                if (collisionObject != null && value <= ClosestHitFraction)
                 {
                     var meshShape = collisionObject.CollisionShape as BvhTriangleMeshShape;
                     if (meshShape != null)
@@ -99,7 +103,7 @@ namespace Moonfish.Graphics
                         TriangleBuffer test = new TriangleBuffer();
                         meshShape.PerformRaycast(test, RayFromWorld,
                             RayFromWorld + (RayToWorld - RayFromWorld) * ClosestHitFraction);
-
+                        GLDebug.ClearLines(  );
                         if (test.NumTriangles > 0)
                         {
                             for (int index = 0; index < test.NumTriangles; index++)
@@ -160,6 +164,10 @@ namespace Moonfish.Graphics
 
         public void OnMouseMove( object sender, SceneMouseEventArgs e )
         {
+            
+            var state = Mouse.GetState( );
+            //if ( !state.IsButtonDown( MouseButton.Left ) ) return;
+
             var dynamicScene = sender as DynamicScene;
             if ( dynamicScene == null ) return;
             if ( selectedCollisionObject == null ) return;
@@ -269,7 +277,7 @@ namespace Moonfish.Graphics
 
         public void OnMouseUp(object sender, SceneMouseEventArgs e)
         {
-            selectedCollisionObject = null;
+            //selectedCollisionObject = null;
         }
 
         public void OnMouseClick(object sender, SceneMouseEventArgs e)
@@ -287,14 +295,19 @@ namespace Moonfish.Graphics
             float delta = 0.00f;
             switch ( e.KeyCode )
             {
-                case Keys.Q: delta = -0.1f;
+                case Keys.Q:
+                    delta = -0.1f;
                     break;
-                case Keys.E: delta = 0.1f;
+                case Keys.E:
+                    delta = 0.1f;
+                    break;
+                case Keys.Escape:
+                    selectedCollisionObject = null;
                     break;
                 default:
                     return;
-            } 
-            
+            }
+
             if ( selectedCollisionObject == null ) return;
             var scenarioObject = selectedCollisionObject.UserObject as ScenarioObject;
             if ( scenarioObject == null ) return;

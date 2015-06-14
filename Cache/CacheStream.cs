@@ -22,6 +22,28 @@ namespace Moonfish.Cache
         public readonly List<VirtualMappedAddress> StructureMemoryBlocks;
         public readonly CacheHeader Header;
 
+        public static CacheStream Open(string fileName)
+        {
+            var directory = Path.GetDirectoryName(fileName);
+
+            if (directory != null)
+                LoadResourceMaps(directory);
+
+            return new CacheStream(fileName);
+        }
+
+        private static void LoadResourceMaps(string directory)
+        {
+            var maps = Directory.GetFiles(directory, "*.map", SearchOption.TopDirectoryOnly);
+            var resourceMaps = maps.GroupBy(
+                Halo2.CheckMapType
+                ).Where(x => x.Key == MapType.MainMenu
+                              || x.Key == MapType.Shared
+                              || x.Key == MapType.SinglePlayerShared)
+                .Select(g => g.First()).ToList();
+            resourceMaps.ForEach(x => Halo2.LoadResource(new CacheStream(x)));
+        }
+
         public CacheStream(string filename)
             : base(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 8*1024)  
         {

@@ -129,11 +129,16 @@ namespace Moonfish.Graphics.Primitives
                 GL.DrawArrays(PrimitiveType.Lines, 0, MaxLines * 2);
                 lineBatch.BindBuffer(BufferTarget.ArrayBuffer, lineBatch.GetOrGenerateBuffer("coordinates"));
                 lineBatch.BufferVertexAttributeSubData(lineList);
-                Array.Clear(lineList, 0, lineList.Length);
+                ClearLines( );
             }
             GL.PointSize(1.0f);
             GL.Enable(EnableCap.DepthTest);
             GL.Finish();
+        }
+
+        public static void ClearLines( )
+        {
+            Array.Clear( lineList, 0, lineList.Length );
         }
 
         [Conditional( "DEBUG" )]

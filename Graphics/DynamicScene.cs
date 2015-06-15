@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
 using Moonfish.Graphics.Input;
 using Moonfish.Graphics.Primitives;
 using OpenTK.Graphics.ES10;
@@ -12,6 +14,7 @@ namespace Moonfish.Graphics
         public DynamicScene( )
         {
             caster = new ConvexHullCaster( );
+            SceneUpdate += caster.OnUpdate;
             DrawDebugCollision = false;
             CollisionManager = new CollisionManager( ProgramManager.SystemProgram );
             MousePole = new TranslationGizmo( );
@@ -49,8 +52,12 @@ namespace Moonfish.Graphics
             //GLDebug.DrawPoint(caster.debugPoint3, Color.DodgerBlue, 5);
         }
 
+        private event EventHandler SceneUpdate;
+
         public override void Update( )
         {
+            if (SceneUpdate!=null)SceneUpdate(this, new EventArgs(  ));
+
             ObjectManager.Update( );
             CollisionManager.Update();
             base.Update( );

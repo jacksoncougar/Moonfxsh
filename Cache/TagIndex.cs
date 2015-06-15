@@ -80,7 +80,14 @@ namespace Moonfish.Cache
             return _data.GetEnumerator();
         }
 
-        public IEnumerable<TagDatum> Select(TagClass tagClass, string path)
+        public IEnumerable<TagDatum> Where(TagClass tagClass)
+        {
+            return from item in _data
+                   where item.Class == tagClass
+                   select item;
+        }
+
+        public IEnumerable<TagDatum> Where(TagClass tagClass, string path)
         {
             return from item in _data
                 where item.Class == tagClass

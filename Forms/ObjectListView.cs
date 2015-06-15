@@ -25,12 +25,12 @@ namespace Moonfish.Forms
         public ObjectListView( )
         {
             SelectedObjectIdent = TagIdent.NullIdentifier;
-            InitializeComponent();
+            InitializeComponent( );
             listView1.MouseDoubleClick +=
                 delegate
                 {
-                    if (MouseDoubleClick != null)
-                        MouseDoubleClick(this, SelectedObjectIdent);
+                    if ( MouseDoubleClick != null )
+                        MouseDoubleClick( this, SelectedObjectIdent );
                 };
 
             listView1.SelectedIndexChanged +=
@@ -42,59 +42,45 @@ namespace Moonfish.Forms
                         SelectedObjectIdent = TagIdent.NullIdentifier;
                         return;
                     }
-                    
-                    var palette = listView1.Items[ index ].Tag as IH2ObjectPalette;
 
-                    if ( palette == null ) return;
-
-                    SelectedObjectIdent = palette.ObjectReference.Ident;
+                    var data = ( TagDatum ) listView1.Items[ index ].Tag;
+                    SelectedObjectIdent = data.Identifier;
                     if ( SelectedObjectChanged != null ) SelectedObjectChanged( this, SelectedObjectIdent );
                 };
         }
 
         public void LoadScenarioPallet( CacheStream cacheStream )
         {
-            var ident = cacheStream.Index.Select( ( TagClass ) "scnr", "" ).First( ).Identifier;
-            var scenario = ( ScenarioBlock ) cacheStream.Deserialize( ident );
-
-            var scenery =
-                scenario.SceneryPalette.Where( x => x.Name.Ident != TagIdent.NullIdentifier )
-                    .Select( x => ( IH2ObjectPalette ) x )
-                    .ToList( );
-            var crates =
-                scenario.CratesPalette.Where( x => x.Name.Ident != TagIdent.NullIdentifier )
-                    .Select( x => ( IH2ObjectPalette ) x )
-                    .ToList( );
-            var weapons =
-                scenario.WeaponPalette.Where( x => x.Name.Ident != TagIdent.NullIdentifier )
-                    .Select( x => ( IH2ObjectPalette ) x )
-                    .ToList( );
-            var netgame =
-                scenario.NetgameEquipment.GroupBy( x => x.ItemVehicleCollection.Ident )
-                    .Select( x => x.First( ) )
-                    .Where( x => x.ItemVehicleCollection.Ident != TagIdent.NullIdentifier )
-                    .Select( x => ( IH2ObjectPalette ) x )
-                    .ToList( );
+            var scenery = cacheStream.Index.Where( TagClass.Scen );
+            var crates = cacheStream.Index.Where( TagClass.Bloc );
+            var weapons = cacheStream.Index.Where( TagClass.Weap );
+            var netgame = cacheStream.Index.Where( TagClass.Itmc );
+            var machines = cacheStream.Index.Where( TagClass.Mach );
 
             AddListViewItems( scenery, new ListViewGroup(
                 "Scenery", HorizontalAlignment.Left ) );
             AddListViewItems( crates, new ListViewGroup(
                 "Crates", HorizontalAlignment.Left ) );
             AddListViewItems( weapons, new ListViewGroup(
-                "Weapons", HorizontalAlignment.Left ) );
-            AddListViewItems( netgame, new ListViewGroup(
-                "NetGame", HorizontalAlignment.Left ) );
+                "Weapons", HorizontalAlignment.Left));
+            AddListViewItems(netgame, new ListViewGroup(
+                "NetGame", HorizontalAlignment.Left));
+            AddListViewItems(machines, new ListViewGroup(
+                "Machines", HorizontalAlignment.Left));
         }
 
-        private void AddListViewItems( List<IH2ObjectPalette> scenery, ListViewGroup listViewGroup )
+        private void AddListViewItems( IEnumerable<TagDatum> scenery, ListViewGroup listViewGroup )
         {
             listView1.Groups.Add( listViewGroup );
-            scenery.ForEach( x => listView1.Items.Add( new ListViewItem( x.ObjectReference.Ident.Index.ToString( ) )
+            foreach ( var tagDatum in scenery )
             {
-                Group = listViewGroup,
-                SubItems = {x.ObjectReference.Ident.ToString( )},
-                Tag = x
-            } ) );
+                listView1.Items.Add( new ListViewItem( tagDatum.Identifier.Index.ToString( ) )
+                {
+                    Group = listViewGroup,
+                    SubItems = {tagDatum.Identifier.ToString( )},
+                    Tag = tagDatum
+                } );
+            }
         }
     };
 }

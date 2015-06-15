@@ -199,12 +199,18 @@ namespace Moonfish.Cache
             var attribute = (TagClassAttribute) typeof (T).Attribute(typeof (TagClassAttribute));
             var tagDatum = Index.Add(attribute.TagClass, tagName, serializedTagData.Length, lastDatum.VirtualAddress);
 
+            _deserializedTagCache.Add(tagDatum.Identifier, item );
+
+            var paths = Index.Select( x => x.Path );
+            Halo2.Paths.Assign(paths);
+            
+
 #if DEBUG
             var v = new Validator();
             v.Validate(tagDatum, stream);
 #endif
 
-            Allocate(tagDatum.Identifier, serializedTagData.Length);
+            //Allocate(tagDatum.Identifier, serializedTagData.Length);
         }
 
         private void Allocate(TagIdent ident, int size)

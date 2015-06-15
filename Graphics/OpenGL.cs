@@ -68,7 +68,7 @@ namespace Moonfish.Graphics
             messageString.AppendLine( ptrToStringAnsi );
             if ( messageString.Length + length > messageString.Capacity )
             {
-                Debug.WriteLine( messageString );
+                //Debug.WriteLine( messageString );
                 messageString.Clear( );
             }
             if (type == DebugType.DebugTypeError)

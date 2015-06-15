@@ -93,9 +93,9 @@ namespace Moonfish.Graphics
         {
             foreach ( var item in _objectInstances.Select( x => x.Value ) )
             {
-                for ( int index = 0; index < item.InstanceWorldMatrices.Count; index++ )
+                for ( int index = 0; index < item.InstanceBasisMatrices.Count; index++ )
                 {
-                    var instanceWorldMatrix = item.InstanceWorldMatrices[ index ];
+                    var instanceWorldMatrix = item.GetInstanceMatrix(index);
 
                     CollisionObject collisionObject = new ClickableCollisionObject( );
                     collisionObject.CollisionShape =
@@ -112,7 +112,7 @@ namespace Moonfish.Graphics
 
         public void LoadScenario( CacheStream map )
         {
-            var ident = map.Index.Select( ( TagClass ) "scnr", "" ).First( ).Identifier;
+            var ident = map.Index.Where( ( TagClass ) "scnr", "" ).First( ).Identifier;
             _scenario = ( ScenarioBlock ) map.Deserialize( ident );
 
             var scenarioStructureBspReferenceBlock = _scenario.StructureBSPs.First();
@@ -148,7 +148,7 @@ namespace Moonfish.Graphics
             }
             foreach ( var item in Level.InstancedGeometriesDefinitions )
             {
-                InstancedGeometryObjects.Add( new RenderObject( item ) );
+                    InstancedGeometryObjects.Add(new RenderObject(item));
             }
             ProgramManager.LoadMaterials( Level.Materials, cacheStream );
         }
@@ -365,13 +365,18 @@ namespace Moonfish.Graphics
             }
         }
 
-        public void AddInstance( TagIdent ident, out int instanceIdent, out ScenarioObject instanceScenarioObject )
+        public void AddScenarioObject( TagIdent ident, ScenarioObject scenarioObject )
         {
-            instanceScenarioObject = this[ident];
-            var instanceWorldMatrix = Matrix4.Identity;
-            instanceIdent = instanceScenarioObject.InstanceWorldMatrices.Count;
+            Add( ident, scenarioObject );
+        }
 
-            instanceScenarioObject.InstanceWorldMatrices.Add(instanceWorldMatrix);
+        public void AddInstance( TagIdent ident, out int instanceIdent, out ScenarioObject instanceScenarioObject, Matrix4 instanceWorldMatrix = new Matrix4() )
+        {
+            instanceWorldMatrix = instanceWorldMatrix == Matrix4.Zero ? Matrix4.Identity : instanceWorldMatrix;
+            instanceScenarioObject = this[ident];
+            instanceIdent = instanceScenarioObject.InstanceBasisMatrices.Count;
+
+            instanceScenarioObject.AddInstance(instanceWorldMatrix);
 
             CollisionObject collisionObject = new ClickableCollisionObject();
             collisionObject.CollisionShape =
@@ -382,6 +387,11 @@ namespace Moonfish.Graphics
             collisionObject.UserIndex = instanceIdent;
             collisionObject.UserObject = instanceScenarioObject;
             Collision.World.AddCollisionObject(collisionObject);
+        }
+
+        public bool Contains( TagIdent ident )
+        {
+            return _objectInstances.ContainsKey( ident );
         }
     }
 }

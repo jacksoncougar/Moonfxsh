@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using BulletSharp;
 using OpenTK;
 using OpenTK.Input;
 using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
@@ -173,6 +174,24 @@ namespace Moonfish.Graphics
         private void viewport_ProjectionChanged( object sender, MatrixChangedEventArgs e )
         {
             CalculateViewProjectionMatrix( );
+        }
+
+        public void LookAt(object selectedObject )
+        {
+            int instance;
+            var selectedScenarioObject = DynamicScene.GetSelectedScenarioInstance( selectedObject, out instance );
+            if (selectedScenarioObject == null) return;
+            _panTrack.Position = selectedScenarioObject.GetInstanceMatrix( instance ).ExtractTranslation( );
+        }
+
+        public void ZoomTo( object selectedObject )
+        {
+            int instance;
+            var selectedScenarioObject = DynamicScene.GetSelectedScenarioInstance(selectedObject, out instance);
+            if (selectedScenarioObject == null) return;
+            _panTrack.Position = selectedScenarioObject.GetInstanceMatrix(instance).ExtractTranslation();
+            var length = selectedScenarioObject.RenderModel.CompressionInfo[0].ToHalfExtents().Length * 2.5f;
+            _zoomTrack.Position = _zoomTrack.Forward * length;
         }
     }
 

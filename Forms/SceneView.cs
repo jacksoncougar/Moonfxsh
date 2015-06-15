@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Moonfish.Cache;
 using Moonfish.Graphics;
+using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using OpenTK;
 using OpenTK.Graphics;
@@ -45,12 +46,19 @@ namespace Moonfish.Forms
             _glControl1.MouseMove += Scene.Camera.OnMouseMove;
             _glControl1.MouseUp += Scene.Camera.OnMouseUp;
             _glControl1.MouseCaptureChanged += Scene.Camera.OnMouseCaptureChanged;
+            _glControl1.KeyDown +=
+                delegate( object sender1, KeyEventArgs e1 )
+                {
+                    if ( e1.KeyCode == Keys.X )
+                        Scene.Camera.LookAt( Scene.SelectedObject );
+                    if ( e1.KeyCode == Keys.Z )
+                        Scene.Camera.ZoomTo( Scene.SelectedObject );
+                };
 
             _glControl1.MouseDown += Scene.OnMouseDown;
             _glControl1.MouseMove += Scene.OnMouseMove;
             _glControl1.MouseUp += Scene.OnMouseUp;
             _glControl1.MouseClick += Scene.OnMouseClick;
-            _glControl1.KeyDown += Scene.caster.OnKeyDown;
 
             Scene.ObjectManager.ProgramManager = Scene.ProgramManager;
             Scene.ObjectManager.Collision = Scene.CollisionManager;
@@ -145,10 +153,26 @@ namespace Moonfish.Forms
         {
             int instanceIdent;
             ScenarioObject instanceScenarioObject;
-            Scene.ObjectManager.AddInstance( ident, out instanceIdent, out instanceScenarioObject );
+            if(Scene.ObjectManager.Contains(ident))
+            Scene.ObjectManager.AddInstance( ident, out instanceIdent, out instanceScenarioObject, Matrix4.CreateTranslation( Scene.CurrentMouseWorldPosition ) );
+            else
+            {
+                var objectBlock  = (ObjectBlock)_cacheStream.Deserialize( ident );
+                var modelBlock = objectBlock.Model.Get<ModelBlock>( );
+                if ( modelBlock == null ) return;
+                instanceScenarioObject = new ScenarioObject( modelBlock );
+                instanceScenarioObject.AssignInstanceMatrices(new Matrix4[0]);
+                Scene.ObjectManager.Add(ident, instanceScenarioObject);
+                Scene.ObjectManager.AddInstance(ident, out instanceIdent, out instanceScenarioObject, Matrix4.CreateTranslation(Scene.CurrentMouseWorldPosition));
+
+                var renderModel = instanceScenarioObject.Model.RenderModel.Get<RenderModelBlock>();
+                if (renderModel != null)
+                    Scene.ProgramManager.LoadMaterials(renderModel.Materials, _cacheStream);
+            }
+            
             var collisionObject =
                 Scene.CollisionManager.World.CollisionObjectArray.First(x => x.UserIndex == instanceIdent && x.UserObject == instanceScenarioObject);
-            Scene.SelectedObject( collisionObject );
+            Scene.SelectObject( collisionObject );
         }
     }
 }

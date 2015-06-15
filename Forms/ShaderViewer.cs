@@ -72,7 +72,7 @@ namespace Moonfish.Graphics
             resourceMaps.ForEach(x => Halo2.LoadResource(new CacheStream(x)));
             Map = new CacheStream(fileName);
 
-            var ident = Map.Index.Select((TagClass)"hlmt", "masterchief").First().Identifier;
+            var ident = Map.Index.Where((TagClass)"hlmt", "masterchief").First().Identifier;
             Map.Deserialize(ident);
             var model = (ModelBlock) Map.Deserialize(ident);
             int width = 1, height = 1;

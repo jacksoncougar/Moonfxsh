@@ -64,51 +64,73 @@ namespace Moonfish.Graphics
         {
             foreach (var cluster in structureBSP.Clusters)
             {
-                var count = cluster.ClusterData[0].Section.VertexBuffers[0].VertexBuffer.Data.Length / 12;
-                var coordinates = new Vector3[count];
-                var normals = new Vector3[count];
-                var tangents = new Vector3[count];
-                var bitangents = new Vector3[count];
-
-                for (var i = 0; i < count; ++i)
-                {
-                    var data = cluster.ClusterData[0].Section.VertexBuffers[0].VertexBuffer.Data;
-                    coordinates[i] = new Vector3(
-                        BitConverter.ToSingle(data, i*12 + 0),
-                        BitConverter.ToSingle(data, i*12 + 4),
-                        BitConverter.ToSingle(data, i*12 + 8));
-                }
-                var globalGeometrySectionVertexBufferBlock = cluster.ClusterData[0].Section.VertexBuffers.Single(x => x.VertexBuffer.Type == VertexAttributeType.TangentSpaceUnitVectorsCompressed);
-                var vectorData = globalGeometrySectionVertexBufferBlock.VertexBuffer.Data;
-                int stride = globalGeometrySectionVertexBufferBlock.VertexBuffer.Type.GetSize( );
-
-                vectorData = Mesh.UnpackNormals( vectorData, VertexAttributeType.TangentSpaceUnitVectorsCompressed, ref stride );
-                for (var i = 0; i < count; ++i)
-                {
-                    normals[i] = new Vector3(
-                        BitConverter.ToSingle(vectorData, i * stride + 0),
-                        BitConverter.ToSingle(vectorData, i * stride + 4),
-                        BitConverter.ToSingle(vectorData, i * stride + 8));
-                    tangents[i] = new Vector3(
-                        BitConverter.ToSingle(vectorData, i * stride + 12),
-                        BitConverter.ToSingle(vectorData, i * stride + 16),
-                        BitConverter.ToSingle(vectorData, i * stride + 20));
-                    bitangents[i] = new Vector3(
-                        BitConverter.ToSingle(vectorData, i * stride + 24),
-                        BitConverter.ToSingle(vectorData, i * stride + 28),
-                        BitConverter.ToSingle(vectorData, i * stride + 32));
-                }
-
-                var indices = cluster.ClusterData[ 0 ].Section.StripIndices.Select( x =>  (int)x.Index ).ToArray( );
-                
-                var collisionObject = new CollisionObject
-                {
-                    CollisionShape = new BvhTriangleMeshShape(new InfoTriangleIndexVertexArray(coordinates, normals, tangents, bitangents, indices), true, true),
-                    CollisionFlags = CollisionFlags.StaticObject,
-                };
-
-                World.AddCollisionObject(collisionObject, (short)CollisionGroup.Level, (short)(CollisionGroup.Objects));
+                var globalGeometrySectionStructBlock = cluster.ClusterData[ 0 ].Section;
+                GenerateBvhCollisionObjectFromMesh( globalGeometrySectionStructBlock );
             }
+            foreach ( var structureBspInstancedGeometryInstancesBlock in structureBSP.InstancedGeometryInstances )
+            {
+                var structureBspInstancedGeometryDefinitionBlock = structureBSP.InstancedGeometriesDefinitions[structureBspInstancedGeometryInstancesBlock.InstanceDefinition];
+                if ( structureBspInstancedGeometryDefinitionBlock.RenderInfo.RenderData.Length < 1 ) continue;
+
+                var globalGeometrySectionStructBlock = structureBspInstancedGeometryDefinitionBlock.RenderInfo.RenderData[0].Section;
+                GenerateBvhCollisionObjectFromMesh(globalGeometrySectionStructBlock, structureBspInstancedGeometryInstancesBlock.WorldMatrix);
+            }
+        }
+
+        private void GenerateBvhCollisionObjectFromMesh(GlobalGeometrySectionStructBlock globalGeometrySectionStructBlock, Matrix4 instanceWorldMatrix = new Matrix4())
+        {
+            instanceWorldMatrix = instanceWorldMatrix == Matrix4.Zero
+                ? Matrix4.Identity
+                : instanceWorldMatrix;
+
+            var count = globalGeometrySectionStructBlock.VertexBuffers[ 0 ].VertexBuffer.Data.Length / 12;
+            var coordinates = new Vector3[count];
+            var normals = new Vector3[count];
+            var tangents = new Vector3[count];
+            var bitangents = new Vector3[count];
+
+            for ( var i = 0; i < count; ++i )
+            {
+                var data = globalGeometrySectionStructBlock.VertexBuffers[ 0 ].VertexBuffer.Data;
+                coordinates[ i ] = Vector3.TransformPosition( new Vector3(
+                    BitConverter.ToSingle( data, i * 12 + 0 ),
+                    BitConverter.ToSingle( data, i * 12 + 4 ),
+                    BitConverter.ToSingle( data, i * 12 + 8 )), instanceWorldMatrix );
+            }
+            var globalGeometrySectionVertexBufferBlock =
+                globalGeometrySectionStructBlock.VertexBuffers.Single(
+                    x => x.VertexBuffer.Type == VertexAttributeType.TangentSpaceUnitVectorsCompressed );
+            var vectorData = globalGeometrySectionVertexBufferBlock.VertexBuffer.Data;
+            int stride = globalGeometrySectionVertexBufferBlock.VertexBuffer.Type.GetSize( );
+
+            vectorData = Mesh.UnpackNormals( vectorData, VertexAttributeType.TangentSpaceUnitVectorsCompressed, ref stride );
+            for ( var i = 0; i < count; ++i )
+            {
+                normals[ i ] = new Vector3(
+                    BitConverter.ToSingle( vectorData, i * stride + 0 ),
+                    BitConverter.ToSingle( vectorData, i * stride + 4 ),
+                    BitConverter.ToSingle( vectorData, i * stride + 8 ) );
+                tangents[ i ] = new Vector3(
+                    BitConverter.ToSingle( vectorData, i * stride + 12 ),
+                    BitConverter.ToSingle( vectorData, i * stride + 16 ),
+                    BitConverter.ToSingle( vectorData, i * stride + 20 ) );
+                bitangents[ i ] = new Vector3(
+                    BitConverter.ToSingle( vectorData, i * stride + 24 ),
+                    BitConverter.ToSingle( vectorData, i * stride + 28 ),
+                    BitConverter.ToSingle( vectorData, i * stride + 32 ) );
+            }
+
+            var indices = globalGeometrySectionStructBlock.StripIndices.Select( x => ( int ) x.Index ).ToArray( );
+
+            var collisionObject = new CollisionObject
+            {
+                CollisionShape =
+                    new BvhTriangleMeshShape(
+                        new InfoTriangleIndexVertexArray( coordinates, normals, tangents, bitangents, indices ), true, true ),
+                CollisionFlags = CollisionFlags.StaticObject
+            };
+
+            World.AddCollisionObject( collisionObject, ( short ) CollisionGroup.Level, ( short ) ( CollisionGroup.Objects ) );
         }
     }
 

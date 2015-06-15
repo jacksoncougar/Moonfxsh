@@ -23,7 +23,7 @@ namespace Moonfish.Graphics
             RenderNodes = 1 << 2
         }
 
-        private readonly Matrix4 _collisionSpaceMatrix;
+        public readonly Matrix4 collisionSpaceMatrix;
         private readonly TriangleBatch _markersBatch;
         private readonly TriangleBatch _nodesBatch;
         private Matrix4 _worldMatrix;
@@ -82,7 +82,7 @@ namespace Moonfish.Graphics
                 };
             }
 
-            _collisionSpaceMatrix =
+            collisionSpaceMatrix =
                 Matrix4.CreateTranslation(
                     RenderModel.CompressionInfo[ 0 ].ToObjectMatrix( ).ExtractTranslation( ) );
             _worldMatrix = Matrix4.Identity;
@@ -97,8 +97,16 @@ namespace Moonfish.Graphics
 
         public void AssignInstanceMatrices( Matrix4[] instanceWorldMatrices )
         {
-            InstanceWorldMatrices = new List<Matrix4>(instanceWorldMatrices);
-            InstanceBasisMatrices = new List<Matrix4>(Enumerable.Repeat( Matrix4.Identity, instanceWorldMatrices.Length ));
+            new List<Matrix4>( instanceWorldMatrices );
+            InstanceBasisMatrices =
+                new List<Matrix4>( Enumerable.Repeat( Matrix4.Identity, instanceWorldMatrices.Length ) );
+            InstanceRotations = new List<Quaternion>( instanceWorldMatrices.Length );
+            InstancePositions = new List<Vector3>( instanceWorldMatrices.Length );
+            foreach ( var instanceWorldMatrix in instanceWorldMatrices )
+            {
+                InstanceRotations.Add( instanceWorldMatrix.ExtractRotation( ) );
+                InstancePositions.Add( instanceWorldMatrix.ExtractTranslation( ) );
+            }
             RenderBatches = GetRenderBatches( );
         }
 
@@ -207,7 +215,7 @@ namespace Moonfish.Graphics
             set
             {
                 _worldMatrix = value;
-                CollisionObject.WorldTransform = _collisionSpaceMatrix * value;
+                CollisionObject.WorldTransform = collisionSpaceMatrix * value;
             }
         }
 
@@ -315,15 +323,15 @@ namespace Moonfish.Graphics
                     batch.AssignUniform("TexcoordRangeUniform", texcoordRange);
                     batch.AssignUniform("WorldMatrixUniform", WorldMatrix);
 
-                    if (InstanceWorldMatrices != null && InstanceWorldMatrices.Count > 0)
+                    if (InstanceBasisMatrices != null && InstanceBasisMatrices.Count > 0)
                     {
                         using (batch.BatchObject.Begin())
                         {
 
                             batch.BatchObject.BindBuffer(BufferTarget.ArrayBuffer,
                                 batch.BatchObject.GetOrGenerateBuffer("instance data"));
-                            batch.InstanceCount = InstanceWorldMatrices.Count;
-                            batch.BatchObject.BufferVertexAttributeData(InstanceWorldMatrices.Zip(InstanceBasisMatrices, (worldMatrix, basisMatrix) => worldMatrix * basisMatrix).ToArray(  ), BufferUsageHint.StaticDraw);
+                            batch.InstanceCount = InstanceBasisMatrices.Count;
+                            batch.BatchObject.BufferVertexAttributeData(GetInstanceMatrices(), BufferUsageHint.StreamDraw);
 
                             var stride = sizeof(Matrix4);
                             var sizeOfVector4 = sizeof(Vector4);
@@ -348,10 +356,26 @@ namespace Moonfish.Graphics
             return collectionBatches;
         }
 
+        private Matrix4[] GetInstanceMatrices( )
+        {
+            Matrix4[] matrices = new Matrix4[InstanceBasisMatrices.Count];
+            for ( int i = 0; i < matrices.Length; i++ )
+            {
+                matrices[ i ] = GetInstanceMatrix( i );
+            }
+            return matrices;
+        }
+
+        public Matrix4 GetInstanceMatrix( int instance )
+        {
+            return InstanceBasisMatrices[ instance ] * Matrix4.CreateFromQuaternion( InstanceRotations[ instance ] ) *
+                   Matrix4.CreateTranslation( InstancePositions[ instance ] );
+        }
 
 
         public List<Matrix4> InstanceBasisMatrices { get; set; }
-        public List<Matrix4> InstanceWorldMatrices { get; set; }
+        public List<Quaternion> InstanceRotations { get; set; }
+        public List<Vector3> InstancePositions { get; set; }
 
         private IEnumerable<RenderBatch> _RenderBatches( )
         {
@@ -398,19 +422,39 @@ namespace Moonfish.Graphics
             Nodes.SetWorldMatrix( nodeBlock, value );
         }
 
-        public void AssignWorldTransform( Matrix4 worldTransformMatrix4 )
-        {
-            _worldMatrix = _collisionSpaceMatrix.Inverted() * worldTransformMatrix4;
-        }
-
-        internal void AssignInstanceWorldTransform(int instance, Matrix4 worldMatrix4)
-        {
-            InstanceWorldMatrices[ instance ] = _collisionSpaceMatrix.Inverted( ) * worldMatrix4;
-        }
-
         public void Update( )
         {
             RenderBatches = GetRenderBatches();
+        }
+
+        public void AssignInstanceBasisTransform(int instance, Matrix4 basisMatrix4)
+        {
+            InstanceBasisMatrices[instance] = basisMatrix4;
+        }
+
+        public void AddInstance( Matrix4 instanceWorldMatrix )
+        {
+            InstanceBasisMatrices.Add( Matrix4.Identity );
+            InstancePositions.Add( instanceWorldMatrix.ExtractTranslation(  ) );
+            InstanceRotations.Add( instanceWorldMatrix.ExtractRotation(  ) );
+        }
+    }
+
+    class ScenarioObjectAxisAlignedWrapper
+    {
+        private readonly ScenarioObject _scenarioObject;
+        private float _axisAlignedRotation;
+
+        public void SetAxisAlignedRotation(int instance, float value)
+        {
+                _axisAlignedRotation = value;
+                var upAxis = _scenarioObject.InstanceBasisMatrices[instance].Row2.Xyz.Normalized();
+                _scenarioObject.InstanceRotations[instance] = Quaternion.FromAxisAngle(upAxis, _axisAlignedRotation);
+        }
+
+        public ScenarioObjectAxisAlignedWrapper( ScenarioObject scenarioObject )
+        {
+            _scenarioObject = scenarioObject;
         }
     }
 }

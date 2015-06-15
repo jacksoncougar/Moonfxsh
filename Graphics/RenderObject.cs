@@ -7,7 +7,7 @@ namespace Moonfish.Graphics
 {
     public class RenderObject
     {
-        protected List<Mesh> sectionBuffers;
+        public List<Mesh> sectionBuffers;
 
         public RenderObject( )
         {
@@ -23,7 +23,9 @@ namespace Moonfish.Graphics
         public RenderObject( StructureBspInstancedGeometryDefinitionBlock item )
         {
             item.RenderInfo.LoadRenderData( );
-            sectionBuffers = new List<Mesh>( new[] {new Mesh( item.RenderInfo.RenderData[ 0 ].Section, null )} );
+            sectionBuffers = item.RenderInfo.RenderData.Length > 0
+                ? new List<Mesh>( new[] {new Mesh( item.RenderInfo.RenderData[ 0 ].Section, null )} )
+                : new List<Mesh>( );
         }
 
         public IEnumerable<RenderBatch> Batches

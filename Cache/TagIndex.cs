@@ -95,7 +95,7 @@ namespace Moonfish.Cache
                 select item;
         }
 
-        public const int VirtualBaseAddress = -2147086368;
+        public const uint VirtualBaseAddress = 0x80061000;
 
         public void SerializeTo(Stream outputStream)
         {
@@ -105,7 +105,7 @@ namespace Moonfish.Cache
             var sizeOfTagDatumArray = _data.Count * sizeOfTagDatum;
 
             // Create buffer and writer
-            var buffer = new byte[GetSize()];
+            var buffer = new byte[GetSize() + HeaderSize];
             var stream =
                 new VirtualStream(buffer, VirtualBaseAddress);
             var binaryWriter = new BinaryWriter(stream);
@@ -184,14 +184,13 @@ namespace Moonfish.Cache
             return newDatum;
         }
 
-        public int GetSize()
+        public int GetSize( )
         {
             return
                 Padding.Align(
-                    HeaderSize
-                    + classArrayCount*TagClassHeirarchy.SizeInBytes
-                    + datumArrayCount*TagDatum.SizeInBytes,
-                    512);
+                    _classes.Count * TagClassHeirarchy.SizeInBytes
+                    + _data.Count * TagDatum.SizeInBytes,
+                    512 );
         }
     }
 }

@@ -206,8 +206,7 @@ namespace Moonfish.Cache
             
 
 #if DEBUG
-            var v = new Validator();
-            v.Validate(tagDatum, stream);
+            new Validator().Validate(tagDatum, stream);
 #endif
 
             //Allocate(tagDatum.Identifier, serializedTagData.Length);

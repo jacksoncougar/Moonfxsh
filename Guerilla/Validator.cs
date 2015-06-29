@@ -357,8 +357,8 @@ namespace Moonfish.Guerilla
                             if (mapStream != null)
                             {
                                 error = true;
-                                OnWriteMessage(string.Format("{2}: Expected address \"{0}\"  - actually was \"{1}\"",
-                                    alignedAddress, pointer.StartAddress, info.name));
+                                OnWriteMessage(string.Format("{2}: Expected address \"{0}\"  - actually was \"{1}\" delta \"{3}\"",
+                                    (uint)alignedAddress, (uint)pointer.StartAddress, info.name, alignedAddress - pointer.StartAddress));
                             }
                         }
                         address = pointer.StartAddress + pointer.PointedSize;
@@ -391,8 +391,8 @@ namespace Moonfish.Guerilla
                 }
                 else if (!IsValid(pointer))
                 {
-                    error = true;
-                    OnWriteMessage(string.Format("INVALID POINTER {1} -> {0}", info.name, pointer));
+                    //error = true;
+                    //OnWriteMessage(string.Format("INVALID POINTER {1} -> {0}", info.name, pointer));
                     return;
                 }
                 else

@@ -94,7 +94,7 @@ namespace Moonfish.Cache
 
             //  process meta table
 
-            var metaDataAddress = VirtualBaseAddress + Index.GetSize() + allocationSize;
+            var metaDataAddress = VirtualBaseAddress + Index.GetSize() + TagIndexBase.HeaderSize + allocationSize;
             int metaDataLength;
             CopyMeta(outputStream, metaDataAddress, out metaDataLength);
 
@@ -134,8 +134,17 @@ namespace Moonfish.Cache
                 }
 
                 var data = Deserialize(datum.Identifier);
-                var dataAddress = buffer.Align(data.Alignment);
+                var dataAddress = (int)buffer.Position;
+
+                Padding.AssertIsAligned( 4, buffer );
+
+                if ( datum.Path.Contains(@"objects\vehicles\c_turret_ap\garbage\turret\turret" ) && datum.Class == TagClass.Phmo )
+                {
+                    
+                }
+
                 buffer.Write(data);
+                buffer.Align( );
                 var length = (int) buffer.Position - dataAddress;
 
                 datum.Length = length;
@@ -305,7 +314,7 @@ namespace Moonfish.Cache
                 //  of the first valid memory after the index
                 //
                 //  note: the virtual stream is used to generate valid pointer addressess
-                var allocationAddress = -2147086368 + Index.GetSize();
+                var allocationAddress = VirtualBaseAddress + Index.GetSize() +  TagIndexBase.HeaderSize;
                 var virtualMemoryStream = new VirtualStream(buffer, allocationAddress);
 
                 var sbspReference = scenarioStructureBspReferenceBlock.StructureBSP;
@@ -539,7 +548,7 @@ namespace Moonfish.Cache
             this.BufferedCopyBytesTo(size, outputStream);
         }
 
-        private static CacheStream Save(CacheStream map)
+        public static CacheStream Save(CacheStream map)
         {
             var filename = Path.Combine(Local.MapsDirectory, @"temp.map");
             FileStream copyStream = new FileStream(filename, FileMode.Create,
@@ -552,6 +561,23 @@ namespace Moonfish.Cache
             File.Delete(map.Name);
             File.Move(filename, map.Name);
             return new CacheStream(map.Name);
+        }
+
+        internal static CacheStream SaveAs(CacheStream map, string destFileName)
+        {
+            var filename = Path.Combine(Local.MapsDirectory, @"temp.map");
+            FileStream copyStream = new FileStream(filename, FileMode.Create,
+                FileAccess.Write, FileShare.ReadWrite, 4 * 1024, FileOptions.SequentialScan);
+            
+            using ( copyStream )
+            using (map)
+            {
+                map.SaveTo(copyStream);
+                map.Sign();
+            }
+            if(File.Exists( destFileName ))File.Delete( destFileName );
+            File.Move(filename, destFileName);
+            return new CacheStream(destFileName);
         }
     }
 }

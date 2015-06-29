@@ -19,6 +19,13 @@ namespace Moonfish.Cache
             VirtualOrigin = virtualOrigin;
         }
 
+        public VirtualStream(byte[] buffer, uint virtualOrigin)
+            : base(
+                buffer)
+        {
+            VirtualOrigin = (int)virtualOrigin;
+        }
+
         public VirtualStream(int virtualOrigin)
         {
             VirtualOrigin = virtualOrigin;

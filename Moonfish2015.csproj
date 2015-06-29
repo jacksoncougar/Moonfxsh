@@ -1245,6 +1245,7 @@
     <Compile Include="Guerilla\Tags\GlobalWaterDefinitionsBlock.cs" />
     <Compile Include="Guerilla\Tags\LightmapGeometrySectionBlock.cs" />
     <Compile Include="Guerilla\Tags\LightmapVertexBufferBucketBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\MaterialsBlock.cs" />
     <Compile Include="Guerilla\Tags\MoonfishXboxAnimationRawBlock.cs" />
     <Compile Include="Guerilla\Tags\ParticleModelBlock.cs" />
     <Compile Include="Guerilla\Tags\PrtInfoBlock.cs" />

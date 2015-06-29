@@ -21,7 +21,7 @@ namespace Moonfish.Forms
 
         public MainForm()
         {
-            _cacheStream = CacheStream.Open( Path.Combine( Local.MapsDirectory, "zanzibar.map" ) );
+            _cacheStream = CacheStream.Open( Path.Combine( Local.MapsDirectory, "headlong.map" ) );
             InitializeComponent();
             var sceneView = new SceneView( _cacheStream );
             sceneView.Show(dockPanel1, DockState.Document);

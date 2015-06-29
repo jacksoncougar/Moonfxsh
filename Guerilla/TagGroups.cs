@@ -416,6 +416,9 @@ namespace Moonfish.Guerilla
                 }
                 switch (name)
                 {
+                    case "materials_block":
+                        LatestFieldSet = FieldSets[0];
+                        break;
                     case "hud_globals_block":
                         LatestFieldSet = FieldSets[0];
                         break;

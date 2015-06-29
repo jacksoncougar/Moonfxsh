@@ -80,7 +80,7 @@ namespace Moonfish.Forms
             Scene.RenderFrame();
         }
 
-        public void HandleApplicationIdle( object sender, EventArgs e )
+        private void HandleApplicationIdle( object sender, EventArgs e )
         {
             while ( IsApplicationIdle( ) )
             {

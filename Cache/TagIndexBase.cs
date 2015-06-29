@@ -5,7 +5,7 @@ namespace Moonfish.Cache
 {
     public class TagIndexBase
     {
-        protected const int HeaderSize = 32;
+        protected internal const int HeaderSize = 32;
 
         public int classArrayAddress;
         public int classArrayCount;
@@ -39,7 +39,7 @@ namespace Moonfish.Cache
             binaryWriter.Write(datumArrayAddress);
             binaryWriter.Write(ScenarioIdent);
             binaryWriter.Write(GlobalsIdent);
-            binaryWriter.Write(_noodleValue);
+            binaryWriter.Write((int)0);
             binaryWriter.Write(datumArrayCount);
             binaryWriter.Write(fourCC);
             return stream.GetBuffer();

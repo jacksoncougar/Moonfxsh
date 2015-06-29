@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -103,14 +104,15 @@ namespace Moonfish.Guerilla
                     var offset = item.Pointer.StartAddress - BaseStream.Position;
                     if (offset < 0)
                     {
-                        }
+                        throw new Exception( "That breaks the maps" );
+                    }
                     var cacheStream = BaseStream as CacheStream;
 
                     Debug.WriteLine(@"type: {0}, local-offset: {1}, file-address: {2}",
                         item.ReferenceField.GetType().Name(), offset,
                         cacheStream != null ? cacheStream.GetFilePosition() : BaseStream.Position);
 #endif
-                    BaseStream.Seek(item.Pointer.StartAddress);
+                    var pos = BaseStream.Seek(item.Pointer.StartAddress);
                 }
 
                 var dataQueueItem = item as ByteDataQueueItem;

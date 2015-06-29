@@ -70,10 +70,10 @@ namespace Moonfish.Guerilla
             if (tag.parentGroupTag != @null)
             {
                 fields = new List<tag_field>();
-                var parent = h2Tags.Where(x => x.groupTag == tag.parentGroupTag).Single();
+                var parent = h2Tags.Single(x => x.groupTag == tag.parentGroupTag);
                 if (parent.parentGroupTag != @null)
                 {
-                    var @base = h2Tags.Where(x => x.groupTag == parent.parentGroupTag).Single();
+                    var @base = h2Tags.Single(x => x.groupTag == parent.parentGroupTag);
                     fields.AddRange(ExtractFields(h2Tags, reader, @base));
                 }
                 fields.AddRange(ExtractFields(h2Tags, reader, parent));

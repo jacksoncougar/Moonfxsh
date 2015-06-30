@@ -678,6 +678,7 @@
     <Compile Include="Guerilla\Tags.Generated\PersistentBackgroundAnimationBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\PhantomsBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\PhantomTypesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PhmoMaterialsBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\PhysicsBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\PhysicsModelBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\PhysicsModelConstraintEdgeConstraintBlock.generated.cs" />

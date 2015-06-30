@@ -138,11 +138,6 @@ namespace Moonfish.Cache
 
                 Padding.AssertIsAligned( 4, buffer );
 
-                if ( datum.Path.Contains(@"objects\vehicles\c_turret_ap\garbage\turret\turret" ) && datum.Class == TagClass.Phmo )
-                {
-                    
-                }
-
                 buffer.Write(data);
                 buffer.Align( );
                 var length = (int) buffer.Position - dataAddress;

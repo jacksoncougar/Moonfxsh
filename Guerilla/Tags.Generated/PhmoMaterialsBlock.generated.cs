@@ -16,16 +16,17 @@ namespace Moonfish.Guerilla.Tags
     using System.Collections.Generic;
     using System.Linq;
     
-    public partial class ListShapesBlock : GuerillaBlock, IWriteQueueable
+    public partial class PhmoMaterialsBlock : GuerillaBlock, IWriteQueueable
     {
-        public ShapeTypeEnum ShapeType;
-        public Moonfish.Tags.ShortBlockIndex2 Shape;
-        public int CollisionFilter;
+        public Moonfish.Tags.StringIdent Name;
+        public Moonfish.Tags.StringIdent GlobalMaterialName;
+        public Moonfish.Tags.ShortBlockIndex1 PhantomType;
+        public Flags PhmoMaterialsFlags;
         public override int SerializedSize
         {
             get
             {
-                return 8;
+                return 12;
             }
         }
         public override int Alignment
@@ -38,9 +39,10 @@ namespace Moonfish.Guerilla.Tags
         public override System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> ReadFields(System.IO.BinaryReader binaryReader)
         {
             System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue = new System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer>(base.ReadFields(binaryReader));
-            this.ShapeType = ((ShapeTypeEnum)(binaryReader.ReadInt16()));
-            this.Shape = binaryReader.ReadShortBlockIndex2();
-            this.CollisionFilter = binaryReader.ReadInt32();
+            this.Name = binaryReader.ReadStringID();
+            this.GlobalMaterialName = binaryReader.ReadStringID();
+            this.PhantomType = binaryReader.ReadShortBlockIndex1();
+            this.PhmoMaterialsFlags = ((Flags)(binaryReader.ReadInt16()));
             return pointerQueue;
         }
         public override void ReadInstances(System.IO.BinaryReader binaryReader, System.Collections.Generic.Queue<Moonfish.Tags.BlamPointer> pointerQueue)
@@ -54,28 +56,16 @@ namespace Moonfish.Guerilla.Tags
         public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
         {
             base.Write_(queueableBinaryWriter);
-            queueableBinaryWriter.Write(((short)(this.ShapeType)));
-            queueableBinaryWriter.Write(this.Shape);
-            queueableBinaryWriter.Write(this.CollisionFilter);
+            queueableBinaryWriter.Write(this.Name);
+            queueableBinaryWriter.Write(this.GlobalMaterialName);
+            queueableBinaryWriter.Write(this.PhantomType);
+            queueableBinaryWriter.Write(((short)(this.PhmoMaterialsFlags)));
         }
-        public enum ShapeTypeEnum : short
+        [System.FlagsAttribute()]
+        public enum Flags : short
         {
-            Sphere = 0,
-            Pill = 1,
-            Box = 2,
-            Triangle = 3,
-            Polyhedron = 4,
-            MultiSphere = 5,
-            Unused0 = 6,
-            Unused1 = 7,
-            Unused2 = 8,
-            Unused3 = 9,
-            Unused4 = 10,
-            Unused5 = 11,
-            Unused6 = 12,
-            Unused7 = 13,
-            List = 14,
-            Mopp = 15,
+            None = 0,
+            DoesNotCollideWithFixedBodies = 1,
         }
     }
 }

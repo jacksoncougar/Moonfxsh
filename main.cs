@@ -27,6 +27,7 @@ namespace Moonfish
         [STAThread]
         private static void Main()
         {
+            //GuerillaCodeDom.GenerateGuerillaCode(TagClass.Phmo);
             CacheStream map = new CacheStream(Path.Combine(Local.MapsDirectory, "ascension.map"));
             foreach (var datum in map.Index)
             {

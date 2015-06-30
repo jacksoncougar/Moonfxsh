@@ -59,7 +59,7 @@ namespace Moonfish.Guerilla.Tags
         public override void QueueWrites(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
         {
             base.QueueWrites(queueableBinaryWriter);
-            queueableBinaryWriter.QueueWrite(this.moppCode);
+            queueableBinaryWriter.QueueWrite(this.moppCode, 16);
             queueableBinaryWriter.QueueWrite(this.BreakableSurfacesMoppCode);
             queueableBinaryWriter.QueueWrite(this.BreakableSurfaceKeyTable);
         }

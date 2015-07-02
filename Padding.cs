@@ -28,7 +28,7 @@ namespace Moonfish
         public static int TargetAlign(this Stream stream, long address, int alignment = 4)
         {
             var count = GetCount(address + stream.Length, alignment);
-            var bytes = GetBytes((int)count, "PADDING");
+            var bytes = GetBytes((int)count, "\0");
             return stream.CanWrite
                 ? new Func<int>(() =>
                 {
@@ -42,7 +42,7 @@ namespace Moonfish
         public static int Align(this Stream stream, int alignment = 4)
         {
             var count = GetCount(stream.Position, alignment);
-            var bytes = GetBytes((int) count, "PADDING");
+            var bytes = GetBytes((int) count, "\0");
             return stream.CanWrite
                 ? new Func<int>(() =>
                 {
@@ -54,8 +54,7 @@ namespace Moonfish
 
         public static int Align(long address, int alignment = 4)
         {
-            address += (int) GetCount(address, alignment);
-            return (int) address;
+            return (int)address + (int) GetCount(address, alignment);
         }
 
         internal static long GetCount(long address, long alignment = 4)

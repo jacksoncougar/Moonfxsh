@@ -22,6 +22,28 @@ namespace Moonfish.Cache
         public readonly List<VirtualMappedAddress> StructureMemoryBlocks;
         public readonly CacheHeader Header;
 
+        public static CacheStream Open(string fileName)
+        {
+            var directory = Path.GetDirectoryName(fileName);
+
+            if (directory != null)
+                LoadResourceMaps(directory);
+
+            return new CacheStream(fileName);
+        }
+
+        private static void LoadResourceMaps(string directory)
+        {
+            var maps = Directory.GetFiles(directory, "*.map", SearchOption.TopDirectoryOnly);
+            var resourceMaps = maps.GroupBy(
+                Halo2.CheckMapType
+                ).Where(x => x.Key == MapType.MainMenu
+                              || x.Key == MapType.Shared
+                              || x.Key == MapType.SinglePlayerShared)
+                .Select(g => g.First()).ToList();
+            resourceMaps.ForEach(x => Halo2.LoadResource(new CacheStream(x)));
+        }
+
         public CacheStream(string filename)
             : base(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 8*1024)  
         {
@@ -31,14 +53,14 @@ namespace Moonfish.Cache
             Header = CacheHeader.DeserializeFrom(this);
 
             base.Seek(Header.PathsInfo.PathTableAddress, SeekOrigin.Begin);
-            var paths = Encoding.UTF8.GetString(binaryReader.ReadBytes(Header.PathsInfo.PathTableLength - 1)).Split(char.MinValue);
+            var paths = Encoding.UTF8.GetString(binaryReader.ReadBytes(Header.PathsInfo.PathTableLength - 1)).Split(Char.MinValue);
 
             Halo2.Paths.Assign(paths);
 
             //STRINGS
 
             base.Seek(Header.StringsInfo.StringTableAddress, SeekOrigin.Begin);
-            Strings = Encoding.UTF8.GetString(binaryReader.ReadBytes(Header.StringsInfo.StringTableLength - 1)).Split(char.MinValue);
+            Strings = Encoding.UTF8.GetString(binaryReader.ReadBytes(Header.StringsInfo.StringTableLength - 1)).Split(Char.MinValue);
 
             Halo2.Strings.Assign(new List<string>(Strings));
 
@@ -177,12 +199,17 @@ namespace Moonfish.Cache
             var attribute = (TagClassAttribute) typeof (T).Attribute(typeof (TagClassAttribute));
             var tagDatum = Index.Add(attribute.TagClass, tagName, serializedTagData.Length, lastDatum.VirtualAddress);
 
+            _deserializedTagCache.Add(tagDatum.Identifier, item );
+
+            var paths = Index.Select( x => x.Path );
+            Halo2.Paths.Assign(paths);
+            
+
 #if DEBUG
-            var v = new Validator();
-            v.Validate(tagDatum, stream);
+            new Validator().Validate(tagDatum, stream);
 #endif
 
-            Allocate(tagDatum.Identifier, serializedTagData.Length);
+            //Allocate(tagDatum.Identifier, serializedTagData.Length);
         }
 
         private void Allocate(TagIdent ident, int size)

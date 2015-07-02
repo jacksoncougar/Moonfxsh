@@ -44,7 +44,7 @@ namespace Moonfish.Collision
             closestHitFraction = null;
             var numerator = -(Vector3.Dot(ray.Origin, this.Normal) + this.Distance);
             var denominator = (Vector3.Dot(ray.Direction, this.Normal));
-            if (Maths.NearlyEqual(numerator, 0) || Maths.NearlyEqual(denominator, 0)) return false;
+            if (numerator.NearlyEqual(0) || denominator.NearlyEqual( 0 )) return false;
             closestHitFraction = numerator/denominator;
             return true;
         }

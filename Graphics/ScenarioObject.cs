@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using BulletSharp;
+using Moonfish.Graphics.Input;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using OpenTK;
@@ -12,32 +13,6 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {
-    public interface IRenderable
-    {
-        void Render(IEnumerable<Program> shaderPasses);
-    }
-
-
-    public class ShaderReference
-    {
-        public enum ReferenceType
-        {
-            Halo2,
-            System
-        }
-
-        public int Ident;
-
-        public ShaderReference(ReferenceType type, int ident)
-        {
-            Type = type;
-            Ident = ident;
-        }
-
-        public ReferenceType Type { get; set; }
-    }
-
-
     public class ScenarioObject : RenderObject
     {
         [Flags]
@@ -48,66 +23,91 @@ namespace Moonfish.Graphics
             RenderNodes = 1 << 2
         }
 
-        private readonly Matrix4 _collisionSpaceMatrix;
+        public readonly Matrix4 collisionSpaceMatrix;
         private readonly TriangleBatch _markersBatch;
         private readonly TriangleBatch _nodesBatch;
         private Matrix4 _worldMatrix;
 
-        private ScenarioObject()
+        private ScenarioObject( )
         {
             ActivePermuation = StringIdent.Zero;
-            Nodes = new List<RenderModelNodeBlock>();
-            Flags = RenderFlags.RenderMarkers | RenderFlags.RenderMesh | RenderFlags.RenderNodes;
+            Nodes = new List<RenderModelNodeBlock>( );
+            Flags = RenderFlags.RenderMesh;
 
-            _nodesBatch = new TriangleBatch();
-            using (_nodesBatch.Begin())
+            _nodesBatch = new TriangleBatch( );
+            using ( _nodesBatch.Begin( ) )
             {
-                _nodesBatch.GenerateBuffer();
-                _nodesBatch.BindBuffer(BufferTarget.ArrayBuffer, _nodesBatch.BufferIdents.Last());
-                _nodesBatch.VertexAttribArray(0, 3, VertexAttribPointerType.Float);
-                _nodesBatch.GenerateBuffer();
-                _nodesBatch.BindBuffer(BufferTarget.ElementArrayBuffer, _nodesBatch.BufferIdents.Last());
+                _nodesBatch.GenerateBuffer( );
+                _nodesBatch.BindBuffer( BufferTarget.ArrayBuffer, _nodesBatch.BufferIdents.Last( ) );
+                _nodesBatch.VertexAttribArray( 0, 3, VertexAttribPointerType.Float );
+                _nodesBatch.GenerateBuffer( );
+                _nodesBatch.BindBuffer( BufferTarget.ElementArrayBuffer, _nodesBatch.BufferIdents.Last( ) );
             }
-            _markersBatch = new TriangleBatch();
-            using (_markersBatch.Begin())
+            _markersBatch = new TriangleBatch( );
+            using ( _markersBatch.Begin( ) )
             {
-                _markersBatch.GenerateBuffer();
-                _markersBatch.BindBuffer(BufferTarget.ArrayBuffer, _markersBatch.BufferIdents.Last());
-                _markersBatch.VertexAttribArray(0, 3, VertexAttribPointerType.Float);
-                _markersBatch.GenerateBuffer();
-                _markersBatch.BindBuffer(BufferTarget.ElementArrayBuffer, _markersBatch.BufferIdents.Last());
+                _markersBatch.GenerateBuffer( );
+                _markersBatch.BindBuffer( BufferTarget.ArrayBuffer, _markersBatch.BufferIdents.Last( ) );
+                _markersBatch.VertexAttribArray( 0, 3, VertexAttribPointerType.Float );
+                _markersBatch.GenerateBuffer( );
+                _markersBatch.BindBuffer( BufferTarget.ElementArrayBuffer, _markersBatch.BufferIdents.Last( ) );
             }
         }
 
-        public ScenarioObject(ModelBlock model)
-            : this()
+        public ScenarioObject( ModelBlock model )
+            : this(  )
         {
             Model = model;
 
-            var renderModel = (RenderModelBlock) model.RenderModel.Get();
-            if (renderModel == null) return;
+            RenderModel = ( RenderModelBlock ) model.RenderModel.Get( );
 
-            CollisionObject = new CollisionObject
+            if ( RenderModel == null )
             {
-                UserObject = this,
-                CollisionFlags = CollisionFlags.StaticObject,
-                CollisionShape = new BoxShape(renderModel.CompressionInfo[0].ToHalfExtents())
-            };
 
-            _collisionSpaceMatrix =
+                CollisionObject = new ClickableCollisionObject
+                {
+                    UserObject = this,
+                    CollisionFlags = CollisionFlags.StaticObject,
+                    CollisionShape = new BoxShape( 0 )
+                };
+                return;
+            }
+            else
+            {
+                CollisionObject = new ClickableCollisionObject
+                {
+                    UserObject = this,
+                    CollisionFlags = CollisionFlags.StaticObject,
+                    CollisionShape = new BoxShape( RenderModel.CompressionInfo[ 0 ].ToHalfExtents( ) )
+                };
+            }
+
+            collisionSpaceMatrix =
                 Matrix4.CreateTranslation(
-                    renderModel.CompressionInfo[0].ToObjectMatrix().ExtractTranslation());
+                    RenderModel.CompressionInfo[ 0 ].ToObjectMatrix( ).ExtractTranslation( ) );
             _worldMatrix = Matrix4.Identity;
 
-            foreach (var section in renderModel.Sections)
+            LoadSections(5);
+            RenderBatches = GetRenderBatches();
+
+            Nodes = new List<RenderModelNodeBlock>( RenderModel.Nodes );
+        }
+
+        public List<RenderBatch> RenderBatches { get; private set; }
+
+        public void AssignInstanceMatrices( Matrix4[] instanceWorldMatrices )
+        {
+            new List<Matrix4>( instanceWorldMatrices );
+            InstanceBasisMatrices =
+                new List<Matrix4>( Enumerable.Repeat( Matrix4.Identity, instanceWorldMatrices.Length ) );
+            InstanceRotations = new List<Quaternion>( instanceWorldMatrices.Length );
+            InstancePositions = new List<Vector3>( instanceWorldMatrices.Length );
+            foreach ( var instanceWorldMatrix in instanceWorldMatrices )
             {
-                var mesh = new Mesh(section.SectionData[0].Section, renderModel.CompressionInfo[0])
-                {
-                    SectionBlock = section
-                };
-                SectionBuffers.Add(mesh);
+                InstanceRotations.Add( instanceWorldMatrix.ExtractRotation( ) );
+                InstancePositions.Add( instanceWorldMatrix.ExtractTranslation( ) );
             }
-            Nodes = new List<RenderModelNodeBlock>(renderModel.Nodes);
+            RenderBatches = GetRenderBatches( );
         }
 
         public StringIdent ActivePermuation { get; set; }
@@ -116,30 +116,30 @@ namespace Moonfish.Graphics
         {
             get
             {
-                if (Flags.HasFlag(RenderFlags.RenderMesh))
-                    foreach (var renderBatch in RenderBatches()) yield return renderBatch;
-                if (Flags.HasFlag(RenderFlags.RenderMarkers))
+                if ( Flags.HasFlag( RenderFlags.RenderMesh ) )
+                    foreach ( var renderBatch in RenderBatches ) yield return renderBatch;
+                if ( Flags.HasFlag( RenderFlags.RenderMarkers ) )
                 {
-                    var renderModel = (RenderModelBlock)Model.RenderModel.Get();
-                    var markersEnumerator = renderModel.MarkerGroups.SelectMany(x => x.Markers).ToList();
+                    var renderModel = ( RenderModelBlock ) Model.RenderModel.Get( );
+                    var markersEnumerator = renderModel.MarkerGroups.SelectMany( x => x.Markers ).ToList( );
                     var elementIndices =
-                        Enumerable.Range(0, markersEnumerator.Count).Select(Convert.ToUInt16).ToArray();
+                        Enumerable.Range( 0, markersEnumerator.Count ).Select( Convert.ToUInt16 ).ToArray( );
 
-                    var positionData = new List<Vector3>();
-                    foreach (var marker in markersEnumerator)
+                    var positionData = new List<Vector3>( );
+                    foreach ( var marker in markersEnumerator )
                     {
                         var nodeIndex = marker.NodeIndex;
                         var translation = marker.Translation;
-                        var transformedPosition = Vector3.Transform(translation, Nodes.GetWorldMatrix(nodeIndex));
+                        var transformedPosition = Vector3.Transform( translation, Nodes.GetWorldMatrix( nodeIndex ) );
 
-                        positionData.Add(transformedPosition);
+                        positionData.Add( transformedPosition );
                     }
-                    using (_markersBatch.Begin())
+                    using ( _markersBatch.Begin( ) )
                     {
-                        _markersBatch.BindBuffer(BufferTarget.ArrayBuffer, _markersBatch.BufferIdents.First());
-                        _markersBatch.BufferVertexAttributeData(positionData.ToArray());
-                        _markersBatch.BindBuffer(BufferTarget.ElementArrayBuffer, _markersBatch.BufferIdents.Last());
-                        _markersBatch.BufferElementArrayData(elementIndices);
+                        _markersBatch.BindBuffer( BufferTarget.ArrayBuffer, _markersBatch.BufferIdents.First( ) );
+                        _markersBatch.BufferVertexAttributeData( positionData.ToArray( ), BufferUsageHint.StaticDraw );
+                        _markersBatch.BindBuffer( BufferTarget.ElementArrayBuffer, _markersBatch.BufferIdents.Last( ) );
+                        _markersBatch.BufferElementArrayData( elementIndices );
                     }
 
                     var batch = new RenderBatch
@@ -147,37 +147,35 @@ namespace Moonfish.Graphics
                         ElementStartIndex = 0,
                         ElementLength = elementIndices.Length,
                         PrimitiveType = PrimitiveType.Points,
-                        Shader = new ShaderReference(ShaderReference.ReferenceType.System, 0)
+                        Shader = new ShaderReference( ShaderReference.ReferenceType.System, 0 )
                     };
 
-                    batch.AssignUniform("WorldMatrixUniform", Matrix4.Identity);
-                    batch.AssignAttribute("Colour", new ColorF(Color.Red).RGBA);
-                    batch.AssignRenderState(EnableCap.DepthTest, false);
-                    batch.AssignRenderState(EnableCap.VertexProgramPointSize, true);
+                    batch.AssignUniform( "WorldMatrixUniform", Matrix4.Identity );
+                    batch.AssignAttribute( "Colour", new ColorF( Color.Red ).RGBA );
                     batch.BatchObject = _markersBatch;
                     yield return batch;
                 }
-                if (Flags.HasFlag(RenderFlags.RenderNodes))
+                if ( Flags.HasFlag( RenderFlags.RenderNodes ) )
                 {
-                    var positionData = new List<Vector3>();
+                    var positionData = new List<Vector3>( );
 
                     var elementIndices =
-                        Enumerable.Range(0, Nodes.Count).Select(x => Convert.ToUInt16(x)).ToArray();
+                        Enumerable.Range( 0, Nodes.Count ).Select( x => Convert.ToUInt16( x ) ).ToArray( );
 
-                    foreach (var node in Nodes)
+                    foreach ( var node in Nodes )
                     {
-                        var transformedPosition = Vector3.Transform(node.DefaultTranslation,
-                            Nodes.GetWorldMatrix(node.ParentNode));
+                        var transformedPosition = Vector3.Transform( node.DefaultTranslation,
+                            Nodes.GetWorldMatrix( node.ParentNode ) );
 
-                        positionData.Add(transformedPosition);
+                        positionData.Add( transformedPosition );
                     }
 
-                    using (_nodesBatch.Begin())
+                    using ( _nodesBatch.Begin( ) )
                     {
-                        _nodesBatch.BindBuffer(BufferTarget.ArrayBuffer, _nodesBatch.BufferIdents.First());
-                        _nodesBatch.BufferVertexAttributeData(positionData.ToArray());
-                        _nodesBatch.BindBuffer(BufferTarget.ElementArrayBuffer, _nodesBatch.BufferIdents.Last());
-                        _nodesBatch.BufferElementArrayData(elementIndices);
+                        _nodesBatch.BindBuffer( BufferTarget.ArrayBuffer, _nodesBatch.BufferIdents.First( ) );
+                        _nodesBatch.BufferVertexAttributeData( positionData.ToArray( ), BufferUsageHint.StaticDraw );
+                        _nodesBatch.BindBuffer( BufferTarget.ElementArrayBuffer, _nodesBatch.BufferIdents.Last( ) );
+                        _nodesBatch.BufferElementArrayData( elementIndices );
                     }
 
                     var batch = new RenderBatch
@@ -185,13 +183,11 @@ namespace Moonfish.Graphics
                         ElementStartIndex = 0,
                         ElementLength = elementIndices.Length,
                         PrimitiveType = PrimitiveType.Points,
-                        Shader = new ShaderReference(ShaderReference.ReferenceType.System, 0)
+                        Shader = new ShaderReference( ShaderReference.ReferenceType.System, 0 )
                     };
 
-                    batch.AssignUniform("WorldMatrixUniform", Matrix4.Identity);
-                    batch.AssignAttribute("Colour", new ColorF(Color.White).RGBA);
-                    batch.AssignRenderState(EnableCap.DepthTest, false);
-                    batch.AssignRenderState(EnableCap.VertexProgramPointSize, true);
+                    batch.AssignUniform( "WorldMatrixUniform", Matrix4.Identity );
+                    batch.AssignAttribute( "Colour", new ColorF( Color.White ).RGBA );
                     batch.BatchObject = _nodesBatch;
                     yield return batch;
                 }
@@ -199,18 +195,19 @@ namespace Moonfish.Graphics
         }
 
         public CollisionObject CollisionObject { get; set; }
-
         public RenderFlags Flags { get; set; }
 
         public IEnumerable<RenderModelMarkerBlock> Markers
         {
-            get { return ((RenderModelBlock)Model.RenderModel.Get()).MarkerGroups.SelectMany(x => x.Markers); }
+            get { return ( ( RenderModelBlock ) Model.RenderModel.Get( ) ).MarkerGroups.SelectMany( x => x.Markers ); }
         }
 
         public ModelBlock Model { get; set; }
 
-        [TypeConverter(typeof (ExpandableObjectConverter))]
+        [TypeConverter( typeof ( ExpandableObjectConverter ) )]
         public List<RenderModelNodeBlock> Nodes { get; private set; }
+
+        public RenderModelBlock RenderModel { get; set; }
 
         public Matrix4 WorldMatrix
         {
@@ -218,126 +215,246 @@ namespace Moonfish.Graphics
             set
             {
                 _worldMatrix = value;
-                CollisionObject.WorldTransform = _collisionSpaceMatrix*value;
+                CollisionObject.WorldTransform = collisionSpaceMatrix * value;
             }
         }
 
-        public Matrix4 CalculateChildWorldMatrix(object value)
+        public Matrix4 CalculateChildWorldMatrix( object value )
         {
-            if (value.GetType() == typeof (RenderModelMarkerBlock))
-                return CalculateWorldMatrix((RenderModelMarkerBlock) value);
-            if (value.GetType() == typeof (RenderModelNodeBlock))
-                return CalculateWorldMatrix((RenderModelNodeBlock) value);
-            throw new InvalidCastException();
+            if ( value.GetType( ) == typeof ( RenderModelMarkerBlock ) )
+                return CalculateWorldMatrix( ( RenderModelMarkerBlock ) value );
+            if ( value.GetType( ) == typeof ( RenderModelNodeBlock ) )
+                return CalculateWorldMatrix( ( RenderModelNodeBlock ) value );
+            throw new InvalidCastException( );
         }
 
-        public void OnMouseMove(CollisionManager collisionManager, Camera activeCamera,
-            MouseEventArgs e)
+        public void SetChildWorldMatrix( object nodeBlock, Matrix4 value )
         {
-            var mouse = new
+            if ( nodeBlock.GetType( ) == typeof ( RenderModelNodeBlock ) )
+                SetWorldMatrix( ( RenderModelNodeBlock ) nodeBlock, value );
+            else throw new InvalidCastException( );
+        }
+
+        private Matrix4 CalculateWorldMatrix( RenderModelMarkerBlock markerBlock )
+        {
+            if (
+                !( ( RenderModelBlock ) Model.RenderModel.Get( ) ).MarkerGroups.SelectMany( x => x.Markers )
+                    .Contains( markerBlock ) )
+                throw new ArgumentOutOfRangeException( );
+
+            return markerBlock.WorldMatrix * Nodes.GetWorldMatrix( markerBlock.NodeIndex );
+        }
+
+        private Matrix4 CalculateWorldMatrix( RenderModelNodeBlock nodeBlock )
+        {
+            if ( !( ( RenderModelBlock ) Model.RenderModel.Get( ) ).Nodes.Contains( nodeBlock ) )
+                throw new ArgumentOutOfRangeException( );
+
+            return Nodes.GetWorldMatrix( nodeBlock );
+        }
+
+        private void LoadSections( byte sectionGroupIndex )
+        {
+            foreach ( var sectionBuffer in sectionBuffers )
             {
-                Near = activeCamera.ReProject(new Vector2(e.X, e.Y), -0.90f),
-                Far = activeCamera.ReProject(new Vector2(e.X, e.Y), 1)
-            };
-
-            var from = Matrix4.CreateTranslation(mouse.Near);
-            var to = Matrix4.CreateTranslation(mouse.Far);
-
-            var d = (mouse.Far - mouse.Near).Normalized();
-            using (var callback = new ClosestConvexResultCallback(mouse.Near, mouse.Far))
+                sectionBuffer.Dispose( );
+            }
+            foreach ( var renderModelRegionBlock in RenderModel.Regions )
             {
-                callback.CollisionFilterGroup = CollisionFilterGroups.StaticFilter;
-                callback.CollisionFilterMask = CollisionFilterGroups.StaticFilter;
-
-                collisionManager.World.ConvexSweepTest((ConvexShape) CollisionObject.CollisionShape, from, to,
-                    callback);
-
-                Console.WriteLine(callback.HitNormalWorld);
-                if (callback.HasHit)
+                foreach ( var renderModelPermutationBlock in renderModelRegionBlock.Permutations )
                 {
-                    Vector3 linVel, angVel;
-                    TransformUtil.CalculateVelocity(from, to, 1.0f, out linVel, out angVel);
-                    Matrix4 T;
-                    TransformUtil.IntegrateTransform(from, linVel, angVel, callback.ClosestHitFraction, out T);
+                    RenderModelSectionBlock section;
+                    switch ( sectionGroupIndex )
+                    {
+                        case 0:
+                            section = RenderModel.Sections[ renderModelPermutationBlock.L1SectionIndex ];
+                            break;
+                        case 1:
+                            section = RenderModel.Sections[ renderModelPermutationBlock.L2SectionIndex ];
+                            break;
+                        case 2:
+                            section = RenderModel.Sections[ renderModelPermutationBlock.L3SectionIndex ];
+                            break;
+                        case 3:
+                            section = RenderModel.Sections[ renderModelPermutationBlock.L4SectionIndex ];
+                            break;
+                        case 4:
+                            section = RenderModel.Sections[ renderModelPermutationBlock.L5SectionIndex ];
+                            break;
+                        case 5:
+                            section = RenderModel.Sections[ renderModelPermutationBlock.L6SectionIndex ];
+                            break;
+                        default:
+                            continue;
+                    }
 
-                    WorldMatrix = T;
+                    section.LoadSectionData( );
+                    var mesh = new Mesh( section.SectionData[ 0 ].Section, RenderModel.CompressionInfo[ 0 ] )
+                    {
+                        SectionBlock = section
+                    };
+                    sectionBuffers.Add( mesh );
                 }
             }
         }
 
-        public void SetChildWorldMatrix(object nodeBlock, Matrix4 value)
+        private unsafe List<RenderBatch> GetRenderBatches()
         {
-            if (nodeBlock.GetType() == typeof (RenderModelNodeBlock))
-                SetWorldMatrix((RenderModelNodeBlock) nodeBlock, value);
-            else throw new InvalidCastException();
-        }
+            var collectionBatches =
+                new List<RenderBatch>(sectionBuffers.SelectMany(x => x.Parts).Count());
 
-        private Matrix4 CalculateWorldMatrix(RenderModelMarkerBlock markerBlock)
-        {
-            if (
-                !((RenderModelBlock) Model.RenderModel.Get()).MarkerGroups.SelectMany(x => x.Markers)
-                    .Contains(markerBlock))
-                throw new ArgumentOutOfRangeException();
-
-            return markerBlock.WorldMatrix*Nodes.GetWorldMatrix(markerBlock.NodeIndex);
-        }
-
-        private Matrix4 CalculateWorldMatrix(RenderModelNodeBlock nodeBlock)
-        {
-            if (!((RenderModelBlock)Model.RenderModel.Get()).Nodes.Contains(nodeBlock))
-                throw new ArgumentOutOfRangeException();
-
-            return Nodes.GetWorldMatrix(nodeBlock);
-        }
-
-        private IEnumerable<RenderBatch> RenderBatches()
-        {
-            var renderModelBlock = ((RenderModelBlock)Model.RenderModel.Get());
-            foreach (var region in renderModelBlock.Regions)
+            foreach (var sectionBuffer in sectionBuffers)
             {
-                var sectionIndex = region.Permutations[0].L6SectionIndex;
-                var mesh = SectionBuffers[sectionIndex];
+                var mesh = sectionBuffer;
 
                 foreach (var part in mesh.Parts)
                 {
-                    var extents = renderModelBlock.CompressionInfo[0].ToObjectMatrix();
-                    var texcoordRange = renderModelBlock.CompressionInfo[0].ExtractTexcoordScaling();
+                    var batch = new RenderBatch
+                    {
+                        ElementStartIndex = part.StripStartIndex * sizeof(ushort),
+                        ElementLength = part.StripLength,
+                        Shader = new ShaderReference(
+                            ShaderReference.ReferenceType.Halo2,
+                            (int)RenderModel.Materials[part.Material].Shader.Ident),
+                        PrimitiveType = PrimitiveType.TriangleStrip,
+                        BatchObject = mesh.TriangleBatch
+                    };
+                    var texcoordRange = RenderModel.CompressionInfo[0].ExtractTexcoordScaling();
+                    batch.AssignUniform("TexcoordRangeUniform", texcoordRange);
+                    batch.AssignUniform("WorldMatrixUniform", WorldMatrix);
+
+                    if (InstanceBasisMatrices != null && InstanceBasisMatrices.Count > 0)
+                    {
+                        using (batch.BatchObject.Begin())
+                        {
+
+                            batch.BatchObject.BindBuffer(BufferTarget.ArrayBuffer,
+                                batch.BatchObject.GetOrGenerateBuffer("instance data"));
+                            batch.InstanceCount = InstanceBasisMatrices.Count;
+                            batch.BatchObject.BufferVertexAttributeData(GetInstanceMatrices(), BufferUsageHint.StreamDraw);
+
+                            var stride = sizeof(Matrix4);
+                            var sizeOfVector4 = sizeof(Vector4);
+                            batch.BatchObject.VertexAttribArray(8, 4, VertexAttribPointerType.Float, false, stride,
+                                sizeOfVector4 * 0);
+                            batch.BatchObject.VertexAttribArray(9, 4, VertexAttribPointerType.Float, false, stride,
+                                sizeOfVector4 * 1);
+                            batch.BatchObject.VertexAttribArray(10, 4, VertexAttribPointerType.Float, false, stride,
+                                sizeOfVector4 * 2);
+                            batch.BatchObject.VertexAttribArray(11, 4, VertexAttribPointerType.Float, false, stride,
+                                sizeOfVector4 * 3);
+
+                            batch.BatchObject.VertexAttribDivisor(8, 1);
+                            batch.BatchObject.VertexAttribDivisor(9, 1);
+                            batch.BatchObject.VertexAttribDivisor(10, 1);
+                            batch.BatchObject.VertexAttribDivisor(11, 1);
+                        }
+                    }
+                    collectionBatches.Add(batch);
+                }
+            }
+            return collectionBatches;
+        }
+
+        private Matrix4[] GetInstanceMatrices( )
+        {
+            Matrix4[] matrices = new Matrix4[InstanceBasisMatrices.Count];
+            for ( int i = 0; i < matrices.Length; i++ )
+            {
+                matrices[ i ] = GetInstanceMatrix( i );
+            }
+            return matrices;
+        }
+
+        public Matrix4 GetInstanceMatrix( int instance )
+        {
+            return InstanceBasisMatrices[ instance ] * Matrix4.CreateFromQuaternion( InstanceRotations[ instance ] ) *
+                   Matrix4.CreateTranslation( InstancePositions[ instance ] );
+        }
+
+
+        public List<Matrix4> InstanceBasisMatrices { get; set; }
+        public List<Quaternion> InstanceRotations { get; set; }
+        public List<Vector3> InstancePositions { get; set; }
+
+        private IEnumerable<RenderBatch> _RenderBatches( )
+        {
+            foreach ( var sectionBuffer in sectionBuffers )
+            {
+                var mesh = sectionBuffer;
+
+                foreach ( var part in mesh.Parts )
+                {
+                    var texcoordRange = RenderModel.CompressionInfo[ 0 ].ExtractTexcoordScaling( );
 
                     var batch = new RenderBatch
                     {
-                        ElementStartIndex = part.StripStartIndex*sizeof (ushort),
+                        ElementStartIndex = part.StripStartIndex * sizeof ( ushort ),
                         ElementLength = part.StripLength
                     };
 
-                    batch.AssignUniform("TexcoordRangeUniform", texcoordRange);
-                    batch.AssignUniform("WorldMatrixUniform", WorldMatrix);
-                    for (int i = 0; i < mesh.SectionBlock.SectionData[0].NodeMap.Length; ++i)
+                    batch.AssignUniform( "TexcoordRangeUniform", texcoordRange );
+                    batch.AssignUniform( "WorldMatrixUniform", WorldMatrix );
+                    for ( var i = 0; i < mesh.SectionBlock.SectionData[ 0 ].NodeMap.Length; ++i )
                     {
                         var inverseBindPoseMatrix =
-                            Nodes.GetInverseBindPoseTransfrom(mesh.SectionBlock.SectionData[0].NodeMap[i].NodeIndex);
+                            Nodes.GetInverseBindPoseTransfrom( mesh.SectionBlock.SectionData[ 0 ].NodeMap[ i ].NodeIndex );
                         var poseMatrix =
-                            Nodes.GetPoseTransfrom(mesh.SectionBlock.SectionData[0].NodeMap[i].NodeIndex);
-                        var final = inverseBindPoseMatrix*poseMatrix;
+                            Nodes.GetPoseTransfrom( mesh.SectionBlock.SectionData[ 0 ].NodeMap[ i ].NodeIndex );
+                        var final = inverseBindPoseMatrix * poseMatrix;
 
-                        batch.AssignUniform(string.Format("BoneMatrices[{0}]", i), final);
+                        batch.AssignUniform( string.Format( "BoneMatrices[{0}]", i ), final );
                     }
 
                     batch.Shader = new ShaderReference(
                         ShaderReference.ReferenceType.Halo2,
-                        (int)renderModelBlock.Materials[part.Material].Shader.Ident);
+                        ( int ) RenderModel.Materials[ part.Material ].Shader.Ident );
                     batch.PrimitiveType = PrimitiveType.TriangleStrip;
                     batch.BatchObject = mesh.TriangleBatch;
-                    batch.ChangeState = delegate() { GL.PointSize(10.0f); };
-                    batch.RevertState = delegate() { GL.PointSize(1.0f); };
 
                     yield return batch;
                 }
             }
         }
 
-        private void SetWorldMatrix(RenderModelNodeBlock nodeBlock, Matrix4 value)
+        private void SetWorldMatrix( RenderModelNodeBlock nodeBlock, Matrix4 value )
         {
-            Nodes.SetWorldMatrix(nodeBlock, value);
+            Nodes.SetWorldMatrix( nodeBlock, value );
+        }
+
+        public void Update( )
+        {
+            RenderBatches = GetRenderBatches();
+        }
+
+        public void AssignInstanceBasisTransform(int instance, Matrix4 basisMatrix4)
+        {
+            InstanceBasisMatrices[instance] = basisMatrix4;
+        }
+
+        public void AddInstance( Matrix4 instanceWorldMatrix )
+        {
+            InstanceBasisMatrices.Add( Matrix4.Identity );
+            InstancePositions.Add( instanceWorldMatrix.ExtractTranslation(  ) );
+            InstanceRotations.Add( instanceWorldMatrix.ExtractRotation(  ) );
+        }
+    }
+
+    class ScenarioObjectAxisAlignedWrapper
+    {
+        private readonly ScenarioObject _scenarioObject;
+        private float _axisAlignedRotation;
+
+        public void SetAxisAlignedRotation(int instance, float value)
+        {
+                _axisAlignedRotation = value;
+                var upAxis = _scenarioObject.InstanceBasisMatrices[instance].Row2.Xyz.Normalized();
+                _scenarioObject.InstanceRotations[instance] = Quaternion.FromAxisAngle(upAxis, _axisAlignedRotation);
+        }
+
+        public ScenarioObjectAxisAlignedWrapper( ScenarioObject scenarioObject )
+        {
+            _scenarioObject = scenarioObject;
         }
     }
 }

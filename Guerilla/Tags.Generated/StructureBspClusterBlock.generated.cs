@@ -114,7 +114,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.QueueWrite(this.Portals);
             queueableBinaryWriter.QueueWrite(this.InstancedGeometryIndices);
             queueableBinaryWriter.QueueWrite(this.IndexReorderTable);
-            queueableBinaryWriter.QueueWrite(this.CollisionMoppCode);
+            queueableBinaryWriter.QueueWrite(this.CollisionMoppCode, 16);
         }
         public override void Write_(Moonfish.Guerilla.QueueableBinaryWriter queueableBinaryWriter)
         {

@@ -58,5 +58,7 @@ namespace Moonfish.Graphics
         {
             RenderStates[state] = value;
         }
+
+        public int InstanceCount { get; set; }
     }
 }

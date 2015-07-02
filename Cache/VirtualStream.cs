@@ -8,7 +8,7 @@ using Moonfish.Guerilla.Tags;
 
 namespace Moonfish.Cache
 {
-    internal class VirtualStream : MemoryStream
+    public class VirtualStream : MemoryStream
     {
         public int VirtualOrigin { get; private set; }
 
@@ -17,6 +17,13 @@ namespace Moonfish.Cache
                 buffer)
         {
             VirtualOrigin = virtualOrigin;
+        }
+
+        public VirtualStream(byte[] buffer, uint virtualOrigin)
+            : base(
+                buffer)
+        {
+            VirtualOrigin = (int)virtualOrigin;
         }
 
         public VirtualStream(int virtualOrigin)

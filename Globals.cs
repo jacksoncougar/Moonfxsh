@@ -173,6 +173,31 @@ namespace Moonfish
             return !@equals;
         }
 
+        internal static bool TryGettingResourceStream(ResourceSource resourceSource, out CacheStream resourceStream)
+        {
+            switch (resourceSource)
+            {
+                case ResourceSource.Shared:
+                    resourceStream = resourceShared;
+                    break;
+                case ResourceSource.SinglePlayerShared:
+                    resourceStream = resourceSinglePlayer;
+                    break;
+                case ResourceSource.MainMenu:
+                    resourceStream = resourceMainMenu;
+                    break;
+                case ResourceSource.Local:
+                    resourceStream = mapStream;
+                    break;
+                default:
+                    resourceStream = null;
+                    return false;
+            }
+            var hasResource = resourceStream != null;
+            return hasResource;
+        }
+
+
         internal static bool TryGettingResourceStream(int resourceAddress, out Stream resourceStream)
         {
             var pointer = (ResourcePointer) resourceAddress;

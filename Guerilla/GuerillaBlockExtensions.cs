@@ -19,15 +19,5 @@ namespace Moonfish.Guerilla
                 : ((GuerillaBlock)(Activator.CreateInstance(
                 guerillaBlocks.GetType().GetElementType()))).Alignment;
         }
-
-        public static int CalculateSizeOfGraphData(this GuerillaBlock[] guerillaBlocks)
-        {
-            var size = 0;
-            for (var i = 0; i < guerillaBlocks.Length; ++i)
-            {
-                size += guerillaBlocks[i].CalculateSizeOfGraphData();
-            }
-            return size;
-        }
     }
 }

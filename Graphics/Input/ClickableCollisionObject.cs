@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using BulletSharp;
 
 namespace Moonfish.Graphics.Input
@@ -13,31 +14,42 @@ namespace Moonfish.Graphics.Input
         }
     }
 
-    public class ClickableCollisionObject : CollisionObject
+    public class ClickableCollisionObject : CollisionObject, IClickable
     {
-        public event EventHandler<SceneMouseEventArgs> OnMouseDown;
-        public event EventHandler<SceneMouseMoveEventArgs> OnMouseMove;
-        public event EventHandler<SceneMouseEventArgs> OnMouseUp;
-        public event EventHandler<SceneMouseEventArgs> OnMouseClick;
+        public event EventHandler<SceneMouseEventArgs> MouseDown;
+        public event EventHandler<SceneMouseEventArgs> MouseMove;
+        public event EventHandler<SceneMouseEventArgs> MouseUp;
+        public event EventHandler<SceneMouseEventArgs> MouseClick;
+        public event EventHandler<SceneMouseEventArgs> MouseCaptureChanged;
 
-        public void MouseDown(object sender, SceneMouseEventArgs e)
+        public void OnMouseDown(object sender, SceneMouseEventArgs e)
         {
-            if (OnMouseDown != null) OnMouseDown(sender, e);
+            Debug.WriteLine("OnMouseDown on {0}", UserObject);
+            if (MouseDown != null) MouseDown(sender, e);
         }
 
-        public void MouseMove(object sender, SceneMouseMoveEventArgs e)
+        public void OnMouseMove(object sender, SceneMouseEventArgs e)
         {
-            if (OnMouseMove != null) OnMouseMove(sender, e);
+            Debug.WriteLine("OnMouseMove on {0}", UserObject);
+            if (MouseMove != null) MouseMove(sender, e);
         }
 
-        public void MouseUp(object sender, SceneMouseEventArgs e)
+        public void OnMouseUp(object sender, SceneMouseEventArgs e)
         {
-            if (OnMouseUp != null) OnMouseUp(sender, e);
+            Debug.WriteLine("OnMouseUp on {0}", UserObject);
+            if (MouseUp != null) MouseUp(sender, e);
         }
 
-        public void MouseClick(object sender, SceneMouseEventArgs e)
+        public void OnMouseClick(object sender, SceneMouseEventArgs e)
         {
-            if (OnMouseClick != null) OnMouseClick(sender, e);
+            Debug.WriteLine("OnMouseClick on {0}", UserObject);
+            if (MouseClick != null) MouseClick(sender, e);
+        }
+
+        public void OnMouseCaptureChanged(object sender, SceneMouseEventArgs e)
+        {
+            Debug.WriteLine("OnMouseCaptureChanged on {0}", UserObject);
+            if (MouseCaptureChanged != null) MouseCaptureChanged(sender, e);
         }
     }
 }

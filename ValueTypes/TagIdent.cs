@@ -34,6 +34,15 @@ namespace Moonfish.Tags
             Salt = salt;
         }
 
+        public T Get<T>() where T : GuerillaBlock
+        {
+            return Halo2.GetReferenceObject(this);
+        }
+        public object Get()
+        {
+            return Get<GuerillaBlock>();
+        }
+
         public static explicit operator int(TagIdent item)
         {
             return (item.Salt << 16) | (ushort) item.Index;

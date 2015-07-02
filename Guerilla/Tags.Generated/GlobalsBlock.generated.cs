@@ -8,6 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using Moonfish.Guerilla.Tags.Generated;
+
 namespace Moonfish.Guerilla.Tags
 {
     using Moonfish.Tags;

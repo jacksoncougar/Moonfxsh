@@ -14,10 +14,7 @@ namespace Moonfish
 
         public static long Seek(this Stream stream, int address)
         {
-            var position = stream.Position;
-            if (position == address) return position;
-            var offset = address - position;
-            return stream.Seek(offset, SeekOrigin.Current);
+            return stream.Seek(address, SeekOrigin.Begin);
         }
 
         public static void BufferedCopyBytesTo(this Stream stream, int size, Stream output)

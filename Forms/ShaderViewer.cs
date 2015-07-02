@@ -72,7 +72,7 @@ namespace Moonfish.Graphics
             resourceMaps.ForEach(x => Halo2.LoadResource(new CacheStream(x)));
             Map = new CacheStream(fileName);
 
-            var ident = Map.Index.Select((TagClass)"hlmt", "masterchief").First().Identifier;
+            var ident = Map.Index.Where((TagClass)"hlmt", "masterchief").First().Identifier;
             Map.Deserialize(ident);
             var model = (ModelBlock) Map.Deserialize(ident);
             int width = 1, height = 1;
@@ -137,7 +137,8 @@ namespace Moonfish.Graphics
         {
             var shader = Map.Deserialize(selectedShaderTag.tagDatum.Identifier) as ShaderBlock;
 
-            material = new MaterialShader(shader, Map);
+            ShaderPostprocessBitmapNewBlock[] textures;
+            material = new MaterialShader(shader, Map, out textures);
             listBox2.Items.Clear();
             listBox2.Items.AddRange(material.shaderPassPaths);
             listBox2.SelectedIndex = 0;
@@ -145,7 +146,7 @@ namespace Moonfish.Graphics
 
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            material.UsePass(listBox2.SelectedIndex);
+            material.UsePass(listBox2.SelectedIndex, null);
         }
     }
 }

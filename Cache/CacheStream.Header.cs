@@ -48,7 +48,7 @@ namespace Moonfish.Cache
 
                     //  Check the BuildVersion then return to the last stream position
                     stream.Seek(0x11C, SeekOrigin.Current);
-                    var test = Encoding.ASCII.GetString(binaryReader.ReadBytes(32)).Trim(char.MinValue);
+                    var test = Encoding.ASCII.GetString(binaryReader.ReadBytes(32)).Trim(Char.MinValue);
                     Version = test == @"11081.07.04.30.0934.main" ? HaloVersion.PC_RETAIL : HaloVersion.XBOX_RETAIL;
                     stream.Seek(-0x13C, SeekOrigin.Current);
                     
@@ -60,7 +60,7 @@ namespace Moonfish.Cache
                     stream.Seek(32 + 224, SeekOrigin.Current);
 
                     //  read the build string and remove the trailing null bytes
-                    BuildString = Encoding.ASCII.GetString(binaryReader.ReadBytes(32)).Trim(char.MinValue);
+                    BuildString = Encoding.ASCII.GetString(binaryReader.ReadBytes(32)).Trim(Char.MinValue);
 
                     //  read the map type (ie: singleplayer, multiplayer, shared, singleplayershared, mainmenu).
                     Type = (MapType) binaryReader.ReadInt32();
@@ -70,11 +70,11 @@ namespace Moonfish.Cache
                     stream.Seek(36, SeekOrigin.Current);
 
                     //  read the name string and remove the trailing null bytes
-                    Name = Encoding.ASCII.GetString(binaryReader.ReadBytes(32)).Trim(char.MinValue);
+                    Name = Encoding.ASCII.GetString(binaryReader.ReadBytes(32)).Trim(Char.MinValue);
                     stream.Seek(4, SeekOrigin.Current);
 
                     //  read the scenario string and remove the trailing null bytes
-                    Scenario = Encoding.ASCII.GetString(binaryReader.ReadBytes(128)).Trim(char.MinValue);
+                    Scenario = Encoding.ASCII.GetString(binaryReader.ReadBytes(128)).Trim(Char.MinValue);
                     stream.Seek(128, SeekOrigin.Current);
                     stream.Seek(4, SeekOrigin.Current);
                     PathsInfo = PathsInfoStruct.DeserializeFrom(stream);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL;
 
@@ -32,7 +33,6 @@ namespace Moonfish.Graphics
             GL.BufferData(BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.DynamicDraw);
 
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -71,6 +71,7 @@ namespace Moonfish.Graphics
 
         private readonly int _vao;
         private readonly List<int> _buffers;
+        private Dictionary<string, int> _namedBufferIndices; 
 
         public TriangleBatch(int vertexArrayObjectident, IEnumerable<int> buffers)
         {
@@ -80,6 +81,7 @@ namespace Moonfish.Graphics
 
         public TriangleBatch()
         {
+            _namedBufferIndices = new Dictionary<string, int>();
             _buffers = new List<int>();
             _vao = GL.GenVertexArray();
         }
@@ -110,7 +112,6 @@ namespace Moonfish.Graphics
             GL.VertexAttribIPointer(index, count, type, stride, (IntPtr) offset);
             GL.EnableVertexAttribArray(index);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -120,7 +121,6 @@ namespace Moonfish.Graphics
             GL.VertexAttribPointer(index, count, type, normalised, stride, offset);
             GL.EnableVertexAttribArray(index);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -128,7 +128,6 @@ namespace Moonfish.Graphics
         {
             var buffer = GL.GenBuffer();
 #if DEBUG
-            OpenGL.ReportError();
 #endif
             _buffers.Add(buffer);
             return buffer;
@@ -138,18 +137,16 @@ namespace Moonfish.Graphics
         {
             GL.BindBuffer(target, buffer);
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
-        public void BufferVertexAttributeData<T>(T[] data) where T : struct
+        public void BufferVertexAttributeData<T>(T[] data, BufferUsageHint bufferUsageHint  = BufferUsageHint.StaticDraw) where T : struct
         {
             var dataSize = (IntPtr) (Marshal.SizeOf(typeof (T))*data.Length);
 
-            GL.BufferData(BufferTarget.ArrayBuffer, dataSize, data, BufferUsageHint.DynamicDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, dataSize, data, bufferUsageHint);
 
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -159,7 +156,6 @@ namespace Moonfish.Graphics
             GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr) offset, dataSize, data);
 
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -169,7 +165,6 @@ namespace Moonfish.Graphics
                 BufferUsageHint.DynamicDraw);
 
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -179,7 +174,6 @@ namespace Moonfish.Graphics
                 BufferUsageHint.DynamicDraw);
 
 #if DEBUG
-            OpenGL.ReportError();
 #endif
         }
 
@@ -197,10 +191,25 @@ namespace Moonfish.Graphics
                 GL.DeleteVertexArray(_vao);
                 GL.DeleteBuffers(_buffers.Count, _buffers.ToArray());
 #if DEBUG
-                OpenGL.ReportError();
 #endif
             }
             _disposed = true;
+        }
+
+        public int GetOrGenerateBuffer( string bufferName )
+        {
+            int index;
+            var key = bufferName.ToLower();
+            if ( _namedBufferIndices.TryGetValue( key, out index ) )
+                return _buffers[ index ];
+
+            _namedBufferIndices[ key ] = _buffers.Count;
+            return GenerateBuffer( );
+        }
+
+        public void VertexAttribDivisor( int index, int divisor )
+        {
+            GL.VertexAttribDivisor( index, divisor );
         }
     }
 }

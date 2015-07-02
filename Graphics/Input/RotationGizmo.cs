@@ -37,7 +37,7 @@ namespace Moonfish.Graphics.Input
             OnWorldMatrixChanged(ref beforeMatrix, ref afterMatrix);
         }
 
-        protected override void Transform(SceneMouseMoveEventArgs args)
+        protected override void Transform(SceneMouseEventArgs args)
         {
             if (selectedAxis == Axis.None) return;
             var camera = args.Camera;
@@ -48,7 +48,7 @@ namespace Moonfish.Graphics.Input
             var normalScreenspace = camera.Project(position + axisNormal).Normalized();
 
             var translation = CalculateScreenspaceTranslation(originScreenspace,
-                camera.Project(position + axisNormal), new Vector2(args.X, args.Y));
+                camera.Project(position + axisNormal), args.ScreenCoordinates);
             SetTransform(Vector2.Dot(translation, normalScreenspace));
         }
     }

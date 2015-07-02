@@ -19,11 +19,11 @@ namespace Moonfish.Graphics
         {
             get
             {
-                var translation_matrix = Matrix4.CreateTranslation(Position);
-                var rotation_matrix = Matrix4.CreateFromQuaternion(Rotation);
-                var scale_matrix = Matrix4.CreateScale(Scale);
+                var T = Matrix4.CreateTranslation(Position);
+                var R = Matrix4.CreateFromQuaternion(Rotation);
+                var S = Matrix4.CreateScale(Scale);
 
-                return translation_matrix*rotation_matrix*scale_matrix;
+                return S * R * T;
             }
         }
     }

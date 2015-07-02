@@ -8,10 +8,9 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {
-    public class MaterialShader : IDisposable
+    public class MaterialShader
     {
         private bool disposed = false;
-        public List<Texture> Textures { get; private set; }
 
         private int activeShaderPass;
 
@@ -27,24 +26,13 @@ namespace Moonfish.Graphics
         public ShaderPassBlock[] shaderPasses;
         public string[] shaderPassPaths;
 
-        public MaterialShader(ShaderBlock shader, CacheStream map)
+        public MaterialShader(ShaderBlock shader, CacheStream map, out ShaderPostprocessBitmapNewBlock[] bitmapBlocks)
             : this()
         {
             this.shader = shader;
-            //  Load bitmap classes and transfer data into glTextures
-            Textures = new List<Texture>(shader.PostprocessDefinition[0].Bitmaps.Length);
-            foreach (var item in shader.PostprocessDefinition[0].Bitmaps)
-            {
-                var texture = new Texture();
-                if (!TagIdent.IsNull(item.BitmapGroup))
-                {
-                    var bitmapBlock = (BitmapBlock) map.Deserialize(item.BitmapGroup);
-                    texture.Load(bitmapBlock, map);
-                }
-                Textures.Add(texture);
-            }
 
             //  Load shader template class and load shader passes
+            bitmapBlocks = shader.PostprocessDefinition[0].Bitmaps;
 
             var shaderTemplateIdent = (TagIdent) shader.PostprocessDefinition[0].ShaderTemplateIndex;
             this.shaderTemplate = (ShaderTemplateBlock) map.Deserialize(shaderTemplateIdent);
@@ -61,20 +49,22 @@ namespace Moonfish.Graphics
 
         public MaterialShader()
         {
-            Textures = new List<Texture>();
         }
 
-        public void UsePass(int index)
+        public void UsePass(int index, Dictionary<TagIdent, List<Texture>> textures)
         {
             ActiveShaderPassIndex = index;
-            if (ActiveShaderPassIndex < 0) return;
+            if (ActiveShaderPassIndex < 0)
+            {
+                return;
+            }
 
             var template = shaderTemplate.PostprocessDefinition[0];
             var activePass = shaderTemplate.PostprocessDefinition[0].Passes[ActiveShaderPassIndex];
             var implementations = template.Implementations.ToList()
                 .GetRange(activePass.Implementations.Index, activePass.Implementations.Length);
             var remappings = template.Remappings.ToList();
-            for (int implementationIndex = 0; implementationIndex < implementations.Count; ++implementationIndex)
+            for (int implementationIndex = implementations.Count - 1; implementationIndex < implementations.Count; ++implementationIndex)
             {
                 var shaderPass = shaderPasses[ActiveShaderPassIndex].PostprocessDefinition[0];
                 var shaderPassImplementation = shaderPass.Implementations[implementationIndex];
@@ -82,43 +72,26 @@ namespace Moonfish.Graphics
                 {
                     var texture = shaderPass.Textures[shaderPassImplementation.Textures.Index + i];
                     var bitmap = texture.BitmapParameterIndex;
-                    if (bitmap == byte.MaxValue) continue;
+                    if (bitmap == byte.MaxValue) 
+                        continue;
 
                     var texturestage = texture.TextureStageIndex;
 
-                    OpenGL.ReportError();
                     GL.ActiveTexture(TextureUnit.Texture1 + texturestage);
-                    OpenGL.ReportError();
+#if DEBUG
                     var bitmapString =
                         shader.PostprocessDefinition[0].Bitmaps[
                             remappings[implementations[implementationIndex].Bitmaps.Index + bitmap].SourceIndex]
                             .BitmapGroup.ToString();
-                    Textures[remappings[implementations[implementationIndex].Bitmaps.Index + bitmap].SourceIndex]
-                        .Bind();
-                    OpenGL.ReportError();
+#endif
+
+                    textures[
+                        shader.PostprocessDefinition[0].Bitmaps[
+                            remappings[implementations[implementationIndex].Bitmaps.Index + bitmap].SourceIndex]
+                            .BitmapGroup].First().Bind();
                 }
                 break;
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposed) return;
-
-            if (disposing)
-            {
-                foreach (var texture in Textures)
-                {
-                    texture.Dispose();
-                }
-            }
-            disposed = true;
         }
     }
 }

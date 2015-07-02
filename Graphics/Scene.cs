@@ -14,6 +14,7 @@ namespace Moonfish.Graphics
         private Stopwatch Timer { get; set; }
         public Camera Camera { get; set; }
 
+
         private Vector3 lightPosition = new Vector3(3.8f, 3.0F, 3.5f);
         private float rotation = 0;
 
@@ -28,7 +29,8 @@ namespace Moonfish.Graphics
 
         public virtual void Initialize()
         {
-            Console.WriteLine(GL.GetString(StringName.Version));
+            
+            Debug.WriteLine(GL.GetString(StringName.Version));
             Timer = new Stopwatch();
             Camera = new Camera();
             ObjectManager = new MeshManager();
@@ -40,15 +42,13 @@ namespace Moonfish.Graphics
             Camera.ViewMatrixChanged += Camera_ViewMatrixChanged;
             Camera.Viewport.ViewportChanged += Viewport_ViewportChanged;
 
-            OpenGL.ReportError();
             GL.ClearColor(Color.FromArgb(~Colours.Green.ToArgb()));
-            OpenGL.ReportError();
             GL.FrontFace(FrontFaceDirection.Ccw);
-            OpenGL.ReportError();
-            GL.Enable(EnableCap.CullFace);
-            OpenGL.ReportError();
             GL.Enable(EnableCap.DepthTest);
-            OpenGL.ReportError();
+#if DEBUG
+            GL.Enable( EnableCap.DebugOutput );
+            GL.Enable( EnableCap.DebugOutputSynchronous );
+#endif
         }
 
         private void Viewport_ViewportChanged(object sender, Viewport.ViewportEventArgs e)
@@ -59,9 +59,12 @@ namespace Moonfish.Graphics
             if (ProgramManager.ScreenProgram != null)
             {
                 var viewMatrixUniform = ProgramManager.ScreenProgram.GetUniformLocation("OrthoProjectionMatrixUniform");
-                ProgramManager.ScreenProgram.SetUniform(viewMatrixUniform,
-                    Matrix4.CreateOrthographicOffCenter(0, e.Viewport.Width, e.Viewport.Height, 0, 0.0f, 100.0f));
-                //ProgramManager.ScreenProgram.SetUniform(viewMatrixUniform, Matrix4.CreateOrthographic(e.Viewport.Width, -e.Viewport.Height, 0.0f, 100.0f));
+                using (ProgramManager.ScreenProgram.Use())
+                {
+                    ProgramManager.ScreenProgram.SetUniform(viewMatrixUniform,
+                   Matrix4.CreateOrthographicOffCenter(0, e.Viewport.Width, e.Viewport.Height, 0, 0.0f, 100.0f));
+                }
+               //ProgramManager.ScreenProgram.SetUniform(viewMatrixUniform, Matrix4.CreateOrthographic(e.Viewport.Width, -e.Viewport.Height, 0.0f, 100.0f));
             }
 #endif
         }
@@ -114,31 +117,30 @@ namespace Moonfish.Graphics
             //Console.WriteLine("Draw()");
 
             ObjectManager.Draw(ProgramManager);
-            var program = ProgramManager.GetProgram(new ShaderReference(ShaderReference.ReferenceType.System, 0));
-            using (program.Use())
-            {
-                var colourUniform = program.GetUniformLocation("Colour");
-                program.SetUniform(colourUniform, new ColorF(Color.Black).RGBA);
-                //Grid.Draw();
-            }
+            //var program = ProgramManager.GetProgram(new ShaderReference(ShaderReference.ReferenceType.System, 0));
+            //using (program.Use())
+            //{
+            //    var colourUniform = program.GetUniformLocation("Colour");
+            //    program.SetUniform(colourUniform, new ColorF(Color.Black).RGBA);
+            //    //Grid.Draw();
+            //}
         }
 
         public virtual void Update()
         {
-            GL.PointSize(1.0f);
             //Console.WriteLine("Update()");
 
             //var R = OpenTK.Matrix4.CreateRotationX( rotation );
             //rotation += OpenTK.MathHelper.DegreesToRadians( 0.03f );
             //rotation = rotation > Maths.Pi2 ? 0 : rotation;
             //var l = OpenTK.Vector3.Transform( lightPosition, R ); //Console.WriteLine(rotation);
-            foreach (var program in ProgramManager)
-            {
-                var lightPositionAttribute = program.GetUniformLocation("LightPositionUniform");
+            //foreach (var program in ProgramManager)
+            //{
+            //    var lightPositionAttribute = program.GetUniformLocation("LightPositionUniform");
 
-                using (program.Use())
-                    program.SetUniform(lightPositionAttribute, new Vector4(lightPosition));
-            }
+            //    using (program.Use())
+            //        program.SetUniform(lightPositionAttribute, new Vector4(lightPosition));
+            //}
             Camera.Update();
         }
     };

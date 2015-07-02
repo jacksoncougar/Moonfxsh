@@ -46,7 +46,6 @@ namespace Moonfish.Graphics
             }
 
             using (debugProgram.Use())
-            using (OpenGL.Disable(EnableCap.DepthTest))
             {
                 var worldMatrixUniform = debugProgram.GetUniformLocation("WorldMatrixUniform");
                 debugProgram.SetUniform(worldMatrixUniform, trans);

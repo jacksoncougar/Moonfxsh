@@ -5,253 +5,267 @@ using System.IO;
 using System.Linq;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {
     /// <summary>
-    /// Wrapper class for buffering Halo 2 mesh data for use through OpenGL
+    ///     Wrapper class for buffering Halo 2 mesh data for use through OpenGL
     /// </summary>
     public class Mesh : IDisposable, IEnumerable<TriangleBatch>
     {
-        public TriangleBatch TriangleBatch { get; private set; }
-
+        private bool _disposed;
         public RenderModelSectionBlock SectionBlock;
 
-        private bool _disposed;
-
-        public GlobalGeometryPartBlockNew[] Parts { get; private set; }
-
-        public Mesh(GlobalGeometrySectionStructBlock section,
-            GlobalGeometryCompressionInfoBlock compressionInfo) :
-                this(section.Parts,
-                    section.StripIndices.Select(x => x.Index).ToArray(),
-                    section.VertexBuffers.Select(x => x.VertexBuffer).ToArray(), compressionInfo)
+        public Mesh( GlobalGeometrySectionStructBlock section,
+            GlobalGeometryCompressionInfoBlock compressionInfo ) :
+                this( section.Parts,
+                    section.Subparts,
+                    section.StripIndices.Select( x => x.Index ).ToArray( ),
+                    section.VertexBuffers.Select( x => x.VertexBuffer ).ToArray( ), compressionInfo )
         {
         }
 
-        public Mesh(GlobalGeometryPartBlockNew[] parts, short[] indices, IList<VertexBuffer> vertexArrayBufferData,
-            GlobalGeometryCompressionInfoBlock compressionInfo)
+        public Mesh( GlobalGeometryPartBlockNew[] parts, GlobalSubpartsBlock[] subParts, short[] indices,
+            IList<VertexBuffer> vertexArrayBufferData,
+            GlobalGeometryCompressionInfoBlock compressionInfo )
         {
             Parts = parts;
-            TriangleBatch = new TriangleBatch();
-            BufferElementArrayData(indices);
-            BufferVertexAttributeData(vertexArrayBufferData, compressionInfo);
+            SubParts = subParts;
+            TriangleBatch = new TriangleBatch( );
+            BufferElementArrayData( indices );
+            BufferVertexAttributeData( vertexArrayBufferData, compressionInfo );
         }
 
-        private void BufferVertexAttributeData(IList<VertexBuffer> vertexBuffers,
-            GlobalGeometryCompressionInfoBlock compressionInfo)
+        public GlobalGeometryPartBlockNew[] Parts { get; private set; }
+        public GlobalSubpartsBlock[] SubParts { get; private set; }
+        public TriangleBatch TriangleBatch { get; private set; }
+
+        public void Dispose( )
         {
-            using (TriangleBatch.Begin())
+            Dispose( true );
+            GC.SuppressFinalize( this );
+        }
+
+        IEnumerator<TriangleBatch> IEnumerable<TriangleBatch>.GetEnumerator( )
+        {
+            if ( TriangleBatch != null ) yield return TriangleBatch;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator( )
+        {
+            return ( ( IEnumerable<TriangleBatch> ) this ).GetEnumerator( );
+        }
+
+        protected virtual void Dispose( bool disposing )
+        {
+            if ( _disposed || !disposing ) return;
+            GL.BindVertexArray( 0 );
+            TriangleBatch.Dispose( );
+            _disposed = true;
+        }
+
+        private void BufferElementArrayData( short[] indices )
+        {
+            using ( TriangleBatch.Begin( ) )
+            {
+                TriangleBatch.BindBuffer(BufferTarget.ElementArrayBuffer, TriangleBatch.GenerateBuffer());
+                TriangleBatch.BufferElementArrayData( indices );
+            }
+        }
+
+        private void BufferVertexAttributeData( IList<VertexBuffer> vertexBuffers,
+            GlobalGeometryCompressionInfoBlock compressionInfo )
+        {
+            using ( TriangleBatch.Begin( ) )
             {
                 var attribute = 0;
-                for (int i = 0; i < vertexBuffers.Count; ++i)
+                for ( var i = 0; i < vertexBuffers.Count; ++i )
                 {
-                    if (!Enum.IsDefined(typeof (VertexAttributeType), vertexBuffers[i].Type)) continue;
+                    if ( !Enum.IsDefined( typeof ( VertexAttributeType ), vertexBuffers[ i ].Type ) )
+                        continue;
+
+
+                    var attributeType = vertexBuffers[ i ].Type;
+                    int attributeSize = vertexBuffers[ i ].Type.GetSize( );
+                    var data = vertexBuffers[ i ].Data;
+                    data = UnpackCoordinates( data, vertexBuffers[ i ].Type, compressionInfo, ref attributeSize );
+                    data = UnpackNormals( data, vertexBuffers[ i ].Type, ref attributeSize );
+#if DEBUG
+
+#endif
 
                     TriangleBatch.BindBuffer(BufferTarget.ArrayBuffer, TriangleBatch.GenerateBuffer());
+                    TriangleBatch.BufferVertexAttributeData( data, BufferUsageHint.StaticDraw );
 
-                    var attributeType = vertexBuffers[i].Type;
-                    int attributeSize;
-                    var data = Unpack(vertexBuffers[i].Data, vertexBuffers[i].Type, compressionInfo,
-                        out attributeSize);
-                    TriangleBatch.BufferVertexAttributeData(data);
-
-                    switch (attributeType)
+                    switch ( attributeType )
                     {
                         case VertexAttributeType.CoordinateWithDoubleNode:
                         case VertexAttributeType.CoordinateCompressed:
                         case VertexAttributeType.CoordinateWithSingleNode:
                         case VertexAttributeType.CoordinateWithTripleNode:
-                            TriangleBatch.VertexAttribArray(attribute++, 3, VertexAttribPointerType.Float, false,
-                                attributeSize);
-                            TriangleBatch.VertexAttribArray(attribute++, 4, VertexAttribPointerType.Byte, false,
-                                attributeSize, sizeof (float)*3);
-                            TriangleBatch.VertexAttribArray(attribute++, 4, VertexAttribPointerType.Float, false,
-                                attributeSize, sizeof (float)*3 + sizeof (byte)*4);
+                            TriangleBatch.VertexAttribArray( 0, 3, VertexAttribPointerType.Float, false,
+                                attributeSize );
+                            TriangleBatch.VertexAttribArray( 1, 4, VertexAttribPointerType.Byte, false,
+                                attributeSize, sizeof ( float ) * 3 );
+                            TriangleBatch.VertexAttribArray( 2, 4, VertexAttribPointerType.Float, false,
+                                attributeSize, sizeof ( float ) * 3 + sizeof ( byte ) * 4 );
                             break;
                         case VertexAttributeType.TextureCoordinateCompressed:
-                            TriangleBatch.VertexAttribArray(attribute++, 2, VertexAttribPointerType.Short, false,
-                                attributeSize);
+                            TriangleBatch.VertexAttribArray( 3, 2, VertexAttribPointerType.Short, false,
+                                attributeSize );
                             break;
                         case VertexAttributeType.TangentSpaceUnitVectorsCompressed:
-                            TriangleBatch.VertexAttribArray(attribute++, 1, VertexAttribIntegerType.Int, attributeSize);
-                            TriangleBatch.VertexAttribArray(attribute++, 1, VertexAttribIntegerType.Int, attributeSize,
-                                4);
-                            TriangleBatch.VertexAttribArray(attribute++, 1, VertexAttribIntegerType.Int, attributeSize,
-                                8);
+                            TriangleBatch.VertexAttribArray( 4, 3, VertexAttribPointerType.Float, false,
+                                attributeSize, Vector3.SizeInBytes * 0 );
+                            TriangleBatch.VertexAttribArray( 5, 3, VertexAttribPointerType.Float, false,
+                                attributeSize, Vector3.SizeInBytes * 1 );
+                            TriangleBatch.VertexAttribArray( 6, 3, VertexAttribPointerType.Float, false,
+                                attributeSize, Vector3.SizeInBytes * 2 );
                             break;
                         case VertexAttributeType.CoordinateFloat:
-                            TriangleBatch.VertexAttribArray(attribute++, 3, VertexAttribPointerType.Float, false,
-                                attributeSize);
+                            TriangleBatch.VertexAttribArray( 0, 3, VertexAttribPointerType.Float, false,
+                                attributeSize );
                             break;
                         case VertexAttributeType.TextureCoordinateFloat:
-                            TriangleBatch.VertexAttribArray(attribute++, 2, VertexAttribPointerType.Float, false,
-                                attributeSize);
+                            TriangleBatch.VertexAttribArray( 3, 2, VertexAttribPointerType.Float, false,
+                                attributeSize );
                             break;
+                        case VertexAttributeType.LightmapUVCoordinateOneXbox:
+                            TriangleBatch.VertexAttribArray( 7, 2, VertexAttribPointerType.Short, true,
+                                attributeSize );
+                            break;
+                        case VertexAttributeType.LightmapUVCoordinateTwoXbox:
+                            TriangleBatch.VertexAttribArray( 8, 2, VertexAttribPointerType.Short, true,
+                                attributeSize );
+                            break;
+                        default:
+                            throw new Exception( );
                     }
                 }
             }
         }
 
-        private static byte[] Unpack(byte[] data, VertexAttributeType attributeType,
-            GlobalGeometryCompressionInfoBlock compressionInfo, out int stride)
+        private static byte[] UnpackCoordinates( byte[] data, VertexAttributeType attributeType,
+            GlobalGeometryCompressionInfoBlock compressionInfo, ref int stride )
         {
-            var packedElementSize = attributeType.GetSize();
-            stride = (3*sizeof (float)) + (4*sizeof (float)) + 4;
-            var count = (data.Length/packedElementSize);
-            var bufferLength = count*stride;
-            var buffer = new byte[bufferLength];
-            using (var binaryReader = new BinaryReader(new MemoryStream(data)))
-            using (var binaryWriter = new BinaryWriter(new MemoryStream(buffer)))
+            switch ( attributeType )
             {
-                switch (attributeType)
-                {
-                    case VertexAttributeType.CoordinateCompressed:
-                    case VertexAttributeType.CoordinateWithTripleNode:
-                    case VertexAttributeType.CoordinateWithDoubleNode:
-                    case VertexAttributeType.CoordinateWithSingleNode:
-                        while (binaryReader.BaseStream.Position < data.Length)
+                case VertexAttributeType.CoordinateCompressed:
+                case VertexAttributeType.CoordinateWithTripleNode:
+                case VertexAttributeType.CoordinateWithDoubleNode:
+                case VertexAttributeType.CoordinateWithSingleNode:
+                    var packedElementSize = attributeType.GetSize( );
+                    stride = ( 3 * sizeof ( float ) ) + ( 4 * sizeof ( float ) ) + 4;
+                    var count = ( data.Length / packedElementSize );
+                    var bufferLength = count * stride;
+                    var buffer = new byte[bufferLength];
+                    using ( var binaryReader = new BinaryReader( new MemoryStream( data ) ) )
+                    using ( var binaryWriter = new BinaryWriter( new MemoryStream( buffer ) ) )
+                    {
+                        while ( binaryReader.BaseStream.Position < data.Length )
                         {
-                            var x = VertexFunctions.Unpack(binaryReader.ReadInt16(),
+                            var x = VertexFunctions.Unpack( binaryReader.ReadInt16( ),
                                 compressionInfo.PositionBoundsX.Min,
-                                compressionInfo.PositionBoundsX.Max);
-                            var y = VertexFunctions.Unpack(binaryReader.ReadInt16(),
+                                compressionInfo.PositionBoundsX.Max );
+                            var y = VertexFunctions.Unpack( binaryReader.ReadInt16( ),
                                 compressionInfo.PositionBoundsY.Min,
-                                compressionInfo.PositionBoundsY.Max);
-                            var z = VertexFunctions.Unpack(binaryReader.ReadInt16(),
+                                compressionInfo.PositionBoundsY.Max );
+                            var z = VertexFunctions.Unpack( binaryReader.ReadInt16( ),
                                 compressionInfo.PositionBoundsZ.Min,
-                                compressionInfo.PositionBoundsZ.Max);
-                            binaryWriter.Write(x);
-                            binaryWriter.Write(y);
-                            binaryWriter.Write(z);
-                            switch (attributeType)
+                                compressionInfo.PositionBoundsZ.Max );
+                            binaryWriter.Write( x );
+                            binaryWriter.Write( y );
+                            binaryWriter.Write( z );
+                            switch ( attributeType )
                             {
                                 case VertexAttributeType.CoordinateCompressed:
-                                    binaryWriter.Write((byte) 0); // bone index 0
-                                    binaryWriter.Write((byte) 0); // bone index 1
-                                    binaryWriter.Write((byte) 0); // bone index 2
-                                    binaryWriter.Write((byte) 0); // pad
-                                    binaryWriter.Write(1.0f); // bone weight 0
-                                    binaryWriter.Write((float) 0); // bone weight 1
-                                    binaryWriter.Write((float) 0); // bone weight 2
-                                    binaryWriter.Write((float) 0); // pad
+                                    WriteVertexNodeInformation( binaryWriter,
+                                        0,
+                                        0,
+                                        0,
+                                        1.0f,
+                                        0,
+                                        0 );
                                     break;
                                 case VertexAttributeType.CoordinateWithSingleNode:
-                                    binaryWriter.Write(binaryReader.ReadByte()); // bone index 0
-                                    binaryWriter.Write(binaryReader.ReadByte()); // bone index 1
-                                    binaryWriter.Write((byte) 0); // pad
-                                    binaryWriter.Write((byte) 0); // bone index 2
-                                    binaryWriter.Write(1.0f); // bone weight 0
-                                    binaryWriter.Write((float) 0); // bone weight 1
-                                    binaryWriter.Write((float) 0); // bone weight 2
-                                    binaryWriter.Write((float) 0); // pad
+                                    WriteVertexNodeInformation( binaryWriter,
+                                        binaryReader.ReadByte( ),
+                                        binaryReader.ReadByte( ),
+                                        0,
+                                        1.0f,
+                                        0,
+                                        0 );
                                     break;
                                 case VertexAttributeType.CoordinateWithDoubleNode:
-                                    binaryReader.ReadBytes(2);
-                                    binaryWriter.Write(binaryReader.ReadByte()); // bone index 0
-                                    binaryWriter.Write(binaryReader.ReadByte()); // bone index 1
-                                    binaryWriter.Write((byte) 0); // pad
-                                    binaryWriter.Write((byte) 0); // bone index 2
-                                    binaryWriter.Write(binaryReader.ReadByte()/255.0f); // bone weight 0
-                                    binaryWriter.Write(binaryReader.ReadByte()/255.0f); // bone weight 1
-                                    binaryWriter.Write((float) 0); // bone weight 2
-                                    binaryWriter.Write((float) 0); // pad
+                                    binaryReader.ReadBytes( 2 );
+                                    WriteVertexNodeInformation( binaryWriter,
+                                        binaryReader.ReadByte( ),
+                                        binaryReader.ReadByte( ),
+                                        0,
+                                        binaryReader.ReadByte( ) / 255.0f,
+                                        binaryReader.ReadByte( ) / 255.0f,
+                                        0 );
                                     break;
                                 case VertexAttributeType.CoordinateWithTripleNode:
-                                    binaryWriter.Write(binaryReader.ReadByte()); // bone index 0
-                                    binaryWriter.Write(binaryReader.ReadByte()); // bone index 1
-                                    binaryWriter.Write(binaryReader.ReadByte()); // bone index 2
-                                    binaryWriter.Write((byte) 0); // pad
-                                    binaryWriter.Write(binaryReader.ReadByte()/255.0f); // bone weight 0
-                                    binaryWriter.Write(binaryReader.ReadByte()/255.0f); // bone weight 1
-                                    binaryWriter.Write(binaryReader.ReadByte()/255.0f); // bone weight 2
-                                    binaryWriter.Write((float) 0); // pad
+                                    WriteVertexNodeInformation( binaryWriter,
+                                        binaryReader.ReadByte( ),
+                                        binaryReader.ReadByte( ),
+                                        binaryReader.ReadByte( ),
+                                        binaryReader.ReadByte( ) / 255.0f,
+                                        binaryReader.ReadByte( ) / 255.0f,
+                                        binaryReader.ReadByte( ) / 255.0f );
                                     break;
                             }
                         }
-                        break;
-                    default:
-                        stride = attributeType.GetSize();
-                        return data;
-                }
+                    }
+                    return buffer;
+                default:
+                    return data;
             }
-            return buffer;
         }
 
-        private void BufferElementArrayData(short[] indices)
+        public static byte[] UnpackNormals( byte[] data, VertexAttributeType attributeType, ref int stride )
         {
-            using (TriangleBatch.Begin())
+            switch ( attributeType )
             {
-                TriangleBatch.GenerateBuffer();
-                TriangleBatch.BindBuffer(BufferTarget.ElementArrayBuffer, TriangleBatch.BufferIdents.Last());
-                TriangleBatch.BufferElementArrayData(indices);
+                case VertexAttributeType.TangentSpaceUnitVectorsCompressed:
+                    var packedElementSize = attributeType.GetSize( );
+                    stride = Vector3.SizeInBytes * 3;
+                    var count = ( data.Length / packedElementSize );
+                    var bufferLength = count * stride;
+                    var buffer = new byte[bufferLength];
+                    using ( var binaryReader = new BinaryReader( new MemoryStream( data ) ) )
+                    using ( var binaryWriter = new BinaryWriter( new MemoryStream( buffer ) ) )
+                    {
+                        while ( binaryReader.BaseStream.Position < data.Length )
+                        {
+                            var normal = VertexFunctions.UnpackVectorInt( binaryReader.ReadInt32( ) );
+                            var tangent = VertexFunctions.UnpackVectorInt( binaryReader.ReadInt32( ) );
+                            var bitangent = VertexFunctions.UnpackVectorInt( binaryReader.ReadInt32( ) );
+                            binaryWriter.Write( normal );
+                            binaryWriter.Write( tangent );
+                            binaryWriter.Write( bitangent );
+                        }
+                    }
+                    return buffer;
+                default:
+                    return data;
             }
         }
 
-        public void Dispose()
+        private static void WriteVertexNodeInformation( BinaryWriter binaryWriter, byte nodeIndex0, byte nodeIndex1,
+            byte nodeIndex2, float nodeWeight0, float nodeWeight1, float nodeWeight2 )
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            binaryWriter.Write( nodeIndex0 ); // bone index 0
+            binaryWriter.Write( nodeIndex1 ); // bone index 1
+            binaryWriter.Write( nodeIndex2 ); // bone index 2
+            binaryWriter.Write( ( byte ) 0 ); // pad
+            binaryWriter.Write( nodeWeight0 ); // bone weight 0
+            binaryWriter.Write( nodeWeight1 ); // bone weight 1
+            binaryWriter.Write( nodeWeight2 ); // bone weight 2
+            binaryWriter.Write( ( float ) 0 ); // pad
         }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed || !disposing) return;
-            GL.BindVertexArray(0);
-            TriangleBatch.Dispose();
-            _disposed = true;
-        }
-
-        IEnumerator<TriangleBatch> IEnumerable<TriangleBatch>.GetEnumerator()
-        {
-            if (TriangleBatch != null) yield return TriangleBatch;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable<TriangleBatch>) this).GetEnumerator();
-        }
-    }
-
-
-    public static class VertexAttributeTypeExtensions
-    {
-        public static byte GetSize(this VertexAttributeType attributeType)
-        {
-            var value = (short) attributeType;
-            var size = (byte) (value & 0x00FF);
-            return size;
-        }
-
-        public static VertexAttributeType ReadVertexAttributeType(this BinaryReader binaryReader)
-        {
-            var msb = binaryReader.ReadByte();
-            var lsb = binaryReader.ReadByte();
-            var type = (VertexAttributeType) (msb << 8 | lsb);
-            return type;
-        }
-    }
-
-    public enum VertexAttributeType : short
-    {
-        None = 0x0000,
-        CoordinateFloat = 0x010C,
-        CoordinateCompressed = 0x0206,
-        CoordinateWithSingleNode = 0x0408,
-        CoordinateWithDoubleNode = 0x060C,
-        CoordinateWithTripleNode = 0x080C,
-
-        TextureCoordinateFloatPc = 0x1708,
-        TextureCoordinateFloat = 0x1808,
-        TextureCoordinateCompressed = 0x1904,
-
-        TangentSpaceUnitVectorsFloat = 0x1924,
-        TangentSpaceUnitVectorsCompressed = 0x1B0C,
-
-        LightmapUvCoordinateOne = 0x1F08,
-        LightmapUvCoordinateTwo = 0x3008,
-
-        DiffuseColour = 0x350C,
-    }
+    };
 }

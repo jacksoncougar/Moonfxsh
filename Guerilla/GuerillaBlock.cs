@@ -19,36 +19,18 @@ namespace Moonfish.Guerilla
 
         public abstract int Alignment { get; }
 
-        public BlamPointer ReadBlockArrayPointer<T>(BinaryReader binaryReader)
-            where T : GuerillaBlock, new()
-        {
-            var ctor = GetObjectActivator<T>(typeof(T));
-            var elementSize = ctor().SerializedSize;
-            return ReadBlockArrayPointer(binaryReader, elementSize);
-        }
+        private delegate T ObjectActivator<out T>(params object[] args);
 
-        public BlamPointer ReadBlockArrayPointer(BinaryReader binaryReader, int elementSize)
-        {
-            var blamPointer = binaryReader.ReadBlamPointer(elementSize);
-            return blamPointer;
-        }
+        private static readonly Dictionary<Type, ObjectActivator<GuerillaBlock>> Activators =
+            new Dictionary<Type, ObjectActivator<GuerillaBlock>>(120);
 
-        public virtual int CalculateMarshalledSize()
-        {
-            return 0;
-        }
-
-        delegate T ObjectActivator<out T>(params object[] args);
-
-        static readonly Dictionary<Type, ObjectActivator<GuerillaBlock>> Activators = new Dictionary<Type, ObjectActivator<GuerillaBlock>>(120);
-
-        static ObjectActivator<T> GetActivator<T> (ConstructorInfo ctor)
+        private static ObjectActivator<T> GetActivator<T>(ConstructorInfo ctor)
         {
             ParameterInfo[] paramsInfo = ctor.GetParameters();
 
             //create a single param of type object[]
             ParameterExpression param =
-                Expression.Parameter(typeof(object[]), "args");
+                Expression.Parameter(typeof (object[]), "args");
 
             Expression[] argsExp =
                 new Expression[paramsInfo.Length];
@@ -76,10 +58,10 @@ namespace Moonfish.Guerilla
             //create a lambda with the New
             //Expression as body and our param object[] as arg
             LambdaExpression lambda =
-                Expression.Lambda(typeof(ObjectActivator<T>), newExp, param);
+                Expression.Lambda(typeof (ObjectActivator<T>), newExp, param);
 
             //compile it
-            ObjectActivator<T> compiled = (ObjectActivator<T>)lambda.Compile();
+            ObjectActivator<T> compiled = (ObjectActivator<T>) lambda.Compile();
             return compiled;
         }
 
@@ -100,11 +82,11 @@ namespace Moonfish.Guerilla
             }
             var pointerArray = new Queue<BlamPointer>[blamPointer.ElementCount];
 
-            var ctor = GetObjectActivator<T>(typeof(T));
+            var ctor = GetObjectActivator<T>(typeof (T));
 
             for (var i = 0; i < blamPointer.ElementCount; ++i)
             {
-                array[i] = (T)ctor();
+                array[i] = (T) ctor();
                 pointerArray[i] = array[i].ReadFields(binaryReader);
             }
             for (var i = 0; i < blamPointer.ElementCount; ++i)
@@ -136,7 +118,7 @@ namespace Moonfish.Guerilla
             if (BlamPointer.IsNull(blamPointer)) return new short[0];
             binaryReader.BaseStream.Position = blamPointer.StartAddress;
             var elements = new short[blamPointer.ElementCount];
-            var buffer = binaryReader.ReadBytes(blamPointer.ElementCount*2);
+            var buffer = binaryReader.ReadBytes(blamPointer.ElementCount * 2);
             Buffer.BlockCopy(buffer, 0, elements, 0, buffer.Length);
             return elements;
         }
@@ -146,16 +128,8 @@ namespace Moonfish.Guerilla
             return new Queue<BlamPointer>();
         }
 
-        public virtual void ReadPointers(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
-        {
-        }
         public virtual void ReadInstances(BinaryReader binaryReader, Queue<BlamPointer> blamPointers)
         {
-        }
-
-        public virtual int CalculateSizeOfGraphData()
-        {
-            return SerializedSize;
         }
 
         public virtual void Read(BinaryReader binaryReader)
@@ -169,12 +143,14 @@ namespace Moonfish.Guerilla
             return nextAddress;
         }
 
-
-
-
-        internal void Read_(QueueableBinaryWriter queueableBinaryWriter)
+        internal void Read_(QueueableBinaryReader queueableBinaryReader)
         {
             throw new NotImplementedException();
+        }
+
+        public virtual void QueueReads(QueueableBinaryReader queueableBinaryReader)
+        {
+            return;
         }
 
         public virtual void Write_(QueueableBinaryWriter queueableBinaryWriter)

@@ -11,6 +11,21 @@
     <AssemblyName>Moonfish2015</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -71,20 +86,29 @@
       <HintPath>packages\JetBrains.Annotations.9.1.1\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\OpenTK.1.1.1589.5942\lib\NET40\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\OpenTK.GLControl.1.1.1589.5942\lib\NET40\OpenTK.GLControl.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>packages\DockPanelSuite.2.9.0.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\CacheStream.cs" />
@@ -106,6 +130,18 @@
     <Compile Include="Compiler\Decompiler.cs" />
     <Compile Include="Debug\Memory.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Forms\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ObjectListView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectListView.Designer.cs">
+      <DependentUpon>ObjectListView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ShaderViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,14 +150,19 @@
     </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="GlobalStrings.cs" />
+    <Compile Include="Graphics\CollisionGroup.cs" />
+    <Compile Include="Graphics\ConvexHullCaster.cs" />
     <Compile Include="Graphics\INode.cs" />
     <Compile Include="Graphics\Input\ClickableCollisionObject.cs" />
     <Compile Include="Graphics\Input\GizmoBase.cs" />
     <Compile Include="Graphics\Input\RotationGizmo.cs" />
     <Compile Include="Graphics\Input\TranslationGizmo.cs" />
+    <Compile Include="Graphics\IRenderable.cs" />
+    <Compile Include="Graphics\LevelMeshManager.cs" />
     <Compile Include="Graphics\MathHelper.cs" />
-    <Compile Include="Graphics\Primitives\Debug.cs" />
+    <Compile Include="Graphics\Primitives\GLDebug.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
+    <Compile Include="Graphics\ShaderReference.cs" />
     <Compile Include="Graphics\TriangleBatch.cs" />
     <Compile Include="Graphics\BulletDebugDrawer.cs" />
     <Compile Include="Graphics\Camera.cs" />
@@ -129,11 +170,11 @@
     <Compile Include="Graphics\DynamicScene.cs" />
     <Compile Include="Graphics\DynamicScene.Events.cs" />
     <Compile Include="Graphics\Interfaces.cs" />
-    <Compile Include="Forms\Gizmo.cs">
+    <Compile Include="Forms\SceneView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Gizmo.Designer.cs">
-      <DependentUpon>Gizmo.cs</DependentUpon>
+    <Compile Include="Forms\SceneView.Designer.cs">
+      <DependentUpon>SceneView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MarkerViewer.cs">
       <SubType>Form</SubType>
@@ -144,10 +185,9 @@
     <Compile Include="Graphics\GraphicsEvents.cs" />
     <Compile Include="Graphics\GraphicsExtensions.cs" />
     <Compile Include="Graphics\Grid.cs" />
-    <Compile Include="Graphics\Manager.cs" />
+    <Compile Include="Graphics\MeshManager.cs" />
     <Compile Include="Graphics\MarkerWrapper.cs" />
     <Compile Include="Graphics\MaterialShader.cs" />
-    <Compile Include="Graphics\Maths.cs" />
     <Compile Include="Graphics\Mesh.cs" />
     <Compile Include="Graphics\MoonfishColours.cs" />
     <Compile Include="Graphics\Conic.cs" />
@@ -167,13 +207,17 @@
     <Compile Include="Graphics\Swizzler.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\Track.cs" />
+    <Compile Include="Graphics\VertexAttributeType.cs" />
     <Compile Include="Graphics\VertexFunctions.cs" />
+    <Compile Include="Graphics\Viewport.cs" />
     <Compile Include="Guerilla\BinaryIOReflection.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaBlockClassBase.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaCodeDom.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaCommentCollection.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaEnumBlockClass.cs" />
     <Compile Include="Cache\CacheStream.CopyTo.cs" />
+    <Compile Include="Guerilla\GeometryExtensions.cs" />
+    <Compile Include="Guerilla\IReadQueueable.cs" />
     <Compile Include="Guerilla\Preprocess\ScenarioStructureBspReferenceBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\ActorStartingLocationsBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\AdditionalNodeDataBlock.generated.cs" />
@@ -634,6 +678,7 @@
     <Compile Include="Guerilla\Tags.Generated\PersistentBackgroundAnimationBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\PhantomsBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\PhantomTypesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PhmoMaterialsBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\PhysicsBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\PhysicsModelBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\PhysicsModelConstraintEdgeConstraintBlock.generated.cs" />
@@ -1199,13 +1244,16 @@
     <Compile Include="Guerilla\Tags\DecoratorCacheBlockBlock.cs" />
     <Compile Include="Guerilla\Tags\DecoratorSetBlock.cs" />
     <Compile Include="Guerilla\Tags\GlobalWaterDefinitionsBlock.cs" />
+    <Compile Include="Guerilla\Tags\LightmapGeometrySectionBlock.cs" />
     <Compile Include="Guerilla\Tags\LightmapVertexBufferBucketBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\MaterialsBlock.cs" />
     <Compile Include="Guerilla\Tags\MoonfishXboxAnimationRawBlock.cs" />
     <Compile Include="Guerilla\Tags\ParticleModelBlock.cs" />
     <Compile Include="Guerilla\Tags\PrtInfoBlock.cs" />
     <Compile Include="Guerilla\Tags\SoundGestaltExtraInfoBlock.cs" />
     <Compile Include="Guerilla\Tags\SoundPermutationChunkBlock.cs" />
     <Compile Include="Guerilla\Tags\StructureBspClusterBlock.cs" />
+    <Compile Include="Guerilla\Tags\StructureLightmapPaletteColorBlock.cs" />
     <Compile Include="ValueTypes\BinaryWriterExtensions.cs" />
     <Compile Include="ValueTypes\LayoutAttribute.cs" />
     <Compile Include="ValueTypes\TagBlockFieldAttribute.cs" />
@@ -1278,6 +1326,12 @@
     <None Include="data\fragment.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="data\lightmap.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="data\lightmap.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="data\sprite.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -1314,8 +1368,14 @@
     <Content Include="license.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\Gizmo.resx">
-      <DependentUpon>Gizmo.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectListView.resx">
+      <DependentUpon>ObjectListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SceneView.resx">
+      <DependentUpon>SceneView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MarkerViewer.resx">
       <DependentUpon>MarkerViewer.cs</DependentUpon>
@@ -1333,6 +1393,23 @@
     <Folder Include="bin\Release\" />
     <Folder Include="bin\x86\Release\" />
     <Folder Include="obj\Debug\TempPE\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

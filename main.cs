@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Fasterflect;
 using Moonfish.Cache;
+using Moonfish.Forms;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.CodeDom;
 using Moonfish.Guerilla.Tags;
@@ -26,32 +27,21 @@ namespace Moonfish
         [STAThread]
         private static void Main()
         {
-            using (var map = new Moonfish.Cache.CacheStream(Path.Combine(Local.MapsDirectory, @"output.map")))
-            using (var output = new FileStream(Path.Combine(Local.MapsDirectory, @"output1.map"), FileMode.Create,
-                    FileAccess.Write, FileShare.ReadWrite, 4 * 1024, FileOptions.SequentialScan))
+            //GuerillaCodeDom.GenerateGuerillaCode(TagClass.Phmo);
+            CacheStream map = new CacheStream(Path.Combine(Local.MapsDirectory, "ascension.map"));
+            foreach (var datum in map.Index)
             {
-                map.SaveTo(output);
-            } 
-            return;
-            {
-                var test = new Moonfish.Cache.CacheStream(Path.Combine(Local.MapsDirectory, @"output.map"));
-                test.Seek(test.Index.GlobalsIdent);
-                var position = test.GetFilePosition();
-
-                var buggery = test.GetOwner(187923790);
-                //test.Deserialize(buggery.Identifier);
-
-                var localOffset = 187923790 - test.VirtualAddressToFileOffset(buggery.VirtualAddress);
-
-                foreach (var data in test.Index)
-                {
-                    test.Deserialize(data.Identifier);
-                }
+                new Validator().Validate(datum, map);
             }
-
-            //Application.EnableVisualStyles();
-            //Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new Gizmo());
+            var cache = CacheStream.SaveAs( map, Path.Combine( Local.MapsDirectory, "headlong.map") );
+            foreach ( var datum in cache.Index )
+            {
+                new Validator( ).Validate( datum, cache );
+            }
+            return;
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new MainForm());
         }
     }
 }

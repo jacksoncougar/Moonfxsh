@@ -2,6 +2,8 @@
 using OpenTK;
 using System;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla.Tags
@@ -31,6 +33,29 @@ namespace Moonfish.Guerilla.Tags
         {
             GeometryBlockInfo.BlockSize = length;
         }
+
+        public void LoadSectionData()
+        {
+            var resourceStream = Halo2.GetResourceBlock(GeometryBlockInfo);
+            if (resourceStream == null) return;
+
+            var sectionBlock = new RenderModelSectionDataBlock();
+            using (var binaryReader = new BinaryReader(resourceStream))
+            {
+                sectionBlock.Read(binaryReader);
+
+                var vertexBufferResources = GeometryBlockInfo.Resources.Where(
+                    x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer).ToArray();
+                for (var i = 0;
+                    i < sectionBlock.Section.VertexBuffers.Length && i < vertexBufferResources.Length;
+                    ++i)
+                {
+                    sectionBlock.Section.VertexBuffers[i].VertexBuffer.Data =
+                        resourceStream.GetResourceData(vertexBufferResources[i]);
+                }
+            }
+            SectionData = new[] {sectionBlock};
+        }
     }
 
     public partial class GlobalGeometryCompressionInfoBlock
@@ -48,11 +73,11 @@ namespace Moonfish.Guerilla.Tags
         public Matrix4 ToObjectMatrix()
         {
             Matrix4 extents_matrix = new Matrix4(
-                new Vector4(12, 0.0f, 0.0f, 0.0f),
-                new Vector4(0.0f, 1, 0.0f, 0.0f),
-                new Vector4(0.0f, 0.0f, 1, 0.0f),
-                new Vector4(0, 0, 0, 1.0f)
-                );
+                 new Vector4(PositionBoundsX.Length / 2, 0.0f, 0.0f, 0.0f),
+                 new Vector4(0.0f, PositionBoundsY.Length / 2, 0.0f, 0.0f),
+                 new Vector4(0.0f, 0.0f, PositionBoundsZ.Length / 2, 0.0f),
+                 new Vector4(PositionBoundsX.Min + PositionBoundsX.Length / 2, PositionBoundsY.Min + PositionBoundsY.Length / 2, PositionBoundsZ.Min + PositionBoundsZ.Length / 2, 1.0f)
+                 );
             return extents_matrix;
         }
 

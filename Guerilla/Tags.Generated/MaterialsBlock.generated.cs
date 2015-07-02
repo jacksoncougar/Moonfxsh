@@ -8,14 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Moonfish.Guerilla.Tags
+using System.Linq;
+using Moonfish.Tags;
+
+namespace Moonfish.Guerilla.Tags.Generated
 {
-    using Moonfish.Tags;
-    using Moonfish.Model;
-    using System.IO;
-    using System.Collections.Generic;
-    using System.Linq;
-    
     public partial class MaterialsBlock : GuerillaBlock, IWriteQueueable
     {
         public Moonfish.Tags.StringIdent Name;
@@ -27,12 +24,12 @@ namespace Moonfish.Guerilla.Tags
         public Moonfish.Tags.StringIdent GeneralArmor;
         public Moonfish.Tags.StringIdent SpecificArmor;
         public MaterialPhysicsPropertiesStructBlock PhysicsProperties = new MaterialPhysicsPropertiesStructBlock();
-        [Moonfish.Tags.TagReferenceAttribute("mpdt")]
+        [TagReference("mpdt")]
         public Moonfish.Tags.TagReference OldMaterialPhysics;
-        [Moonfish.Tags.TagReferenceAttribute("bsdt")]
+        [TagReference("bsdt")]
         public Moonfish.Tags.TagReference BreakableSurface;
         public MaterialsSweetenersStructBlock Sweeteners = new MaterialsSweetenersStructBlock();
-        [Moonfish.Tags.TagReferenceAttribute("foot")]
+        [TagReference("foot")]
         public Moonfish.Tags.TagReference MaterialEffects;
         public override int SerializedSize
         {

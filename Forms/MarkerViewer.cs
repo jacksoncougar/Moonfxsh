@@ -57,7 +57,7 @@ namespace Moonfish.Graphics
 
         private void SaveMarkerData()
         {
-            var selectedItem = Scene.ObjectManager[SelectedTag].FirstOrDefault();
+            var selectedItem = Scene.ObjectManager[SelectedTag];
             var renderModel = selectedItem.Model.RenderModel.Get<RenderModelBlock>();
 
             if (selectedItem == null) return;
@@ -173,13 +173,12 @@ namespace Moonfish.Graphics
             {
                 control.Visible = tsBtnLabels.Checked;
                 var marker = (MarkerWrapper) control.Tag;
-                var location = Scene.Camera.UnProject(marker.ParentWorldMatrix.ExtractTranslation(),
-                    Maths.ProjectionTarget.View);
+                var location = Scene.Camera.Project( marker.ParentWorldMatrix.ExtractTranslation( ) );
                 control.Location = new Point((int) location.X, (int) location.Y);
             }
             Scene.DrawDebugCollision = debugDrawToolStripMenuItem.Checked;
             //Scene.MousePole.Mode = (TransformMode)Enum.Parse(typeof(TransformMode), toolStripComboBox1.SelectedItem.ToString());
-            var selectedItem = Scene.ObjectManager[SelectedTag].FirstOrDefault();
+            var selectedItem = Scene.ObjectManager[SelectedTag];
             if (selectedItem == null) return;
             selectedItem.Flags = toolStripButton1.Checked
                 ? selectedItem.Flags |= ScenarioObject.RenderFlags.RenderNodes
@@ -206,7 +205,7 @@ namespace Moonfish.Graphics
 
         private void RemoveModel(TagIdent ident)
         {
-            var @object = Scene.ObjectManager[ident].FirstOrDefault();
+            var @object = Scene.ObjectManager[ident];
             if (@object == null) return;
 
             var collisionObject =
@@ -236,10 +235,10 @@ namespace Moonfish.Graphics
             var scenarioObject = new ScenarioObject(model);
             Scene.ObjectManager.Add(ident, scenarioObject);
 
-            Scene.ProgramManager.LoadMaterials(renderModel.Materials.Select(x => x.Shader.Ident), Map);
-            Scene.CollisionManager.LoadScenarioObjectCollision(Scene.ObjectManager[ident].First());
+            //Scene.ProgramManager.LoadMaterials(renderModel.Materials.Select(x => x.Shader.Ident), Map);
+            Scene.CollisionManager.LoadScenarioObjectCollision(Scene.ObjectManager[ident]);
 
-            var @object = Scene.ObjectManager[ident].First();
+            var @object = Scene.ObjectManager[ident];
 
             propertyGrid1.SelectedObject = renderModel.MarkerGroups;
             glControl1.Controls.Clear();
@@ -266,7 +265,7 @@ namespace Moonfish.Graphics
             if (listBox1.SelectedIndex < 0) return;
             RemoveModel(SelectedTag);
             SelectedTag = ((TagInfo) listBox1.SelectedItem).tagDatum.Identifier;
-            if (Scene.ObjectManager[SelectedTag].Any() == false)
+            if (Scene.ObjectManager[SelectedTag] != null)
             {
                 LoadModel(SelectedTag);
             }

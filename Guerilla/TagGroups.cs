@@ -416,6 +416,14 @@ namespace Moonfish.Guerilla
                 }
                 switch (name)
                 {
+                    case "materials_block":
+                        LatestFieldSet = FieldSets[0];
+                        if(LatestFieldSet.Fields.Count == 5)
+                        {
+                            name = "phmo_materials_block";
+                            definitionName = "phmo_materials_block";
+                        }
+                        break;
                     case "hud_globals_block":
                         LatestFieldSet = FieldSets[0];
                         break;

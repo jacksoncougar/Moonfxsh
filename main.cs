@@ -28,20 +28,20 @@ namespace Moonfish
         private static void Main()
         {
             //GuerillaCodeDom.GenerateGuerillaCode(TagClass.Phmo);
-            CacheStream map = new CacheStream(Path.Combine(Local.MapsDirectory, "ascension.map"));
-            foreach (var datum in map.Index)
-            {
-                new Validator().Validate(datum, map);
-            }
-            var cache = CacheStream.SaveAs( map, Path.Combine( Local.MapsDirectory, "headlong.map") );
-            foreach ( var datum in cache.Index )
-            {
-                new Validator( ).Validate( datum, cache );
-            }
-            return;
+            //CacheStream map = new CacheStream(Path.Combine(Local.MapsDirectory, "lockout.map"));
+            //foreach (var datum in map.Index)
+            //{
+            //    new Validator().Validate(datum, map);
+            //}
+            //var cache = CacheStream.SaveAs( map, Path.Combine( Local.MapsDirectory, "headlong.map") );
+            //foreach ( var datum in cache.Index )
+            //{
+            //    new Validator( ).Validate( datum, cache );
+            //}
+            //return;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(new DatumViewer());
         }
     }
 }

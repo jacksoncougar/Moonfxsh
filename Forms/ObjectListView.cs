@@ -69,10 +69,10 @@ namespace Moonfish.Forms
                 "Machines", HorizontalAlignment.Left));
         }
 
-        private void AddListViewItems( IEnumerable<TagDatum> scenery, ListViewGroup listViewGroup )
+        public void AddListViewItems( IEnumerable<TagDatum> tagDatums, ListViewGroup listViewGroup )
         {
             listView1.Groups.Add( listViewGroup );
-            foreach ( var tagDatum in scenery )
+            foreach ( var tagDatum in tagDatums )
             {
                 listView1.Items.Add( new ListViewItem( tagDatum.Identifier.Index.ToString( ) )
                 {

@@ -130,6 +130,24 @@
     <Compile Include="Compiler\Decompiler.cs" />
     <Compile Include="Debug\Memory.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Forms\DatumViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DatumViewer.Designer.cs">
+      <DependentUpon>DatumViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\InputBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InputBox.Designer.cs">
+      <DependentUpon>InputBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\GuerillaBlockPropertyViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GuerillaBlockPropertyViewer.Designer.cs">
+      <DependentUpon>GuerillaBlockPropertyViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +165,12 @@
     </Compile>
     <Compile Include="Forms\ShaderViewer.Designer.cs">
       <DependentUpon>ShaderViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TagDatumView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TagDatumView.Designer.cs">
+      <DependentUpon>TagDatumView.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="GlobalStrings.cs" />
@@ -1368,6 +1392,15 @@
     <Content Include="license.txt" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\DatumViewer.resx">
+      <DependentUpon>DatumViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\InputBox.resx">
+      <DependentUpon>InputBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GuerillaBlockPropertyViewer.resx">
+      <DependentUpon>GuerillaBlockPropertyViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1382,6 +1415,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ShaderViewer.resx">
       <DependentUpon>ShaderViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TagDatumView.resx">
+      <DependentUpon>TagDatumView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

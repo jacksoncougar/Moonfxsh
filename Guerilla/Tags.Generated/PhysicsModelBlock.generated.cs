@@ -158,7 +158,7 @@ namespace Moonfish.Guerilla.Tags
             queueableBinaryWriter.QueueWrite(this.Lists);
             queueableBinaryWriter.QueueWrite(this.ListShapes);
             queueableBinaryWriter.QueueWrite(this.Mopps);
-            queueableBinaryWriter.QueueWrite(this.MoppCodes, 8);
+            queueableBinaryWriter.QueueWrite(this.MoppCodes);
             queueableBinaryWriter.QueueWrite(this.HingeConstraints);
             queueableBinaryWriter.QueueWrite(this.RagdollConstraints);
             queueableBinaryWriter.QueueWrite(this.Regions);

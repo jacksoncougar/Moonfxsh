@@ -52,6 +52,7 @@ namespace Moonfish.Forms
             this.treeView1.SelectedImageIndex = 0;
             this.treeView1.Size = new System.Drawing.Size(522, 350);
             this.treeView1.TabIndex = 0;
+            this.treeView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.treeView1_KeyDown);
             this.treeView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseClick);
             // 
             // contextMenuStrip1
@@ -60,7 +61,7 @@ namespace Moonfish.Forms
             this.cloneToolStripMenuItem,
             this.clonemanyToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(139, 48);
             // 
             // cloneToolStripMenuItem
             // 

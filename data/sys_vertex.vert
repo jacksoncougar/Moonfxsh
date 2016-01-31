@@ -10,6 +10,6 @@ uniform mat4 ViewProjectionMatrixUniform;
 void main()
 {
 	DiffuseColour = Colour;
-    gl_Position = ViewProjectionMatrixUniform  * WorldMatrixUniform * Position;
+    gl_Position = ViewProjectionMatrixUniform  * Position;
 	gl_PointSize = 5;
 }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Moonfish</RootNamespace>
     <AssemblyName>Moonfish2015</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -26,6 +26,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,6 +38,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -45,6 +48,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -56,6 +60,7 @@
     <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -66,6 +71,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -127,6 +133,7 @@
     <Compile Include="Cache\VirtualStream.cs" />
     <Compile Include="Collision\DebugDrawer.cs" />
     <Compile Include="Collision\Shapes.cs" />
+    <Compile Include="Collision\TriangleRayIntersection.cs" />
     <Compile Include="Compiler\Decompiler.cs" />
     <Compile Include="Debug\Memory.cs" />
     <Compile Include="Extensions.cs" />
@@ -174,6 +181,10 @@
     </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="GlobalStrings.cs" />
+    <Compile Include="Graphics\Bucket.cs" />
+    <Compile Include="Graphics\BucketManager.cs" />
+    <Compile Include="Graphics\ClosestNotMeConvexResultCallback.cs" />
+    <Compile Include="Graphics\ClosestRayResultCullFaceCallback.cs" />
     <Compile Include="Graphics\CollisionGroup.cs" />
     <Compile Include="Graphics\ConvexHullCaster.cs" />
     <Compile Include="Graphics\INode.cs" />
@@ -231,6 +242,8 @@
     <Compile Include="Graphics\Swizzler.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\Track.cs" />
+    <Compile Include="Graphics\TriangleBucket.cs" />
+    <Compile Include="Graphics\UniformBuffer.cs" />
     <Compile Include="Graphics\VertexAttributeType.cs" />
     <Compile Include="Graphics\VertexFunctions.cs" />
     <Compile Include="Graphics\Viewport.cs" />
@@ -242,6 +255,7 @@
     <Compile Include="Cache\CacheStream.CopyTo.cs" />
     <Compile Include="Guerilla\GeometryExtensions.cs" />
     <Compile Include="Guerilla\IReadQueueable.cs" />
+    <Compile Include="Guerilla\Preprocess\Bsp3dNodesBlock.cs" />
     <Compile Include="Guerilla\Preprocess\ScenarioStructureBspReferenceBlock.cs" />
     <Compile Include="Guerilla\Tags.Generated\ActorStartingLocationsBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\AdditionalNodeDataBlock.generated.cs" />
@@ -1347,33 +1361,46 @@
   <ItemGroup>
     <Compile Include="Cache\CacheStream.StringsInfo.cs" />
     <Compile Include="Cache\CacheStream.SharedInfoStruct.cs" />
-    <None Include="data\fragment.frag">
+    <EmbeddedResource Include="data\fragment.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\lightmap.frag">
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\lightmap.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\lightmap.vert">
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\lightmap.vert">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\sprite.frag">
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\sprite.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\sprite.vert">
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\sprite.vert">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\sys_fragment.frag">
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\debug.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\sys_vertex.vert">
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\sys_fragment.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\vertex.vert">
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\debug.vert">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="data\viewscreen.vert">
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\sys_vertex.vert">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\vertex.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\viewscreen.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <EmbeddedResource Include="data\debug2.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\debug2.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <None Include="Documentation\jmad animations raw.pdf" />
     <None Include="Documentation\sbsp &amp; lightmap meta.pdf" />
     <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />

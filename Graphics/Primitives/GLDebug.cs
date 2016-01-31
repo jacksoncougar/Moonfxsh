@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using OpenTK;
@@ -7,198 +6,230 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics.Primitives
 {
+    /// <summary>
+    ///     Class for rendering primitive shapes in OpenGL efficiently
+    /// </summary>
     public static class GLDebug
     {
-        private const int MaxPoints = 10000;
-        private const int MaxLines = 10000;
-        public static Program DebugProgram { private get; set; }
-        public static Program ScreenspaceProgram { private get; set; }
+        private const int MaxPoints = 100;
+        private const int GlobalMaxLines = 250000;
 
-        [Conditional( "DEBUG" )]
-        public static void DrawNormal( this Vector3 normal, float length, Color color )
-        {
-            DrawLine( normal, normal + normal * length, color, 3.0f );
-        }
+        private static readonly VertexArrayObject PointBatch = new VertexArrayObject( );
+        private static readonly VertexArrayObject LineBatch = new VertexArrayObject( );
+        private static readonly VertexArrayObject TriangleBatch = new VertexArrayObject( );
 
-        [Conditional( "DEBUG" )]
-        public static void DrawLine( Vector3 from, Vector3 to, Color color, float lineWidth )
-        {
-            DrawLine( ref from, ref to, ref color, lineWidth );
-        }
+        private static readonly Vector3[] PointList = new Vector3[MaxPoints];
+        private static readonly Vector3[] LineList = new Vector3[GlobalMaxLines];
+        private static readonly Vector3[] TriangleList = new Vector3[GlobalMaxTriangles];
+        private static int lineIndex;
+        private static int pointIndex;
+        private static int triangleIndex;
 
-        [Conditional( "DEBUG" )]
-        public static void Draw2DPoint( Vector2 point, Color color, float pointSize = 1.0f )
-        {
-            var vao = GL.GenVertexArray( );
-            var arrayBuffer = GL.GenBuffer( );
+        private static int MaxLines;
+        private static readonly Vector3 DefaultColour = Color.DarkOliveGreen.ToColorF( ).RGBA.Xyz;
 
-            GL.BindVertexArray( vao );
-            GL.BindBuffer( BufferTarget.ArrayBuffer, arrayBuffer );
-            GL.BufferData( BufferTarget.ArrayBuffer, ( IntPtr ) Vector2.SizeInBytes, ref point,
-                BufferUsageHint.StreamDraw );
-            GL.VertexAttribPointer( 0, 2, VertexAttribPointerType.Float, false, 0, IntPtr.Zero );
-            GL.EnableVertexAttribArray( 0 );
-            var colourAttribute = ScreenspaceProgram.GetAttributeLocation( "Colour" );
-            var worldMatrixUniform = ScreenspaceProgram.GetUniformLocation( "WorldMatrixUniform" );
-            using ( ScreenspaceProgram.Use( ) )
-            {
-                ScreenspaceProgram.SetUniform( worldMatrixUniform, Matrix4.Identity );
-                Program.SetAttribute( colourAttribute, new ColorF( Color.FromArgb( color.ToArgb( ) ) ).RGBA );
-                GL.DrawArrays( PrimitiveType.Points, 0, 1 );
-            }
-            GL.DeleteBuffer( arrayBuffer );
-            GL.DeleteVertexArray( vao );
-        }
+        private const int GlobalMaxTriangles = 300;
 
-        [Conditional( "DEBUG" )]
-        public static void DrawPoint( Vector3 point, Color color, float pointSize )
-        {
-            var vao = GL.GenVertexArray( );
-            var arrayBuffer = GL.GenBuffer( );
-
-            GL.BindVertexArray( vao );
-            GL.BindBuffer( BufferTarget.ArrayBuffer, arrayBuffer );
-            GL.BufferData( BufferTarget.ArrayBuffer, ( IntPtr ) Vector3.SizeInBytes, ref point,
-                BufferUsageHint.StreamDraw );
-            GL.VertexAttribPointer( 0, 3, VertexAttribPointerType.Float, false, 0, IntPtr.Zero );
-            GL.EnableVertexAttribArray( 0 );
-            var colourAttribute = DebugProgram.GetAttributeLocation( "Colour" );
-            var worldMatrixUniform = DebugProgram.GetUniformLocation( "WorldMatrixUniform" );
-            GL.Disable( EnableCap.DepthTest );
-            GL.PointSize( 5f );
-            using ( DebugProgram.Use( ) )
-            {
-                DebugProgram.SetUniform( worldMatrixUniform, Matrix4.Identity );
-                Program.SetAttribute( colourAttribute, new ColorF( Color.FromArgb( color.ToArgb( ) ) ).RGBA );
-                GL.DrawArrays( PrimitiveType.Points, 0, 1 );
-            }
-            GL.Enable( EnableCap.DepthTest );
-            GL.Finish( );
-            GL.DeleteBuffer( arrayBuffer );
-            GL.DeleteVertexArray( vao );
-        }
-
-        private static TriangleBatch pointBatch = new TriangleBatch();
-        private static TriangleBatch lineBatch = new TriangleBatch();
-
-        private static Vector3[] pointList = new Vector3[MaxPoints];
-        private static Vector3[] lineList = new Vector3[MaxLines * 2];
 
         static GLDebug( )
         {
-            using ( pointBatch.Begin( ) )
+#if DEBUG
+            using ( PointBatch.Begin( ) )
             {
-                pointBatch.BindBuffer( BufferTarget.ArrayBuffer,  pointBatch.GetOrGenerateBuffer( "coordinates" ) );
-                pointBatch.BufferVertexAttributeData(new Vector3[MaxPoints], BufferUsageHint.StreamDraw);
-                pointBatch.VertexAttribArray( 0, 3, VertexAttribPointerType.Float );
+                PointBatch.BindBuffer( BufferTarget.ArrayBuffer, PointBatch.GetOrGenerateBuffer( "coordinates" ) );
+                PointBatch.BufferVertexAttributeData( new Vector3[MaxPoints], BufferUsageHint.StreamDraw );
+                PointBatch.VertexAttribArray( 0, 3, VertexAttribPointerType.Float, false, Vector3.SizeInBytes * 2 );
+                PointBatch.VertexAttribArray( 1, 3, VertexAttribPointerType.Float, false, Vector3.SizeInBytes * 2,
+                    Vector3.SizeInBytes );
             }
-            using (lineBatch.Begin())
+            using ( LineBatch.Begin( ) )
             {
-                lineBatch.BindBuffer(BufferTarget.ArrayBuffer, lineBatch.GetOrGenerateBuffer("coordinates"));
-                lineBatch.BufferVertexAttributeData(new Vector3[MaxLines * 2], BufferUsageHint.StreamDraw);
-                lineBatch.VertexAttribArray(0, 3, VertexAttribPointerType.Float);
+                LineBatch.BindBuffer( BufferTarget.ArrayBuffer, LineBatch.GetOrGenerateBuffer( "coordinates" ) );
+                LineBatch.BufferVertexAttributeData( new Vector3[GlobalMaxLines], BufferUsageHint.StreamDraw );
+                LineBatch.VertexAttribArray( 0, 3, VertexAttribPointerType.Float, false, Vector3.SizeInBytes * 2 );
+                LineBatch.VertexAttribArray( 1, 3, VertexAttribPointerType.Float, false, Vector3.SizeInBytes * 2,
+                    Vector3.SizeInBytes );
             }
+            using ( TriangleBatch.Begin( ) )
+            {
+                TriangleBatch.BindBuffer( BufferTarget.ArrayBuffer, TriangleBatch.GetOrGenerateBuffer( "coordinates" ) );
+                TriangleBatch.BufferVertexAttributeData( new Vector3[GlobalMaxTriangles], BufferUsageHint.StreamDraw );
+                TriangleBatch.VertexAttribArray( 0, 3, VertexAttribPointerType.Float, false, Vector3.SizeInBytes * 2 );
+                TriangleBatch.VertexAttribArray( 1, 3, VertexAttribPointerType.Float, false, Vector3.SizeInBytes * 2,
+                    Vector3.SizeInBytes );
+            }
+#endif
         }
 
+        public static void Clear( )
+        {
+            pointIndex = 0;
+            lineIndex = 0;
+            triangleIndex = 0;
+            Array.Clear( LineList, 0, LineList.Length );
+            Array.Clear( PointList, 0, PointList.Length );
+            Array.Clear( TriangleList, 0, TriangleList.Length );
+        }
+
+        /// <summary>
+        ///     Draws all lines in the draw queue
+        /// </summary>
         [Conditional("DEBUG")]
-        public static void QueuePointDraw(int index, Vector3 point)
+        public static void DrawLines()
         {
-            pointList[ index ] = point;
-        }
-
-        [Conditional( "DEBUG" )]
-        public static void QueueLineDraw( int index, Vector3 from, Vector3 to )
-        {
-            lineList[index * 2 + 0] = from;
-            lineList[index * 2 + 1] = to;
-        }
-
-        [Conditional("DEBUG")]
-        public static void DrawLines(Color color, float pointSize)
-        {
-            var colourAttribute = DebugProgram.GetAttributeLocation("Colour");
-            var worldMatrixUniform = DebugProgram.GetUniformLocation("WorldMatrixUniform");
-            GL.Disable(EnableCap.DepthTest);
-            GL.PointSize(pointSize);
-
-            using (DebugProgram.Use())
-            using (lineBatch.Begin())
+            using (LineBatch.Begin())
             {
-                DebugProgram.SetUniform(worldMatrixUniform, Matrix4.Identity);
-                Program.SetAttribute(colourAttribute, new ColorF(Color.FromArgb(color.ToArgb())).RGBA);
-                GL.DrawArrays(PrimitiveType.Lines, 0, MaxLines * 2);
-                lineBatch.BindBuffer(BufferTarget.ArrayBuffer, lineBatch.GetOrGenerateBuffer("coordinates"));
-                lineBatch.BufferVertexAttributeSubData(lineList);
-                ClearLines( );
+                GL.DrawArrays(PrimitiveType.Lines, 0, MaxLines > GlobalMaxLines ? GlobalMaxLines : MaxLines);
+                LineBatch.BindBuffer(BufferTarget.ArrayBuffer, LineBatch.GetOrGenerateBuffer("coordinates"));
+                LineBatch.BufferVertexAttributeSubData(LineList);
+                lineIndex = MaxLines = 0;
             }
-            GL.PointSize(1.0f);
-            GL.Enable(EnableCap.DepthTest);
-            GL.Finish();
         }
 
-        public static void ClearLines( )
+        /// <summary>
+        ///     Draws all triangles in the draw queue
+        /// </summary>
+        [Conditional("DEBUG")]
+        public static void DrawTriangles()
         {
-            Array.Clear( lineList, 0, lineList.Length );
-        }
-
-        [Conditional( "DEBUG" )]
-        public static void DrawPoints( Color color, float pointSize )
-        {
-            var colourAttribute = DebugProgram.GetAttributeLocation( "Colour" );
-            var worldMatrixUniform = DebugProgram.GetUniformLocation( "WorldMatrixUniform" );
-            GL.Disable( EnableCap.DepthTest );
-            GL.PointSize( pointSize );
-
-            using ( DebugProgram.Use( ) )
-            using ( pointBatch.Begin( ) )
+            using (TriangleBatch.Begin())
             {
-                DebugProgram.SetUniform( worldMatrixUniform, Matrix4.Identity );
-                Program.SetAttribute( colourAttribute, new ColorF( Color.FromArgb( color.ToArgb( ) ) ).RGBA );
+                GL.DrawArrays(PrimitiveType.Triangles, 0, GlobalMaxTriangles);
+                TriangleBatch.BindBuffer(BufferTarget.ArrayBuffer, TriangleBatch.GetOrGenerateBuffer("coordinates"));
+                TriangleBatch.BufferVertexAttributeSubData(TriangleList);
+                triangleIndex = 0;
+            }
+        }
+
+        /// <summary>
+        ///     Draws all points in the draw queue
+        /// </summary>
+        [Conditional( "DEBUG" )]
+        public static void DrawPoints( )
+        {
+            using ( PointBatch.Begin( ) )
+            {
                 GL.DrawArrays( PrimitiveType.Points, 0, 100 );
-                pointBatch.BindBuffer( BufferTarget.ArrayBuffer, pointBatch.GetOrGenerateBuffer( "coordinates" ) );
-                pointBatch.BufferVertexAttributeSubData(pointList);
-                Array.Clear( pointList, 0, pointList.Length );
+                PointBatch.BindBuffer( BufferTarget.ArrayBuffer, PointBatch.GetOrGenerateBuffer( "coordinates" ) );
+                PointBatch.BufferVertexAttributeSubData( PointList );
+                pointIndex = 0;
             }
-            GL.PointSize( 1.0f );
-            GL.Enable( EnableCap.DepthTest );
-            GL.Finish( );
+        }
+
+        /// <summary>
+        ///     Adds a line to the draw queue
+        /// </summary>
+        /// <param name="from">end-point A coordinate of line</param>
+        /// <param name="to">end-point B coordinate of line</param>
+        [Conditional( "DEBUG" )]
+        public static void QueueLineDraw( ref Vector3 from, ref Vector3 to )
+        {
+            QueueLineDraw( lineIndex++, from, to , DefaultColour);
+        }
+
+        /// <summary>
+        ///     Adds a line to the draw queue
+        /// </summary>
+        /// <param name="from">end-point A coordinate of line</param>
+        /// <param name="to">end-point B coordinate of line</param>
+        /// <param name="red"></param>
+        [Conditional("DEBUG")]
+        public static void QueueLineDraw(Vector3 @from, Vector3 to)
+        {
+            QueueLineDraw(lineIndex++, from, to, DefaultColour);
         }
 
         [Conditional( "DEBUG" )]
-        public static void Draw2DLine( Vector2 from, Vector2 to, Color color, float lineWidth = 1.0f )
+        public static void QueueLineDraw( Vector3 @from, Vector3 to, Vector3 colour )
         {
-            var line = new Line( new Vector3( from.X, from.Y, 0 ), new Vector3( to.X, to.Y, 0 ) );
-            var colourAttribute = ScreenspaceProgram.GetAttributeLocation( "Colour" );
-            var worldMatrixUniform = ScreenspaceProgram.GetUniformLocation( "WorldMatrixUniform" );
-            using ( ScreenspaceProgram.Use( ) )
-            {
-                ScreenspaceProgram.SetUniform( worldMatrixUniform, Matrix4.Identity );
-                GL.BindVertexArray( line.VertexArrayObjectIdent );
-                Program.SetAttribute( colourAttribute, new ColorF( Color.FromArgb( color.ToArgb( ) ) ).RGBA );
-                GL.LineWidth( lineWidth );
-                GL.DrawArrays( PrimitiveType.Lines, 0, 2 );
-                GL.LineWidth( 1.0f );
-            }
-            line.Dispose( );
+            QueueLineDraw( lineIndex++, from, to, colour );
         }
 
-        [Conditional( "DEBUG" )]
-        public static void DrawLine( ref Vector3 from, ref Vector3 to, ref Color color, float lineWidth )
+        /// <summary>
+        ///     Adds a line to the draw queue
+        /// </summary>
+        /// <param name="index">index into line queue to insert line data</param>
+        /// <param name="from">end-point A coordinate of line</param>
+        /// <param name="to">end-point B coordinate of line</param>
+        [Conditional("DEBUG")]
+        public static void QueueLineDraw(int index, Vector3 from, Vector3 to)
         {
-            var line = new Line( from, to );
-            var colourAttribute = DebugProgram.GetAttributeLocation( "Colour" );
-            var worldMatrixUniform = DebugProgram.GetUniformLocation( "WorldMatrixUniform" );
-            using ( DebugProgram.Use( ) )
-            {
-                GL.BindVertexArray( line.VertexArrayObjectIdent );
-                Program.SetAttribute( colourAttribute, new ColorF( Color.FromArgb( color.ToArgb( ) ) ).RGBA );
-                DebugProgram.SetUniform( worldMatrixUniform, Matrix4.Identity );
-                //GL.LineWidth( lineWidth );
-                GL.DrawArrays( PrimitiveType.Lines, 0, 2 );
-                GL.Finish( );
-                //GL.LineWidth( 1.0f );
-            }
-            line.Dispose( );
+            QueueLineDraw( index, @from, to, DefaultColour );
+        }
+
+        /// <summary>
+        ///     Adds a line to the draw queue
+        /// </summary>
+        /// <param name="index">index into line queue to insert line data</param>
+        /// <param name="from">end-point A coordinate of line</param>
+        /// <param name="to">end-point B coordinate of line</param>
+        [Conditional("DEBUG")]
+        public static void QueueLineDraw(int index, Vector3 from, Vector3 to, Vector3 colour)
+        {
+            LineList[(index * 4 + 0) % GlobalMaxLines] = from;
+            LineList[(index * 4 + 1) % GlobalMaxLines] = colour;
+            LineList[(index * 4 + 2) % GlobalMaxLines] = to;
+            var max = index * 4 + 3;
+            MaxLines = MaxLines < max ? max : MaxLines;
+            LineList[max % GlobalMaxLines] = colour;
+        }
+
+        [Conditional("DEBUG")]
+        public static void QueueTriangleDraw( Vector3 vertex0, Vector3 vertex1, Vector3 vertex2)
+        {
+            QueueTriangleDraw( triangleIndex++, ref vertex0, ref vertex1, ref vertex2 );
+        }
+
+        [Conditional("DEBUG")]
+        public static void QueueTriangleDraw(ref Vector3 vertex0, ref Vector3 vertex1, ref Vector3 vertex2)
+        {
+            QueueTriangleDraw(triangleIndex++, ref vertex0, ref vertex1, ref vertex2);
+        }
+
+        [Conditional("DEBUG")]
+        public static void QueueTriangleDraw(int index, ref Vector3 vertex0, ref Vector3 vertex1, ref Vector3 vertex2)
+        {
+            TriangleList[(index * 6 + 0) % GlobalMaxTriangles] = vertex0;
+            TriangleList[(index * 6 + 1) % GlobalMaxTriangles] = DefaultColour;
+            TriangleList[(index * 6 + 2) % GlobalMaxTriangles] = vertex1;
+            TriangleList[(index * 6 + 3) % GlobalMaxTriangles] = DefaultColour;
+            TriangleList[(index * 6 + 4) % GlobalMaxTriangles] = vertex2;
+            var max = index * 6 + 5;
+            TriangleList[max % GlobalMaxTriangles] = DefaultColour;
+        }
+
+        /// <summary>
+        ///     Adds a point to the draw queue
+        /// </summary>
+        /// <param name="index">index into the line queue to insert the point data</param>
+        /// <param name="point">point coordinate</param>
+        [Conditional( "DEBUG" )]
+        public static void QueuePointDraw( int index, Vector3 point )
+        {
+            PointList[ index % MaxPoints ] = point;
+            PointList[ index % MaxPoints ] = DefaultColour;
+        }
+
+        /// <summary>
+        ///     Adds a point to the draw queue
+        /// </summary>
+        /// <param name="point">point coordinate</param>
+        [Conditional( "DEBUG" )]
+        public static void QueuePointDraw( ref Vector3 point )
+        {
+            PointList[ pointIndex++ % MaxPoints ] = point;
+            PointList[ pointIndex++ % MaxPoints ] = DefaultColour;
+        }
+
+        /// <summary>
+        ///     Adds a point to the draw queue
+        /// </summary>
+        /// <param name="point">point coordinate</param>
+        [Conditional( "DEBUG" )]
+        public static void QueuePointDraw( Vector3 point )
+        {
+            PointList[ pointIndex++ % MaxPoints ] = point;
+            PointList[ pointIndex++ % MaxPoints ] = DefaultColour;
         }
     }
 }

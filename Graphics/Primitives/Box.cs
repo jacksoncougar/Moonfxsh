@@ -4,7 +4,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {
-    internal class Box : TriangleBatch
+    internal class Box : VertexArrayObject
     {
         public int ElementCount { get; private set; }
         public PrimitiveType PrimitiveType { get; private set; }

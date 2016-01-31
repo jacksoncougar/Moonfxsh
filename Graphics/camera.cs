@@ -150,13 +150,22 @@ namespace Moonfish.Graphics
             var viewMatrix = Matrix4.Invert( Track.WorldMatrix );
             var projectionMatrix = Viewport.ProjectionMatrix;
 
+            var viewDirty = ViewMatrix != viewMatrix;
+            var projectionDirty = ProjectionMatrix != projectionMatrix;
             ViewMatrix = viewMatrix;
             ProjectionMatrix = projectionMatrix;
 
             Matrix4 viewProjectionMatrix;
             Matrix4.Mult( ref viewMatrix, ref projectionMatrix, out viewProjectionMatrix );
-            OnViewProjectionMatrixChanged( new MatrixChangedEventArgs( ref viewProjectionMatrix ) );
-            OnViewMatrixChanged( new MatrixChangedEventArgs( ref viewMatrix ) );
+
+            if ( viewDirty || projectionDirty )
+            {
+                OnViewProjectionMatrixChanged( new MatrixChangedEventArgs( ref viewProjectionMatrix ) );
+            }
+            if ( viewDirty )
+            {
+                OnViewMatrixChanged( new MatrixChangedEventArgs( ref viewMatrix ) );
+            }
         }
 
         private void OnViewMatrixChanged( MatrixChangedEventArgs e )
@@ -176,22 +185,19 @@ namespace Moonfish.Graphics
             CalculateViewProjectionMatrix( );
         }
 
-        public void LookAt(object selectedObject )
+        public void LookAt(Vector3 location)
         {
-            int instance;
-            var selectedScenarioObject = DynamicScene.GetSelectedScenarioInstance( selectedObject, out instance );
-            if (selectedScenarioObject == null) return;
-            _panTrack.Position = selectedScenarioObject.GetInstanceMatrix( instance ).ExtractTranslation( );
+            _panTrack.Position = location;
         }
 
         public void ZoomTo( object selectedObject )
         {
-            int instance;
-            var selectedScenarioObject = DynamicScene.GetSelectedScenarioInstance(selectedObject, out instance);
-            if (selectedScenarioObject == null) return;
-            _panTrack.Position = selectedScenarioObject.GetInstanceMatrix(instance).ExtractTranslation();
-            var length = selectedScenarioObject.RenderModel.CompressionInfo[0].ToHalfExtents().Length * 2.5f;
-            _zoomTrack.Position = _zoomTrack.Forward * length;
+            //int instance;
+            //var selectedScenarioObject = DynamicScene.GetSelectedScenarioInstance(selectedObject, out instance);
+            //if (selectedScenarioObject == null) return;
+            //_panTrack.Position = selectedScenarioObject.GetInstanceMatrix(instance).ExtractTranslation();
+            //var length = selectedScenarioObject.RenderModel.CompressionInfo[0].ToHalfExtents().Length * 2.5f;
+            //_zoomTrack.Position = _zoomTrack.Forward * length;
         }
     }
 

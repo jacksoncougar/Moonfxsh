@@ -14,7 +14,7 @@ namespace Moonfish.Graphics
             _width = DefaultWidth;
             _height = DefaultHeight;
             ZNear = 0.025f;
-            _zFar = 150.0f;
+            _zFar = 1500.0f;
             _fieldOfView = (float) Math.PI/4;
             _projectionMatrix = Matrix4.Identity;
             CalculateProjectionMatrix();

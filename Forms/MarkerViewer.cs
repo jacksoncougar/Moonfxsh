@@ -57,34 +57,34 @@ namespace Moonfish.Graphics
 
         private void SaveMarkerData()
         {
-            var selectedItem = Scene.ObjectManager[SelectedTag];
-            var renderModel = selectedItem.Model.RenderModel.Get<RenderModelBlock>();
+            //var selectedItem = Scene.ObjectManager[SelectedTag];
+            //var renderModel = selectedItem.Model.RenderModel.Get<RenderModelBlock>();
 
-            if (selectedItem == null) return;
+            //if (selectedItem == null) return;
 
-            var markerEnumerator =
-                renderModel.MarkerGroups.SelectMany(x => x.Markers).GetEnumerator();
+            //var markerEnumerator =
+            //    renderModel.MarkerGroups.SelectMany(x => x.Markers).GetEnumerator();
 
-            BinaryReader binaryReader = new BinaryReader(Map);
-            BinaryWriter binaryWriter = new BinaryWriter(Map);
+            //BinaryReader binaryReader = new BinaryReader(Map);
+            //BinaryWriter binaryWriter = new BinaryWriter(Map);
 
-            Map.Seek(selectedItem.Model.RenderModel.Ident);
-            Map.Seek(88, SeekOrigin.Current);
-            var markerGroups = binaryReader.ReadBlamPointer(12);
-            foreach (var group in markerGroups)
-            {
-                Map.Seek(group + 4, SeekOrigin.Begin);
-                var markers = binaryReader.ReadBlamPointer(36);
-                foreach (var marker in markers)
-                {
-                    if (!markerEnumerator.MoveNext()) return;
-                    var data = markerEnumerator.Current;
-                    Map.Seek(marker + 4, SeekOrigin.Begin);
-                    binaryWriter.Write(data.Translation);
-                    binaryWriter.Write(data.Rotation);
-                    binaryWriter.Write(data.Scale);
-                }
-            }
+            //Map.Seek(selectedItem.Model.RenderModel.Ident);
+            //Map.Seek(88, SeekOrigin.Current);
+            //var markerGroups = binaryReader.ReadBlamPointer(12);
+            //foreach (var group in markerGroups)
+            //{
+            //    Map.Seek(group + 4, SeekOrigin.Begin);
+            //    var markers = binaryReader.ReadBlamPointer(36);
+            //    foreach (var marker in markers)
+            //    {
+            //        if (!markerEnumerator.MoveNext()) return;
+            //        var data = markerEnumerator.Current;
+            //        Map.Seek(marker + 4, SeekOrigin.Begin);
+            //        binaryWriter.Write(data.Translation);
+            //        binaryWriter.Write(data.Rotation);
+            //        binaryWriter.Write(data.Scale);
+            //    }
+            //}
         }
 
         private void glControl1_Load(object sender, EventArgs e)
@@ -169,28 +169,28 @@ namespace Moonfish.Graphics
 
         private void UpdateState()
         {
-            foreach (FloatingLabel control in glControl1.Controls)
-            {
-                control.Visible = tsBtnLabels.Checked;
-                var marker = (MarkerWrapper) control.Tag;
-                var location = Scene.Camera.Project( marker.ParentWorldMatrix.ExtractTranslation( ) );
-                control.Location = new Point((int) location.X, (int) location.Y);
-            }
-            Scene.DrawDebugCollision = debugDrawToolStripMenuItem.Checked;
-            //Scene.MousePole.Mode = (TransformMode)Enum.Parse(typeof(TransformMode), toolStripComboBox1.SelectedItem.ToString());
-            var selectedItem = Scene.ObjectManager[SelectedTag];
-            if (selectedItem == null) return;
-            selectedItem.Flags = toolStripButton1.Checked
-                ? selectedItem.Flags |= ScenarioObject.RenderFlags.RenderNodes
-                : selectedItem.Flags &= ~ScenarioObject.RenderFlags.RenderNodes;
-            selectedItem.Flags = toolStripButton2.Checked
-                ? selectedItem.Flags |= ScenarioObject.RenderFlags.RenderMarkers
-                : selectedItem.Flags &= ~ScenarioObject.RenderFlags.RenderMarkers;
-            selectedItem.Flags = toolStripButton3.Checked
-                ? selectedItem.Flags |= ScenarioObject.RenderFlags.RenderMesh
-                : selectedItem.Flags &= ~ScenarioObject.RenderFlags.RenderMesh;
-            lblRenderTime.Text = string.Format(lblRenderTime.Tag.ToString(),
-                TimeSpan.FromTicks((long) Scene.Performance.FrameTime).TotalMilliseconds);
+            //foreach (FloatingLabel control in glControl1.Controls)
+            //{
+            //    control.Visible = tsBtnLabels.Checked;
+            //    var marker = (MarkerWrapper) control.Tag;
+            //    var location = Scene.Camera.Project( marker.ParentWorldMatrix.ExtractTranslation( ) );
+            //    control.Location = new Point((int) location.X, (int) location.Y);
+            //}
+            //Scene.DrawDebugCollision = debugDrawToolStripMenuItem.Checked;
+            ////Scene.MousePole.Mode = (TransformMode)Enum.Parse(typeof(TransformMode), toolStripComboBox1.SelectedItem.ToString());
+            //var selectedItem = Scene.ObjectManager[SelectedTag];
+            //if (selectedItem == null) return;
+            //selectedItem.Flags = toolStripButton1.Checked
+            //    ? selectedItem.Flags |= ScenarioObject.RenderFlags.RenderNodes
+            //    : selectedItem.Flags &= ~ScenarioObject.RenderFlags.RenderNodes;
+            //selectedItem.Flags = toolStripButton2.Checked
+            //    ? selectedItem.Flags |= ScenarioObject.RenderFlags.RenderMarkers
+            //    : selectedItem.Flags &= ~ScenarioObject.RenderFlags.RenderMarkers;
+            //selectedItem.Flags = toolStripButton3.Checked
+            //    ? selectedItem.Flags |= ScenarioObject.RenderFlags.RenderMesh
+            //    : selectedItem.Flags &= ~ScenarioObject.RenderFlags.RenderMesh;
+            //lblRenderTime.Text = string.Format(lblRenderTime.Tag.ToString(),
+            //    TimeSpan.FromTicks((long) Scene.Performance.FrameTime).TotalMilliseconds);
         }
 
 
@@ -199,76 +199,76 @@ namespace Moonfish.Graphics
             while (IsApplicationIdle())
             {
                 Scene.Update();
-                Scene.RenderFrame();
+                Scene.RenderFrame(0f);
             }
         }
 
         private void RemoveModel(TagIdent ident)
         {
-            var @object = Scene.ObjectManager[ident];
-            if (@object == null) return;
+            //var @object = Scene.ObjectManager[ident];
+            //if (@object == null) return;
 
-            var collisionObject =
-                Scene.CollisionManager.World.CollisionObjectArray.FirstOrDefault(x => x == @object.CollisionObject);
-            if (collisionObject != null)
-            {
-                Scene.CollisionManager.World.RemoveCollisionObject(@object.CollisionObject);
-            }
-            glControl1.Controls.Clear();
-            foreach (var marker in @object.Markers)
-            {
-                var markerCollisionObject =
-                    Scene.CollisionManager.World.CollisionObjectArray.FirstOrDefault(x => x.UserObject == marker);
-                if (markerCollisionObject != null)
-                {
-                    Scene.CollisionManager.World.RemoveCollisionObject(markerCollisionObject);
-                }
-            }
-            Scene.ObjectManager.Remove(ident);
+            //var collisionObject =
+            //    Scene.CollisionManager.World.CollisionObjectArray.FirstOrDefault(x => x == @object.CollisionObject);
+            //if (collisionObject != null)
+            //{
+            //    Scene.CollisionManager.World.RemoveCollisionObject(@object.CollisionObject);
+            //}
+            //glControl1.Controls.Clear();
+            //foreach (var marker in @object.Markers)
+            //{
+            //    var markerCollisionObject =
+            //        Scene.CollisionManager.World.CollisionObjectArray.FirstOrDefault(x => x.UserObject == marker);
+            //    if (markerCollisionObject != null)
+            //    {
+            //        Scene.CollisionManager.World.RemoveCollisionObject(markerCollisionObject);
+            //    }
+            //}
+            //Scene.ObjectManager.Remove(ident);
         }
 
         private void LoadModel(TagIdent ident)
         {
-            var model = (ModelBlock) (Map.Deserialize(ident));
-            var renderModel = model.RenderModel.Get<RenderModelBlock>();
+            //var model = (ModelBlock) (Map.Deserialize(ident));
+            //var renderModel = model.RenderModel.Get<RenderModelBlock>();
 
-            var scenarioObject = new ScenarioObject(model);
-            Scene.ObjectManager.Add(ident, scenarioObject);
+            //var scenarioObject = new ScenarioObject(model);
+            //Scene.ObjectManager.Add(ident, scenarioObject);
 
-            //Scene.ProgramManager.LoadMaterials(renderModel.Materials.Select(x => x.Shader.Ident), Map);
-            Scene.CollisionManager.LoadScenarioObjectCollision(Scene.ObjectManager[ident]);
+            ////Scene.ProgramManager.LoadMaterials(renderModel.Materials.Select(x => x.Shader.Ident), Map);
+            //Scene.CollisionManager.LoadScenarioObjectCollision(Scene.ObjectManager[ident]);
 
-            var @object = Scene.ObjectManager[ident];
+            //var @object = Scene.ObjectManager[ident];
 
-            propertyGrid1.SelectedObject = renderModel.MarkerGroups;
-            glControl1.Controls.Clear();
-            foreach (var markerGroup in renderModel.MarkerGroups)
-            {
-                var name = markerGroup.Name.ToString();
-                foreach (var marker in markerGroup.Markers)
-                {
-                    glControl1.Controls.Add(
-                        new FloatingLabel
-                        {
-                            Text = name,
-                            BackColor = Color.Red,
-                            ForeColor = Color.Black,
-                            AutoSize = true,
-                            Tag = marker
-                        });
-                }
-            }
+            //propertyGrid1.SelectedObject = renderModel.MarkerGroups;
+            //glControl1.Controls.Clear();
+            //foreach (var markerGroup in renderModel.MarkerGroups)
+            //{
+            //    var name = markerGroup.Name.ToString();
+            //    foreach (var marker in markerGroup.Markers)
+            //    {
+            //        glControl1.Controls.Add(
+            //            new FloatingLabel
+            //            {
+            //                Text = name,
+            //                BackColor = Color.Red,
+            //                ForeColor = Color.Black,
+            //                AutoSize = true,
+            //                Tag = marker
+            //            });
+            //    }
+            //}
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBox1.SelectedIndex < 0) return;
-            RemoveModel(SelectedTag);
-            SelectedTag = ((TagInfo) listBox1.SelectedItem).tagDatum.Identifier;
-            if (Scene.ObjectManager[SelectedTag] != null)
-            {
-                LoadModel(SelectedTag);
-            }
+            //if (listBox1.SelectedIndex < 0) return;
+            //RemoveModel(SelectedTag);
+            //SelectedTag = ((TagInfo) listBox1.SelectedItem).tagDatum.Identifier;
+            //if (Scene.ObjectManager[SelectedTag] != null)
+            //{
+            //    LoadModel(SelectedTag);
+            //}
         }
 
         private void glControl1_SizeChanged(object sender, EventArgs e)
@@ -278,7 +278,7 @@ namespace Moonfish.Graphics
         private void glControl1_Paint(object sender, PaintEventArgs e)
         {
             Scene.Update();
-            Scene.RenderFrame();
+            Scene.RenderFrame(0f);
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)

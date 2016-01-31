@@ -7,7 +7,8 @@ namespace Moonfish.Graphics
     {
 
         None = 0,
-        Level = 2,
-        Objects = 3,
+        Level = 1,
+        Objects = 1 << 1,
+        Static = 1 << 2,
     }
 }

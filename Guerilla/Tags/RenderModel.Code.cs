@@ -14,44 +14,44 @@ namespace Moonfish.Guerilla.Tags
 
     partial class RenderModelSectionBlock : IResourceBlock
     {
-        public ResourcePointer GetResourcePointer(int index = 0)
+        public ResourcePointer GetResourcePointer( int index = 0 )
         {
             return GeometryBlockInfo.BlockOffset;
         }
 
-        public int GetResourceLength(int index = 0)
+        public int GetResourceLength( int index = 0 )
         {
             return GeometryBlockInfo.BlockSize;
         }
 
-        public void SetResourcePointer(ResourcePointer pointer, int index = 0)
+        public void SetResourcePointer( ResourcePointer pointer, int index = 0 )
         {
             GeometryBlockInfo.BlockOffset = pointer;
         }
 
-        public void SetResourceLength(int length, int index = 0)
+        public void SetResourceLength( int length, int index = 0 )
         {
             GeometryBlockInfo.BlockSize = length;
         }
 
-        public void LoadSectionData()
+        public void LoadSectionData( )
         {
-            var resourceStream = Halo2.GetResourceBlock(GeometryBlockInfo);
-            if (resourceStream == null) return;
+            var resourceStream = Halo2.GetResourceBlock( GeometryBlockInfo );
+            if ( resourceStream == null ) return;
 
-            var sectionBlock = new RenderModelSectionDataBlock();
-            using (var binaryReader = new BinaryReader(resourceStream))
+            var sectionBlock = new RenderModelSectionDataBlock( );
+            using ( var binaryReader = new BinaryReader( resourceStream ) )
             {
-                sectionBlock.Read(binaryReader);
+                sectionBlock.Read( binaryReader );
 
                 var vertexBufferResources = GeometryBlockInfo.Resources.Where(
-                    x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer).ToArray();
-                for (var i = 0;
+                    x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer ).ToArray( );
+                for ( var i = 0;
                     i < sectionBlock.Section.VertexBuffers.Length && i < vertexBufferResources.Length;
-                    ++i)
+                    ++i )
                 {
-                    sectionBlock.Section.VertexBuffers[i].VertexBuffer.Data =
-                        resourceStream.GetResourceData(vertexBufferResources[i]);
+                    sectionBlock.Section.VertexBuffers[ i ].VertexBuffer.Data =
+                        resourceStream.GetResourceData( vertexBufferResources[ i ] );
                 }
             }
             SectionData = new[] {sectionBlock};

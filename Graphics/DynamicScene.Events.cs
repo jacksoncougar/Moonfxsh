@@ -3,21 +3,18 @@ using System.Windows.Forms;
 using BulletSharp;
 using Moonfish.Graphics.Input;
 using Moonfish.Graphics.Primitives;
+using Moonfish.Guerilla.Tags;
 using OpenTK;
 
 namespace Moonfish.Graphics
 {
     public partial class DynamicScene
     {
-        public static ScenarioObject GetSelectedScenarioInstance(object selectedObject, out int instance)
+        public static ObjectBlock GetSelectedScenarioInstance(object selectedObject, out int instance)
         {
             instance = -1;
             var item = selectedObject as CollisionObject;
-            if (item == null)
-            {
-                return null;
-            }
-            var scenarioObject = item.UserObject as ScenarioObject;
+            var scenarioObject = item?.UserObject as ObjectBlock;
             if (scenarioObject == null)
             {
                 return null;
@@ -38,11 +35,19 @@ namespace Moonfish.Graphics
 
         public event SelectedObjectChangedEventHandler SelectedObjectChanged;
 
-        public void SelectObject( object selectedObject )
+        public void SelectObject( CollisionObject selectedObject )
         {
-            if (SelectedObjectChanged != null)
+            if ( selectedObject == null )
             {
-                SelectedObjectChanged(this, new SelectEventArgs(SelectedObject = selectedObject));
+                SelectedObject = null;
+                SelectedObjectChanged?.Invoke(this,new SelectEventArgs(SelectedObject));
+
+            }
+            else if ( selectedObject.UserObject is ObjectBlock )
+            {
+                SelectedObject = selectedObject;
+                SelectedObjectChanged?.Invoke( this,
+                    new SelectEventArgs(SelectedObject) );
             }
         }
 
@@ -54,13 +59,14 @@ namespace Moonfish.Graphics
                 Far = Camera.UnProject(new Vector2(e.X, e.Y), 1.0f)
             };
 
-            var callback = new ClosestRayResultCallback( mouse.Close, mouse.Far )
+            var callback = new ClosestRayResultCullFaceCallback(mouse.Close, mouse.Far)
             {
-                CollisionFilterMask = ( CollisionFilterGroups ) CollisionGroup.Objects
+                CollisionFilterGroup = CollisionFilterGroups.AllFilter,
+                CollisionFilterMask = CollisionFilterGroups.AllFilter
             };
             CollisionManager.World.RayTest( mouse.Close, mouse.Far, callback );
 
-            if ( e.Button == MouseButtons.Left && callback.HasHit )
+            if ( callback.HasHit )
             {
                 var clickableCollisionObject = callback.CollisionObject as IClickable;
                 if ( clickableCollisionObject != null )
@@ -92,39 +98,37 @@ namespace Moonfish.Graphics
 
         public void OnMouseUp(object sender, MouseEventArgs e)
         {
-            if (MouseUp != null)
-                MouseUp(this, new SceneMouseEventArgs(Camera, new Vector2(e.X, e.Y), default(Vector3), e.Button));
+            MouseUp?.Invoke(this, new SceneMouseEventArgs(Camera, new Vector2(e.X, e.Y), default(Vector3), e.Button));
         }
 
-        public void OnMouseMove(object sender, MouseEventArgs e)
+        public void OnMouseMove( object sender, MouseEventArgs e )
         {
             var mouse = new
             {
-                Close = Camera.UnProject(new Vector2(e.X, e.Y), -1.0f),
-                Far = Camera.UnProject(new Vector2(e.X, e.Y), 1.0f)
+                Close = Camera.UnProject( new Vector2( e.X, e.Y ), -1.0f ),
+                Far = Camera.UnProject( new Vector2( e.X, e.Y ), 1.0f )
             };
 
-            var callback = new ClosestRayResultCallback(mouse.Close, mouse.Far)
+            var callback = new ClosestRayResultCallback( mouse.Close, mouse.Far )
             {
-                CollisionFilterMask = (CollisionFilterGroups)CollisionGroup.Objects
+                CollisionFilterMask = ( CollisionFilterGroups ) CollisionGroup.Objects
             };
-            CollisionManager.World.RayTest(mouse.Close, mouse.Far, callback);
+            CollisionManager.World.RayTest( mouse.Close, mouse.Far, callback );
 
-            if (callback.HasHit)
+            if ( callback.HasHit )
             {
                 CurrentMouseWorldPosition = callback.HitPointWorld;
                 GLDebug.QueuePointDraw( 0, CurrentMouseWorldPosition );
             }
 
-            if (MouseMove != null) 
-                MouseMove(this, new SceneMouseEventArgs(Camera, new Vector2(e.X, e.Y), default(Vector3), e.Button));
+            MouseMove?.Invoke( this,
+                new SceneMouseEventArgs( Camera, new Vector2( e.X, e.Y ), default(Vector3), e.Button ) );
         }
 
         public void OnMouseClick(object sender, MouseEventArgs e)
         {
-            if (MouseClick != null)
-                MouseClick(this,
-                    new SceneMouseEventArgs(Camera, new Vector2(e.X, e.Y), default(Vector3), e.Button));
+            MouseClick?.Invoke(this,
+                new SceneMouseEventArgs(Camera, new Vector2(e.X, e.Y), default(Vector3), e.Button));
         }
 
         public void OnMouseCaptureChanged(object sender, EventArgs e)
@@ -134,8 +138,7 @@ namespace Moonfish.Graphics
 
         public void OnKeyDown( object sender, KeyEventArgs e )
         {
-            if ( KeyDown != null )
-                KeyDown( sender, e );
+            KeyDown?.Invoke( sender, e );
         }
     }
 }

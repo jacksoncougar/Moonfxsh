@@ -30,6 +30,24 @@ namespace Moonfish.Forms
             treeView1.ExpandAll( );
         }
 
+        private void AddNew( )
+        {
+            var selectedNode = treeView1.SelectedNode;
+            var tag = selectedNode.Tag as Tuple<GuerillaBlock, GuerillaBlock[], FieldInfo>;
+
+            if ( tag == null )
+            {
+                return;
+            }
+
+            var guerillaBlocks = new List<GuerillaBlock>
+            {
+                ( GuerillaBlock ) Activator.CreateInstance( tag.Item3.FieldType.GetElementType( ) )
+            };
+
+            UpdateGuerillaBlock( tag, guerillaBlocks.ToArray( ) );
+        }
+
         private void Clone( int count = 1 )
         {
             GuerillaBlock element;
@@ -61,7 +79,7 @@ namespace Moonfish.Forms
         ///     We use this hack because FieldInfo.SetValue won't implicitly find the right converter
         /// </summary>
         /// <typeparam name="T">The type of the element to convert to</typeparam>
-        /// <param name="input">The array holding the lements to convert</param>
+        /// <param name="input">The array holding the elements to convert</param>
         /// <returns>An array of type T</returns>
         private static T[] Convert<T>( dynamic[] input )
         {
@@ -156,24 +174,6 @@ namespace Moonfish.Forms
                     AddNew( );
                     break;
             }
-        }
-
-        private void AddNew( )
-        {
-            var selectedNode = treeView1.SelectedNode;
-            var tag = selectedNode.Tag as Tuple<GuerillaBlock, GuerillaBlock[], FieldInfo>;
-
-            if (tag == null)
-            {
-                return;
-            }
-
-            var guerillaBlocks = new List<GuerillaBlock>
-            {
-                ( GuerillaBlock ) Activator.CreateInstance( tag.Item3.FieldType.GetElementType( ) )
-            };
-
-            UpdateGuerillaBlock(tag, guerillaBlocks.ToArray());
         }
 
         private void treeView1_MouseClick( object sender, MouseEventArgs e )

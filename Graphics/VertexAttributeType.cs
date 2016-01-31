@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Moonfish.Graphics
@@ -19,7 +21,7 @@ namespace Moonfish.Graphics
             return type;
         }
     }
-
+    
     public enum VertexAttributeType : short
     {
         None = 0x0000,
@@ -42,5 +44,9 @@ namespace Moonfish.Graphics
         LightmapUVCoordinateTwoXbox = 0x3004,
 
         DiffuseColour = 0x350C,
+
+        UnpackedWorldCoordinateData = 0x2120,
+        UnpackedTextureCoordinateData = 0x2208,
+        UnpackedLightingData = 0x2324,
     }
 }

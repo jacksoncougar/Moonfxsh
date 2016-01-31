@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Moonfish.Cache;
 using Moonfish.Guerilla.Tags;
@@ -21,10 +22,12 @@ namespace Moonfish.Graphics
             Shaders = new Dictionary<string, Program>( );
             LoadedTextureArrays = new Dictionary<TagIdent, List<Texture>>( );
             LightmapTextures = new Dictionary<Tuple<int, int>, Texture>( );
-            LoadDefaultShader( );
-            LoadSystemShader( );
-            LoadScreenShader( );
-            LoadLightmapShader( );
+            //LoadDefaultShader( );
+            //LoadSystemShader( );
+            //LoadScreenShader( );
+            //LoadLightmapShader( );
+            LoadDebugShader( );
+            LoadDebug2Shader( );
         }
 
         public Dictionary<Tuple<int, int>, Texture> LightmapTextures { get; set; }
@@ -33,13 +36,17 @@ namespace Moonfish.Graphics
 
         public Program ScreenProgram
         {
-            get { return Shaders[ "screen" ]; }
+            get { return Shaders["screen"]; }
         }
+
+        public Program DefaultProgram => Shaders["default"];
 
         public Program SystemProgram
         {
-            get { return Shaders[ "system" ]; }
+            get { return Shaders["system"]; }
         }
+
+        public Program DebugShader => Shaders[ "debug" ];
 
         private Program ActiveProgram
         {
@@ -57,8 +64,10 @@ namespace Moonfish.Graphics
         }
 
         private Dictionary<string, Program> Shaders { get; set; }
+        public Program DebugShader2 => Shaders[ "debug2" ];
 
-        public IEnumerator<Program> GetEnumerator( )
+
+    public IEnumerator<Program> GetEnumerator( )
         {
             return Shaders.Select( x => x.Value ).GetEnumerator( );
         }
@@ -167,8 +176,8 @@ namespace Moonfish.Graphics
         private void LoadDefaultShader( )
         {
             Program defaultProgram;
-            var vertex_shader = new Shader( "data/vertex.vert", ShaderType.VertexShader );
-            var fragment_shader = new Shader( "data/fragment.frag", ShaderType.FragmentShader );
+            var vertex_shader = new Shader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/vertex.vert"), ShaderType.VertexShader );
+            var fragment_shader = new Shader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/fragment.frag"), ShaderType.FragmentShader );
             defaultProgram = new Program( "shaded" );
             GL.BindAttribLocation( defaultProgram.Ident, 0, "position" );
             GL.BindAttribLocation( defaultProgram.Ident, 1, "boneIndices" );
@@ -324,16 +333,38 @@ namespace Moonfish.Graphics
             Shaders[ "screen" ] = defaultProgram;
         }
 
-        private void LoadSystemShader( )
+        private void LoadSystemShader()
         {
-            var vertex_shader = new Shader( "data/sys_vertex.vert", ShaderType.VertexShader );
-            var fragment_shader = new Shader( "data/sys_fragment.frag", ShaderType.FragmentShader );
-            var defaultProgram = new Program( "system" );
-            GL.BindAttribLocation( defaultProgram.Ident, 0, "Position" );
-            GL.BindAttribLocation( defaultProgram.Ident, 1, "Colour" );
+            var vertex_shader = new Shader("data/sys_vertex.vert", ShaderType.VertexShader);
+            var fragment_shader = new Shader("data/sys_fragment.frag", ShaderType.FragmentShader);
+            var defaultProgram = new Program("system");
+            GL.BindAttribLocation(defaultProgram.Ident, 0, "Position");
+            GL.BindAttribLocation(defaultProgram.Ident, 1, "Colour");
 
-            defaultProgram.Link( new List<Shader>( 2 ) {vertex_shader, fragment_shader} );
-            Shaders[ "system" ] = defaultProgram;
+            defaultProgram.Link(new List<Shader>(2) { vertex_shader, fragment_shader });
+            Shaders["system"] = defaultProgram;
+        }
+
+        private void LoadDebugShader()
+        {
+            var vertex_shader = new Shader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/debug.vert"), ShaderType.VertexShader);
+            var fragment_shader = new Shader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/debug.frag"), ShaderType.FragmentShader);
+            var program = new Program("debug");
+
+            program.Link(new List<Shader>(2) { vertex_shader, fragment_shader });
+
+            Shaders["debug"] = program;
+        }
+
+        private void LoadDebug2Shader()
+        {
+            var vertex_shader = new Shader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/debug2.vert"), ShaderType.VertexShader);
+            var fragment_shader = new Shader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/debug2.frag"), ShaderType.FragmentShader);
+            var program = new Program("debug2");
+
+            program.Link(new List<Shader>(2) { vertex_shader, fragment_shader });
+
+            Shaders["debug2"] = program;
         }
     };
 }

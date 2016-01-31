@@ -8,7 +8,7 @@ namespace Moonfish.Graphics
 {
     public class Program : IDisposable
     {
-        private static int activeProgram = 0;
+        private static int activeProgram;
 
         private readonly Dictionary<string, int> _attributes;
         private readonly Dictionary<string, int> _uniforms;
@@ -91,7 +91,7 @@ namespace Moonfish.Graphics
             if ( status == 0 )
             {
                 var program_log = GL.GetProgramInfoLog( Ident );
-                MessageBox.Show( String.Format( "Linker failure: {0}\n", program_log ) );
+                MessageBox.Show( $"Linker failure: {program_log}\n" );
             }
             GL.ValidateProgram( Ident );
             int valid;
@@ -101,12 +101,13 @@ namespace Moonfish.Graphics
             if ( valid == 0 )
             {
                 var program_log = GL.GetProgramInfoLog( Ident );
-                MessageBox.Show( String.Format( "Validation failure {0}", program_log ) );
+                MessageBox.Show( $"Validation failure {program_log}" );
             }
 
             foreach ( var shader in shaderList )
             {
                 GL.DetachShader( Ident, shader.ID );
+                GL.DeleteShader( shader.ID );
             }
         }
 

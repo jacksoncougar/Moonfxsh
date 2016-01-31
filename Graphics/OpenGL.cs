@@ -12,16 +12,15 @@ namespace Moonfish.Graphics
         static OpenGL( )
         {
 #if DEBUG
-            timer.Interval = 5000;
+            timer.Interval = 1;
             callback = Callback;
             arbCallback = Callback;
             timer.Tick += delegate
             {
-                if ( messageString.Length > 0 )
-                {
-                    Debug.WriteLine( messageString );
-                    messageString.Clear( );
-                }
+                if ( messageString.Length <= 0 ) return;
+
+                Debug.WriteLine( messageString );
+                messageString.Clear( );
             };
             timer.Start( );
             GL.DebugMessageCallback( callback, IntPtr.Zero );
@@ -57,7 +56,7 @@ namespace Moonfish.Graphics
         {
             var errorCode = GL.GetError( );
             if ( errorCode != ErrorCode.NoError )
-                throw new Exception( string.Format( "OpenGL Error: {0}", errorCode ) );
+                throw new Exception( $"OpenGL Error: {errorCode}" );
         }
 
         private static void Callback( DebugSource source, DebugType type, int id, DebugSeverity severity, int length,
@@ -66,14 +65,14 @@ namespace Moonfish.Graphics
 #if DEBUG
             var ptrToStringAnsi = Marshal.PtrToStringAnsi( message, length );
             messageString.AppendLine( ptrToStringAnsi );
-            if ( messageString.Length + length > messageString.Capacity )
+            if ( messageString.Length + length > messageString.Capacity || type != DebugType.DebugTypeOther)
             {
-                //Debug.WriteLine( messageString );
+                Debug.WriteLine( messageString );
                 messageString.Clear( );
             }
             if (type == DebugType.DebugTypeError)
             {
-                //throw new Exception(ptrToStringAnsi);
+                throw new Exception(ptrToStringAnsi);
             }
 #endif
         }
@@ -107,7 +106,7 @@ namespace Moonfish.Graphics
 #if DEBUG
         private static readonly DebugProc callback;
         private static readonly DebugProcKhr arbCallback;
-        private static readonly StringBuilder messageString = new StringBuilder( 10000 );
+        private static readonly StringBuilder messageString = new StringBuilder( 20 );
         private static readonly Timer timer = new Timer( );
 #endif
     }

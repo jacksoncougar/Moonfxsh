@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
+using System.Windows.Documents;
+using Moonfish.Guerilla.Tags;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
@@ -8,140 +14,152 @@ namespace Moonfish.Graphics
 {
     public class Scene
     {
+        public Scene( )
+        {
+            Initialize( );
+        }
+
+        public Camera Camera { get; set; }
+        public NewSceneManager Manager { get; set; }
         public Performance Performance { get; private set; }
-        public MeshManager ObjectManager { get; set; }
         public ProgramManager ProgramManager { get; set; }
         private Stopwatch Timer { get; set; }
-        public Camera Camera { get; set; }
-
-
-        private Vector3 lightPosition = new Vector3(3.8f, 3.0F, 3.5f);
-        private float rotation = 0;
 
         public event EventHandler OnFrameReady;
 
-        private CoordinateGrid Grid;
-
-        public Scene()
+        public void RenderFrame( float timeStep )
         {
-            Initialize();
+            BeginFrame( );
+            Draw(timeStep);
+            EndFrame( );
         }
 
-        public virtual void Initialize()
+        private DrawCommand[] WalkScene( )
         {
-            
-            Debug.WriteLine(GL.GetString(StringName.Version));
-            Timer = new Stopwatch();
-            Camera = new Camera();
-            ObjectManager = new MeshManager();
-            ProgramManager = new ProgramManager();
-            Performance = new Performance();
-            Grid = new CoordinateGrid(2, 2);
+            return new DrawCommand[0];
+            //  foreach object => by instance Id (can use the id in scenario)
+            //  get location of object
 
-            Camera.ViewProjectionMatrixChanged += Camera_ViewProjectionMatrixChanged;
-            Camera.ViewMatrixChanged += Camera_ViewMatrixChanged;
-            Camera.Viewport.ViewportChanged += Viewport_ViewportChanged;
+            //var objectPosition = Vector3.Zero;
+            //var viewerPosition = Camera.Position;
 
-            GL.ClearColor(Color.FromArgb(~Colours.Green.ToArgb()));
-            GL.FrontFace(FrontFaceDirection.Ccw);
-            GL.Enable(EnableCap.DepthTest);
-#if DEBUG
-            GL.Enable( EnableCap.DebugOutput );
-            GL.Enable( EnableCap.DebugOutputSynchronous );
-#endif
+            //var objectDistance = ( viewerPosition - objectPosition ).Length;
+
+            //var modelBlock = Manager._objectBlock.Model.Get<ModelBlock>( );
+            //var renderModelBlock = modelBlock.RenderModel.Get<RenderModelBlock>( );
+
+            //var lodBias = GetDetailBias( modelBlock, objectDistance );
+            //var permutation = 0;
+
+            //var sections = new int[renderModelBlock.Regions.Length];
+            //for ( var index = 0; index < renderModelBlock.Regions.Length; index++ )
+            //{
+            //    var renderModelRegionBlock = renderModelBlock.Regions[ index ];
+            //    sections[ index ] = GetSectionIndex( renderModelRegionBlock, permutation, lodBias );
+            //}
+            //var commands = new List<DrawCommand>( );
+            //foreach ( var index in sections )
+            //{
+            //    commands.AddRange(
+            //        Manager.bucketManager.GetDrawCommands(
+            //            renderModelBlock.Sections[ index ].SectionData[ 0 ].Section ) );
+            //}
+            //return commands.ToArray(  );
         }
 
-        private void Viewport_ViewportChanged(object sender, Viewport.ViewportEventArgs e)
+        private static int GetSectionIndex( RenderModelRegionBlock region, int permutation, int levelOfDetail )
         {
-            GL.Viewport(0, 0, e.Viewport.Width, e.Viewport.Height);
-
-#if DEBUG
-            if (ProgramManager.ScreenProgram != null)
+            var renderModelPermutationBlock = region.Permutations[ permutation ];
+            switch ( levelOfDetail )
             {
-                var viewMatrixUniform = ProgramManager.ScreenProgram.GetUniformLocation("OrthoProjectionMatrixUniform");
-                using (ProgramManager.ScreenProgram.Use())
-                {
-                    ProgramManager.ScreenProgram.SetUniform(viewMatrixUniform,
-                   Matrix4.CreateOrthographicOffCenter(0, e.Viewport.Width, e.Viewport.Height, 0, 0.0f, 100.0f));
-                }
-               //ProgramManager.ScreenProgram.SetUniform(viewMatrixUniform, Matrix4.CreateOrthographic(e.Viewport.Width, -e.Viewport.Height, 0.0f, 100.0f));
+                case 1:
+                    return renderModelPermutationBlock.L1SectionIndex;
+                case 2:
+                    return renderModelPermutationBlock.L2SectionIndex;
+                case 3:
+                    return renderModelPermutationBlock.L3SectionIndex;
+                case 4:
+                    return renderModelPermutationBlock.L4SectionIndex;
+                case 5:
+                    return renderModelPermutationBlock.L5SectionIndex;
             }
-#endif
+            return -1;
         }
 
-        private void Camera_ViewMatrixChanged(object sender, MatrixChangedEventArgs e)
+        private static int GetDetailBias( ModelBlock modelBlock, float distanceToViewer )
         {
-            foreach (var program in ProgramManager)
+            if (distanceToViewer > modelBlock.ReduceToL1) return 1;
+            if (distanceToViewer > modelBlock.ReduceToL2) return 2;
+            if (distanceToViewer > modelBlock.ReduceToL3) return 3;
+            return distanceToViewer > modelBlock.ReduceToL4 ? 4 : 5;
+        }
+
+        public virtual void Update( )
+        {
+            Camera.Update( );
+        }
+
+        protected virtual void Draw( float delta )
+        {
+            var commands = WalkScene( );
+            Manager.DrawLevelGeometry(  );
+        }
+
+        private void BeginFrame( )
+        {
+            Performance.BeginFrame( );
+        }
+
+        private void Camera_ViewMatrixChanged( object sender, MatrixChangedEventArgs e )
+        {
+            foreach ( var program in ProgramManager )
             {
-                program.Use();
-                var viewMatrixUniform = program.GetUniformLocation("ViewMatrixUniform");
-                program.SetUniform(viewMatrixUniform, ref e.Matrix);
+                program.Assign(  );
+                var viewMatrixUniform = program.GetUniformLocation( "ViewMatrixUniform" );
+                program.SetUniform( viewMatrixUniform,  e.Matrix  );
             }
         }
 
-        private void Camera_ViewProjectionMatrixChanged(object sender, MatrixChangedEventArgs e)
+        private void Camera_ViewProjectionMatrixChanged( object sender, MatrixChangedEventArgs e )
         {
-            foreach (var program in ProgramManager)
+            foreach ( var program in ProgramManager )
             {
-                program.Use();
+                program.Use( );
                 var viewProjectionMatrixUniform = program.GetUniformLocation("ViewProjectionMatrixUniform");
                 program.SetUniform(viewProjectionMatrixUniform, ref e.Matrix);
             }
         }
 
-        public virtual void RenderFrame()
+        private void EndFrame( )
         {
-            //Console.WriteLine("RenderFrame()");
-            BeginFrame();
-            Draw(Performance.Delta);
-            EndFrame();
+            Performance.EndFrame( );
+            OnFrameReady?.Invoke( this, new EventArgs( ) );
+            GL.Clear( ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit );
         }
 
-        private void EndFrame()
+        private void Initialize( )
         {
-            //Console.WriteLine("EndFrame()");
-            GL.Finish();
-            Performance.EndFrame();
-            if (OnFrameReady != null) OnFrameReady(this, new EventArgs());
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            Console.WriteLine( GL.GetString( StringName.Version ) );
+            Timer = new Stopwatch( );
+            Camera = new Camera( );
+            Manager = new NewSceneManager( );
+            ProgramManager = new ProgramManager( );
+            Performance = new Performance( );
+
+            Camera.ViewProjectionMatrixChanged += Camera_ViewProjectionMatrixChanged;
+            Camera.ViewMatrixChanged += Camera_ViewMatrixChanged;
+            Camera.Viewport.ViewportChanged += Viewport_ViewportChanged;
+
+            GL.ClearColor( Color.FromArgb( ~Colours.Green.ToArgb( ) ) );
+            GL.FrontFace( FrontFaceDirection.Ccw );
+            GL.Enable( EnableCap.CullFace );
+            GL.Enable( EnableCap.DepthTest );
+            GL.PointSize( 5.0f );
         }
 
-        private void BeginFrame()
+        private void Viewport_ViewportChanged( object sender, Viewport.ViewportEventArgs e )
         {
-            //Console.WriteLine("BeginFrame()");
-            Performance.BeginFrame();
-        }
-
-        public virtual void Draw(float delta)
-        {
-            //Console.WriteLine("Draw()");
-
-            ObjectManager.Draw(ProgramManager);
-            //var program = ProgramManager.GetProgram(new ShaderReference(ShaderReference.ReferenceType.System, 0));
-            //using (program.Use())
-            //{
-            //    var colourUniform = program.GetUniformLocation("Colour");
-            //    program.SetUniform(colourUniform, new ColorF(Color.Black).RGBA);
-            //    //Grid.Draw();
-            //}
-        }
-
-        public virtual void Update()
-        {
-            //Console.WriteLine("Update()");
-
-            //var R = OpenTK.Matrix4.CreateRotationX( rotation );
-            //rotation += OpenTK.MathHelper.DegreesToRadians( 0.03f );
-            //rotation = rotation > Maths.Pi2 ? 0 : rotation;
-            //var l = OpenTK.Vector3.Transform( lightPosition, R ); //Console.WriteLine(rotation);
-            //foreach (var program in ProgramManager)
-            //{
-            //    var lightPositionAttribute = program.GetUniformLocation("LightPositionUniform");
-
-            //    using (program.Use())
-            //        program.SetUniform(lightPositionAttribute, new Vector4(lightPosition));
-            //}
-            Camera.Update();
+            GL.Viewport( 0, 0, e.Viewport.Width, e.Viewport.Height );
         }
     };
 }

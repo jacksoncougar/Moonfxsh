@@ -10,5 +10,7 @@ namespace Moonfish.Tags
     {
         public VertexAttributeType Type; //?
         public byte[] Data;
+
+        public int VertexElementCount => Data.Length / Type.GetSize( );
     }
 }

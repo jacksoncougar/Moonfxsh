@@ -1,4 +1,6 @@
-﻿using BulletSharp;
+﻿using System.Drawing;
+using BulletSharp;
+using Moonfish.Graphics.Primitives;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -36,6 +38,40 @@ namespace Moonfish.Graphics
         private Vector3 bbmin, bbmax;
         private Box box = new Box(Vector3.Zero, Vector3.Zero);
 
+        public override void DrawTransform( ref Matrix4 transform, float orthoLen )
+        {
+            var origin = transform.ExtractTranslation( );
+            var x = origin + transform.Row0.Xyz.Normalized(  ) * orthoLen;
+            var y = origin + transform.Row1.Xyz.Normalized() * orthoLen;
+            var z = origin + transform.Row2.Xyz.Normalized() * orthoLen;
+            GLDebug.QueueLineDraw(ref origin, ref x);
+            GLDebug.QueueLineDraw(ref origin, ref y);
+            GLDebug.QueueLineDraw(ref origin, ref z);
+        }
+
+        public override void DrawLine( ref Vector3 @from, ref Vector3 to, Color4 fromColor, Color4 toColor )
+        {
+            GLDebug.QueueLineDraw(ref from, ref to);
+        }
+
+        public override void DrawAabb( ref Vector3 @from, ref Vector3 to, Color4 color )
+        {
+            if (bbmin != @from || bbmax != to)
+            {
+                bbmin = @from;
+                bbmax = to;
+                box.Resize(@from, to);
+            }
+
+            debugProgram.Assign();
+            {
+                var worldMatrixUniform = debugProgram.GetUniformLocation("WorldMatrixUniform");
+                debugProgram.SetUniform(worldMatrixUniform, Matrix4.Identity);
+                GL.BindVertexArray(box.VertexArrayObjectIdent);
+                GL.DrawElements(box.PrimitiveType, box.ElementCount, DrawElementsType.UnsignedShort, 0);
+            }
+        }
+
         public override void DrawBox(ref Vector3 bbMin, ref Vector3 bbMax, ref Matrix4 trans, Color4 color)
         {
             if (bbmin != bbMin || bbmax != bbMax)
@@ -45,7 +81,7 @@ namespace Moonfish.Graphics
                 box.Resize(bbMin, bbMax);
             }
 
-            using (debugProgram.Use())
+            debugProgram.Assign(  );
             {
                 var worldMatrixUniform = debugProgram.GetUniformLocation("WorldMatrixUniform");
                 debugProgram.SetUniform(worldMatrixUniform, trans);
@@ -74,6 +110,7 @@ namespace Moonfish.Graphics
 
         public override void DrawLine(ref Vector3 from, ref Vector3 to, Color4 color)
         {
+            GLDebug.QueueLineDraw( ref from, ref to );
         }
 
         public override void ReportErrorWarning(string warningString)

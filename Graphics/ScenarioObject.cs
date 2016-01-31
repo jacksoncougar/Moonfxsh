@@ -24,8 +24,8 @@ namespace Moonfish.Graphics
         }
 
         public readonly Matrix4 collisionSpaceMatrix;
-        private readonly TriangleBatch _markersBatch;
-        private readonly TriangleBatch _nodesBatch;
+        private readonly VertexArrayObject _markersBatch;
+        private readonly VertexArrayObject _nodesBatch;
         private Matrix4 _worldMatrix;
 
         private ScenarioObject( )
@@ -34,7 +34,7 @@ namespace Moonfish.Graphics
             Nodes = new List<RenderModelNodeBlock>( );
             Flags = RenderFlags.RenderMesh;
 
-            _nodesBatch = new TriangleBatch( );
+            _nodesBatch = new VertexArrayObject( );
             using ( _nodesBatch.Begin( ) )
             {
                 _nodesBatch.GenerateBuffer( );
@@ -43,7 +43,7 @@ namespace Moonfish.Graphics
                 _nodesBatch.GenerateBuffer( );
                 _nodesBatch.BindBuffer( BufferTarget.ElementArrayBuffer, _nodesBatch.BufferIdents.Last( ) );
             }
-            _markersBatch = new TriangleBatch( );
+            _markersBatch = new VertexArrayObject( );
             using ( _markersBatch.Begin( ) )
             {
                 _markersBatch.GenerateBuffer( );
@@ -422,9 +422,12 @@ namespace Moonfish.Graphics
             Nodes.SetWorldMatrix( nodeBlock, value );
         }
 
+        /// <summary>
+        /// Updates the matrices for each instance.
+        /// </summary>
         public void Update( )
         {
-            RenderBatches = GetRenderBatches();
+           // RenderBatches = GetRenderBatches();
         }
 
         public void AssignInstanceBasisTransform(int instance, Matrix4 basisMatrix4)
@@ -448,13 +451,13 @@ namespace Moonfish.Graphics
         public void SetAxisAlignedRotation(int instance, float value)
         {
                 _axisAlignedRotation = value;
-                var upAxis = _scenarioObject.InstanceBasisMatrices[instance].Row2.Xyz.Normalized();
-                _scenarioObject.InstanceRotations[instance] = Quaternion.FromAxisAngle(upAxis, _axisAlignedRotation);
+               // var upAxis = _scenarioObject.InstanceBasisMatrices[instance].Row2.Xyz.Normalized();
+                //_scenarioObject.InstanceRotations[instance] = Quaternion.FromAxisAngle(upAxis, _axisAlignedRotation);
         }
 
-        public ScenarioObjectAxisAlignedWrapper( ScenarioObject scenarioObject )
+        public ScenarioObjectAxisAlignedWrapper( ObjectBlock scenarioObject )
         {
-            _scenarioObject = scenarioObject;
+           // _scenarioObject = scenarioObject;
         }
     }
 }

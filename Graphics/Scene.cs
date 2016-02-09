@@ -101,8 +101,8 @@ namespace Moonfish.Graphics
 
         protected virtual void Draw( float delta )
         {
-            var commands = WalkScene( );
-            Manager.DrawLevelGeometry(  );
+            var commands = Manager.GetLevelGeometryDrawCommands( );
+            Manager.Draw( ProgramManager, commands );
         }
 
         private void BeginFrame( )

@@ -18,6 +18,7 @@ namespace Moonfish.Graphics
     {
         public BucketManager bucketManager;
         private CacheStream _cache;
+        private Dictionary<int,List<DrawCommand>> _levelGeometryDrawCommands = new Dictionary<int, List<DrawCommand>>();
 
         public NewSceneManager(  )
         {
@@ -37,12 +38,72 @@ namespace Moonfish.Graphics
             LoadLevelGeometry(scenarioStructureBspBlock);
         }
 
-        public void DrawLevelGeometry( int sbspIndex = 0 )
+        
+        public void Draw(ProgramManager programManager, ICollection<DrawCommand> drawCommands)
         {
-            var scenarioBlock = _cache.Index.ScenarioIdent.Get<ScenarioBlock>();
+            programManager.DebugShader.Assign();
 
-            var scenarioStructureBspReferenceBlock = scenarioBlock.StructureBSPs[sbspIndex];
-            var scenarioStructureBspBlock = scenarioStructureBspReferenceBlock.StructureBSP.Get<ScenarioStructureBspBlock>();
+            BucketManager.Draw(drawCommands, programManager.DebugShader);
+        }
+
+        public List<DrawCommand> GetLevelGeometryDrawCommands( int sbspIndex = 0 )
+        {
+            //  cache and return commands since they shouldn't change
+            if ( _levelGeometryDrawCommands.ContainsKey( sbspIndex ) ) return _levelGeometryDrawCommands[ sbspIndex ];
+            
+            var scenarioBlock = _cache.Index.ScenarioIdent.Get<ScenarioBlock>( );
+
+            var scenarioStructureBspReferenceBlock = scenarioBlock.StructureBSPs[ sbspIndex ];
+            var scenarioStructureBspBlock =
+                scenarioStructureBspReferenceBlock.StructureBSP.Get<ScenarioStructureBspBlock>( );
+
+            var drawCommands = new List<DrawCommand>( );
+            foreach ( var structureBspClusterBlock in scenarioStructureBspBlock.Clusters )
+            {
+                drawCommands.AddRange( bucketManager.GetDrawCommands( structureBspClusterBlock.ClusterData[ 0 ].Section ) );
+            }
+
+            drawCommands = new List<DrawCommand>( Optimize( drawCommands ) );
+
+            foreach ( var item in scenarioStructureBspBlock.InstancedGeometriesDefinitions )
+            {
+                drawCommands.AddRange( bucketManager.GetDrawCommands( item.RenderInfo.RenderData[ 0 ].Section ) );
+            }
+            _levelGeometryDrawCommands[sbspIndex] = drawCommands;
+            return _levelGeometryDrawCommands[ sbspIndex ];
+        }
+
+        private static IEnumerable<DrawCommand> Optimize( List<DrawCommand> drawCommands )
+        {
+            var enumerables = drawCommands.GroupBy( g => g.bucket ) as IList<IGrouping<Bucket, DrawCommand>> ??
+                              drawCommands.GroupBy( g => g.bucket ).ToList( );
+
+            var optimizedCommands = new List<DrawCommand>( enumerables.Count );
+            foreach ( var grouping in enumerables )
+            {
+                var count = grouping.Count( );
+
+                var primitiveCounts = new int[count];
+                var baseOffsets = new int[count];
+                var baseVertices = new int[count];
+
+                var index = 0;
+                foreach ( var drawCommand in grouping )
+                {
+                    primitiveCounts[ index ] = drawCommand.count[ 0 ];
+                    baseOffsets[ index ] = drawCommand.offset[ 0 ];
+                    baseVertices[ index ] = drawCommand.baseVertex[ 0 ];
+                    index++;
+                }
+                var copy = grouping.First( );
+                copy.baseVertex = baseVertices;
+                copy.count = primitiveCounts;
+                copy.offset = baseOffsets;
+                copy.multiDrawCount = count;
+                copy.AssignAttribute("instanceWorldMatrix", Matrix4.Identity);
+                optimizedCommands.Add( copy );
+            }
+            return optimizedCommands;
         }
 
         private void LoadLevelGeometry(ScenarioStructureBspBlock structureBsp )
@@ -210,7 +271,7 @@ namespace Moonfish.Graphics
 
             Collision.LoadScenarioCollision( scenarioStructureBspBlock );
             //LoadCollision( );
-            _drawCommands = bucketManager.GetCommands( );
+            //_drawCommands = bucketManager.GetCommands( );
         }
 
         public void Update( )

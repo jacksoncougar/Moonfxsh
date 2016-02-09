@@ -52,23 +52,34 @@ namespace Moonfish.Graphics
         public static void Draw( [NotNull] ICollection<DrawCommand> drawCommands, Program program )
         {
             var lastVertexArray = 0;
-            foreach ( var drawCommand in drawCommands.OrderBy( e=>e.bucket.VertexArrayObject ) )
+            var uniformLocation = program.GetUniformLocation("ShaderArguments");
+            program.SetUniform(uniformLocation, Vector4.UnitX);
+            foreach ( var drawCommand in drawCommands.OrderBy( e=>e.bucket.VertexArrayObject ).Where( e=>e.IsMultiDraw ) )
             {
                 using ( lastVertexArray != drawCommand.bucket.VertexArrayObject ? drawCommand.bucket.Bind( ) : null )
                 {
                     if ( drawCommand.IsMultiDraw )
                     {
-                        drawCommand.SetupAttributes(program);
+
                         GL.MultiDrawElementsBaseVertex( drawCommand.primitiveType, drawCommand.count,
                             drawCommand.elementType, drawCommand.offset, drawCommand.multiDrawCount,
                             drawCommand.baseVertex );
                     }
-                    if ( drawCommand.IsInstancedDraw )
+                    lastVertexArray = drawCommand.bucket.VertexArrayObject;
+                }
+            }
+            program.SetUniform(uniformLocation, Vector4.Zero);
+            foreach (var drawCommand in drawCommands.OrderBy(e => e.bucket.VertexArrayObject).Where( e=>e.IsInstancedDraw ))
+            {
+                using (lastVertexArray != drawCommand.bucket.VertexArrayObject ? drawCommand.bucket.Bind() : null)
+                {
+                    if (drawCommand.IsInstancedDraw)
                     {
-                        GL.DrawElementsInstancedBaseVertexBaseInstance( drawCommand.primitiveType,
-                            drawCommand.count[ 0 ],
-                            drawCommand.elementType, ( IntPtr ) drawCommand.offset[ 0 ], drawCommand.instanceCount,
-                            drawCommand.baseVertex[ 0 ], drawCommand.instanceBaseOffset );
+
+                        GL.DrawElementsInstancedBaseVertexBaseInstance(drawCommand.primitiveType,
+                            drawCommand.count[0],
+                            drawCommand.elementType, (IntPtr)drawCommand.offset[0], drawCommand.instanceCount,
+                            drawCommand.baseVertex[0], drawCommand.instanceBaseOffset);
                     }
                     lastVertexArray = drawCommand.bucket.VertexArrayObject;
                 }
@@ -84,15 +95,10 @@ namespace Moonfish.Graphics
             {
                 if ( !bucket.Contains( section ) ) continue;
 
-                var instanceCount = bucket.StorageMeta[section].InstanceCount;
-                var instanceBaseOffset = bucket.StorageMeta[section].InstanceBufferBaseOffset;
+                var meshFragmentInfo = bucket.storageMeta[ section ];
 
                 foreach ( var globalGeometryPartBlockNew in section.Parts )
                 {
-                    var start = globalGeometryPartBlockNew.StripStartIndex;
-                    var length = globalGeometryPartBlockNew.StripLength;
-                    var baseVertex = bucket.vertexBufferAttributeBaseOffets[section];
-                    var baseOffset = bucket.indexBufferBaseOffets[section];
                     var primitiveType =
                         globalGeometryPartBlockNew.GlobalGeometryPartNewFlags.HasFlag(
                             GlobalGeometryPartBlockNew.Flags.OverrideTriangleList )
@@ -101,12 +107,16 @@ namespace Moonfish.Graphics
 
                     var drawCommand = new DrawCommand
                     {
-                        instanceCount = instanceCount,
-                        instanceBaseOffset = instanceBaseOffset,
-                        baseVertex = new[] {baseVertex},
-                        count = new[] {( int ) length},
+                        instanceCount = meshFragmentInfo.InstanceCount,
+                        instanceBaseOffset = meshFragmentInfo.InstanceBufferBaseOffset,
+                        baseVertex = new[] {meshFragmentInfo.VertexBufferBaseOffset},
+                        count = new[] {( int ) globalGeometryPartBlockNew.StripLength},
                         elementType = DrawElementsType.UnsignedShort,
-                        offset = new[] {baseOffset + start * 2},
+                        offset =
+                            new[]
+                            {
+                                meshFragmentInfo.IndexBufferBaseOffset + globalGeometryPartBlockNew.StripStartIndex * 2
+                            },
                         primitiveType = primitiveType,
                         bucket = bucket
                     };
@@ -116,9 +126,10 @@ namespace Moonfish.Graphics
             return commands;
         }
 
-        public DrawCommand[] GetCommands( )
+        public DrawCommand[] GetMultiDrawCommands( )
         {
-            var commands = new List<DrawCommand>(_buckets.Count);
+            var commands = new List<DrawCommand>(  );
+
             foreach ( var bucket in _buckets )
             {
                 if ( bucket.InstanceCount != 0 ) continue;
@@ -130,7 +141,7 @@ namespace Moonfish.Graphics
                 var baseVertex = new int[multiDrawCount];
 
                 var index = 0;
-                foreach (var key in bucket)
+                foreach ( var key in bucket )
                 {
                     foreach ( var globalGeometryPartBlockNew in key.Parts )
                     {
@@ -148,9 +159,10 @@ namespace Moonfish.Graphics
                             continue;
                         }
                         count[ index ] = globalGeometryPartBlockNew.StripLength;
-                        baseVertex[ index ] = bucket.vertexBufferAttributeBaseOffets[ key ];
-                        baseOffset[ index ] = bucket.indexBufferBaseOffets[ key ] +
-                                              globalGeometryPartBlockNew.StripStartIndex * 2;
+                        baseVertex[ index ] = 0;
+                        baseOffset[ index ] = 0;
+                        //bucket.indexBufferBaseOffets[ key ] +
+                                             // globalGeometryPartBlockNew.StripStartIndex * 2;
                         index++;
                     }
                 }
@@ -167,47 +179,7 @@ namespace Moonfish.Graphics
                 drawCommand.AssignAttribute( "instanceWorldMatrix", Matrix4.Identity );
                 commands.Add( drawCommand );
             }
-            foreach ( var bucket in _buckets )
-            {
-                using ( bucket.Bind( ) )
-                {
-                    foreach ( var key in bucket.vertexBufferAttributeBaseOffets.Keys )
-                    {
-                        int instanceCount = bucket.StorageMeta[ key ].InstanceCount;
-                        var instanceBaseOffset = bucket.StorageMeta[ key ].InstanceBufferBaseOffset;
-                        foreach ( var globalGeometryPartBlockNew in key.Parts )
-                        {
-                            if ( bucket.InstanceCount < 0 )
-                                continue;
-
-
-                            var start = globalGeometryPartBlockNew.StripStartIndex;
-                            var length = globalGeometryPartBlockNew.StripLength;
-                            var baseVertex = bucket.vertexBufferAttributeBaseOffets[ key ];
-                            var baseOffset = bucket.indexBufferBaseOffets[ key ];
-                            var primitiveType =
-                                globalGeometryPartBlockNew.GlobalGeometryPartNewFlags.HasFlag(
-                                    GlobalGeometryPartBlockNew.Flags.OverrideTriangleList )
-                                    ? PrimitiveType.Triangles
-                                    : PrimitiveType.TriangleStrip;
-
-                            var drawCommand = new DrawCommand
-                            {
-                                instanceCount = instanceCount,
-                                instanceBaseOffset = instanceBaseOffset,
-                                baseVertex = new[] {baseVertex},
-                                count = new[] {( int ) length},
-                                elementType = DrawElementsType.UnsignedShort,
-                                offset = new[] {baseOffset + start * 2},
-                                primitiveType = primitiveType,
-                                bucket = bucket
-                            };
-                            commands.Add(drawCommand);
-                        }
-                    }
-                }
-            }
-            return commands.ToArray(  );
+            return new DrawCommand[0];
         }
 
 
@@ -217,7 +189,7 @@ namespace Moonfish.Graphics
             foreach ( var bucket in _buckets.Where( e=> e.Intersect( sectionStructBlocks ).Any()))
                 unsafe
                 {
-                    var baseInstance = bucket.StorageMeta[ sectionStructBlocks.First( ) ].InstanceBufferBaseOffset;
+                    var baseInstance = bucket.storageMeta[ sectionStructBlocks.First( ) ].InstanceBufferBaseOffset;
                     bucket.BufferInstanceSubData( instanceWorldMatrixs, (baseInstance + instanceId) * sizeof ( Matrix4 ) );
                 }
         }
@@ -325,10 +297,10 @@ namespace Moonfish.Graphics
                     foreach (var globalGeometrySectionStructBlock in bucket)
                     {
                         if (InstanceStorageMeta.ContainsKey(globalGeometrySectionStructBlock))
-                            bucket.StorageMeta[globalGeometrySectionStructBlock].InstanceBufferBaseOffset =
+                            bucket.storageMeta[globalGeometrySectionStructBlock].InstanceBufferBaseOffset =
                                 InstanceStorageMeta[globalGeometrySectionStructBlock].InstanceOffset;
                         if (InstanceStorageMeta.ContainsKey(globalGeometrySectionStructBlock))
-                            bucket.StorageMeta[globalGeometrySectionStructBlock].InstanceCount =
+                            bucket.storageMeta[globalGeometrySectionStructBlock].InstanceCount =
                                 InstanceStorageMeta[globalGeometrySectionStructBlock].InstanceCount;
                     }
                 }

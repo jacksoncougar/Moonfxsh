@@ -29,12 +29,9 @@ namespace Moonfish.Graphics
 
         private BucketAttributes attributes;
 
-        public Dictionary<GlobalGeometrySectionStructBlock, MeshFragmentInfo> StorageMeta =
+        public Dictionary<GlobalGeometrySectionStructBlock, MeshFragmentInfo> storageMeta =
             new Dictionary<GlobalGeometrySectionStructBlock, MeshFragmentInfo>( );
-
-        public ReadOnlyDictionary<GlobalGeometrySectionStructBlock, int> indexBufferBaseOffets;
-        public ReadOnlyDictionary<GlobalGeometrySectionStructBlock, int> vertexBufferAttributeBaseOffets;
-
+        
         public Bucket( VertexAttributeType[] supportedVertexAttributeTypes )
         {
             attributes.SupportedVertexAttributes = supportedVertexAttributeTypes;
@@ -65,7 +62,7 @@ namespace Moonfish.Graphics
 
         public IEnumerator<GlobalGeometrySectionStructBlock> GetEnumerator( )
         {
-            return vertexBufferAttributeBaseOffets.Keys.GetEnumerator( );
+            return storageMeta.Keys.GetEnumerator( );
         }
 
         IEnumerator IEnumerable.GetEnumerator( )
@@ -82,18 +79,9 @@ namespace Moonfish.Graphics
         {
             PartsCount = 0;
 
-            StorageMeta =
+            storageMeta =
                 new Dictionary<GlobalGeometrySectionStructBlock, MeshFragmentInfo>(
                     sectionData.ToDictionary(k => k, v => new MeshFragmentInfo()));
-            if ( attributes.SupportedVertexAttributes.Length < 1 )
-            {
-                vertexBufferAttributeBaseOffets =
-                    new ReadOnlyDictionary<GlobalGeometrySectionStructBlock, int>( sectionData.ToDictionary( k => k,
-                        v => 0 ) );
-                indexBufferBaseOffets =
-                    new ReadOnlyDictionary<GlobalGeometrySectionStructBlock, int>( sectionData.ToDictionary( k => k,
-                        v => 0 ) );
-            }
 
             GL.BindVertexArray( VertexArrayObject );
 
@@ -207,7 +195,7 @@ namespace Moonfish.Graphics
 
                     if ( firstPass )
                     {
-                        StorageMeta[ renderModelSectionDataBlock ].VertexBufferBaseOffset = vertexOffset;
+                        storageMeta[ renderModelSectionDataBlock ].VertexBufferBaseOffset = vertexOffset;
                         vertexBaseVertex[ renderModelSectionDataBlock ] = vertexOffset;
                         vertexOffset += globalGeometrySectionVertexBufferBlock.VertexBuffer.Data.Length / attributeSize;
                     }
@@ -218,9 +206,7 @@ namespace Moonfish.Graphics
 
                 ConfigureVertexAttributeArray( supportedFormat, attributeSize );
             }
-
-            vertexBufferAttributeBaseOffets = new ReadOnlyDictionary<GlobalGeometrySectionStructBlock, int>(
-                vertexBaseVertex );
+            
         }
 
         private void BufferElementData( ICollection<GlobalGeometrySectionStructBlock> sectionData )
@@ -243,11 +229,11 @@ namespace Moonfish.Graphics
 
                 indexBaseVertex[ renderModelSectionDataBlock ] = offset;
                 
-                StorageMeta[renderModelSectionDataBlock].IndexBufferBaseOffset = offset;
+                storageMeta[renderModelSectionDataBlock].IndexBufferBaseOffset = offset;
                 offset += dataSize;
 
             }
-            indexBufferBaseOffets = new ReadOnlyDictionary<GlobalGeometrySectionStructBlock, int>( indexBaseVertex );
+            new ReadOnlyDictionary<GlobalGeometrySectionStructBlock, int>( indexBaseVertex );
         }
 
         /// <summary>

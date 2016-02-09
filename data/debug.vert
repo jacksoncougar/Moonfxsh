@@ -10,18 +10,18 @@ layout(location = 6) in vec4 tangent;
 
 layout(location = 7) in mat4 instanceWorldMatrix;
 
-uniform mat4 WorldMatrixUniform;
+uniform vec4 ShaderArguments;
+uniform mat4 WorldMatrixUniform = mat4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
 uniform mat4 ViewProjectionMatrixUniform;
 uniform mat4 ViewMatrixUniform;
 
 layout(location = 0) flat out vec4 diffuseColour;
 
 void main()
-{
-
-	//diffuseColour = vec4(MV3x3 * normal.xyz, 1);
-	mat4 worldMatrix = WorldMatrixUniform;
-	if (WorldMatrixUniform == 0)worldMatrix = instanceWorldMatrix;
+{	
+	mat4 worldMatrix;
+	if(ShaderArguments.x > 0.5) worldMatrix = WorldMatrixUniform;
+	else worldMatrix = instanceWorldMatrix;
 
 
 	mat4 modelViewMatrix = ViewMatrixUniform * worldMatrix;

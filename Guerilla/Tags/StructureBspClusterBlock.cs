@@ -25,6 +25,8 @@ namespace Moonfish.Guerilla.Tags
             GeometryBlockInfo.BlockSize = length;
         }
 
+        public bool IsClusterDataLoaded => ClusterData.Length > 0;
+
         public void LoadClusterData()
         {
             var resourceStream = Halo2.GetResourceBlock(GeometryBlockInfo);
@@ -46,6 +48,15 @@ namespace Moonfish.Guerilla.Tags
                 }
             }
             ClusterData = new[] {clusterBlock};
+        }
+        public void DeleteClusterData()
+        {
+            if ( ClusterData.Length <= 0 ) return;
+
+            foreach ( var globalGeometrySectionVertexBufferBlock in ClusterData[0].Section.VertexBuffers )
+            {
+                globalGeometrySectionVertexBufferBlock.VertexBuffer.Data = null;
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 using Moonfish.Cache;
 using Moonfish.Graphics;
@@ -25,9 +26,7 @@ namespace Moonfish.Forms
         private double _accumulator;
         private double _currentTime;
         private readonly double _deltaTime = 0.09f;
-
-        private double _lastUpdate;
-        private double _minUpdateFreq = 1f / 50f;
+        private readonly double _minFrameTime = 0.001f;
 
         public SceneView( CacheStream cacheStream )
         {
@@ -132,9 +131,11 @@ namespace Moonfish.Forms
             while ( IsApplicationIdle( ) )
             {
                 var newTime = _timer.ElapsedMilliseconds / 1000f;
-                var baseTick = _timer.ElapsedTicks;
                 var frameTime = newTime - _currentTime;
+                if (frameTime < _minFrameTime)
+                    Thread.Sleep((int)(_minFrameTime * 1000));
 
+                var baseTick = _timer.ElapsedTicks;
 
                 if ( frameTime > 0.25 ) frameTime = 0.25;
                 _currentTime = newTime;
@@ -145,15 +146,20 @@ namespace Moonfish.Forms
                 {
                     UpdateState( );
                     Scene.UpdatePhysics( );
+
+#if DEBUG
                     _updateTime = _timer.ElapsedTicks - baseTick;
+#endif
+
                     _accumulator -= _deltaTime;
                 }
                 var alpha = _accumulator / _deltaTime;
 
                 Scene.Update( );
                 Scene.RenderFrame( ( float ) alpha );
+#if DEBUG
                 _totalTime = _timer.ElapsedTicks - baseTick;
-                _lastUpdate = 0;
+#endif
             }
         }
 
@@ -167,7 +173,7 @@ namespace Moonfish.Forms
         {
 #if DEBUG
             // ReSharper disable once UseObjectOrCollectionInitializer
-            _glControl1 = new GLControl( new GraphicsMode( new ColorFormat( 32 ), 24, 8, 0 ), 3, 3,
+            _glControl1 = new GLControl( new GraphicsMode( new ColorFormat( 32 ), 24, 8, 8 ), 3, 3,
                 GraphicsContextFlags.Debug | GraphicsContextFlags.ForwardCompatible );
 #else
             _glControl1 = new GLControl( new GraphicsMode(new ColorFormat(32), 24, 8, 8), 3, 3, GraphicsContextFlags.Default);

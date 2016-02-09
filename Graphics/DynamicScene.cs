@@ -56,7 +56,7 @@ namespace Moonfish.Graphics
             //ProgramManager.DebugShader2.Assign();
            // GLDebug.DrawTriangles();
 
-            ProgramManager.DebugShader.Assign( );
+            //ProgramManager.DebugShader.Assign( );
             base.Draw( delta );
             //ObjectManager.ExplicitDraw( ProgramManager, MousePole.Model );
 //#if DEBUG

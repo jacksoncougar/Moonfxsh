@@ -327,16 +327,23 @@ namespace Moonfish.Graphics
         private class Handle : IDisposable
         {
             private readonly bool _keepBound;
+            private static int currentVertexArrayObject = 0;
 
             public Handle( int vertexArrayObject, bool keepBound = true )
             {
                 _keepBound = keepBound;
+                if ( currentVertexArrayObject == vertexArrayObject ) return;
+
                 GL.BindVertexArray( vertexArrayObject );
+                currentVertexArrayObject = vertexArrayObject;
             }
 
             public void Dispose( )
             {
-                if ( !_keepBound ) GL.BindVertexArray( 0 );
+                if ( _keepBound ) return;
+
+                GL.BindVertexArray( 0 );
+                currentVertexArrayObject = 0;
             }
         }
     }

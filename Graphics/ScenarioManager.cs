@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Moonfish.Cache;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
@@ -11,103 +10,67 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace Moonfish.Graphics
 {
+    /// <summary>
+    ///     Controls all visual aspects of the rendering pipeline of Moonfxsh
+    /// </summary>
     public class ScenarioManager
     {
-        private readonly NewBucketManager _bucketManager;
-        private static DrawManager _drawManager;
+        /// <summary>
+        ///     Controls loading of vertex data and creating attribute buffers
+        /// </summary>
+        private readonly BucketManager _bucketManager;
 
-        private readonly Dictionary<int, List<DrawCommand>> _levelGeometryDrawCommands =
-            new Dictionary<int, List<DrawCommand>>( );
+        /// <summary>
+        ///     Controls batching of calls, sorting of transparancies, etc
+        /// </summary>
+        private readonly DrawManager _drawManager;
 
+        /// <summary>
+        ///     The cache where scenario data is
+        /// </summary>
         private CacheStream _cache;
 
         public ScenarioManager( )
         {
-            _drawManager = new DrawManager(  );
-            _bucketManager = new NewBucketManager( );
-        }
-
-        public void Draw( Camera eyeCamera, ProgramManager programManager )
-        {
-            var program = programManager.DebugShader;
-            program.Assign( );
-            TraverseSceenario( eyeCamera );
-
-            var transparentPatches = _drawManager.GetTransparentParts( eyeCamera );
-            var renderPatches = _drawManager.GetOpaqueParts( eyeCamera );
-
-            Draw(transparentPatches, program);
-            Draw( renderPatches, program );
-        }
-
-        private void Draw( IEnumerable<RenderPatch> patches, Program program )
-        {
-            foreach ( var patch in patches )
-            {
-                var location = program.GetUniformLocation( "WorldMatrixUniform" );
-                program.SetUniform( location, patch.Data.worldMatrix );
-                int vertexBaseIndex;
-                int indexBaseOffset;
-                var bucket = _bucketManager.GetBucketResource( patch.Part, out indexBaseOffset, out vertexBaseIndex );
-                using ( bucket.Bind( ) )
-                {
-                    GL.DrawElementsBaseVertex(
-                        PrimitiveType.TriangleStrip, patch.Part.StripLength, DrawElementsType.UnsignedShort,
-                        ( IntPtr ) (indexBaseOffset + patch.Part.StripStartIndex * 2), vertexBaseIndex );
-                }
-                GL.Finish(  );
-            }
-        }
-
-        public List<DrawCommand> GetLevelGeometryDrawCommands( int sbspIndex = 0 )
-        {
-            ////  cache and return commands since they shouldn't change
-            //if ( _levelGeometryDrawCommands.ContainsKey( sbspIndex ) ) return _levelGeometryDrawCommands[ sbspIndex ];
-
-            //var scenarioBlock = _cache.Index.ScenarioIdent.Get<ScenarioBlock>( );
-
-            //var scenarioStructureBspReferenceBlock = scenarioBlock.StructureBSPs[ sbspIndex ];
-            //var scenarioStructureBspBlock =
-            //    scenarioStructureBspReferenceBlock.StructureBSP.Get<ScenarioStructureBspBlock>( );
-
-            //var drawCommands = new List<DrawCommand>( );
-            //foreach ( var structureBspClusterBlock in scenarioStructureBspBlock.Clusters )
-            //{
-            //    drawCommands.AddRange( _bucketManager.GetDrawCommands( structureBspClusterBlock.ClusterData[ 0 ].Section ) );
-            //}
-
-            //drawCommands = new List<DrawCommand>( Optimize( drawCommands ) );
-
-            //foreach ( var item in scenarioStructureBspBlock.InstancedGeometriesDefinitions )
-            //{
-            //    drawCommands.AddRange( _bucketManager.GetDrawCommands( item.RenderInfo.RenderData[ 0 ].Section ) );
-            //}
-            //_levelGeometryDrawCommands[ sbspIndex ] = drawCommands;
-            //return _levelGeometryDrawCommands[ sbspIndex ];
-            return new List<DrawCommand>();
-        }
-        
-        public void Load( CacheStream cache, int sbspIndex = 0 )
-        {
-            _cache = cache;
-
-            var scenarioBlock = cache.Index.ScenarioIdent.Get<ScenarioBlock>( );
-
-            var scenarioStructureBspReferenceBlock = scenarioBlock.StructureBSPs[ sbspIndex ];
-            var scenarioStructureBspBlock =
-                scenarioStructureBspReferenceBlock.StructureBSP.Get<ScenarioStructureBspBlock>( );
-
-            // Load Level Geometry
-            LoadLevelGeometry( scenarioStructureBspBlock );
+            _drawManager = new DrawManager( );
+            _bucketManager = new BucketManager( );
         }
 
         /// <summary>
-        ///     Buffers array data and creates draw commands as needed
+        ///     Walks the scenario and draws all objects with their current state
         /// </summary>
-        /// <param name="eyeCamera"></param>
-        /// <param name="objectBlock"></param>
-        /// <param name="instance"></param>
-        private void Dispatch( Camera eyeCamera, ObjectBlock objectBlock,
+        /// <param name="eye">The viewer camera</param>
+        /// <param name="programManager"></param>
+        public void Draw( Camera eye, ProgramManager programManager )
+        {
+            var program = programManager.DebugShader;
+            program.Assign( );
+            TraverseScenario( eye );
+
+            var transparentPatches = _drawManager.GetTransparentParts( eye );
+            var renderPatches = _drawManager.GetOpaqueParts( );
+
+            // TODO better batching!
+            DrawPatchElements( transparentPatches, program );
+            DrawPatchElements( renderPatches, program );
+        }
+
+        /// <summary>
+        ///     Loads scenario from Cache
+        /// </summary>
+        /// <param name="cacheStream"></param>
+        public void Load( CacheStream cacheStream )
+        {
+            _cache = cacheStream;
+        }
+
+        /// <summary>
+        ///     Buffers array data and creates draw commands as needed for a given object
+        /// </summary>
+        /// <param name="eye">Viewer camera used to select detail level</param>
+        /// <param name="objectBlock">Object to draw</param>
+        /// <param name="instance">Instance data of object to draw</param>
+        private void Dispatch( Camera eye, ObjectBlock objectBlock,
             ScenarioSceneryBlock instance )
         {
             var modelBlock = objectBlock.Model.Get<ModelBlock>( );
@@ -115,10 +78,10 @@ namespace Moonfish.Graphics
 
             if ( renderBlock == null ) return;
 
-            NewBucketManager.UnpackVertexData( renderBlock );
+            BucketManager.UnpackVertexData( renderBlock );
 
             // TODO use bounding offset and bounding radius here x
-            var distance = eyeCamera.DistanceOf( instance.ObjectData.Position );
+            var distance = eye.DistanceOf( instance.ObjectData.Position );
             var detailLevel = GetDetailLevel( modelBlock, distance );
 
             var instanceVariant = instance.PermutationData.VariantName;
@@ -138,11 +101,11 @@ namespace Moonfish.Graphics
             if ( hasVariant )
             {
                 var variantBlock = modelBlock.Variants.Single( e => e.Name == variant );
-                sections = DrawVariant( variantBlock, renderBlock, detailLevel );
+                sections = ProcessVariant( variantBlock, renderBlock, detailLevel );
             }
             else if ( hasRegions )
             {
-                sections = DrawRegions( modelBlock.ModelRegionBlock, renderBlock, detailLevel );
+                sections = ProcessRegions( modelBlock.ModelRegionBlock, renderBlock, detailLevel );
             }
             var renderModelSectionBlocks = sections as RenderModelSectionBlock[] ?? sections.ToArray( );
 
@@ -159,31 +122,28 @@ namespace Moonfish.Graphics
             }
         }
 
-        private static IEnumerable<RenderModelSectionBlock> DrawRegions(
-            IReadOnlyCollection<ModelRegionBlock> modelRegionBlock, RenderModelBlock renderBlock,
-            DetailLevel detailLevel )
+        /// <summary>
+        ///     Draws each patch with an individual call.
+        /// </summary>
+        /// <param name="patches">Patches to draw</param>
+        /// <param name="program">Program to shad patches with</param>
+        private void DrawPatchElements( IEnumerable<PatchData> patches, Program program )
         {
-            var regionNames = new List<StringIdent>( modelRegionBlock.Count );
-            foreach ( var region in modelRegionBlock )
+            foreach ( var patch in patches )
             {
-                regionNames.Add( region.Name );
-            }
-            var sectionIndices = SelectRenderModelSections( renderBlock, regionNames, null, detailLevel );
-            return renderBlock.Sections.Where( ( e, i ) => sectionIndices.Contains( i ) );
-        }
+                var location = program.GetUniformLocation( "WorldMatrixUniform" );
+                program.SetUniform( location, patch.Data.worldMatrix );
+                int vertexBaseIndex;
+                int indexBaseOffset;
 
-        private static IEnumerable<RenderModelSectionBlock> DrawVariant( ModelVariantBlock variantBlock,
-            RenderModelBlock renderBlock, DetailLevel detailLevel )
-        {
-            var regionNames = new List<StringIdent>(variantBlock.Regions.Length);
-            var permutationNames = new List<StringIdent>(variantBlock.Regions.Length);
-            foreach ( var region in variantBlock.Regions )
-            {
-                regionNames.Add( region.RegionName );
-                permutationNames.Add( region.Permutations.SingleOrDefault( )?.PermutationName ?? StringIdent.Zero );
+                var bucket = _bucketManager.GetBucketResource( patch.Part, out indexBaseOffset, out vertexBaseIndex );
+                using ( bucket.Bind( ) )
+                {
+                    GL.DrawElementsBaseVertex(
+                        PrimitiveType.TriangleStrip, patch.Part.StripLength, DrawElementsType.UnsignedShort,
+                        ( IntPtr ) ( indexBaseOffset + patch.Part.StripStartIndex * 2 ), vertexBaseIndex );
+                }
             }
-            var sectionIndices = SelectRenderModelSections( renderBlock, regionNames, permutationNames, detailLevel );
-            return renderBlock.Sections.Where( ( e, i ) => sectionIndices.Contains( i ) );
         }
 
         /// <summary>
@@ -228,35 +188,31 @@ namespace Moonfish.Graphics
             }
         }
 
-        private void LoadLevelGeometry( ScenarioStructureBspBlock structureBsp )
+        private static IEnumerable<RenderModelSectionBlock> ProcessRegions(
+            IReadOnlyCollection<ModelRegionBlock> modelRegionBlock, RenderModelBlock renderBlock,
+            DetailLevel detailLevel )
         {
-            //using ( _bucketManager.BeginBucket( ) )
-            //{
-            //    foreach ( var structureBspClusterBlock in structureBsp.Clusters )
-            //    {
-            //        structureBspClusterBlock.LoadClusterData( );
-            //        BucketManager.UnpackLightingData( structureBspClusterBlock.ClusterData[ 0 ].Section );
-            //    }
+            var regionNames = new List<StringIdent>( modelRegionBlock.Count );
+            foreach ( var region in modelRegionBlock )
+            {
+                regionNames.Add( region.Name );
+            }
+            var sectionIndices = SelectRenderModelSections( renderBlock, regionNames, null, detailLevel );
+            return renderBlock.Sections.Where( ( e, i ) => sectionIndices.Contains( i ) );
+        }
 
-            //    _bucketManager.QueueSectionData( structureBsp.Clusters.Select( e => e.ClusterData[ 0 ].Section ) );
-            //}
-
-            //using ( _bucketManager.BeginBucket( ) )
-            //{
-            //    for ( var index = 0; index < structureBsp.InstancedGeometriesDefinitions.Length; index++ )
-            //    {
-            //        var item = structureBsp.InstancedGeometriesDefinitions[ index ];
-            //        var index1 = index;
-            //        var items =
-            //            structureBsp.InstancedGeometryInstances.Where( e => e.InstanceDefinition == index1 )
-            //                .Select( e => e.WorldMatrix )
-            //                .ToList( );
-            //        item.RenderInfo.LoadRenderData( );
-            //        BucketManager.UnpackLightingData( item.RenderInfo.RenderData[ 0 ].Section );
-            //        _bucketManager.QueueSectionData( new[] {item.RenderInfo.RenderData[ 0 ].Section} );
-            //        _bucketManager.QueueInstanceData( new[] {item.RenderInfo.RenderData[ 0 ].Section}, items );
-            //    }
-            //}
+        private static IEnumerable<RenderModelSectionBlock> ProcessVariant( ModelVariantBlock variantBlock,
+            RenderModelBlock renderBlock, DetailLevel detailLevel )
+        {
+            var regionNames = new List<StringIdent>( variantBlock.Regions.Length );
+            var permutationNames = new List<StringIdent>( variantBlock.Regions.Length );
+            foreach ( var region in variantBlock.Regions )
+            {
+                regionNames.Add( region.RegionName );
+                permutationNames.Add( region.Permutations.SingleOrDefault( )?.PermutationName ?? StringIdent.Zero );
+            }
+            var sectionIndices = SelectRenderModelSections( renderBlock, regionNames, permutationNames, detailLevel );
+            return renderBlock.Sections.Where( ( e, i ) => sectionIndices.Contains( i ) );
         }
 
         /// <summary>
@@ -266,7 +222,8 @@ namespace Moonfish.Graphics
         /// <param name="regionNames">A list of names for each region to return</param>
         /// <param name="permutationNames"></param>
         /// <param name="detailLevel">The detail level of mesh to return</param>
-        private static int[] SelectRenderModelSections( RenderModelBlock renderBlock, List<StringIdent> regionNames, List<StringIdent> permutationNames, DetailLevel detailLevel )
+        private static IEnumerable<int> SelectRenderModelSections( RenderModelBlock renderBlock,
+            List<StringIdent> regionNames, IReadOnlyList<StringIdent> permutationNames, DetailLevel detailLevel )
         {
             var renderModelRegionBlocks = renderBlock.Regions.Where( u => regionNames.Contains( u.Name ) ).ToArray( );
             var sectionIndices = new int[renderModelRegionBlocks.Length];
@@ -284,16 +241,31 @@ namespace Moonfish.Graphics
         }
 
         /// <summary>
-        /// Walks the scenario tree and render all renderable parts
+        ///     Walks the scenario tree and render all renderable parts
         /// </summary>
         /// <param name="eyeCamera"></param>
-        private void TraverseSceenario( Camera eyeCamera )
+        private void TraverseScenario( Camera eyeCamera )
         {
-            var scenarioBlock = _cache.Index.ScenarioIdent.Get<ScenarioBlock>( );
+            var scenarioBlock = _cache?.Index.ScenarioIdent.Get<ScenarioBlock>( );
+            if ( scenarioBlock == null ) return;
 
-            DrawManager.ClearVisable( );
+            DrawManager.ClearVisible( );
             using ( _bucketManager.Begin( ) )
             {
+                foreach ( var instance in scenarioBlock.Scenery )
+                {
+                    var palette = instance.Type;
+
+                    var objectBlock = scenarioBlock.SceneryPalette[ palette ].Name.Get<ObjectBlock>( );
+                    var modelBlock = objectBlock?.Model.Get<ModelBlock>( );
+                    var renderModel = modelBlock?.RenderModel.Get<RenderModelBlock>( );
+
+                    if ( renderModel == null ) continue;
+
+                    if ( !eyeCamera.CanSee( instance, objectBlock ) ) continue;
+
+                    Dispatch( eyeCamera, objectBlock, instance );
+                }
                 foreach ( var instance in scenarioBlock.Scenery )
                 {
                     var palette = instance.Type;
@@ -311,21 +283,24 @@ namespace Moonfish.Graphics
             }
         }
 
+        /// <summary>
+        ///     Sorts render calls into optimized batches
+        /// </summary>
         private class DrawManager
         {
-            private InstanceId _currentInstanceId;
+            /// <summary>
+            ///     Clears all parts currently marked as visible ( Call this at the start of a frame )
+            /// </summary>
+            public static void ClearVisible( )
+            {
+                //TODO implement filtering here
+            }
 
-            private readonly Dictionary<InstanceId, InstanceData> _instanceDataDictionary =
-                new Dictionary<InstanceId, InstanceData>( );
-
-            private readonly Dictionary<GuerillaBlock, InstanceId> _instanceDictionary =
-                new Dictionary<GuerillaBlock, InstanceId>( );
-            
-            private readonly Dictionary<GlobalGeometryPartBlockNew, List<InstanceId>> _partDictionary =
-                new Dictionary<GlobalGeometryPartBlockNew, List<InstanceId>>( );
-
-            private static readonly Comparer<float> Comparer = Comparer<float>.Create( ( a, b ) => a <= b? 1 : -1 );
-
+            /// <summary>
+            ///     Creates an instance object for the given part
+            /// </summary>
+            /// <param name="part">The part to be instanced</param>
+            /// <param name="instance">The instance data</param>
             public void CreateInstance( GlobalGeometryPartBlockNew part, ScenarioSceneryBlock instance )
             {
                 if ( !_partDictionary.ContainsKey( part ) )
@@ -346,13 +321,11 @@ namespace Moonfish.Graphics
                 }
             }
 
-            public IEnumerable<RenderPatch> GetTransparentParts( Camera eye )
-            {
-                var transparentParts = _partDictionary.Where( e => e.Key.Type == GlobalGeometryPartBlockNew.TypeEnum.Transparent );
-                return  SortTransparentParts( transparentParts, eye);
-            }
-
-            public IEnumerable<RenderPatch> GetOpaqueParts(Camera eye)
+            /// <summary>
+            ///     Returns all Opaque* type parts
+            /// </summary>
+            /// <returns>A sequence of patch data</returns>
+            public IEnumerable<PatchData> GetOpaqueParts( )
             {
                 var patches =
                     _partDictionary.Where(
@@ -360,36 +333,53 @@ namespace Moonfish.Graphics
                             e.Key.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowCasting ||
                             e.Key.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowOnly ||
                             e.Key.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueNonshadowing );
-                var opaquePatches = new List<RenderPatch>( );
+                var opaquePatches = new List<PatchData>( );
                 foreach ( var pair in patches )
                 {
                     foreach ( var instanceId in pair.Value )
                     {
                         var instanceData = _instanceDataDictionary[ instanceId ];
-                        opaquePatches.Add( new RenderPatch( pair.Key, instanceData ) );
+                        opaquePatches.Add( new PatchData( pair.Key, instanceData ) );
                     }
                 }
                 return opaquePatches;
             }
 
             /// <summary>
-            /// Returns a sorted collection of DrawStubs
+            ///     Returns all Transparent type parts
+            /// </summary>
+            /// <param name="eye">The viewer used for depth sorting</param>
+            /// <returns>A sequence of patch data</returns>
+            public IEnumerable<PatchData> GetTransparentParts( Camera eye )
+            {
+                var transparentParts =
+                    _partDictionary.Where( e => e.Key.Type == GlobalGeometryPartBlockNew.TypeEnum.Transparent );
+                return SortTransparentParts( transparentParts, eye );
+            }
+
+            private InstanceId CreateInstanceId( )
+            {
+                return _currentInstanceId++;
+            }
+
+            /// <summary>
+            ///     Returns a sorted collection of DrawStubs
             /// </summary>
             /// <param name="transparentPartDictionary"></param>
             /// <param name="eye"></param>
             /// <returns></returns>
-            private IEnumerable<RenderPatch> SortTransparentParts(
+            private IEnumerable<PatchData> SortTransparentParts(
                 IEnumerable<KeyValuePair<GlobalGeometryPartBlockNew, List<InstanceId>>> transparentPartDictionary,
                 Camera eye )
             {
                 var keyValuePairs =
                     transparentPartDictionary as IList<KeyValuePair<GlobalGeometryPartBlockNew, List<InstanceId>>> ??
                     transparentPartDictionary.ToList( );
-                
+
                 var capacity = keyValuePairs.Sum( u => u.Value.Count );
 
                 var transparentDrawsSortedList =
-                    new SortedList<float, RenderPatch>( capacity, Comparer );
+                    new SortedList<float, PatchData>( capacity, Comparer );
 
                 foreach ( var item in keyValuePairs )
                 {
@@ -405,15 +395,10 @@ namespace Moonfish.Graphics
                         // Reverse the sorting here with negation
                         var distance = eye.DistanceOf( scenePosition );
 
-                        transparentDrawsSortedList.Add( distance, new RenderPatch( part, instanceData ) );
+                        transparentDrawsSortedList.Add( distance, new PatchData( part, instanceData ) );
                     }
                 }
-                return transparentDrawsSortedList.Select( u=>u.Value );
-            }
-
-            private InstanceId CreateInstanceId( )
-            {
-                return _currentInstanceId++;
+                return transparentDrawsSortedList.Select( u => u.Value );
             }
 
             private struct InstanceId
@@ -432,25 +417,44 @@ namespace Moonfish.Graphics
                 }
             }
 
-            public static void ClearVisable( )
-            {
-                //TODO implement filtering here
-            }
+            #region Part and Instance data lookups
+
+            private static readonly Comparer<float> Comparer = Comparer<float>.Create( ( a, b ) => a <= b ? 1 : -1 );
+
+            private readonly Dictionary<InstanceId, InstanceData> _instanceDataDictionary =
+                new Dictionary<InstanceId, InstanceData>( );
+
+            private readonly Dictionary<GuerillaBlock, InstanceId> _instanceDictionary =
+                new Dictionary<GuerillaBlock, InstanceId>( );
+
+            private readonly Dictionary<GlobalGeometryPartBlockNew, List<InstanceId>> _partDictionary =
+                new Dictionary<GlobalGeometryPartBlockNew, List<InstanceId>>( );
+
+            private InstanceId _currentInstanceId;
+
+            #endregion
         }
     };
 
-    internal class RenderPatch
+    /// <summary>
+    ///     Container of an atomic draw element ( ie; smallest sortable draw I want to deal with :} )
+    ///     This should be processed more to create batches
+    /// </summary>
+    internal class PatchData
     {
-        public GlobalGeometryPartBlockNew Part { get; }
-        public InstanceData Data { get; }
-
-        public RenderPatch( GlobalGeometryPartBlockNew part, InstanceData data )
+        public PatchData( GlobalGeometryPartBlockNew part, InstanceData data )
         {
             Part = part;
             Data = data;
         }
+
+        public InstanceData Data { get; }
+        public GlobalGeometryPartBlockNew Part { get; }
     }
 
+    /// <summary>
+    ///     Contains instance data ( colour, orientation, etc )
+    /// </summary>
     internal struct InstanceData
     {
         private Vector4 Colour;

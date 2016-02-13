@@ -40,7 +40,6 @@ namespace Moonfish.Graphics
 
         protected virtual void Draw( float delta )
         {
-            var commands = Manager.GetLevelGeometryDrawCommands( );
             Manager.Draw(Camera, ProgramManager );
         }
 
@@ -81,7 +80,7 @@ namespace Moonfish.Graphics
             Console.WriteLine( GL.GetString( StringName.Version ) );
             Timer = new Stopwatch( );
             Camera = new Camera( );
-            Manager = new ScenarioManager( );
+            Manager = new ScenarioManager();
             ProgramManager = new ProgramManager( );
             Performance = new Performance( );
 

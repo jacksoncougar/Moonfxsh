@@ -109,5 +109,11 @@ namespace Moonfish.Graphics
         private static readonly StringBuilder messageString = new StringBuilder( 20 );
         private static readonly Timer timer = new Timer( );
 #endif
+
+        public static void EnableDebugging( )
+        {
+            GL.Enable(EnableCap.DebugOutput);
+            GL.Enable(EnableCap.DebugOutputSynchronous);
+        }
     }
 }

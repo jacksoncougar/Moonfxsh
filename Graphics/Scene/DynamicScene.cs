@@ -13,6 +13,26 @@ namespace Moonfish.Graphics
     {
         public ConvexHullCaster caster;
 
+        public DynamicScene( Control ownerControl ) : this( )
+        {
+            ownerControl.MouseDown += Camera.OnMouseDown;
+            ownerControl.MouseMove += Camera.OnMouseMove;
+            ownerControl.MouseUp += Camera.OnMouseUp;
+            ownerControl.MouseCaptureChanged += Camera.OnMouseCaptureChanged;
+            ownerControl.KeyDown +=
+                delegate( object sender1, KeyEventArgs e1 )
+                {
+                    if ( e1.KeyCode == Keys.X )
+                        Camera.LookAt( GetLocationOf( SelectedObject ) );
+                    if ( e1.KeyCode == Keys.Z )
+                        Camera.ZoomTo( SelectedObject );
+                };
+            ownerControl.MouseDown += OnMouseDown;
+            ownerControl.MouseMove += OnMouseMove;
+            ownerControl.MouseUp += OnMouseUp;
+            ownerControl.MouseClick += OnMouseClick;
+        }
+
         public DynamicScene( )
         {
             caster = new ConvexHullCaster( );
@@ -30,6 +50,7 @@ namespace Moonfish.Graphics
                 CollisionManager.World.AddCollisionObject( item, CollisionFilterGroups.SensorTrigger, CollisionFilterGroups.SensorTrigger );
 
 #if DEBUG
+            //OpenGL.EnableDebugging( );
 #endif
         }
 
@@ -50,25 +71,6 @@ namespace Moonfish.Graphics
             //Manager.Update( );
             base.Update( );
         }
-
-        protected override void Draw( float delta )
-        {
-            //ProgramManager.DebugShader2.Assign();
-           // GLDebug.DrawTriangles();
-
-            //ProgramManager.DebugShader.Assign( );
-            base.Draw( delta );
-            //ObjectManager.ExplicitDraw( ProgramManager, MousePole.Model );
-//#if DEBUG
-//            ProgramManager.DebugShader2.Assign( );
-//            GLDebug.DrawTriangles();
-//            GL.Disable( EnableCap.DepthTest );
-//            GLDebug.DrawPoints( ); 
-//            GL.Enable( EnableCap.DepthTest );
-//            GLDebug.DrawLines();
-//#endif
-        }
-
 
         private void OnSelectedObjectChanged( object seneder, SelectEventArgs e )
         {

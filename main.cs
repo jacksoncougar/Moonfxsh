@@ -27,21 +27,9 @@ namespace Moonfish
         [STAThread]
         private static void Main()
         {
-            //GuerillaCodeDom.GenerateGuerillaCode(TagClass.Coll);
-            //CacheStream map = new CacheStream(Path.Combine(Local.MapsDirectory, "lockout.map"));
-            //foreach (var datum in map.Index)
-            //{
-            //    new Validator().Validate(datum, map);
-            //}
-            //var cache = CacheStream.SaveAs(map, Path.Combine(Local.MapsDirectory, "headlong.map"));
-            //foreach (var datum in cache.Index)
-            //{
-            //    new Validator().Validate(datum, cache);
-            //}
-            //return;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SceneView(CacheStream.Open( Path.Combine(Local.MapsDirectory, "ascension.map") )));
+            Application.Run( new SceneView( CacheStream.Open( Path.Combine( Local.MapsDirectory, "ascension.map" ) ) ) );
         }
     }
 }

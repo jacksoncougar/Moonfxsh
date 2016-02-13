@@ -19,9 +19,7 @@ layout(location = 0) flat out vec4 diffuseColour;
 
 void main()
 {	
-	mat4 worldMatrix;
-	if(ShaderArguments.x > 0.5) worldMatrix = WorldMatrixUniform;
-	else worldMatrix = instanceWorldMatrix;
+	mat4 worldMatrix = WorldMatrixUniform;
 
 
 	mat4 modelViewMatrix = ViewMatrixUniform * worldMatrix;

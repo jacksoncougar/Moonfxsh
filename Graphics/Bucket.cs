@@ -17,30 +17,59 @@ namespace Moonfish.Graphics
         public int InstanceBufferBaseOffset;
         public int InstanceCount;
     }
-    
-    public class Bucket : IDisposable, IEnumerable<GlobalGeometrySectionStructBlock>
+
+    public class PartBufferLocations
     {
+        public int VertexBaseOffset { get; set; }
+
+        public int IndexBaseOffset { get; set; }
+
+        public PartBufferLocations( int indexBaseOffset, int vertexBaseOffset )
+        {
+            IndexBaseOffset = indexBaseOffset;
+            VertexBaseOffset = vertexBaseOffset;
+        }
+    }
+    public class Bucket : IDisposable, IEnumerable<GlobalGeometryPartBlockNew>
+    {
+        #region OpenGL Buffer Handles
+
         private readonly ReadOnlyDictionary<VertexAttributeType, int> _attributeBuffers;
         private readonly int _elementBuffer;
         private readonly int _instanceDataBuffer;
 
         private readonly int _vertexArrayObject;
+
+        #endregion
+
         private bool _disposed;
 
-        private BucketAttributes attributes;
+        #region Properties
 
-        public Dictionary<GlobalGeometrySectionStructBlock, MeshFragmentInfo> storageMeta =
-            new Dictionary<GlobalGeometrySectionStructBlock, MeshFragmentInfo>( );
+        public int BufferSize { get; private set; }
+        public GlobalGeometryPartBlockNew.TypeEnum GeometryType { get; private set; }
+        public VertexAttributeType[] SupportedVertexAttributes { get; private set; }
+        public int VertexAttributeId => SupportedVertexAttributes.GetVertexAttributesId( );
+
+        #endregion
+
+        private Dictionary<GlobalGeometryPartBlockNew, PartBufferLocations> storageMeta =
+            new Dictionary<GlobalGeometryPartBlockNew, PartBufferLocations>( );
+
+        public PartBufferLocations GetBufferLocation( GlobalGeometryPartBlockNew part )
+        {
+            return storageMeta[ part ];
+        }
         
         public Bucket( VertexAttributeType[] supportedVertexAttributeTypes )
         {
-            attributes.SupportedVertexAttributes = supportedVertexAttributeTypes;
+            SupportedVertexAttributes = supportedVertexAttributeTypes;
             _vertexArrayObject = GL.GenVertexArray( );
             _instanceDataBuffer = GL.GenBuffer( );
 
             _attributeBuffers =
                 new ReadOnlyDictionary<VertexAttributeType, int>(
-                    attributes.SupportedVertexAttributes.ToDictionary( k => k,
+                    SupportedVertexAttributes.ToDictionary( k => k,
                         v => GL.GenBuffer( ) ) );
             _elementBuffer = GL.GenBuffer( );
         }
@@ -49,10 +78,7 @@ namespace Moonfish.Graphics
 
         public int PartsCount { get; private set; }
 
-        public int VertexArrayObject
-        {
-            get { return _vertexArrayObject; }
-        }
+        public int VertexArrayObject => _vertexArrayObject;
 
         public void Dispose( )
         {
@@ -60,7 +86,7 @@ namespace Moonfish.Graphics
             GC.SuppressFinalize( this );
         }
 
-        public IEnumerator<GlobalGeometrySectionStructBlock> GetEnumerator( )
+        public IEnumerator<GlobalGeometryPartBlockNew> GetEnumerator( )
         {
             return storageMeta.Keys.GetEnumerator( );
         }
@@ -75,13 +101,11 @@ namespace Moonfish.Graphics
             return new Handle( VertexArrayObject, keepBound);
         }
 
-        public void BufferData( List<GlobalGeometrySectionStructBlock> sectionData )
+        public void BufferData( ICollection<GlobalGeometrySectionStructBlock> sectionData )
         {
             PartsCount = 0;
 
-            storageMeta =
-                new Dictionary<GlobalGeometrySectionStructBlock, MeshFragmentInfo>(
-                    sectionData.ToDictionary(k => k, v => new MeshFragmentInfo()));
+            storageMeta = new Dictionary<GlobalGeometryPartBlockNew, PartBufferLocations>();
 
             GL.BindVertexArray( VertexArrayObject );
 
@@ -141,7 +165,7 @@ namespace Moonfish.Graphics
             GL.BindVertexArray( VertexArrayObject );
 
             GL.BindBuffer( BufferTarget.ArrayBuffer, _instanceDataBuffer );
-            GL.BufferData( BufferTarget.ArrayBuffer, ( IntPtr ) instanceDataSize, buffer, BufferUsageHint.StaticDraw );
+            GL.BufferData( BufferTarget.ArrayBuffer, ( IntPtr ) instanceDataSize, buffer, BufferUsageHint.DynamicDraw );
 
             VertexAttribArray( 7, 4, VertexAttribPointerType.Float, false, stride, 0, 1 );
             VertexAttribArray( 8, 4, VertexAttribPointerType.Float, false, stride, Vector4.SizeInBytes * 1, 1 );
@@ -165,9 +189,7 @@ namespace Moonfish.Graphics
         private void BufferAttributeData( ICollection<GlobalGeometrySectionStructBlock> sectionData )
         {
             var firstPass = true;
-            var vertexBaseVertex = sectionData.ToDictionary( k => k, v => 0 );
-
-            foreach ( var supportedFormat in attributes.SupportedVertexAttributes )
+            foreach ( var supportedFormat in SupportedVertexAttributes )
             {
                 var bufferSize =
                     sectionData.SelectMany( e => e.VertexBuffers )
@@ -184,26 +206,24 @@ namespace Moonfish.Graphics
                 var vertexOffset = 0;
                 foreach ( var renderModelSectionDataBlock in sectionData )
                 {
-                    PartsCount += renderModelSectionDataBlock.Parts.Length;
-
-                    var globalGeometrySectionVertexBufferBlock =
-                        renderModelSectionDataBlock.VertexBuffers.First( e => e.VertexBuffer.Type == supportedFormat );
+                    var vertexBuffer =
+                        renderModelSectionDataBlock.VertexBuffers.Select( u=>u.VertexBuffer ).Single( e => e.Type == supportedFormat );
 
                     GL.BufferSubData( BufferTarget.ArrayBuffer, ( IntPtr ) offset,
-                        ( IntPtr ) globalGeometrySectionVertexBufferBlock.VertexBuffer.Data.Length,
-                        globalGeometrySectionVertexBufferBlock.VertexBuffer.Data );
+                        ( IntPtr ) vertexBuffer.Data.Length,
+                        vertexBuffer.Data );
 
                     if ( firstPass )
                     {
-                        storageMeta[ renderModelSectionDataBlock ].VertexBufferBaseOffset = vertexOffset;
-                        vertexBaseVertex[ renderModelSectionDataBlock ] = vertexOffset;
-                        vertexOffset += globalGeometrySectionVertexBufferBlock.VertexBuffer.Data.Length / attributeSize;
+                        foreach (var part in renderModelSectionDataBlock.Parts)
+                        {
+                            SetVertexOffset(part, vertexOffset);
+                        }
                     }
-
-                    offset += globalGeometrySectionVertexBufferBlock.VertexBuffer.Data.Length;
+                    vertexOffset += vertexBuffer.VertexElementCount;
+                    offset += vertexBuffer.Data.Length;
                 }
                 firstPass = false;
-
                 ConfigureVertexAttributeArray( supportedFormat, attributeSize );
             }
             
@@ -212,7 +232,7 @@ namespace Moonfish.Graphics
         private void BufferElementData( ICollection<GlobalGeometrySectionStructBlock> sectionData )
         {
             var offset = 0;
-            var indexBufferSize = sectionData.Sum( x => Padding.Align( x.StripIndices.Length * 2 ) );
+            var indexBufferSize = sectionData.Sum( x => Padding.Align( x.StripIndices.Length * sizeof(ushort)) );
             var indexBaseVertex = sectionData.ToDictionary( k => k, v => 0 );
 
             GL.BindBuffer( BufferTarget.ElementArrayBuffer, _elementBuffer );
@@ -228,12 +248,33 @@ namespace Moonfish.Graphics
                 GL.BufferSubData( BufferTarget.ElementArrayBuffer, ( IntPtr ) offset, ( IntPtr ) dataSize, indices );
 
                 indexBaseVertex[ renderModelSectionDataBlock ] = offset;
-                
-                storageMeta[renderModelSectionDataBlock].IndexBufferBaseOffset = offset;
-                offset += dataSize;
 
+                foreach ( var part in renderModelSectionDataBlock.Parts )
+                {
+                    SetIndexOffset( part, offset );
+                }
+                offset += dataSize;
             }
-            new ReadOnlyDictionary<GlobalGeometrySectionStructBlock, int>( indexBaseVertex );
+        }
+
+        private void SetVertexOffset(GlobalGeometryPartBlockNew part, int offset)
+        {
+            if (!storageMeta.ContainsKey(part))
+            {
+                storageMeta.Add(part, new PartBufferLocations(0, offset));
+                return;
+            }
+            storageMeta[part].VertexBaseOffset = offset;
+        }
+
+        private void SetIndexOffset( GlobalGeometryPartBlockNew part, int offset )
+        {
+            if ( !storageMeta.ContainsKey( part ) )
+            {
+                storageMeta.Add( part, new PartBufferLocations(offset, 0 ) );
+                return;
+            }
+            storageMeta[ part ].IndexBaseOffset = offset;
         }
 
         /// <summary>

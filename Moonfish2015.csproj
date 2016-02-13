@@ -167,6 +167,7 @@
     <Compile Include="Forms\ObjectListView.Designer.cs">
       <DependentUpon>ObjectListView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SceneClock.cs" />
     <Compile Include="Forms\ShaderViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -187,6 +188,8 @@
     <Compile Include="Graphics\ClosestRayResultCullFaceCallback.cs" />
     <Compile Include="Graphics\CollisionGroup.cs" />
     <Compile Include="Graphics\ConvexHullCaster.cs" />
+    <Compile Include="Graphics\DetailLevel.cs" />
+    <Compile Include="Graphics\Heirarchy\INode.cs" />
     <Compile Include="Graphics\INode.cs" />
     <Compile Include="Graphics\Input\ClickableCollisionObject.cs" />
     <Compile Include="Graphics\Input\GizmoBase.cs" />
@@ -197,13 +200,15 @@
     <Compile Include="Graphics\MathHelper.cs" />
     <Compile Include="Graphics\Primitives\GLDebug.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
+    <Compile Include="Graphics\ScenarioExtensions.cs" />
+    <Compile Include="Graphics\ScenarioManager.cs" />
     <Compile Include="Graphics\ShaderReference.cs" />
     <Compile Include="Graphics\TriangleBatch.cs" />
     <Compile Include="Graphics\BulletDebugDrawer.cs" />
-    <Compile Include="Graphics\Camera.cs" />
+    <Compile Include="Graphics\Camera\Camera.cs" />
     <Compile Include="Graphics\CollisionManager.cs" />
-    <Compile Include="Graphics\DynamicScene.cs" />
-    <Compile Include="Graphics\DynamicScene.Events.cs" />
+    <Compile Include="Graphics\Scene\DynamicScene.cs" />
+    <Compile Include="Graphics\Scene\DynamicScene.Events.cs" />
     <Compile Include="Graphics\Interfaces.cs" />
     <Compile Include="Forms\SceneView.cs">
       <SubType>Form</SubType>
@@ -219,13 +224,13 @@
     </Compile>
     <Compile Include="Graphics\GraphicsEvents.cs" />
     <Compile Include="Graphics\GraphicsExtensions.cs" />
-    <Compile Include="Graphics\Grid.cs" />
+    <Compile Include="Graphics\Primitives\Grid.cs" />
     <Compile Include="Graphics\MeshManager.cs" />
     <Compile Include="Graphics\MarkerWrapper.cs" />
     <Compile Include="Graphics\MaterialShader.cs" />
     <Compile Include="Graphics\Mesh.cs" />
     <Compile Include="Graphics\MoonfishColours.cs" />
-    <Compile Include="Graphics\Conic.cs" />
+    <Compile Include="Graphics\Primitives\Conic.cs" />
     <Compile Include="Graphics\Node.cs" />
     <Compile Include="Graphics\NodeCollectionExtensions.cs" />
     <Compile Include="Graphics\OpenGL.cs" />
@@ -236,17 +241,17 @@
     <Compile Include="Graphics\RenderBatch.cs" />
     <Compile Include="Graphics\RenderObject.cs" />
     <Compile Include="Graphics\ScenarioObject.cs" />
-    <Compile Include="Graphics\Scene.cs" />
+    <Compile Include="Graphics\Scene\Scene.cs" />
     <Compile Include="Graphics\Section.cs" />
     <Compile Include="Graphics\Shader.cs" />
     <Compile Include="Graphics\Swizzler.cs" />
     <Compile Include="Graphics\Texture.cs" />
-    <Compile Include="Graphics\Track.cs" />
+    <Compile Include="Graphics\Camera\Track.cs" />
     <Compile Include="Graphics\TriangleBucket.cs" />
     <Compile Include="Graphics\UniformBuffer.cs" />
     <Compile Include="Graphics\VertexAttributeType.cs" />
     <Compile Include="Graphics\VertexFunctions.cs" />
-    <Compile Include="Graphics\Viewport.cs" />
+    <Compile Include="Graphics\Camera\Viewport.cs" />
     <Compile Include="Guerilla\BinaryIOReflection.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaBlockClassBase.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaCodeDom.cs" />

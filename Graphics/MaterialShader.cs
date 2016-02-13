@@ -12,12 +12,12 @@ namespace Moonfish.Graphics
     {
         private bool disposed = false;
 
-        private int activeShaderPass;
+        private int _activeShaderPass;
 
-        public int ActiveShaderPassIndex
+        private int ActiveShaderPassIndex
         {
-            get { return activeShaderPass; }
-            set { activeShaderPass = value.Clamp<int>(-1, shaderPasses.Length - 1); }
+            get { return _activeShaderPass; }
+            set { _activeShaderPass = value.Clamp(-1, shaderPasses.Length - 1); }
         }
 
 

@@ -18,19 +18,13 @@ namespace Moonfish.Forms
 {
     public partial class SceneView : DockContent
     {
-        private readonly Stopwatch _timer = new Stopwatch( );
         private CacheStream _cacheStream;
         private GLControl _glControl1;
-        private long _totalTime;
-        private long _updateTime;
-        private double _accumulator;
-        private double _currentTime;
-        private readonly double _deltaTime = 0.09f;
-        private readonly double _minFrameTime = 0.001f;
 
         public SceneView( CacheStream cacheStream )
         {
-            _timer.Start( );
+            SceneClock = new SceneClock( );
+            SceneClock.timer.Start( );
             _cacheStream = cacheStream;
             InitializeComponent( );
             LoadGLControl( );
@@ -39,41 +33,17 @@ namespace Moonfish.Forms
 
         public SceneView( )
         {
-            _timer.Start( );
+            SceneClock = new SceneClock( );
+            SceneClock.timer.Start( );
             InitializeComponent( );
+            GuerillaBlockPropertyViewer blockPropertyViewer = new GuerillaBlockPropertyViewer(  );
+            blockPropertyViewer.DockTo( FloatPane, DockStyle.Right, 0 );
         }
 
         private DynamicScene Scene { get; set; }
 
-        public void AddSceneObject( TagIdent ident )
-        {
-            //int instanceIdent;
-            //ScenarioObject instanceScenarioObject;
-            //if ( Scene.ObjectManager.Contains( ident ) )
-            //    Scene.ObjectManager.AddInstance( ident, out instanceIdent, out instanceScenarioObject,
-            //        Matrix4.CreateTranslation( Scene.CurrentMouseWorldPosition ) );
-            //else
-            //{
-            //    var objectBlock = ( ObjectBlock ) _cacheStream.Deserialize( ident );
-            //    var modelBlock = objectBlock.Model.Get<ModelBlock>( );
-            //    if ( modelBlock == null ) return;
-            //    instanceScenarioObject = new ScenarioObject( modelBlock );
-            //    instanceScenarioObject.AssignInstanceMatrices( new Matrix4[0] );
-            //    Scene.ObjectManager.Add( ident, instanceScenarioObject );
-            //    Scene.ObjectManager.AddInstance( ident, out instanceIdent, out instanceScenarioObject,
-            //        Matrix4.CreateTranslation( Scene.CurrentMouseWorldPosition ) );
+        private SceneClock SceneClock { get; }
 
-            //    var renderModel = instanceScenarioObject.Model.RenderModel.Get<RenderModelBlock>( );
-            //    if ( renderModel != null )
-            //        Scene.ProgramManager.LoadMaterials( renderModel.Materials, _cacheStream );
-            //}
-
-            //var collisionObject =
-            //    Scene.CollisionManager.World.CollisionObjectArray.First(
-            //        x => x.UserIndex == instanceIdent && x.UserObject == instanceScenarioObject );
-            //Scene.SelectObject( collisionObject );
-        }
-        
         private void ChangeViewport( int width, int height )
         {
             Scene.Camera.Viewport.Size = new Size( width, height );
@@ -81,42 +51,19 @@ namespace Moonfish.Forms
 
         private void glControl1_Load( object sender, EventArgs e )
         {
-            Scene = new DynamicScene( );
+            //  create a new dynamic scene and pass this control as the scene owner to hook control
+            //  then load the selected map into the scene
+            Scene = new DynamicScene( _glControl1 );
+            Scene.Manager.Load( _cacheStream );
+            //var tagDatum  = _cacheStream.Index.SingleOrDefault(u => u.Class == TagClass.Bloc && u.Path.Contains("fusion"));
+
+            //  application idle will handle the render and update loop
             Application.Idle += HandleApplicationIdle;
             Scene.OnFrameReady += Scene_OnFrameReady;
-
             _glControl1.Resize += glControl1_Resize;
-            _glControl1.MouseDown += Scene.Camera.OnMouseDown;
-            _glControl1.MouseMove += Scene.Camera.OnMouseMove;
-            _glControl1.MouseUp += Scene.Camera.OnMouseUp;
-            _glControl1.MouseCaptureChanged += Scene.Camera.OnMouseCaptureChanged;
-            _glControl1.KeyDown +=
-                delegate( object sender1, KeyEventArgs e1 )
-                {
-                    if ( e1.KeyCode == Keys.X )
-                        Scene.Camera.LookAt( Scene.GetLocationOf( Scene.SelectedObject ) );
-                    if ( e1.KeyCode == Keys.Z )
-                        Scene.Camera.ZoomTo( Scene.SelectedObject );
-                };
-
-            _glControl1.MouseDown += Scene.OnMouseDown;
-            _glControl1.MouseMove += Scene.OnMouseMove;
-            _glControl1.MouseUp += Scene.OnMouseUp;
-            _glControl1.MouseClick += Scene.OnMouseClick;
-
-            //Scene.Manager.ProgramManager = Scene.ProgramManager;
-            //Scene.Manager.Collision = Scene.CollisionManager;
-
-            Scene.Manager.Load( _cacheStream );
-
-            //Scene.ObjectManager.LoadScenario(_cacheStream);
-            //Scene.Manager.LoadObject(
-            //    ( ObjectBlock )
-            //        _cacheStream.Deserialize(
-            //            _cacheStream.Index.Where( TagClass.Bipd, "masterchief_mp" ).First( ).Identifier ) );
 
             //  firing this method is meant to load the view-projection matrix values into 
-            //  the shader uniforms, and initalizes the camera
+            //  the shader uniforms, and initalizes the camera before the first draw can be called
             glControl1_Resize( this, new EventArgs( ) );
         }
 
@@ -130,42 +77,31 @@ namespace Moonfish.Forms
         {
             while ( IsApplicationIdle( ) )
             {
-                var newTime = _timer.ElapsedMilliseconds / 1000f;
-                var frameTime = newTime - _currentTime;
-                if (frameTime < _minFrameTime)
-                    Thread.Sleep((int)(_minFrameTime * 1000));
+                SceneClock.Tick( );
 
-                var baseTick = _timer.ElapsedTicks;
+                if ( SceneClock.Sleep )
+                {
+                    Thread.Sleep( ( int ) ( SceneClock.MinFrameTime * 1000 ) );
+                }
 
-                if ( frameTime > 0.25 ) frameTime = 0.25;
-                _currentTime = newTime;
+                SceneClock.Tock( );
 
-                _accumulator += frameTime;
-
-                while ( _accumulator >= _deltaTime )
+                while ( SceneClock.TimeForUpdate( ) )
                 {
                     UpdateState( );
                     Scene.UpdatePhysics( );
-
-#if DEBUG
-                    _updateTime = _timer.ElapsedTicks - baseTick;
-#endif
-
-                    _accumulator -= _deltaTime;
+                    SceneClock.IntegrateUpdate( );
                 }
-                var alpha = _accumulator / _deltaTime;
+                var alpha = SceneClock.accumulator / SceneClock.DeltaTime;
 
                 Scene.Update( );
                 Scene.RenderFrame( ( float ) alpha );
-#if DEBUG
-                _totalTime = _timer.ElapsedTicks - baseTick;
-#endif
             }
         }
 
         private static bool IsApplicationIdle( )
         {
-            NativeMessage result;
+            SceneView.NativeMessage result;
             return PeekMessage( out result, IntPtr.Zero, 0, 0, 0 ) == 0;
         }
 
@@ -200,13 +136,11 @@ namespace Moonfish.Forms
             {
                 Filter = @"Blam! Map File (.map)|*.map"
             };
-            if ( dialog.ShowDialog( ) == DialogResult.OK )
-            {
-                _cacheStream = CacheStream.Open( dialog.FileName );
-                LoadGLControl( );
-                _glControl1.Load += glControl1_Load;
-                glControl1_Load( null, null );
-            }
+            if ( dialog.ShowDialog( ) != DialogResult.OK ) return;
+            _cacheStream = CacheStream.Open( dialog.FileName );
+            LoadGLControl( );
+            _glControl1.Load += glControl1_Load;
+            glControl1_Load( null, null );
         }
 
         private void Scene_OnFrameReady( object sender, EventArgs e )
@@ -216,13 +150,13 @@ namespace Moonfish.Forms
 
         private void SceneView_DragDrop( object sender, DragEventArgs e )
         {
-            var test = e.Data.GetData( DataFormats.FileDrop );
+            
         }
 
         private void UpdateState( )
         {
             lblRenderTime.Text = string.Format( lblRenderTime.Tag.ToString( ),
-                TimeSpan.FromTicks( _totalTime ).TotalMilliseconds, TimeSpan.FromTicks( _updateTime ).TotalMilliseconds,
+                TimeSpan.FromTicks( SceneClock.totalTime ).TotalMilliseconds, TimeSpan.FromTicks( SceneClock.updateTime ).TotalMilliseconds,
                 TimeSpan.FromTicks( Scene.Performance.FrameTime ).TotalMilliseconds );
         }
 
@@ -240,7 +174,7 @@ namespace Moonfish.Forms
         }
 
         [DllImport( "user32.dll" )]
-        private static extern int PeekMessage( out NativeMessage message, IntPtr window, uint filterMin, uint filterMax,
+        private static extern int PeekMessage( out SceneView.NativeMessage message, IntPtr window, uint filterMin, uint filterMax,
             uint remove );
 
         #endregion

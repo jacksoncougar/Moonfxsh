@@ -29,7 +29,7 @@ namespace Moonfish
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run( new SceneView( CacheStream.Open( Path.Combine( Local.MapsDirectory, "ascension.map" ) ) ) );
+            Application.Run( new MetaViewer( CacheStream.Open( Path.Combine( Local.MapsDirectory, "ascension.map" ) ) ) );
         }
     }
 }

@@ -11,7 +11,9 @@ layout(location = 6) in vec4 tangent;
 layout(location = 7) in mat4 instanceWorldMatrix;
 
 uniform vec4 ShaderArguments;
+
 uniform mat4 WorldMatrixUniform = mat4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
+
 uniform mat4 ViewProjectionMatrixUniform;
 uniform mat4 ViewMatrixUniform;
 

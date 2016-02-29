@@ -142,14 +142,14 @@
     <Compile Include="Compiler\Decompiler.cs" />
     <Compile Include="Debug\Memory.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Forms\BitArray.cs" />
+    <Compile Include="Debug\BitArray.cs" />
     <Compile Include="Forms\DataMapper.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\DataMapper.Designer.cs">
       <DependentUpon>DataMapper.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DataTypes.cs" />
+    <Compile Include="Debug\DataTypes.cs" />
     <Compile Include="Forms\DatumViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -180,7 +180,8 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NV30Shader.cs" />
+    <Compile Include="Graphics\Blam!\BitExtensions.cs" />
+    <Compile Include="Graphics\Blam!\NV30Shader.cs" />
     <Compile Include="Forms\VrtxViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -205,7 +206,11 @@
     <Compile Include="Forms\Research.Designer.cs">
       <DependentUpon>Research.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SceneClock.cs" />
+    <Compile Include="Graphics\Blam!\SourceRegister.cs" />
+    <Compile Include="Graphics\Blam!\SwizzleSuffix.cs" />
+    <Compile Include="Graphics\Blam!\VertexShader.cs" />
+    <Compile Include="Graphics\Blam!\WriteMask.cs" />
+    <Compile Include="Graphics\SceneClock.cs" />
     <Compile Include="Forms\ShaderViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -218,7 +223,7 @@
     <Compile Include="Forms\TagDatumView.Designer.cs">
       <DependentUpon>TagDatumView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\TextureState.cs" />
+    <Compile Include="Graphics\Blam!\TextureState.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="GlobalStrings.cs" />
     <Compile Include="Graphics\Bucket.cs" />

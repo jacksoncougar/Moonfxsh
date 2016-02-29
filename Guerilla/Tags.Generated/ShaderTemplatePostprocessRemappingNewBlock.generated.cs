@@ -18,7 +18,7 @@ namespace Moonfish.Guerilla.Tags
     
     public partial class ShaderTemplatePostprocessRemappingNewBlock : GuerillaBlock, IWriteQueueable
     {
-        private byte[] fieldskip = new byte[3];
+        public byte[] fieldskip = new byte[3];
         public byte SourceIndex;
         public override int SerializedSize
         {

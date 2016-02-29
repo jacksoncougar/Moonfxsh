@@ -142,12 +142,14 @@
     <Compile Include="Compiler\Decompiler.cs" />
     <Compile Include="Debug\Memory.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Forms\BitArray.cs" />
     <Compile Include="Forms\DataMapper.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\DataMapper.Designer.cs">
       <DependentUpon>DataMapper.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DataTypes.cs" />
     <Compile Include="Forms\DatumViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -178,6 +180,13 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\NV30Shader.cs" />
+    <Compile Include="Forms\VrtxViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VrtxViewer.Designer.cs">
+      <DependentUpon>VrtxViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MetaViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -189,6 +198,12 @@
     </Compile>
     <Compile Include="Forms\ObjectListView.Designer.cs">
       <DependentUpon>ObjectListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Research.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Research.Designer.cs">
+      <DependentUpon>Research.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\SceneClock.cs" />
     <Compile Include="Forms\ShaderViewer.cs">
@@ -203,6 +218,7 @@
     <Compile Include="Forms\TagDatumView.Designer.cs">
       <DependentUpon>TagDatumView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TextureState.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="GlobalStrings.cs" />
     <Compile Include="Graphics\Bucket.cs" />
@@ -1439,9 +1455,11 @@
     <Content Include="bin\x86\Debug\Moonfish2015.exe" />
     <Content Include="bin\x86\Debug\Moonfish2015.pdb" />
     <Content Include="Documentation\halo_2_header.txt" />
+    <Content Include="Documentation\NVVertexProgramIL.h" />
     <Content Include="Documentation\tangent_space_calculations_cpp.txt" />
     <Content Include="Documentation\index layout.txt" />
     <Content Include="Documentation\vertex_formats.txt" />
+    <Content Include="Documentation\vertex_program.txt" />
     <Content Include="Documentation\vertex_resource_raw.txt" />
     <Content Include="icon.ico" />
     <Content Include="license.txt" />
@@ -1465,11 +1483,17 @@
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VrtxViewer.resx">
+      <DependentUpon>VrtxViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MetaViewer.resx">
       <DependentUpon>MetaViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ObjectListView.resx">
       <DependentUpon>ObjectListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Research.resx">
+      <DependentUpon>Research.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SceneView.resx">
       <DependentUpon>SceneView.cs</DependentUpon>

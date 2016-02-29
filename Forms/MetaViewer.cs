@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,7 +13,6 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using Be.Windows.Forms;
-using Moonfish.Cache;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.CodeDom;
 using Moonfish.Guerilla.Tags;
@@ -26,29 +26,33 @@ namespace Moonfish.Forms
         private readonly DataTypes _converter;
         private Dictionary<GuerillaBlock, Stream> _streamDictionary;
         private Type _type;
-
-        public MetaViewer()
+        
+        public MetaViewer( ) 
         {
             InitializeComponent();
-        }
-
-        public MetaViewer( CacheStream cacheStream ) : this( )
-        {
-
+            hexBox1.ByteCharConverter  = new DefaultByteCharConverter(  );
             _streamDictionary = new Dictionary<GuerillaBlock, Stream>();
 
             foreach ( var map in GuerillaCodeDom.GetAllMaps() )
             {
-                var tagDatums = map.Index.Where( u => u.Class == TagClass.Spas );
+                var tagDatums = map.Index.Where( u => u.Class == TagClass.Vrtx );
 
                 foreach ( var tagDatum in tagDatums )
                 {
-                    var guerillaBlock = tagDatum.Identifier.Get<ShaderPassBlock>( );
-                    foreach ( var textureState in guerillaBlock.PostprocessDefinition[ 0 ].TextureStates )
+                    try
                     {
-                        var stream = new MemoryStream( );
-                        stream.Write( textureState );
-                        _streamDictionary.Add( textureState, stream );
+                        var guerillaBlock = tagDatum.Identifier.Get<VertexShaderBlock>();
+                        var stream = new MemoryStream();
+                        var buffer = guerillaBlock.GeometryClassifications[0].Code;
+                        stream.Write(buffer, 0, buffer.Length);
+
+                        if (!_streamDictionary.ContainsKey(guerillaBlock.GeometryClassifications[0]))
+                            _streamDictionary.Add(guerillaBlock.GeometryClassifications[0], stream);
+
+                    }
+                    catch
+                    {
+                        continue;
                     }
                 }
             }
@@ -115,10 +119,15 @@ namespace Moonfish.Forms
                 {
                     value.Add(new { Name = buffer[0] });
                 }
-                else if ( _type == typeof ( short ) && count >= sizeof(short))
+                else if (_type == typeof(short) && count >= sizeof(short))
                 {
-                    value.Add(new { Name = BitConverter.ToInt16( buffer, 0 ) });
+                    value.Add(new { Name = BitConverter.ToInt16(buffer, 0) });
 
+                }
+                else if (_type == typeof(bool) && count >= sizeof(byte))
+                {
+                    //var b = new BitArray(buffer);
+                    //value.Add( new {Name = new string( b.Cast<bool>( ).Select( bit => bit ? '1' : '0' ).ToArray( ) )} );
                 }
                 else
                 {
@@ -128,6 +137,7 @@ namespace Moonfish.Forms
             var source = new BindingSource( );
             source.DataSource = value;
             dataGridView1.DataSource = source;
+            
         }
 
         private void hexBox1_CurrentPositionInLineChanged(object sender, EventArgs e)
@@ -177,62 +187,37 @@ namespace Moonfish.Forms
 
         private void propertyGrid1_SelectedGridItemChanged(object sender, SelectedGridItemChangedEventArgs e)
         {
-            switch ( e.NewSelection.Label )
+            switch ( e.NewSelection.Label.ToLower() )
             {
-                case "Byte":
+                case "byte":
                     _type = typeof ( byte );
                     break;
-                case "Short":
-                    _type = typeof ( short );
+                case "short":
+                    _type = typeof(short);
+                    break;
+                case "bits":
+                    _type = typeof(bool);
                     break;
                 default:
                     _type = e.NewSelection.Label == "int" ? typeof ( int ) : typeof ( string );
                     break;
             }
         }
-    }
-}
 
-public class DataTypes
-{
-    public byte[] data = new byte[0];
-
-    public string Byte
-    {
-        get { return data.Length >= sizeof(byte) ? data[ 0 ].ToString( ) : ""; }
-        set
+        private void hexBox1_CopiedHex(object sender, EventArgs e)
         {
-            byte result;
-            if ( byte.TryParse( value, out result ) && data.Length >= sizeof(byte))
-                data[ 0 ] = result;
+
         }
-    }
 
-    public string Short
-    {
-        get { return data.Length >= sizeof(short) ? BitConverter.ToInt16( data, 0 ).ToString() : ""; }
-        set
+        private void hexBox1_Copied(object sender, EventArgs e)
         {
-            short result;
-            if (short.TryParse(value, out result) && data.Length >= sizeof(short))
-            {
-                var bytes = BitConverter.GetBytes(result);
-                Array.Copy(bytes, data, sizeof(short));
-            }
+            var data = Clipboard.GetData(DataFormats.StringFormat );
         }
-    }
 
-    public string Int
-    {
-        get { return data.Length >= sizeof(int) ? BitConverter.ToInt32(data, 0).ToString() : ""; }
-        set
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int result;
-            if ( int.TryParse( value, out result ) && data.Length >= sizeof ( int ) )
-            {
-                var bytes = BitConverter.GetBytes( result );
-                Array.Copy( bytes, data, sizeof ( int ) );
-            }
+            var data = dataGridView1.GetClipboardContent( );
+            if ( data != null ) Clipboard.SetDataObject( data );
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Moonfish.Guerilla.Tags
     public partial class PixelShaderFragmentBlock : GuerillaBlock, IWriteQueueable
     {
         public byte SwitchParameterIndex;
-        private byte[] fieldpad = new byte[1];
+        public byte[] fieldpad = new byte[1];
         public TagBlockIndexStructBlock PermutationsIndex = new TagBlockIndexStructBlock();
         public override int SerializedSize
         {

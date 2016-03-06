@@ -32,40 +32,41 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer_sc1_values = new System.Windows.Forms.SplitContainer();
+            this.splitContainer_tags_hex = new System.Windows.Forms.SplitContainer();
+            this.vertexTags = new System.Windows.Forms.ListView();
+            this.hexBox1 = new Be.Windows.Forms.HexBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.splitContainer_tags_hex = new System.Windows.Forms.SplitContainer();
-            this.vertexTags = new System.Windows.Forms.ListView();
-            this.hexBox1 = new Be.Windows.Forms.HexBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.txbStride = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.txbStride = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.txbOffset = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.txbShift = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripLabel4 = new System.Windows.Forms.ToolStripLabel();
             this.txbMask = new System.Windows.Forms.ToolStripTextBox();
+            this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer_sc1_values)).BeginInit();
             this.splitContainer_sc1_values.Panel1.SuspendLayout();
             this.splitContainer_sc1_values.Panel2.SuspendLayout();
             this.splitContainer_sc1_values.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer_tags_hex)).BeginInit();
+            this.splitContainer_tags_hex.Panel1.SuspendLayout();
+            this.splitContainer_tags_hex.Panel2.SuspendLayout();
+            this.splitContainer_tags_hex.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer_tags_hex)).BeginInit();
-            this.splitContainer_tags_hex.Panel1.SuspendLayout();
-            this.splitContainer_tags_hex.Panel2.SuspendLayout();
-            this.splitContainer_tags_hex.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -101,6 +102,58 @@
             this.splitContainer_sc1_values.Size = new System.Drawing.Size(1117, 460);
             this.splitContainer_sc1_values.SplitterDistance = 900;
             this.splitContainer_sc1_values.TabIndex = 5;
+            // 
+            // splitContainer_tags_hex
+            // 
+            this.splitContainer_tags_hex.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer_tags_hex.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer_tags_hex.Name = "splitContainer_tags_hex";
+            // 
+            // splitContainer_tags_hex.Panel1
+            // 
+            this.splitContainer_tags_hex.Panel1.Controls.Add(this.vertexTags);
+            // 
+            // splitContainer_tags_hex.Panel2
+            // 
+            this.splitContainer_tags_hex.Panel2.Controls.Add(this.hexBox1);
+            this.splitContainer_tags_hex.Size = new System.Drawing.Size(900, 460);
+            this.splitContainer_tags_hex.SplitterDistance = 278;
+            this.splitContainer_tags_hex.TabIndex = 6;
+            // 
+            // vertexTags
+            // 
+            this.vertexTags.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.vertexTags.FullRowSelect = true;
+            this.vertexTags.Location = new System.Drawing.Point(0, 0);
+            this.vertexTags.MultiSelect = false;
+            this.vertexTags.Name = "vertexTags";
+            this.vertexTags.Size = new System.Drawing.Size(278, 460);
+            this.vertexTags.TabIndex = 5;
+            this.vertexTags.UseCompatibleStateImageBehavior = false;
+            this.vertexTags.View = System.Windows.Forms.View.Details;
+            this.vertexTags.SelectedIndexChanged += new System.EventHandler(this.vertexTags_SelectedIndexChanged);
+            // 
+            // hexBox1
+            // 
+            this.hexBox1.BackColor = System.Drawing.Color.DarkGray;
+            this.hexBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hexBox1.ColumnInfoVisible = true;
+            this.hexBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.hexBox1.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.hexBox1.GroupSeparatorVisible = true;
+            this.hexBox1.LineInfoOffset = ((long)(6));
+            this.hexBox1.LineInfoVisible = true;
+            this.hexBox1.Location = new System.Drawing.Point(0, 0);
+            this.hexBox1.Name = "hexBox1";
+            this.hexBox1.ReadOnly = true;
+            this.hexBox1.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
+            this.hexBox1.Size = new System.Drawing.Size(618, 460);
+            this.hexBox1.StringViewVisible = true;
+            this.hexBox1.TabIndex = 4;
+            this.hexBox1.UseFixedBytesPerLine = true;
+            this.hexBox1.VScrollBarVisible = true;
+            this.hexBox1.SelectionStartChanged += new System.EventHandler(this.hexBox1_SelectionStartChanged);
+            this.hexBox1.SelectionLengthChanged += new System.EventHandler(this.hexBox1_SelectionLengthChanged);
             // 
             // splitContainer1
             // 
@@ -158,58 +211,6 @@
             this.toolStripStatusLabel1.Text = "Ready";
             this.toolStripStatusLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // splitContainer_tags_hex
-            // 
-            this.splitContainer_tags_hex.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer_tags_hex.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer_tags_hex.Name = "splitContainer_tags_hex";
-            // 
-            // splitContainer_tags_hex.Panel1
-            // 
-            this.splitContainer_tags_hex.Panel1.Controls.Add(this.vertexTags);
-            // 
-            // splitContainer_tags_hex.Panel2
-            // 
-            this.splitContainer_tags_hex.Panel2.Controls.Add(this.hexBox1);
-            this.splitContainer_tags_hex.Size = new System.Drawing.Size(900, 460);
-            this.splitContainer_tags_hex.SplitterDistance = 278;
-            this.splitContainer_tags_hex.TabIndex = 6;
-            // 
-            // vertexTags
-            // 
-            this.vertexTags.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.vertexTags.FullRowSelect = true;
-            this.vertexTags.Location = new System.Drawing.Point(0, 0);
-            this.vertexTags.MultiSelect = false;
-            this.vertexTags.Name = "vertexTags";
-            this.vertexTags.Size = new System.Drawing.Size(278, 460);
-            this.vertexTags.TabIndex = 5;
-            this.vertexTags.UseCompatibleStateImageBehavior = false;
-            this.vertexTags.View = System.Windows.Forms.View.Details;
-            this.vertexTags.SelectedIndexChanged += new System.EventHandler(this.vertexTags_SelectedIndexChanged);
-            // 
-            // hexBox1
-            // 
-            this.hexBox1.BackColor = System.Drawing.Color.DarkGray;
-            this.hexBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.hexBox1.ColumnInfoVisible = true;
-            this.hexBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.hexBox1.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.hexBox1.GroupSeparatorVisible = true;
-            this.hexBox1.LineInfoOffset = ((long)(6));
-            this.hexBox1.LineInfoVisible = true;
-            this.hexBox1.Location = new System.Drawing.Point(0, 0);
-            this.hexBox1.Name = "hexBox1";
-            this.hexBox1.ReadOnly = true;
-            this.hexBox1.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
-            this.hexBox1.Size = new System.Drawing.Size(618, 460);
-            this.hexBox1.StringViewVisible = true;
-            this.hexBox1.TabIndex = 4;
-            this.hexBox1.UseFixedBytesPerLine = true;
-            this.hexBox1.VScrollBarVisible = true;
-            this.hexBox1.SelectionStartChanged += new System.EventHandler(this.hexBox1_SelectionStartChanged);
-            this.hexBox1.SelectionLengthChanged += new System.EventHandler(this.hexBox1_SelectionLengthChanged);
-            // 
             // menuStrip1
             // 
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -236,6 +237,12 @@
             this.toolStrip1.TabIndex = 8;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(40, 22);
+            this.toolStripLabel2.Text = "Stride:";
+            // 
             // txbStride
             // 
             this.txbStride.Name = "txbStride";
@@ -243,17 +250,6 @@
             this.txbStride.Size = new System.Drawing.Size(100, 25);
             this.txbStride.Text = "16";
             this.txbStride.ToolTipText = "Distance between consequetive items";
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(40, 22);
-            this.toolStripLabel2.Text = "Stride:";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripLabel1
             // 
@@ -268,6 +264,11 @@
             this.txbOffset.Size = new System.Drawing.Size(100, 25);
             this.txbOffset.Text = "4";
             this.txbOffset.ToolTipText = "Offset from start of data to begin repeating";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripLabel3
             // 
@@ -313,6 +314,10 @@
             this.splitContainer_sc1_values.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer_sc1_values)).EndInit();
             this.splitContainer_sc1_values.ResumeLayout(false);
+            this.splitContainer_tags_hex.Panel1.ResumeLayout(false);
+            this.splitContainer_tags_hex.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer_tags_hex)).EndInit();
+            this.splitContainer_tags_hex.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -320,10 +325,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.splitContainer_tags_hex.Panel1.ResumeLayout(false);
-            this.splitContainer_tags_hex.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer_tags_hex)).EndInit();
-            this.splitContainer_tags_hex.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -354,5 +355,6 @@
         private System.Windows.Forms.ToolStripTextBox txbShift;
         private System.Windows.Forms.ToolStripLabel toolStripLabel4;
         private System.Windows.Forms.ToolStripTextBox txbMask;
+        private System.Windows.Forms.HelpProvider helpProvider1;
     }
 }

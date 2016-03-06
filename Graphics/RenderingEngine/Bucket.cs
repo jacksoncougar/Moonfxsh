@@ -5,21 +5,15 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Moonfish.Guerilla.Tags;
+using Moonfish.Tags;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {
-    public class MeshFragmentInfo
-    {
-        public int IndexBufferBaseOffset;
-        public int VertexBufferBaseOffset;
-        public int InstanceBufferBaseOffset;
-        public int InstanceCount;
-    }
-
     public class PartBufferLocations
     {
+        public TagIdent Shader { get; set; }
         public int VertexBaseOffset { get; set; }
 
         public int IndexBaseOffset { get; set; }
@@ -37,8 +31,6 @@ namespace Moonfish.Graphics
         private readonly ReadOnlyDictionary<VertexAttributeType, int> _attributeBuffers;
         private readonly int _elementBuffer;
         private readonly int _instanceDataBuffer;
-
-        private readonly int _vertexArrayObject;
 
         #endregion
 
@@ -64,7 +56,7 @@ namespace Moonfish.Graphics
         public Bucket( VertexAttributeType[] supportedVertexAttributeTypes )
         {
             SupportedVertexAttributes = supportedVertexAttributeTypes;
-            _vertexArrayObject = GL.GenVertexArray( );
+            VertexArrayObject = GL.GenVertexArray( );
             _instanceDataBuffer = GL.GenBuffer( );
 
             _attributeBuffers =
@@ -74,11 +66,11 @@ namespace Moonfish.Graphics
             _elementBuffer = GL.GenBuffer( );
         }
 
-        public int InstanceCount { get; private set; }
+        private int InstanceCount { get; set; }
 
-        public int PartsCount { get; private set; }
+        private int PartsCount { get; set; }
 
-        public int VertexArrayObject => _vertexArrayObject;
+        private int VertexArrayObject { get; }
 
         public void Dispose( )
         {
@@ -96,7 +88,7 @@ namespace Moonfish.Graphics
             return GetEnumerator( );
         }
 
-        public IDisposable Bind( bool keepBound = true )
+        public IDisposable Bind( bool keepBound = false )
         {
             return new Handle( VertexArrayObject, keepBound);
         }
@@ -108,6 +100,7 @@ namespace Moonfish.Graphics
             storageMeta = new Dictionary<GlobalGeometryPartBlockNew, PartBufferLocations>();
 
             GL.BindVertexArray( VertexArrayObject );
+            
 
             BufferElementData( sectionData );
 
@@ -332,7 +325,8 @@ namespace Moonfish.Graphics
             public Handle( int vertexArrayObject, bool keepBound = true )
             {
                 _keepBound = keepBound;
-                if ( currentVertexArrayObject == vertexArrayObject ) return;
+                if ( currentVertexArrayObject == vertexArrayObject )
+                    return;
 
                 GL.BindVertexArray( vertexArrayObject );
                 currentVertexArrayObject = vertexArrayObject;

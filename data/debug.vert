@@ -18,18 +18,18 @@ uniform mat4 ViewProjectionMatrixUniform;
 uniform mat4 ViewMatrixUniform;
 
 layout(location = 0) flat out vec4 diffuseColour;
+layout(location = 1) out vec4 oTextureCoordinates;
 
 void main()
 {	
 	mat4 worldMatrix = WorldMatrixUniform;
-
-
 	mat4 modelViewMatrix = ViewMatrixUniform * worldMatrix;
 	mat3 MV3x3 = mat3(modelViewMatrix);
 
 	vec3 t = normalize((MV3x3 * normal.xyz));
 	diffuseColour = vec4(t, 1);
-	
+	oTextureCoordinates = textureCoordinates;
+
 	gl_Position = ViewProjectionMatrixUniform  * worldMatrix * coordinates;
 	gl_PointSize = 5;
 }

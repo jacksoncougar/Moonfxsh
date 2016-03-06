@@ -24,40 +24,40 @@ namespace Moonfish.Forms
 {
     public partial class VrtxViewer : Form
     {
-        private DataTypes _types = new DataTypes( );
+        private DataTypes _types = new DataTypes();
         private MemoryStream _stream;
-        private HashSet<GuerillaBlock> blockKeys = new HashSet<GuerillaBlock>( );
-        private Dictionary<GuerillaBlock, Stream> vertexStreams = new Dictionary<GuerillaBlock, Stream>( );
+        private HashSet<GuerillaBlock> blockKeys = new HashSet<GuerillaBlock>();
+        private Dictionary<GuerillaBlock, Stream> vertexStreams = new Dictionary<GuerillaBlock, Stream>();
 
-        public VrtxViewer( )
+        public VrtxViewer()
         {
-            InitializeComponent( );
-            hexBox1.ByteCharConverter = new DefaultByteCharConverter( );
-            vertexTags.Columns.Add( "Path" );
+            InitializeComponent();
+            hexBox1.ByteCharConverter = new DefaultByteCharConverter();
+            vertexTags.Columns.Add("Path");
 
-            foreach ( var map in GuerillaCodeDom.GetAllMaps( ) )
+            foreach (var map in GuerillaCodeDom.GetAllMaps())
             {
-                var tagDatums = map.Index.Where( u => u.Class == TagClass.Vrtx );
+                var tagDatums = map.Index.Where(u => u.Class == TagClass.Vrtx);
 
-                foreach ( var tagDatum in tagDatums )
+                foreach (var tagDatum in tagDatums)
                 {
                     try
                     {
-                        var guerillaBlock = tagDatum.Identifier.Get<VertexShaderBlock>( );
-                        for ( int index = 0; index < guerillaBlock.GeometryClassifications.Length; index++ )
+                        var guerillaBlock = tagDatum.Identifier.Get<VertexShaderBlock>();
+                        for (int index = 0; index < guerillaBlock.GeometryClassifications.Length; index++)
                         {
-                            var vertexShaderClassificationBlock = guerillaBlock.GeometryClassifications[ index ];
-                            if ( vertexShaderClassificationBlock.Code.Length <= 0 ||
-                                 !blockKeys.Add( vertexShaderClassificationBlock ) ) continue;
+                            var vertexShaderClassificationBlock = guerillaBlock.GeometryClassifications[index];
+                            if (vertexShaderClassificationBlock.Code.Length <= 0 ||
+                                 !blockKeys.Add(vertexShaderClassificationBlock)) continue;
 
-                            var path = map.Index[ tagDatum.Identifier ].Path;
-                            var stream = new MemoryStream( vertexShaderClassificationBlock.Code );
-                            vertexStreams.Add( vertexShaderClassificationBlock, stream );
-                            vertexTags.Items.Add( new ListViewItem
+                            var path = map.Index[tagDatum.Identifier].Path;
+                            var stream = new MemoryStream(vertexShaderClassificationBlock.Code);
+                            vertexStreams.Add(vertexShaderClassificationBlock, stream);
+                            vertexTags.Items.Add(new ListViewItem
                             {
                                 Text = $"{path}: [{index}]",
                                 Tag = vertexShaderClassificationBlock
-                            } );
+                            });
                         }
                     }
                     catch
@@ -67,72 +67,72 @@ namespace Moonfish.Forms
                 }
                 break;
             }
-            vertexTags.Columns[ 0 ].AutoResize( ColumnHeaderAutoResizeStyle.ColumnContent );
-            _stream = new MemoryStream( );
-            hexBox1.ByteProvider = new DynamicFileByteProvider( _stream );
-            vertexTags.Items[ 0 ].Selected = true;
+            vertexTags.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+            _stream = new MemoryStream();
+            hexBox1.ByteProvider = new DynamicFileByteProvider(_stream);
+            vertexTags.Items[0].Selected = true;
             hexBox1.AutoSize = true;
             splitContainer_tags_hex.Panel2MinSize = hexBox1.RequiredWidth + hexBox1.Padding.Horizontal;
             splitContainer_tags_hex.FixedPanel = FixedPanel.Panel2;
             propertyGrid1.SelectedObject = _types;
         }
 
-        private void vertexTags_SelectedIndexChanged( object sender, EventArgs e )
+        private void vertexTags_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if ( vertexTags.SelectedItems.Count > 0 )
+            if (vertexTags.SelectedItems.Count > 0)
             {
-                LoadStream( vertexTags.SelectedItems[ 0 ].Tag );
+                LoadStream(vertexTags.SelectedItems[0].Tag);
             }
         }
 
-        private void LoadStream( object tag )
+        private void LoadStream(object tag)
         {
             var block = tag as GuerillaBlock;
-            if ( block == null ) return;
+            if (block == null) return;
 
-            var stream = ( MemoryStream ) vertexStreams[ block ];
-            hexBox1.ByteProvider.DeleteBytes( 0, hexBox1.ByteProvider.Length );
-            var buffer = stream.ToArray( );
-            hexBox1.ByteProvider.InsertBytes( 0, buffer );
-            hexBox1.ByteProvider.ApplyChanges( );
-            hexBox1.Refresh( );
+            var stream = (MemoryStream)vertexStreams[block];
+            hexBox1.ByteProvider.DeleteBytes(0, hexBox1.ByteProvider.Length);
+            var buffer = stream.ToArray();
+            hexBox1.ByteProvider.InsertBytes(0, buffer);
+            hexBox1.ByteProvider.ApplyChanges();
+            hexBox1.Refresh();
         }
 
-        private void hexBox1_SelectionStartChanged( object sender, EventArgs e )
+        private void hexBox1_SelectionStartChanged(object sender, EventArgs e)
         {
-            OnHexSelectionChanged( );
+            OnHexSelectionChanged();
         }
 
-        private void hexBox1_SelectionLengthChanged( object sender, EventArgs e )
+        private void hexBox1_SelectionLengthChanged(object sender, EventArgs e)
         {
-            OnHexSelectionChanged( );
+            OnHexSelectionChanged();
         }
 
-        private void OnHexSelectionChanged( )
+        private void OnHexSelectionChanged()
         {
-            DisplaySelectionValues( );
-            DisplaySelectionStatus( );
-            DisplaySelectionAlternatives( );
+            DisplaySelectionValues();
+            DisplaySelectionStatus();
+            DisplaySelectionAlternatives();
         }
 
-        private void DisplaySelectionAlternatives( )
+        private void DisplaySelectionAlternatives()
         {
             return;
-            if ( propertyGrid1.SelectedGridItem?.Value != null )
+            if (propertyGrid1.SelectedGridItem?.Value != null)
             {
-                var type = propertyGrid1.SelectedGridItem.Value.GetType( );
+                var type = propertyGrid1.SelectedGridItem.Value.GetType();
 
                 int offset, stride;
-                if ( !int.TryParse( txbOffset.Text, out offset )
-                     || !int.TryParse( txbStride.Text, out stride ) )
+                if (!int.TryParse(txbOffset.Text, out offset)
+                     || !int.TryParse(txbStride.Text, out stride))
                 {
                     return;
                 }
 
-                var dataSize = Marshal.SizeOf( type );
-                if ( type == typeof ( sbyte ) )
+                var dataSize = Marshal.SizeOf(type);
+                if (type == typeof(sbyte))
                 {
-                    using ( var binaryReader = new BinaryReader( _stream, Encoding.Default, true ) )
+                    using (var binaryReader = new BinaryReader(_stream, Encoding.Default, true))
                     {
 
                     }
@@ -140,22 +140,22 @@ namespace Moonfish.Forms
             }
         }
 
-        private void DisplaySelectionStatus( )
+        private void DisplaySelectionStatus()
         {
-            var len = ( int ) hexBox1.SelectionLength;
-            if ( len < 1 ) return;
+            var len = (int)hexBox1.SelectionLength;
+            if (len < 1) return;
             toolStripStatusLabel1.Text = $"Sel: {len,-11}";
         }
 
-        private void DisplaySelectionValues( )
+        private void DisplaySelectionValues()
         {
-            var loc = ( int ) hexBox1.SelectionStart;
-            var len = ( int ) hexBox1.SelectionLength;
+            var loc = (int)hexBox1.SelectionStart;
+            var len = (int)hexBox1.SelectionLength;
             var buffer = new byte[len];
-            if ( !( loc < 0 || len < 1 ) )
+            if (!(loc < 0 || len < 1))
             {
-                _stream.Seek( loc, SeekOrigin.Begin );
-                _stream.Read( buffer, 0, len );
+                _stream.Seek(loc, SeekOrigin.Begin);
+                _stream.Read(buffer, 0, len);
             }
             _types.data = buffer;
             Update();
@@ -164,9 +164,9 @@ namespace Moonfish.Forms
         private void txbMask_Validating(object sender, CancelEventArgs e)
         {
             int mask;
-            if ( int.TryParse( txbMask.Text, NumberStyles.AllowHexSpecifier, CultureInfo.CurrentCulture, out mask ) )
+            if (int.TryParse(txbMask.Text, NumberStyles.AllowHexSpecifier, CultureInfo.CurrentCulture, out mask))
             {
-                txbMask.Text = mask.ToString( );
+                txbMask.Text = mask.ToString();
                 _types.mask = mask;
             }
             else
@@ -179,9 +179,9 @@ namespace Moonfish.Forms
         private void txbShift_Validating(object sender, CancelEventArgs e)
         {
             byte shift;
-            if ( byte.TryParse( txbShift.Text, out shift ) )
+            if (byte.TryParse(txbShift.Text, out shift))
             {
-                txbShift.Text = shift.ToString( );
+                txbShift.Text = shift.ToString();
                 _types.shift = shift;
             }
             else
@@ -193,13 +193,13 @@ namespace Moonfish.Forms
 
         private void txbMask_Validated(object sender, EventArgs e)
         {
-            Update( );
+            Update();
         }
 
-        private void Update( )
+        private new void Update()
         {
-            propertyGrid1.Refresh( );
-            propertyGrid1.ExpandAllGridItems( );
+            propertyGrid1.Refresh();
+            propertyGrid1.ExpandAllGridItems();
         }
 
         private void txbShift_Validated(object sender, EventArgs e)

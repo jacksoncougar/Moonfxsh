@@ -5,10 +5,12 @@ using System.Linq;
 using System.Windows.Forms;
 using Moonfish.Compiler;
 using System.ComponentModel;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Fasterflect;
+using Moonfish.Cache;
 using Moonfish.Forms;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.CodeDom;
@@ -27,7 +29,7 @@ namespace Moonfish
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run( new VrtxViewer( ) );
+            Application.Run( new MainForm(  ));
         }
     }
 }

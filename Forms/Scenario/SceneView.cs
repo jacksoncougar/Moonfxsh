@@ -19,7 +19,7 @@ namespace Moonfish.Forms
     public partial class SceneView : DockContent
     {
         private CacheStream _cacheStream;
-        private GLControl _glControl1;
+        private OpenTK.GLControl _glControl1;
 
         public SceneView( CacheStream cacheStream )
         {
@@ -28,7 +28,6 @@ namespace Moonfish.Forms
             _cacheStream = cacheStream;
             InitializeComponent( );
             LoadGLControl( );
-            _glControl1.Load += glControl1_Load;
         }
 
         public SceneView( )
@@ -101,7 +100,7 @@ namespace Moonfish.Forms
 
         private static bool IsApplicationIdle( )
         {
-            SceneView.NativeMessage result;
+            NativeMessage result;
             return PeekMessage( out result, IntPtr.Zero, 0, 0, 0 ) == 0;
         }
 
@@ -114,6 +113,8 @@ namespace Moonfish.Forms
 #else
             _glControl1 = new GLControl( new GraphicsMode(new ColorFormat(32), 24, 8, 8), 3, 3, GraphicsContextFlags.Default);
 #endif
+            _glControl1.Load += glControl1_Load;
+            
             // 
             // glControl1
             // 

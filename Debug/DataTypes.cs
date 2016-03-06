@@ -84,12 +84,12 @@ public class DataTypes
 
     [TypeConverter(typeof(ExpandableObjectConverter))]
     [DisplayName(@"NV Vertex Shader")]
-    public NV30Shader BinaryBitmasked
+    public VertexProgramInstruction BinaryBitmasked
     {
         get
         {
             return data.Length >= sizeof ( int ) * 4
-                ? new NV30Shader( data )
+                ? new VertexProgramInstruction( data )
                 : null;
         }
     }

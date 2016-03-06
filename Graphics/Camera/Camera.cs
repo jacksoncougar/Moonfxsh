@@ -201,7 +201,7 @@ namespace Moonfish.Graphics
             //_zoomTrack.Position = _zoomTrack.Forward * length;
         }
 
-        public bool CanSee( ScenarioSceneryBlock instance, ObjectBlock objectBlock )
+        public bool CanSee( dynamic instance, ObjectBlock objectBlock )
         {
             //todo implement viewstrum culling
             return true;

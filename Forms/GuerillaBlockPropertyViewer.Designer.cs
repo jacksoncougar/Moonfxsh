@@ -35,8 +35,8 @@ namespace Moonfish.Forms
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cloneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.clonemanyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -66,9 +66,16 @@ namespace Moonfish.Forms
             // cloneToolStripMenuItem
             // 
             this.cloneToolStripMenuItem.Name = "cloneToolStripMenuItem";
-            this.cloneToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.cloneToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.cloneToolStripMenuItem.Text = "&Clone";
             this.cloneToolStripMenuItem.Click += new System.EventHandler(this.cloneToolStripMenuItem_Click);
+            // 
+            // clonemanyToolStripMenuItem
+            // 
+            this.clonemanyToolStripMenuItem.Name = "clonemanyToolStripMenuItem";
+            this.clonemanyToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.clonemanyToolStripMenuItem.Text = "Clone &Many";
+            this.clonemanyToolStripMenuItem.Click += new System.EventHandler(this.clonemanyToolStripMenuItem_Click);
             // 
             // imageList1
             // 
@@ -77,19 +84,13 @@ namespace Moonfish.Forms
             this.imageList1.Images.SetKeyName(0, "folder.png");
             this.imageList1.Images.SetKeyName(1, "page.png");
             // 
-            // clonemanyToolStripMenuItem
-            // 
-            this.clonemanyToolStripMenuItem.Name = "clonemanyToolStripMenuItem";
-            this.clonemanyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.clonemanyToolStripMenuItem.Text = "Clone &Many";
-            this.clonemanyToolStripMenuItem.Click += new System.EventHandler(this.clonemanyToolStripMenuItem_Click);
-            // 
             // GuerillaBlockPropertyViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(522, 350);
             this.Controls.Add(this.treeView1);
+            this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "GuerillaBlockPropertyViewer";
             this.Text = "GuerillaBlockPropertyViewer";

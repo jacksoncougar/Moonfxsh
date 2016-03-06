@@ -40,12 +40,17 @@ namespace Moonfish.Graphics
         }
 
         /// <summary>
-        ///     Determines if source is negated
+        /// Determines if source is negated
         /// </summary>
         public bool Negate { get; }
 
         /// <summary>
-        ///     Determines mapping of components from register used in source
+        /// Returns '-' if Negate property is true, else an empty string
+        /// </summary>
+        public string NegationPrefix => Negate ? "-" : "";
+
+        /// <summary>
+        /// Determines mapping of components from register used in source
         /// </summary>
         [TypeConverter( typeof ( ExpandableObjectConverter ) )]
         public SwizzleSuffix Swizzle { get; }

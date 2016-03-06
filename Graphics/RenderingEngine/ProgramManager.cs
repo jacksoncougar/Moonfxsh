@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Moonfish.Cache;
+using Moonfish.Graphics.RenderingEngine;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using OpenTK.Graphics.OpenGL;
@@ -115,23 +116,23 @@ namespace Moonfish.Graphics
         public void LoadMaterials( IList<GlobalGeometryMaterialBlock> materials, CacheStream cacheStream,
             IList<int> indices = null )
         {
-            for ( var index = 0; index < materials.Count; index++ )
-            {
-                var globalGeometryMaterialBlock = materials[ index ];
-                var shaderBlock = globalGeometryMaterialBlock.Shader.Get<ShaderBlock>( );
-                ShaderPostprocessBitmapNewBlock[] textures;
-                var material = new MaterialShader( shaderBlock, cacheStream, out textures );
+            //for ( var index = 0; index < materials.Count; index++ )
+            //{
+            //    var globalGeometryMaterialBlock = materials[ index ];
+            //    var shaderBlock = globalGeometryMaterialBlock.Shader.Get<ShaderBlock>( );
+            //    ShaderPostprocessBitmapNewBlock[] textures;
+            //    var material = new MaterialShader( shaderBlock, cacheStream, out textures );
 
-                foreach ( var shaderPostprocessBitmapNewBlock in textures )
-                {
-                    LoadTextureGroup(shaderPostprocessBitmapNewBlock.BitmapGroup);
-                }
+            //    foreach ( var shaderPostprocessBitmapNewBlock in textures )
+            //    {
+            //        LoadTextureGroup(shaderPostprocessBitmapNewBlock.BitmapGroup);
+            //    }
 
-                Materials[
-                    indices != null && index < indices.Count
-                        ? ( TagIdent ) indices[ index ]
-                        : globalGeometryMaterialBlock.Shader.Ident ] = material;
-            }
+            //    Materials[
+            //        indices != null && index < indices.Count
+            //            ? ( TagIdent ) indices[ index ]
+            //            : globalGeometryMaterialBlock.Shader.Ident ] = material;
+            //}
         }
 
         public void LoadPalettedTextureGroup( int bitmapIndex, int paletteIndex, BitmapDataBlock bitmapDataBlock,
@@ -353,6 +354,21 @@ namespace Moonfish.Graphics
 
             program.Link(new List<Shader>(2) { vertex_shader, fragment_shader });
 
+            var diffuseMapUniform = program.GetUniformLocation("diffuseSampler");
+
+            program.Use();
+            program.SetUniform(diffuseMapUniform, 0);
+
+            StateManager.AlphaFuncChanged += delegate (object sender, D3DCMPFUNC function)
+            {
+                var uniformLocation = program.GetUniformLocation("AlphaFuncUniform");
+                program.SetUniform(uniformLocation, (int)function);
+            };
+            StateManager.AlphaRefChanged += delegate (object sender, float alphaRef)
+            {
+                var uniformLocation = program.GetUniformLocation("AlphaRefUniform");
+                program.SetUniform(uniformLocation, alphaRef);
+            };
             Shaders["debug"] = program;
         }
 

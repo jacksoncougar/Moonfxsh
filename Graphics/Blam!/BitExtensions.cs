@@ -4,13 +4,14 @@ namespace Moonfish.Graphics
     {
         public static int GetBit(this int word, int index )
         {
-            return word & ( 1 << index ) >> index;
+            return (word & ( 1 << index )) >> index;
         }
 
         public static int GetBits(this uint dword, int mask, int shift)
         {
             return (int)((dword & mask) >> shift);
         }
+        
 
         /// <summary>
         ///     Returns a value that is split between int boundaries

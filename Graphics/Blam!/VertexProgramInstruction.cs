@@ -1,11 +1,13 @@
 using System;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using Fasterflect;
 
 namespace Moonfish.Graphics
 {
     /// <summary>
-    /// nVidia IL vertex program instruction
+    ///     nVidia IL vertex program instruction
     /// </summary>
     public class VertexProgramInstruction
     {
@@ -28,183 +30,187 @@ namespace Moonfish.Graphics
             TEMP = 0xFF //r*
         };
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage( "ReSharper", "InconsistentNaming" )]
         public enum ScalarOps
         {
             /// <summary>
             ///     No operation
             /// </summary>
-            NOP = 0x00,
+            [OpCodeAttributes( false, false, false )] NOP = 0x00,
 
             /// <summary>
             ///     Move
             /// </summary>
-            MOV = 0x01,
+            [OpCodeAttributes( false, false, true )] MOV = 0x01,
 
             /// <summary>
             ///     Reciprocal
             /// </summary>
-            RCP = 0x02,
+            [OpCodeAttributes( false, false, true )] RCP = 0x02,
 
             /// <summary>
             ///     Reciprocal clamped
             /// </summary>
-            RCC = 0x03,
+            [OpCodeAttributes( false, false, true )] RCC = 0x03,
 
             /// <summary>
             ///     Reciprocal square root
             /// </summary>
-            RSQ = 0x04,
+            [OpCodeAttributes( false, false, true )] RSQ = 0x04,
 
             /// <summary>
             ///     Exponent
             /// </summary>
-            EXP = 0x05,
+            [OpCodeAttributes( false, false, true )] EXP = 0x05,
 
             /// <summary>
             ///     Logarithm
             /// </summary>
-            LOG = 0x06,
+            [OpCodeAttributes( false, false, true )] LOG = 0x06,
 
             /// <summary>
             ///     Compute lighting coefficients
             /// </summary>
-            LIT = 0x07
+            [OpCodeAttributes( false, false, true )] LIT = 0x07
         }
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage( "ReSharper", "InconsistentNaming" )]
         public enum VectorOps
         {
             /// <summary>
             ///     No Operation
             /// </summary>
-            NOP = 0x00,
+            [OpCodeAttributes( false, false, false )] NOP = 0x00,
 
             /// <summary>
             ///     Move
             /// </summary>
-            MOV = 0x01,
+            [OpCodeAttributes( true, false, false )] MOV = 0x01,
 
             /// <summary>
             ///     Multiply
             /// </summary>
-            MUL = 0x02,
+            [OpCodeAttributes( true, true, false )] MUL = 0x02,
 
             /// <summary>
             ///     Add
             /// </summary>
-            ADD = 0x03,
+            [OpCodeAttributes( true, false, true )] ADD = 0x03,
 
             /// <summary>
             ///     Multiply & Add
             /// </summary>
-            MAD = 0x04,
+            [OpCodeAttributes( true, true, true )] MAD = 0x04,
 
             /// <summary>
             ///     3-component dot product
             /// </summary>
-            DP3 = 0x05,
+            [OpCodeAttributes( true, true, false )] DP3 = 0x05,
 
             /// <summary>
             ///     4-component dot product
             /// </summary>
-            DP4 = 0x07,
+            [OpCodeAttributes( true, true, false )] DP4 = 0x07,
 
             /// <summary>
             ///     Homogeneous dot product
             /// </summary>
-            DPH = 0x06,
+            [OpCodeAttributes( true, true, false )] DPH = 0x06,
 
             /// <summary>
             ///     Distance vector
             /// </summary>
-            DST = 0x08,
+            [OpCodeAttributes( true, true, false )] DST = 0x08,
 
             /// <summary>
             ///     Minimum
             /// </summary>
-            MIN = 0x09,
+            [OpCodeAttributes( true, true, false )] MIN = 0x09,
 
             /// <summary>
             ///     Maximum
             /// </summary>
-            MAX = 0x0A,
+            [OpCodeAttributes( true, true, false )] MAX = 0x0A,
 
             /// <summary>
             ///     Set on: less-than
             /// </summary>
-            SLT = 0x0B,
+            [OpCodeAttributes( true, true, false )] SLT = 0x0B,
 
             /// <summary>
             ///     Set on: greater-than or equal
             /// </summary>
-            SGE = 0x0C,
+            [OpCodeAttributes( true, true, false )] SGE = 0x0C,
 
             /// <summary>
             ///     Address register load
             /// </summary>
-            ARL = 0x0D,
+            [OpCodeAttributes( true, false, false )] ARL = 0x0D,
 
             /// <summary>
             ///     Fraction
             /// </summary>
-            FRC = 0x0E,
+            [OpCodeAttributes( false, false, false )] FRC = 0x0E,
 
             /// <summary>
             ///     Floor
             /// </summary>
-            FLR = 0x0F,
+            [OpCodeAttributes( false, false, false )] FLR = 0x0F,
 
             /// <summary>
             ///     Set on: equal
             /// </summary>
-            SEQ = 0x10,
+            [OpCodeAttributes( false, false, false )] SEQ = 0x10,
 
             /// <summary>
             ///     Set on: false
             /// </summary>
-            SFL = 0x11,
+            [OpCodeAttributes( false, false, false )] SFL = 0x11,
 
             /// <summary>
             ///     Set on: greater-than
             /// </summary>
-            SGT = 0x12,
+            [OpCodeAttributes( false, false, false )] SGT = 0x12,
 
             /// <summary>
             ///     Set on: less-than or equal
             /// </summary>
-            SLE = 0x13,
+            [OpCodeAttributes( false, false, false )] SLE = 0x13,
 
             /// <summary>
             ///     Set on: not equal
             /// </summary>
-            SNE = 0x14,
+            [OpCodeAttributes( false, false, false )] SNE = 0x14,
 
             /// <summary>
             ///     Set on: true
             /// </summary>
-            STR = 0x15,
+            [OpCodeAttributes( false, false, false )] STR = 0x15,
 
             /// <summary>
             ///     Set sign
             /// </summary>
-            SSG = 0x16,
+            [OpCodeAttributes( false, false, false )] SSG = 0x16,
 
             /// <summary>
             ///     Address register load (round)
             /// </summary>
-            ARR = 0x17,
+            [OpCodeAttributes( false, false, false )] ARR = 0x17,
 
             /// <summary>
             ///     Address register add
             /// </summary>
-            ARA = 0x18,
+            [OpCodeAttributes( false, false, false )] ARA = 0x18,
 
             /// <summary>
             ///     Texture Sample ...
             /// </summary>
-            TXWHAT = 0x19
+            [OpCodeAttributes( false, false, false )] TXWHAT = 0x19
         }
+
+        private const string RegisterToken = "r";
+        private const string AttributeToken = "v";
+        private const string ConstantToken = "c";
 
         public VertexProgramInstruction( byte[] data )
         {
@@ -218,9 +224,11 @@ namespace Moonfish.Graphics
             ConstantSource = GetBits( dword1, ConstantSourceMask, ConstantSourceShift );
             AttributerSource = GetBits( dword1, AttributeSourceMask, AttributeSourceShift );
 
-            var src0Bits = GetSplitBits( dword1, dword2, Src0MsbMask, Src0MsbShift, Src0LsbMask, Src0LsbShift, Src0LsbLength );
+            var src0Bits = GetSplitBits( dword1, dword2, Src0MsbMask, Src0MsbShift, Src0LsbMask, Src0LsbShift,
+                Src0LsbLength );
             var src1Bits = GetBits( dword2, Src1Mask, Src1Shift );
-            var src2Bits = GetSplitBits( dword2, dword3, Src2MsbMask, Src2MsbShift, Src2LsbMask, Src2LsbShift, Src2LsbLength );
+            var src2Bits = GetSplitBits( dword2, dword3, Src2MsbMask, Src2MsbShift, Src2LsbMask, Src2LsbShift,
+                Src2LsbLength );
 
             Source0 = new SourceRegister( src0Bits );
             Source1 = new SourceRegister( src1Bits );
@@ -258,11 +266,82 @@ namespace Moonfish.Graphics
         [TypeConverter( typeof ( ExpandableObjectConverter ) )]
         public SourceRegister Source2 { get; }
 
+        public string ToAsm
+        {
+            get
+            {
+                var asm = $@"{VectorOp} {GetDestinationToken( )} {GetSourceToken( Source0 )} {GetSourceToken( Source1 )} {GetSourceToken
+                    ( Source2 )} ".Replace( "\0", "" );
+                return asm;
+            }
+        }
+
         public VectorOps VectorOp { get; }
 
         private static int GetBits( uint dword, int mask, int shift )
         {
             return ( int ) ( ( dword & mask ) >> shift );
+        }
+
+        private string GetDestinationToken( )
+        {
+            switch ( Destination )
+            {
+                case DestinationRegister.POS:
+                    return ScalarResult
+                        ? "oPos" + "." + DstVectorWriteMask
+                        : "~r" + RegisterSource + "." + DstTempWriteMask;
+                case DestinationRegister.COL0:
+                    return "oD0" + "." + ( ScalarResult ? DstVectorWriteMask.ToString( ) : DstTempWriteMask + "!" );
+                case DestinationRegister.COL1:
+                    return "oD1" + "." + ( ScalarResult ? DstVectorWriteMask.ToString( ) : DstTempWriteMask + "!" );
+                case DestinationRegister.FOGC:
+                    return "oFog" + "." + ( ScalarResult ? DstVectorWriteMask.ToString( ) : DstTempWriteMask + "!" );
+                case DestinationRegister.PSZ:
+                    return "oPts" + "." + ( ScalarResult ? DstVectorWriteMask.ToString( ) : DstTempWriteMask + "!" );
+                case DestinationRegister.BFC0:
+                    return "oB0" + "." + ( ScalarResult ? DstVectorWriteMask.ToString( ) : DstTempWriteMask + "!" );
+                case DestinationRegister.BFC1:
+                    return "oB1" + "." + ( ScalarResult ? DstVectorWriteMask.ToString( ) : DstTempWriteMask + "!" );
+                case DestinationRegister.TC0:
+                    return "oT0" + "." + ( ScalarResult ? DstVectorWriteMask.ToString( ) : DstTempWriteMask + "!" );
+                case DestinationRegister.TC1:
+                    return "oT1" + "." + ( ScalarResult ? DstVectorWriteMask.ToString( ) : DstTempWriteMask + "!" );
+                case DestinationRegister.TC2:
+                    return "oT2" + "." + ( ScalarResult ? DstVectorWriteMask.ToString( ) : DstTempWriteMask + "!" );
+                case DestinationRegister.TC3:
+                    return "oT3" + "." + ( ScalarResult ? DstVectorWriteMask.ToString( ) : DstTempWriteMask + "!" );
+                case DestinationRegister.TEMP:
+                    return "r" + RegisterSource + "." + DstTempWriteMask;
+                default:
+                    return "";
+            }
+        }
+
+        /// <summary>
+        ///     Makes a string from the SourceRegister value. e.g -r10.xyzw
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        private string GetSourceToken( SourceRegister source )
+        {
+            //  Use reflection to determine which Source values to use with the OpCode,
+            //  return empty string for any unused source
+            var attribute = ( OpCodeAttributes ) VectorOp.Attribute( typeof ( OpCodeAttributes ) );
+            if ( ( !attribute.ParamA || source != Source0 ) && ( !attribute.ParamB || source != Source1 ) &&
+                 ( !attribute.ParamC || source != Source2 ) ) return string.Empty;
+
+            switch ( source.Type )
+            {
+                case SourceRegister.SourceType.Temporary:
+                    return source.NegationPrefix + RegisterToken + source.TempID + source.Swizzle.GetSuffix( );
+                case SourceRegister.SourceType.Attribute:
+                    return source.NegationPrefix + AttributeToken + AttributerSource + source.Swizzle.GetSuffix( );
+                case SourceRegister.SourceType.Constant:
+                    return source.NegationPrefix + ConstantToken + ConstantSource + source.Swizzle.GetSuffix( );
+                default:
+                    throw new DataException( "Invalid " + nameof( source.Type ) );
+            }
         }
 
         /// <summary>
@@ -285,6 +364,20 @@ namespace Moonfish.Graphics
             var lsbBits = ( dword1 & lsbMask ) >> lsbShift;
             var bits = ( int ) ( msbBits << lsbLength | lsbBits );
             return bits;
+        }
+
+        private class OpCodeAttributes : Attribute
+        {
+            public OpCodeAttributes( bool paramA, bool paramB, bool paramC )
+            {
+                ParamA = paramA;
+                ParamB = paramB;
+                ParamC = paramC;
+            }
+
+            public bool ParamA { get; }
+            public bool ParamB { get; }
+            public bool ParamC { get; }
         }
 
         #region Constants

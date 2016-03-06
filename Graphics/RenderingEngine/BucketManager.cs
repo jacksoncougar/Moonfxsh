@@ -16,7 +16,7 @@ namespace Moonfish.Graphics
         {
             private Bucket _bucket;
 
-            private HashSet<GlobalGeometrySectionStructBlock> sections =
+            private readonly HashSet<GlobalGeometrySectionStructBlock> sections =
                 new HashSet<GlobalGeometrySectionStructBlock>( );
 
             /// <summary>
@@ -49,7 +49,7 @@ namespace Moonfish.Graphics
         }
 
         private readonly List<Bucket> _buckets = new List<Bucket>( );
-        private Dictionary<int, BucketBuilder> bucketBuilders = new Dictionary<int, BucketBuilder>();
+        private readonly Dictionary<int, BucketBuilder> _bucketBuilders = new Dictionary<int, BucketBuilder>();
 
         public Bucket GetBucketResource( GlobalGeometryPartBlockNew part, out int indexBaseOffset,
             out int vertexBaseOffset )
@@ -77,11 +77,11 @@ namespace Moonfish.Graphics
 
             public void Dispose( )
             {
-                foreach ( var keyValuePair in _bucketManager.bucketBuilders )
+                foreach ( var keyValuePair in _bucketManager._bucketBuilders )
                 {
                     _bucketManager._buckets.Add( keyValuePair.Value.Finalise( ) );
                 }
-                _bucketManager.bucketBuilders.Clear(  );
+                _bucketManager._bucketBuilders.Clear(  );
             }
         }
 
@@ -95,10 +95,10 @@ namespace Moonfish.Graphics
             //  builder can buffer all the attributes, if not, create a new builder to handle the data
             var attributeTypes = GetSectionVertexAttributeTypes( section );
             var vertexAttributesId = attributeTypes.GetVertexAttributesId(  );
-            if ( !bucketBuilders.ContainsKey(vertexAttributesId))
-                bucketBuilders.Add(vertexAttributesId, new BucketBuilder( new Bucket( attributeTypes ) ) );
+            if ( !_bucketBuilders.ContainsKey(vertexAttributesId))
+                _bucketBuilders.Add(vertexAttributesId, new BucketBuilder( new Bucket( attributeTypes ) ) );
 
-            var builder = bucketBuilders[ vertexAttributesId ];
+            var builder = _bucketBuilders[ vertexAttributesId ];
             builder.Add( section );
         }
 
@@ -337,5 +337,6 @@ namespace Moonfish.Graphics
         }
 
         #endregion
+
     };
 }

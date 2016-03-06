@@ -50,7 +50,7 @@ namespace Moonfish.Graphics
                 CollisionManager.World.AddCollisionObject( item, CollisionFilterGroups.SensorTrigger, CollisionFilterGroups.SensorTrigger );
 
 #if DEBUG
-            //OpenGL.EnableDebugging( );
+            OpenGL.EnableDebugging( );
 #endif
         }
 

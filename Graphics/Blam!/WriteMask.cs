@@ -24,10 +24,10 @@ namespace Moonfish.Graphics
         public override string ToString( )
         {
             var x = X ? 'x' : '\0';
-            var y = X ? 'y' : '\0';
-            var z = X ? 'z' : '\0';
-            var w = X ? 'w' : '\0';
-            return new string( new[] {x, y, z, w} );
+            var y = Y ? 'y' : '\0';
+            var z = Z ? 'z' : '\0';
+            var w = W ? 'w' : '\0';
+            return new string( new[] {x, y, z, w} ).Trim();
         }
     };
 }

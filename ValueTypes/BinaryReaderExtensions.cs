@@ -40,7 +40,6 @@ namespace Moonfish.Tags
             {
                 var count = resource.ResourceDataSize;
                 var address = resource.ResourceDataOffset + resourceStream.HeaderSize;
-                var size = 1;
                 return new BlamPointer(count, address, elementSize);
             }
             else

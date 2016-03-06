@@ -22,13 +22,13 @@ namespace Moonfish.Tags
         {
             return value.Index == -1;
         }
-
+        
         public TagIdent(short index)
             : this(index, (short) (SaltConstant + index))
         {
         }
 
-        public TagIdent(short index, short salt)
+        public TagIdent(short index = -1, short salt = -1)
         {
             Index = index;
             Salt = salt;

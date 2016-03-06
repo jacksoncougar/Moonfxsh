@@ -144,7 +144,6 @@ namespace Moonfish.Guerilla
                     var value = Guerilla.ReadString(reader, definition);
                     return value;
                 }
-                    break;
                 default:
                     return definition;
             }
@@ -447,7 +446,6 @@ namespace Moonfish.Guerilla
                         break;
                     case "vertex_shader_classification_block":
                         LatestFieldSet = FieldSets[0];
-                        break;
                         break;
                     default:
                         reader.BaseStream.Seek(field_set_latest_address, SeekOrigin.Begin);

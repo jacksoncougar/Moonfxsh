@@ -85,7 +85,7 @@ namespace Moonfish.Graphics
         {
             using (TriangleBatch.Begin())
             {
-                var attribute = 0;
+                //var attribute = 0;
                 for (var i = 0; i < vertexBuffers.Count; ++i)
                 {
                     if (!Enum.IsDefined(typeof(VertexAttributeType), vertexBuffers[i].Type))

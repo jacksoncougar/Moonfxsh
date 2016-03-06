@@ -135,13 +135,13 @@ namespace Moonfish.Graphics
 
         private void LoadShader(TagInfo selectedShaderTag)
         {
-            var shader = Map.Deserialize(selectedShaderTag.tagDatum.Identifier) as ShaderBlock;
+            //var shader = Map.Deserialize(selectedShaderTag.tagDatum.Identifier) as ShaderBlock;
 
-            ShaderPostprocessBitmapNewBlock[] textures;
-            material = new MaterialShader(shader, Map, out textures);
-            listBox2.Items.Clear();
-            listBox2.Items.AddRange(material.shaderPassPaths);
-            listBox2.SelectedIndex = 0;
+            //ShaderPostprocessBitmapNewBlock[] textures;
+            //material = new MaterialShader(shader, Map, out textures);
+            //listBox2.Items.Clear();
+            //listBox2.Items.AddRange(material.shaderPassPaths);
+            //listBox2.SelectedIndex = 0;
         }
 
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)

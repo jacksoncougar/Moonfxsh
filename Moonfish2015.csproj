@@ -92,16 +92,21 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>packages\fasterflect.2.1.3\lib\net40\Fasterflect.dll</HintPath>
     </Reference>
-    <Reference Include="JetBrains.Annotations">
-      <HintPath>packages\JetBrains.Annotations.9.1.1\lib\net20\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="ICSharpCode.TextEditor, Version=3.2.1.6466, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
+      <HintPath>packages\ICSharpCode.TextEditor.3.2.1.6466\lib\Net20\ICSharpCode.TextEditor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\OpenTK.1.1.1589.5942\lib\NET40\OpenTK.dll</HintPath>
+      <HintPath>packages\OpenTK.1.1.1589.5941\lib\NET40\OpenTK.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\OpenTK.GLControl.1.1.1589.5942\lib\NET40\OpenTK.GLControl.dll</HintPath>
+      <HintPath>packages\OpenTK.GLControl.1.1.1589.5941\lib\NET40\OpenTK.GLControl.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -116,8 +121,13 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WeifenLuo.WinFormsUI.Docking">
-      <HintPath>packages\DockPanelSuite.2.9.0.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    <Reference Include="ThemeVS2013Blue, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>packages\DockPanelSuite.ThemeVS2013Blue.2.10.0-beta2\lib\net40\ThemeVS2013Blue.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>packages\DockPanelSuite.2.10.0-beta2\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -174,14 +184,46 @@
     <Compile Include="Forms\GuerillaBlockPropertyViewer.Designer.cs">
       <DependentUpon>GuerillaBlockPropertyViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MainForm.cs">
+    <Compile Include="Forms\Scenario\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MainForm.Designer.cs">
+    <Compile Include="Forms\Scenario\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ShaderForm\AsmEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\AsmEditor.Designer.cs">
+      <DependentUpon>AsmEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\ClassTreeNode.cs" />
+    <Compile Include="Forms\ShaderForm\ShaderPropertyGrid.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\ShaderPropertyGrid.Designer.cs">
+      <DependentUpon>ShaderPropertyGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\TagList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\TagList.Designer.cs">
+      <DependentUpon>TagList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\TagTreeNode.cs" />
+    <Compile Include="Forms\ShaderProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ShaderProperties.Designer.cs">
+      <DependentUpon>ShaderProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\VrtxASMViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\VrtxASMViewer.Designer.cs">
+      <DependentUpon>VrtxASMViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Graphics\Blam!\BitExtensions.cs" />
-    <Compile Include="Graphics\Blam!\NV30Shader.cs" />
+    <Compile Include="Graphics\Blam!\VertexProgramInstruction.cs" />
     <Compile Include="Forms\VrtxViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -210,6 +252,12 @@
     <Compile Include="Graphics\Blam!\SwizzleSuffix.cs" />
     <Compile Include="Graphics\Blam!\VertexShader.cs" />
     <Compile Include="Graphics\Blam!\WriteMask.cs" />
+    <Compile Include="Graphics\RenderingEngine\D3d8Types.cs" />
+    <Compile Include="Graphics\RenderingEngine\Extensions.cs" />
+    <Compile Include="Graphics\RenderingEngine\InstanceData.cs" />
+    <Compile Include="Graphics\RenderingEngine\MaterialManager.cs" />
+    <Compile Include="Graphics\RenderingEngine\PatchData.cs" />
+    <Compile Include="Graphics\RenderingEngine\StateManager.cs" />
     <Compile Include="Graphics\SceneClock.cs" />
     <Compile Include="Forms\ShaderViewer.cs">
       <SubType>Form</SubType>
@@ -226,8 +274,8 @@
     <Compile Include="Graphics\Blam!\TextureState.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="GlobalStrings.cs" />
-    <Compile Include="Graphics\Bucket.cs" />
-    <Compile Include="Graphics\BucketManager.cs" />
+    <Compile Include="Graphics\RenderingEngine\Bucket.cs" />
+    <Compile Include="Graphics\RenderingEngine\BucketManager.cs" />
     <Compile Include="Graphics\ClosestNotMeConvexResultCallback.cs" />
     <Compile Include="Graphics\ClosestRayResultCullFaceCallback.cs" />
     <Compile Include="Graphics\CollisionGroup.cs" />
@@ -244,8 +292,8 @@
     <Compile Include="Graphics\MathHelper.cs" />
     <Compile Include="Graphics\Primitives\GLDebug.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
-    <Compile Include="Graphics\ScenarioExtensions.cs" />
-    <Compile Include="Graphics\ScenarioManager.cs" />
+    <Compile Include="Graphics\RenderingEngine\ScenarioExtensions.cs" />
+    <Compile Include="Graphics\RenderingEngine\ScenarioManager.cs" />
     <Compile Include="Graphics\ShaderReference.cs" />
     <Compile Include="Graphics\TriangleBatch.cs" />
     <Compile Include="Graphics\BulletDebugDrawer.cs" />
@@ -254,10 +302,10 @@
     <Compile Include="Graphics\Scene\DynamicScene.cs" />
     <Compile Include="Graphics\Scene\DynamicScene.Events.cs" />
     <Compile Include="Graphics\Interfaces.cs" />
-    <Compile Include="Forms\SceneView.cs">
+    <Compile Include="Forms\Scenario\SceneView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SceneView.Designer.cs">
+    <Compile Include="Forms\Scenario\SceneView.Designer.cs">
       <DependentUpon>SceneView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MarkerViewer.cs">
@@ -280,7 +328,7 @@
     <Compile Include="Graphics\Performance.cs" />
     <Compile Include="Graphics\Primitives\Box.cs" />
     <Compile Include="Graphics\Program.cs" />
-    <Compile Include="Graphics\ProgramManager.cs" />
+    <Compile Include="Graphics\RenderingEngine\ProgramManager.cs" />
     <Compile Include="Graphics\RenderBatch.cs" />
     <Compile Include="Graphics\RenderObject.cs" />
     <Compile Include="Graphics\ScenarioObject.cs" />
@@ -1467,7 +1515,6 @@
     <Content Include="Documentation\vertex_program.txt" />
     <Content Include="Documentation\vertex_resource_raw.txt" />
     <Content Include="icon.ico" />
-    <Content Include="license.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\DataMapper.resx">
@@ -1485,8 +1532,23 @@
     <EmbeddedResource Include="Forms\GuerillaBlockPropertyViewer.resx">
       <DependentUpon>GuerillaBlockPropertyViewer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MainForm.resx">
+    <EmbeddedResource Include="Forms\Scenario\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ShaderForm\AsmEditor.resx">
+      <DependentUpon>AsmEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ShaderForm\ShaderPropertyGrid.resx">
+      <DependentUpon>ShaderPropertyGrid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ShaderForm\TagList.resx">
+      <DependentUpon>TagList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ShaderProperties.resx">
+      <DependentUpon>ShaderProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ShaderForm\VrtxASMViewer.resx">
+      <DependentUpon>VrtxASMViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VrtxViewer.resx">
       <DependentUpon>VrtxViewer.cs</DependentUpon>
@@ -1500,7 +1562,7 @@
     <EmbeddedResource Include="Forms\Research.resx">
       <DependentUpon>Research.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SceneView.resx">
+    <EmbeddedResource Include="Forms\Scenario\SceneView.resx">
       <DependentUpon>SceneView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MarkerViewer.resx">

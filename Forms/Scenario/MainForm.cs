@@ -16,22 +16,20 @@ namespace Moonfish.Forms
         {
             InitializeComponent( );
 
-            _cacheStream = CacheStream.Open( Path.Combine( Local.MapsDirectory, "ascension.map" ) );
+            dockPanel1.Theme = new VS2013BlueTheme(  );
 
-            var blockPropertyViewer = new GuerillaBlockPropertyViewer( );
+            _cacheStream = CacheStream.Open( Path.Combine( Local.MapsDirectory, "ascension.map" ) );
+            
             var sceneView = new SceneView( _cacheStream );
             var objectListView = new ObjectListView( );
 
-            objectListView.SelectedObjectChanged += delegate
+            objectListView.OnSelectedObjectChanged += delegate
             {
-                blockPropertyViewer.LoadGuerillaBlocks(
-                    ( GuerillaBlock ) objectListView.SelectedObjectIdent.Get<ObjectBlock>(  ) );
             };
             
 
             objectListView.LoadScenarioPallet( _cacheStream );
-
-            blockPropertyViewer.Show( dockPanel1, DockState.DockRight );
+            
             sceneView.Show( dockPanel1, DockState.Document );
             objectListView.Show( dockPanel1, DockState.DockLeft );
         }

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Moonfish.Cache;
+using Moonfish.Graphics.RenderingEngine;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
@@ -25,15 +27,40 @@ namespace Moonfish.Graphics
         /// </summary>
         private readonly DrawManager _drawManager;
 
+        private readonly MaterialManager _materialManager;
+
         /// <summary>
         ///     The cache where scenario data is
         /// </summary>
         private CacheStream _cache;
+#if DEBUG
+        private static readonly ScenarioInstanceBlock instance = new ScenarioInstanceBlock(  );
+#endif 
 
         public ScenarioManager( )
         {
-            _drawManager = new DrawManager( );
+            _materialManager = new MaterialManager(  );
+               _drawManager = new DrawManager( );
             _bucketManager = new BucketManager( );
+        }
+        
+        [Conditional("DEBUG")]
+        public void DebugDraw( Camera eye, ProgramManager programManager )
+        {
+            var program = programManager.DebugShader;
+            program.Assign( );
+
+            var datum = _cache.Index.First( u => u.Class == TagClass.Scen && u.Path.Contains( "tree" ) );
+            var debugObject = ( ObjectBlock ) _cache.Deserialize( datum.Identifier );
+
+            ForceItem( eye, debugObject, instance );
+
+            var transparentPatches = _drawManager.GetTransparentParts( eye );
+            var renderPatches = _drawManager.GetOpaqueParts( );
+
+            // TODO better batching!
+            DrawPatchElements( transparentPatches, program );
+            DrawPatchElements( renderPatches, program );
         }
 
         /// <summary>
@@ -41,10 +68,11 @@ namespace Moonfish.Graphics
         /// </summary>
         /// <param name="eye">The viewer camera</param>
         /// <param name="programManager"></param>
-        public void Draw( Camera eye, ProgramManager programManager )
+        public void DrawScenario( Camera eye, ProgramManager programManager )
         {
             var program = programManager.DebugShader;
             program.Assign( );
+
             TraverseScenario( eye );
 
             var transparentPatches = _drawManager.GetTransparentParts( eye );
@@ -71,7 +99,7 @@ namespace Moonfish.Graphics
         /// <param name="objectBlock">Object to draw</param>
         /// <param name="instance">Instance data of object to draw</param>
         private void Dispatch( Camera eye, ObjectBlock objectBlock,
-            ScenarioSceneryBlock instance )
+            dynamic instance )
         {
             var modelBlock = objectBlock.Model.Get<ModelBlock>( );
             var renderBlock = modelBlock?.RenderModel.Get<RenderModelBlock>( );
@@ -117,7 +145,11 @@ namespace Moonfish.Graphics
 
                 foreach ( var part in renderModelSection.SectionData[ 0 ].Section.Parts )
                 {
-                    _drawManager.CreateInstance( part, instance );
+                    var materialBlock = renderBlock.Materials[part.Material];
+
+                    //  Create an instance for this part and assign a shader for it
+                    _drawManager.CreateInstance(part, instance);
+                    _drawManager.AssignShader(part, materialBlock.Shader.Ident);
                 }
             }
         }
@@ -135,13 +167,44 @@ namespace Moonfish.Graphics
                 program.SetUniform( location, patch.Data.worldMatrix );
                 int vertexBaseIndex;
                 int indexBaseOffset;
+                
 
                 var bucket = _bucketManager.GetBucketResource( patch.Part, out indexBaseOffset, out vertexBaseIndex );
+                if ( patch.ShaderIdent != TagIdent.NullIdentifier )
+                {
+                    var material = _materialManager.GetMaterial( patch.ShaderIdent );
+                    _materialManager.Bind( material );
+                }
                 using ( bucket.Bind( ) )
                 {
                     GL.DrawElementsBaseVertex(
                         PrimitiveType.TriangleStrip, patch.Part.StripLength, DrawElementsType.UnsignedShort,
                         ( IntPtr ) ( indexBaseOffset + patch.Part.StripStartIndex * 2 ), vertexBaseIndex );
+                }
+            }
+        }
+
+        private void DispatchMaterial( TagIdent shaderIdent )
+        {
+            
+        }
+
+        private void ForceItem( Camera eye, ObjectBlock @object, ScenarioInstanceBlock instance )
+        {
+            var scenarioBlock = _cache?.Index.ScenarioIdent.Get<ScenarioBlock>( );
+            if ( scenarioBlock == null ) return;
+
+            DrawManager.ClearVisible( );
+            using ( _bucketManager.Begin( ) )
+            {
+                var modelBlock = @object?.Model.Get<ModelBlock>( );
+                var renderModel = modelBlock?.RenderModel.Get<RenderModelBlock>( );
+
+                if ( renderModel == null ) return;
+
+                if ( eye.CanSee( instance, @object ) )
+                {
+                    Dispatch( eye, @object, instance );
                 }
             }
         }
@@ -185,6 +248,31 @@ namespace Moonfish.Graphics
                     return permutation.L6SectionIndex;
                 default:
                     throw new ArgumentOutOfRangeException( nameof( detailLevel ), detailLevel, null );
+            }
+        }
+
+        /// <summary>
+        ///     Loops through each instance and dispatches them for processing
+        /// </summary>
+        /// <param name="eye">Viewer camera</param>
+        /// <param name="instanceCollection">Only pass valid scenario instance block array</param>
+        /// <param name="paletteCollection">Only pass valid scenario palette block array</param>
+        private void ProcessPalette( Camera eye, dynamic instanceCollection, dynamic paletteCollection )
+        {
+            foreach ( var instance in instanceCollection )
+            {
+                var paletteIndex = instance.Type;
+
+                var objectBlock = paletteCollection[ paletteIndex ].Name.Get<ObjectBlock>( );
+                var modelBlock = objectBlock?.Model.Get<ModelBlock>( );
+                var renderModel = modelBlock?.RenderModel.Get<RenderModelBlock>( );
+
+                if ( renderModel == null ) continue;
+
+                if ( eye.CanSee( instance, objectBlock ) )
+                {
+                    Dispatch( eye, objectBlock, instance );
+                }
             }
         }
 
@@ -252,35 +340,32 @@ namespace Moonfish.Graphics
             DrawManager.ClearVisible( );
             using ( _bucketManager.Begin( ) )
             {
-                foreach ( var instance in scenarioBlock.Scenery )
-                {
-                    var palette = instance.Type;
-
-                    var objectBlock = scenarioBlock.SceneryPalette[ palette ].Name.Get<ObjectBlock>( );
-                    var modelBlock = objectBlock?.Model.Get<ModelBlock>( );
-                    var renderModel = modelBlock?.RenderModel.Get<RenderModelBlock>( );
-
-                    if ( renderModel == null ) continue;
-
-                    if ( !eyeCamera.CanSee( instance, objectBlock ) ) continue;
-
-                    Dispatch( eyeCamera, objectBlock, instance );
-                }
-                foreach ( var instance in scenarioBlock.Scenery )
-                {
-                    var palette = instance.Type;
-
-                    var objectBlock = scenarioBlock.SceneryPalette[ palette ].Name.Get<ObjectBlock>( );
-                    var modelBlock = objectBlock?.Model.Get<ModelBlock>( );
-                    var renderModel = modelBlock?.RenderModel.Get<RenderModelBlock>( );
-
-                    if ( renderModel == null ) continue;
-
-                    if ( !eyeCamera.CanSee( instance, objectBlock ) ) continue;
-
-                    Dispatch( eyeCamera, objectBlock, instance );
-                }
+                ProcessPalette( eyeCamera, scenarioBlock.Scenery, scenarioBlock.SceneryPalette );
+                ProcessPalette( eyeCamera, scenarioBlock.Crates, scenarioBlock.CratesPalette );
+                ProcessPalette( eyeCamera, scenarioBlock.Bipeds, scenarioBlock.BipedPalette );
+                ProcessPalette( eyeCamera, scenarioBlock.Creatures, scenarioBlock.CreaturesPalette );
+                ProcessPalette( eyeCamera, scenarioBlock.Controls, scenarioBlock.ControlPalette );
+                ProcessPalette( eyeCamera, scenarioBlock.Decals, scenarioBlock.DecalsPalette );
+                ProcessPalette( eyeCamera, scenarioBlock.Decorators, scenarioBlock.DecoratorsPalette );
+                ProcessPalette( eyeCamera, scenarioBlock.Machines, scenarioBlock.MachinePalette );
+                ProcessPalette( eyeCamera, scenarioBlock.Equipment, scenarioBlock.EquipmentPalette );
+                ProcessPalette( eyeCamera, scenarioBlock.SoundScenery, scenarioBlock.SoundSceneryPalette );
+                ProcessPalette( eyeCamera, scenarioBlock.Vehicles, scenarioBlock.VehiclePalette );
+                ProcessPalette( eyeCamera, scenarioBlock.Weapons, scenarioBlock.WeaponPalette );
             }
+        }
+
+        /// <summary>
+        ///     A defuault instance wrapper
+        /// </summary>
+        public class ScenarioInstanceBlock : GuerillaBlock
+        {
+            private byte[] indexer = new byte[4];
+            public ScenarioObjectDatumStructBlock ObjectData = new ScenarioObjectDatumStructBlock( );
+            public ScenarioObjectPermutationStructBlock PermutationData = new ScenarioObjectPermutationStructBlock( );
+            public ScenarioSceneryDatumStructV4Block SceneryData = new ScenarioSceneryDatumStructV4Block( );
+            public override int Alignment { get; }
+            public override int SerializedSize { get; }
         }
 
         /// <summary>
@@ -300,8 +385,9 @@ namespace Moonfish.Graphics
             ///     Creates an instance object for the given part
             /// </summary>
             /// <param name="part">The part to be instanced</param>
+            /// <param name="o"></param>
             /// <param name="instance">The instance data</param>
-            public void CreateInstance( GlobalGeometryPartBlockNew part, ScenarioSceneryBlock instance )
+            public void CreateInstance( GlobalGeometryPartBlockNew part, dynamic instance )
             {
                 if ( !_partDictionary.ContainsKey( part ) )
                 {
@@ -339,7 +425,10 @@ namespace Moonfish.Graphics
                     foreach ( var instanceId in pair.Value )
                     {
                         var instanceData = _instanceDataDictionary[ instanceId ];
-                        opaquePatches.Add( new PatchData( pair.Key, instanceData ) );
+                        opaquePatches.Add( new PatchData( pair.Key, instanceData )
+                        {
+                            ShaderIdent = _shaderDictionary[ pair.Key ]
+                        } );
                     }
                 }
                 return opaquePatches;
@@ -395,7 +484,10 @@ namespace Moonfish.Graphics
                         // Reverse the sorting here with negation
                         var distance = eye.DistanceOf( scenePosition );
 
-                        transparentDrawsSortedList.Add( distance, new PatchData( part, instanceData ) );
+                        transparentDrawsSortedList.Add( distance, new PatchData( part, instanceData)
+                        {
+                            ShaderIdent = _shaderDictionary[part]
+                        });
                     }
                 }
                 return transparentDrawsSortedList.Select( u => u.Value );
@@ -428,47 +520,20 @@ namespace Moonfish.Graphics
                 new Dictionary<GuerillaBlock, InstanceId>( );
 
             private readonly Dictionary<GlobalGeometryPartBlockNew, List<InstanceId>> _partDictionary =
-                new Dictionary<GlobalGeometryPartBlockNew, List<InstanceId>>( );
+                new Dictionary<GlobalGeometryPartBlockNew, List<InstanceId>>();
+
+            private readonly Dictionary<GlobalGeometryPartBlockNew, TagIdent> _shaderDictionary =
+                new Dictionary<GlobalGeometryPartBlockNew, TagIdent>();
 
             private InstanceId _currentInstanceId;
 
             #endregion
+
+            public void AssignShader( GlobalGeometryPartBlockNew part, TagIdent shaderIdent )
+            {
+                //  Does this work now?
+                _shaderDictionary[ part ] = shaderIdent;
+            }
         }
     };
-
-    /// <summary>
-    ///     Container of an atomic draw element ( ie; smallest sortable draw I want to deal with :} )
-    ///     This should be processed more to create batches
-    /// </summary>
-    internal class PatchData
-    {
-        public PatchData( GlobalGeometryPartBlockNew part, InstanceData data )
-        {
-            Part = part;
-            Data = data;
-        }
-
-        public InstanceData Data { get; }
-        public GlobalGeometryPartBlockNew Part { get; }
-    }
-
-    /// <summary>
-    ///     Contains instance data ( colour, orientation, etc )
-    /// </summary>
-    internal struct InstanceData
-    {
-        private Vector4 Colour;
-        public Matrix4 worldMatrix;
-
-        public InstanceData( ScenarioSceneryBlock sceneryInstance )
-        {
-            // RGBA format
-            Colour = new Vector4(
-                sceneryInstance.PermutationData.PrimaryColor.R / 255f,
-                sceneryInstance.PermutationData.PrimaryColor.G / 255f,
-                sceneryInstance.PermutationData.PrimaryColor.B / 255f,
-                1.0f );
-            worldMatrix = sceneryInstance.ObjectData.CreateWorldMatrix( );
-        }
-    }
 }

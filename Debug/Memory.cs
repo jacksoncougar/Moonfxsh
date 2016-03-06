@@ -27,8 +27,8 @@ namespace Moonfish.Debug_
             var baseAddress = process.MainModule.BaseAddress;
             var size = process.MainModule.ModuleMemorySize;
             var start = baseAddress + size;
-            var headerOffset = 0x1609B40 - 64;
-            var length = process.VirtualMemorySize;
+            //var headerOffset = 0x1609B40 - 64;
+            var length = process.VirtualMemorySize64;
             // 0x0046A3B8 is the address where I found the string, replace it with what you found
             ReadProcessMemory((int) processHandle, baseAddress.ToInt32(), buffer, buffer.Length, ref bytesRead);
 

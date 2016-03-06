@@ -1,6 +1,6 @@
 ﻿namespace Moonfish.Forms
 {
-    partial class MainForm
+    partial class ShaderProperties
     {
         /// <summary>
         /// Required designer variable.
@@ -49,13 +49,10 @@
             // dockPanel1
             // 
             this.dockPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dockPanel1.DockBackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.dockPanel1.DockRightPortion = 0.618D;
             this.dockPanel1.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
             this.dockPanel1.Location = new System.Drawing.Point(0, 0);
             this.dockPanel1.Name = "dockPanel1";
-            this.dockPanel1.ShowDocumentIcon = true;
-            this.dockPanel1.Size = new System.Drawing.Size(729, 450);
+            this.dockPanel1.Size = new System.Drawing.Size(774, 610);
             dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
             dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
             autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
@@ -104,14 +101,14 @@
             this.dockPanel1.Skin = dockPanelSkin1;
             this.dockPanel1.TabIndex = 0;
             // 
-            // MainForm
+            // ShaderProperties
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(729, 450);
+            this.ClientSize = new System.Drawing.Size(774, 610);
             this.Controls.Add(this.dockPanel1);
-            this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Name = "ShaderProperties";
+            this.Text = "ShaderProperties";
             this.ResumeLayout(false);
 
         }

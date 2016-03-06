@@ -93,7 +93,7 @@ namespace Moonfish
 
         public static dynamic GetReferenceObject(TagIdent identifier, bool reload = false)
         {
-            if (mapStream == null) return null;
+            if ( mapStream == null || identifier == TagIdent.NullIdentifier ) return null;
             if (reload)
                 mapStream.ClearCache(identifier);
             return mapStream.Deserialize(identifier);

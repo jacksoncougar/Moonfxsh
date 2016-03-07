@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Moonfish.Guerilla.Preprocess
+namespace Moonfish.Guerilla.Tags
 {
-    internal class ShaderBlock
+    public partial class ShaderBlock
     {
         [GuerillaPreProcessFieldsMethod(BlockName = "shader_block")]
         protected static IList<MoonfishTagField> GuerillaPreProcessMethod(IList<MoonfishTagField> fields)

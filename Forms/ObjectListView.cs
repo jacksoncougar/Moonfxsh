@@ -17,8 +17,8 @@ namespace Moonfish.Forms
 {
     public partial class ObjectListView : DockContent
     {
-        public event EventHandler<TagIdent> MouseDoubleClick;
-        public event EventHandler<TagIdent> SelectedObjectChanged;
+        public new event EventHandler<TagIdent> MouseDoubleClick;
+        public event EventHandler<TagIdent> OnSelectedObjectChanged;
 
         public TagIdent SelectedObjectIdent { get; private set; }
 
@@ -45,7 +45,7 @@ namespace Moonfish.Forms
 
                     var data = ( TagDatum ) listView1.Items[ index ].Tag;
                     SelectedObjectIdent = data.Identifier;
-                    if ( SelectedObjectChanged != null ) SelectedObjectChanged( this, SelectedObjectIdent );
+                    if ( OnSelectedObjectChanged != null ) OnSelectedObjectChanged( this, SelectedObjectIdent );
                 };
         }
 
@@ -69,10 +69,10 @@ namespace Moonfish.Forms
                 "Machines", HorizontalAlignment.Left));
         }
 
-        private void AddListViewItems( IEnumerable<TagDatum> scenery, ListViewGroup listViewGroup )
+        public void AddListViewItems( IEnumerable<TagDatum> tagDatums, ListViewGroup listViewGroup )
         {
             listView1.Groups.Add( listViewGroup );
-            foreach ( var tagDatum in scenery )
+            foreach ( var tagDatum in tagDatums )
             {
                 listView1.Items.Add( new ListViewItem( tagDatum.Identifier.Index.ToString( ) )
                 {

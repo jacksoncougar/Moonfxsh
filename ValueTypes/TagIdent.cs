@@ -13,22 +13,14 @@ namespace Moonfish.Tags
         public readonly short Index;
         public readonly short Salt;
 
-        public short SaltedIndex
-        {
-            get { return (short) (Salt - SaltConstant); }
-        }
+        public short SaltedIndex => (short) (Salt - SaltConstant);
 
         public static bool IsNull(TagIdent value)
         {
             return value.Index == -1;
         }
 
-        public TagIdent(short index)
-            : this(index, (short) (SaltConstant + index))
-        {
-        }
-
-        public TagIdent(short index, short salt)
+        public TagIdent(short index = -1, short salt = -1)
         {
             Index = index;
             Salt = salt;
@@ -38,6 +30,7 @@ namespace Moonfish.Tags
         {
             return Halo2.GetReferenceObject(this);
         }
+
         public object Get()
         {
             return Get<GuerillaBlock>();
@@ -71,13 +64,12 @@ namespace Moonfish.Tags
         public override bool Equals(object obj)
         {
             var other = obj as TagIdent?;
-            if (other == null) return false;
-            return Equals(other.Value);
+            return other != null && Equals(other.Value);
         }
 
         public override int GetHashCode()
         {
-            return SaltedIndex;
+            return (int)this;
         }
 
         public static bool operator !=(TagIdent object1, TagIdent object2)
@@ -87,7 +79,7 @@ namespace Moonfish.Tags
 
         public override string ToString()
         {
-            return string.Format(@"{0}:{1} - {2}", Index, Salt, Halo2.Paths[Index]);
+            return $@"{Index},{Salt},{Halo2.Paths[ Index ]}";
         }
 
         public static TagIdent NullIdentifier = (TagIdent) (-1);

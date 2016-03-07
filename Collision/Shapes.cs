@@ -8,10 +8,10 @@ namespace Moonfish.Collision
         public Vector3 Origin;
         public Vector3 Direction;
 
-        public Ray(Vector3 origin, Vector3 direction)
+        public Ray(Vector3 origin, Vector3 target)
         {
             Origin = origin;
-            Direction = (direction - origin).Normalized();
+            Direction = (target - origin).Normalized();
         }
     }
 

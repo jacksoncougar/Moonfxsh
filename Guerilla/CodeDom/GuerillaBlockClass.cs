@@ -34,8 +34,12 @@ namespace Moonfish.Guerilla.CodeDom
                 Size += parentClass.Size;
             }
             TargetClass.CustomAttributes.Add(
-                new CodeAttributeDeclaration(new CodeTypeReference(typeof (TagClassAttribute).Name()),
+                new CodeAttributeDeclaration(new CodeTypeReference(typeof(TagClassAttribute).Name()),
                     new CodeAttributeArgument(new CodePrimitiveExpression(tag.Class.ToString()))));
+
+            TargetClass.CustomAttributes.Add(
+                new CodeAttributeDeclaration( new CodeTypeReference( typeof ( TagBlockOriginalNameAttribute ).Name( ) ),
+                    new CodeAttributeArgument( new CodePrimitiveExpression( tag.Definition.Name ) ) ) );
 
             var codeNamespace = new CodeNamespace("Moonfish.Tags");
             codeNamespace.Types.Add(new CodeTypeDeclaration(typeof (TagClass).Name())
@@ -64,6 +68,9 @@ namespace Moonfish.Guerilla.CodeDom
         {
             Size = definition.CalculateSizeOfFieldSet();
             TargetClass.IsPartial = true;
+            TargetClass.CustomAttributes.Add(
+                new CodeAttributeDeclaration(new CodeTypeReference(typeof(TagBlockOriginalNameAttribute).Name()),
+                    new CodeAttributeArgument(new CodePrimitiveExpression(definition.Name))));
             Initialize(definition.Fields, Size, definition.Alignment);
         }
 

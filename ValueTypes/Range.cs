@@ -18,12 +18,9 @@ namespace Moonfish.Model
 
         public override string ToString()
         {
-            return string.Format("Min:{0} Max:{1})", Min, Max);
+            return $"{Min}, {Max}";
         }
 
-        public float Length
-        {
-            get { return Max - Min; }
-        }
+        public float Length => Max - Min;
     }
 }

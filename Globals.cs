@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Moonfish.Cache;
-using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
 using Moonfish.ResourceManagement;
 using Moonfish.Tags;
@@ -93,7 +92,7 @@ namespace Moonfish
 
         public static dynamic GetReferenceObject(TagIdent identifier, bool reload = false)
         {
-            if (mapStream == null) return null;
+            if ( mapStream == null || identifier == TagIdent.NullIdentifier ) return null;
             if (reload)
                 mapStream.ClearCache(identifier);
             return mapStream.Deserialize(identifier);
@@ -113,14 +112,6 @@ namespace Moonfish
             {
                 return null;
             }
-        }
-
-        public static T GetReferenceObject<T>(TagReference reference) where T : GuerillaBlock
-        {
-            if (mapStream == null) return null;
-            if (reference.Ident == TagIdent.NullIdentifier) return null;
-
-            return (T) mapStream.Deserialize(reference.Ident);
         }
 
         public static ResourceStream GetResourceBlock(GlobalGeometryBlockInfoStructBlock blockInfo)
@@ -197,7 +188,6 @@ namespace Moonfish
             return hasResource;
         }
 
-
         internal static bool TryGettingResourceStream(int resourceAddress, out Stream resourceStream)
         {
             var pointer = (ResourcePointer) resourceAddress;
@@ -219,8 +209,8 @@ namespace Moonfish
                     resourceStream = null;
                     return false;
             }
-            var hasResource = resourceStream != null;
-            return hasResource;
+            var success = resourceStream != null;
+            return success;
         }
     }
 
@@ -259,6 +249,8 @@ namespace Moonfish
         private static string _functionName;
         public static string Result { get; private set; }
 
+        public static TimeSpan Performance { get; private set; }
+
         public static void SetCapacity(int size)
         {
             _samples = new List<long>(size);
@@ -283,11 +275,11 @@ namespace Moonfish
         public static void Clear()
         {
             var average = _samples.Sum() / _samples.Count;
-            var timeSpan = new TimeSpan(average);
+            Performance = new TimeSpan(average);
 
-            Result = string.Format("Average call time: {0}", timeSpan.Milliseconds < 1
-                ? string.Format("{0}ticks", timeSpan.Ticks)
-                : string.Format("{0}ms", timeSpan.TotalMilliseconds));
+            Result = string.Format("Average call time: {0}", Performance.Milliseconds < 1
+                ? string.Format("{0}ticks", Performance.Ticks)
+                : string.Format("{0}ms", Performance.TotalMilliseconds));
             _samples.Clear();
         }
     }

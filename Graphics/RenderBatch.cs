@@ -7,7 +7,7 @@ namespace Moonfish.Graphics
     public class RenderBatch
     {
         public ShaderReference Shader { get; set; }
-        public TriangleBatch BatchObject { get; set; }
+        public VertexArrayObject BatchObject { get; set; }
         public PrimitiveType PrimitiveType { get; set; }
         public DrawElementsType DrawElementsType { get; set; }
         public int ElementStartIndex { get; set; }

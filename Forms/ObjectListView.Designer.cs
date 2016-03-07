@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.listView1 = new System.Windows.Forms.ListView();
-            this.columnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnIdent = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // listView1
@@ -43,27 +43,29 @@
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(549, 791);
+            this.listView1.Size = new System.Drawing.Size(533, 752);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            // 
+            // columnIdent
+            // 
+            this.columnIdent.Text = "Ident";
             // 
             // columnName
             // 
             this.columnName.Text = "Name";
             this.columnName.Width = 300;
             // 
-            // columnIdent
-            // 
-            this.columnIdent.Text = "Ident";
-            // 
             // ObjectListView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(533, 752);
             this.Controls.Add(this.listView1);
+            this.DoubleBuffered = true;
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "ObjectListView";
-            this.Size = new System.Drawing.Size(549, 791);
             this.ResumeLayout(false);
 
         }

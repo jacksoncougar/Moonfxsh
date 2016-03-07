@@ -13,6 +13,11 @@ namespace Moonfish.Cache
         private readonly List<TagClassHeirarchy> _classes;
         private readonly List<TagDatum> _data;
 
+        public List<TagClassHeirarchy> ClassHeirarchies
+        {
+            get { return _classes; }
+        }
+
         public TagIndex(CacheStream cache, IReadOnlyList<string> paths)
             : base(cache)
         {

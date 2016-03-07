@@ -9,15 +9,15 @@ using Microsoft.CSharp;
 
 namespace Moonfish.Guerilla
 {
-    public class BinaryIOReflection
+    public static class BinaryIOReflection
     {
-        private static Dictionary<Type, string> _binaryWriterMethods;
-        private static Dictionary<Type, string> _binaryReaderMethods;
+        private static Dictionary<Type, string> binaryWriterMethods;
+        private static Dictionary<Type, string> binaryReaderMethods;
         public static Dictionary<Type, Delegate> BinaryReaderMethodDelegates;
 
         public static string GetBinaryReaderMethodName(Type type)
         {
-            var method = (from m in _binaryReaderMethods
+            var method = (from m in binaryReaderMethods
                 where m.Key == type
                 select m.Value).FirstOrDefault();
 
@@ -26,7 +26,7 @@ namespace Moonfish.Guerilla
 
         public static string GetBinaryWriterMethodName(Type type)
         {
-            var method = (from m in _binaryWriterMethods
+            var method = (from m in binaryWriterMethods
                 where m.Key == type
                 select m.Value).FirstOrDefault();
             return method;
@@ -147,8 +147,8 @@ namespace Moonfish.Guerilla
 
         public static void CacheMethods()
         {
-            _binaryReaderMethods = CreateMethodCache<BinaryReader>();
-            _binaryWriterMethods = CreateWriteMethodCache<BinaryWriter>();
+            binaryReaderMethods = CreateMethodCache<BinaryReader>();
+            binaryWriterMethods = CreateWriteMethodCache<BinaryWriter>();
             BinaryReaderMethodDelegates = CreateMethodDelegateCache<BinaryReader>();
         }
     }

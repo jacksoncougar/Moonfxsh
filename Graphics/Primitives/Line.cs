@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics.Primitives
 {
-    internal class Line : TriangleBatch
+    internal class Line : VertexArrayObject
     {
         public Line(Vector3 start, Vector3 end)
         {

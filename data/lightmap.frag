@@ -30,7 +30,7 @@ out vec4 frag_color;
 void main()
 {
 	vec4 lightmapColourIndex = texture(lightmap, LightmapTexcoord_texturespace.st);
-	float g = LightmapTexcoord_texturespace.p;
+	float g = float(LightmapTexcoord_texturespace.p);
 	float actuallayer = floor(g + 0.5);
 	//vec4 lightmapPaletteColour = texture(lightmapPalette, vec2(lightmapColourIndex, actuallayer) );
 	vec4 lightColor = vec4(1.0, 1.0, 1.0, 1.0);

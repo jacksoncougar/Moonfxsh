@@ -9,7 +9,18 @@ namespace Moonfish.Tags
 
         public TagClassAttribute(string tagClass)
         {
-            TagClass = (TagClass) tagClass;
+            TagClass = (TagClass)tagClass;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+    public class TagBlockOriginalNameAttribute : System.Attribute
+    {
+        public string OriginalName { get; set; }
+
+        public TagBlockOriginalNameAttribute(string originalName)
+        {
+            OriginalName = originalName;
         }
     }
 }

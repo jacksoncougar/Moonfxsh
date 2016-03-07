@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using BulletSharp;
@@ -24,8 +23,8 @@ namespace Moonfish.Graphics
         }
 
         public readonly Matrix4 collisionSpaceMatrix;
-        private readonly TriangleBatch _markersBatch;
-        private readonly TriangleBatch _nodesBatch;
+        private readonly VertexArrayObject _markersBatch;
+        private readonly VertexArrayObject _nodesBatch;
         private Matrix4 _worldMatrix;
 
         private ScenarioObject( )
@@ -34,7 +33,7 @@ namespace Moonfish.Graphics
             Nodes = new List<RenderModelNodeBlock>( );
             Flags = RenderFlags.RenderMesh;
 
-            _nodesBatch = new TriangleBatch( );
+            _nodesBatch = new VertexArrayObject( );
             using ( _nodesBatch.Begin( ) )
             {
                 _nodesBatch.GenerateBuffer( );
@@ -43,7 +42,7 @@ namespace Moonfish.Graphics
                 _nodesBatch.GenerateBuffer( );
                 _nodesBatch.BindBuffer( BufferTarget.ElementArrayBuffer, _nodesBatch.BufferIdents.Last( ) );
             }
-            _markersBatch = new TriangleBatch( );
+            _markersBatch = new VertexArrayObject( );
             using ( _markersBatch.Begin( ) )
             {
                 _markersBatch.GenerateBuffer( );
@@ -111,88 +110,6 @@ namespace Moonfish.Graphics
         }
 
         public StringIdent ActivePermuation { get; set; }
-
-        public IEnumerable<RenderBatch> Batches
-        {
-            get
-            {
-                if ( Flags.HasFlag( RenderFlags.RenderMesh ) )
-                    foreach ( var renderBatch in RenderBatches ) yield return renderBatch;
-                if ( Flags.HasFlag( RenderFlags.RenderMarkers ) )
-                {
-                    var renderModel = ( RenderModelBlock ) Model.RenderModel.Get( );
-                    var markersEnumerator = renderModel.MarkerGroups.SelectMany( x => x.Markers ).ToList( );
-                    var elementIndices =
-                        Enumerable.Range( 0, markersEnumerator.Count ).Select( Convert.ToUInt16 ).ToArray( );
-
-                    var positionData = new List<Vector3>( );
-                    foreach ( var marker in markersEnumerator )
-                    {
-                        var nodeIndex = marker.NodeIndex;
-                        var translation = marker.Translation;
-                        var transformedPosition = Vector3.Transform( translation, Nodes.GetWorldMatrix( nodeIndex ) );
-
-                        positionData.Add( transformedPosition );
-                    }
-                    using ( _markersBatch.Begin( ) )
-                    {
-                        _markersBatch.BindBuffer( BufferTarget.ArrayBuffer, _markersBatch.BufferIdents.First( ) );
-                        _markersBatch.BufferVertexAttributeData( positionData.ToArray( ), BufferUsageHint.StaticDraw );
-                        _markersBatch.BindBuffer( BufferTarget.ElementArrayBuffer, _markersBatch.BufferIdents.Last( ) );
-                        _markersBatch.BufferElementArrayData( elementIndices );
-                    }
-
-                    var batch = new RenderBatch
-                    {
-                        ElementStartIndex = 0,
-                        ElementLength = elementIndices.Length,
-                        PrimitiveType = PrimitiveType.Points,
-                        Shader = new ShaderReference( ShaderReference.ReferenceType.System, 0 )
-                    };
-
-                    batch.AssignUniform( "WorldMatrixUniform", Matrix4.Identity );
-                    batch.AssignAttribute( "Colour", new ColorF( Color.Red ).RGBA );
-                    batch.BatchObject = _markersBatch;
-                    yield return batch;
-                }
-                if ( Flags.HasFlag( RenderFlags.RenderNodes ) )
-                {
-                    var positionData = new List<Vector3>( );
-
-                    var elementIndices =
-                        Enumerable.Range( 0, Nodes.Count ).Select( x => Convert.ToUInt16( x ) ).ToArray( );
-
-                    foreach ( var node in Nodes )
-                    {
-                        var transformedPosition = Vector3.Transform( node.DefaultTranslation,
-                            Nodes.GetWorldMatrix( node.ParentNode ) );
-
-                        positionData.Add( transformedPosition );
-                    }
-
-                    using ( _nodesBatch.Begin( ) )
-                    {
-                        _nodesBatch.BindBuffer( BufferTarget.ArrayBuffer, _nodesBatch.BufferIdents.First( ) );
-                        _nodesBatch.BufferVertexAttributeData( positionData.ToArray( ), BufferUsageHint.StaticDraw );
-                        _nodesBatch.BindBuffer( BufferTarget.ElementArrayBuffer, _nodesBatch.BufferIdents.Last( ) );
-                        _nodesBatch.BufferElementArrayData( elementIndices );
-                    }
-
-                    var batch = new RenderBatch
-                    {
-                        ElementStartIndex = 0,
-                        ElementLength = elementIndices.Length,
-                        PrimitiveType = PrimitiveType.Points,
-                        Shader = new ShaderReference( ShaderReference.ReferenceType.System, 0 )
-                    };
-
-                    batch.AssignUniform( "WorldMatrixUniform", Matrix4.Identity );
-                    batch.AssignAttribute( "Colour", new ColorF( Color.White ).RGBA );
-                    batch.BatchObject = _nodesBatch;
-                    yield return batch;
-                }
-            }
-        }
 
         public CollisionObject CollisionObject { get; set; }
         public RenderFlags Flags { get; set; }
@@ -422,9 +339,12 @@ namespace Moonfish.Graphics
             Nodes.SetWorldMatrix( nodeBlock, value );
         }
 
+        /// <summary>
+        /// Updates the matrices for each instance.
+        /// </summary>
         public void Update( )
         {
-            RenderBatches = GetRenderBatches();
+           // RenderBatches = GetRenderBatches();
         }
 
         public void AssignInstanceBasisTransform(int instance, Matrix4 basisMatrix4)
@@ -448,13 +368,13 @@ namespace Moonfish.Graphics
         public void SetAxisAlignedRotation(int instance, float value)
         {
                 _axisAlignedRotation = value;
-                var upAxis = _scenarioObject.InstanceBasisMatrices[instance].Row2.Xyz.Normalized();
-                _scenarioObject.InstanceRotations[instance] = Quaternion.FromAxisAngle(upAxis, _axisAlignedRotation);
+               // var upAxis = _scenarioObject.InstanceBasisMatrices[instance].Row2.Xyz.Normalized();
+                //_scenarioObject.InstanceRotations[instance] = Quaternion.FromAxisAngle(upAxis, _axisAlignedRotation);
         }
 
-        public ScenarioObjectAxisAlignedWrapper( ScenarioObject scenarioObject )
+        public ScenarioObjectAxisAlignedWrapper( ObjectBlock scenarioObject )
         {
-            _scenarioObject = scenarioObject;
+           // _scenarioObject = scenarioObject;
         }
     }
 }

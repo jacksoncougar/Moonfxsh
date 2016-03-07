@@ -111,14 +111,13 @@ namespace Moonfish.Guerilla.Tags
         {
             get
             {
-                var worldMatrix = Matrix4.Identity;
-                var translationMatrix = Matrix4.CreateTranslation(ObjectData.Position);
-                var rotationXMatrix = Matrix4.CreateRotationX(ObjectData.Rotation.Z);
-                var rotationYMatrix = Matrix4.CreateRotationY(-ObjectData.Rotation.Y);
-                var rotationZMatrix = Matrix4.CreateRotationZ(ObjectData.Rotation.X);
-                var scaleMatrix = Matrix4.CreateScale(ObjectData.Scale.NearlyEqual(0) ? 1 : ObjectData.Scale);
+                var translationMatrix = Matrix4.CreateTranslation( ObjectData.Position );
+                var rotationXMatrix = Matrix4.CreateRotationX( ObjectData.Rotation.Z );
+                var rotationYMatrix = Matrix4.CreateRotationY( -ObjectData.Rotation.Y );
+                var rotationZMatrix = Matrix4.CreateRotationZ( ObjectData.Rotation.X );
+                var scaleMatrix = Matrix4.CreateScale( ObjectData.Scale.NearlyEqual( 0 ) ? 1 : ObjectData.Scale );
                 return
-                    worldMatrix*rotationZMatrix*rotationYMatrix*rotationXMatrix*translationMatrix*scaleMatrix;
+                    rotationZMatrix * rotationYMatrix * rotationXMatrix * translationMatrix * scaleMatrix;
             }
         }
     }

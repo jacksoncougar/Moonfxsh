@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BulletSharp;
 using Moonfish.Graphics.Input;
+using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
 using OpenTK;
 
@@ -15,10 +18,11 @@ namespace Moonfish.Graphics
 
         public CollisionManager( Program debug )
         {
-            var defaultCollisionConfiguration = new DefaultCollisionConfiguration( );
-            var collisionDispatcher = new CollisionDispatcher( defaultCollisionConfiguration );
-            var broadphase = new DbvtBroadphase( );
-            this.World = new CollisionWorld( collisionDispatcher, broadphase, defaultCollisionConfiguration );
+            var defaultCollisionConfiguration = new DefaultCollisionConfiguration( ); 
+             var collisionDispatcher =  new CollisionDispatcher(defaultCollisionConfiguration);
+            var broadphase = new AxisSweep3(new Vector3(-100,-100,-100), new Vector3(100,100,100));
+            World = new CollisionWorld( collisionDispatcher, broadphase, defaultCollisionConfiguration );
+
             if ( debug != null )
                 this.World.DebugDrawer = new BulletDebugDrawer( debug );
         }
@@ -28,9 +32,9 @@ namespace Moonfish.Graphics
         /// </summary>
         public void Update( )
         {
-            World.PerformDiscreteCollisionDetection( );
+            World.UpdateAabbs(  );
         }
-
+        
         public void LoadScenarioObjectCollision( ScenarioObject scenarioObject )
         {
             for ( var index = 0; index < scenarioObject.Nodes.Count; index++ )
@@ -59,98 +63,203 @@ namespace Moonfish.Graphics
                 World.AddCollisionObject(collisionObject, (short)CollisionGroup.Objects, (short)(CollisionGroup.Objects | CollisionGroup.Level));
             }
         }
+        
 
-        internal void LoadScenarioCollision(ScenarioStructureBspBlock structureBSP)
+        internal void LoadScenarioCollision( ScenarioStructureBspBlock structureBSP )
         {
-            foreach (var cluster in structureBSP.Clusters)
             {
-                var globalGeometrySectionStructBlock = cluster.ClusterData[ 0 ].Section;
-                GenerateBvhCollisionObjectFromMesh( globalGeometrySectionStructBlock );
+                var meshArray = new InfoTriangleIndexVertexArray( );
+                foreach ( var cluster in structureBSP.Clusters )
+                {
+                    var globalGeometrySectionStructBlock = cluster.ClusterData[ 0 ].Section;
+                    if ( !IsCollisionMesh( globalGeometrySectionStructBlock ) ) continue;
+
+                    var indexedMesh = GenerateBvhCollisionObjectFromMesh( globalGeometrySectionStructBlock , Matrix4.Identity);
+                    meshArray.AddIndexedMesh( indexedMesh );
+                    meshArray.AddIndexedMeshSurfaceData( globalGeometrySectionStructBlock );
+                }
+
+                Vector3 aabbMax;
+                Vector3 aabbMin;
+                meshArray.CalculateAabbBruteForce( out aabbMin, out aabbMax );
+                var bvhTriangleMeshShape = new BvhTriangleMeshShape( meshArray, true, aabbMin, aabbMax, true );
+                bvhTriangleMeshShape.BuildOptimizedBvh( );
+
+                var collisionObject = new CollisionObject
+                {
+                    CollisionShape = bvhTriangleMeshShape
+                };
+                World.AddCollisionObject( collisionObject, CollisionFilterGroups.StaticFilter,
+                    CollisionFilterGroups.DefaultFilter );
             }
-            foreach ( var structureBspInstancedGeometryInstancesBlock in structureBSP.InstancedGeometryInstances )
+
+            foreach (var structureBspInstancedGeometryInstancesBlock in structureBSP.InstancedGeometryInstances)
             {
+                var instanceMeshArray = new InfoTriangleIndexVertexArray();
                 var structureBspInstancedGeometryDefinitionBlock = structureBSP.InstancedGeometriesDefinitions[structureBspInstancedGeometryInstancesBlock.InstanceDefinition];
-                if ( structureBspInstancedGeometryDefinitionBlock.RenderInfo.RenderData.Length < 1 ) continue;
+                if (structureBspInstancedGeometryDefinitionBlock.RenderInfo.RenderData.Length < 1) continue;
 
                 var globalGeometrySectionStructBlock = structureBspInstancedGeometryDefinitionBlock.RenderInfo.RenderData[0].Section;
-                GenerateBvhCollisionObjectFromMesh(globalGeometrySectionStructBlock, structureBspInstancedGeometryInstancesBlock.WorldMatrix);
+                if (!IsCollisionMesh(globalGeometrySectionStructBlock)) continue;
+
+                var indexedMesh = GenerateBvhCollisionObjectFromMesh(globalGeometrySectionStructBlock, structureBspInstancedGeometryInstancesBlock.WorldMatrix);
+                instanceMeshArray.AddIndexedMesh(indexedMesh);
+                instanceMeshArray.AddIndexedMeshSurfaceData(globalGeometrySectionStructBlock);
+
+                Vector3 aabbMin;
+                Vector3 aabbMax;
+                instanceMeshArray.CalculateAabbBruteForce(out aabbMin, out aabbMax);
+                var bvhTriangleMeshShape = new BvhTriangleMeshShape( instanceMeshArray, true, aabbMin, aabbMax, true );
+                bvhTriangleMeshShape.BuildOptimizedBvh();
+
+                var collisionObject = new CollisionObject
+                {
+                    CollisionShape = bvhTriangleMeshShape,
+                    UserObject = "Instance"
+                };
+                World.AddCollisionObject(collisionObject, CollisionFilterGroups.StaticFilter, CollisionFilterGroups.DefaultFilter);
             }
+            World.UpdateAabbs();
+
         }
 
-        private void GenerateBvhCollisionObjectFromMesh(GlobalGeometrySectionStructBlock globalGeometrySectionStructBlock, Matrix4 instanceWorldMatrix = new Matrix4())
+        private static bool IsCollisionMesh( GlobalGeometrySectionStructBlock globalGeometrySectionStructBlock )
         {
-            instanceWorldMatrix = instanceWorldMatrix == Matrix4.Zero
-                ? Matrix4.Identity
-                : instanceWorldMatrix;
+           return globalGeometrySectionStructBlock.Parts.Count(
+                e => e.GlobalGeometryPartNewFlags.HasFlag( GlobalGeometryPartBlockNew.Flags.Decalable ) ) > 0;
+        }
 
-            var count = globalGeometrySectionStructBlock.VertexBuffers[ 0 ].VertexBuffer.Data.Length / 12;
-            var coordinates = new Vector3[count];
-            var normals = new Vector3[count];
-            var tangents = new Vector3[count];
-            var bitangents = new Vector3[count];
 
-            for ( var i = 0; i < count; ++i )
+        private DefaultIndexedMesh GenerateBvhCollisionObjectFromMesh(GlobalGeometrySectionStructBlock globalGeometrySectionStructBlock, Matrix4 instanceWorldMatrix)
+        {
+            return new DefaultIndexedMesh( globalGeometrySectionStructBlock, instanceWorldMatrix );
+        }
+
+        public void Move( CollisionObject item, Matrix4 transform )
+        {
+            var worldTransform = item.WorldTransform;
+            var from = worldTransform.ExtractTranslation( );
+            var to = transform.ExtractTranslation( );
+
+            var closestConvexResultCallback = new ClosestNotMeConvexResultCallback( item, from, to )
             {
-                var data = globalGeometrySectionStructBlock.VertexBuffers[ 0 ].VertexBuffer.Data;
-                coordinates[ i ] = Vector3.TransformPosition( new Vector3(
-                    BitConverter.ToSingle( data, i * 12 + 0 ),
-                    BitConverter.ToSingle( data, i * 12 + 4 ),
-                    BitConverter.ToSingle( data, i * 12 + 8 )), instanceWorldMatrix );
-            }
-            var globalGeometrySectionVertexBufferBlock =
-                globalGeometrySectionStructBlock.VertexBuffers.Single(
-                    x => x.VertexBuffer.Type == VertexAttributeType.TangentSpaceUnitVectorsCompressed );
-            var vectorData = globalGeometrySectionVertexBufferBlock.VertexBuffer.Data;
-            int stride = globalGeometrySectionVertexBufferBlock.VertexBuffer.Type.GetSize( );
-
-            vectorData = Mesh.UnpackNormals( vectorData, VertexAttributeType.TangentSpaceUnitVectorsCompressed, ref stride );
-            for ( var i = 0; i < count; ++i )
-            {
-                normals[ i ] = new Vector3(
-                    BitConverter.ToSingle( vectorData, i * stride + 0 ),
-                    BitConverter.ToSingle( vectorData, i * stride + 4 ),
-                    BitConverter.ToSingle( vectorData, i * stride + 8 ) );
-                tangents[ i ] = new Vector3(
-                    BitConverter.ToSingle( vectorData, i * stride + 12 ),
-                    BitConverter.ToSingle( vectorData, i * stride + 16 ),
-                    BitConverter.ToSingle( vectorData, i * stride + 20 ) );
-                bitangents[ i ] = new Vector3(
-                    BitConverter.ToSingle( vectorData, i * stride + 24 ),
-                    BitConverter.ToSingle( vectorData, i * stride + 28 ),
-                    BitConverter.ToSingle( vectorData, i * stride + 32 ) );
-            }
-
-            var indices = globalGeometrySectionStructBlock.StripIndices.Select( x => ( int ) x.Index ).ToArray( );
-
-            var collisionObject = new CollisionObject
-            {
-                CollisionShape =
-                    new BvhTriangleMeshShape(
-                        new InfoTriangleIndexVertexArray( coordinates, normals, tangents, bitangents, indices ), true, true ),
-                CollisionFlags = CollisionFlags.StaticObject
+                CollisionFilterGroup = ( CollisionFilterGroups ) ( CollisionGroup.Objects | CollisionGroup.Level )
             };
+            World.ConvexSweepTest( ( ConvexShape ) item.CollisionShape, worldTransform, transform, closestConvexResultCallback );
+            if ( closestConvexResultCallback.HasHit )
+            {
+                Vector3 linVel;
+                Vector3 angVel;
+                TransformUtil.CalculateVelocity( worldTransform, transform, 1.0f, out linVel, out angVel );
+                Matrix4 T;
+                TransformUtil.IntegrateTransform( worldTransform, linVel, angVel,
+                    closestConvexResultCallback.ClosestHitFraction, out T );
+                item.WorldTransform = T;
+            }
+            else item.WorldTransform = transform;
+        }
+    }
 
-            World.AddCollisionObject( collisionObject, ( short ) CollisionGroup.Level, ( short ) ( CollisionGroup.Objects ) );
+    public class DefaultIndexedMesh : IndexedMesh
+    {
+        public DefaultIndexedMesh( GlobalGeometrySectionStructBlock geometrySectionStructBlock) : this( geometrySectionStructBlock, Matrix4.Identity )
+        {
+        }
+
+        public DefaultIndexedMesh( GlobalGeometrySectionStructBlock geometrySectionStructBlock, 
+            Matrix4 instanceWorldMatrix)
+        {
+            var collisionParts = geometrySectionStructBlock.Parts.Where(
+                e => e.GlobalGeometryPartNewFlags.HasFlag( GlobalGeometryPartBlockNew.Flags.Decalable ) ).ToArray( );
+
+            if ( collisionParts.Length<=0 )
+            {
+                return;
+            }
+
+           
+            int indicesLength = 0;
+            foreach ( var globalGeometryPartBlockNew in collisionParts )
+            {
+                indicesLength += globalGeometryPartBlockNew.StripLength;
+            }
+
+            var coordinates =
+                geometrySectionStructBlock.VertexBuffers.Single(
+                    e => e.VertexBuffer.Type == VertexAttributeType.CoordinateFloat ).VertexBuffer.Data;
+            var coordinateDataStride = VertexAttributeType.CoordinateFloat.GetSize( );
+            var vertexCount = coordinates.Length / coordinateDataStride;
+
+
+            Allocate(vertexCount, coordinateDataStride, indicesLength / 3, 4 * 3 );
+            
+            using ( BinaryWriter binaryWriter = new BinaryWriter( LockIndices( ) ) )
+            {
+                foreach ( var globalGeometryPartBlockNew in collisionParts )
+                {
+                    int baseIndex = globalGeometryPartBlockNew.StripStartIndex;
+                    for ( int i = 0; i < globalGeometryPartBlockNew.StripLength; ++i )
+                    {
+                        binaryWriter.Write((int)geometrySectionStructBlock.StripIndices[baseIndex + i].Index);
+                    }
+                }
+            }
+
+            using (var binaryReader = new BinaryReader(new MemoryStream(coordinates)))
+            using (var binaryWriter = new BinaryWriter(LockVerts()))
+            {
+                for ( var i = 0; i < vertexCount; ++i )
+                {
+                    var value = binaryReader.ReadVector3( );
+                    Vector3.Transform( ref value, ref instanceWorldMatrix, out value );
+                    binaryWriter.Write( value );
+                }
+            }
+        }
+    }
+
+    public class PartSurfaceInfo
+    {
+        public Vector3[] Normals { get; set; }
+        public Vector3[] Tangents { get; set; }
+        public Vector3[] Bitangents { get; set; }
+
+        public PartSurfaceInfo( GlobalGeometrySectionStructBlock geometrySectionStructBlock )
+        {
+
+            var lightingData = geometrySectionStructBlock.VertexBuffers.Single(
+                e => e.VertexBuffer.Type == VertexAttributeType.UnpackedLightingData ).VertexBuffer.Data;
+            var lightingDataStride = VertexAttributeType.UnpackedLightingData.GetSize( );
+            var count = lightingData.Length / lightingDataStride;
+
+            Normals = new Vector3[count];
+            Bitangents = new Vector3[count];
+            Tangents = new Vector3[count];
+            for ( var i = 0; i < count; ++i )
+            {
+                Normals[ i ] = new Vector3(
+                    BitConverter.ToSingle( lightingData, i * lightingDataStride + 0 ),
+                    BitConverter.ToSingle( lightingData, i * lightingDataStride + 4 ),
+                    BitConverter.ToSingle( lightingData, i * lightingDataStride + 8 ) );
+                Tangents[ i ] = new Vector3(
+                    BitConverter.ToSingle( lightingData, i * lightingDataStride + 12 ),
+                    BitConverter.ToSingle( lightingData, i * lightingDataStride + 16 ),
+                    BitConverter.ToSingle( lightingData, i * lightingDataStride + 20 ) );
+                Bitangents[ i ] = new Vector3(
+                    BitConverter.ToSingle( lightingData, i * lightingDataStride + 24 ),
+                    BitConverter.ToSingle( lightingData, i * lightingDataStride + 28 ),
+                    BitConverter.ToSingle( lightingData, i * lightingDataStride + 32 ) );
+            }
         }
     }
 
     public class InfoTriangleIndexVertexArray : TriangleIndexVertexArray
     {
-        public Vector3[] Normals { get; set; }
-        public Vector3[] Tangents { get; set; }
-        public Vector3[] Bitangents { get; set; }
-        public Vector3[] Coordinates { get; set; }
-        public int[] Indices { get; set; }
+        public List<PartSurfaceInfo> SurfaceInfo { get; set; }= new List<PartSurfaceInfo>();
 
-        public InfoTriangleIndexVertexArray( Vector3[] coordinates, Vector3[] normals, Vector3[] tangents,
-            Vector3[] bitangents, int[] indices )
-        :base(indices, coordinates)
+        public void AddIndexedMeshSurfaceData( GlobalGeometrySectionStructBlock globalGeometrySectionStructBlock )
         {
-            Normals = normals;
-            Tangents = tangents;
-            Bitangents = bitangents;
-            Coordinates = coordinates;
-            Indices = indices;
+            SurfaceInfo.Add( new PartSurfaceInfo( globalGeometrySectionStructBlock ) );
         }
     }
 }

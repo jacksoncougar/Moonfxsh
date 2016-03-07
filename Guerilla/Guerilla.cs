@@ -20,7 +20,7 @@ namespace Moonfish.Guerilla
         public static int AlignmentOf(Type elementType)
         {
             var layoutAttribute = elementType.Attribute(typeof (LayoutAttribute)) as LayoutAttribute;
-            var elementSize = layoutAttribute != null ? layoutAttribute.Alignment : 4;
+            var elementSize = layoutAttribute?.Alignment ?? 4;
             return elementSize;
         }
 
@@ -118,7 +118,7 @@ namespace Moonfish.Guerilla
         public static int SizeOf(Type elementType)
         {
             var layoutAttribute = elementType.Attribute(typeof (LayoutAttribute)) as LayoutAttribute;
-            var elementSize = layoutAttribute != null ? layoutAttribute.Size : Marshal.SizeOf(elementType);
+            var elementSize = layoutAttribute?.Size ?? Marshal.SizeOf(elementType);
             return elementSize;
         }
 
@@ -169,7 +169,7 @@ namespace Moonfish.Guerilla
             return blamPointer.EndAddress;
         }
 
-        public static IList<MoonfishTagField> PostProcess(string name, IList<MoonfishTagField> fields)
+        public static IEnumerable<MoonfishTagField> PostProcess(string name, IList<MoonfishTagField> fields)
         {
             var preProcess =
                 PreProcessFieldsFunctions.Where(x => x.Key == name).Select(x => x.Value).FirstOrDefault();

@@ -10,8 +10,6 @@ namespace Moonfish
             return new StreamPositionHandle(stream);
         }
 
-
-
         public static long Seek(this Stream stream, int address)
         {
             return stream.Seek(address, SeekOrigin.Begin);

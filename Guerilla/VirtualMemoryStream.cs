@@ -13,10 +13,12 @@ namespace Moonfish.Guerilla
             map = new VirtualMappedAddress()
             {
                 Address = virtualAddress,
-                Length = (int) this.Length,
+                Length = (int) Length,
                 Magic = virtualAddress
             };
         }
+
+        public sealed override long Length => base.Length;
 
         public override long Seek(long offset, SeekOrigin origin)
         {
@@ -31,11 +33,11 @@ namespace Moonfish.Guerilla
 
         private long CheckOffset(long value)
         {
-            if (value < 0 || value > this.Length)
+            if (value < 0 || value > Length)
             {
                 return PointerToOffset((int) value);
             }
-            else return value;
+            return value;
         }
 
         private int PointerToOffset(int value)

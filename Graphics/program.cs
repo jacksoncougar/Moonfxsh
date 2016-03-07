@@ -8,7 +8,7 @@ namespace Moonfish.Graphics
 {
     public class Program : IDisposable
     {
-        private static int activeProgram = 0;
+        private static int activeProgram;
 
         private readonly Dictionary<string, int> _attributes;
         private readonly Dictionary<string, int> _uniforms;
@@ -91,7 +91,7 @@ namespace Moonfish.Graphics
             if ( status == 0 )
             {
                 var program_log = GL.GetProgramInfoLog( Ident );
-                MessageBox.Show( String.Format( "Linker failure: {0}\n", program_log ) );
+                MessageBox.Show( $"Linker failure: {program_log}\n" );
             }
             GL.ValidateProgram( Ident );
             int valid;
@@ -101,12 +101,13 @@ namespace Moonfish.Graphics
             if ( valid == 0 )
             {
                 var program_log = GL.GetProgramInfoLog( Ident );
-                MessageBox.Show( String.Format( "Validation failure {0}", program_log ) );
+                MessageBox.Show( $"Validation failure {program_log}" );
             }
 
             foreach ( var shader in shaderList )
             {
                 GL.DetachShader( Ident, shader.ID );
+                GL.DeleteShader( shader.ID );
             }
         }
 
@@ -197,35 +198,6 @@ namespace Moonfish.Graphics
             {
                 AssignActiveProgram( _previousProgramId );
             }
-        }
-    }
-
-    public class SystemProgram : Program
-    {
-        public SystemProgram(List<Shader> shaders)
-            : base("system")
-        {
-            GL.BindAttribLocation(Ident, 0, "position");
-            GL.BindAttribLocation(Ident, 1, "boneIndices");
-            GL.BindAttribLocation(Ident, 2, "boneWeights");
-            GL.BindAttribLocation(Ident, 3, "texcoord");
-            GL.BindAttribLocation(Ident, 4, "normal");
-            GL.BindAttribLocation(Ident, 5, "tangent");
-            GL.BindAttribLocation(Ident, 6, "bitangent");
-            GL.BindAttribLocation(Ident, 7, "colour");
-
-            Link(shaders);
-
-            var p8NormalColourUniform = GetUniformLocation("P8NormalColour");
-            var p8NormalMapUniform = GetUniformLocation("P8NormalMap");
-            var diffuseMapUniform = GetUniformLocation("DiffuseMap");
-            var environmentMapUniform = GetUniformLocation("EnvironmentMap");
-
-           Use();
-           SetUniform(p8NormalColourUniform, 0);
-           SetUniform(p8NormalMapUniform, 3);
-           SetUniform(diffuseMapUniform, 1);
-           SetUniform(environmentMapUniform, 2);
         }
     }
 }

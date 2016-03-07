@@ -8,7 +8,7 @@ using OpenTK;
 namespace Moonfish.Guerilla.Tags
 {
     [TypeConverter(typeof (MarkerGroupConverter))]
-    public partial class RenderModelNodeBlock : ISelectable
+    public partial class RenderModelNodeBlock
     {
         public CollisionObject CollisionObject { get; set; }
 

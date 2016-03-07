@@ -17,7 +17,7 @@ namespace Moonfish.Graphics.Input
         private readonly ClickableCollisionObject _forwardCollisionObject;
         private readonly ClickableCollisionObject _rightCollisionObject;
         private readonly ClickableCollisionObject _upCollisionObject;
-        private TriangleBatch _batch;
+        private VertexArrayObject _batch;
         private bool _hidden;
         protected Vector3 position;
         private Vector2 _registrationScreenspace;
@@ -31,7 +31,7 @@ namespace Moonfish.Graphics.Input
             _upCollisionObject = new ClickableCollisionObject
             {
                 CollisionShape = new SphereShape(0.25f),
-                UserObject = this
+                UserObject = this,
             };
             _rightCollisionObject = new ClickableCollisionObject
             {
@@ -246,7 +246,7 @@ namespace Moonfish.Graphics.Input
 
         private void GenerateModel()
         {
-            _batch = new TriangleBatch();
+            _batch = new VertexArrayObject();
             var coordinates = new[]
             {Vector3.Zero, Vector3.UnitX, Vector3.Zero, Vector3.UnitY, Vector3.Zero, Vector3.UnitZ};
             var colours = GetColours();

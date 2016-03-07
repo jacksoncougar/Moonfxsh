@@ -20,7 +20,7 @@ namespace Moonfish.Tags
 
         public override string ToString()
         {
-            return string.Format("X:{0} Y:{1}", X, Y);
+            return $"{X}, {Y}";
         }
     }
 }

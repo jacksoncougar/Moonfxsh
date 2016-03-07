@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Moonfish.Graphics
@@ -18,8 +20,33 @@ namespace Moonfish.Graphics
             var type = (VertexAttributeType) (msb << 8 | lsb);
             return type;
         }
-    }
 
+        static Dictionary<VertexAttributeType, int> IdLookup =new Dictionary<VertexAttributeType, int>();
+
+        static VertexAttributeTypeExtensions( )
+        {
+            var values = Enum.GetValues( typeof ( VertexAttributeType ) );
+            int index = 1;
+            foreach ( var value in values )
+            {
+                if ( !IdLookup.ContainsKey( ( VertexAttributeType ) value ) )
+                {
+                    IdLookup.Add( ( VertexAttributeType ) value, index <<= 1 );
+                }
+            }
+        }
+
+        public static int GetVertexAttributesId(this VertexAttributeType[] attributes )
+        {
+            var id = 0;
+            foreach ( var vertexAttributeType in attributes )
+            {
+                id |= IdLookup[ vertexAttributeType ];
+            }
+            return id;
+        }
+    }
+    
     public enum VertexAttributeType : short
     {
         None = 0x0000,
@@ -42,5 +69,9 @@ namespace Moonfish.Graphics
         LightmapUVCoordinateTwoXbox = 0x3004,
 
         DiffuseColour = 0x350C,
+
+        UnpackedWorldCoordinateData = 0x2120,
+        UnpackedTextureCoordinateData = 0x2208,
+        UnpackedLightingData = 0x2324,
     }
 }

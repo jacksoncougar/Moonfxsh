@@ -26,6 +26,8 @@ namespace Moonfish.Guerilla.Tags
             GeometryBlockInfo.BlockSize = length;
         }
 
+        public bool IsRenderDataLoaded => RenderData.Length > 0;
+
         public void LoadRenderData()
         {
             var resourceStream = Halo2.GetResourceBlock(GeometryBlockInfo);

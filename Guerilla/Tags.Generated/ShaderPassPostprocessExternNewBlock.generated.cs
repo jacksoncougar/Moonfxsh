@@ -18,7 +18,7 @@ namespace Moonfish.Guerilla.Tags
     
     public partial class ShaderPassPostprocessExternNewBlock : GuerillaBlock, IWriteQueueable
     {
-        private byte[] fieldskip = new byte[3];
+        public byte[] fieldskip = new byte[3];
         public byte ExternIndex;
         public override int SerializedSize
         {

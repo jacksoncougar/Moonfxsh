@@ -201,21 +201,9 @@ namespace Moonfish.Graphics.Input
             // (positionVector, translationVector);
 
             FromQuaternion = Matrix4.CreateFromQuaternion(transform);
-
-            var test = CalculateWorldMatrix(position, rotation, scale)*FromQuaternion;
-            var g = test.ExtractTranslation();
+            
 
 #if DEBUG
-            GLDebug.DrawPoint(_pivot, Color.AliceBlue, 5.0f);
-            GLDebug.DrawPoint(g, Color.Black, 5.0f);
-            GLDebug.Draw2DPoint(originScreenspace, Color.AliceBlue, 5.0f);
-            GLDebug.DrawLine(_pivot, mouseVector, Color.Red, 2.0f);
-            GLDebug.DrawLine(position + vector, position, Color.Aquamarine, 2.0f);
-            GLDebug.DrawLine(position + vector, _pivot, Color.BlueViolet, 1.0f);
-            GLDebug.DrawLine(_pivot + vector, _pivot, Color.RoyalBlue, 2.0f);
-            GLDebug.DrawLine(_pivot + normal, _pivot, Color.Aqua, 2.0f);
-            GLDebug.DrawLine(_pivot + t, _pivot, Color.LawnGreen, 2.0f);
-            //GLDebug.DrawLine(_pivot + axisNormal, _pivot, Color.SpringGreen, 1.0f);
 #endif
 
             SetTransform(transform);

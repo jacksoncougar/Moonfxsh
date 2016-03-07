@@ -50,52 +50,52 @@ namespace Moonfish.Graphics
 
         private void glControl1_Load(object sender, EventArgs e)
         {
-            Scene = new Scene();
-            Application.Idle += HandleApplicationIdle;
-            Scene.OnFrameReady += Scene_OnFrameReady;
+            //Scene = new Scene();
+            //Application.Idle += HandleApplicationIdle;
+            //Scene.OnFrameReady += Scene_OnFrameReady;
 
-            glControl1.Resize += glControl1_Resize;
-            glControl1.MouseDown += Scene.Camera.OnMouseDown;
-            glControl1.MouseMove += Scene.Camera.OnMouseMove;
-            glControl1.MouseUp += Scene.Camera.OnMouseUp;
-            glControl1.MouseCaptureChanged += Scene.Camera.OnMouseCaptureChanged;
+            //glControl1.Resize += glControl1_Resize;
+            //glControl1.MouseDown += Scene.Camera.OnMouseDown;
+            //glControl1.MouseMove += Scene.Camera.OnMouseMove;
+            //glControl1.MouseUp += Scene.Camera.OnMouseUp;
+            //glControl1.MouseCaptureChanged += Scene.Camera.OnMouseCaptureChanged;
 
-            var fileName = Path.Combine(Local.MapsDirectory, "headlong.map");
-            var directory = Path.GetDirectoryName(fileName);
-            var maps = Directory.GetFiles(directory, "*.map", SearchOption.TopDirectoryOnly);
-            var resourceMaps = maps.GroupBy(
-                x => { return Halo2.CheckMapType(x); }
-                ).Where(x => x.Key == MapType.MainMenu
-                             || x.Key == MapType.Shared
-                             || x.Key == MapType.SinglePlayerShared)
-                .Select(g => g.First()).ToList();
-            resourceMaps.ForEach(x => Halo2.LoadResource(new CacheStream(x)));
-            Map = new CacheStream(fileName);
+            //var fileName = Path.Combine(Local.MapsDirectory, "headlong.map");
+            //var directory = Path.GetDirectoryName(fileName);
+            //var maps = Directory.GetFiles(directory, "*.map", SearchOption.TopDirectoryOnly);
+            //var resourceMaps = maps.GroupBy(
+            //    x => { return Halo2.CheckMapType(x); }
+            //    ).Where(x => x.Key == MapType.MainMenu
+            //                 || x.Key == MapType.Shared
+            //                 || x.Key == MapType.SinglePlayerShared)
+            //    .Select(g => g.First()).ToList();
+            //resourceMaps.ForEach(x => Halo2.LoadResource(new CacheStream(x)));
+            //Map = new CacheStream(fileName);
 
-            var ident = Map.Index.Where((TagClass)"hlmt", "masterchief").First().Identifier;
-            Map.Deserialize(ident);
-            var model = (ModelBlock) Map.Deserialize(ident);
-            int width = 1, height = 1;
-            for (int i = 0; i < width*height; ++i)
-            {
-                float x = 0.4f*(i%width);
-                float y = 0.4f*(i/width);
-                var scenarioObject = new ScenarioObject(model)
-                {
-                    WorldMatrix = Matrix4.CreateTranslation(new Vector3(x, y, 0))
-                };
-                Scene.ObjectManager.Add(ident, scenarioObject);
-            }
+            //var ident = Map.Index.Where((TagClass)"hlmt", "masterchief").First().Identifier;
+            //Map.Deserialize(ident);
+            //var model = (ModelBlock) Map.Deserialize(ident);
+            //int width = 1, height = 1;
+            //for (int i = 0; i < width*height; ++i)
+            //{
+            //    float x = 0.4f*(i%width);
+            //    float y = 0.4f*(i/width);
+            //    var scenarioObject = new ScenarioObject(model)
+            //    {
+            //        WorldMatrix = Matrix4.CreateTranslation(new Vector3(x, y, 0))
+            //    };
+            //    Scene.ObjectManager.Add(ident, scenarioObject);
+            //}
 
-            var shaderTags = Map.Index.Where(x => x.Class.ToString() == "shad").ToArray();
-            listBox1.Items.AddRange(shaderTags.Select(x => (object) x.Path).ToArray());
-            listBox1.DisplayMember = "Path";
+            //var shaderTags = Map.Index.Where(x => x.Class.ToString() == "shad").ToArray();
+            //listBox1.Items.AddRange(shaderTags.Select(x => (object) x.Path).ToArray());
+            //listBox1.DisplayMember = "Path";
 
-            listBox1.SelectedIndex = listBox1.FindString(@"objects\characters\masterchief\shaders\masterchief");
+            //listBox1.SelectedIndex = listBox1.FindString(@"objects\characters\masterchief\shaders\masterchief");
 
-            //  firing this method is meant to load the view-projection matrix values into 
-            //  the shader uniforms, and initalizes the camera
-            glControl1_Resize(this, new EventArgs());
+            ////  firing this method is meant to load the view-projection matrix values into 
+            ////  the shader uniforms, and initalizes the camera
+            //glControl1_Resize(this, new EventArgs());
         }
 
         private void glControl1_Resize(object sender, EventArgs e)
@@ -120,7 +120,7 @@ namespace Moonfish.Graphics
             while (IsApplicationIdle())
             {
                 Scene.Update();
-                Scene.RenderFrame();
+                Scene.RenderFrame(0f);
             }
         }
 
@@ -135,13 +135,13 @@ namespace Moonfish.Graphics
 
         private void LoadShader(TagInfo selectedShaderTag)
         {
-            var shader = Map.Deserialize(selectedShaderTag.tagDatum.Identifier) as ShaderBlock;
+            //var shader = Map.Deserialize(selectedShaderTag.tagDatum.Identifier) as ShaderBlock;
 
-            ShaderPostprocessBitmapNewBlock[] textures;
-            material = new MaterialShader(shader, Map, out textures);
-            listBox2.Items.Clear();
-            listBox2.Items.AddRange(material.shaderPassPaths);
-            listBox2.SelectedIndex = 0;
+            //ShaderPostprocessBitmapNewBlock[] textures;
+            //material = new MaterialShader(shader, Map, out textures);
+            //listBox2.Items.Clear();
+            //listBox2.Items.AddRange(material.shaderPassPaths);
+            //listBox2.SelectedIndex = 0;
         }
 
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)

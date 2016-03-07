@@ -22,17 +22,17 @@ namespace Moonfish.Guerilla
         /// <summary>
         /// Virtual address of the tag layout table.
         /// </summary>
-        public const int TagLayoutTableAddress = 0x00901B90;
+        private const int TagLayoutTableAddress = 0x00901B90;
 
         /// <summary>
         /// The number of tag layouts in the tag layout table.
         /// </summary>
-        public const int NumberOfTagLayouts = 120;
+        private const int NumberOfTagLayouts = 120;
 
         /// <summary>
         /// Name of the h2 language library used for localizing user interface strings.
         /// </summary>
-        public const string H2LanguageLibrary = Local.LanguageLibraryPath;
+        private const string H2LanguageLibrary = Local.LanguageLibraryPath;
 
         #region Imports
 
@@ -46,7 +46,7 @@ namespace Moonfish.Guerilla
 
         private delegate IList<MoonfishTagField> ProcessFieldsDelegate(IList<MoonfishTagField> fields);
 
-        public static readonly IntPtr H2LangLib;
+        private static readonly IntPtr H2LangLib;
         public static List<GuerillaTagGroup> h2Tags;
         public static Dictionary<string, Action<BinaryReader, IList<tag_field>>> PostprocessFunctions;
 

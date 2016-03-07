@@ -3,8 +3,9 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Moonfish.Debug_
+namespace Moonfish.Debug
 {
+    // ReSharper disable once UnusedMember.Global
     public class MemoryRead
     {
         private const int PROCESS_WM_READ = 0x0010;

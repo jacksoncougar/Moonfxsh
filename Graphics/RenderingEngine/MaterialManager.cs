@@ -16,7 +16,7 @@ namespace Moonfish.Graphics.RenderingEngine
     public class MaterialManager
     {
         public Dictionary<TagIdent, MaterialShader> _materialDictionary = new Dictionary<TagIdent, MaterialShader>();
-        public Dictionary<TagIdent, Texture> _textureDictionary = new Dictionary<TagIdent, Texture>( );
+        public Dictionary<TagIdent, TextureHandle> _textureDictionary = new Dictionary<TagIdent, TextureHandle>( );
 
         public MaterialShader GetMaterial( TagIdent materialIdent )
         {
@@ -37,7 +37,7 @@ namespace Moonfish.Graphics.RenderingEngine
                 {
                     continue;
                 }
-                var texture = new Texture(  );
+                var texture = new TextureHandle(  );
                 texture.Load(bitmapBlock.Bitmaps[layer]);
                 _textureDictionary.Add(bitmapKey, texture );
             }

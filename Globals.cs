@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Moonfish.Cache;
-using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
 using Moonfish.ResourceManagement;
 using Moonfish.Tags;
@@ -113,14 +112,6 @@ namespace Moonfish
             {
                 return null;
             }
-        }
-
-        public static T GetReferenceObject<T>(TagReference reference) where T : GuerillaBlock
-        {
-            if (mapStream == null) return null;
-            if (reference.Ident == TagIdent.NullIdentifier) return null;
-
-            return (T) mapStream.Deserialize(reference.Ident);
         }
 
         public static ResourceStream GetResourceBlock(GlobalGeometryBlockInfoStructBlock blockInfo)

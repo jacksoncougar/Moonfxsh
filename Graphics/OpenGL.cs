@@ -18,8 +18,7 @@ namespace Moonfish.Graphics
             timer.Tick += delegate
             {
                 if ( messageString.Length <= 0 ) return;
-
-                Debug.WriteLine( messageString );
+                System.Diagnostics.Debug.WriteLine( messageString );
                 messageString.Clear( );
             };
             timer.Start( );
@@ -67,7 +66,7 @@ namespace Moonfish.Graphics
             messageString.AppendLine( ptrToStringAnsi );
             if ( messageString.Length + length > messageString.Capacity || type != DebugType.DebugTypeOther)
             {
-                Debug.WriteLine( messageString );
+                System.Diagnostics.Debug.WriteLine( messageString );
                 messageString.Clear( );
             }
             if (type == DebugType.DebugTypeError)

@@ -90,10 +90,9 @@ namespace Moonfish.Tags
             return this == (TagClass) obj;
         }
 
-        public override int GetHashCode()
+        public override int GetHashCode( )
         {
-            var i = (int) this;
-            return i.GetHashCode();
+            return ( int ) this;
         }
 
         public override string ToString()

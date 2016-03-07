@@ -82,7 +82,7 @@ namespace Moonfish.Graphics
             return handles.ToArray( );
         }
 
-        public void UsePass( int index, Dictionary<TagIdent, List<Texture>> textures )
+        public void UsePass( int index, Dictionary<TagIdent, List<Graphics.TextureHandle>> textures )
         {
             ActiveShaderPassIndex = index;
             if ( ActiveShaderPassIndex < 0 )

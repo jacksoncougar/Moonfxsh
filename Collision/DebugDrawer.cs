@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Moonfish.Collision
 {
-    public class Line : IRenderable, IDisposable
+    public class Line : IDisposable
     {
         private int vao, arrayBuffer;
 
@@ -45,7 +45,7 @@ namespace Moonfish.Collision
     }
 
 
-    public class Point : IRenderable, IDisposable
+    public class Point : IDisposable
     {
         private int vao, arrayBuffer;
 

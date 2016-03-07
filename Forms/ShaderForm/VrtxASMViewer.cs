@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using Be.Windows.Forms;
+using Moonfish.Debug;
 using Moonfish.Graphics;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.CodeDom;

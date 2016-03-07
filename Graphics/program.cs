@@ -200,33 +200,4 @@ namespace Moonfish.Graphics
             }
         }
     }
-
-    public class SystemProgram : Program
-    {
-        public SystemProgram(List<Shader> shaders)
-            : base("system")
-        {
-            GL.BindAttribLocation(Ident, 0, "position");
-            GL.BindAttribLocation(Ident, 1, "boneIndices");
-            GL.BindAttribLocation(Ident, 2, "boneWeights");
-            GL.BindAttribLocation(Ident, 3, "texcoord");
-            GL.BindAttribLocation(Ident, 4, "normal");
-            GL.BindAttribLocation(Ident, 5, "tangent");
-            GL.BindAttribLocation(Ident, 6, "bitangent");
-            GL.BindAttribLocation(Ident, 7, "colour");
-
-            Link(shaders);
-
-            var p8NormalColourUniform = GetUniformLocation("P8NormalColour");
-            var p8NormalMapUniform = GetUniformLocation("P8NormalMap");
-            var diffuseMapUniform = GetUniformLocation("DiffuseMap");
-            var environmentMapUniform = GetUniformLocation("EnvironmentMap");
-
-           Use();
-           SetUniform(p8NormalColourUniform, 0);
-           SetUniform(p8NormalMapUniform, 3);
-           SetUniform(diffuseMapUniform, 1);
-           SetUniform(environmentMapUniform, 2);
-        }
-    }
 }

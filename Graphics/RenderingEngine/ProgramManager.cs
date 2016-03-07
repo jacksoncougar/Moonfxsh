@@ -21,8 +21,8 @@ namespace Moonfish.Graphics
         {
             Materials = new Dictionary<TagIdent, MaterialShader>( );
             Shaders = new Dictionary<string, Program>( );
-            LoadedTextureArrays = new Dictionary<TagIdent, List<Texture>>( );
-            LightmapTextures = new Dictionary<Tuple<int, int>, Texture>( );
+            LoadedTextureArrays = new Dictionary<TagIdent, List<TextureHandle>>( );
+            LightmapTextures = new Dictionary<Tuple<int, int>, TextureHandle>( );
             //LoadDefaultShader( );
             //LoadSystemShader( );
             //LoadScreenShader( );
@@ -31,8 +31,8 @@ namespace Moonfish.Graphics
             LoadDebug2Shader( );
         }
 
-        public Dictionary<Tuple<int, int>, Texture> LightmapTextures { get; set; }
-        public Dictionary<TagIdent, List<Texture>> LoadedTextureArrays { get; set; }
+        public Dictionary<Tuple<int, int>, TextureHandle> LightmapTextures { get; set; }
+        public Dictionary<TagIdent, List<TextureHandle>> LoadedTextureArrays { get; set; }
         public Dictionary<TagIdent, MaterialShader> Materials { get; set; }
 
         public Program ScreenProgram
@@ -78,7 +78,7 @@ namespace Moonfish.Graphics
             return GetEnumerator( );
         }
 
-        public Texture GetLightmapTexture( int bitmapIndex, int paletteIndex )
+        public TextureHandle GetLightmapTexture( int bitmapIndex, int paletteIndex )
         {
             return LightmapTextures[ new Tuple<int, int>( bitmapIndex, paletteIndex ) ];
         }
@@ -139,9 +139,9 @@ namespace Moonfish.Graphics
             StructureLightmapPaletteColorBlock colourPaletteData, TextureMagFilter textureMagFilter,
             TextureMinFilter textureMinFilter )
         {
-            var texture = new Texture( );
+            var texture = new TextureHandle( );
             var paletteData = colourPaletteData.GetColourPaletteData( );
-            texture.LoadPalettedTexture( bitmapDataBlock, paletteData, textureMagFilter, textureMinFilter );
+            //texture.LoadPalettedTexture( bitmapDataBlock, paletteData, textureMagFilter, textureMinFilter );
             OpenGL.GetError( );
 
             var key = new Tuple<int, int>( bitmapIndex, paletteIndex );
@@ -163,11 +163,11 @@ namespace Moonfish.Graphics
 
             foreach ( var bitmapDataBlock in bitmapGroup.Get<BitmapBlock>( ).Bitmaps )
             {
-                var texture = new Texture( );
+                var texture = new TextureHandle( );
                 texture.Load( bitmapDataBlock, magFilter, minFilter );
 
                 if ( !LoadedTextureArrays.ContainsKey( bitmapGroup ) )
-                    LoadedTextureArrays[ bitmapGroup ] = new List<Texture>( );
+                    LoadedTextureArrays[ bitmapGroup ] = new List<TextureHandle>( );
 
                 if ( LoadedTextureArrays[ bitmapGroup ].Contains( texture ) ) return;
                 LoadedTextureArrays[ bitmapGroup ].Add( texture );

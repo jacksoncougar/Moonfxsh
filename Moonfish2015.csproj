@@ -149,7 +149,6 @@
     <Compile Include="Collision\DebugDrawer.cs" />
     <Compile Include="Collision\Shapes.cs" />
     <Compile Include="Collision\TriangleRayIntersection.cs" />
-    <Compile Include="Compiler\Decompiler.cs" />
     <Compile Include="Debug\Memory.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Debug\BitArray.cs" />
@@ -252,6 +251,7 @@
     <Compile Include="Graphics\Blam!\SwizzleSuffix.cs" />
     <Compile Include="Graphics\Blam!\VertexShader.cs" />
     <Compile Include="Graphics\Blam!\WriteMask.cs" />
+    <Compile Include="Graphics\ColorExtensions.cs" />
     <Compile Include="Graphics\RenderingEngine\D3d8Types.cs" />
     <Compile Include="Graphics\RenderingEngine\Extensions.cs" />
     <Compile Include="Graphics\RenderingEngine\InstanceData.cs" />
@@ -276,19 +276,16 @@
     <Compile Include="GlobalStrings.cs" />
     <Compile Include="Graphics\RenderingEngine\Bucket.cs" />
     <Compile Include="Graphics\RenderingEngine\BucketManager.cs" />
-    <Compile Include="Graphics\ClosestNotMeConvexResultCallback.cs" />
-    <Compile Include="Graphics\ClosestRayResultCullFaceCallback.cs" />
+    <Compile Include="Graphics\Input\ClosestNotMeConvexResultCallback.cs" />
+    <Compile Include="Graphics\Input\ClosestRayResultCullFaceCallback.cs" />
     <Compile Include="Graphics\CollisionGroup.cs" />
-    <Compile Include="Graphics\ConvexHullCaster.cs" />
-    <Compile Include="Graphics\DetailLevel.cs" />
+    <Compile Include="Graphics\Input\ConvexHullCaster.cs" />
+    <Compile Include="Graphics\RenderingEngine\DetailLevel.cs" />
     <Compile Include="Graphics\Heirarchy\INode.cs" />
-    <Compile Include="Graphics\INode.cs" />
     <Compile Include="Graphics\Input\ClickableCollisionObject.cs" />
     <Compile Include="Graphics\Input\GizmoBase.cs" />
     <Compile Include="Graphics\Input\RotationGizmo.cs" />
     <Compile Include="Graphics\Input\TranslationGizmo.cs" />
-    <Compile Include="Graphics\IRenderable.cs" />
-    <Compile Include="Graphics\LevelMeshManager.cs" />
     <Compile Include="Graphics\MathHelper.cs" />
     <Compile Include="Graphics\Primitives\GLDebug.cs" />
     <Compile Include="Graphics\Primitives\Line.cs" />
@@ -301,7 +298,6 @@
     <Compile Include="Graphics\CollisionManager.cs" />
     <Compile Include="Graphics\Scene\DynamicScene.cs" />
     <Compile Include="Graphics\Scene\DynamicScene.Events.cs" />
-    <Compile Include="Graphics\Interfaces.cs" />
     <Compile Include="Forms\Scenario\SceneView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -317,8 +313,7 @@
     <Compile Include="Graphics\GraphicsEvents.cs" />
     <Compile Include="Graphics\GraphicsExtensions.cs" />
     <Compile Include="Graphics\Primitives\Grid.cs" />
-    <Compile Include="Graphics\MarkerWrapper.cs" />
-    <Compile Include="Graphics\MaterialShader.cs" />
+    <Compile Include="Graphics\RenderingEngine\MaterialShader.cs" />
     <Compile Include="Graphics\Mesh.cs" />
     <Compile Include="Graphics\MoonfishColours.cs" />
     <Compile Include="Graphics\Primitives\Conic.cs" />
@@ -333,13 +328,10 @@
     <Compile Include="Graphics\RenderObject.cs" />
     <Compile Include="Graphics\ScenarioObject.cs" />
     <Compile Include="Graphics\Scene\Scene.cs" />
-    <Compile Include="Graphics\Section.cs" />
     <Compile Include="Graphics\Shader.cs" />
     <Compile Include="Graphics\Swizzler.cs" />
     <Compile Include="Graphics\Texture.cs" />
     <Compile Include="Graphics\Camera\Track.cs" />
-    <Compile Include="Graphics\TriangleBucket.cs" />
-    <Compile Include="Graphics\UniformBuffer.cs" />
     <Compile Include="Graphics\VertexAttributeType.cs" />
     <Compile Include="Graphics\VertexFunctions.cs" />
     <Compile Include="Graphics\Camera\Viewport.cs" />
@@ -353,6 +345,7 @@
     <Compile Include="Guerilla\IReadQueueable.cs" />
     <Compile Include="Guerilla\Preprocess\Bsp3dNodesBlock.cs" />
     <Compile Include="Guerilla\Preprocess\ScenarioStructureBspReferenceBlock.cs" />
+    <Compile Include="Guerilla\QueueableBinaryReader.cs" />
     <Compile Include="Guerilla\Tags.Generated\ActorStartingLocationsBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\AdditionalNodeDataBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\AiAnimationReferenceBlock.generated.cs" />
@@ -1314,7 +1307,6 @@
     <Compile Include="Guerilla\Tags.Generated\ZoneBlock.generated.cs" />
     <Compile Include="Guerilla\Tags.Generated\ZoneSetBlock.generated.cs" />
     <Compile Include="Guerilla\GuerillaBlock.cs" />
-    <Compile Include="Guerilla\GuerillaBlockAllocator.cs" />
     <Compile Include="Guerilla\CodeDom\GuerillaBlockClass.cs" />
     <Compile Include="Guerilla\GuerillaBlockExtensions.cs" />
     <Compile Include="Guerilla\IWriteQueueable.cs" />
@@ -1329,8 +1321,6 @@
     <Compile Include="Guerilla\GuerillaExtensions.cs" />
     <Compile Include="Guerilla\GuerillaToCs.cs" />
     <Compile Include="Guerilla\GuerillaToEnt.cs" />
-    <Compile Include="Guerilla\IGuerilla.cs" />
-    <Compile Include="Guerilla\IGuerillaExtensions.cs" />
     <Compile Include="Guerilla\Reflection\EnumInfo.cs" />
     <Compile Include="Guerilla\Reflection\FieldInfo.cs" />
     <Compile Include="Guerilla\Reflection\GuerillaName.cs" />
@@ -1395,11 +1385,10 @@
     <Compile Include="ValueTypes\TagStructFieldAttribute.cs" />
     <Compile Include="Guerilla\Validator.cs" />
     <Compile Include="Guerilla\VirtualMemoryStream.cs" />
-    <Compile Include="IResource.cs" />
     <Compile Include="Local.cs" />
     <Compile Include="main.cs" />
     <Compile Include="Cache\MapType.cs" />
-    <Compile Include="OpenTKExtensions.cs" />
+    <Compile Include="Graphics\OpenTKExtensions.cs" />
     <Compile Include="Padding.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -1443,7 +1432,7 @@
     <Compile Include="ValueTypes\ShortBlockIndex2.cs" />
     <Compile Include="ValueTypes\String256.cs" />
     <Compile Include="ValueTypes\String32.cs" />
-    <Compile Include="ValueTypes\StringID.cs" />
+    <Compile Include="ValueTypes\StringIdent.cs" />
     <Compile Include="ValueTypes\TagClass.cs" />
     <Compile Include="ValueTypes\TagIdent.cs" />
     <Compile Include="ValueTypes\TagReference.cs" />
@@ -1583,6 +1572,7 @@
     <Folder Include="bin\Debug\" />
     <Folder Include="bin\Release\" />
     <Folder Include="bin\x86\Release\" />
+    <Folder Include="Compiler\" />
     <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>
   <ItemGroup>

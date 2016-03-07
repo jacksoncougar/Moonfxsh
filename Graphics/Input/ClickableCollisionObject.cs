@@ -24,32 +24,27 @@ namespace Moonfish.Graphics.Input
 
         public void OnMouseDown(object sender, SceneMouseEventArgs e)
         {
-            Debug.WriteLine("OnMouseDown on {0}", UserObject);
-            if (MouseDown != null) MouseDown(sender, e);
+            MouseDown?.Invoke(sender, e);
         }
 
         public void OnMouseMove(object sender, SceneMouseEventArgs e)
         {
-            Debug.WriteLine("OnMouseMove on {0}", UserObject);
-            if (MouseMove != null) MouseMove(sender, e);
+            MouseMove?.Invoke(sender, e);
         }
 
         public void OnMouseUp(object sender, SceneMouseEventArgs e)
         {
-            Debug.WriteLine("OnMouseUp on {0}", UserObject);
-            if (MouseUp != null) MouseUp(sender, e);
+            MouseUp?.Invoke(sender, e);
         }
 
         public void OnMouseClick(object sender, SceneMouseEventArgs e)
         {
-            Debug.WriteLine("OnMouseClick on {0}", UserObject);
-            if (MouseClick != null) MouseClick(sender, e);
+            MouseClick?.Invoke(sender, e);
         }
 
         public void OnMouseCaptureChanged(object sender, SceneMouseEventArgs e)
         {
-            Debug.WriteLine("OnMouseCaptureChanged on {0}", UserObject);
-            if (MouseCaptureChanged != null) MouseCaptureChanged(sender, e);
+            MouseCaptureChanged?.Invoke(sender, e);
         }
     }
 }

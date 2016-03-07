@@ -10,12 +10,14 @@ namespace Moonfish.Graphics.RenderingEngine
         public static EventHandler<D3DCMPFUNC> AlphaFuncChanged;
         public static EventHandler<float> AlphaRefChanged;
 
+        /// <summary>
+        ///     Tracks changes across the render states to avoid dispatching redundant calls
+        /// </summary>
         private static readonly Dictionary<D3DRENDERSTATETYPE, int> CurrentState =
             new Dictionary<D3DRENDERSTATETYPE, int>( );
 
-
         /// <summary>
-        ///     Updates render state values
+        ///     Handles dispatching state changes for updating
         /// </summary>
         /// <param name="stateHandle"></param>
         public static void DispatchState( MaterialShader.RenderStateHandle stateHandle )
@@ -28,11 +30,11 @@ namespace Moonfish.Graphics.RenderingEngine
             switch ( stateHandle.RenderState )
             {
                 case D3DRENDERSTATETYPE.ALPHATESTENABLE:
-                    {
-                        var enable = stateHandle.unionValue > 0;
-                        if (enable) GL.Enable(EnableCap.Blend);
-                        else GL.Disable(EnableCap.Blend);
-                    }
+                {
+                    var enable = stateHandle.unionValue > 0;
+                    if ( enable ) GL.Enable( EnableCap.Blend );
+                    else GL.Disable( EnableCap.Blend );
+                }
                     break;
                 case D3DRENDERSTATETYPE.ALPHAFUNC:
                 {
@@ -40,10 +42,10 @@ namespace Moonfish.Graphics.RenderingEngine
                     AlphaFuncChanged?.Invoke( null, function );
                 }
                     break;
-                    case D3DRENDERSTATETYPE.ALPHAREF:
+                case D3DRENDERSTATETYPE.ALPHAREF:
                 {
                     var alphaReference = ( float ) stateHandle.unionValue / byte.MaxValue;
-                        AlphaRefChanged?.Invoke( null, alphaReference );
+                    AlphaRefChanged?.Invoke( null, alphaReference );
                 }
                     break;
                 case D3DRENDERSTATETYPE.COLORWRITEENABLE:
@@ -82,6 +84,11 @@ namespace Moonfish.Graphics.RenderingEngine
             CurrentState[ stateHandle.RenderState ] = stateHandle.unionValue;
         }
 
+        /// <summary>
+        ///     Enables the GL.BlendFunc parameter
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="stateHandle"></param>
         private static void EnableBlendFunc( D3DRENDERSTATETYPE type, MaterialShader.RenderStateHandle stateHandle )
         {
             var other = type == D3DRENDERSTATETYPE.SRCBLEND ? D3DRENDERSTATETYPE.DESTBLEND : D3DRENDERSTATETYPE.SRCBLEND;
@@ -90,7 +97,7 @@ namespace Moonfish.Graphics.RenderingEngine
                 ? value
                 : 0;
             var otherBlend = ( D3DBLEND ) value;
-            var blend = ( D3DBLEND ) ( stateHandle.unionValue );
+            var blend = ( D3DBLEND ) stateHandle.unionValue;
 
             if ( other == D3DRENDERSTATETYPE.SRCBLEND )
                 GL.BlendFunc( otherBlend.ConvertToBlendingFactorSrc( ), blend.ConvertToBlendingFactorDest( ) );

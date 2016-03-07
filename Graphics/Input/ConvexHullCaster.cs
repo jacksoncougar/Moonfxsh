@@ -120,7 +120,7 @@ namespace Moonfish.Graphics
 
             var extractRotation = Matrix4.CreateFromQuaternion( collisionObject.WorldTransform.ExtractRotation( ) );
             var vector3 = destination + surfaceNormal * 1.5f;
-            Debug.WriteLine(vector3);
+
             var extractTranslation = Matrix4.CreateTranslation(vector3);
             var from = basisMatrix * extractTranslation;
             var to = basisMatrix * Matrix4.CreateTranslation( destination );
@@ -138,7 +138,7 @@ namespace Moonfish.Graphics
                 Matrix4 T;
                 TransformUtil.IntegrateTransform(from, linVel, angVel, convexCallback.ClosestHitFraction, out T );
 
-                Debug.Write( convexCallback.ClosestHitFraction );
+
                 //.WorldTransform = basisMatrix * T;
 
                 //var instanceBasis = 

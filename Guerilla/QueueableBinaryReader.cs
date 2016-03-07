@@ -1,62 +1,51 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
+using Fasterflect;
+using Moonfish.Cache;
 using Moonfish.Tags;
 
 namespace Moonfish.Guerilla
 {
-    public class QueueableBinaryWriter : BinaryWriter
+    public class QueueableBinaryReader : BinaryReader
     {
         private readonly Dictionary<object, QueueItem> _lookupDictionary;
         private readonly Queue<QueueItem> _queue;
         private int _queueAddress;
 
-        public QueueableBinaryWriter( Stream output, int serializedSize ) : base( output, Encoding.Default, true )
+        public QueueableBinaryReader( Stream input, int serializedSize )
+            : base( input, Encoding.Default, true )
         {
             _queueAddress = serializedSize;
             _queue = new Queue<QueueItem>( 100 );
             _lookupDictionary = new Dictionary<object, QueueItem>( 100 );
         }
 
-        public void QueueWrite( GuerillaBlock[] dataBlocks )
+        public void QueueRead( GuerillaBlock[] dataBlocks, BlamPointer dataPointer )
         {
-            //  if the array is empty there's nothing to write, so return
+            //  if the array is empty there's nothing to read, so return
             if ( dataBlocks.Length <= 0 ) return;
 
-            Enqueue( dataBlocks );
-
-            //  all guerilla blocks implement IWriteQueueable
-            foreach ( IWriteQueueable block in dataBlocks )
-                block.QueueWrites( this );
+            Enqueue( dataBlocks, dataPointer );
         }
 
-        public void QueueWrite( byte[] data )
+        public void QueueRead( byte[] data, BlamPointer dataPointer )
         {
             //  if the array is empty there's nothing to write, so return
             if ( data.Length <= 0 ) return;
 
-            Enqueue( data );
+            Enqueue( data, dataPointer );
         }
 
-        public void QueueWrite( short[] data )
+        public void QueueRead( short[] data, BlamPointer dataPointer )
         {
             //  if the array is empty there's nothing to write, so return
             if ( data.Length <= 0 ) return;
 
-            Enqueue( data );
+            Enqueue( data, dataPointer );
         }
 
-        public void WritePointer( object instanceFIeld )
-        {
-            QueueItem queueItem;
-            this.Write( _lookupDictionary.TryGetValue( instanceFIeld, out queueItem )
-                ? queueItem.Pointer
-                : BlamPointer.Null );
-        }
-
-        public void WriteQueue( )
+        public void ReadQueue( )
         {
             while ( _queue.Count > 0 )
             {
@@ -66,29 +55,22 @@ namespace Moonfish.Guerilla
                 //  cache.
                 if ( !BlamPointer.IsNull( item.Pointer ) && BaseStream.Position != item.Pointer.StartAddress )
                 {
-#if DEBUG
                     var offset = item.Pointer.StartAddress - BaseStream.Position;
-                    if ( offset < 0 )
-                    {
-                        throw new Exception( "That breaks the maps" );
-                    }
-#endif
-                    BaseStream.Seek( item.Pointer.StartAddress );
+                    BaseStream.Seek( offset, SeekOrigin.Current );
                 }
 
                 var dataQueueItem = item as ByteDataQueueItem;
                 if ( dataQueueItem != null )
                 {
-                    Write( dataQueueItem.Data );
+                    dataQueueItem.Data = ReadBytes( item.Pointer.ElementCount );
                     continue;
                 }
 
                 var shortDataQueueItem = item as ShortDataQueueItem;
                 if ( shortDataQueueItem != null )
                 {
-                    var buffer = shortDataQueueItem.Data;
-                    for ( var i = 0; i < buffer.Length; ++i )
-                        Write( shortDataQueueItem.Data[ i ] );
+                    for ( var i = 0; i < item.Pointer.ElementCount; ++i )
+                        shortDataQueueItem.Data[ i ] = ReadInt16( );
                     continue;
                 }
 
@@ -98,14 +80,9 @@ namespace Moonfish.Guerilla
                 //  then foreach element in the block array call the write method
                 foreach ( GuerillaBlock block in guerillaBlockQueueItem.DataBlocks )
                 {
-                    block.Write_( this );
+                    block.ReadFields( this );
                 }
             }
-        }
-
-        internal void QueueWrite( byte[] data, int alignment )
-        {
-            Enqueue( data, alignment );
         }
 
         private QueueItem Dequeue( )
@@ -115,35 +92,25 @@ namespace Moonfish.Guerilla
             return queueItem;
         }
 
-        private void Enqueue( byte[] data, int alignment = 4 )
+        private void Enqueue( byte[] data, BlamPointer dataPointer )
         {
-            var blamPointer = new BlamPointer( data.Length, _queueAddress, 1, alignment );
-            var dataQueueItem = new ByteDataQueueItem( data ) {Pointer = blamPointer};
+            var dataQueueItem = new ByteDataQueueItem( data ) {Pointer = dataPointer};
             _lookupDictionary[ data ] = dataQueueItem;
             _queue.Enqueue( dataQueueItem );
-            _queueAddress = blamPointer.EndAddress;
         }
 
-        private void Enqueue( short[] data )
+        private void Enqueue( short[] data, BlamPointer dataPointer )
         {
-            var blamPointer = new BlamPointer( data.Length, _queueAddress, 2 );
-            var dataQueueItem = new ShortDataQueueItem( data ) {Pointer = blamPointer};
+            var dataQueueItem = new ShortDataQueueItem( data ) {Pointer = dataPointer};
             _lookupDictionary[ data ] = dataQueueItem;
             _queue.Enqueue( dataQueueItem );
-            _queueAddress = blamPointer.EndAddress;
         }
 
-        private void Enqueue( GuerillaBlock[] dataBlocks )
+        private void Enqueue( GuerillaBlock[] dataBlocks, BlamPointer dataPointer )
         {
-            var elementSize = dataBlocks.GetElementSize( );
-            var alignment = dataBlocks.GetAlignment( );
-            var blamPointer = new BlamPointer( dataBlocks.Length, _queueAddress, elementSize,
-                alignment );
-
-            var guerillaQueueItem = new GuerillaQueueItem( dataBlocks ) {Pointer = blamPointer};
+            var guerillaQueueItem = new GuerillaQueueItem( dataBlocks ) {Pointer = dataPointer};
             _lookupDictionary[ dataBlocks ] = guerillaQueueItem;
             _queue.Enqueue( guerillaQueueItem );
-            _queueAddress = blamPointer.EndAddress;
         }
 
         private abstract class QueueItem
@@ -159,7 +126,7 @@ namespace Moonfish.Guerilla
                 Data = data;
             }
 
-            public byte[] Data { get; private set; }
+            public byte[] Data { get; set; }
             public override BlamPointer Pointer { get; set; }
 
             public override object ReferenceField

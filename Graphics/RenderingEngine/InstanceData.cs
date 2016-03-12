@@ -5,7 +5,7 @@ namespace Moonfish.Graphics
     /// <summary>
     ///     Contains instance data ( colour, orientation, etc )
     /// </summary>
-    internal struct InstanceData
+    public struct InstanceData
     {
         private Vector4 Colour;
         public Matrix4 worldMatrix;

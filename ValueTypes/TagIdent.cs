@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using JetBrains.Annotations;
 using Moonfish.Guerilla;
 
 namespace Moonfish.Tags
@@ -87,6 +88,12 @@ namespace Moonfish.Tags
         public bool Equals(TagIdent other)
         {
             return Index.Equals(other.Index) && Salt.Equals(other.Salt);
+        }
+
+        [Pure]
+        public string GetPath( )
+        {
+            return Halo2.Paths[ Index ];
         }
     }
 }

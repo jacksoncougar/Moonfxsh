@@ -28,7 +28,8 @@ namespace Moonfish
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run( new MainForm(  ));
+            var _cacheStream = CacheStream.Open(Path.Combine(Local.MapsDirectory, "ascension.map"));
+            Application.Run( new MainForm());
         }
     }
 }

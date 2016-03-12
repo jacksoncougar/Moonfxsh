@@ -30,7 +30,7 @@ namespace Moonfish.Graphics
 
             _orbitTrack.Update(70, 60);
 
-            Update();
+            Update(0f, 0f);
         }
 
         public new Vector3 Position
@@ -136,11 +136,24 @@ namespace Moonfish.Graphics
             if (MouseUp != null) MouseUp(this, e);
         }
 
-        public void Update()
+        public void Update(float delta, float time)
         {
             Position = Track.WorldMatrix.ExtractTranslation();
             Rotation = Track.WorldMatrix.ExtractRotation();
+            SimulateWind(delta, time);
             if (CameraUpdated != null) CameraUpdated(this, new CameraEventArgs(this));
+        }
+
+        Random random =new Random();
+        private void SimulateWind( float delta, float time )
+        {
+            // map to [-0.5, 0.5], over 10 seconds
+            var value = (( time % 10 ) - 5) / 1000;
+            System.Diagnostics.Debug.WriteLine(value);
+            var rand0 = random.Next(0, 1);
+            var rand1 = random.Next(0, 1);
+            //var output = (float)(value * value * value) / 16f;
+            _orbitTrack.ArcRotate( rand0 < 1 ? value : -value, rand1 < 1 ? -value : value );
         }
 
         public event ViewMatrixChangedEventHandler ViewMatrixChanged;

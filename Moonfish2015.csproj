@@ -125,11 +125,13 @@
       <HintPath>packages\DockPanelSuite.ThemeVS2013Blue.2.10.0-beta2\lib\net40\ThemeVS2013Blue.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="UIAutomationProvider" />
     <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
       <HintPath>packages\DockPanelSuite.2.10.0-beta2\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\CacheStream.cs" />
@@ -183,6 +185,7 @@
     <Compile Include="Forms\GuerillaBlockPropertyViewer.Designer.cs">
       <DependentUpon>GuerillaBlockPropertyViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ScenarioView\CachePath.cs" />
     <Compile Include="Forms\Scenario\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -221,6 +224,27 @@
     <Compile Include="Forms\ShaderForm\VrtxASMViewer.Designer.cs">
       <DependentUpon>VrtxASMViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TagBlock Editor\AddressBar.xaml.cs">
+      <DependentUpon>AddressBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TagBlock Editor\BlockResourceViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\TagBlock Editor\BlockResourceViewer.Designer.cs">
+      <DependentUpon>BlockResourceViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TagBlock Editor\Editor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TagBlock Editor\Editor.Designer.cs">
+      <DependentUpon>Editor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ScenarioView\ScenarioView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\ScenarioView\ScenarioView.Designer.cs">
+      <DependentUpon>ScenarioView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Graphics\Blam!\BitExtensions.cs" />
     <Compile Include="Graphics\Blam!\VertexProgramInstruction.cs" />
     <Compile Include="Forms\VrtxViewer.cs">
@@ -255,6 +279,7 @@
     <Compile Include="Graphics\RenderingEngine\D3d8Types.cs" />
     <Compile Include="Graphics\RenderingEngine\Extensions.cs" />
     <Compile Include="Graphics\RenderingEngine\InstanceData.cs" />
+    <Compile Include="Graphics\RenderingEngine\InstanceManager.cs" />
     <Compile Include="Graphics\RenderingEngine\MaterialManager.cs" />
     <Compile Include="Graphics\RenderingEngine\PatchData.cs" />
     <Compile Include="Graphics\RenderingEngine\StateManager.cs" />
@@ -1489,6 +1514,11 @@
     <None Include="data\standard.vert" />
     <None Include="Documentation\jmad animations raw.pdf" />
     <None Include="Documentation\sbsp &amp; lightmap meta.pdf" />
+    <None Include="Documentation\Shaders\envytools.pdf" />
+    <None Include="Documentation\Shaders\Feb11-programmable-hardware1.pdf" />
+    <None Include="Documentation\Shaders\set-study-gf3.pdf" />
+    <None Include="Documentation\Shaders\tutorial-graphics-hardware.pdf" />
+    <None Include="Documentation\vertex program documentation.pdf" />
     <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <None Include="packages.config" />
     <Compile Include="Guerilla\Tags\Shader.Code.cs" />
@@ -1538,6 +1568,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ShaderForm\VrtxASMViewer.resx">
       <DependentUpon>VrtxASMViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TagBlock Editor\BlockResourceViewer.resx">
+      <DependentUpon>BlockResourceViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TagBlock Editor\Editor.resx">
+      <DependentUpon>Editor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VrtxViewer.resx">
       <DependentUpon>VrtxViewer.cs</DependentUpon>
@@ -1591,6 +1627,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Forms\TagBlock Editor\AddressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

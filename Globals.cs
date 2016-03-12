@@ -100,18 +100,7 @@ namespace Moonfish
 
         public static dynamic GetReferenceObject(TagReference reference)
         {
-            if (mapStream == null) return null;
-            if (reference.Ident == TagIdent.NullIdentifier) return null;
-
-            try
-            {
-                var @object = mapStream.Deserialize(reference.Ident);
-                return @object;
-            }
-            catch
-            {
-                return null;
-            }
+            return GetReferenceObject( reference.Ident );
         }
 
         public static ResourceStream GetResourceBlock(GlobalGeometryBlockInfoStructBlock blockInfo)

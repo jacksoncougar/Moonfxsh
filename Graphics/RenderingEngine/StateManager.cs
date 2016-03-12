@@ -79,6 +79,15 @@ namespace Moonfish.Graphics.RenderingEngine
                     GL.BlendEquation( blendEquation );
                 }
                     break;
+                    case D3DRENDERSTATETYPE.ZWRITEENABLE:
+                {
+                    var enable = stateHandle.unionValue > 0;
+
+                    if ( enable )
+                        GL.Enable( EnableCap.DepthTest );
+                    else GL.Disable( EnableCap.DepthTest );
+                }
+                    break;
             }
             // Update the current states
             CurrentState[ stateHandle.RenderState ] = stateHandle.unionValue;

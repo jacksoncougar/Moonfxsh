@@ -64,9 +64,15 @@ namespace Moonfish.Graphics
                 
                 foreach ( var param in shaderPass.Textures.TakeSubset(textures))
                 {
-                    if ( param.BitmapExternIndex > 0 ) continue;
+                    if ( (sbyte)param.BitmapExternIndex > 0 )
+                        continue;
+
                     var bitmapParameterIndex = param.BitmapParameterIndex;
-                    var bitmapMapping = bitmapMappings[bitmapParameterIndex];
+
+                    if ((sbyte)bitmapParameterIndex < 0)
+                        continue;
+
+                        var bitmapMapping = bitmapMappings[bitmapParameterIndex];
                     var bitmapParam = shader.Bitmaps[ bitmapMapping.SourceIndex ];
 
                     handles.Add( new TextureHandle( bitmapParam ) {TextureStage = param.TextureStageIndex} );

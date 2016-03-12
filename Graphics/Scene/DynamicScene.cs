@@ -60,7 +60,7 @@ namespace Moonfish.Graphics
 
         private event EventHandler SceneUpdate;
 
-        public override void Update( )
+        public override void Update( float delta, float currentTime )
         {
 #if DEBUG
             //CollisionManager.World.DebugDrawWorld();
@@ -69,7 +69,7 @@ namespace Moonfish.Graphics
             SceneUpdate?.Invoke(this, new EventArgs(  ));
 
             //Manager.Update( );
-            base.Update( );
+            base.Update( delta, currentTime );
         }
 
         private void OnSelectedObjectChanged( object seneder, SelectEventArgs e )

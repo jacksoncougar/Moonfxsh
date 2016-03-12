@@ -198,7 +198,7 @@ namespace Moonfish.Graphics
         {
             while (IsApplicationIdle())
             {
-                Scene.Update();
+                Scene.Update(0f, 0f);
                 Scene.RenderFrame(0f);
             }
         }
@@ -277,7 +277,7 @@ namespace Moonfish.Graphics
 
         private void glControl1_Paint(object sender, PaintEventArgs e)
         {
-            Scene.Update();
+            Scene.Update(0f, 0f);
             Scene.RenderFrame(0f);
         }
 

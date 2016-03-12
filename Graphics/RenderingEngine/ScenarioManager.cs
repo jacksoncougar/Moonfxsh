@@ -35,6 +35,7 @@ namespace Moonfish.Graphics
         private CacheStream _cache;
 #if DEBUG
         private static readonly ScenarioInstanceBlock instance = new ScenarioInstanceBlock(  );
+        private static ObjectBlock ObjectBlock;
 #endif 
 
         public ScenarioManager( )
@@ -47,13 +48,14 @@ namespace Moonfish.Graphics
         [Conditional("DEBUG")]
         public void DebugDraw( Camera eye, ProgramManager programManager )
         {
+            if ( ObjectBlock == null )
+                return;
+            
+
             var program = programManager.DebugShader;
             program.Assign( );
-
-            var datum = _cache.Index.First( u => u.Class == TagClass.Scen && u.Path.Contains( "tree" ) );
-            var debugObject = ( ObjectBlock ) _cache.Deserialize( datum.Identifier );
-
-            ForceItem( eye, debugObject, instance );
+            
+            ForceItem( eye, ObjectBlock, instance );
 
             var transparentPatches = _drawManager.GetTransparentParts( eye );
             var renderPatches = _drawManager.GetOpaqueParts( );
@@ -150,6 +152,24 @@ namespace Moonfish.Graphics
                     //  Create an instance for this part and assign a shader for it
                     _drawManager.CreateInstance(part, instance);
                     _drawManager.AssignShader(part, materialBlock.Shader.Ident);
+                }
+            }
+        }
+
+        public void DispatchDeletion( ObjectBlock objectBlock, dynamic instance )
+        {
+            var modelBlock = objectBlock?.Model.Get<ModelBlock>( );
+            var renderBlock = modelBlock?.RenderModel.Get<RenderModelBlock>( );
+
+            if ( renderBlock == null ) return;
+
+            var sections = renderBlock.Sections;
+
+            foreach ( var renderModelSection in sections )
+            {
+                foreach ( var part in renderModelSection.SectionData[ 0 ].Section.Parts )
+                {
+                    _drawManager.RemoveInstance( part, instance );
                 }
             }
         }
@@ -381,30 +401,21 @@ namespace Moonfish.Graphics
                 //TODO implement filtering here
             }
 
+            private InstanceManager InstanceManager { get; set; } = new InstanceManager(  );
+
             /// <summary>
             ///     Creates an instance object for the given part
             /// </summary>
             /// <param name="part">The part to be instanced</param>
-            /// <param name="o"></param>
             /// <param name="instance">The instance data</param>
             public void CreateInstance( GlobalGeometryPartBlockNew part, dynamic instance )
             {
-                if ( !_partDictionary.ContainsKey( part ) )
-                {
-                    _partDictionary.Add( part, new List<InstanceId>( ) );
-                }
+                InstanceManager.CreateInstance( part, instance );
+            }
 
-                if ( !_instanceDictionary.ContainsKey( instance ) )
-                {
-                    _instanceDictionary.Add( instance, _currentInstanceId );
-                    _instanceDataDictionary.Add( CreateInstanceId( ), new InstanceData( instance ) );
-                }
-
-                var instanceId = _instanceDictionary[ instance ];
-                if ( !_partDictionary[ part ].Contains( instanceId ) )
-                {
-                    _partDictionary[ part ].Add( instanceId );
-                }
+            public void RemoveInstance( GlobalGeometryPartBlockNew part, dynamic instance )
+            {
+                InstanceManager.RemoveInstance( part, instance );
             }
 
             /// <summary>
@@ -413,25 +424,23 @@ namespace Moonfish.Graphics
             /// <returns>A sequence of patch data</returns>
             public IEnumerable<PatchData> GetOpaqueParts( )
             {
-                var patches =
-                    _partDictionary.Where(
-                        e =>
-                            e.Key.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowCasting ||
-                            e.Key.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowOnly ||
-                            e.Key.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueNonshadowing );
-                var opaquePatches = new List<PatchData>( );
-                foreach ( var pair in patches )
+                var opaqueParts = InstanceManager.Parts.Where(
+                    e =>
+                        e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowCasting ||
+                        e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowOnly ||
+                        e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueNonshadowing );
+                var patches = new List<PatchData>( );
+                foreach ( var part in opaqueParts )
                 {
-                    foreach ( var instanceId in pair.Value )
+                    foreach ( var instance in InstanceManager.GetInstancesOf( part ) )
                     {
-                        var instanceData = _instanceDataDictionary[ instanceId ];
-                        opaquePatches.Add( new PatchData( pair.Key, instanceData )
+                        patches.Add( new PatchData( part, instance )
                         {
-                            ShaderIdent = _shaderDictionary[ pair.Key ]
+                            ShaderIdent = _shaderDictionary[ part ]
                         } );
                     }
                 }
-                return opaquePatches;
+                return patches;
             }
 
             /// <summary>
@@ -442,92 +451,50 @@ namespace Moonfish.Graphics
             public IEnumerable<PatchData> GetTransparentParts( Camera eye )
             {
                 var transparentParts =
-                    _partDictionary.Where( e => e.Key.Type == GlobalGeometryPartBlockNew.TypeEnum.Transparent );
+                    InstanceManager.Parts.Where( e => e.Type == GlobalGeometryPartBlockNew.TypeEnum.Transparent )
+                        .ToList( );
                 return SortTransparentParts( transparentParts, eye );
-            }
-
-            private InstanceId CreateInstanceId( )
-            {
-                return _currentInstanceId++;
             }
 
             /// <summary>
             ///     Returns a sorted collection of DrawStubs
             /// </summary>
-            /// <param name="transparentPartDictionary"></param>
+            /// <param name="transparentParts"></param>
             /// <param name="eye"></param>
             /// <returns></returns>
             private IEnumerable<PatchData> SortTransparentParts(
-                IEnumerable<KeyValuePair<GlobalGeometryPartBlockNew, List<InstanceId>>> transparentPartDictionary,
+                ICollection<GlobalGeometryPartBlockNew> transparentParts,
                 Camera eye )
             {
-                var keyValuePairs =
-                    transparentPartDictionary as IList<KeyValuePair<GlobalGeometryPartBlockNew, List<InstanceId>>> ??
-                    transparentPartDictionary.ToList( );
 
-                var capacity = keyValuePairs.Sum( u => u.Value.Count );
+                var capacity = transparentParts.Sum( u => InstanceManager.GetInstanceCount( u ) );
 
                 var transparentDrawsSortedList =
-                    new SortedList<float, PatchData>( capacity, Comparer );
+                    new SortedList<float, PatchData>( capacity, DistanceComparer );
 
-                foreach ( var item in keyValuePairs )
+                foreach ( var part in transparentParts )
                 {
-                    var part = item.Key;
-                    var instances = item.Value;
-                    foreach ( var id in instances )
+                    foreach ( var instance in InstanceManager.GetInstancesOf( part ) )
                     {
-                        var instanceData = _instanceDataDictionary[ id ];
-                        Vector3 scenePosition;
-                        Vector3.TransformPosition( ref part.Position, ref instanceData.worldMatrix,
-                            out scenePosition );
+                        var scenePosition = Vector3.TransformPosition( part.Position, instance.worldMatrix );
 
-                        // Reverse the sorting here with negation
                         var distance = eye.DistanceOf( scenePosition );
 
-                        transparentDrawsSortedList.Add( distance, new PatchData( part, instanceData)
+                        transparentDrawsSortedList.Add( distance, new PatchData( part, instance )
                         {
-                            ShaderIdent = _shaderDictionary[part]
-                        });
+                            ShaderIdent = _shaderDictionary[ part ]
+                        } );
                     }
                 }
                 return transparentDrawsSortedList.Select( u => u.Value );
             }
 
-            private struct InstanceId
-            {
-                private int _id;
 
-                public override int GetHashCode( )
-                {
-                    return _id.GetHashCode( );
-                }
-
-                public static InstanceId operator ++( InstanceId instanceId )
-                {
-                    instanceId._id++;
-                    return instanceId;
-                }
-            }
-
-            #region Part and Instance data lookups
-
-            private static readonly Comparer<float> Comparer = Comparer<float>.Create( ( a, b ) => a <= b ? 1 : -1 );
-
-            private readonly Dictionary<InstanceId, InstanceData> _instanceDataDictionary =
-                new Dictionary<InstanceId, InstanceData>( );
-
-            private readonly Dictionary<GuerillaBlock, InstanceId> _instanceDictionary =
-                new Dictionary<GuerillaBlock, InstanceId>( );
-
-            private readonly Dictionary<GlobalGeometryPartBlockNew, List<InstanceId>> _partDictionary =
-                new Dictionary<GlobalGeometryPartBlockNew, List<InstanceId>>();
+            private static readonly Comparer<float> DistanceComparer = Comparer<float>.Create( ( a, b ) => a <= b ? 1 : -1 );
 
             private readonly Dictionary<GlobalGeometryPartBlockNew, TagIdent> _shaderDictionary =
                 new Dictionary<GlobalGeometryPartBlockNew, TagIdent>();
-
-            private InstanceId _currentInstanceId;
-
-            #endregion
+            
 
             public void AssignShader( GlobalGeometryPartBlockNew part, TagIdent shaderIdent )
             {
@@ -535,5 +502,13 @@ namespace Moonfish.Graphics
                 _shaderDictionary[ part ] = shaderIdent;
             }
         }
+
+        public void Load( ObjectBlock objectBlock)
+        {
+            if ( objectBlock == null || ObjectBlock == objectBlock) return;
+            DispatchDeletion( ObjectBlock, instance );
+            ObjectBlock = objectBlock;
+        }
+
     };
 }

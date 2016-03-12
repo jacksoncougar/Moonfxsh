@@ -119,7 +119,7 @@ namespace Moonfish.Graphics
         {
             while (IsApplicationIdle())
             {
-                Scene.Update();
+                Scene.Update(0f, 0f);
                 Scene.RenderFrame(0f);
             }
         }

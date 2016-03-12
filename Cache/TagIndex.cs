@@ -50,6 +50,11 @@ namespace Moonfish.Cache
             }
         }
 
+        public IEnumerable<TagDatum> GetTags( string path )
+        {
+            return _data.Where( u => u.Path.StartsWith( path ) );
+        }
+
         public TagDatum this[TagIdent ident]
         {
             get { return this[ident.Index % 10000]; }
@@ -90,14 +95,6 @@ namespace Moonfish.Cache
             return from item in _data
                    where item.Class == tagClass
                    select item;
-        }
-
-        public IEnumerable<TagDatum> Where(TagClass tagClass, string path)
-        {
-            return from item in _data
-                where item.Class == tagClass
-                where item.Path.Contains(path)
-                select item;
         }
 
         public const uint VirtualBaseAddress = 0x80061000;

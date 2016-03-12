@@ -35,11 +35,9 @@ namespace Moonfish.Forms
             SceneClock = new SceneClock( );
             SceneClock.timer.Start( );
             InitializeComponent( );
-            GuerillaBlockPropertyViewer blockPropertyViewer = new GuerillaBlockPropertyViewer(  );
-            blockPropertyViewer.DockTo( FloatPane, DockStyle.Right, 0 );
         }
 
-        private DynamicScene Scene { get; set; }
+        public DynamicScene Scene { get; set; }
 
         private SceneClock SceneClock { get; }
 
@@ -53,6 +51,10 @@ namespace Moonfish.Forms
             //  create a new dynamic scene and pass this control as the scene owner to hook control
             //  then load the selected map into the scene
             Scene = new DynamicScene( _glControl1 );
+            Scene.Manager.Load(
+                ( ObjectBlock )
+                    _cacheStream.Index.First( u => u.Class == TagClass.Scen && u.Path.Contains( "tree" ) )
+                        .Identifier.Get( ) );
             Scene.Manager.Load( _cacheStream );
             //var tagDatum  = _cacheStream.Index.SingleOrDefault(u => u.Class == TagClass.Bloc && u.Path.Contains("fusion"));
 
@@ -76,26 +78,36 @@ namespace Moonfish.Forms
         {
             while ( IsApplicationIdle( ) )
             {
-                SceneClock.Tick( );
-
-                if ( SceneClock.Sleep )
-                {
-                    Thread.Sleep( ( int ) ( SceneClock.MinFrameTime * 1000 ) );
-                }
-
-                SceneClock.Tock( );
-
-                while ( SceneClock.TimeForUpdate( ) )
-                {
-                    UpdateState( );
-                    Scene.UpdatePhysics( );
-                    SceneClock.IntegrateUpdate( );
-                }
-                var alpha = SceneClock.accumulator / SceneClock.DeltaTime;
-
-                Scene.Update( );
-                Scene.RenderFrame( ( float ) alpha );
+                Step( );
             }
+        }
+
+        public void UpdateScene( )
+        {
+            Step( );
+        }
+
+        private void Step( )
+        {
+            SceneClock.Tick( );
+
+            if ( SceneClock.Sleep )
+            {
+                Thread.Sleep( ( int ) ( SceneClock.MinFrameTime * 1000 ) );
+            }
+
+            SceneClock.Tock( );
+
+            while ( SceneClock.TimeForUpdate( ) )
+            {
+                UpdateState( );
+                Scene.UpdatePhysics( );
+                SceneClock.IntegrateUpdate( );
+            }
+            var alpha = SceneClock.accumulator / SceneClock.DeltaTime;
+
+            Scene.Update( ( float ) alpha, (float)SceneClock.currentTime);
+            Scene.RenderFrame( ( float ) alpha );
         }
 
         private static bool IsApplicationIdle( )
@@ -156,9 +168,6 @@ namespace Moonfish.Forms
 
         private void UpdateState( )
         {
-            lblRenderTime.Text = string.Format( lblRenderTime.Tag.ToString( ),
-                TimeSpan.FromTicks( SceneClock.totalTime ).TotalMilliseconds, TimeSpan.FromTicks( SceneClock.updateTime ).TotalMilliseconds,
-                TimeSpan.FromTicks( Scene.Performance.FrameTime ).TotalMilliseconds );
         }
 
         #region Peek Message Native
@@ -179,5 +188,11 @@ namespace Moonfish.Forms
             uint remove );
 
         #endregion
+
+        public void LoadFromCache( CacheStream cacheStream )
+        {
+            _cacheStream = cacheStream;
+            LoadGLControl();
+        }
     }
 }

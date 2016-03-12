@@ -7,7 +7,7 @@ namespace Moonfish.Graphics
     ///     Container of an atomic draw element ( ie; smallest sortable draw I want to deal with :} )
     ///     This should be processed more to create batches
     /// </summary>
-    internal class PatchData
+    public class PatchData
     {
         public PatchData( GlobalGeometryPartBlockNew part, InstanceData data )
         {

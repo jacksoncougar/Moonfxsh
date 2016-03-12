@@ -2050,7 +2050,12 @@ public class GlobalPaths : IEnumerable<string>
 
     public string this[int index]
     {
-        get { return localPaths[index]; }
+        get
+        {
+            if ( index >= 0 && index < localPaths.Count )
+                return localPaths[ index ];
+            return string.Empty;
+        }
     }
 
     public void Assign(IEnumerable<string> values)

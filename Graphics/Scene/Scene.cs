@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using Moonfish.Tags;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
@@ -33,14 +34,14 @@ namespace Moonfish.Graphics
             EndFrame( );
         }
 
-        public virtual void Update( )
+        public virtual void Update( float delta, float beta )
         {
-            Camera.Update( );
+            Camera.Update( delta, beta );
         }
 
         protected virtual void Draw( float delta )
         {
-            Manager.DebugDraw(Camera, ProgramManager );
+            Manager.DebugDraw(Camera, ProgramManager);
         }
 
         private void BeginFrame( )

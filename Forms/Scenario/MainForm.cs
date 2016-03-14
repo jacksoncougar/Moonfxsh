@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows.Forms;
 using Moonfish.Cache;
-using Moonfish.Forms.TagBlock_Editor;
 using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
@@ -31,7 +30,7 @@ namespace Moonfish.Forms
 
             _sceneView = new SceneView( _cacheStream );
             _moonfxshExplorerForm = new MoonfxshExplorer( );
-            _moonfxshExplorerForm.LoadTags( _cacheStream.Index.Select( u => new TagReference( u.Class, u.Identifier ) ).ToArray(  ));
+            _moonfxshExplorerForm.LoadTags( _cacheStream.Index.ToArray(  ));
             _moonfxshExplorerForm.TagItemDoubleClick += ( sender, reference ) => EditTag( reference );
             _sceneView.Show(dockPanel1, DockState.Document);
             _moonfxshExplorerForm.Show( dockPanel1, DockState.DockBottom );

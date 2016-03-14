@@ -98,10 +98,11 @@
             this.Controls.Add(this.dockPanel1);
             this.Controls.Add(this.menuStrip1);
             this.DoubleBuffered = true;
+            this.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Text = "Moonfxsh";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

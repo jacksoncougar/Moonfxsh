@@ -1,4 +1,4 @@
-﻿namespace Moonfish.Forms.TagBlock_Editor
+﻿namespace Moonfish.Forms
 {
     partial class MoonfxshExplorer
     {
@@ -40,9 +40,10 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.scenarioView1 = new Moonfish.Forms.ScenarioView();
+            this.tinyIcons = new System.Windows.Forms.ImageList(this.components);
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
-            this.addressbar1 = new Moonfish.Forms.TagBlock_Editor.Addressbar();
+            this.addressbar1 = new NavigationBar();
+            this.scenarioView1 = new Moonfish.Forms.ScenarioView();
             this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -73,9 +74,7 @@
             // 
             this.listView1.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.GridLines = true;
-            this.listView1.HotTracking = true;
-            this.listView1.HoverSelection = true;
+            this.listView1.HideSelection = false;
             this.listView1.LargeImageList = this.explorerLargeImages;
             this.listView1.Location = new System.Drawing.Point(244, 0);
             this.listView1.MultiSelect = false;
@@ -86,21 +85,22 @@
             this.listView1.TabIndex = 5;
             this.listView1.TileSize = new System.Drawing.Size(64, 64);
             this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
             this.listView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDoubleClick);
             // 
             // explorerLargeImages
             // 
             this.explorerLargeImages.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("explorerLargeImages.ImageStream")));
             this.explorerLargeImages.TransparentColor = System.Drawing.Color.Transparent;
-            this.explorerLargeImages.Images.SetKeyName(0, "appbar.page.png");
-            this.explorerLargeImages.Images.SetKeyName(1, "appbar.folder.png");
+            this.explorerLargeImages.Images.SetKeyName(0, "Document-128.png");
+            this.explorerLargeImages.Images.SetKeyName(1, "Folder-256.png");
             // 
             // explorerSmallImageList
             // 
             this.explorerSmallImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("explorerSmallImageList.ImageStream")));
             this.explorerSmallImageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.explorerSmallImageList.Images.SetKeyName(0, "appbar.page.png");
-            this.explorerSmallImageList.Images.SetKeyName(1, "appbar.folder.png");
+            this.explorerSmallImageList.Images.SetKeyName(0, "Document-128.png");
+            this.explorerSmallImageList.Images.SetKeyName(1, "Folder-256.png");
             // 
             // splitter1
             // 
@@ -155,6 +155,24 @@
             this.toolStripButton3.Text = "toolStripButton3";
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
+            // tinyIcons
+            // 
+            this.tinyIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("tinyIcons.ImageStream")));
+            this.tinyIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.tinyIcons.Images.SetKeyName(0, "Document-128.png");
+            this.tinyIcons.Images.SetKeyName(1, "Folder-256.png");
+            // 
+            // elementHost1
+            // 
+            this.elementHost1.AutoSize = true;
+            this.elementHost1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.elementHost1.Location = new System.Drawing.Point(0, 31);
+            this.elementHost1.Name = "elementHost1";
+            this.elementHost1.Size = new System.Drawing.Size(820, 22);
+            this.elementHost1.TabIndex = 4;
+            this.elementHost1.Text = "elementHost1";
+            this.elementHost1.Child = this.addressbar1;
+            // 
             // scenarioView1
             // 
             this.scenarioView1.Dock = System.Windows.Forms.DockStyle.Left;
@@ -167,17 +185,6 @@
             this.scenarioView1.TabIndex = 3;
             this.scenarioView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.scenarioView1_AfterSelect);
             this.scenarioView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.scenarioView1_NodeMouseDoubleClick);
-            // 
-            // elementHost1
-            // 
-            this.elementHost1.AutoSize = true;
-            this.elementHost1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.elementHost1.Location = new System.Drawing.Point(0, 31);
-            this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(820, 22);
-            this.elementHost1.TabIndex = 4;
-            this.elementHost1.Text = "elementHost1";
-            this.elementHost1.Child = this.addressbar1;
             // 
             // MoonfxshExplorer
             // 
@@ -211,6 +218,7 @@
         private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.ImageList explorerLargeImages;
         private System.Windows.Forms.Integration.ElementHost elementHost1;
-        private Addressbar addressbar1;
+        private NavigationBar addressbar1;
+        private System.Windows.Forms.ImageList tinyIcons;
     }
 }

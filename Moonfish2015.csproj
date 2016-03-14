@@ -185,7 +185,7 @@
     <Compile Include="Forms\GuerillaBlockPropertyViewer.Designer.cs">
       <DependentUpon>GuerillaBlockPropertyViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ScenarioView\CachePath.cs" />
+    <Compile Include="Forms\Explorer Control\CachePath.cs" />
     <Compile Include="Forms\Scenario\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -224,25 +224,20 @@
     <Compile Include="Forms\ShaderForm\VrtxASMViewer.Designer.cs">
       <DependentUpon>VrtxASMViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\TagBlock Editor\AddressBar.xaml.cs">
-      <DependentUpon>AddressBar.xaml</DependentUpon>
+    <Compile Include="Forms\Explorer Control\NavigationBar.xaml.cs">
+      <DependentUpon>NavigationBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Forms\TagBlock Editor\BlockResourceViewer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\TagBlock Editor\BlockResourceViewer.Designer.cs">
-      <DependentUpon>BlockResourceViewer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\TagBlock Editor\Editor.cs">
+    <Compile Include="Forms\Explorer Control\DirectoryPath.cs" />
+    <Compile Include="Forms\Explorer Control\MoonfxshExplorer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\TagBlock Editor\Editor.Designer.cs">
-      <DependentUpon>Editor.cs</DependentUpon>
+    <Compile Include="Forms\Explorer Control\MoonfxshExplorer.Designer.cs">
+      <DependentUpon>MoonfxshExplorer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ScenarioView\ScenarioView.cs">
+    <Compile Include="Forms\Explorer Control\ScenarioView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Forms\ScenarioView\ScenarioView.Designer.cs">
+    <Compile Include="Forms\Explorer Control\ScenarioView.Designer.cs">
       <DependentUpon>ScenarioView.cs</DependentUpon>
     </Compile>
     <Compile Include="Graphics\Blam!\BitExtensions.cs" />
@@ -1534,6 +1529,30 @@
     <Content Include="Documentation\vertex_program.txt" />
     <Content Include="Documentation\vertex_resource_raw.txt" />
     <Content Include="icon.ico" />
+    <Content Include="resources\Delete-52.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\icon_categorize.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\icon_heirarchy.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\Left-50.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\Restart-48.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\Right-50.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\Search-64.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\Up-50.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\DataMapper.resx">
@@ -1569,11 +1588,8 @@
     <EmbeddedResource Include="Forms\ShaderForm\VrtxASMViewer.resx">
       <DependentUpon>VrtxASMViewer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\TagBlock Editor\BlockResourceViewer.resx">
-      <DependentUpon>BlockResourceViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\TagBlock Editor\Editor.resx">
-      <DependentUpon>Editor.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Explorer Control\MoonfxshExplorer.resx">
+      <DependentUpon>MoonfxshExplorer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VrtxViewer.resx">
       <DependentUpon>VrtxViewer.cs</DependentUpon>
@@ -1629,7 +1645,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Forms\TagBlock Editor\AddressBar.xaml">
+    <Page Include="Forms\Explorer Control\NavigationBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

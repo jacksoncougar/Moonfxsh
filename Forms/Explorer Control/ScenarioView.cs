@@ -15,13 +15,13 @@ namespace Moonfish.Forms
             Class
         }
 
-        public readonly List<TagReference>  References = new List<TagReference>();
+        public readonly List<TagDatum>  References = new List<TagDatum>();
 
-        private static readonly Comparer<TagReference> PathComparer = Comparer<TagReference>.Create(
+        private static readonly Comparer<TagDatum> PathComparer = Comparer<TagDatum>.Create(
             ( u, v ) =>
-                string.Compare( Halo2.Paths[ u.Ident.Index ], Halo2.Paths[ v.Ident.Index ], StringComparison.Ordinal ) );
+                string.Compare( Halo2.Paths[ u.Identifier.Index ], Halo2.Paths[ v.Identifier.Index ], StringComparison.Ordinal ) );
 
-        private static readonly Comparer<TagReference> ClassComparer = Comparer<TagReference>.Create(
+        private static readonly Comparer<TagDatum> ClassComparer = Comparer<TagDatum>.Create(
             ( u, v ) =>
             {
                 var result = string.Compare( u.Class.ToString( ), v.Class.ToString( ), StringComparison.Ordinal );
@@ -46,7 +46,7 @@ namespace Moonfish.Forms
             }
         }
 
-        public void LoadReferences( TagReference[] references )
+        public void LoadReferences(TagDatum[] references )
         {
             if ( references == null )
                 return;
@@ -56,7 +56,7 @@ namespace Moonfish.Forms
             Display(References);
         }
 
-        private void Display( List<TagReference> references )
+        private void Display( List<TagDatum> references )
         {
             if ( Mode == DisplayMode.Hierarchical )
                 DisplayHierarchical( references );
@@ -64,12 +64,12 @@ namespace Moonfish.Forms
                 DisplayClasses( references );
         }
 
-        private void DisplayClasses( IEnumerable<TagReference> references, bool loadTags = false )
+        private void DisplayClasses( IEnumerable<TagDatum> references, bool loadTags = false )
         {
             var lookup = new Dictionary<TagClass, TreeNode>( );
             foreach ( var reference in references )
             {
-                var path = Halo2.Paths[ reference.Ident.Index ];
+                var path = Halo2.Paths[ reference.Identifier.Index ];
                 var tagClass = reference.Class;
                 var @class = ( string ) tagClass;
 
@@ -92,7 +92,7 @@ namespace Moonfish.Forms
             EndUpdate(  );
         }
 
-        private void DisplayHierarchical( IEnumerable<TagReference> references, bool loadTags = false)
+        private void DisplayHierarchical( IEnumerable<TagDatum> references, bool loadTags = false)
         {
             BeginUpdate();
             Nodes.Clear( );
@@ -100,7 +100,7 @@ namespace Moonfish.Forms
             var rootNode = new DirectoryNode( "root", "cache:");
             foreach ( var reference in references )
             {
-                var path = Halo2.Paths[ reference.Ident.Index ];
+                var path = Halo2.Paths[ reference.Identifier.Index ];
                 var directories = path.Split( new[] {@"\"}, StringSplitOptions.RemoveEmptyEntries );
                 var length = path.IndexOf('\\');
 
@@ -143,11 +143,11 @@ namespace Moonfish.Forms
 
         public class GuerillaBlockReferenceNode : TreeNode
         {
-            public GuerillaBlockReferenceNode( string name, string text, TagReference reference )
+            public GuerillaBlockReferenceNode( string name, string text, TagDatum reference )
             {
                 Text = Path.ChangeExtension( text, reference.Class.ToString( ) );
                 Name = Path.ChangeExtension( name, reference.Class.ToString( ) );
-                BlockIdent = reference.Ident;
+                BlockIdent = reference.Identifier;
                 BlockClass = reference.Class;
             }
 

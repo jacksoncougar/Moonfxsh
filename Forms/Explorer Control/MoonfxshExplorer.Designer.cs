@@ -36,14 +36,14 @@
             this.explorerLargeImages = new System.Windows.Forms.ImageList(this.components);
             this.explorerSmallImageList = new System.Windows.Forms.ImageList(this.components);
             this.splitter1 = new System.Windows.Forms.Splitter();
+            this.scenarioView1 = new Moonfish.Forms.ScenarioView();
+            this.tinyIcons = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.tinyIcons = new System.Windows.Forms.ImageList(this.components);
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
-            this.addressbar1 = new NavigationBar();
-            this.scenarioView1 = new Moonfish.Forms.ScenarioView();
+            this.addressbar1 = new Moonfish.Forms.NavigationBar();
             this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -110,6 +110,31 @@
             this.splitter1.TabIndex = 4;
             this.splitter1.TabStop = false;
             // 
+            // scenarioView1
+            // 
+            this.scenarioView1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.scenarioView1.FullRowSelect = true;
+            this.scenarioView1.HideSelection = false;
+            this.scenarioView1.ImageIndex = 1;
+            this.scenarioView1.ImageList = this.tinyIcons;
+            this.scenarioView1.Location = new System.Drawing.Point(0, 0);
+            this.scenarioView1.Mode = Moonfish.Forms.ScenarioView.DisplayMode.Hierarchical;
+            this.scenarioView1.Name = "scenarioView1";
+            this.scenarioView1.SelectedImageIndex = 1;
+            this.scenarioView1.ShowLines = false;
+            this.scenarioView1.ShowRootLines = false;
+            this.scenarioView1.Size = new System.Drawing.Size(241, 406);
+            this.scenarioView1.TabIndex = 3;
+            this.scenarioView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.scenarioView1_AfterSelect);
+            this.scenarioView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.scenarioView1_NodeMouseDoubleClick);
+            // 
+            // tinyIcons
+            // 
+            this.tinyIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("tinyIcons.ImageStream")));
+            this.tinyIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.tinyIcons.Images.SetKeyName(0, "Document-128.png");
+            this.tinyIcons.Images.SetKeyName(1, "Folder-256.png");
+            // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -155,13 +180,6 @@
             this.toolStripButton3.Text = "toolStripButton3";
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
-            // tinyIcons
-            // 
-            this.tinyIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("tinyIcons.ImageStream")));
-            this.tinyIcons.TransparentColor = System.Drawing.Color.Transparent;
-            this.tinyIcons.Images.SetKeyName(0, "Document-128.png");
-            this.tinyIcons.Images.SetKeyName(1, "Folder-256.png");
-            // 
             // elementHost1
             // 
             this.elementHost1.AutoSize = true;
@@ -172,19 +190,6 @@
             this.elementHost1.TabIndex = 4;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = this.addressbar1;
-            // 
-            // scenarioView1
-            // 
-            this.scenarioView1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.scenarioView1.FullRowSelect = true;
-            this.scenarioView1.HideSelection = false;
-            this.scenarioView1.Location = new System.Drawing.Point(0, 0);
-            this.scenarioView1.Mode = Moonfish.Forms.ScenarioView.DisplayMode.Hierarchical;
-            this.scenarioView1.Name = "scenarioView1";
-            this.scenarioView1.Size = new System.Drawing.Size(241, 406);
-            this.scenarioView1.TabIndex = 3;
-            this.scenarioView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.scenarioView1_AfterSelect);
-            this.scenarioView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.scenarioView1_NodeMouseDoubleClick);
             // 
             // MoonfxshExplorer
             // 

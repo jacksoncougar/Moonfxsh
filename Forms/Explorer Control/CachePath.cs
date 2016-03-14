@@ -1,11 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Moonfish.Forms
 {
     public static class CachePath
     {
+        public static string CacheRoot = "cache:\\";
+
+        public static string Combine( string path1, string path2 )
+        {
+            return path1.EndsWith( ":" ) ? $@"{path1}\{path2.TrimStart( '\\' )}" : Path.Combine( path1, path2 );
+        }
+
         /// <summary>
         /// Enumerates each parent directory-path of <paramref name="path"/> from the root directory back to the directory of <paramref name="path"/>
         /// </summary>
@@ -38,7 +46,7 @@ namespace Moonfish.Forms
 
                 // Increment startOffset by 1 to move past the directorySeperator
                 startOffset = endOffset + 1;
-                yield return dir == string.Empty ? "cache:\\" : dir;
+                yield return dir == string.Empty && startOffset == 0 ? CacheRoot : dir;
             } while ( startOffset < total );
         }
 
@@ -69,7 +77,18 @@ namespace Moonfish.Forms
 
         public static string GetDirectoryLevel( string path, int level, string directorySeperator = "\\")
         {
-            return level <= 0 ? "cache:" : ForeachDirectory( path, directorySeperator ).Skip( level - 1 ).First( );
+            return level <= 0 ? CacheRoot : ForeachDirectory( path, directorySeperator ).Skip( level - 1 ).First( );
+        } 
+
+        public static string GetDirectoryName(string path, string directorySeperator = "\\")
+        {
+            var offset = 0;
+            while(true)
+            {
+                var index = path.IndexOf(directorySeperator, offset);
+                if (index < 0) return offset < 0 ? path : path.Substring(0, offset);
+                offset = index + 1;
+            }
         }
     }
 }

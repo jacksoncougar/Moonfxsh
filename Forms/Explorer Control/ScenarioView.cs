@@ -51,6 +51,11 @@ namespace Moonfish.Forms
             if ( references == null )
                 return;
 
+            for ( var i = 0; i < references.Length; i++ )
+            {
+                references[ i ].Path = Path.Combine( CachePath.CacheRoot, references[ i ].Path );
+            }
+
             References.AddRange( references );
             References.Sort(ClassComparer);
             Display(References);
@@ -96,11 +101,10 @@ namespace Moonfish.Forms
         {
             BeginUpdate();
             Nodes.Clear( );
-
-            var rootNode = new DirectoryNode( "root", "cache:");
+            
             foreach ( var reference in references )
             {
-                var path = Halo2.Paths[ reference.Identifier.Index ];
+                var path = reference.Path;
                 var directories = path.Split( new[] {@"\"}, StringSplitOptions.RemoveEmptyEntries );
                 var length = path.IndexOf('\\');
 
@@ -108,7 +112,7 @@ namespace Moonfish.Forms
                 if ( directories.Length <= 0 )
                     continue;
 
-                var collection = rootNode.Nodes;
+                var collection = Nodes;
 
                 // Loop through all elements of array except the last one
                 var lastElementIndex = directories.Length - 1;
@@ -131,7 +135,8 @@ namespace Moonfish.Forms
                 var guerillaBlockNode = new ScenarioView.GuerillaBlockReferenceNode( path, text, reference );
                 if ( !collection.ContainsKey( guerillaBlockNode.Name ) ) collection.Add( guerillaBlockNode );
             }
-            Nodes.Add( rootNode );
+            SelectedNode = Nodes.Count > 0 ? Nodes[ 0 ] : null;
+            SelectedNode?.Expand( );
             EndUpdate();
         }
         
@@ -173,20 +178,25 @@ namespace Moonfish.Forms
 
         public void SelectDirectoryNode( string path )
         {
-            if ( path == "cache:" )
+            if ( path == CachePath.CacheRoot )
             {
                 SelectedNode = Nodes[ 0 ];
                 return;
             }
-            var collection = Nodes[0].Nodes;
+            var collection = Nodes;
             
+            BeginUpdate(  );
+            TreeNode selectionNode = null;
             foreach ( var directoryName in CachePath.ForeachDirectory( path ) )
             {
                 if ( !collection.ContainsKey( directoryName ) ) return;
                 collection[directoryName].Expand(  );
-                SelectedNode = collection[ directoryName ];
+                selectionNode = collection[ directoryName ];
                 collection = collection[ directoryName ].Nodes;
             }
+            if ( selectionNode != null )
+                SelectedNode = selectionNode;
+            EndUpdate(  );
         }
     }
 }

@@ -46,28 +46,65 @@ namespace Moonfish.Forms
         /// </remarks>
         public event EventHandler<TagReference> TagItemDoubleClick;
 
-        /// <summary>
-        ///     Lists items and sub-directories within the directory.
-        /// </summary>
-        /// <param name="path">The directory path</param>
-        private void ListDirectory( string path )
+        class FuncEqualityComparer<T> : IEqualityComparer<T>
         {
+            readonly Func<T, T, bool> _comparer;
+            readonly Func<T, int> _hash;
+
+            public FuncEqualityComparer( Func<T, T, bool> comparer )
+                : this( comparer, t => 0 )
+                // NB Cannot assume anything about how e.g., t.GetHashCode() interacts with the comparer's behavior
+            {
+            }
+
+            public FuncEqualityComparer( Func<T, T, bool> comparer, Func<T, int> hash )
+            {
+                _comparer = comparer;
+                _hash = hash;
+            }
+
+            public bool Equals( T x, T y )
+            {
+                return _comparer( x, y );
+            }
+
+            public int GetHashCode( T obj )
+            {
+                return _hash( obj );
+            }
+        }
+
+        /// <summary>
+            ///     Lists items and sub-directories within the directory.
+            /// </summary>
+            /// <param name="path">The directory path</param>
+            private void ListDirectory( string path )
+        {
+            listView1.BeginUpdate();
             listView1.Clear( );
             SetupDetailsView( );
-            var path1 = path;
-            var references = path == "cache:"
-                ? scenarioView1.References
-                : scenarioView1.References.Where(
-                    u => u.Identifier.GetPath( ).StartsWith( path1 ) || u.Identifier.GetPath( ) == path1 );
-            path = path == "cache:" ? "" : path;
+
+            IEnumerable<TagDatum> references;
+            if ( path == CachePath.CacheRoot )
+            {
+                references = scenarioView1.References;
+            }
+            else
+            {
+                references = scenarioView1.References.Where(
+                    u => u.Path.StartsWith( path ) || u.Path == path );
+            }
+
+            HashSet<ListViewItem> items =
+                new HashSet<ListViewItem>( new FuncEqualityComparer<ListViewItem>( ( u, v ) => u.Name == v.Name ) );
             foreach ( var reference in references )
             {
-                var tagPath = reference.Identifier.GetPath( );
-                var directory = Path.GetDirectoryName( tagPath ) ?? string.Empty;
+                var tagPath = reference.Path;
+                var directory = CachePath.GetDirectoryName( tagPath ) ?? string.Empty;
 
                 // This item is a tag
-                if ( directory == path )
-                    listView1.Items.Add( new TagReferenceListViewItem( reference ) );
+                if ( tagPath == path )
+                    items.Add( new TagReferenceListViewItem( reference ) );
                 // This item is a directory
                 else
                 {
@@ -76,13 +113,14 @@ namespace Moonfish.Forms
                         StringSplitOptions.RemoveEmptyEntries );
                     if ( split.Length < 1 ) continue;
                     directory = split[ 0 ];
-                    var fullPath = Path.Combine( path, directory );
-                    if ( !listView1.Items.ContainsKey( fullPath ) )
-                    {
-                        listView1.Items.Add( new DirectoryListViewItem( directory, fullPath, 1 ) );
-                    }
+                    var fullPath = CachePath.Combine( path, directory );
+
+                    items.Add( new DirectoryListViewItem( directory, fullPath, 1 ) );
+
                 }
             }
+            listView1.Items.AddRange( items.ToArray( ) );
+            listView1.EndUpdate(  );
         }
 
         private void listView1_MouseDoubleClick( object sender, MouseEventArgs e )

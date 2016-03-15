@@ -1,0 +1,1617 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DD0C713C-6119-4D6D-8F0A-CAA8F34763BF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Moonfish</RootNamespace>
+    <AssemblyName>Moonfish</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;STREAMDEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Be.Windows.Forms.HexBox, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Be.Windows.Forms.HexBox.1.6.1\lib\net40\Be.Windows.Forms.HexBox.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="BulletSharp, Version=2.82.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Collision\Release OpenTK\BulletSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Fasterflect, Version=2.1.3.0, Culture=neutral, PublicKeyToken=38d18473284c1ca7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\fasterflect.2.1.3\lib\net40\Fasterflect.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.TextEditor, Version=3.2.1.6466, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
+      <HintPath>packages\ICSharpCode.TextEditor.3.2.1.6466\lib\Net20\ICSharpCode.TextEditor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>packages\OpenTK.1.1.1589.5941\lib\NET40\OpenTK.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>packages\OpenTK.GLControl.1.1.1589.5941\lib\NET40\OpenTK.GLControl.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ThemeVS2013Blue, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>packages\DockPanelSuite.ThemeVS2013Blue.2.10.0-beta2\lib\net40\ThemeVS2013Blue.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>packages\DockPanelSuite.2.10.0-beta2\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cache\CacheStream.cs" />
+    <Compile Include="Cache\CacheStream.Header.cs" />
+    <Compile Include="Cache\CacheStream.PathsInfo.cs" />
+    <Compile Include="Cache\CacheStream.StringIdentInfo.cs" />
+    <Compile Include="Cache\CacheWriter.cs" />
+    <Compile Include="Cache\CacheStream.IndexInfo.cs" />
+    <Compile Include="Cache\StructureAllocationHeader.cs" />
+    <Compile Include="Cache\StructureCache.cs" />
+    <Compile Include="Cache\TagClassHeirarchy.cs" />
+    <Compile Include="Cache\TagDatum.cs" />
+    <Compile Include="Cache\TagIndex.cs" />
+    <Compile Include="Cache\TagIndexBase.cs" />
+    <Compile Include="Cache\VirtualMappedAddress.cs" />
+    <Compile Include="Cache\VirtualStream.cs" />
+    <Compile Include="Collision\DebugDrawer.cs" />
+    <Compile Include="Collision\Shapes.cs" />
+    <Compile Include="Collision\TriangleRayIntersection.cs" />
+    <Compile Include="Debug\Memory.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Debug\BitArray.cs" />
+    <Compile Include="Forms\DataMapper.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\DataMapper.Designer.cs">
+      <DependentUpon>DataMapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Debug\DataTypes.cs" />
+    <Compile Include="Forms\DatumViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DatumViewer.Designer.cs">
+      <DependentUpon>DatumViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\GuerillaBlockViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\GuerillaBlockViewer.Designer.cs">
+      <DependentUpon>GuerillaBlockViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\InputBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InputBox.Designer.cs">
+      <DependentUpon>InputBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\GuerillaBlockPropertyViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GuerillaBlockPropertyViewer.Designer.cs">
+      <DependentUpon>GuerillaBlockPropertyViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\AsmEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\AsmEditor.Designer.cs">
+      <DependentUpon>AsmEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\ClassTreeNode.cs" />
+    <Compile Include="Forms\ShaderForm\ShaderPropertyGrid.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\ShaderPropertyGrid.Designer.cs">
+      <DependentUpon>ShaderPropertyGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\TagList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\TagList.Designer.cs">
+      <DependentUpon>TagList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\TagTreeNode.cs" />
+    <Compile Include="Forms\ShaderProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ShaderProperties.Designer.cs">
+      <DependentUpon>ShaderProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\VrtxASMViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ShaderForm\VrtxASMViewer.Designer.cs">
+      <DependentUpon>VrtxASMViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Blam!\BitExtensions.cs" />
+    <Compile Include="Graphics\Blam!\VertexProgramInstruction.cs" />
+    <Compile Include="Forms\VrtxViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VrtxViewer.Designer.cs">
+      <DependentUpon>VrtxViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MetaViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MetaViewer.Designer.cs">
+      <DependentUpon>MetaViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ObjectListView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ObjectListView.Designer.cs">
+      <DependentUpon>ObjectListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Research.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Research.Designer.cs">
+      <DependentUpon>Research.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Blam!\SourceRegister.cs" />
+    <Compile Include="Graphics\Blam!\SwizzleSuffix.cs" />
+    <Compile Include="Graphics\Blam!\VertexShader.cs" />
+    <Compile Include="Graphics\Blam!\WriteMask.cs" />
+    <Compile Include="Graphics\ColorExtensions.cs" />
+    <Compile Include="Graphics\RenderingEngine\D3d8Types.cs" />
+    <Compile Include="Graphics\RenderingEngine\Extensions.cs" />
+    <Compile Include="Graphics\RenderingEngine\InstanceData.cs" />
+    <Compile Include="Graphics\RenderingEngine\InstanceManager.cs" />
+    <Compile Include="Graphics\RenderingEngine\MaterialManager.cs" />
+    <Compile Include="Graphics\RenderingEngine\PatchData.cs" />
+    <Compile Include="Graphics\RenderingEngine\StateManager.cs" />
+    <Compile Include="Graphics\SceneClock.cs" />
+    <Compile Include="Forms\ShaderViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ShaderViewer.Designer.cs">
+      <DependentUpon>ShaderViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TagDatumView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TagDatumView.Designer.cs">
+      <DependentUpon>TagDatumView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\Blam!\TextureState.cs" />
+    <Compile Include="Globals.cs" />
+    <Compile Include="GlobalStrings.cs" />
+    <Compile Include="Graphics\RenderingEngine\Bucket.cs" />
+    <Compile Include="Graphics\RenderingEngine\BucketManager.cs" />
+    <Compile Include="Graphics\Input\ClosestNotMeConvexResultCallback.cs" />
+    <Compile Include="Graphics\Input\ClosestRayResultCullFaceCallback.cs" />
+    <Compile Include="Graphics\CollisionGroup.cs" />
+    <Compile Include="Graphics\Input\ConvexHullCaster.cs" />
+    <Compile Include="Graphics\RenderingEngine\DetailLevel.cs" />
+    <Compile Include="Graphics\Heirarchy\INode.cs" />
+    <Compile Include="Graphics\Input\ClickableCollisionObject.cs" />
+    <Compile Include="Graphics\Input\GizmoBase.cs" />
+    <Compile Include="Graphics\Input\RotationGizmo.cs" />
+    <Compile Include="Graphics\Input\TranslationGizmo.cs" />
+    <Compile Include="Graphics\MathHelper.cs" />
+    <Compile Include="Graphics\Primitives\GLDebug.cs" />
+    <Compile Include="Graphics\Primitives\Line.cs" />
+    <Compile Include="Graphics\RenderingEngine\ScenarioExtensions.cs" />
+    <Compile Include="Graphics\RenderingEngine\ScenarioManager.cs" />
+    <Compile Include="Graphics\ShaderReference.cs" />
+    <Compile Include="Graphics\TriangleBatch.cs" />
+    <Compile Include="Graphics\BulletDebugDrawer.cs" />
+    <Compile Include="Graphics\Camera\Camera.cs" />
+    <Compile Include="Graphics\CollisionManager.cs" />
+    <Compile Include="Graphics\Scene\DynamicScene.cs" />
+    <Compile Include="Graphics\Scene\DynamicScene.Events.cs" />
+    <Compile Include="Forms\MarkerViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MarkerViewer.Designer.cs">
+      <DependentUpon>MarkerViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graphics\GraphicsEvents.cs" />
+    <Compile Include="Graphics\GraphicsExtensions.cs" />
+    <Compile Include="Graphics\Primitives\Grid.cs" />
+    <Compile Include="Graphics\RenderingEngine\MaterialShader.cs" />
+    <Compile Include="Graphics\Mesh.cs" />
+    <Compile Include="Graphics\MoonfishColours.cs" />
+    <Compile Include="Graphics\Primitives\Conic.cs" />
+    <Compile Include="Graphics\Node.cs" />
+    <Compile Include="Graphics\NodeCollectionExtensions.cs" />
+    <Compile Include="Graphics\OpenGL.cs" />
+    <Compile Include="Graphics\Performance.cs" />
+    <Compile Include="Graphics\Primitives\Box.cs" />
+    <Compile Include="Graphics\Program.cs" />
+    <Compile Include="Graphics\RenderingEngine\ProgramManager.cs" />
+    <Compile Include="Graphics\RenderBatch.cs" />
+    <Compile Include="Graphics\RenderObject.cs" />
+    <Compile Include="Graphics\ScenarioObject.cs" />
+    <Compile Include="Graphics\Scene\Scene.cs" />
+    <Compile Include="Graphics\Shader.cs" />
+    <Compile Include="Graphics\Swizzler.cs" />
+    <Compile Include="Graphics\Texture.cs" />
+    <Compile Include="Graphics\Camera\Track.cs" />
+    <Compile Include="Graphics\VertexAttributeType.cs" />
+    <Compile Include="Graphics\VertexFunctions.cs" />
+    <Compile Include="Graphics\Camera\Viewport.cs" />
+    <Compile Include="Guerilla\BinaryIOReflection.cs" />
+    <Compile Include="Guerilla\CodeDom\GuerillaBlockClassBase.cs" />
+    <Compile Include="Guerilla\CodeDom\GuerillaCodeDom.cs" />
+    <Compile Include="Guerilla\CodeDom\GuerillaCommentCollection.cs" />
+    <Compile Include="Guerilla\CodeDom\GuerillaEnumBlockClass.cs" />
+    <Compile Include="Cache\CacheStream.CopyTo.cs" />
+    <Compile Include="Guerilla\GeometryExtensions.cs" />
+    <Compile Include="Guerilla\IReadQueueable.cs" />
+    <Compile Include="Guerilla\Preprocess\Bsp3dNodesBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\ScenarioStructureBspReferenceBlock.cs" />
+    <Compile Include="Guerilla\QueueableBinaryReader.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ActorStartingLocationsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AdditionalNodeDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiAnimationReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiConversationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiConversationLineBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiConversationParticipantBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiDeafeningEncodedPasBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiDialogueGlobalsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiGlobalsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiGlobalsGravemindBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AimAssistStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiMissionDialogueBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiRecordingReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiScenarioMissionDialogueBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiSceneBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiSceneRoleBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiSceneRoleVariantsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiSceneTriggerBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AiScriptReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AmbientLightStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AngularVelocityLowerBoundStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationAimingScreenStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationBlendScreenBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationDestinationStateStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationEffectEventBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationEntryBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationFrameEventBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationGraphContentsStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationGraphEffectReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationGraphNodeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationGraphResourcesStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationGraphSoundReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationIkBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationIndexStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationModeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationPoolBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationSoundEventBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationTransitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationTransitionDestinationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AnimationTransitionStateStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AntennaBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AntennaVertexBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AntiGravityPointDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\AreasBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ArmorModifierBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BackgroundAnimationKeyframeReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BallAndSocketConstraintsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BarrelFiringEffectBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BeamBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BehaviorNamesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BipedBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BipedLockOnDataStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BitmapBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BitmapBlockReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BitmapDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BitmapGroupSequenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BitmapGroupSpriteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BoxesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BreakableSurfaceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BreakableSurfaceKeyTableBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\Bsp2dNodesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\Bsp2dReferencesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\Bsp3dNodesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BspLeafBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\BspSurfaceReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ButtonWidgetReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ByteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CachedDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CacheFileSoundBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CameraBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CameraTrackBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CameraTrackControlPointBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CellularAutomata2dBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CellularAutomataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterBoardingBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterBossBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterChargeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterCoverBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterEngageBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterEvasionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterFiringPatternBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterFiringPatternPropertiesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterGeneralBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterGrenadesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterIdleBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterLookBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterMovementBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterPaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterPerceptionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterPhysicsDeadStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterPhysicsFlyingStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterPhysicsGroundStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterPhysicsSentinelStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterPhysicsStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterPlacementBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterPresearchBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterReadyBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterRetreatBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterSearchBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterSwarmBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterVariantsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterVehicleBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterVitalityBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterVocalizationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CharacterWeaponsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CheatPowerupsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CheatWeaponsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ChocolateMountainBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ClothBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ClothIndicesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ClothLinksBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ClothPropertiesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ClothVerticesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ClusterDoorPortalEncodedPasBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CollisionBspPhysicsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CollisionDamageBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CollisionModelBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CollisionModelBspBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CollisionModelMaterialBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CollisionModelNodeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CollisionModelPathfindingSphereBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CollisionModelPermutationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CollisionModelRegionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ColonyBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ColorBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ColorFunctionStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ColorTableBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ConstraintBodiesStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ContactPointBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ContrailBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ContrailPointStatesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CrateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CreateNewVariantStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CreatureBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CsPointBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CsPointSetBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\CsScriptDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DamageAnimationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DamageConstraintInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DamageDirectionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DamageEffectBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DamageEffectPlayerResponseBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DamageEffectSoundEffectDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DamageGroupBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DamageOuterConeAngleStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DamageRegionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DamageSeatInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecalBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecalVerticesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecoratorCacheBlockBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecoratorCacheBlockDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecoratorCellCollectionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecoratorClassesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecoratorGroupBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecoratorModelIndicesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecoratorModelsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecoratorModelVerticesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecoratorPermutationsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecoratorPlacementBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecoratorPlacementDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecoratorProjectedDecalBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecoratorsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecoratorSetBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DecoratorShaderReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DetailObjectCollectionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DetailObjectTypeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DeviceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DeviceControlBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DeviceGroupBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DeviceLightFixtureBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DeviceMachineBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DialogueBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DialogueDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DialogueVariantBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DifficultyBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DontUseMeScenarioEnvironmentObjectBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DoorEncodedPasBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\DynamicSpawnZoneOverloadBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\EdgesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\EditorCommentBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\EffectAccelerationsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\EffectBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\EffectEventBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\EffectLocationsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\EffectPartBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\EncodedClusterDistancesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\EnvironmentObjectBspRefs.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\EnvironmentObjectNodes.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\EnvironmentObjectRefs.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\EquipmentBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ErrorReportCommentsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ErrorReportLinesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ErrorReportQuadsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ErrorReportsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ErrorReportTrianglesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ErrorReportVectorsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ErrorReportVerticesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ExternReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\FallingDamageBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\FiringPositionsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\FlightReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\FlockDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\FlockSinkBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\FlockSourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\FrictionPointDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GameEngineAssaultEventBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GameEngineCtfEventBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GameEngineFlavorEventBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GameEngineGeneralEventBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GameEngineJuggernautEventBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GameEngineKingEventBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GameEngineOddballEventBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GameEngineSlayerEventBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GameEngineStatusResponseBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GameEngineTerritoriesEventBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GameGlobalsDamageBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GamePortalToPortalMappingBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GarbageBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GDefaultVariantsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GDefaultVariantSettingsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GearBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GloalWindPrimitivesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalCollisionBspBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalCollisionBspStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalDamageInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalDamageNodesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalDamageSectionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalDetailObjectBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalDetailObjectCellsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalDetailObjectCountsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalErrorReportCategoriesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalGeometryBlockInfoStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalGeometryBlockResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalGeometryCompressionInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalGeometryMaterialBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalGeometryMaterialPropertyBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalGeometryPartBlockNew.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalGeometryPointDataIndexBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalGeometryPointDataStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalGeometryRawPointBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalGeometryRigidPointGroupBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalGeometrySectionInfoStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalGeometrySectionRawVertexBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalGeometrySectionStripIndexBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalGeometrySectionStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalGeometrySectionVertexBufferBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalHudMultitextureOverlayDefinition.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalHudMultitextureOverlayEffectorDefinition.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalHudScreenEffectDefinition.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalLeafConnectionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalMapLeafBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalNewHudGlobalsConstantsStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalNewHudGlobalsStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalParticleSystemLiteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalScenarioLoadParametersBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalShaderParameterBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalStructurePhysicsStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalSubpartsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalTagImportInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalUiCampaignLevelBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalUiMultiplayerLevelBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalVisibilityBoundsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalWaterDefinitionsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalWeatherBackgroundPlateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalWindModelStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GlobalZReferenceVectorBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GNullBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GrenadeAndPowerupStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GrenadeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GrenadeHudInterfaceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GrenadeHudOverlayBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GrenadeHudSoundBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GrenadesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\GScenarioEditorFolderBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HavokCleanupResourcesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HavokVehiclePhysicsStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HingeConstraintsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HsGlobalsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HsReferencesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HsScriptsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HsSourceFilesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HsUnitSeatBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudBitmapWidgets.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudBlockReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudButtonIconBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudDashlightsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudGlobalsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudMessageElementsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudMessagesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudMessageTextBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudNumberBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudScreenEffectWidgets.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudTextWidgets.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudWaypointArrowBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudWaypointBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudWidgetEffectBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudWidgetEffectFunctionStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudWidgetInputsStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\HudWidgetStateDefinitionStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\IndicesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\InertialMatrixBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\InheritedAnimationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\InheritedAnimationNodeMapBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\InheritedAnimationNodeMapFlagBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\InstancedGeometryReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\InstantaneousDamageRepsonseBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\InstantaneousResponseDamageEffectMarkerStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\InstantaneousResponseDamageEffectStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\InterfaceTagReferences.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\InvoluntaryDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ItemBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ItemCollectionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ItemPermutation.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LeafConnectionVertexBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LeavesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LensFlareBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LensFlareColorAnimationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LensFlareReflectionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LensFlareScalarAnimationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightBrightnessAnimationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightColorAnimationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightGelAnimationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightingVariablesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightmapBucketRawVertexBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightmapGeometryRenderInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightmapGeometrySectionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightmapGeometrySectionCacheDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightmapInstanceBucketReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightmapInstanceBucketSectionOffsetBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightmapSceneryObjectInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightmapShadowsStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightmapVertexBufferBucketBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightmapVertexBufferBucketCacheDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightVolumeAspectBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightVolumeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightVolumeRuntimeOffsetBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LightVolumeVolumeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LimitedHingeConstraintsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LiquidArcBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LiquidBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LiquidCoreBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ListReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ListsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ListShapesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ListSkinReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LocalBitmapReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LocalStringIdListSectionReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LocalStringIdListStringReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LookFunctionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LoopingSoundDetailBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\LoopingSoundTrackBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MagazineObjects.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\Magazines.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MapLeafConnectionIndexBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MapLeafFaceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MapLeafFaceVertexBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MappingFunctionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MassDistributionsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MassPointBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MaterialEffectBlockV2.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MaterialEffectMaterialBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MaterialEffectsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MaterialPhysicsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MaterialPhysicsPropertiesStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MaterialsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MaterialsSweetenersStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MeleeAimAssistStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MeleeDamageParametersStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MeterBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MissionDialogueLinesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MissionDialogueVariantsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ModelAnimationGraphBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ModelAnimationRuntimeDataStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ModelBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ModelMaterialBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ModelNodeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ModelObjectDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ModelPermutationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ModelRegionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ModelTargetBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ModelTargetLockOnDataStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ModelVariantBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ModelVariantObjectBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ModelVariantPermutationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ModelVariantRegionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ModelVariantStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MoonfishGlobalStructureBlockInfoStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MoonfishGlobalUnicodeBlockInfoStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MoonfishSoundReferencesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MoonfishXboxAnimationRawBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MoonfishXboxAnimationUnknownBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MoppsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MouseCursorBitmapReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MouseCursorDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MultilingualUnicodeStringListBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MultilingualUnicodeStringReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MultiplayerColorBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MultiplayerConstantsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MultiplayerGlobalsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MultiplayerInformationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MultiplayerRuntimeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MultiplayerScenarioDescriptionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MultiplayerUiBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MultiplayerUniversalBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MultiplayerVariantSettingsInterfaceDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\MultiSpheresBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\NewHudDashlightDataStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\NewHudDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\NewHudSoundBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\NodeRenderLeavesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\NodesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\NullBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ObjectAiPropertiesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ObjectAnimationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ObjectAttachmentBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ObjectBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ObjectChangeColorFunction.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ObjectChangeColorInitialPermutation.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ObjectChangeColors.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ObjectFunctionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ObjectSpaceNodeDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ObjectWidgetBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\OccluderToMachineDoorMapping.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\OldMaterialEffectMaterialBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\OldMaterialsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\OldObjectFunctionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\OldUnusedObjectIdentifiersBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\OldUnusedStrucurePhysicsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\OrderCompletionCondition.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\OrderEndingBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\OrdersBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PackedDataSizesStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ParticleBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ParticleController.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ParticleControllerParameters.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ParticleModelBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ParticleModelIndicesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ParticleModelsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ParticleModelVerticesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ParticlePhysicsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ParticlePropertyColorStructNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ParticlePropertyScalarStructNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ParticlesRenderDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ParticlesUpdateDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ParticleSystemDefinitionBlockNew.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ParticleSystemEmitterDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ParticleSystemLiteDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PatchyFogBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PathfindingDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PathfindingHintsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PathfindingObjectIndexListBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PermutationsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PersistentBackgroundAnimationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PhantomsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PhantomTypesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PhmoMaterialsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PhysicsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PhysicsModelBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PhysicsModelConstraintEdgeConstraintBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PhysicsModelNodeConstraintEdgeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PillsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\Pixel32Block.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PixelShaderBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PixelShaderCombinerBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PixelShaderConstantBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PixelShaderFragmentBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PixelShaderPermutationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PixelShaderPermutationNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlanarFogBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlanarFogPatchyFogBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlanesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlatformSoundEffectBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlatformSoundEffectCollectionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlatformSoundEffectConstantBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlatformSoundEffectFunctionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlatformSoundEffectOverrideDescriptorBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlatformSoundEffectTemplateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlatformSoundEffectTemplateCollectionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlatformSoundEffectTemplateComponentBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlatformSoundFilterBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlatformSoundFilterLfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlatformSoundOverrideMixbinsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlatformSoundPitchLfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlatformSoundPlaybackBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlatformSoundPlaybackStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlayerBlockReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlayerControlBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlayerInformationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlayerRepresentationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PlayerTrainingEntryDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PointBlockReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PointPhysicsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PointToPathCurveBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PointToPathCurvePointBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PolyhedraBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PolyhedronFourVectorsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PolyhedronPlaneEquationsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PoweredMassPointBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PoweredSeatBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PowerupBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PrecacheListBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PredictedBitmapsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PredictedResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PrimaryLightStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PrismaticConstraintsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ProjectileBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ProjectileMaterialResponseBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PrtClusterBasisBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PrtInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PrtLodInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PrtRawPcaDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PrtSectionInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\PrtVertexBuffersBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\QuantizedOrientationStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RagdollConstraintsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RasterizerDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RasterizerScreenEffectConvolutionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RasterizerScreenEffectPassReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RasterizerScreenEffectTexcoordGenerationAdvancedControlBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RealVector4dBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RecordedAnimationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RefBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RegionsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderLightingStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderModelBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderModelCompoundNodeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderModelInvalidSectionPairsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderModelMarkerBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderModelMarkerGroupBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderModelNodeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderModelNodeMapBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderModelNodeMapBlockOLD.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderModelPermutationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderModelRegionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderModelSectionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderModelSectionDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderModelSectionGroupBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RenderStateParameterBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ResponseBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RigidBodiesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RigidBodyIndicesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RulesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RuntimeCampaignLevelBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\RuntimeLevelsDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScalarFunctionStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioAiResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioAiResourceReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioAtmosphericFogMixerBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioAtmosphericFogPalette.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioBipedBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioBipedPaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioBipedsResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioBspSwitchTransitionVolumeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioBspSwitchTriggerVolumeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioChildScenarioBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioCinematicsResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioClusterAtmosphericFogPropertiesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioClusterBackgroundSoundsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioClusterDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioClusterDataResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioClusterPointsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioClusterSoundEnvironmentsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioClusterWeatherPropertiesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioCommentsResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioControlBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioControlPaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioControlStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioCrateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioCratePaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioCreatureBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioCreaturePaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioCreatureResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioCutsceneCameraPointBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioCutsceneFlagBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioCutsceneTitleBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioDecalPaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioDecalsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioDecalsResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioDecoratorSetPaletteEntryBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioDecoratorsResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioDescriptionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioDetailObjectCollectionPaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioDevicesResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioDeviceStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioEquipmentBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioEquipmentDatumStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioEquipmentPaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioEquipmentResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioFunctionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioHsSourceReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioInterpolatorBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioKillTriggerVolumesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioLevelDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioLightBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioLightFixtureBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioLightFixturePaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioLightFixtureStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioLightPaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioLightsResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioLightStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioMachineBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioMachinePaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioMachineStructV3Block.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioNetgameEquipmentBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioNetgameEquipmentOrientationStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioNetpointsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioObjectDatumStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioObjectIdStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioObjectNamesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioObjectPermutationStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioPlanarFogPalette.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioPlayersBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioProfilesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioResourceReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioResourcesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioSceneryBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioSceneryDatumStructV4Block.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioSceneryPaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioSceneryResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioScreenEffectReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioSimulationDefinitionTableBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioSkyReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioSoundSceneryBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioSoundSceneryPaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioSoundSceneryResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioSpawnDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioSphericalHarmonicLightingPoint.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioStartingEquipmentBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioStructureBspBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioStructureBspReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioStructureBspSphericalHarmonicLightingBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioStructureLightingResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioStructureLightmapBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioTriggerVolumeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioTriggerVolumesResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioUnitStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioVehicleBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioVehiclePaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioVehiclesResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioWeaponBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioWeaponDatumStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioWeaponPaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScenarioWeaponsResourceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SceneryBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScreenAnimationKeyframeReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScreenEffectBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScreenEffectBonusStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ScreenFlashDefinitionStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SecondaryLightStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SecondarySetTriggerBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SecondaryZoneSetBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SectionRenderLeavesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SectorBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SectorBsp2dNodesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SectorLinkBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SectorVertexBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderAnimationPropertyBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderGpuStateReferenceStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderGpuStateStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderLightResponseBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPassBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPassImplementationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPassParameterBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPassPostprocessConstantInfoNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPassPostprocessConstantNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPassPostprocessDefinitionNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPassPostprocessExternNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPassPostprocessImplementationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPassPostprocessImplementationNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPassPostprocessTextureNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPassPostprocessTextureStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPassTextureBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPassVertexShaderConstantBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessAnimatedParameterNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessAnimatedParameterReferenceNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessBitmapBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessBitmapNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessBitmapPropertyBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessBitmapTransformBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessBitmapTransformOverlayBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessColorBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessColorOverlayBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessColorPropertyBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessDefinitionNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessImplementationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessImplementationNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessLayerBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessLevelOfDetailBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessLevelOfDetailNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessOverlayNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessOverlayReferenceNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessPassBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessValueBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessValueOverlayBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessValuePropertyBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPostprocessVertexShaderConstantBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderPropertiesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderStateAlphaBlendStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderStateAlphaTestStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderStateChannelsStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderStateConstantBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderStateCullStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderStateDepthStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderStateFillStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderStateMiscStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTemplateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTemplateCategoryBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTemplateLevelOfDetailBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTemplateParameterBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTemplatePassReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTemplatePostprocessDefinitionNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTemplatePostprocessImplementationNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTemplatePostprocessLevelOfDetailNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTemplatePostprocessPassNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTemplatePostprocessRemappingNewBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTemplatePropertyBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTemplateRuntimeExternalLightResponseIndexBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTextureStateAddressStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTextureStateConstantBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTextureStateFilterStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTextureStateKillStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShaderTextureStateMiscStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShapeBlockReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ShapeGroupReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SimplePlatformSoundPlaybackStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SingleAnimationReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SkillToRankMappingBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SkyAnimationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SkyAtmosphericFogBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SkyBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SkyCubemapBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SkyFogBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SkyLightBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SkyLightFogBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SkyPatchyFogBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SkyRadiosityLightBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SkyShaderFunctionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundCacheFileGestaltBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundClassBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundClassesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundDialogueConstantsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundEffectCollectionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundEffectComponentBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundEffectOverrideParametersBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundEffectOverridesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundEffectPlaybackBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundEffectStructDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundEffectTemplateAdditionalSoundInputBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundEffectTemplateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundEffectTemplateParameterBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundEffectTemplatesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundEncodedDialogueSectionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundEnvironmentBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundGestaltCustomPlaybackBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundGestaltExtraInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundGestaltImportNamesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundGestaltPermutationsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundGestaltPitchRangeParametersBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundGestaltPitchRangesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundGestaltPlaybackBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundGestaltPromotionsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundGestaltRuntimePermutationBitVectorBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundGestaltScaleBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundGlobalMixStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundGlobalsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundLoopingBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundMixBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundPermutationChunkBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundPermutationDialogueInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundPlaybackParameterDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundPlaybackParametersStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundPromotionRuleBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundPromotionRuntimeTimerBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundReferencesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundResponseDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundResponseExtraSoundsStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundScaleModifiersStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundSceneryBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SoundSceneryDatumStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SpecialMovementBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SpheresBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SpriteVerticesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SquadGroupsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SquadsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StatesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StaticSpawnZoneBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StaticSpawnZoneDataStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StereoSystemBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\STextValuePairBlocksBlockUNUSED.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\STextValuePairReferenceBlockUNUSED.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StiffSpringConstraintsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspAudibilityBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspBackgroundSoundPaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspBreakableSurfaceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspClusterBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspClusterDataBlockNew.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspClusterDebugInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspClusterInstancedGeometryIndexBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspClusterPortalBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspClusterPortalIndexBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspClusterPortalVertexBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspConveyorSurfaceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspDebugInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspDebugInfoIndicesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspDebugInfoRenderLineBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspDetailObjectDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspEnvironmentObjectBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspEnvironmentObjectPaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspFakeLightprobesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspFogPlaneBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspFogPlaneDebugInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspFogZoneDebugInfoBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspInstancedGeometryDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspInstancedGeometryInstancesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspLeafBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspLightmapDataBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspMarkerBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspPathfindingEdgesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspPrecomputedLightingBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspRuntimeDecalBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspSkyOwnerClusterBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspSoundClusterBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspSoundEnvironmentPaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspSurfaceReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspWeatherPaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspWeatherPolyhedronBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureBspWeatherPolyhedronPlaneBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureCollisionMaterialsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureDevicePortalAssociationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureInstancedGeometryRenderInfoStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureLightmapGroupBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureLightmapLightingEnvironmentBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureLightmapPaletteColorBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructurePortalDeviceMappingBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureSoundClusterInteriorClusterIndices.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StructureSoundClusterPortalDesignators.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StyleBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\StylePaletteBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SuperDetonationDamageStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SurfaceFlagsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SurfacesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\SyntaxDatumBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TableViewListItemReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TableViewListReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TableViewListRowReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TagBlockIndexBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TagBlockIndexStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TagImportFileBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TextBlockReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TextureBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TextureStageStateBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TextureStageStateParameterBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TextValuePairBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TextValuePairDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TextValuePairReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TorqueCurveStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TransparentPlanesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TrianglesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TriggerReferences.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\TriggersBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UiCampaignBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UiErrorBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UiErrorCategoryBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UiLevelsDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UiLightReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UiModelSceneReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UiObjectReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitAdditionalNodeNamesStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitBoardingMeleeStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitBoostStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitCameraStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitCameraTrackBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitHudAuxilaryOverlayBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitHudAuxilaryPanelBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitHudInterfaceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitHudReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitHudSoundBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitLipsyncScalesStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitPosturesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitSeatAccelerationStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitSeatBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UnitWeaponBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UNUSEDStructureBspNodeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserHintBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserHintClimbBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserHintFlightBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserHintFlightPointBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserHintJumpBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserHintLineSegmentBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserHintParallelogramBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserHintPointBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserHintPolygonBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserHintRayBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserHintWellBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserHintWellPointBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserInterfaceGlobalsDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserInterfaceListSkinDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserInterfaceScreenWidgetDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserInterfaceSharedGlobalsDefinitionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\UserInterfaceWidgetReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VariantSettingEditReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VehicleBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VehicleCollectionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VehiclePermutation.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VehiclePhantomShapeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VehiclesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VehicleSuspensionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VertexShaderBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VertexShaderClassificationBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VertexShaderConstantBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VertexShaderReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VerticesBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VibrationDefinitionStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VibrationFrequencyDefinitionStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VisibilityStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VocalizationDefinitionsBlock0.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VocalizationDefinitionsBlock1.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VocalizationDefinitionsBlock2.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VocalizationDefinitionsBlock3.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VocalizationDefinitionsBlock4.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VocalizationDefinitionsBlock5.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\VocalizationPatternsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WaterGeometrySectionBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponBarrelDamageEffectStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponBarrels.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponClassBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponClassLookupBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponFirstPersonInterfaceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponHudCrosshairBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponHudCrosshairItemBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponHudInterfaceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponHudMeterBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponHudNumberBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponHudOverlayBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponHudOverlaysBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponHudStaticBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponInterfaceStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponsBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponSharedInterfaceStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponTrackingStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponTriggerAutofireStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponTriggerChargingStructBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponTriggers.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeaponTypeBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WeatherSystemBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WindBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\WindowPaneReferenceBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ZoneBlock.generated.cs" />
+    <Compile Include="Guerilla\Tags.Generated\ZoneSetBlock.generated.cs" />
+    <Compile Include="Guerilla\GuerillaBlock.cs" />
+    <Compile Include="Guerilla\CodeDom\GuerillaBlockClass.cs" />
+    <Compile Include="Guerilla\GuerillaBlockExtensions.cs" />
+    <Compile Include="Guerilla\IWriteQueueable.cs" />
+    <Compile Include="Guerilla\QueueableBinaryWriter.cs" />
+    <Compile Include="Guerilla\Reflection\AccessModifiers.cs" />
+    <Compile Include="Guerilla\Reflection\AccessModifiersExtensions.cs" />
+    <Compile Include="Guerilla\Reflection\AttributeInfo.cs" />
+    <Compile Include="Guerilla\Reflection\ClassInfo.cs" />
+    <Compile Include="Guerilla\Guerilla.cs" />
+    <Compile Include="Guerilla\GuerillaAttributes.cs" />
+    <Compile Include="Guerilla\GuerillaBase.cs" />
+    <Compile Include="Guerilla\GuerillaExtensions.cs" />
+    <Compile Include="Guerilla\GuerillaToCs.cs" />
+    <Compile Include="Guerilla\GuerillaToEnt.cs" />
+    <Compile Include="Guerilla\Reflection\EnumInfo.cs" />
+    <Compile Include="Guerilla\Reflection\FieldInfo.cs" />
+    <Compile Include="Guerilla\Reflection\GuerillaName.cs" />
+    <Compile Include="Guerilla\Reflection\MethodInfo.cs" />
+    <Compile Include="Guerilla\MoonfishFieldType.cs" />
+    <Compile Include="Guerilla\MoonfishTagDataDefinition.cs" />
+    <Compile Include="Guerilla\MoonfishTagDefinition.cs" />
+    <Compile Include="Guerilla\MoonfishTagEnumDefinition.cs" />
+    <Compile Include="Guerilla\MoonfishTagGroup.cs" />
+    <Compile Include="Guerilla\MoonfishTagReferenceDefinition.cs" />
+    <Compile Include="Guerilla\MoonfishTagStruct.cs" />
+    <Compile Include="Guerilla\Reflection\MethodInfoFactory.cs" />
+    <Compile Include="Guerilla\Reflection\NamespaceInfo.cs" />
+    <Compile Include="Guerilla\Reflection\ParameterInfo.cs" />
+    <Compile Include="Guerilla\Preprocess\BitmapDataBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\BitmapBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\DecoratorPermutationsBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\GlobalGeometryBlockInfoStructBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\GlobalsBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\HudWaypointArrowBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\ModelAnimationGraphBlockBase.cs" />
+    <Compile Include="Guerilla\Preprocess\ModelVariantRegionBlockBase.cs" />
+    <Compile Include="Guerilla\Preprocess\PixelShaderFragmentBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\ScenarioBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\ScenarioCutsceneTitleBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\ShaderBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\ShaderPassPostprocessImplementationNewBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\ShaderPostprocessBitmapNewBlockBase.cs" />
+    <Compile Include="Guerilla\Preprocess\SoundBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\TagBlockIndexStructBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\SoundGestaltPromotionsBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\UserInterfaceScreenWidgetDefinitionBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\VertexShaderBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\VertexShaderClassificationBlock.cs" />
+    <Compile Include="Guerilla\Reflection\PropertyInfo.cs" />
+    <Compile Include="Guerilla\Reflection\StaticStreamWriter.cs" />
+    <Compile Include="Guerilla\Reflection\StringBuilderExtensions.cs" />
+    <Compile Include="Guerilla\Reflection\StringExtensions.cs" />
+    <Compile Include="Guerilla\Reflection\StaticReflection.cs" />
+    <Compile Include="Guerilla\TagGroups.cs" />
+    <Compile Include="Guerilla\GuerillaTagGroup.cs" />
+    <Compile Include="Guerilla\Reflection\TokenDictionary.cs" />
+    <Compile Include="Guerilla\Reflection\TokenInfo.cs" />
+    <Compile Include="Guerilla\Reflection\UsingInfo.cs" />
+    <Compile Include="Guerilla\Tags\DecoratorCacheBlockBlock.cs" />
+    <Compile Include="Guerilla\Tags\DecoratorSetBlock.cs" />
+    <Compile Include="Guerilla\Tags\GlobalWaterDefinitionsBlock.cs" />
+    <Compile Include="Guerilla\Tags\LightmapGeometrySectionBlock.cs" />
+    <Compile Include="Guerilla\Tags\LightmapVertexBufferBucketBlock.cs" />
+    <Compile Include="Guerilla\Preprocess\MaterialsBlock.cs" />
+    <Compile Include="Guerilla\Tags\MoonfishXboxAnimationRawBlock.cs" />
+    <Compile Include="Guerilla\Tags\ParticleModelBlock.cs" />
+    <Compile Include="Guerilla\Tags\PrtInfoBlock.cs" />
+    <Compile Include="Guerilla\Tags\SoundGestaltExtraInfoBlock.cs" />
+    <Compile Include="Guerilla\Tags\SoundPermutationChunkBlock.cs" />
+    <Compile Include="Guerilla\Tags\StructureBspClusterBlock.cs" />
+    <Compile Include="Guerilla\Tags\StructureLightmapPaletteColorBlock.cs" />
+    <Compile Include="ValueTypes\BinaryWriterExtensions.cs" />
+    <Compile Include="ValueTypes\LayoutAttribute.cs" />
+    <Compile Include="ValueTypes\TagBlockFieldAttribute.cs" />
+    <Compile Include="ValueTypes\TagClassAttribute.cs" />
+    <Compile Include="ValueTypes\TagStructFieldAttribute.cs" />
+    <Compile Include="Guerilla\Validator.cs" />
+    <Compile Include="Guerilla\VirtualMemoryStream.cs" />
+    <Compile Include="Local.cs" />
+    <Compile Include="main.cs" />
+    <Compile Include="Cache\MapType.cs" />
+    <Compile Include="Graphics\OpenTKExtensions.cs" />
+    <Compile Include="Padding.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyGridExtensions.cs" />
+    <Compile Include="ResourcePointer.cs" />
+    <Compile Include="ResourceStream.cs" />
+    <Compile Include="StreamExtensions.cs" />
+    <Compile Include="ValueTypes\TagFieldAttribute.cs" />
+    <Compile Include="ValueTypes\BinaryReaderExtensions.cs" />
+    <Compile Include="Guerilla\Tags\BitmapBlock.Code.cs" />
+    <Compile Include="Guerilla\Tags\BitmapDataBlock.Code.cs" />
+    <Compile Include="ValueTypes\BlamPointer.cs" />
+    <Compile Include="Guerilla\Tags\GlobalGeometryPartBlockNew.Code.cs" />
+    <Compile Include="Guerilla\Tags\HierarchyModel.Code.cs" />
+    <Compile Include="Guerilla\Tags\IResourceBlock.cs" />
+    <Compile Include="Guerilla\Tags\RenderModel.Code.cs" />
+    <Compile Include="Guerilla\Tags\RenderModelNodeBlock.cs" />
+    <Compile Include="Guerilla\Tags\Scenario.Code.cs" />
+    <Compile Include="Guerilla\Tags\ScenarioNetgameEquipmentBlock.cs" />
+    <Compile Include="Guerilla\Tags\ScenarioStructureBSP.Code.cs" />
+    <Compile Include="Guerilla\Tags\Scenery.Code.cs" />
+    <Compile Include="Guerilla\Tags\StructureBspInstancedGeometryInstancesBlock.cs" />
+    <Compile Include="Guerilla\Tags\StructureInstancedGeometryRenderInfoStructBlock.cs" />
+    <Compile Include="Guerilla\Tags\TagBlockIndexStructBlock.cs" />
+    <Compile Include="ValueTypes\BlockFlags16.cs" />
+    <Compile Include="ValueTypes\BlockFlags32.cs" />
+    <Compile Include="ValueTypes\BlockFlags8.cs" />
+    <Compile Include="ValueTypes\ByteBlockIndex1.cs" />
+    <Compile Include="ValueTypes\ByteBlockIndex2.cs" />
+    <Compile Include="ValueTypes\ColourR8G8B8.cs" />
+    <Compile Include="ValueTypes\ColourA1R1G1B1.cs" />
+    <Compile Include="ValueTypes\GuerillaTypeAttribute.cs" />
+    <Compile Include="ValueTypes\LongBlockIndex1.cs" />
+    <Compile Include="ValueTypes\LongBlockIndex2.cs" />
+    <Compile Include="ValueTypes\ColourR1G1B1.cs" />
+    <Compile Include="ValueTypes\ShortBlockIndex1.cs" />
+    <Compile Include="ValueTypes\ShortBlockIndex2.cs" />
+    <Compile Include="ValueTypes\String256.cs" />
+    <Compile Include="ValueTypes\String32.cs" />
+    <Compile Include="ValueTypes\StringIdent.cs" />
+    <Compile Include="ValueTypes\TagClass.cs" />
+    <Compile Include="ValueTypes\TagIdent.cs" />
+    <Compile Include="ValueTypes\TagReference.cs" />
+    <Compile Include="ValueTypes\TagReferenceAttribute.cs" />
+    <Compile Include="ValueTypes\Point.cs" />
+    <Compile Include="Cache\TagIndexElement.cs" />
+    <Compile Include="ValueTypes\Range.cs" />
+    <Compile Include="Cache\HaloVersion.cs" />
+    <Compile Include="ValueTypes\VertexBuffer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cache\CacheStream.StringsInfo.cs" />
+    <Compile Include="Cache\CacheStream.SharedInfoStruct.cs" />
+    <EmbeddedResource Include="data\fragment.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\lightmap.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\lightmap.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\sprite.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\sprite.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\debug.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\sys_fragment.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\debug.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\sys_vertex.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\vertex.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\viewscreen.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <EmbeddedResource Include="data\debug2.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="data\debug2.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Include="data\standard.vert" />
+    <None Include="Documentation\jmad animations raw.pdf" />
+    <None Include="Documentation\sbsp &amp; lightmap meta.pdf" />
+    <None Include="Documentation\Shaders\envytools.pdf" />
+    <None Include="Documentation\Shaders\Feb11-programmable-hardware1.pdf" />
+    <None Include="Documentation\Shaders\set-study-gf3.pdf" />
+    <None Include="Documentation\Shaders\tutorial-graphics-hardware.pdf" />
+    <None Include="Documentation\vertex program documentation.pdf" />
+    <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="packages.config" />
+    <Compile Include="Guerilla\Tags\Shader.Code.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\x86\Debug\Moonfish2015.exe" />
+    <Content Include="bin\x86\Debug\Moonfish2015.pdb" />
+    <Content Include="Documentation\halo_2_header.txt" />
+    <Content Include="Documentation\NVVertexProgramIL.h" />
+    <Content Include="Documentation\tangent_space_calculations_cpp.txt" />
+    <Content Include="Documentation\index layout.txt" />
+    <Content Include="Documentation\vertex_formats.txt" />
+    <Content Include="Documentation\vertex_program.txt" />
+    <Content Include="Documentation\vertex_resource_raw.txt" />
+    <Content Include="icon.ico" />
+    <Resource Include="resources\Delete-52.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\icon_categorize.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\icon_heirarchy.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\Left-50.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\Restart-48.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\Right-50.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\Search-64.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="resources\Up-50.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\DataMapper.resx">
+      <DependentUpon>DataMapper.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DatumViewer.resx">
+      <DependentUpon>DatumViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GuerillaBlockViewer.resx">
+      <DependentUpon>GuerillaBlockViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\InputBox.resx">
+      <DependentUpon>InputBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GuerillaBlockPropertyViewer.resx">
+      <DependentUpon>GuerillaBlockPropertyViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ShaderForm\AsmEditor.resx">
+      <DependentUpon>AsmEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ShaderForm\ShaderPropertyGrid.resx">
+      <DependentUpon>ShaderPropertyGrid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ShaderForm\TagList.resx">
+      <DependentUpon>TagList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ShaderProperties.resx">
+      <DependentUpon>ShaderProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ShaderForm\VrtxASMViewer.resx">
+      <DependentUpon>VrtxASMViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VrtxViewer.resx">
+      <DependentUpon>VrtxViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MetaViewer.resx">
+      <DependentUpon>MetaViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ObjectListView.resx">
+      <DependentUpon>ObjectListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Research.resx">
+      <DependentUpon>Research.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MarkerViewer.resx">
+      <DependentUpon>MarkerViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ShaderViewer.resx">
+      <DependentUpon>ShaderViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TagDatumView.resx">
+      <DependentUpon>TagDatumView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
+    <Folder Include="bin\Release\" />
+    <Folder Include="bin\x86\Release\" />
+    <Folder Include="Compiler\" />
+    <Folder Include="obj\Debug\TempPE\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

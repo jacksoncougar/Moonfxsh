@@ -21,9 +21,13 @@ namespace Sunfish.Forms
         {
             InitializeComponent( );
 
+            // Setup some properties of ListView here
+            SetupDetailsView();
+            (toolStripButton3 as IBindableComponent).DataBindings.Add("Text", listView1, "View");
+
             // WPF interop Events
-            addressbar1.AddressSubmitted += ( sender, e ) => { scenarioView1.SelectDirectoryNode( e ); };
-            addressbar1.SearchSubmitted += ( sender, e ) => { Search( e ); };
+            navigationBar1.AddressSubmitted += ( sender, e ) => { scenarioView1.SelectDirectoryNode( e ); };
+            navigationBar1.SearchSubmitted += ( sender, e ) => { Search( e ); };
         }
 
         /// <summary>
@@ -82,8 +86,7 @@ namespace Sunfish.Forms
             private void ListDirectory( string path )
         {
             listView1.BeginUpdate();
-            listView1.Clear( );
-            SetupDetailsView( );
+            listView1.Items.Clear();
 
             IEnumerable<TagDatum> references;
             if ( path == CachePath.CacheRoot )
@@ -96,16 +99,25 @@ namespace Sunfish.Forms
                     u => u.Path.StartsWith( path ) || u.Path == path );
             }
 
-            HashSet<ListViewItem> items =
-                new HashSet<ListViewItem>( new FuncEqualityComparer<ListViewItem>( ( u, v ) => u.Name == v.Name ) );
+            SortedSet<ListViewItem> items =
+                new SortedSet<ListViewItem>(Comparer<ListViewItem>.Create((u, v) =>
+                {
+                    var uType = u.GetType();
+                    var vType = v.GetType();
+                    var compareType = uType.Name.CompareTo(vType.Name);
+                    if (compareType != 0) return compareType;
+                    var compareName = u.Name.CompareTo(v.Name);
+                    return compareName;
+                }));
+            
             foreach ( var reference in references )
             {
                 var tagPath = reference.Path;
                 var directory = CachePath.GetDirectoryName( tagPath ) ?? string.Empty;
 
                 // This item is a tag
-                if ( tagPath == path )
-                    items.Add( new TagReferenceListViewItem( reference ) );
+                if (directory == path )
+                    items.Add( new TagReferenceListViewItem(reference));
                 // This item is a directory
                 else
                 {
@@ -116,7 +128,7 @@ namespace Sunfish.Forms
                     directory = split[ 0 ];
                     var fullPath = CachePath.Combine( path, directory );
 
-                    items.Add( new DirectoryListViewItem( directory, fullPath, 1 ) );
+                    items.Add(new DirectoryListViewItem(directory, fullPath, 1));
 
                 }
             }
@@ -143,7 +155,7 @@ namespace Sunfish.Forms
             if ( directoryNode == null ) return;
 
             ListDirectory( directoryNode.Path );
-            addressbar1.DisplayPath( directoryNode.Path );
+            navigationBar1.DisplayPath( directoryNode.Path );
         }
 
         private void scenarioView1_NodeMouseDoubleClick( object sender, TreeNodeMouseClickEventArgs e )
@@ -169,10 +181,9 @@ namespace Sunfish.Forms
         {
             if ( searchTerm == string.Empty ) return;
             scenarioView1.SelectedNode = null;
-            addressbar1.AddressBox.Text = "Search Results in Cache";
+            navigationBar1.AddressBox.Text = "Search Results in Cache";
 
-            listView1.Clear( );
-            SetupDetailsView( );
+            listView1.Items.Clear();
 
             IEnumerable<TagDatum> references;
             var isClass = Halo2.Classes.Any( u => u == searchTerm );
@@ -229,7 +240,7 @@ namespace Sunfish.Forms
             public TagReferenceListViewItem( TagDatum datum, int imageIndex = 0 )
             {
                 Reference = new TagReference( datum.Class, datum.Identifier );
-                Name = datum.Identifier.GetPath( );
+                Name = Path.ChangeExtension(datum.Identifier.GetPath(), datum.Class.ToString());
                 Text = Path.ChangeExtension( Path.GetFileName( datum.Identifier.GetPath( ) ),
                     datum.Class.ToString( ) );
                 ImageIndex = imageIndex;
@@ -244,7 +255,7 @@ namespace Sunfish.Forms
             ///     Reference of tag
             /// </summary>
             public TagReference Reference { get; }
-        }
+        };
 
         /// <summary>
         ///     A <see cref="ListViewItem" /> item that represents a directory

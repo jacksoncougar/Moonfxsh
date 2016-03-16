@@ -71,9 +71,6 @@ C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\Be.Windows.Forms.HexBox.d
 C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\ICSharpCode.TextEditor.dll
 C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\Fasterflect.dll
 C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\Moonfish.pdb
-C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\JetBrains.Annotations.xml
-C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\OpenTK.xml
-C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\OpenTK.GLControl.xml
 C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\Be.Windows.Forms.HexBox.xml
 C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\Fasterflect.xml
 C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\obj\Debug\Explorer Control\NavigationBar.baml
@@ -83,3 +80,7 @@ C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\obj\Debug\Sunfish.Properties.Resour
 C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\obj\Debug\Sunfish.Forms.MainForm.resources
 C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\obj\Debug\Sunfish.Forms.SceneView.resources
 C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\obj\Debug\Sunfish.csproj.GenerateResource.Cache
+C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\AssimpNet.dll
+C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\AssimpNet.xml
+C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\obj\Debug\TextureViewer.g.cs
+C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\obj\Debug\TextureViewer.baml

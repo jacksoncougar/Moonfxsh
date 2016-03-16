@@ -45,12 +45,12 @@
     </UserControl.Resources>
     <Grid Margin="10,0,10,0">
         <Grid.Resources>
-            <ImageBrush x:Key="LeftImageBrush" ImageSource="../../resources/Left-50.png"></ImageBrush>
-            <ImageBrush x:Key="RightImageBrush" ImageSource="../../resources/Right-50.png"></ImageBrush>
-            <ImageBrush x:Key="UpImageBrush" ImageSource="../../resources/Up-50.png"></ImageBrush>
-            <ImageBrush x:Key="UpdateImageBrush" ImageSource="../../resources/Restart-48.png"></ImageBrush>
-            <ImageBrush x:Key="SearchImageBrush" ImageSource="../../resources/Search-64.png"></ImageBrush>
-            <ImageBrush x:Key="DeleteImageBrush" ImageSource="../../resources/Delete-52.png"></ImageBrush>
+            <ImageBrush x:Key="LeftImageBrush" ImageSource="../resources/Left-50.png"></ImageBrush>
+            <ImageBrush x:Key="RightImageBrush" ImageSource="../resources/Right-50.png"></ImageBrush>
+            <ImageBrush x:Key="UpImageBrush" ImageSource="../resources/Up-50.png"></ImageBrush>
+            <ImageBrush x:Key="UpdateImageBrush" ImageSource="../resources/Restart-48.png"></ImageBrush>
+            <ImageBrush x:Key="SearchImageBrush" ImageSource="../resources/Search-64.png"></ImageBrush>
+            <ImageBrush x:Key="DeleteImageBrush" ImageSource="../resources/Delete-52.png"></ImageBrush>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
@@ -70,7 +70,7 @@
             <TextBox VerticalContentAlignment="Center" Text="{Binding State.Path}" Name="AddressBox" Grid.Column="0" KeyUp="AddressBox_KeyUp"/>
             <Button Grid.Column ="1" Click="Button_Click" Margin="0,0,10,0" BorderThickness="1" RenderTransformOrigin="0.5,0.5">
                 <Button.Background>
-                    <ImageBrush Viewport="0.1,0.1,0.8,0.8" ViewportUnits="RelativeToBoundingBox" ImageSource="../../resources/Restart-48.png"/>
+                    <ImageBrush Viewport="0.1,0.1,0.8,0.8" ViewportUnits="RelativeToBoundingBox" ImageSource="../resources/Restart-48.png"/>
                 </Button.Background>
             </Button>
         </Grid>

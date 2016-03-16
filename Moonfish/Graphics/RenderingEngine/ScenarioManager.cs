@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using Moonfish.Cache;
 using Moonfish.Graphics.RenderingEngine;
-using Moonfish.Guerilla;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using OpenTK;
@@ -34,7 +33,6 @@ namespace Moonfish.Graphics
         /// </summary>
         private CacheStream _cache;
 #if DEBUG
-        private static readonly ScenarioInstanceBlock instance = new ScenarioInstanceBlock(  );
         private static ObjectBlock ObjectBlock;
 #endif 
 
@@ -51,11 +49,15 @@ namespace Moonfish.Graphics
             if ( ObjectBlock == null )
                 return;
             
+            foreach ( var staticObject in StaticObjects )
+            {
+                ForceItem( eye, staticObject, new ScenarioInstanceBlock( ) );
+            }
 
             var program = programManager.DebugShader;
             program.Assign( );
             
-            ForceItem( eye, ObjectBlock, instance );
+            ForceItem( eye, ObjectBlock, new ScenarioInstanceBlock(  ) );
 
             var transparentPatches = _drawManager.GetTransparentParts( eye );
             var renderPatches = _drawManager.GetOpaqueParts( );
@@ -204,6 +206,8 @@ namespace Moonfish.Graphics
             }
         }
 
+
+
         private void DispatchMaterial( TagIdent shaderIdent )
         {
             
@@ -317,7 +321,7 @@ namespace Moonfish.Graphics
             foreach ( var region in variantBlock.Regions )
             {
                 regionNames.Add( region.RegionName );
-                permutationNames.Add( region.Permutations.SingleOrDefault( )?.PermutationName ?? StringIdent.Zero );
+                permutationNames.Add( region.Permutations.FirstOrDefault( )?.PermutationName ?? StringIdent.Zero );
             }
             var sectionIndices = SelectRenderModelSections( renderBlock, regionNames, permutationNames, detailLevel );
             return renderBlock.Sections.Where( ( e, i ) => sectionIndices.Contains( i ) );
@@ -342,7 +346,7 @@ namespace Moonfish.Graphics
                     GetSectionIndex(
                         permutationNames == null
                             ? region.Permutations[ 0 ]
-                            : region.Permutations.Single( u => u.Name == permutationNames[ index ] ), detailLevel );
+                            : region.Permutations.SingleOrDefault( u => u.Name == permutationNames[ index ] ) ?? region.Permutations[0], detailLevel ) ;
                 sectionIndices[ index ] = sectionIndex;
             }
             return sectionIndices;
@@ -373,19 +377,6 @@ namespace Moonfish.Graphics
                 ProcessPalette( eyeCamera, scenarioBlock.Vehicles, scenarioBlock.VehiclePalette );
                 ProcessPalette( eyeCamera, scenarioBlock.Weapons, scenarioBlock.WeaponPalette );
             }
-        }
-
-        /// <summary>
-        ///     A defuault instance wrapper
-        /// </summary>
-        public class ScenarioInstanceBlock : GuerillaBlock
-        {
-            private byte[] indexer = new byte[4];
-            public ScenarioObjectDatumStructBlock ObjectData = new ScenarioObjectDatumStructBlock( );
-            public ScenarioObjectPermutationStructBlock PermutationData = new ScenarioObjectPermutationStructBlock( );
-            public ScenarioSceneryDatumStructV4Block SceneryData = new ScenarioSceneryDatumStructV4Block( );
-            public override int Alignment { get; }
-            public override int SerializedSize { get; }
         }
 
         /// <summary>
@@ -506,9 +497,15 @@ namespace Moonfish.Graphics
         public void Load( ObjectBlock objectBlock)
         {
             if ( objectBlock == null || ObjectBlock == objectBlock) return;
-            DispatchDeletion( ObjectBlock, instance );
+            DispatchDeletion( ObjectBlock, new ScenarioInstanceBlock(  ) );
             ObjectBlock = objectBlock;
         }
 
+        private List<ObjectBlock> StaticObjects { get; } = new List<ObjectBlock>();
+        public void Load( BitmapBlock block )
+        {
+            var billboardObject = new BillboardObject( block.Bitmaps[0] );
+            StaticObjects.Add( billboardObject );
+        }
     };
 }

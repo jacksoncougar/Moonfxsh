@@ -32,7 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MoonfxshExplorer));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.listView1 = new Sunfish.TagListView();
             this.explorerLargeImages = new System.Windows.Forms.ImageList(this.components);
             this.explorerSmallImageList = new System.Windows.Forms.ImageList(this.components);
             this.splitter1 = new System.Windows.Forms.Splitter();
@@ -41,9 +41,9 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton3 = new Sunfish.ToolStripBindableButton();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
-            this.addressbar1 = new Sunfish.Forms.NavigationBar();
+            this.navigationBar1 = new Sunfish.Forms.NavigationBar();
             this.panel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -73,17 +73,19 @@
             // listView1
             // 
             this.listView1.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.listView1.AutoArrange = false;
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView1.FullRowSelect = true;
             this.listView1.HideSelection = false;
             this.listView1.LargeImageList = this.explorerLargeImages;
             this.listView1.Location = new System.Drawing.Point(244, 0);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
+            this.listView1.ShowGroups = false;
             this.listView1.Size = new System.Drawing.Size(576, 406);
             this.listView1.SmallImageList = this.explorerSmallImageList;
-            this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listView1.TabIndex = 5;
-            this.listView1.TileSize = new System.Drawing.Size(64, 64);
+            this.listView1.TileSize = new System.Drawing.Size(200, 64);
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             this.listView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDoubleClick);
@@ -118,7 +120,7 @@
             this.scenarioView1.ImageIndex = 1;
             this.scenarioView1.ImageList = this.tinyIcons;
             this.scenarioView1.Location = new System.Drawing.Point(0, 0);
-            this.scenarioView1.Mode = ScenarioView.DisplayMode.Hierarchical;
+            this.scenarioView1.Mode = Sunfish.Forms.ScenarioView.DisplayMode.Hierarchical;
             this.scenarioView1.Name = "scenarioView1";
             this.scenarioView1.SelectedImageIndex = 1;
             this.scenarioView1.ShowLines = false;
@@ -172,12 +174,12 @@
             // toolStripButton3
             // 
             this.toolStripButton3.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
             this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(23, 28);
-            this.toolStripButton3.Text = "toolStripButton3";
+            this.toolStripButton3.Size = new System.Drawing.Size(38, 28);
+            this.toolStripButton3.Text = "fd";
+            this.toolStripButton3.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
             // elementHost1
@@ -189,7 +191,7 @@
             this.elementHost1.Size = new System.Drawing.Size(820, 22);
             this.elementHost1.TabIndex = 4;
             this.elementHost1.Text = "elementHost1";
-            this.elementHost1.Child = this.addressbar1;
+            this.elementHost1.Child = this.navigationBar1;
             // 
             // MoonfxshExplorer
             // 
@@ -215,15 +217,16 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private ScenarioView scenarioView1;
-        private System.Windows.Forms.ListView listView1;
+        private TagListView listView1;
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ImageList explorerSmallImageList;
-        private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.ImageList explorerLargeImages;
-        private System.Windows.Forms.Integration.ElementHost elementHost1;
         private NavigationBar addressbar1;
         private System.Windows.Forms.ImageList tinyIcons;
+        private System.Windows.Forms.Integration.ElementHost elementHost1;
+        private NavigationBar navigationBar1;
+        private ToolStripBindableButton toolStripButton3;
     }
 }

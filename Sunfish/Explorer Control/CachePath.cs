@@ -86,7 +86,7 @@ namespace Sunfish.Forms
             while(true)
             {
                 var index = path.IndexOf(directorySeperator, offset);
-                if (index < 0) return offset < 0 ? path : path.Substring(0, offset);
+                if (index < 0) return offset < 0 ? path : path.Substring(0, offset - 1);
                 offset = index + 1;
             }
         }

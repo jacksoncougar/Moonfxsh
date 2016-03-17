@@ -1490,6 +1490,7 @@
     <None Include="Documentation\Shaders\Feb11-programmable-hardware1.pdf" />
     <None Include="Documentation\Shaders\set-study-gf3.pdf" />
     <None Include="Documentation\Shaders\tutorial-graphics-hardware.pdf" />
+    <None Include="Documentation\Solution UML hierarchy.pdf" />
     <None Include="Documentation\vertex program documentation.pdf" />
     <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <None Include="packages.config" />

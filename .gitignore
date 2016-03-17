@@ -39,12 +39,14 @@ local.properties
 # User-specific files
 *.suo
 *.user
+*.psess
+*.sdf
 *.sln.docstates
 
 # Build results
 
-*/[Dd]ebug/
-*/[Rr]elease/
+[Dd]ebug/
+[Rr]elease/
 x64/
 build/
 [Bb]in/

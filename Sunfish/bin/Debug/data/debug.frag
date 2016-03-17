@@ -18,7 +18,7 @@ void main()
 	vec4 colour = texture(diffuseSampler, texcoord.st);
 	vec4 normal = texture(normalSampler, texcoord.st) * 2.0 - 1.0;
 
-	if (AlphaTest(AlphaFuncUniform, normal.a, AlphaRefUniform)) discard;
+	//if (AlphaTest(AlphaFuncUniform, normal.a, AlphaRefUniform)) discard;
 
 	FragmentColour = colour;
 }

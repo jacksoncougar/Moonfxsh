@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using JetBrains.Annotations;
 using Moonfish.Guerilla;
 
 namespace Moonfish.Tags
@@ -27,6 +28,13 @@ namespace Moonfish.Tags
         public object Get()
         {
             return Get<GuerillaBlock>();
+        }
+
+        public static explicit operator TagReference( GuerillaBlock block )
+        {
+            var cache = Halo2.ActiveMap;
+            var datum = cache.Add( block, string.Empty );
+            return  new TagReference(datum.Class, datum.Identifier);
         }
     }
 }

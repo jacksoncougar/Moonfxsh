@@ -54,7 +54,7 @@ namespace Moonfish.Graphics
             foreach ( var program in ProgramManager )
             {
                 program.Assign(  );
-                var viewMatrixUniform = program.GetUniformLocation( "ViewMatrixUniform" );
+                var viewMatrixUniform = program.GetUniformLocation("ViewMatrixUniform");
                 program.SetUniform( viewMatrixUniform,  e.Matrix  );
             }
         }
@@ -99,6 +99,13 @@ namespace Moonfish.Graphics
         private void Viewport_ViewportChanged( object sender, Viewport.ViewportEventArgs e )
         {
             GL.Viewport( 0, 0, e.Viewport.Width, e.Viewport.Height );
+            foreach (var program in ProgramManager)
+            {
+                program.Assign();
+                var viewMatrixUniform = program.GetUniformLocation("ViewportMatrixUniform");
+                var viewportMatrix = new Matrix2(new Vector2(2.0f / e.Viewport.Width, 0.0f), new Vector2(0.0f, 2.0f/e.Viewport.Height) );
+                program.SetUniform( viewMatrixUniform, viewportMatrix );
+            }
         }
     };
 }

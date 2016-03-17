@@ -187,17 +187,5 @@ namespace Moonfish.Graphics
             public float LogDimension { get; }
             public byte TextureStage { get; set; }
         }
-
-        private struct BitmapMapping
-        {
-            public readonly byte SourceIndex;
-            public readonly byte DesinationIndex;
-
-            public BitmapMapping( ShaderTemplatePostprocessRemappingNewBlock remappingBlock )
-            {
-                SourceIndex = remappingBlock.SourceIndex;
-                DesinationIndex = remappingBlock.fieldskip[ 0 ];
-            }
-        }
     }
 }

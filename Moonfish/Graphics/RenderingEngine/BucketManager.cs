@@ -122,7 +122,9 @@ namespace Moonfish.Graphics
             foreach ( var renderModelSectionBlock in renderModel.Sections )
             {
                 renderModelSectionBlock.LoadSectionDataIfEmpty(  );
-                UnpackAttributeData( renderModelSectionBlock.SectionData[ 0 ].Section, renderModel.CompressionInfo[ 0 ] );
+                if ( renderModel.CompressionInfo.Length > 0 )
+                    UnpackAttributeData( renderModelSectionBlock.SectionData[ 0 ].Section,
+                        renderModel.CompressionInfo[ 0 ] );
             }
         }
 

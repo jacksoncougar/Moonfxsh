@@ -23,7 +23,7 @@ namespace Moonfish.Graphics
             Ident = GL.CreateProgram( );
         }
 
-        public int Ident { get; private set; }
+        public int Ident { get; }
         public string Name { get; private set; }
 
         public void Dispose( )
@@ -35,12 +35,6 @@ namespace Moonfish.Graphics
         public void Assign( )
         {
             AssignActiveProgram( Ident );
-        }
-
-        private static void AssignActiveProgram( int program )
-        {
-            if ( activeProgram != program )
-                GL.UseProgram( activeProgram = program );
         }
 
         public int GetAttributeLocation( string name )
@@ -179,10 +173,21 @@ namespace Moonfish.Graphics
             GL.Uniform1( location, value );
         }
 
+        public void SetUniform( int location, Matrix2 value )
+        {
+            GL.UniformMatrix2( location, false, ref value );
+        }
+
         public IDisposable Use( )
         {
-            AssignActiveProgram(Ident);
+            AssignActiveProgram( Ident );
             return new Handle( 0 );
+        }
+
+        private static void AssignActiveProgram( int program )
+        {
+            if ( activeProgram != program )
+                GL.UseProgram( activeProgram = program );
         }
 
         private class Handle : IDisposable

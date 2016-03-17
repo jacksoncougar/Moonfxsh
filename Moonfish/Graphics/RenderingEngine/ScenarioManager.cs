@@ -6,7 +6,6 @@ using Moonfish.Cache;
 using Moonfish.Graphics.RenderingEngine;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
-using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 
 namespace Moonfish.Graphics
@@ -16,6 +15,10 @@ namespace Moonfish.Graphics
     /// </summary>
     public class ScenarioManager
     {
+#if DEBUG
+        private static ObjectBlock ObjectBlock;
+#endif
+
         /// <summary>
         ///     Controls loading of vertex data and creating attribute buffers
         /// </summary>
@@ -32,39 +35,63 @@ namespace Moonfish.Graphics
         ///     The cache where scenario data is
         /// </summary>
         private CacheStream _cache;
-#if DEBUG
-        private static ObjectBlock ObjectBlock;
-#endif 
 
         public ScenarioManager( )
         {
-            _materialManager = new MaterialManager(  );
-               _drawManager = new DrawManager( );
+            _materialManager = new MaterialManager( );
+            _drawManager = new DrawManager( );
             _bucketManager = new BucketManager( );
         }
-        
-        [Conditional("DEBUG")]
+
+        private List<ObjectBlock> StaticObjects { get; } = new List<ObjectBlock>( );
+
+        [Conditional( "DEBUG" )]
         public void DebugDraw( Camera eye, ProgramManager programManager )
         {
             if ( ObjectBlock == null )
                 return;
-            
+
             foreach ( var staticObject in StaticObjects )
             {
                 ForceItem( eye, staticObject, new ScenarioInstanceBlock( ) );
             }
+            ForceItem( eye, ObjectBlock, new ScenarioInstanceBlock( ) );
 
             var program = programManager.DebugShader;
             program.Assign( );
-            
-            ForceItem( eye, ObjectBlock, new ScenarioInstanceBlock(  ) );
-
-            var transparentPatches = _drawManager.GetTransparentParts( eye );
-            var renderPatches = _drawManager.GetOpaqueParts( );
-
             // TODO better batching!
+            var transparentPatches = _drawManager.GetTransparentParts( eye );
             DrawPatchElements( transparentPatches, program );
-            DrawPatchElements( renderPatches, program );
+
+            foreach ( var shaderIdent in _drawManager.GetShaders( ) )
+            {
+                var shader = ( ShaderBlock ) shaderIdent.Get( );
+                if ( shader.GetType( ) == typeof ( MoonfishScreenSpaceShader ) )
+                    program = programManager.ScreenProgram;
+                else program = programManager.DebugShader;
+
+                program.Assign( );
+                var renderPatches = _drawManager.GetOpaqueParts( shaderIdent );
+                DrawPatchElements( renderPatches, program );
+            }
+        }
+
+        private void DispatchDeletion( ObjectBlock objectBlock, dynamic instance )
+        {
+            var modelBlock = objectBlock?.Model.Get<ModelBlock>( );
+            var renderBlock = modelBlock?.RenderModel.Get<RenderModelBlock>( );
+
+            if ( renderBlock == null ) return;
+
+            var sections = renderBlock.Sections;
+
+            foreach ( var renderModelSection in sections )
+            {
+                foreach ( var part in renderModelSection.SectionData[ 0 ].Section.Parts )
+                {
+                    _drawManager.RemoveInstance( part, instance );
+                }
+            }
         }
 
         /// <summary>
@@ -94,6 +121,27 @@ namespace Moonfish.Graphics
         public void Load( CacheStream cacheStream )
         {
             _cache = cacheStream;
+        }
+
+        public void Load( ObjectBlock objectBlock )
+        {
+            if ( objectBlock == null || ObjectBlock == objectBlock ) return;
+            DispatchDeletion( ObjectBlock, new ScenarioInstanceBlock( ) );
+            ObjectBlock = objectBlock;
+        }
+
+        public void Load( TagReference reference )
+        {
+            if ( reference.Class == TagClass.Bitm )
+            {
+                foreach ( var staticObject in StaticObjects )
+                {
+                    DispatchDeletion(staticObject, new ScenarioInstanceBlock());
+                }
+                StaticObjects.Clear(  );
+                var billboardObject = new BillboardObject(reference.Ident);
+                StaticObjects.Add( billboardObject );
+            }
         }
 
         /// <summary>
@@ -139,6 +187,10 @@ namespace Moonfish.Graphics
             {
                 sections = ProcessRegions( modelBlock.ModelRegionBlock, renderBlock, detailLevel );
             }
+            else
+            {
+                sections = renderBlock.Sections;
+            }
             var renderModelSectionBlocks = sections as RenderModelSectionBlock[] ?? sections.ToArray( );
 
             //  Loop through all the sections and load the vertex data if needed and pass the part along 
@@ -149,29 +201,11 @@ namespace Moonfish.Graphics
 
                 foreach ( var part in renderModelSection.SectionData[ 0 ].Section.Parts )
                 {
-                    var materialBlock = renderBlock.Materials[part.Material];
+                    var materialBlock = renderBlock.Materials[ part.Material ];
 
                     //  Create an instance for this part and assign a shader for it
-                    _drawManager.CreateInstance(part, instance);
-                    _drawManager.AssignShader(part, materialBlock.Shader.Ident);
-                }
-            }
-        }
-
-        public void DispatchDeletion( ObjectBlock objectBlock, dynamic instance )
-        {
-            var modelBlock = objectBlock?.Model.Get<ModelBlock>( );
-            var renderBlock = modelBlock?.RenderModel.Get<RenderModelBlock>( );
-
-            if ( renderBlock == null ) return;
-
-            var sections = renderBlock.Sections;
-
-            foreach ( var renderModelSection in sections )
-            {
-                foreach ( var part in renderModelSection.SectionData[ 0 ].Section.Parts )
-                {
-                    _drawManager.RemoveInstance( part, instance );
+                    _drawManager.CreateInstance( part, instance );
+                    _drawManager.AssignShader( part, materialBlock.Shader.Ident );
                 }
             }
         }
@@ -189,7 +223,7 @@ namespace Moonfish.Graphics
                 program.SetUniform( location, patch.Data.worldMatrix );
                 int vertexBaseIndex;
                 int indexBaseOffset;
-                
+
 
                 var bucket = _bucketManager.GetBucketResource( patch.Part, out indexBaseOffset, out vertexBaseIndex );
                 if ( patch.ShaderIdent != TagIdent.NullIdentifier )
@@ -204,13 +238,6 @@ namespace Moonfish.Graphics
                         ( IntPtr ) ( indexBaseOffset + patch.Part.StripStartIndex * 2 ), vertexBaseIndex );
                 }
             }
-        }
-
-
-
-        private void DispatchMaterial( TagIdent shaderIdent )
-        {
-            
         }
 
         private void ForceItem( Camera eye, ObjectBlock @object, ScenarioInstanceBlock instance )
@@ -346,7 +373,8 @@ namespace Moonfish.Graphics
                     GetSectionIndex(
                         permutationNames == null
                             ? region.Permutations[ 0 ]
-                            : region.Permutations.SingleOrDefault( u => u.Name == permutationNames[ index ] ) ?? region.Permutations[0], detailLevel ) ;
+                            : region.Permutations.SingleOrDefault( u => u.Name == permutationNames[ index ] ) ??
+                              region.Permutations[ 0 ], detailLevel );
                 sectionIndices[ index ] = sectionIndex;
             }
             return sectionIndices;
@@ -377,135 +405,6 @@ namespace Moonfish.Graphics
                 ProcessPalette( eyeCamera, scenarioBlock.Vehicles, scenarioBlock.VehiclePalette );
                 ProcessPalette( eyeCamera, scenarioBlock.Weapons, scenarioBlock.WeaponPalette );
             }
-        }
-
-        /// <summary>
-        ///     Sorts render calls into optimized batches
-        /// </summary>
-        private class DrawManager
-        {
-            /// <summary>
-            ///     Clears all parts currently marked as visible ( Call this at the start of a frame )
-            /// </summary>
-            public static void ClearVisible( )
-            {
-                //TODO implement filtering here
-            }
-
-            private InstanceManager InstanceManager { get; set; } = new InstanceManager(  );
-
-            /// <summary>
-            ///     Creates an instance object for the given part
-            /// </summary>
-            /// <param name="part">The part to be instanced</param>
-            /// <param name="instance">The instance data</param>
-            public void CreateInstance( GlobalGeometryPartBlockNew part, dynamic instance )
-            {
-                InstanceManager.CreateInstance( part, instance );
-            }
-
-            public void RemoveInstance( GlobalGeometryPartBlockNew part, dynamic instance )
-            {
-                InstanceManager.RemoveInstance( part, instance );
-            }
-
-            /// <summary>
-            ///     Returns all Opaque* type parts
-            /// </summary>
-            /// <returns>A sequence of patch data</returns>
-            public IEnumerable<PatchData> GetOpaqueParts( )
-            {
-                var opaqueParts = InstanceManager.Parts.Where(
-                    e =>
-                        e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowCasting ||
-                        e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowOnly ||
-                        e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueNonshadowing );
-                var patches = new List<PatchData>( );
-                foreach ( var part in opaqueParts )
-                {
-                    foreach ( var instance in InstanceManager.GetInstancesOf( part ) )
-                    {
-                        patches.Add( new PatchData( part, instance )
-                        {
-                            ShaderIdent = _shaderDictionary[ part ]
-                        } );
-                    }
-                }
-                return patches;
-            }
-
-            /// <summary>
-            ///     Returns all Transparent type parts
-            /// </summary>
-            /// <param name="eye">The viewer used for depth sorting</param>
-            /// <returns>A sequence of patch data</returns>
-            public IEnumerable<PatchData> GetTransparentParts( Camera eye )
-            {
-                var transparentParts =
-                    InstanceManager.Parts.Where( e => e.Type == GlobalGeometryPartBlockNew.TypeEnum.Transparent )
-                        .ToList( );
-                return SortTransparentParts( transparentParts, eye );
-            }
-
-            /// <summary>
-            ///     Returns a sorted collection of DrawStubs
-            /// </summary>
-            /// <param name="transparentParts"></param>
-            /// <param name="eye"></param>
-            /// <returns></returns>
-            private IEnumerable<PatchData> SortTransparentParts(
-                ICollection<GlobalGeometryPartBlockNew> transparentParts,
-                Camera eye )
-            {
-
-                var capacity = transparentParts.Sum( u => InstanceManager.GetInstanceCount( u ) );
-
-                var transparentDrawsSortedList =
-                    new SortedList<float, PatchData>( capacity, DistanceComparer );
-
-                foreach ( var part in transparentParts )
-                {
-                    foreach ( var instance in InstanceManager.GetInstancesOf( part ) )
-                    {
-                        var scenePosition = Vector3.TransformPosition( part.Position, instance.worldMatrix );
-
-                        var distance = eye.DistanceOf( scenePosition );
-
-                        transparentDrawsSortedList.Add( distance, new PatchData( part, instance )
-                        {
-                            ShaderIdent = _shaderDictionary[ part ]
-                        } );
-                    }
-                }
-                return transparentDrawsSortedList.Select( u => u.Value );
-            }
-
-
-            private static readonly Comparer<float> DistanceComparer = Comparer<float>.Create( ( a, b ) => a <= b ? 1 : -1 );
-
-            private readonly Dictionary<GlobalGeometryPartBlockNew, TagIdent> _shaderDictionary =
-                new Dictionary<GlobalGeometryPartBlockNew, TagIdent>();
-            
-
-            public void AssignShader( GlobalGeometryPartBlockNew part, TagIdent shaderIdent )
-            {
-                //  Does this work now?
-                _shaderDictionary[ part ] = shaderIdent;
-            }
-        }
-
-        public void Load( ObjectBlock objectBlock)
-        {
-            if ( objectBlock == null || ObjectBlock == objectBlock) return;
-            DispatchDeletion( ObjectBlock, new ScenarioInstanceBlock(  ) );
-            ObjectBlock = objectBlock;
-        }
-
-        private List<ObjectBlock> StaticObjects { get; } = new List<ObjectBlock>();
-        public void Load( BitmapBlock block )
-        {
-            var billboardObject = new BillboardObject( block.Bitmaps[0] );
-            StaticObjects.Add( billboardObject );
         }
     };
 }

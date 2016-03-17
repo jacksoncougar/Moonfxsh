@@ -149,7 +149,7 @@ namespace Moonfish.Graphics
         {
             // map to [-0.5, 0.5], over 10 seconds
             var value = (( time % 10 ) - 5) / 1000;
-            System.Diagnostics.Debug.WriteLine(value);
+            //System.Diagnostics.Debug.WriteLine(value);
             var rand0 = random.Next(0, 1);
             var rand1 = random.Next(0, 1);
             //var output = (float)(value * value * value) / 16f;

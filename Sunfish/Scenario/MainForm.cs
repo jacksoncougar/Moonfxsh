@@ -38,7 +38,7 @@ namespace Sunfish.Forms
         {
             if ( reference.Class == TagClass.Bitm )
             {
-                _sceneView.Scene.Manager.Load((BitmapBlock)reference.Get());
+                _sceneView.Scene.Manager.Load(reference);
             }
             if ( reference.Class == TagClass.Scen || reference.Class == TagClass.Bloc ||
                  reference.Class == TagClass.Vehi || reference.Class == TagClass.Bipd ||
@@ -46,8 +46,7 @@ namespace Sunfish.Forms
                  reference.Class == TagClass.Mach || reference.Class == TagClass.Unit ||
                  reference.Class == TagClass.Weap )
                 _sceneView.Scene.Manager.Load( ( ObjectBlock ) reference.Get( ) );
-
-            _sceneView.Scene.Manager.Load( ( ObjectBlock ) reference.Get( ) );
+            
         }
     }
 }

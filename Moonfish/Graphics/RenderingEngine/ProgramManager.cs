@@ -25,7 +25,7 @@ namespace Moonfish.Graphics
             LightmapTextures = new Dictionary<Tuple<int, int>, TextureHandle>( );
             //LoadDefaultShader( );
             //LoadSystemShader( );
-            //LoadScreenShader( );
+            LoadScreenShader( );
             //LoadLightmapShader( );
             LoadDebugShader( );
             LoadDebug2Shader( );
@@ -37,14 +37,14 @@ namespace Moonfish.Graphics
 
         public Program ScreenProgram
         {
-            get { return Shaders["screen"]; }
+            get { return Shaders[ "screen" ]; }
         }
 
-        public Program DefaultProgram => Shaders["default"];
+        public Program DefaultProgram => Shaders[ "default" ];
 
         public Program SystemProgram
         {
-            get { return Shaders["system"]; }
+            get { return Shaders[ "system" ]; }
         }
 
         public Program DebugShader => Shaders[ "debug" ];
@@ -68,7 +68,7 @@ namespace Moonfish.Graphics
         public Program DebugShader2 => Shaders[ "debug2" ];
 
 
-    public IEnumerator<Program> GetEnumerator( )
+        public IEnumerator<Program> GetEnumerator( )
         {
             return Shaders.Select( x => x.Value ).GetEnumerator( );
         }
@@ -177,8 +177,11 @@ namespace Moonfish.Graphics
         private void LoadDefaultShader( )
         {
             Program defaultProgram;
-            var vertex_shader = new Shader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/vertex.vert"), ShaderType.VertexShader );
-            var fragment_shader = new Shader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data/fragment.frag"), ShaderType.FragmentShader );
+            var vertex_shader = new Shader( Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "data/vertex.vert" ),
+                ShaderType.VertexShader );
+            var fragment_shader =
+                new Shader( Path.Combine( AppDomain.CurrentDomain.BaseDirectory, "data/fragment.frag" ),
+                    ShaderType.FragmentShader );
             defaultProgram = new Program( "shaded" );
             GL.BindAttribLocation( defaultProgram.Ident, 0, "position" );
             GL.BindAttribLocation( defaultProgram.Ident, 1, "boneIndices" );
@@ -186,9 +189,9 @@ namespace Moonfish.Graphics
             GL.BindAttribLocation( defaultProgram.Ident, 3, "texcoord" );
             GL.BindAttribLocation( defaultProgram.Ident, 4, "normal" );
             GL.BindAttribLocation( defaultProgram.Ident, 5, "tangent" );
-            GL.BindAttribLocation(defaultProgram.Ident, 6, "bitangent");
-            GL.BindAttribLocation(defaultProgram.Ident, 7, "colour");
-            GL.BindAttribLocation(defaultProgram.Ident, 8, "instanceWorldMatrix");
+            GL.BindAttribLocation( defaultProgram.Ident, 6, "bitangent" );
+            GL.BindAttribLocation( defaultProgram.Ident, 7, "colour" );
+            GL.BindAttribLocation( defaultProgram.Ident, 8, "instanceWorldMatrix" );
 
             //GL.BindAttribLocation(defaultProgram.ID, 3, "colour"); OpenGL.ReportError();
             defaultProgram.Link( new List<Shader>( 2 ) {vertex_shader, fragment_shader} );
@@ -224,8 +227,8 @@ namespace Moonfish.Graphics
 
 
             defaultProgram.Link( new List<Shader>( 2 ) {vertex_shader, fragment_shader} );
-            Shaders[defaultProgram.Name] = defaultProgram;
-            
+            Shaders[ defaultProgram.Name ] = defaultProgram;
+
             var p8NormalColourUniform = Shaders[ defaultProgram.Name ].GetUniformLocation( "P8NormalColour" );
             var p8NormalMapUniform = Shaders[ defaultProgram.Name ].GetUniformLocation( "P8NormalMap" );
             var diffuseMapUniform = Shaders[ defaultProgram.Name ].GetUniformLocation( "DiffuseMap" );
@@ -325,12 +328,17 @@ namespace Moonfish.Graphics
         private void LoadScreenShader( )
         {
             var vertex_shader = new Shader( "data/viewscreen.vert", ShaderType.VertexShader );
-            var fragment_shader = new Shader( "data/sys_fragment.frag", ShaderType.FragmentShader );
+            var fragment_shader = new Shader( "data/debug.frag", ShaderType.FragmentShader );
             var defaultProgram = new Program( "screen" );
             GL.BindAttribLocation( defaultProgram.Ident, 0, "Position" );
             GL.BindAttribLocation( defaultProgram.Ident, 1, "Colour" );
 
             defaultProgram.Link( new List<Shader>( 2 ) {vertex_shader, fragment_shader} );
+
+            var diffuseMapUniform = defaultProgram.GetUniformLocation( "diffuseSampler" );
+
+            defaultProgram.Use( );
+            defaultProgram.SetUniform( diffuseMapUniform, 0 );
             Shaders[ "screen" ] = defaultProgram;
         }
 

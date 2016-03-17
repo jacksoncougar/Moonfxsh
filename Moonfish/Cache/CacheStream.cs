@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using Fasterflect;
@@ -146,7 +147,7 @@ namespace Moonfish.Cache
 
             _deserializedTagCache = new Dictionary<TagIdent, GuerillaBlock>(Index.Count);
             _tagHashDictionary = new Dictionary<TagIdent, string>(Index.Count);
-            Halo2.ActiveMap(this);
+            Halo2.SetActiveMap(this);
 
             Initialize();
         }
@@ -186,7 +187,7 @@ namespace Moonfish.Cache
             return new TagDatum();
         }
 
-        public void Add<T>(T item, string tagName) where T : GuerillaBlock
+        public TagDatum Add<T>(T item, string tagName) where T : GuerillaBlock
         {
             var lastDatum = Index.Last();
 
@@ -196,7 +197,9 @@ namespace Moonfish.Cache
             binaryWriter.Write(item);
             var serializedTagData = stream.ToArray();
 
-            var attribute = (TagClassAttribute) typeof (T).Attribute(typeof (TagClassAttribute));
+            var attribute = ( TagClassAttribute ) item.GetType( ).Attribute( typeof ( TagClassAttribute ) ) ??
+                            ( TagClassAttribute )
+                                item.GetType( ).BaseType?.GetCustomAttributes(typeof ( TagClassAttribute ) ).FirstOrDefault();
             var tagDatum = Index.Add(attribute.TagClass, tagName, serializedTagData.Length, lastDatum.VirtualAddress);
 
             _deserializedTagCache.Add(tagDatum.Identifier, item );
@@ -206,8 +209,9 @@ namespace Moonfish.Cache
             
 
 #if DEBUG
-            new Validator().Validate(tagDatum, stream);
+            //new Validator().Validate(tagDatum, stream);
 #endif
+            return tagDatum;
 
             //Allocate(tagDatum.Identifier, serializedTagData.Length);
         }

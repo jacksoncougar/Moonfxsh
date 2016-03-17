@@ -248,12 +248,17 @@
     <Compile Include="Graphics\Blam!\VertexShader.cs" />
     <Compile Include="Graphics\Blam!\WriteMask.cs" />
     <Compile Include="Graphics\ColorExtensions.cs" />
+    <Compile Include="Graphics\RenderingEngine\BillboardObject.cs" />
+    <Compile Include="Graphics\RenderingEngine\BitmapMapping.cs" />
     <Compile Include="Graphics\RenderingEngine\D3d8Types.cs" />
+    <Compile Include="Graphics\RenderingEngine\DrawManager.cs" />
     <Compile Include="Graphics\RenderingEngine\Extensions.cs" />
     <Compile Include="Graphics\RenderingEngine\InstanceData.cs" />
     <Compile Include="Graphics\RenderingEngine\InstanceManager.cs" />
     <Compile Include="Graphics\RenderingEngine\MaterialManager.cs" />
+    <Compile Include="Graphics\RenderingEngine\MeshImporter.cs" />
     <Compile Include="Graphics\RenderingEngine\PatchData.cs" />
+    <Compile Include="Graphics\RenderingEngine\ScenarioInstanceBlock.cs" />
     <Compile Include="Graphics\RenderingEngine\StateManager.cs" />
     <Compile Include="Graphics\SceneClock.cs" />
     <Compile Include="Forms\ShaderViewer.cs">
@@ -1365,6 +1370,7 @@
     <Compile Include="Guerilla\Tags\MoonfishXboxAnimationRawBlock.cs" />
     <Compile Include="Guerilla\Tags\ParticleModelBlock.cs" />
     <Compile Include="Guerilla\Tags\PrtInfoBlock.cs" />
+    <Compile Include="Guerilla\Tags\ShaderPassPostprocessTextureStateBlock.cs" />
     <Compile Include="Guerilla\Tags\SoundGestaltExtraInfoBlock.cs" />
     <Compile Include="Guerilla\Tags\SoundPermutationChunkBlock.cs" />
     <Compile Include="Guerilla\Tags\StructureBspClusterBlock.cs" />

@@ -139,10 +139,12 @@ namespace Moonfish
             return definedTagGroupsDictionary.TryGetValue(className, out type) ? type : null;
         }
 
-        internal static void ActiveMap(CacheStream mapstream)
+        internal static void SetActiveMap(CacheStream mapstream)
         {
             mapStream = mapstream;
         }
+
+        public static CacheStream ActiveMap => mapStream;
 
         internal static bool ObjectChanged(TagIdent ident)
         {

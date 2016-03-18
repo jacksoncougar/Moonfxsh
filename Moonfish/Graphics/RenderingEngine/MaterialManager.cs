@@ -18,13 +18,13 @@ namespace Moonfish.Graphics.RenderingEngine
         public Dictionary<TagIdent, MaterialShader> _materialDictionary = new Dictionary<TagIdent, MaterialShader>();
         public Dictionary<TagIdent, TextureHandle> _textureDictionary = new Dictionary<TagIdent, TextureHandle>( );
 
-        public MaterialShader GetMaterial( TagIdent materialIdent )
+        public MaterialShader GetMaterial( TagGlobalKey key )
         {
-            if ( _materialDictionary.ContainsKey( materialIdent ) ) return _materialDictionary[ materialIdent ];
+            if ( _materialDictionary.ContainsKey( key.TagKey ) ) return _materialDictionary[ key.TagKey ];
 
-            var shaderBlock = materialIdent.Get<ShaderBlock>();
+            var shaderBlock = ( ShaderBlock ) key.Get( );
             ShaderPostprocessBitmapNewBlock[] bitmaps;
-            _materialDictionary[materialIdent] = new MaterialShader(shaderBlock, out bitmaps);
+            _materialDictionary[ key.TagKey ] = new MaterialShader( shaderBlock, out bitmaps );
 
             foreach ( var bitmap in bitmaps )
             {
@@ -32,17 +32,17 @@ namespace Moonfish.Graphics.RenderingEngine
                 if ( _textureDictionary.ContainsKey( bitmapKey ) ) continue;
 
                 var layer = bitmap.BitmapIndex;
-                var bitmapBlock = ( BitmapBlock ) bitmap.BitmapGroup.Get( );
-                if ( bitmapBlock==null )
+                var bitmapBlock = ( BitmapBlock ) bitmap.BitmapGroup.Get( key.CacheKey );
+                if ( bitmapBlock == null )
                 {
                     continue;
                 }
-                var texture = new TextureHandle(  );
-                texture.Load(bitmapBlock.Bitmaps[layer]);
-                _textureDictionary.Add(bitmapKey, texture );
+                var texture = new TextureHandle( );
+                texture.Load( bitmapBlock.Bitmaps[ layer ] );
+                _textureDictionary.Add( bitmapKey, texture );
             }
 
-            return _materialDictionary[materialIdent];
+            return _materialDictionary[ key.TagKey ];
         }
 
         private static TagIdent GetBitmapKey( ShaderPostprocessBitmapNewBlock bitmap )

@@ -140,6 +140,7 @@
     <Compile Include="Cache\CacheStream.StringIdentInfo.cs" />
     <Compile Include="Cache\CacheWriter.cs" />
     <Compile Include="Cache\CacheStream.IndexInfo.cs" />
+    <Compile Include="Cache\ICache.cs" />
     <Compile Include="Cache\StructureAllocationHeader.cs" />
     <Compile Include="Cache\StructureCache.cs" />
     <Compile Include="Cache\TagClassHeirarchy.cs" />
@@ -1375,6 +1376,11 @@
     <Compile Include="Guerilla\Tags\SoundPermutationChunkBlock.cs" />
     <Compile Include="Guerilla\Tags\StructureBspClusterBlock.cs" />
     <Compile Include="Guerilla\Tags\StructureLightmapPaletteColorBlock.cs" />
+    <Compile Include="Solution\DynamicContent.cs" />
+    <Compile Include="Solution\Index.cs" />
+    <Compile Include="Solution\Resource.cs" />
+    <Compile Include="Solution\Solution.cs" />
+    <Compile Include="Solution\StaticContent.cs" />
     <Compile Include="ValueTypes\BinaryWriterExtensions.cs" />
     <Compile Include="ValueTypes\LayoutAttribute.cs" />
     <Compile Include="ValueTypes\TagBlockFieldAttribute.cs" />
@@ -1493,7 +1499,6 @@
     <None Include="Documentation\Solution UML hierarchy.pdf" />
     <None Include="Documentation\vertex program documentation.pdf" />
     <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
-    <None Include="packages.config" />
     <Compile Include="Guerilla\Tags\Shader.Code.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1501,6 +1506,7 @@
     <Content Include="bin\x86\Debug\Moonfish2015.pdb" />
     <Content Include="Documentation\halo_2_header.txt" />
     <Content Include="Documentation\NVVertexProgramIL.h" />
+    <Content Include="Documentation\Spas.png" />
     <Content Include="Documentation\tangent_space_calculations_cpp.txt" />
     <Content Include="Documentation\index layout.txt" />
     <Content Include="Documentation\vertex_formats.txt" />

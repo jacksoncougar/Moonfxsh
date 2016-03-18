@@ -14,17 +14,19 @@ namespace Moonfish.Graphics
     {
         private static readonly Comparer<float> DistanceComparer = Comparer<float>.Create( ( a, b ) => a <= b ? 1 : -1 );
 
-        private readonly Dictionary<GlobalGeometryPartBlockNew, TagIdent> _shaderDictionary =
-            new Dictionary<GlobalGeometryPartBlockNew, TagIdent>( );
+        private readonly Dictionary<GlobalGeometryPartBlockNew, TagGlobalKey> _shaderDictionary =
+            new Dictionary<GlobalGeometryPartBlockNew, TagGlobalKey>( );
 
         private InstanceManager InstanceManager { get; } = new InstanceManager( );
 
 
-        public void AssignShader( GlobalGeometryPartBlockNew part, TagIdent shaderIdent )
+        public void AssignShader( GlobalGeometryPartBlockNew part, CacheKey cacheKey, TagIdent shaderIdent )
         {
+            var glocalKey = new TagGlobalKey( cacheKey, shaderIdent );
             //  Does this work now?
-            _shaderDictionary[ part ] = shaderIdent;
+            _shaderDictionary[ part ] = glocalKey;
         }
+
 
         /// <summary>
         ///     Clears all parts currently marked as visible ( Call this at the start of a frame )
@@ -44,10 +46,10 @@ namespace Moonfish.Graphics
             InstanceManager.CreateInstance( part, instance );
         }
 
-        public IEnumerable<PatchData> GetOpaqueParts( TagIdent shaderIdent )
+        public IEnumerable<PatchData> GetOpaqueParts(TagGlobalKey shaderKey )
         {
             var opaqueParts = InstanceManager.Parts.Where(
-                e => _shaderDictionary[ e ] == shaderIdent && (
+                e => _shaderDictionary[ e ] == shaderKey && (
                     e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowCasting ||
                     e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueShadowOnly ||
                     e.Type == GlobalGeometryPartBlockNew.TypeEnum.OpaqueNonshadowing ) );
@@ -57,7 +59,7 @@ namespace Moonfish.Graphics
                 {
                     yield return new PatchData( part, instance )
                     {
-                        ShaderIdent = _shaderDictionary[ part ]
+                        ShaderKey = _shaderDictionary[ part ]
                     };
                 }
             }
@@ -81,14 +83,14 @@ namespace Moonfish.Graphics
                 {
                     patches.Add( new PatchData( part, instance )
                     {
-                        ShaderIdent = _shaderDictionary[ part ]
+                        ShaderKey = _shaderDictionary[ part ]
                     } );
                 }
             }
             return patches;
         }
 
-        public IEnumerable<TagIdent> GetShaders( )
+        public IEnumerable<TagGlobalKey> GetShaders( )
         {
             return _shaderDictionary.Values.Distinct( );
         }
@@ -136,7 +138,7 @@ namespace Moonfish.Graphics
 
                     transparentDrawsSortedList.Add( distance, new PatchData( part, instance )
                     {
-                        ShaderIdent = _shaderDictionary[ part ]
+                        ShaderKey = _shaderDictionary[ part ]
                     } );
                 }
             }

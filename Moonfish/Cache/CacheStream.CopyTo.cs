@@ -184,8 +184,6 @@ namespace Moonfish.Cache
                     case Halo2.ResourceSource.Local:
                         CopyLocalResource( outputStream, resourceBlock, address, length, i );
                         break;
-                    case Halo2.ResourceSource.Tag:
-                        throw new NotImplementedException( );
                     default:
                         //  we don't need to do anything with external resources
                         continue;

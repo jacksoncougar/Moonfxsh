@@ -16,15 +16,15 @@ namespace Moonfish
     ///     This static class holds all globals for Halo 2 and useful methods
     ///     This isn't actuall how the enum is setup in Halo 2: I'm just inserting an extra flag
     /// </summary>
+    [Obsolete]
     public static class Halo2
     {
         public enum ResourceSource
         {
             Local = 0,
-            Tag = 1,
-            MainMenu = 2,
-            Shared = 4,
-            SinglePlayerShared = 6
+            MainMenu = 1,
+            Shared = 2,
+            SinglePlayerShared = 3
         }
 
         public const int NullPtr = 0;
@@ -76,60 +76,17 @@ namespace Moonfish
             get { return strings; }
         }
 
-        public static GlobalPaths Paths { get; set; }
+        private static GlobalPaths Paths { get; set; }
 
-        public static MapType CheckMapType(string filename)
+        public static MapType CheckMapType( string filename )
         {
             using (
                 var reader =
-                    new BinaryReader(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite,
-                        2048, FileOptions.SequentialScan | FileOptions.Asynchronous)))
+                    new BinaryReader( new FileStream( filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite,
+                        2048, FileOptions.SequentialScan | FileOptions.Asynchronous ) ) )
             {
-                reader.BaseStream.Seek(320, SeekOrigin.Begin);
-                return (MapType) reader.ReadInt32();
-            }
-        }
-
-        public static dynamic GetReferenceObject(TagIdent identifier, bool reload = false)
-        {
-            if ( mapStream == null || identifier == TagIdent.NullIdentifier ) return null;
-            if (reload)
-                mapStream.ClearCache(identifier);
-            return mapStream.Deserialize(identifier);
-        }
-
-        public static dynamic GetReferenceObject(TagReference reference)
-        {
-            return GetReferenceObject( reference.Ident );
-        }
-
-        public static ResourceStream GetResourceBlock(GlobalGeometryBlockInfoStructBlock blockInfo)
-        {
-            Stream resourceStream = mapStream;
-            if (blockInfo.ResourceLocation != ResourceSource.Local
-                && !TryGettingResourceStream(blockInfo.BlockOffset, out resourceStream))
-                return null;
-            resourceStream.Position = blockInfo.ResourceOffset + 8;
-            var buffer = new byte[blockInfo.BlockSize - 8];
-            resourceStream.Read(buffer, 0, blockInfo.BlockSize - 8);
-            return new ResourceStream(buffer, blockInfo);
-        }
-
-        public static bool LoadResource(CacheStream map)
-        {
-            switch (map.Header.Type)
-            {
-                case MapType.Shared:
-                    resourceShared = map;
-                    return true;
-                case MapType.SinglePlayerShared:
-                    resourceSinglePlayer = map;
-                    return true;
-                case MapType.MainMenu:
-                    resourceMainMenu = map;
-                    return true;
-                default:
-                    return false;
+                reader.BaseStream.Seek( 320, SeekOrigin.Begin );
+                return ( MapType ) reader.ReadInt32( );
             }
         }
 
@@ -145,64 +102,8 @@ namespace Moonfish
         }
 
         public static CacheStream ActiveMap => mapStream;
-
-        internal static bool ObjectChanged(TagIdent ident)
-        {
-            var newHash = mapStream.CalculateHash(ident);
-            var currentHash = mapStream.GetTagHash(ident);
-            if (currentHash == null) return false;
-            var equals = currentHash == newHash;
-            return !@equals;
-        }
-
-        internal static bool TryGettingResourceStream(ResourceSource resourceSource, out CacheStream resourceStream)
-        {
-            switch (resourceSource)
-            {
-                case ResourceSource.Shared:
-                    resourceStream = resourceShared;
-                    break;
-                case ResourceSource.SinglePlayerShared:
-                    resourceStream = resourceSinglePlayer;
-                    break;
-                case ResourceSource.MainMenu:
-                    resourceStream = resourceMainMenu;
-                    break;
-                case ResourceSource.Local:
-                    resourceStream = mapStream;
-                    break;
-                default:
-                    resourceStream = null;
-                    return false;
-            }
-            var hasResource = resourceStream != null;
-            return hasResource;
-        }
-
-        internal static bool TryGettingResourceStream(int resourceAddress, out Stream resourceStream)
-        {
-            var pointer = (ResourcePointer) resourceAddress;
-            switch (pointer.Source)
-            {
-                case ResourceSource.Shared:
-                    resourceStream = resourceShared;
-                    break;
-                case ResourceSource.SinglePlayerShared:
-                    resourceStream = resourceSinglePlayer;
-                    break;
-                case ResourceSource.MainMenu:
-                    resourceStream = resourceMainMenu;
-                    break;
-                case ResourceSource.Local:
-                    resourceStream = mapStream;
-                    break;
-                default:
-                    resourceStream = null;
-                    return false;
-            }
-            var success = resourceStream != null;
-            return success;
-        }
+        
+        
     }
 
     public static class Log

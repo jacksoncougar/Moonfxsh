@@ -41,7 +41,7 @@ namespace Moonfish.Graphics
             var id = 0;
             foreach ( var vertexAttributeType in attributes )
             {
-                id |= IdLookup[ vertexAttributeType ];
+                id |= IdLookup.ContainsKey( vertexAttributeType ) ? IdLookup[ vertexAttributeType ] : 0;
             }
             return id;
         }

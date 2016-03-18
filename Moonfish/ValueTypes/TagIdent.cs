@@ -27,14 +27,14 @@ namespace Moonfish.Tags
             Salt = salt;
         }
 
-        public T Get<T>() where T : GuerillaBlock
+        public T Get<T>(CacheKey key) where T : GuerillaBlock
         {
-            return Halo2.GetReferenceObject(this);
+            return this.GetFromCache<T>(key );
         }
 
-        public object Get()
+        public object Get(CacheKey key)
         {
-            return Get<GuerillaBlock>();
+            return this.GetFromCache(key);
         }
 
         public static explicit operator int(TagIdent item)
@@ -80,7 +80,7 @@ namespace Moonfish.Tags
 
         public override string ToString()
         {
-            return $@"{Index},{Salt},{Halo2.Paths[ Index ]}";
+            return $@"{Index},{Salt}";
         }
 
         public static TagIdent NullIdentifier = (TagIdent) (-1);
@@ -91,9 +91,9 @@ namespace Moonfish.Tags
         }
 
         [Pure]
-        public string GetPath( )
+        public string GetPath( CacheKey key )
         {
-            return Halo2.Paths[ Index ];
+            return Solution.Index[ key ][ Index ].Path;
         }
     }
 }

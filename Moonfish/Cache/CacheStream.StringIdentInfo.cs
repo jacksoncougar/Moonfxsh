@@ -9,6 +9,7 @@ namespace Moonfish.Cache
 {
     partial class CacheStream
     {
+
         /// <summary>
         /// A struct containing an address and byte-length to a resource in halo 2 vista
         /// </summary>

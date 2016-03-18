@@ -20,7 +20,7 @@ namespace Sunfish.Forms
 
         private static readonly Comparer<TagDatum> PathComparer = Comparer<TagDatum>.Create(
             ( u, v ) =>
-                string.Compare( Halo2.Paths[ u.Identifier.Index ], Halo2.Paths[ v.Identifier.Index ], StringComparison.Ordinal ) );
+                string.Compare( u.Identifier.GetPath( u.CacheKey ), v.Identifier.GetPath( v.CacheKey ), StringComparison.Ordinal ) );
 
         private static readonly Comparer<TagDatum> ClassComparer = Comparer<TagDatum>.Create(
             ( u, v ) =>
@@ -75,7 +75,7 @@ namespace Sunfish.Forms
             var lookup = new Dictionary<TagClass, TreeNode>( );
             foreach ( var reference in references )
             {
-                var path = Halo2.Paths[ reference.Identifier.Index ];
+                var path = reference.Path;
                 var tagClass = reference.Class;
                 var @class = ( string ) tagClass;
 
@@ -155,8 +155,10 @@ namespace Sunfish.Forms
                 Name = Path.ChangeExtension( name, reference.Class.ToString( ) );
                 BlockIdent = reference.Identifier;
                 BlockClass = reference.Class;
+                Datum = reference;
             }
 
+            public TagDatum Datum { get; }
             public TagClass BlockClass { get; }
             public TagIdent BlockIdent { get; }
         }

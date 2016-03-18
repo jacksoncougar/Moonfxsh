@@ -49,7 +49,7 @@ namespace Sunfish.Forms
         /// <remarks>
         ///     This should fire regardless of where the tag item is located: ie treeview, or taglist
         /// </remarks>
-        public event EventHandler<TagReference> TagItemDoubleClick;
+        public event EventHandler<TagDatum> TagItemDoubleClick;
 
         class FuncEqualityComparer<T> : IEqualityComparer<T>
         {
@@ -165,7 +165,7 @@ namespace Sunfish.Forms
 
             var tagClass = guerillaBlockReference.BlockClass;
             var tagIdent = guerillaBlockReference.BlockIdent;
-            TagItemDoubleClick?.Invoke( this, new TagReference( tagClass, tagIdent ) );
+            TagItemDoubleClick?.Invoke( this, guerillaBlockReference.Datum );
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace Sunfish.Forms
             }
             else
             {
-                references = scenarioView1.References.Where( u => u.Identifier.GetPath( ).Contains( searchTerm ) );
+                references = scenarioView1.References.Where( u => u.Identifier.GetPath( u.CacheKey ).Contains( searchTerm ) );
             }
             foreach ( var reference in references )
             {
@@ -239,9 +239,9 @@ namespace Sunfish.Forms
         {
             public TagReferenceListViewItem( TagDatum datum, int imageIndex = 0 )
             {
-                Reference = new TagReference( datum.Class, datum.Identifier );
-                Name = Path.ChangeExtension(datum.Identifier.GetPath(), datum.Class.ToString());
-                Text = Path.ChangeExtension( Path.GetFileName( datum.Identifier.GetPath( ) ),
+                Reference = datum;
+                Name = Path.ChangeExtension(datum.Identifier.GetPath(datum.CacheKey), datum.Class.ToString());
+                Text = Path.ChangeExtension( Path.GetFileName( datum.Identifier.GetPath( datum.CacheKey) ),
                     datum.Class.ToString( ) );
                 ImageIndex = imageIndex;
                 SubItems.AddRange( new[]
@@ -254,7 +254,7 @@ namespace Sunfish.Forms
             /// <summary>
             ///     Reference of tag
             /// </summary>
-            public TagReference Reference { get; }
+            public TagDatum Reference { get; }
         };
 
         /// <summary>

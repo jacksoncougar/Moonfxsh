@@ -15,6 +15,51 @@ namespace Moonfish.Guerilla
             return customAttribute.TagClass;
         }
 
+        static Dictionary<Type, FieldInfo[]> FieldInfoDictionary = new Dictionary<Type, FieldInfo[]>();
+        static Dictionary<FieldInfo, MemberGetter> Accessors = new Dictionary<FieldInfo, MemberGetter>(); 
+        public static IEnumerable<GuerillaBlock> Children(this GuerillaBlock guerillaBlock)
+        {
+            var blockType = guerillaBlock.GetType( );
+            if ( !FieldInfoDictionary.ContainsKey( blockType ) )
+            {
+                FieldInfoDictionary[ blockType ] = blockType.Fields( null ).ToArray( );
+            }
+            var fields = FieldInfoDictionary[ blockType ];
+
+            foreach (var fieldInfo in fields)
+            {
+                if (IsGuerillaBlockStruct(fieldInfo))
+                {
+                    if ( !Accessors.ContainsKey( fieldInfo ) )
+                    {
+                        Accessors[ fieldInfo ] = fieldInfo.DelegateForGetFieldValue( );
+                    }
+                    var block = ( GuerillaBlock ) Accessors[ fieldInfo ].Invoke( guerillaBlock );
+                    yield return block;
+                    foreach ( var child in block.Children(  ) )
+                    {
+                        yield return child;
+                    }
+                }
+                if (IsGuerillaBlockArray(fieldInfo))
+                {
+                    if (!Accessors.ContainsKey(fieldInfo))
+                    {
+                        Accessors[fieldInfo] = fieldInfo.DelegateForGetFieldValue();
+                    }
+                    var elements = (GuerillaBlock[])Accessors[fieldInfo].Invoke(guerillaBlock);
+                    foreach (var element in elements)
+                    {
+                        yield return element;
+                        foreach ( var child in element.Children(  ) )
+                        {
+                            yield return child;
+                        }
+                    }
+                }
+            }
+        }
+
         public static IEnumerable<TagReference> GetReferences ( this GuerillaBlock guerillaBlock)
         {
             var fields = guerillaBlock.GetType( ).GetRuntimeFields( );
@@ -53,7 +98,7 @@ namespace Moonfish.Guerilla
 
         private static bool IsGuerillaBlockStruct( FieldInfo arg )
         {
-            var isStruct = arg.FieldType == typeof ( GuerillaBlock );
+            var isStruct = arg.FieldType.IsSubclassOf(typeof(GuerillaBlock ));
             return isStruct;
         }
 

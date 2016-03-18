@@ -15,7 +15,9 @@ namespace Moonfish.Graphics
             Data = data;
         }
 
-        public TagIdent ShaderIdent { get; set; } = TagIdent.NullIdentifier;
+
+
+        public TagGlobalKey ShaderKey { get; set; }
         public InstanceData Data { get; }
         public GlobalGeometryPartBlockNew Part { get; }
     }

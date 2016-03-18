@@ -18,14 +18,14 @@ namespace Sunfish.Forms
 {
     public partial class SceneView : DockContent
     {
-        private CacheStream _cacheStream;
+        public event EventHandler SceneInitialized;
+
         private OpenTK.GLControl _glControl1;
 
         public SceneView( CacheStream cacheStream )
         {
             SceneClock = new SceneClock( );
             SceneClock.timer.Start( );
-            _cacheStream = cacheStream;
             InitializeComponent( );
             LoadGLControl( );
         }
@@ -35,6 +35,9 @@ namespace Sunfish.Forms
             SceneClock = new SceneClock( );
             SceneClock.timer.Start( );
             InitializeComponent( );
+
+            LoadGLControl();
+
         }
 
         public DynamicScene Scene { get; set; }
@@ -48,15 +51,11 @@ namespace Sunfish.Forms
 
         private void glControl1_Load( object sender, EventArgs e )
         {
+            //var tagDatum  = _cacheStream.Index.SingleOrDefault(u => u.Class == TagClass.Bloc && u.Path.Contains("fusion"));
+
             //  create a new dynamic scene and pass this control as the scene owner to hook control
             //  then load the selected map into the scene
-            Scene = new DynamicScene( _glControl1 );
-            Scene.Manager.Load(
-                ( ObjectBlock )
-                    _cacheStream.Index.First( u => u.Class == TagClass.Scen && u.Path.Contains( "tree" ) )
-                        .Identifier.Get( ) );
-            Scene.Manager.Load( _cacheStream );
-            //var tagDatum  = _cacheStream.Index.SingleOrDefault(u => u.Class == TagClass.Bloc && u.Path.Contains("fusion"));
+            Scene = new DynamicScene(_glControl1);
 
             //  application idle will handle the render and update loop
             Application.Idle += HandleApplicationIdle;
@@ -66,6 +65,12 @@ namespace Sunfish.Forms
             //  firing this method is meant to load the view-projection matrix values into 
             //  the shader uniforms, and initalizes the camera before the first draw can be called
             glControl1_Resize( this, new EventArgs( ) );
+            SceneInitialized?.Invoke( this, null );
+        }
+
+        public void LoadCache( ICache cacheStream )
+        {
+                Scene.Manager.Load( cacheStream );
         }
 
         private void glControl1_Resize( object sender, EventArgs e )
@@ -150,7 +155,6 @@ namespace Sunfish.Forms
                 Filter = @"Blam! Map File (.map)|*.map"
             };
             if ( dialog.ShowDialog( ) != DialogResult.OK ) return;
-            _cacheStream = CacheStream.Open( dialog.FileName );
             LoadGLControl( );
             _glControl1.Load += glControl1_Load;
             glControl1_Load( null, null );
@@ -188,11 +192,5 @@ namespace Sunfish.Forms
             uint remove );
 
         #endregion
-
-        public void LoadFromCache( CacheStream cacheStream )
-        {
-            _cacheStream = cacheStream;
-            LoadGLControl();
-        }
     }
 }

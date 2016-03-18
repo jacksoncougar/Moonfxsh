@@ -42,13 +42,13 @@ namespace Moonfish.Forms
                 {
                     try
                     {
-                        var guerillaBlock = tagDatum.Identifier.Get<VertexShaderBlock>();
-                        var stream = new MemoryStream();
-                        var buffer = guerillaBlock.GeometryClassifications[0].Code;
-                        stream.Write(buffer, 0, buffer.Length);
+                        ////var guerillaBlock = tagDatum.Identifier.Get<VertexShaderBlock>();
+                        //var stream = new MemoryStream();
+                        //var buffer = guerillaBlock.GeometryClassifications[0].Code;
+                        //stream.Write(buffer, 0, buffer.Length);
 
-                        if (!_streamDictionary.ContainsKey(guerillaBlock.GeometryClassifications[0]))
-                            _streamDictionary.Add(guerillaBlock.GeometryClassifications[0], stream);
+                        //if (!_streamDictionary.ContainsKey(guerillaBlock.GeometryClassifications[0]))
+                        //    _streamDictionary.Add(guerillaBlock.GeometryClassifications[0], stream);
 
                     }
                     catch

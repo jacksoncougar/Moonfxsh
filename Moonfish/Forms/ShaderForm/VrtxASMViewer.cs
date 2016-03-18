@@ -44,22 +44,22 @@ namespace Moonfish.Forms
                 {
                     try
                     {
-                        var guerillaBlock = tagDatum.Identifier.Get<VertexShaderBlock>( );
-                        for ( int index = 0; index < guerillaBlock.GeometryClassifications.Length; index++ )
-                        {
-                            var vertexShaderClassificationBlock = guerillaBlock.GeometryClassifications[ index ];
-                            if ( vertexShaderClassificationBlock.Code.Length <= 0 ||
-                                 !blockKeys.Add( vertexShaderClassificationBlock ) ) continue;
+                        //var guerillaBlock = tagDatum.Identifier.Get<VertexShaderBlock>( );
+                        //for ( int index = 0; index < guerillaBlock.GeometryClassifications.Length; index++ )
+                        //{
+                        //    var vertexShaderClassificationBlock = guerillaBlock.GeometryClassifications[ index ];
+                        //    if ( vertexShaderClassificationBlock.Code.Length <= 0 ||
+                        //         !blockKeys.Add( vertexShaderClassificationBlock ) ) continue;
 
-                            var path = map.Index[ tagDatum.Identifier ].Path;
-                            var stream = new MemoryStream( vertexShaderClassificationBlock.Code );
-                            vertexStreams.Add( vertexShaderClassificationBlock, stream );
-                            vertexTags.Items.Add( new ListViewItem
-                            {
-                                Text = $"{path}: [{index}]",
-                                Tag = vertexShaderClassificationBlock
-                            } );
-                        }
+                        //    var path = map.Index[ tagDatum.Identifier ].Path;
+                        //    var stream = new MemoryStream( vertexShaderClassificationBlock.Code );
+                        //    vertexStreams.Add( vertexShaderClassificationBlock, stream );
+                        //    vertexTags.Items.Add( new ListViewItem
+                        //    {
+                        //        Text = $"{path}: [{index}]",
+                        //        Tag = vertexShaderClassificationBlock
+                        //    } );
+                        //}
                     }
                     catch
                     {

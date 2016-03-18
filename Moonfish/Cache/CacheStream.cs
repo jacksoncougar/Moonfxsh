@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,12 +13,12 @@ using Moonfish.Tags;
 
 namespace Moonfish.Cache
 {
-    public partial class CacheStream : FileStream
+    public partial class CacheStream : FileStream, ICache
     {
         private readonly Dictionary<TagIdent, GuerillaBlock> _deserializedTagCache;
         private readonly Dictionary<TagIdent, string> _tagHashDictionary;
         public readonly VirtualMappedAddress DefaultMemoryBlock;
-        
+
         public readonly string[] Strings;
         public readonly Dictionary<TagIdent, int> StructureMemoryBlockBindings;
         public readonly List<VirtualMappedAddress> StructureMemoryBlocks;
@@ -35,14 +36,6 @@ namespace Moonfish.Cache
 
         private static void LoadResourceMaps(string directory)
         {
-            var maps = Directory.GetFiles(directory, "*.map", SearchOption.TopDirectoryOnly);
-            var resourceMaps = maps.GroupBy(
-                Halo2.CheckMapType
-                ).Where(x => x.Key == MapType.MainMenu
-                              || x.Key == MapType.Shared
-                              || x.Key == MapType.SinglePlayerShared)
-                .Select(g => g.First()).ToList();
-            resourceMaps.ForEach(x => Halo2.LoadResource(new CacheStream(x)));
         }
 
         public CacheStream(string filename)
@@ -56,7 +49,7 @@ namespace Moonfish.Cache
             base.Seek(Header.PathsInfo.PathTableAddress, SeekOrigin.Begin);
             var paths = Encoding.UTF8.GetString(binaryReader.ReadBytes(Header.PathsInfo.PathTableLength - 1)).Split(Char.MinValue);
 
-            Halo2.Paths.Assign(paths);
+            //Halo2.Paths.Assign(paths);
 
             //STRINGS
 
@@ -147,7 +140,6 @@ namespace Moonfish.Cache
 
             _deserializedTagCache = new Dictionary<TagIdent, GuerillaBlock>(Index.Count);
             _tagHashDictionary = new Dictionary<TagIdent, string>(Index.Count);
-            Halo2.SetActiveMap(this);
 
             Initialize();
         }
@@ -173,6 +165,16 @@ namespace Moonfish.Cache
         }
 
         private VirtualMappedAddress ActiveStructureMemoryAllocation { get; set; }
+
+        public int Count
+        {
+            get { return Index.Count; }
+        }
+
+        public TagDatum this[int index]
+        {
+            get { return Index[ index ]; }
+        }
 
         public TagDatum GetOwner(int address)
         {
@@ -205,7 +207,6 @@ namespace Moonfish.Cache
             _deserializedTagCache.Add(tagDatum.Identifier, item );
 
             var paths = Index.Select( x => x.Path );
-            Halo2.Paths.Assign(paths);
             
 
 #if DEBUG
@@ -270,20 +271,25 @@ namespace Moonfish.Cache
             return DefaultMemoryBlock.Contains(blamPointer) || ActiveStructureMemoryAllocation.Contains(blamPointer);
         }
 
-        public GuerillaBlock Deserialize(TagIdent ident)
+        public GuerillaBlock Deserialize( TagIdent ident )
+        {
+            return Deserialize<GuerillaBlock>( ident );
+        }
+
+        public T Deserialize<T>( TagIdent ident ) where T : GuerillaBlock
         {
             GuerillaBlock deserializedTag;
-            if (_deserializedTagCache.TryGetValue(ident, out deserializedTag))
-                return deserializedTag;
+            if ( _deserializedTagCache.TryGetValue( ident, out deserializedTag ) )
+                return ( T ) deserializedTag;
 
-            var type = Halo2.GetTypeOf(Index[ident].Class);
-            if (type == null) return null;
+            var type = Halo2.GetTypeOf( Index[ ident ].Class );
+            if ( type == null ) return null;
 
-            Seek(ident);
-            _deserializedTagCache[ident] = Deserialize(type);
-            _tagHashDictionary[ident] = CalculateHash(ident);
+            Seek( ident );
+            _deserializedTagCache[ ident ] = Deserialize( type );
+            _tagHashDictionary[ ident ] = CalculateHash( ident );
 
-            return _deserializedTagCache[ident];
+            return ( T ) _deserializedTagCache[ ident ];
         }
 
         private GuerillaBlock Deserialize(Type tagType)
@@ -343,7 +349,7 @@ namespace Moonfish.Cache
             return true;
         }
 
-        private int CalculateChecksum()
+        public int CalculateChecksum()
         {
             const int blockSize = 512;
             var buffer = new byte[blockSize];
@@ -431,6 +437,41 @@ namespace Moonfish.Cache
             foreach (var block in StructureMemoryBlocks.Where(block => block.ContainsVirtualOffset(value)))
                 return block.GetOffset(value);
             throw new InvalidOperationException();
+        }
+
+        /// <summary>
+        /// TODO optimize 
+        /// </summary>
+        /// <param name="guerillaBlock"></param>
+        /// <returns></returns>
+        public bool Contains<T>( T guerillaBlock ) where T :GuerillaBlock
+        {
+            foreach ( var block in _deserializedTagCache )
+            {
+                if ( block.Value == guerillaBlock )
+                    return true;
+                var children = block.Value.Children(  ).ToList(  );
+                foreach ( var child in children )
+                {
+                    if ( child is GlobalGeometryPartBlockNew )
+                    {
+                        
+                    }
+                    if ( child == guerillaBlock )
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        public IEnumerator<TagDatum> GetEnumerator()
+        {
+            return Index.GetEnumerator( );
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return Index.GetEnumerator();
         }
     }
 }

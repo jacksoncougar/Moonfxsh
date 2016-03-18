@@ -67,10 +67,6 @@ C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\Sunfish.pdb
 C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\AssimpNet.dll
 C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\JetBrains.Annotations.dll
 C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\Moonfish.dll
-C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\OpenTK.dll
-C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\OpenTK.GLControl.dll
-C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\ThemeVS2013Blue.dll
-C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\WeifenLuo.WinFormsUI.Docking.dll
 C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\BulletSharp.dll
 C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\Be.Windows.Forms.HexBox.dll
 C:\Users\seed\Documents\Git\Moonfxsh\Sunfish\bin\Debug\ICSharpCode.TextEditor.dll

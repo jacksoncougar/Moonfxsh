@@ -13,7 +13,7 @@ namespace Moonfish.Graphics
     {
         public ConvexHullCaster caster;
 
-        public DynamicScene( Control ownerControl ) : this( )
+        public DynamicScene( Control ownerControl ): this(  )
         {
             ownerControl.MouseDown += Camera.OnMouseDown;
             ownerControl.MouseMove += Camera.OnMouseMove;
@@ -33,7 +33,7 @@ namespace Moonfish.Graphics
             ownerControl.MouseClick += OnMouseClick;
         }
 
-        public DynamicScene( )
+        public DynamicScene( ) : base()
         {
             caster = new ConvexHullCaster( );
             SceneUpdate += caster.OnUpdate;

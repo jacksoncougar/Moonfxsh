@@ -9,7 +9,7 @@ namespace Moonfish.Guerilla
         public static GlobalGeometrySectionStructBlock LoadSectionData(
             this GlobalGeometryBlockInfoStructBlock geometryInfo )
         {
-            var resourceStream = Halo2.GetResourceBlock( geometryInfo );
+            var resourceStream = geometryInfo.GetResourceFromCache( );
             if ( resourceStream == null ) return default(GlobalGeometrySectionStructBlock);
 
             var sectionBlock = new GlobalGeometrySectionStructBlock( );

@@ -10,6 +10,7 @@ using Moonfish.Tags;
 using System.Linq.Expressions;
 using System.Reflection;
 using Fasterflect;
+using Moonfish.Cache;
 
 namespace Moonfish.Guerilla
 {
@@ -18,7 +19,7 @@ namespace Moonfish.Guerilla
         public abstract int SerializedSize { get; }
 
         public abstract int Alignment { get; }
-
+        
         private delegate T ObjectActivator<out T>(params object[] args);
 
         private static readonly Dictionary<Type, ObjectActivator<GuerillaBlock>> Activators =
@@ -73,12 +74,6 @@ namespace Moonfish.Guerilla
             {
                 var offset = blamPointer.StartAddress - binaryReader.BaseStream.Position;
                 binaryReader.BaseStream.Seek(offset, SeekOrigin.Current);
-#if DEBUGEXTREME
-                var cacheStream = binaryReader.BaseStream as CacheStream;
-                if (cacheStream != null)
-                    Console.WriteLine(@"type: {0}, local-offset: {1}, file-address: {2}", typeof (T).Name(), offset,
-                        cacheStream.GetFilePosition());
-#endif
             }
             var pointerArray = new Queue<BlamPointer>[blamPointer.ElementCount];
 
@@ -86,7 +81,8 @@ namespace Moonfish.Guerilla
 
             for (var i = 0; i < blamPointer.ElementCount; ++i)
             {
-                array[i] = (T) ctor();
+                var element = (T) ctor();
+                array[i] = element;
                 pointerArray[i] = array[i].ReadFields(binaryReader);
             }
             for (var i = 0; i < blamPointer.ElementCount; ++i)
@@ -134,6 +130,7 @@ namespace Moonfish.Guerilla
 
         public virtual void Read(BinaryReader binaryReader)
         {
+            Solution.CreateLink(this, binaryReader.BaseStream as ICache);
             var pointers = ReadFields(binaryReader);
             ReadInstances(binaryReader, pointers);
         }

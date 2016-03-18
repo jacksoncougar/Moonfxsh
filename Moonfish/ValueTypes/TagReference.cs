@@ -21,13 +21,15 @@ namespace Moonfish.Tags
         {
             return string.Format("{0}, {1}", Class, Ident);
         }
-        public T Get<T>() where T : GuerillaBlock
+
+        public T Get<T>(CacheKey key ) where T : GuerillaBlock
         {
-            return Halo2.GetReferenceObject(this);
+            return ( T ) this.GetFromCache(key );
         }
-        public object Get()
+
+        public object Get(CacheKey key)
         {
-            return Get<GuerillaBlock>();
+            return this.GetFromCache(key );
         }
 
         public static explicit operator TagReference( GuerillaBlock block )

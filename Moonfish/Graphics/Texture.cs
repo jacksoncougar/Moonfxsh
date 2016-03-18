@@ -102,7 +102,8 @@ namespace Moonfish.Graphics
         /// </summary>
         public void Bind( )
         {
-            GL.BindTexture( _textureTarget, _handle );
+            if ( Enum.IsDefined( typeof ( TextureTarget ), _textureTarget ) )
+                GL.BindTexture( _textureTarget, _handle );
         }
 
         /// <summary>
@@ -116,6 +117,7 @@ namespace Moonfish.Graphics
             TextureMinFilter textureMinFilter = TextureMinFilter.Linear )
         {
             var buffer = bitmapBlock.GetResourceData( );
+            if ( buffer == null ) return;
             var width = bitmapBlock.Width;
             var height = bitmapBlock.Height;
 

@@ -43,55 +43,55 @@ namespace Moonfish.Forms
                 {
                     try
                     {
-                        var guerillaBlock = tagDatum.Identifier.Get<ShaderTemplateBlock>();
-                        foreach (var definition in guerillaBlock.PostprocessDefinition)
-                        {
-                            foreach ( var implementation in definition.Implementations )
-                            {
-                                for ( int index = 0; index < implementation.Bitmaps.Length; index++ )
-                                {
-                                    var remap = definition.Remappings[index];
-                                    items.Add(
-                                               new
-                                               {
-                                                   Type = "Bitmap Remappings",
-                                                   SourceIndex = remap.SourceIndex,
-                                                   Value0 = remap.fieldskip[0],
-                                                   Value1 = remap.fieldskip[1],
-                                                   Value2 = remap.fieldskip[2],
-                                                   Location = map.Index[tagDatum.Identifier].Path
-                                               });
-                                }
-                                for (int index = 0; index < implementation.PixelConstants.Length; index++)
-                                {
-                                    var remap = definition.Remappings[index];
-                                    items.Add(
-                                               new
-                                               {
-                                                   Type = "Pixel Constant Remappings",
-                                                   SourceIndex = remap.SourceIndex,
-                                                   Value0 = remap.fieldskip[0],
-                                                   Value1 = remap.fieldskip[1],
-                                                   Value2 = remap.fieldskip[2],
-                                                   Location = map.Index[tagDatum.Identifier].Path
-                                               });
-                                }
-                                for (int index = 0; index < implementation.VertexConstants.Length; index++)
-                                {
-                                    var remap = definition.Remappings[index];
-                                    items.Add(
-                                               new
-                                               {
-                                                   Type = "Vertex Constant Remappings",
-                                                   SourceIndex = remap.SourceIndex,
-                                                   Value0 = remap.fieldskip[0],
-                                                   Value1 = remap.fieldskip[1],
-                                                   Value2 = remap.fieldskip[2],
-                                                   Location = map.Index[tagDatum.Identifier].Path
-                                               });
-                                }
-                            }
-                        }
+                        ////var guerillaBlock = tagDatum.Identifier.Get<ShaderTemplateBlock>();
+                        //foreach (var definition in guerillaBlock.PostprocessDefinition)
+                        //{
+                        //    foreach ( var implementation in definition.Implementations )
+                        //    {
+                        //        for ( int index = 0; index < implementation.Bitmaps.Length; index++ )
+                        //        {
+                        //            var remap = definition.Remappings[index];
+                        //            items.Add(
+                        //                       new
+                        //                       {
+                        //                           Type = "Bitmap Remappings",
+                        //                           SourceIndex = remap.SourceIndex,
+                        //                           Value0 = remap.fieldskip[0],
+                        //                           Value1 = remap.fieldskip[1],
+                        //                           Value2 = remap.fieldskip[2],
+                        //                           Location = map.Index[tagDatum.Identifier].Path
+                        //                       });
+                        //        }
+                        //        for (int index = 0; index < implementation.PixelConstants.Length; index++)
+                        //        {
+                        //            var remap = definition.Remappings[index];
+                        //            items.Add(
+                        //                       new
+                        //                       {
+                        //                           Type = "Pixel Constant Remappings",
+                        //                           SourceIndex = remap.SourceIndex,
+                        //                           Value0 = remap.fieldskip[0],
+                        //                           Value1 = remap.fieldskip[1],
+                        //                           Value2 = remap.fieldskip[2],
+                        //                           Location = map.Index[tagDatum.Identifier].Path
+                        //                       });
+                        //        }
+                        //        for (int index = 0; index < implementation.VertexConstants.Length; index++)
+                        //        {
+                        //            var remap = definition.Remappings[index];
+                        //            items.Add(
+                        //                       new
+                        //                       {
+                        //                           Type = "Vertex Constant Remappings",
+                        //                           SourceIndex = remap.SourceIndex,
+                        //                           Value0 = remap.fieldskip[0],
+                        //                           Value1 = remap.fieldskip[1],
+                        //                           Value2 = remap.fieldskip[2],
+                        //                           Location = map.Index[tagDatum.Identifier].Path
+                        //                       });
+                        //        }
+                        //    }
+                        //}
                     }
                     catch
                     {

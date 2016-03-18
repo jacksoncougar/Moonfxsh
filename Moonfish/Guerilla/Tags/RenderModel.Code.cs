@@ -41,7 +41,7 @@ namespace Moonfish.Guerilla.Tags
 
         public void LoadSectionData( )
         {
-            var resourceStream = Halo2.GetResourceBlock( GeometryBlockInfo );
+            var resourceStream = GeometryBlockInfo.GetResourceFromCache();
             if ( resourceStream == null ) return;
 
             var sectionBlock = new RenderModelSectionDataBlock( );

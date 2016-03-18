@@ -111,19 +111,6 @@ namespace Moonfish.Graphics
 
         private void LoadMap(string fileName)
         {
-            var directory = Path.GetDirectoryName(fileName);
-            if (directory != null)
-            {
-                var maps = Directory.GetFiles(directory, "*.map", SearchOption.TopDirectoryOnly);
-                var resourceMaps = maps.GroupBy(
-                    Halo2.CheckMapType
-                    ).Where(x => x.Key == MapType.MainMenu
-                                 || x.Key == MapType.Shared
-                                 || x.Key == MapType.SinglePlayerShared)
-                    .Select(g => g.First()).ToList();
-                resourceMaps.ForEach(x => Halo2.LoadResource(new CacheStream(x)));
-            }
-
             Map = new CacheStream(fileName);
 
             listBox1.Items.Clear();

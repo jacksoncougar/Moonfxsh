@@ -30,6 +30,11 @@ namespace Moonfish.Cache
             {
                 return (CacheHeader)MemberwiseClone();
             }
+
+            public CacheHeader( )
+            {
+                
+            }
             
             private CacheHeader(Stream stream)
             {

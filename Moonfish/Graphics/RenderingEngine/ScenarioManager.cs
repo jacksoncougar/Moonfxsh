@@ -19,6 +19,8 @@ namespace Moonfish.Graphics
         private static ObjectBlock ObjectBlock;
 #endif
 
+        private TagCache moonfishCache = new TagCache( );
+
         /// <summary>
         ///     Controls loading of vertex data and creating attribute buffers
         /// </summary>
@@ -30,13 +32,13 @@ namespace Moonfish.Graphics
         private readonly DrawManager _drawManager;
 
         private readonly MaterialManager _materialManager;
-
+        
         /// <summary>
         ///     The cache where scenario data is
         /// </summary>
         private CacheStream _cache;
 
-        public ScenarioManager( )
+        public ScenarioManager(  )
         {
             _materialManager = new MaterialManager( );
             _drawManager = new DrawManager( );
@@ -78,8 +80,12 @@ namespace Moonfish.Graphics
 
         private void DispatchDeletion( ObjectBlock objectBlock, dynamic instance )
         {
-            var modelBlock = objectBlock?.Model.Get<ModelBlock>( );
-            var renderBlock = modelBlock?.RenderModel.Get<RenderModelBlock>( );
+            if ( objectBlock == null ) return;
+            CacheKey cacheKey;
+            if ( !objectBlock.TryGetCacheKey( out cacheKey ) ) return;
+
+            var modelBlock = objectBlock?.Model.Get<ModelBlock>( cacheKey );
+            var renderBlock = modelBlock?.RenderModel.Get<RenderModelBlock>( cacheKey );
 
             if ( renderBlock == null ) return;
 
@@ -87,7 +93,7 @@ namespace Moonfish.Graphics
 
             foreach ( var renderModelSection in sections )
             {
-                foreach ( var part in renderModelSection.SectionData[ 0 ].Section.Parts )
+                foreach ( var part in renderModelSection.SectionData.SelectMany( u => u.Section.Parts ) )
                 {
                     _drawManager.RemoveInstance( part, instance );
                 }
@@ -118,9 +124,8 @@ namespace Moonfish.Graphics
         ///     Loads scenario from Cache
         /// </summary>
         /// <param name="cacheStream"></param>
-        public void Load( CacheStream cacheStream )
+        public void Load( ICache cacheStream )
         {
-            _cache = cacheStream;
         }
 
         public void Load( ObjectBlock objectBlock )
@@ -139,7 +144,7 @@ namespace Moonfish.Graphics
                     DispatchDeletion(staticObject, new ScenarioInstanceBlock());
                 }
                 StaticObjects.Clear(  );
-                var billboardObject = new BillboardObject(reference.Ident);
+                var billboardObject = new BillboardObject(reference.Ident, moonfishCache);
                 StaticObjects.Add( billboardObject );
             }
         }
@@ -153,8 +158,11 @@ namespace Moonfish.Graphics
         private void Dispatch( Camera eye, ObjectBlock objectBlock,
             dynamic instance )
         {
-            var modelBlock = objectBlock.Model.Get<ModelBlock>( );
-            var renderBlock = modelBlock?.RenderModel.Get<RenderModelBlock>( );
+            CacheKey cacheKey;
+            if ( !objectBlock.TryGetCacheKey( out cacheKey ) ) return;
+
+            var modelBlock = objectBlock.Model.Get<ModelBlock>(cacheKey);
+            var renderBlock = modelBlock?.RenderModel.Get<RenderModelBlock>(cacheKey);
 
             if ( renderBlock == null ) return;
 
@@ -177,13 +185,13 @@ namespace Moonfish.Graphics
             var hasRegions = modelBlock.ModelRegionBlock.Length > 0;
 
             //  Here sections are collected using the detail level and chosen variant (if it exists)
-            var sections = Enumerable.Empty<RenderModelSectionBlock>( );
-            if ( hasVariant )
+            IEnumerable<RenderModelSectionBlock> sections;
+            if ( false &&hasVariant )
             {
                 var variantBlock = modelBlock.Variants.Single( e => e.Name == variant );
                 sections = ProcessVariant( variantBlock, renderBlock, detailLevel );
             }
-            else if ( hasRegions )
+            else if (false && hasRegions )
             {
                 sections = ProcessRegions( modelBlock.ModelRegionBlock, renderBlock, detailLevel );
             }
@@ -197,6 +205,8 @@ namespace Moonfish.Graphics
             //  to the draw manager to  handle sorting and grouping
             foreach ( var renderModelSection in renderModelSectionBlocks )
             {
+                if ( renderModelSection.SectionData.Length <= 0 ) continue;
+
                 _bucketManager.BufferPartData( renderModelSection.SectionData[ 0 ].Section );
 
                 foreach ( var part in renderModelSection.SectionData[ 0 ].Section.Parts )
@@ -205,7 +215,7 @@ namespace Moonfish.Graphics
 
                     //  Create an instance for this part and assign a shader for it
                     _drawManager.CreateInstance( part, instance );
-                    _drawManager.AssignShader( part, materialBlock.Shader.Ident );
+                    _drawManager.AssignShader( part, cacheKey, materialBlock.Shader.Ident );
                 }
             }
         }
@@ -226,9 +236,9 @@ namespace Moonfish.Graphics
 
 
                 var bucket = _bucketManager.GetBucketResource( patch.Part, out indexBaseOffset, out vertexBaseIndex );
-                if ( patch.ShaderIdent != TagIdent.NullIdentifier )
+                if ( patch.ShaderKey.TagKey != TagIdent.NullIdentifier )
                 {
-                    var material = _materialManager.GetMaterial( patch.ShaderIdent );
+                    var material = _materialManager.GetMaterial( patch.ShaderKey );
                     _materialManager.Bind( material );
                 }
                 using ( bucket.Bind( ) )
@@ -242,14 +252,14 @@ namespace Moonfish.Graphics
 
         private void ForceItem( Camera eye, ObjectBlock @object, ScenarioInstanceBlock instance )
         {
-            var scenarioBlock = _cache?.Index.ScenarioIdent.Get<ScenarioBlock>( );
-            if ( scenarioBlock == null ) return;
-
             DrawManager.ClearVisible( );
             using ( _bucketManager.Begin( ) )
             {
-                var modelBlock = @object?.Model.Get<ModelBlock>( );
-                var renderModel = modelBlock?.RenderModel.Get<RenderModelBlock>( );
+                CacheKey key;
+                if ( !@object.TryGetCacheKey( out key ) ) return;
+
+                var modelBlock = @object?.Model.Get<ModelBlock>(key);
+                var renderModel = modelBlock?.RenderModel.Get<RenderModelBlock>(key);
 
                 if ( renderModel == null ) return;
 
@@ -386,7 +396,8 @@ namespace Moonfish.Graphics
         /// <param name="eyeCamera"></param>
         private void TraverseScenario( Camera eyeCamera )
         {
-            var scenarioBlock = _cache?.Index.ScenarioIdent.Get<ScenarioBlock>( );
+            var key = CacheKey.Create( _cache );
+            var scenarioBlock = _cache?.Index.ScenarioIdent.Get<ScenarioBlock>(key);
             if ( scenarioBlock == null ) return;
 
             DrawManager.ClearVisible( );

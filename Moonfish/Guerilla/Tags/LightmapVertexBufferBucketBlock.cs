@@ -31,7 +31,7 @@ namespace Moonfish.Guerilla.Tags
 
         public void LoadCacheData()
         {
-            var resourceStream = Halo2.GetResourceBlock(GeometryBlockInfo);
+            var resourceStream = GeometryBlockInfo.GetResourceFromCache();
             if (resourceStream == null) return;
 
             var sectionBlock = new LightmapVertexBufferBucketCacheDataBlock();

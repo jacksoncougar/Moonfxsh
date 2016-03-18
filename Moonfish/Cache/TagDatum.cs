@@ -5,6 +5,7 @@ namespace Moonfish
 {
     public struct TagDatum
     {
+        public CacheKey CacheKey { get; set; }
         public TagClass Class;
         public TagIdent Identifier;
         public int VirtualAddress;

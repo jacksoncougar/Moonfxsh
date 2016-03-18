@@ -30,7 +30,7 @@ namespace Moonfish.Guerilla.Tags
 
         public void LoadRenderData()
         {
-            var resourceStream = Halo2.GetResourceBlock(GeometryBlockInfo);
+            var resourceStream = GeometryBlockInfo.GetResourceFromCache();
             if (resourceStream == null) return;
 
             var clusterBlock = new StructureBspClusterDataBlockNew();

@@ -204,7 +204,7 @@ namespace Moonfish.Graphics
                             continue;
                     }
 
-                    section.LoadSectionData( );
+                    //section.LoadSectionData( );
                     var mesh = new Mesh( section.SectionData[ 0 ].Section, RenderModel.CompressionInfo[ 0 ] )
                     {
                         SectionBlock = section

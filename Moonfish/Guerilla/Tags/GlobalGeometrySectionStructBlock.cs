@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Guerilla.Tags
 {
@@ -26,5 +27,15 @@ namespace Moonfish.Guerilla.Tags
         }
 
         private int PartIdentifier { get; } = CreateUniquePartIdentifier;
+
+        public PrimitiveType PrimitiveType
+        {
+            get
+            {
+                return GlobalGeometryPartNewFlags.HasFlag( Flags.OverrideTriangleList )
+                    ? PrimitiveType.Triangles
+                    : PrimitiveType.TriangleStrip;
+            }
+        }
     }
 }

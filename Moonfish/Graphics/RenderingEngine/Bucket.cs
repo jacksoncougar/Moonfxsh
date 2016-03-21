@@ -287,5 +287,10 @@ namespace Moonfish.Graphics
         public int VertexAttributeId => SupportedVertexAttributes.GetVertexAttributesId( );
 
         #endregion
+
+        public PartBufferLocations this [ GlobalGeometryPartBlockNew part ]
+        {
+            get { return GetBufferLocation( part ); }
+        }
     }
 }

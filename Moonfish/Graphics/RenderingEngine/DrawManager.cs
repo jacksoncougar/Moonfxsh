@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Fasterflect;
 using Moonfish.Graphics.RenderingEngine;
 using Moonfish.Guerilla.Tags;
 using Moonfish.Tags;
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 
 namespace Moonfish.Graphics
 {
@@ -23,13 +24,18 @@ namespace Moonfish.Graphics
         private Dictionary<TagGlobalKey, List<GlobalGeometryPartBlockNew>> OpaquePatches { get; } =
             new Dictionary<TagGlobalKey, List<GlobalGeometryPartBlockNew>>( );
 
-        private List<PatchData> TransparentPatches { get; set; } = new List<PatchData>();
+        private List<PatchData> TransparentPatches { get; set; } = new List<PatchData>( );
 
         public void AssignShader( GlobalGeometryPartBlockNew part, CacheKey cacheKey, TagIdent shaderIdent )
         {
             var glocalKey = new TagGlobalKey( cacheKey, shaderIdent );
             //  Does this work now?
             _shaderDictionary[ part ] = glocalKey;
+        }
+
+        public void Clear( )
+        {
+            InstanceManager.ClearInstances( );
         }
 
 
@@ -39,6 +45,44 @@ namespace Moonfish.Graphics
         public static void ClearVisible( )
         {
             //TODO implement filtering here
+        }
+
+        /// <summary>
+        ///     Creates an instance object for the given part
+        /// </summary>
+        /// <param name="part">The part to be instanced</param>
+        /// <param name="instance">The instance data</param>
+        public void CreateInstance( GlobalGeometryPartBlockNew part, IH2ObjectInstance instance,
+            bool supportsPermutations )
+        {
+            InstanceManager.CreateInstance( part, instance, supportsPermutations );
+        }
+
+        public IEnumerable<GlobalGeometryPartBlockNew> GetOpaqueParts( TagGlobalKey shaderKey )
+        {
+            return OpaquePatches.ContainsKey( shaderKey )
+                ? OpaquePatches[ shaderKey ]
+                : Enumerable.Empty<GlobalGeometryPartBlockNew>( );
+        }
+
+        public IEnumerable<TagGlobalKey> GetShaders( )
+        {
+            return _shaderDictionary.Values;
+        }
+
+        /// <summary>
+        ///     Returns all Transparent type parts
+        /// </summary>
+        /// <param name="eye">The viewer used for depth sorting</param>
+        /// <returns>A sequence of patch data</returns>
+        public IEnumerable<PatchData> GetTransparentParts( Camera eye )
+        {
+            return TransparentPatches;
+        }
+
+        public void RemoveInstance( GlobalGeometryPartBlockNew part, dynamic instance )
+        {
+            InstanceManager.RemoveInstance( part, instance );
         }
 
         public void Sort( Camera eye )
@@ -61,43 +105,6 @@ namespace Moonfish.Graphics
                 InstanceManager.Parts.Where( e => e.Type == GlobalGeometryPartBlockNew.TypeEnum.Transparent )
                     .ToList( );
             TransparentPatches = new List<PatchData>( SortTransparentParts( transparentParts, eye ) );
-        }
-
-        /// <summary>
-        ///     Creates an instance object for the given part
-        /// </summary>
-        /// <param name="part">The part to be instanced</param>
-        /// <param name="instance">The instance data</param>
-        public void CreateInstance( GlobalGeometryPartBlockNew part, IH2ObjectInstance instance, bool supportsPermutations )
-        {
-            InstanceManager.CreateInstance( part, instance , supportsPermutations);
-        }
-
-        public IEnumerable<GlobalGeometryPartBlockNew> GetOpaqueParts( TagGlobalKey shaderKey )
-        {
-            return OpaquePatches.ContainsKey( shaderKey )
-                ? OpaquePatches[ shaderKey ]
-                : Enumerable.Empty<GlobalGeometryPartBlockNew>( );
-        }
-        
-        public IEnumerable<TagGlobalKey> GetShaders( )
-        {
-            return _shaderDictionary.Values;
-        }
-
-        /// <summary>
-        ///     Returns all Transparent type parts
-        /// </summary>
-        /// <param name="eye">The viewer used for depth sorting</param>
-        /// <returns>A sequence of patch data</returns>
-        public IEnumerable<PatchData> GetTransparentParts( Camera eye )
-        {
-            return TransparentPatches;
-        }
-
-        public void RemoveInstance( GlobalGeometryPartBlockNew part, dynamic instance )
-        {
-            InstanceManager.RemoveInstance( part, instance );
         }
 
         /// <summary>
@@ -132,14 +139,54 @@ namespace Moonfish.Graphics
             return transparentDrawsSortedList.Select( u => u.Value );
         }
 
-        public void RemoveShader( GlobalGeometryPartBlockNew part )
+        private Dictionary<IndirectCommandBufferKey, IndirectDrawCommandBuffer> PrimitiveIndirectDrawBuffer =
+            new Dictionary<IndirectCommandBufferKey, IndirectDrawCommandBuffer>( );
+
+        public void CreateIndirectDrawCommands( BucketManager bucketManager, InstanceDataBuffer instanceData )
         {
-                
+            foreach ( var commandBuffer in PrimitiveIndirectDrawBuffer.Values )
+            {
+                commandBuffer.Clear( );
+            }
+
+            foreach ( var part in InstanceManager.Parts )
+            {
+                var bucket = bucketManager.GetBucketResource( part );
+                var primitiveType = part.PrimitiveType;
+
+                var bufferKey = new IndirectCommandBufferKey( bucket, primitiveType );
+
+                if ( !PrimitiveIndirectDrawBuffer.ContainsKey( bufferKey ) )
+                {
+                    PrimitiveIndirectDrawBuffer[ bufferKey ] = new IndirectDrawCommandBuffer( primitiveType, bucket );
+                }
+                PrimitiveIndirectDrawBuffer[ bufferKey ].AddDrawCommand( part, bucket,
+                    instanceData[ part ] );
+
+            }
+
+            foreach ( var indirectDrawCommandBuffers in PrimitiveIndirectDrawBuffer.Values )
+            {
+                indirectDrawCommandBuffers.CreateCommandBuffer( );
+            }
         }
 
-        public void Clear( )
+        public void DispatchDraws( InstanceDataBuffer instanceData )
         {
-            InstanceManager.ClearInstances( );
+            foreach ( var drawCommandBuffer in PrimitiveIndirectDrawBuffer.Values )
+            {
+                using ( drawCommandBuffer.Bind( ) )
+                using ( drawCommandBuffer.SourceBucket.Bind( ) )
+                using ( instanceData.Bind( ) )
+                {
+                    GL.MultiDrawElementsIndirect(
+                        ( All ) drawCommandBuffer.PrimitiveType,
+                        All.UnsignedShort,
+                        IntPtr.Zero,
+                        drawCommandBuffer.Count,
+                        0 );
+                }
+            }
         }
-    }
+    };
 }

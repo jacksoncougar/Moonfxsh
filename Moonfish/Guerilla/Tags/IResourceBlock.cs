@@ -9,7 +9,6 @@ namespace Moonfish.Guerilla.Tags
     {
         ResourcePointer GetResourcePointer(int index = 0);
         int GetResourceLength(int index = 0);
-
         void SetResourcePointer(ResourcePointer pointer, int index = 0);
         void SetResourceLength(int length, int index = 0);
     }

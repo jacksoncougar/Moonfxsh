@@ -25,38 +25,38 @@ namespace Moonfish.Graphics.RenderingEngine
         {
             // Quit early if updating is pointless
             if (CurrentState.ContainsKey(stateHandle.RenderState) &&
-                 CurrentState[stateHandle.RenderState] == stateHandle.unionValue)
+                 CurrentState[stateHandle.RenderState] == stateHandle.UnionValue)
                 return;
 
             switch ( stateHandle.RenderState )
             {
                 case D3DRENDERSTATETYPE.ALPHATESTENABLE:
                 {
-                    var enable = stateHandle.unionValue > 0;
+                    var enable = stateHandle.UnionValue > 0;
                     AlphaTestEnableChanged?.Invoke( null, enable );
                 }
                     break;
                 case D3DRENDERSTATETYPE.ALPHAFUNC:
                 {
-                    var function = ( D3DCMPFUNC ) stateHandle.unionValue;
+                    var function = ( D3DCMPFUNC ) stateHandle.UnionValue;
                     AlphaFuncChanged?.Invoke( null, function );
                 }
                     break;
                 case D3DRENDERSTATETYPE.ALPHAREF:
                 {
-                    var alphaReference = ( float ) stateHandle.unionValue / byte.MaxValue;
+                    var alphaReference = ( float ) stateHandle.UnionValue / byte.MaxValue;
                     AlphaRefChanged?.Invoke( null, alphaReference );
                 }
                     break;
                 case D3DRENDERSTATETYPE.COLORWRITEENABLE:
                 {
-                    var writeMask = new ColourWriteMask( stateHandle.unionValue );
+                    var writeMask = new ColourWriteMask( stateHandle.UnionValue );
                     GL.ColorMask( writeMask.R, writeMask.G, writeMask.B, writeMask.A );
                 }
                     break;
                 case D3DRENDERSTATETYPE.ALPHABLENDENABLE:
                 {
-                    var enable = stateHandle.unionValue > 0;
+                    var enable = stateHandle.UnionValue > 0;
                     if ( enable ) GL.Enable( EnableCap.Blend );
                     else GL.Disable( EnableCap.Blend );
                     AlphaBlendEnableChanged?.Invoke( null, enable );
@@ -74,7 +74,7 @@ namespace Moonfish.Graphics.RenderingEngine
                     break;
                 case D3DRENDERSTATETYPE.BLENDOP:
                 {
-                    var blendOp = ( D3DBLENDOP ) stateHandle.unionValue;
+                    var blendOp = ( D3DBLENDOP ) stateHandle.UnionValue;
                     var blendEquation = blendOp.ConvertToBlendEquation( );
                     GL.BlendEquation( blendEquation );
                 }
@@ -87,7 +87,7 @@ namespace Moonfish.Graphics.RenderingEngine
                     break;
                     case D3DRENDERSTATETYPE.CULLMODE:
                 {
-                    var value = ( D3DCULL ) stateHandle.unionValue;
+                    var value = ( D3DCULL ) stateHandle.UnionValue;
                     var cullMode = value.ConvertCullMode( );
                     GL.Enable( EnableCap.CullFace );
                     GL.CullFace( cullMode );
@@ -100,7 +100,7 @@ namespace Moonfish.Graphics.RenderingEngine
                     break;
             }
             // Update the current states
-            CurrentState[ stateHandle.RenderState ] = stateHandle.unionValue;
+            CurrentState[ stateHandle.RenderState ] = stateHandle.UnionValue;
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Moonfish.Graphics.RenderingEngine
                 ? value
                 : 0;
             var otherBlend = ( D3DBLEND ) value;
-            var blend = ( D3DBLEND ) stateHandle.unionValue;
+            var blend = ( D3DBLEND ) stateHandle.UnionValue;
 
             if ( other == D3DRENDERSTATETYPE.SRCBLEND )
                 GL.BlendFunc( otherBlend.ConvertToBlendingFactorSrc( ), blend.ConvertToBlendingFactorDest( ) );

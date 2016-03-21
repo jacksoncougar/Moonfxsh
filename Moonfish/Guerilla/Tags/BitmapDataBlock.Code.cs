@@ -66,5 +66,10 @@ namespace Moonfish.Guerilla.Tags
                     break;
             }
         }
+
+        public void LoadResourceData()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

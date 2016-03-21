@@ -12,77 +12,13 @@ namespace Moonfish.Graphics
 {
     public class BucketManager
     {
-        private class BucketBuilder
-        {
-            private Bucket _bucket;
-
-            private readonly HashSet<GlobalGeometrySectionStructBlock> sections =
-                new HashSet<GlobalGeometrySectionStructBlock>( );
-
-            /// <summary>
-            /// Returns true if the GlobalGeometrySectionStructBlock vertex attributes matches the bucket attributes
-            /// and GeoemetryType matches
-            /// </summary>
-            /// <param name="sectionStructBlock"></param>
-            /// <returns></returns>
-            public bool CanBuffer( GlobalGeometrySectionStructBlock sectionStructBlock )
-            {
-                return
-                    _bucket.SupportedVertexAttributes.SequenceEqual( GetSectionVertexAttributeTypes( sectionStructBlock ) );
-            }
-
-            public BucketBuilder( Bucket bucket )
-            {
-                _bucket = bucket;
-            }
-
-            public void Add(GlobalGeometrySectionStructBlock sectionStructBlock)
-            {
-                sections.Add(sectionStructBlock);
-            }
-
-            public Bucket Finalise( )
-            {
-                _bucket.BufferData( sections );
-                return _bucket;
-            }
-        }
-
-        private readonly List<Bucket> _buckets = new List<Bucket>( );
         private readonly Dictionary<int, BucketBuilder> _bucketBuilders = new Dictionary<int, BucketBuilder>();
 
-        public Bucket GetBucketResource( GlobalGeometryPartBlockNew part, out int indexBaseOffset,
-            out int vertexBaseOffset )
-        {
-            var bucket = _buckets.Single( u => u.Contains( part ) );
-            var locations = bucket.GetBufferLocation( part );
-            indexBaseOffset = locations.IndexBaseOffset;
-            vertexBaseOffset = locations.VertexBaseOffset;
-            return bucket;
-        }
+        private readonly List<Bucket> _buckets = new List<Bucket>( );
 
         public IDisposable Begin( )
         {
             return new Handle( this );
-        }
-
-        private class Handle : IDisposable
-        {
-            private readonly BucketManager _bucketManager;
-
-            public Handle( BucketManager bucketManager )
-            {
-                _bucketManager = bucketManager;
-            }
-
-            public void Dispose( )
-            {
-                foreach ( var keyValuePair in _bucketManager._bucketBuilders )
-                {
-                    _bucketManager._buckets.Add( keyValuePair.Value.Finalise( ) );
-                }
-                _bucketManager._bucketBuilders.Clear(  );
-            }
         }
 
         public void BufferPartData( GlobalGeometrySectionStructBlock section )
@@ -102,6 +38,71 @@ namespace Moonfish.Graphics
 
             var builder = _bucketBuilders[ vertexAttributesId ];
             builder.Add( section );
+        }
+
+        public Bucket GetBucketResource( GlobalGeometryPartBlockNew part, out int indexBaseOffset,
+            out int vertexBaseOffset )
+        {
+            var bucket = _buckets.Single( u => u.Contains( part ) );
+            var locations = bucket.GetBufferLocation( part );
+            indexBaseOffset = locations.IndexBaseOffset;
+            vertexBaseOffset = locations.VertexBaseOffset;
+            return bucket;
+        }
+
+        private class BucketBuilder
+        {
+            private readonly HashSet<GlobalGeometrySectionStructBlock> sections =
+                new HashSet<GlobalGeometrySectionStructBlock>( );
+
+            private Bucket _bucket;
+
+            public BucketBuilder( Bucket bucket )
+            {
+                _bucket = bucket;
+            }
+
+            public void Add(GlobalGeometrySectionStructBlock sectionStructBlock)
+            {
+                sections.Add(sectionStructBlock);
+            }
+
+            /// <summary>
+            /// Returns true if the GlobalGeometrySectionStructBlock vertex attributes matches the bucket attributes
+            /// and GeoemetryType matches
+            /// </summary>
+            /// <param name="sectionStructBlock"></param>
+            /// <returns></returns>
+            public bool CanBuffer( GlobalGeometrySectionStructBlock sectionStructBlock )
+            {
+                return
+                    _bucket.SupportedVertexAttributes.SequenceEqual( GetSectionVertexAttributeTypes( sectionStructBlock ) );
+            }
+
+            public Bucket Finalise( )
+            {
+                _bucket.BufferData( sections );
+                return _bucket;
+            }
+        }
+
+        private class Handle : IDisposable
+        {
+            private readonly BucketManager _bucketManager;
+
+            public Handle( BucketManager bucketManager )
+            {
+                _bucketManager = bucketManager;
+            }
+
+            public void Dispose( )
+            {
+                foreach ( var keyValuePair in _bucketManager._bucketBuilders )
+                {
+                    _bucketManager._buckets.Add( keyValuePair.Value.Finalise( ) );
+                }
+                _bucketManager._bucketBuilders.Clear(  );
+            }
         }
 
         #region Static Functions
@@ -342,5 +343,9 @@ namespace Moonfish.Graphics
 
         #endregion
 
+        public Bucket GetBucketResource( GlobalGeometryPartBlockNew part )
+        {
+            return _buckets.Single( u => u.Contains( part ) );
+        }
     };
 }

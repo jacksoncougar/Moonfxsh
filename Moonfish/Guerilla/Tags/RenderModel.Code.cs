@@ -14,6 +14,29 @@ namespace Moonfish.Guerilla.Tags
 
     partial class RenderModelSectionBlock : IResourceBlock
     {
+        public void LoadResourceData( )
+        {
+            var resourceStream = GeometryBlockInfo.GetResourceFromCache();
+            if ( resourceStream == null ) return;
+
+            var sectionBlock = new RenderModelSectionDataBlock( );
+            using ( var binaryReader = new BinaryReader( resourceStream ) )
+            {
+                sectionBlock.Read( binaryReader );
+
+                var vertexBufferResources = GeometryBlockInfo.Resources.Where(
+                    x => x.Type == GlobalGeometryBlockResourceBlock.TypeEnum.VertexBuffer ).ToArray( );
+                for ( var i = 0;
+                    i < sectionBlock.Section.VertexBuffers.Length && i < vertexBufferResources.Length;
+                    ++i )
+                {
+                    sectionBlock.Section.VertexBuffers[ i ].VertexBuffer.Data =
+                        resourceStream.GetResourceData( vertexBufferResources[ i ] );
+                }
+            }
+            SectionData = new[] {sectionBlock};
+        }
+
         public ResourcePointer GetResourcePointer( int index = 0 )
         {
             return GeometryBlockInfo.BlockOffset;
@@ -36,11 +59,8 @@ namespace Moonfish.Guerilla.Tags
 
         public void LoadSectionDataIfEmpty( )
         {
-            if ( SectionData.Length <= 0 ) LoadSectionData( );
-        }
+            if ( SectionData.Length > 0 ) return;
 
-        public void LoadSectionData( )
-        {
             var resourceStream = GeometryBlockInfo.GetResourceFromCache();
             if ( resourceStream == null ) return;
 

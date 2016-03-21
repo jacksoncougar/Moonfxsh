@@ -174,14 +174,14 @@ namespace Moonfish.Graphics
         
         public class RenderStateHandle : BindingHandle
         {
-            public D3DRENDERSTATETYPE RenderState;
-            public int unionValue;
+            public D3DRENDERSTATETYPE RenderState { get; }
+            public int UnionValue { get; }
 
             public RenderStateHandle(  RenderStateBlock state, bool defaultState = false )
             {
                 DefaultState = defaultState;
                 RenderState = ( D3DRENDERSTATETYPE ) state.StateIndex;
-                unionValue = state.StateValue;
+                UnionValue = state.StateValue;
             }
         }
 

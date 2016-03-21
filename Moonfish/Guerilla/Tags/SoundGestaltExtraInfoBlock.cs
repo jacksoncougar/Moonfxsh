@@ -27,5 +27,10 @@ namespace Moonfish.Guerilla.Tags
         {
             GeometryBlockInfo.BlockSize = length;
         }
+
+        public void LoadResourceData()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -252,8 +252,11 @@
     <Compile Include="Graphics\RenderingEngine\BillboardObject.cs" />
     <Compile Include="Graphics\RenderingEngine\BitmapMapping.cs" />
     <Compile Include="Graphics\RenderingEngine\D3d8Types.cs" />
+    <Compile Include="Graphics\RenderingEngine\DrawIndirectCmd.cs" />
     <Compile Include="Graphics\RenderingEngine\DrawManager.cs" />
     <Compile Include="Graphics\RenderingEngine\Extensions.cs" />
+    <Compile Include="Graphics\RenderingEngine\IndirectCommandBufferKey.cs" />
+    <Compile Include="Graphics\RenderingEngine\IndirectDrawCommandBuffer.cs" />
     <Compile Include="Graphics\RenderingEngine\InstanceData.cs" />
     <Compile Include="Graphics\RenderingEngine\InstanceDataBuffer.cs" />
     <Compile Include="Graphics\RenderingEngine\InstanceManager.cs" />
